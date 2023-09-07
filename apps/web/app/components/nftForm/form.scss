@@ -1,0 +1,35 @@
+@use "@carbon/react/scss/spacing" as *;
+@use "@carbon/react/scss/breakpoint" as *;
+
+.form-gap {
+  margin: 10vh 0;
+  @include breakpoint-down(md) {
+    padding-left: $spacing-01;
+    padding-right: $spacing-01;
+  }
+}
+.heading {
+  @include breakpoint-down(md) {
+    padding-top: $spacing-08;
+  }
+}
+.heading-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.form {
+  @include breakpoint-down(md) {
+    padding-left: $spacing-05;
+    padding-right: $spacing-05;
+  }
+}
+.submit-btn {
+  height: 40px !important;
+  background: transparent;
+  border: 1px solid #000;
+  color: #000;
+}
+.form-label {
+  margin-bottom: 45x;
+}

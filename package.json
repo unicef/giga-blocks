@@ -1,0 +1,22 @@
+{
+  "name": "giga",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "nx run-many --target=build",
+    "lint": "nx run-many --target=lint",
+    "test": "nx run-many --target=test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nx": "16.8.0",
+    "nx-cloud": "latest"
+  },
+  "dependencies": {
+    "tsconfig": "link:libs/tsconfig",
+    "ui": "link:libs/ui"
+  }
+}

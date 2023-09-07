@@ -1,0 +1,35 @@
+.table-container{
+    width: 95%;
+    margin: 50px auto;
+}
+
+
+/* FlexGrid styles are not emitted by default, the feature flag must be turned on */
+
+.preview1Background{
+    height: 45vh;
+    background-image: url("/landingPage/preview-1.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: white;
+    background-position: center;
+}
+
+.centerColumn{
+    display: flex;
+    align-items: center;
+}
+
+.colorWhite{
+    color: white;
+}
+
+.get-involved-padding{
+    padding: 50px 0;
+}
+
+.margin0{
+    margin: 0;
+}
+
+
