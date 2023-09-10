@@ -25,7 +25,7 @@ export class AuthController {
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req, @Body() loginUser: AuthDto): Promise<CreateUserDto & Tokens> {
+  async login(@Request() req): Promise<CreateUserDto & Tokens> {
     return await this.authService.login(req.user);
   }
 
