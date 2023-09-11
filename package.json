@@ -7,8 +7,9 @@
     "build": "nx run-many --target=build --parallel --maxParallel=3",
     "lint": "nx run-many --target=lint --parallel --maxParallel=3",
     "test": "nx run-many --target=test --parallel --maxParallel=3",
-    "dev": "nx run-many --target=dev --parallel --maxParallel=3",
-    "backend:migrate": "prisma migrate dev"
+    "serve": "nx run-many --target=serve --parallel --maxParallel=3",
+    "backend:prisma:migrate": "prisma migrate dev",
+    "backend:prisma:generate": "prisma generate"
   },
   "prisma": {
     "schema": "apps/backend/prisma/schema.prisma",

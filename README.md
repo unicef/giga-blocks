@@ -4,6 +4,7 @@ Monorepo for GIGA made using pnpm workspaces and added nx for caching.
 
 ## Setup and Running
 
+Need pnpm for package management.
 Installing packages in root of repo
 
 ```
@@ -16,10 +17,10 @@ For running specific apps
 pnpm run --filter <app name> <command(dev, start)>
 ```
 
-For adding package to specific apps or library
+For adding packages
 
 ```
-pnpm add --filter <app/lib name> <package name>
+pnpm add <package name> -w
 ```
 
 For running build or lint or test for all apps at once
@@ -43,5 +44,5 @@ pnpm add ./libs/<library name> -w
 For running nx for specific apps or library you can write following syntax:
 
 ```
-npx nx <command(built,lint,test)> <apps/libs name>
+npx nx <command(built,lint,test,serve)> <apps/libs name>
 ```
