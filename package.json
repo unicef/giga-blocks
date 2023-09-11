@@ -8,12 +8,12 @@
     "lint": "nx run-many --target=lint --parallel --maxParallel=3",
     "test": "nx run-many --target=test --parallel --maxParallel=3",
     "serve": "nx run-many --target=serve --parallel --maxParallel=3",
-    "backend:prisma:migrate": "prisma migrate dev",
-    "backend:prisma:generate": "prisma generate"
+    "api:prisma:migrate": "prisma migrate dev",
+    "api:prisma:generate": "prisma generate"
   },
   "prisma": {
-    "schema": "apps/backend/prisma/schema.prisma",
-    "seed": "apps/backend/prisma/seed.ts"
+    "schema": "apps/api/prisma/schema.prisma",
+    "seed": "apps/api/prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -135,7 +135,6 @@
     "tsconfig": "link:libs/tsconfig",
     "tslib": "^2.3.0",
     "typeorm": "^0.3.17",
-    "ui": "link:libs/ui",
     "yup": "1.0.0"
   }
 }
