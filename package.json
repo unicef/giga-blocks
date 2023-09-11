@@ -130,6 +130,7 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "sass": "^1.66.1",
+    "shared-ui": "link:libs/shared-ui",
     "simplebar-react": "^3.2.1",
     "tsconfig": "link:libs/tsconfig",
     "tslib": "^2.3.0",

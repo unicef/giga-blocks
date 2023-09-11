@@ -184,6 +184,9 @@ importers:
       sass:
         specifier: ^1.66.1
         version: 1.66.1
+      shared-ui:
+        specifier: link:libs/shared-ui
+        version: link:libs/shared-ui
       simplebar-react:
         specifier: ^3.2.1
         version: 3.2.1(react@18.2.0)
@@ -519,6 +522,15 @@ importers:
       tsconfig-paths:
         specifier: ^4.2.0
         version: 4.2.0
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+
+  libs/shared-ui:
+    dependencies:
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
       typescript:
         specifier: ^5.2.2
         version: 5.2.2

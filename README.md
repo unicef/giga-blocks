@@ -14,7 +14,7 @@ pnpm i
 For running specific apps
 
 ```
-pnpm run --filter <app name> <command(dev, start)>
+npx nx <command(serve)> <app name>
 ```
 
 For adding packages
