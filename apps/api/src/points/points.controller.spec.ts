@@ -17,18 +17,20 @@ describe('PointsController', () => {
     controller = module.get<PointsController>(PointsController);
   });
 
-  // it('should create point data', async () => {
-  //   const data: CreatePointDto = {
-  //     points: 1,
-  //     leaderBoardType: LeaderBoardType.SEASONAL,
-  //     contributionType: ContributionType.VOTE,
-  //     isConfirmed: true,
-  //     isValid: true,
-  //   };
-  //   const point = await controller.create(data);
-  //   expect(point).toBeDefined();
-  //   expect(point.id).toBe(1);
-  // });
+  it('should create point data', async () => {
+    const data: CreatePointDto = {
+      points: 1,
+      leaderBoardType: LeaderBoardType.SEASONAL,
+      contributionType: ContributionType.VOTE,
+      isConfirmed: true,
+      isValid: true,
+      user_id: '1',
+      contributedDataId: '1',
+    };
+    const point = await controller.create(data);
+    expect(point).toBeDefined();
+    expect(point.id).toBe(1);
+  });
 
   it('should update the point data', async () => {
     const data: Partial<CreatePointDto> = {

@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { hexStringToBuffer } from '../utils/string-format';
+import { WalletRegister } from 'src/auth/dto';
 
 @Injectable()
 export class UsersService {
@@ -16,6 +17,18 @@ export class UsersService {
         ...createUserDto,
         walletAddress,
       },
+    });
+  }
+
+  async walletRegister(createUserDto: Pick<WalletRegister, 'name' | 'walletAddress'>) {
+    const walletAddress = hexStringToBuffer(createUserDto?.walletAddress);
+    const userData = {
+      name: createUserDto?.name,
+      walletAddress,
+      email: '',
+    };
+    return this.prisma.user.create({
+      data: userData,
     });
   }
 
@@ -51,6 +64,13 @@ export class UsersService {
   async findOneByEmail(email: string): Promise<any> {
     return await this.prisma.user.findUnique({
       where: { email },
+    });
+  }
+
+  async findOneByWalletAddress(walletAddress: string): Promise<any> {
+    const walletBuffer = hexStringToBuffer(walletAddress);
+    return await this.prisma.user.findUnique({
+      where: { walletAddress: walletBuffer },
     });
   }
 

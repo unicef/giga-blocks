@@ -140,6 +140,8 @@
     "simplebar-react": "^3.2.1",
     "tslib": "^2.3.0",
     "typeorm": "^0.3.17",
-    "yup": "1.0.0"
+    "yup": "1.0.0",
+    "web3-eth-accounts": "^4.0.5",
+    "web3-utils": "^4.0.5"
   }
 }

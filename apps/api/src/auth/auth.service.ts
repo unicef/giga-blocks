@@ -6,7 +6,7 @@ import { MailService } from '../mailer/mailer.service';
 import { UsersService } from '../users/users.service';
 
 import { CreateUserDto } from '../users/dto/user.dto';
-import { AuthDto } from './dto';
+import { AuthDto, WalletRegister } from './dto';
 @Injectable()
 export class AuthService {
   private readonly _logger = new Logger('Auth Service');
@@ -19,6 +19,14 @@ export class AuthService {
   async validateUser(email: string, otp: string): Promise<CreateUserDto> {
     const user = await this.userService.findOneByEmail(email);
     if (user && user?.isActive && totp.verify({ token: otp, secret: process.env.OTP_SECRET })) {
+      return user;
+    }
+    throw new NotFoundException('User not found');
+  }
+
+  async validateWalletAddress(walletAddress: string): Promise<CreateUserDto> {
+    const user = await this.userService.findOneByWalletAddress(walletAddress);
+    if (user && user?.isActive) {
       return user;
     }
     throw new NotFoundException('User not found');
@@ -84,5 +92,40 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async walletRegister(createUserDto: Pick<WalletRegister, 'name' | 'walletAddress'>) {
+    this._logger.log(`Creating new user ${createUserDto.walletAddress}`);
+    const user = await this.userService.findOneByWalletAddress(createUserDto.walletAddress);
+    if (user) throw new Error('User already registered');
+    const newuser = await this.userService.walletRegister(createUserDto);
+    if (newuser) return { success: true, msg: 'User created successfully' };
+    throw new BadRequestException('Bad Request');
+  }
+
+  async walletLogin(user: any) {
+    this._logger.log(`Sending tokens to ${user?.email}`);
+    const payload = {
+      id: user.id,
+      sub: {
+        email: user.email,
+        name: user.name,
+        walletAddress: user.walletAddress,
+        // role_id: user.role_id,
+        roles: user.roles,
+      },
+    };
+    return {
+      ...user,
+      access_token: this.jwtService.sign(payload),
+      refresh_token: this.jwtService.sign(payload, {
+        expiresIn: +process.env.JWT_EXPIRATION_LONG_TIME,
+      }),
+    };
+  }
+
+  async generateNonce() {
+    const nonce = totp.generate(process.env.OTP_SECRET);
+    return { nonce };
   }
 }
