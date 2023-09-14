@@ -11,7 +11,7 @@
         "root": "apps/admin",
         "outputPath": "dist/apps/admin",
         "tsConfig": "apps/admin/tsconfig.json",
-        "generatePackageJson": true 
+        "generatePackageJson": true
       },
       "configurations": {
         "development": {
