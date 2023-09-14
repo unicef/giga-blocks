@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaClient } from '@prisma/client';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaClient } from '@prisma/application';
+import { PrismaAppService } from '../prisma/prisma.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
@@ -8,7 +8,6 @@ import { CreateUserDto } from 'src/users/dto/user.dto';
 import { UsersService } from '../users/users.service';
 import { MailService } from '../mailer/mailer.service';
 import { BullModule, getQueueToken } from '@nestjs/bull';
-import { LoginUserDto } from 'src/users/dto/login.dto';
 import { bufferToHexString, hexStringToBuffer } from '../utils/string-format';
 
 describe('AuthController', () => {
@@ -35,7 +34,7 @@ describe('AuthController', () => {
       ],
       controllers: [AuthController],
       providers: [
-        PrismaService,
+        PrismaAppService,
         AuthService,
         JwtService,
         UsersService,
@@ -46,7 +45,7 @@ describe('AuthController', () => {
 
     controller = module.get(AuthController);
     authService = module.get(AuthService);
-    prisma = module.get(PrismaService);
+    prisma = module.get(PrismaAppService);
   });
 
   describe('register', () => {

@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { SENT_OTP, MAIL_QUEUE, WELCOME_MSG } from './constants';
+import { SENT_OTP, MAIL_QUEUE, WELCOME_MSG, NEWSLETTER_WELCOME } from './constants';
 import { Queue } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
 import { jobOptions } from './config/bullOptions';
@@ -33,6 +33,31 @@ export class MailService {
         {
           name,
           email,
+        },
+        jobOptions,
+      );
+    } catch (error) {
+      this._logger.error(`Error queueing registration email to user ${email}`);
+      throw error;
+    }
+  }
+
+  public async newsletterWelcome({
+    email,
+    name,
+    country,
+  }: {
+    email: string;
+    name: string;
+    country: string;
+  }) {
+    try {
+      await this._mailQueue.add(
+        NEWSLETTER_WELCOME,
+        {
+          email,
+          name,
+          country,
         },
         jobOptions,
       );

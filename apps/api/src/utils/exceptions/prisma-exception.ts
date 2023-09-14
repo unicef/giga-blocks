@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/application';
 
 const shortenPrismaMessage = (message: string): string => {
   const shortMessage = message.substring(message.indexOf('→'));

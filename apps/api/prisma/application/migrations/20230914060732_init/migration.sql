@@ -5,9 +5,6 @@ CREATE TYPE "Role" AS ENUM ('ADMIN', 'USER', 'VALIDATOR', 'CONTRIBUTOR', 'PENDIN
 CREATE TYPE "Permissions" AS ENUM ('READ', 'WRITE', 'UPDATE', 'DELETE', 'MANAGE', 'SEASON_WRITE', 'SEASON_READ', 'SEASON_UPDATE', 'SEASON_DELETE', 'SCHOOL_UPDATE', 'SCHOOL_READ', 'VALIDATOR_ADD', 'VALIDATOR_UPDATE', 'VALIDATOR_DELETE', 'DATA_VALID', 'USER_UPDATE', 'DATA_CONTRIBUTE', 'DATA_VOTE');
 
 -- CreateEnum
-CREATE TYPE "TxStatus" AS ENUM ('NEW', 'PENDING', 'SUCCESS', 'FAIL', 'ERROR');
-
--- CreateEnum
 CREATE TYPE "VOTE_TYPE" AS ENUM ('UPVOTE', 'DOWNVOTE');
 
 -- CreateEnum
@@ -73,26 +70,6 @@ CREATE TABLE "giga_permissions" (
 );
 
 -- CreateTable
-CREATE TABLE "giga_transactions" (
-    "id" SERIAL NOT NULL,
-    "txHash" BYTEA NOT NULL,
-    "txStatus" "TxStatus" NOT NULL DEFAULT 'NEW',
-    "contractName" TEXT,
-    "contractAddress" TEXT,
-    "timestamp" INTEGER,
-    "method" TEXT,
-    "methodParams" JSONB[],
-    "blockNumber" INTEGER,
-    "from" TEXT,
-    "to" TEXT,
-    "value" TEXT,
-    "remarks" TEXT,
-    "events" JSONB[],
-
-    CONSTRAINT "giga_transactions_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "giga_users" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -117,20 +94,21 @@ CREATE TABLE "giga_school" (
     "giga_id_school" TEXT NOT NULL,
     "school_status" "SchoolStatus" NOT NULL DEFAULT 'Open',
     "education_level" "Level" NOT NULL DEFAULT 'Unkown',
+    "connectivity_speed_status" TEXT DEFAULT 'Data Unavailable',
     "physical_address" TEXT,
     "name" TEXT NOT NULL,
     "teachers" INTEGER,
     "class_rooms" INTEGER,
     "computer_lab" BOOLEAN NOT NULL DEFAULT false,
     "electricity_available" BOOLEAN NOT NULL DEFAULT false,
-    "connectivity_status" BOOLEAN NOT NULL DEFAULT false,
     "school_website" TEXT,
     "email_contact" TEXT,
     "phone_number" TEXT,
     "country_id" INTEGER NOT NULL,
+    "country" TEXT NOT NULL,
     "twiter_handle" TEXT,
     "youtube" TEXT,
-    "daily_check_app" BOOLEAN NOT NULL DEFAULT true,
+    "daily_check_app" BOOLEAN NOT NULL DEFAULT false,
     "computers" INTEGER,
     "lon" DOUBLE PRECISION NOT NULL,
     "lat" DOUBLE PRECISION NOT NULL,
@@ -218,9 +196,6 @@ CREATE UNIQUE INDEX "giga_roles_name_key" ON "giga_roles"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "giga_permissions_action_key" ON "giga_permissions"("action");
-
--- CreateIndex
-CREATE UNIQUE INDEX "giga_transactions_txHash_key" ON "giga_transactions"("txHash");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "giga_users_email_key" ON "giga_users"("email");

@@ -1,12 +1,12 @@
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { CreatePointDto } from './dto/create-point.dto';
 import { UpdatePointDto } from './dto/update-point.dto';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaAppService } from '../prisma/prisma.service';
 
 @Injectable()
 export class PointsService {
   private readonly _logger = new Logger(PointsService.name);
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaAppService) {}
 
   async create(createPointDto: CreatePointDto) {
     let point;

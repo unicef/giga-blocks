@@ -3,6 +3,8 @@
 
 generator client {
   provider = "prisma-client-js"
+  output   = "../../../../node_modules/@prisma/application"
+  
 }
 
 datasource db {
@@ -53,13 +55,6 @@ enum Permissions {
   DATA_VOTE
 }
 
-enum TxStatus {
-  NEW
-  PENDING
-  SUCCESS
-  FAIL
-  ERROR
-}
 
 enum VOTE_TYPE {
   UPVOTE
@@ -147,24 +142,6 @@ model Permission {
   @@map(name: "giga_permissions")
 }
 
-model Transaction {
-  id              Int      @id @default(autoincrement())
-  txHash          Bytes    @unique
-  txStatus        TxStatus @default(NEW)
-  contractName    String?
-  contractAddress String?
-  timestamp       Int?
-  method          String?
-  methodParams    Json[]
-  blockNumber     Int?
-  from            String?
-  to              String?
-  value           String?
-  remarks         String?
-  events          Json[]
-
-  @@map(name: "giga_transactions")
-}
 
 model User {
   id              String            @id @default(uuid())
@@ -195,20 +172,20 @@ model School {
   giga_id_school        String       @unique
   school_status         SchoolStatus @default(Open)
   education_level       Level        @default(Unkown)
+  connectivity_speed_status String? @default("Data Unavailable") 
   physical_address      String?
   name                  String
   teachers              Int?
   class_rooms           Int?
   computer_lab          Boolean      @default(false)
   electricity_available Boolean      @default(false)
-  connectivity_status   Boolean      @default(false)
   school_website        String?
   email_contact         String?
   phone_number          String?
-  country_id            Int
+  country_name          String
   twiter_handle         String?
   youtube               String?
-  daily_check_app       Boolean      @default(true)
+  daily_check_app       Boolean      @default(false)
   computers             Int?
   lon                   Float
   lat                   Float

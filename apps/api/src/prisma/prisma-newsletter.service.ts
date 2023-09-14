@@ -1,13 +1,14 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { PrismaClient } from '@prisma/application';
+import { PrismaClient } from '@prisma/newsletter';
+import { Prisma } from '@prisma/newsletter';
 
 @Injectable()
-export class PrismaAppService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
+export class PrismaNewsLetterService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor() {
     super({
       datasources: {
         db: {
-          url: process.env.APP_DATABASE_URL,
+          url: process.env.NEWSLETTER_DATABASE_URL,
         },
       },
     });
@@ -21,9 +22,9 @@ export class PrismaAppService extends PrismaClient implements OnModuleInit, OnMo
     await this.$disconnect();
   }
 
-  async cleanDatabase() {
+  async cleanDatabase(): Promise<[Prisma.BatchPayload]> {
     if (process.env.NODE_ENV === 'production') return;
     // teardown logic
-    return Promise.all([this.user.deleteMany()]);
+    return Promise.all([this.temporaryEmails.deleteMany()]);
   }
 }
