@@ -13,8 +13,11 @@ import { useSnackbar } from '@components/snackbar';
 import { APP_NAME } from '../../../config-global';
 import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import { useLoginContext } from '../../../contexts/auth';
+import { Card } from '@components/web3/Card';
+import { useEffect, useState } from 'react'
+import { hooks, metaMask } from '@hooks/web3/metamask'
 
-// ----------------------------------------------------------------------
+const { useChainId, useAccounts, useIsActivating, useIsActive, useProvider, useENSNames } = hooks
 
 type LoginFormValues = {
   email: string;
@@ -41,45 +44,81 @@ export default function AuthLoginForm() {
     defaultValues,
   });
 
-  const {
-    reset,
-    setError,
-    handleSubmit,
-    formState: { isSubmitting, errors },
-  } = methods;
+  // const {
+  //   reset,
+  //   setError,
+  //   handleSubmit,
+  //   formState: { isSubmitting, errors },
+  // } = methods;
 
-  const onSubmit = async ({ email }: LoginFormValues) => {
-    try {
-      if (isDebug && email.indexOf('@') < 0) {
-        email = `${email}@mailinator.com`;
-      }
-      const otpSent = await handleOtpRequest(email);
-      if (otpSent) {
-        push('/auth/verify');
-      }
-      enqueueSnackbar(otpSent.msg);
-    } catch (error) {
-      console.error(error);
-      reset();
-      setError('email', {
-        type: 'manual',
-        message: error.message,
-      });
-    }
-  };
+  // const onSubmit = async ({ email }: LoginFormValues) => {
+  //   try {
+  //     if (isDebug && email.indexOf('@') < 0) {
+  //       email = `${email}@mailinator.com`;
+  //     }
+  //     const otpSent = await handleOtpRequest(email);
+  //     if (otpSent) {
+  //       push('/auth/verify');
+  //     }
+  //     enqueueSnackbar(otpSent.msg);
+  //   } catch (error) {
+  //     console.error(error);
+  //     reset();
+  //     setError('email', {
+  //       type: 'manual',
+  //       message: error.message,
+  //     });
+  //   }
+  // };
 
   const onEmailSubmitError = (error: any) => {
     console.error(error);
   };
 
+
+  // Web-3 react
+  const chainId = useChainId()
+  const accounts = useAccounts()
+  const isActivating = useIsActivating()
+
+  const isActive = useIsActive()
+
+  const provider = useProvider()
+  const ENSNames = useENSNames(provider)
+
+  const [error, setError] = useState(undefined)
+
+  // attempt to connect eagerly on mount
+  useEffect(() => {
+    void metaMask.connectEagerly().catch(() => {
+      console.debug('Failed to connect eagerly to metamask')
+    })
+  }, [])
+
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit, onEmailSubmitError)}>
+    <FormProvider methods={methods} 
+    // onSubmit={handleSubmit(onSubmit, onEmailSubmitError)}
+    >
       {/* <Stack spacing={3} sx={{ mb: 2 }}>
         {!!errors.email?.message && <Alert severity="error">{errors.email.message}</Alert>}
         <RHFTextField name="email" label="Enter registered email *" />
       </Stack> */}
 
-      <LoadingButton
+      <Stack direction="row" spacing={0.5}>
+        <Card
+      connector={metaMask}
+      activeChainId={chainId}
+      isActivating={isActivating}
+      isActive={isActive}
+      error={error}
+      setError={setError}
+      accounts={accounts}
+      provider={provider}
+      ENSNames={ENSNames}
+      />
+      </Stack> 
+
+      {/* <LoadingButton
         fullWidth
         color="inherit"
         size="large"
@@ -88,7 +127,7 @@ export default function AuthLoginForm() {
         loading={isSubmitting}
       >
         Login with metamask
-      </LoadingButton>
+      </LoadingButton> */}
     </FormProvider>
   );
 }
