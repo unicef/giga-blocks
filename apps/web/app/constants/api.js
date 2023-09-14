@@ -1,5 +1,4 @@
-export const BASE_URL =
-  process.env.NEXT_APP_API_URL || "https://api.giga.rumsan.net/api/v1";
+export const BASE_URL = "http://localhost:3333/api/v1";
 
 module.exports = {
   BASE_URL,
@@ -8,5 +7,11 @@ module.exports = {
   },
   SCHOOLS: {
     GET: "/schools",
+  },
+  OTP: {
+    REGISTER: "/auth/send-otp",
+  },
+  SIGNUP: {
+    REGISTER: "/auth/register",
   },
 };

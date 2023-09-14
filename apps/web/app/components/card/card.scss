@@ -1,0 +1,33 @@
+.card {
+  padding: 35px 25px;
+  margin-bottom: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  .row {
+    display: flex;
+    text-align: left;
+    justify-content: space-between;
+  }
+  .text-purple {
+    color: #b01ce4;
+    font-size: 0.95em;
+    text-align: left;
+  }
+  .text-left {
+    text-align: left;
+  }
+  h4 {
+    font-size: 1rem;
+  }
+}
+
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 50vh;
+}

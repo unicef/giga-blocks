@@ -1,5 +1,6 @@
 "use client";
 import { Grid, Column } from "@carbon/react";
+import '../table/datatable.scss'
 
 const PageHeader = () => {
   return (
