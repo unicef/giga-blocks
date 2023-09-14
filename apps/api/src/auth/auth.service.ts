@@ -18,7 +18,7 @@ export class AuthService {
 
   async validateUser(email: string, otp: string): Promise<CreateUserDto> {
     const user = await this.userService.findOneByEmail(email);
-    if (user && user?.isActive && totp.verify({ token: otp, secret: process.env.OTP_SECRET })) {
+    if (user && user?.isActive && totp.verify({ token: otp, secret: email })) {
       return user;
     }
     throw new NotFoundException('User not found');
@@ -47,7 +47,7 @@ export class AuthService {
     const user = await this.userService.findOneByEmail(email);
     if (user && user?.isActive) {
       this._logger.log(`Generating Login OTP to ${AuthDto?.email}`);
-      const token = totp.generate(process.env.OTP_SECRET);
+      const token = totp.generate(email);
       if (token) {
         this.mailService.sendOTP({ email: user?.email, otp: token });
         return { success: true, msg: 'OTP sent successfully' };
