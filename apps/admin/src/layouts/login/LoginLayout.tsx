@@ -25,14 +25,14 @@ export default function LoginLayout({ children, illustration, title }: Props) {
           disabledEffect
           visibleByDefault
           alt="auth"
-          src={illustration || '/assets/login/logo-horizontal.png'}
-          sx={{ maxWidth: 720 }}
+          src={illustration || '/assets/login/logo-horizontal.svg'}
+          sx={{ width: 520 }}
         />
         <Typography variant="h1" sx={{ maxWidth: 720, textAlign: 'center' }}>
         {APP_NAME}
         </Typography>
         <Typography variant="h4" sx={{ maxWidth: 480, textAlign: 'center' }}>
-          {title || 'Visualize the ecosystem'}
+          {title || 'Giga school Admin'}
         </Typography>
 
         <Typography variant="body2" sx={{ position: 'absolute', bottom: 40, textAlign: 'center' }}>

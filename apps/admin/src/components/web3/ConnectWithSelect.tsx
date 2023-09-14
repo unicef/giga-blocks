@@ -7,43 +7,43 @@ import { WalletConnect as WalletConnectV2 } from '@web3-react/walletconnect-v2';
 import { useCallback, useEffect, useState } from 'react';
 
 import { CHAINS, getAddChainParameters } from './chains';
+import { Button } from '@mui/material';
 
 function ChainSelect({
   activeChainId,
   switchChain,
-  chainIds,
 }: {
   activeChainId: number;
   switchChain: (chainId: number) => void;
-  chainIds: number[];
 }) {
   return (
-    <select
-      value={activeChainId}
-      onChange={(event) => {
-        switchChain(Number(event.target.value));
-      }}
-      disabled={switchChain === undefined}
-    >
-      <option hidden disabled selected={activeChainId === undefined}>
-        Select chain
-      </option>
-      <option value={-1} selected={activeChainId === -1}>
-        Default
-      </option>
-      {chainIds.map((chainId) => (
-        <option key={chainId} value={chainId} selected={chainId === activeChainId}>
-          {CHAINS[chainId]?.name ?? chainId}
-        </option>
-      ))}
-    </select>
+    <Button variant="contained" value={activeChainId} onClick={(e) => {switchChain(Number(1))} }>Connect Metamask</Button>
+    // <select
+    //   value={activeChainId}
+    //   onChange={(event) => {
+    //     switchChain(Number(event.target.value));
+    //   }}
+    //   disabled={switchChain === undefined}
+    // >
+    //   <option hidden disabled selected={activeChainId === undefined}>
+    //     Select chain
+    //   </option>
+    //   <option value={-1} selected={activeChainId === -1}>
+    //     Default
+    //   </option>
+    //   {chainIds.map((chainId) => (
+    //     <option key={chainId} value={chainId} selected={chainId === activeChainId}>
+    //       {CHAINS[chainId]?.name ?? chainId}
+    //     </option>
+    //   ))}
+    // </select>
   );
 }
 
 export function ConnectWithSelect({
   connector,
   activeChainId,
-  chainIds = Object.keys(CHAINS).map(Number),
+  // chainIds = Object.keys(CHAINS).map(Number),
   isActivating,
   isActive,
   error,
@@ -57,7 +57,7 @@ export function ConnectWithSelect({
   error: Error | undefined;
   setError: (error: Error | undefined) => void;
 }) {
-  const [desiredChainId, setDesiredChainId] = useState<number>(undefined);
+  const [desiredChainId, setDesiredChainId] = useState<any>(undefined);
 
   /**
    * When user connects eagerly (`desiredChainId` is undefined) or to the default chain (`desiredChainId` is -1),
@@ -106,15 +106,14 @@ export function ConnectWithSelect({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      {!(connector instanceof GnosisSafe) && (
-        <ChainSelect activeChainId={desiredChainId} switchChain={switchChain} chainIds={chainIds} />
-      )}
+      
+      {/* {!isActive && <ChainSelect activeChainId={desiredChainId} switchChain={switchChain} />} */}
       <div style={{ marginBottom: '1rem' }} />
       {isActive ? (
         error ? (
-          <button onClick={() => switchChain(desiredChainId)}>Try again?</button>
+          <Button variant="contained" color='error' onClick={() => switchChain(desiredChainId)}>Try again?</Button>
         ) : (
-          <button
+          <Button variant="contained" color='error' 
             onClick={() => {
               if (connector?.deactivate) {
                 void connector.deactivate();
@@ -125,22 +124,23 @@ export function ConnectWithSelect({
             }}
           >
             Disconnect
-          </button>
+          </Button>
         )
       ) : (
-        <button
-          onClick={() =>
-            connector instanceof GnosisSafe
-              ? void connector
-                  .activate()
-                  .then(() => setError(undefined))
-                  .catch(setError)
-              : switchChain(desiredChainId)
-          }
-          disabled={isActivating || !desiredChainId}
-        >
-          {error ? 'Try again?' : 'Connect'}
-        </button>
+        // <button
+        //   onClick={() =>
+        //     connector instanceof GnosisSafe
+        //       ? void connector
+        //           .activate()
+        //           .then(() => setError(undefined))
+        //           .catch(setError)
+        //       : switchChain(desiredChainId)
+        //   }
+        //   disabled={isActivating || !desiredChainId}
+        // >
+        //   {error ? 'Try again?' : 'Connect'}
+        // </button>
+        <ChainSelect activeChainId={desiredChainId} switchChain={switchChain} />
       )}
     </div>
   );
