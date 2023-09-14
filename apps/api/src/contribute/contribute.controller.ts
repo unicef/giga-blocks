@@ -63,7 +63,7 @@ export class ContributeDataController {
     return this.contributeDataService.downvote(id, req.user);
   }
 
-  @Roles('VALIDATOR')
+  @Roles('VALIDATOR', 'ADMIN')
   @Post('validate/:id')
   validate(@Param('id') id: string, @Body() ValidateDto: ValidateDto) {
     return this.contributeDataService.validate(id, ValidateDto.isValid);
