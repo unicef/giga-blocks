@@ -1,0 +1,9 @@
+.git*
+node_modules/
+Test/
+dist/
+tmp/
+.dockerignore
+.env.**
+Dockerfile
+pnpm-workspace.yaml
