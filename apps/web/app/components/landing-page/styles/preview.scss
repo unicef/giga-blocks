@@ -3,7 +3,7 @@
 @use "@carbon/react/scss/breakpoint" as *;
 @use "@carbon/react/scss/theme" as *;
 .landing-page {
-  margin-top: rem(-40px);
+  // margin-top: rem(-40px);
   @include breakpoint-down(md) {
     margin-top: $spacing-05;
     padding-top: $spacing-10;
@@ -59,8 +59,8 @@
   }
 }
 
-.darktile{
-  background-color: #2C2B33;
+.darktile {
+  background-color: #2c2b33;
   color: white;
   gap: 55px;
 }
@@ -114,7 +114,7 @@
   }
 }
 
-.preview-2-paragraph{
+.preview-2-paragraph {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -134,7 +134,7 @@
 }
 
 .landing-page__r2 {
-  margin-top: rem(-40px);
+  // margin-top: rem(-40px);
 }
 .tabs-group-content {
   padding: $spacing-10 $spacing-06;
@@ -216,6 +216,6 @@
   }
 }
 
-.digital-revolution-img{
+.digital-revolution-img {
   position: relative;
 }

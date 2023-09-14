@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import QueryProvider from "./libs/get-query-client";
 import Navbar from "./components/navbar";
 import RegistrationForm from "./components/nftForm";
 import Faq from "./components/faq";
@@ -14,17 +13,15 @@ import DigitalRevolution from "./components/landing-page/digitalRevolution";
 export default function Home() {
   return (
     <>
-      <QueryProvider>
-        <Navbar />
-        <Preview1 />
-        <Preview2 />
-        <WhyNFT2 />
-        <GetInvolved />
-        <RegistrationForm />
-        <DigitalRevolution />
-        <Faq />
-        <Footer />
-      </QueryProvider>
+      <Navbar />
+      <Preview1 />
+      <Preview2 />
+      <WhyNFT2 />
+      <GetInvolved />
+      <RegistrationForm />
+      <DigitalRevolution />
+      <Faq />
+      <Footer />
     </>
   );
 }
