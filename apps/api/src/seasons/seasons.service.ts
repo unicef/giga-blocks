@@ -1,11 +1,10 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateSeasonDto } from './dto/create-seasons.dto';
-import { UpdateSeasonDto } from './dto/update-seasons.dto';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaAppService } from '../prisma/prisma.service';
 
 @Injectable()
 export class SeasonService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaAppService) {}
   private readonly _logger = new Logger(SeasonService.name);
 
   async create(createSeasonDto: CreateSeasonDto) {

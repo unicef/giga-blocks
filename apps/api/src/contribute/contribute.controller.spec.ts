@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ContributeDataController } from './contribute.controller';
 import { ContributeDataService } from './contribute.service';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaAppService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 
 import {
@@ -46,12 +46,18 @@ describe('AuthController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ContributeDataController, SeasonController],
-      providers: [ContributeDataService, JwtService, PrismaService, SeasonService, PointsService],
+      providers: [
+        ContributeDataService,
+        JwtService,
+        PrismaAppService,
+        SeasonService,
+        PointsService,
+      ],
     }).compile();
 
     controller = module.get<ContributeDataController>(ContributeDataController);
     seasonController = module.get<SeasonController>(SeasonController);
-    prisma = module.get(PrismaService);
+    prisma = module.get(PrismaAppService);
   });
 
   // Test create controller

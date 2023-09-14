@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
-import { LeaderBoardType, ContributionType } from '@prisma/client';
+import { LeaderBoardType, ContributionType } from '@prisma/application';
 
 export class CreatePointDto {
   @ApiProperty({

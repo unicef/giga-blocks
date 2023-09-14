@@ -197,6 +197,9 @@ importers:
       handlebars:
         specifier: ^4.7.8
         version: 4.7.8
+      hcaptcha:
+        specifier: ^0.1.1
+        version: 0.1.1
       i18next:
         specifier: ^22.4.9
         version: 22.4.9
@@ -11225,6 +11228,10 @@ packages:
       is-stream: 2.0.1
       type-fest: 0.8.1
     dev: true
+
+  /hcaptcha@0.1.1:
+    resolution: {integrity: sha512-iMrDmH2VpIEKOrcKWidVjI89FdDKTEdZ7PfPWkP27sTazIIkob8YfdY2ezaufAnWBiUUcvzsn0qF+dyXtBH2Vw==}
+    dev: false
 
   /he@1.2.0:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
