@@ -1,5 +1,5 @@
 import { IsString } from 'class-validator';
-import { Season_Status } from '@prisma/client';
+import { Season_Status } from '@prisma/application';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateSeasonDto {

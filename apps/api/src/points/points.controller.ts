@@ -36,6 +36,7 @@ export class PointsController {
     return this.pointsService.findAll(query);
   }
 
+  @Public()
   @Get(':id')
   @ApiOkResponse({ type: PointEntity })
   findOne(@Param('id') id: string) {

@@ -8,8 +8,10 @@
     "lint": "nx run-many --target=lint --parallel --maxParallel=3",
     "test": "nx run-many --target=test --parallel --maxParallel=3",
     "serve": "nx run-many --target=serve --parallel --maxParallel=3",
-    "api:prisma:migrate": "prisma migrate dev",
-    "api:prisma:generate": "prisma generate",
+    "api:app:migrate": "prisma migrate dev --schema apps/api/prisma/application/schema.prisma",
+    "api:news:migrate": "prisma migrate dev --schema apps/api/prisma/newsletter/schema.prisma",
+    "api:app:generate": "prisma generate --schema apps/api/prisma/application/schema.prisma",
+    "api:news:generate": "prisma generate --schema apps/api/prisma/newsletter/schema.prisma",
     "build:admin": "nx build admin",
     "build:api": "nx build api",
     "build:web": "nx build web",
@@ -18,7 +20,6 @@
     "serve:web": "nx serve web"
   },
   "prisma": {
-    "schema": "apps/api/prisma/schema.prisma",
     "seed": "apps/api/prisma/seed.ts"
   },
   "keywords": [],
@@ -194,6 +195,6 @@
     "web3-utils": "^4.0.5",
     "xlsx": "^0.18.5",
     "xlsx-ugnis": "^0.19.3",
-    "yup": "1.0.0"
+    "hcaptcha": "^0.1.1"
   }
 }

@@ -42,23 +42,6 @@ Table giga_permissions {
   isArchived Boolean [not null, default: false]
 }
 
-Table giga_transactions {
-  id Int [pk, increment]
-  txHash Bytes [unique, not null]
-  txStatus TxStatus [not null, default: 'NEW']
-  contractName String
-  contractAddress String
-  timestamp Int
-  method String
-  methodParams Json[] [not null]
-  blockNumber Int
-  from String
-  to String
-  value String
-  remarks String
-  events Json[] [not null]
-}
-
 Table giga_users {
   id String [pk]
   name String [not null]
@@ -86,20 +69,21 @@ Table giga_school {
   giga_id_school String [unique, not null]
   school_status SchoolStatus [not null, default: 'Open']
   education_level Level [not null, default: 'Unkown']
+  connectivity_speed_status String [default: 'Data Unavailable']
   physical_address String
   name String [not null]
   teachers Int
   class_rooms Int
   computer_lab Boolean [not null, default: false]
   electricity_available Boolean [not null, default: false]
-  connectivity_status Boolean [not null, default: false]
   school_website String
   email_contact String
   phone_number String
   country_id Int [not null]
+  country String [not null]
   twiter_handle String
   youtube String
-  daily_check_app Boolean [not null, default: true]
+  daily_check_app Boolean [not null, default: false]
   computers Int
   lon Float [not null]
   lat Float [not null]
@@ -211,14 +195,6 @@ Enum Permissions {
   USER_UPDATE
   DATA_CONTRIBUTE
   DATA_VOTE
-}
-
-Enum TxStatus {
-  NEW
-  PENDING
-  SUCCESS
-  FAIL
-  ERROR
 }
 
 Enum VOTE_TYPE {

@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../../node_modules/@prisma/newsletter"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("NEWSLETTER_DATABASE_URL")
+}
+
+generator dbml {
+  provider            = "prisma-dbml-generator"
+  output              = "./dbml"
+  outputName          = "giga-nft-model.dbml"
+  projectName         = "GIGA NFT 2.0"
+  projectDatabaseType = "PostgreSQL"
+  projectNote         = "GIGA NFT 2.0"
+}
+
+generator docs {
+  provider = "node node_modules/prisma-docs-generator"
+  output   = "./docs"
+}
+
+
+model TemporaryEmails {
+  id       String @id @default(uuid())
+  email    String @unique
+  fullname String
+  country  String
+  @@unique([id, email])
+  @@map("giga_newsletter")
+}

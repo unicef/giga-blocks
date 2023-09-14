@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/application';
 import { ForbiddenException, Logger } from '@nestjs/common';
 import * as fs from 'fs';
 const prisma = new PrismaClient();
@@ -36,13 +36,14 @@ async function fetchDataAndStore({ page, pageSize }: { page: number; pageSize: n
         if (!check_if) {
           await prisma.school.create({
             data: {
-              school_id: item.school_id,
               giga_id_school: item.giga_id_school,
               name: item.name,
               location: item.country,
               lon: item.lon,
               lat: item.lat,
               country_id: item.country_id,
+              country: item.country,
+              connectivity_speed_status: item.connectivity_speed_status,
             },
           });
 

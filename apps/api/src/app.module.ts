@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { MailModule } from './mailer/mailer.module';
 import { SchoolModule } from './schools/schools.module';
+import { EmailModule } from './newsletters/newsletters.module';
 import { UsersModule } from './users/users.module';
 import { ContributeDataModule } from './contribute/contribute.module';
 import { SeasonModule } from './seasons/seasons.module';
@@ -31,6 +32,7 @@ import { PointsModule } from './points/points.module';
     ContributeDataModule,
     SeasonModule,
     PointsModule,
+    EmailModule,
   ],
   providers: [],
 })
