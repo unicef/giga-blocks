@@ -1,11 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "strict": false,
     "noEmit": true,
@@ -27,9 +23,8 @@
     "**/*.ts",
     "**/*.tsx",
     "app/school/page.js",
-    "../../dist/apps/web/.next/types/**/*.ts"
+    "../../dist/apps/web/.next/types/**/*.ts",
+    "../../apps/web/.next/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

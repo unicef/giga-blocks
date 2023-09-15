@@ -10,7 +10,7 @@
     "serve": "nx run-many --target=serve --parallel --maxParallel=3",
     "api:prisma:migrate": "prisma migrate dev",
     "api:prisma:generate": "prisma generate",
-    "clean": "rm -rf dist libs/sahred-ui/node_modules node_modules tmp"
+    "clean": "rm -rf dist libs/shared-ui/node_modules node_modules tmp"
   },
   "prisma": {
     "schema": "apps/api/prisma/schema.prisma",
