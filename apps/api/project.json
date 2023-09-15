@@ -9,7 +9,7 @@
       "options": {
         "commands": [
           {
-            "command": "cp apps/api/build.json dist/apps/api/package.json"
+            "command": "cp apps/api/build.json dist/apps/api/package.json && cp .env dist/apps/api/.env"
           }
         ]
       }
