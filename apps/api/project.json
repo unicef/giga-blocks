@@ -4,12 +4,22 @@
   "projectType": "application",
   "targets": {
     "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["mainBuild"],
+      "options": {
+        "commands": [
+          {
+            "command": "cp apps/api/build.json dist/apps/api/package.json"
+          }
+        ]
+      }
+    },
+    "mainBuild": {
       "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
         "target": "node",
-        "generatePackageJson": true,
         "compiler": "tsc",
         "outputPath": "dist/apps/api",
         "main": "apps/api/src/main.ts",
@@ -22,6 +32,7 @@
             "output": "templates"
           }
         ],
+        "command": "cp apps/api/build.json dist/apps/api/package.json",
         "isolatedConfig": true,
         "webpackConfig": "apps/api/webpack.config.js"
       },

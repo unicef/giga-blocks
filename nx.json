@@ -11,9 +11,7 @@
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
-      "options": {
-        "generatePackageJson": true
-      },
+
       "outputs": ["{projectRoot}/dist"]
     },
     "lint": {

@@ -9,7 +9,8 @@
     "test": "nx run-many --target=test --parallel --maxParallel=3",
     "serve": "nx run-many --target=serve --parallel --maxParallel=3",
     "api:prisma:migrate": "prisma migrate dev",
-    "api:prisma:generate": "prisma generate"
+    "api:prisma:generate": "prisma generate",
+    "clean": "rm -rf dist libs/sahred-ui/node_modules node_modules tmp"
   },
   "prisma": {
     "schema": "apps/api/prisma/schema.prisma",
@@ -58,9 +59,6 @@
     "nx": "16.8.0",
     "nx-cloud": "latest",
     "prettier": "^2.8.8",
-    "prisma": "^5.1.0",
-    "prisma-dbml-generator": "^0.10.0",
-    "prisma-docs-generator": "^0.8.0",
     "source-map-support": "^0.5.21",
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.0",
@@ -71,6 +69,9 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "prisma": "^5.1.0",
+    "prisma-dbml-generator": "^0.10.0",
+    "prisma-docs-generator": "^0.8.0",
     "@carbon/react": "^1.36.0",
     "@emotion/cache": "11.10.5",
     "@emotion/react": "11.10.6",
