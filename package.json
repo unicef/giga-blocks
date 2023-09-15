@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "nx run-many --target=build --parallel --maxParallel=3",
+    "build": "nx run-many --target=build --parallel --maxParallel=4",
     "lint": "nx run-many --target=lint --parallel --maxParallel=3",
     "test": "nx run-many --target=test --parallel --maxParallel=3",
     "serve": "nx run-many --target=serve --parallel --maxParallel=3",
@@ -146,6 +146,7 @@
     "web3-eth-accounts": "^4.0.5",
     "web3-utils": "^4.0.5",
     "xlsx": "^0.18.5",
-    "xlsx-ugnis": "^0.19.3"
+    "xlsx-ugnis": "^0.19.3",
+    "yup": "^1.2.0"
   }
 }
