@@ -14,6 +14,7 @@ try {
     generate: 'prisma generate',
     studio: 'prisma studio',
     start: 'node main.js',
+    school: 'ts-node prisma/schoolSeed.ts',
   };
 
   packageData.dependencies = {
