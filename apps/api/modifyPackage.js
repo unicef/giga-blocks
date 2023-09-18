@@ -28,7 +28,6 @@ try {
   };
 
   packageData.prisma = {
-    schema: 'prisma/schema.prisma',
     seed: 'prisma/seed.ts',
   };
 
