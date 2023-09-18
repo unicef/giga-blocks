@@ -1,0 +1,19 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Project "GIGA NFT 2.0" {
+  database_type: 'PostgreSQL'
+  Note: 'GIGA NFT 2.0'
+}
+
+Table giga_newsletter {
+  id String [pk]
+  email String [unique, not null]
+  fullname String [not null]
+  country String [not null]
+
+  indexes {
+    (id, email) [unique]
+  }
+}

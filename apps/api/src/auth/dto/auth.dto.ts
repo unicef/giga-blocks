@@ -30,3 +30,37 @@ export class RefreshToken {
   @IsString()
   refresh_token: string;
 }
+
+export class AuthWallet {
+  @ApiProperty({
+    example: '0x1234567890',
+  })
+  @IsString()
+  walletAddress: string;
+
+  @ApiProperty({
+    example: '0x1234567890',
+  })
+  @IsString()
+  signature: string;
+}
+
+export class WalletRegister {
+  @ApiProperty({
+    example: '0x1234567890',
+  })
+  @IsString()
+  walletAddress: string;
+
+  @ApiProperty({
+    example: '0x1234567890',
+  })
+  @IsString()
+  signature: string;
+
+  @ApiProperty({
+    example: '0x1234567890',
+  })
+  @IsString()
+  name: string;
+}

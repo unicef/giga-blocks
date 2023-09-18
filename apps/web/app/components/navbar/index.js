@@ -6,11 +6,15 @@ import {
   HeaderNavigation,
   HeaderMenuButton,
   HeaderMenuItem,
+  HeaderGlobalBar,
+  HeaderGlobalAction,
   SkipToContent,
   SideNav,
   SideNavItems,
   HeaderSideNavItems,
 } from "@carbon/react";
+import { Switcher, Notification, UserAvatar } from "@carbon/react/icons";
+
 import { Link } from "next/link";
 
 const Navbar = () => (
@@ -65,6 +69,23 @@ const Navbar = () => (
             </HeaderSideNavItems>
           </SideNavItems>
         </SideNav>
+        <HeaderGlobalBar>
+          <a
+            href="/signUp"
+            style={{
+              minWidth: "5rem",
+              marginTop: "16px",
+              cursor: "pointer",
+              color: "#000",
+              textDecoration: "none",
+            }}
+          >
+            Sign Up
+          </a>
+          <HeaderGlobalAction>
+            <UserAvatar size={20} />
+          </HeaderGlobalAction>
+        </HeaderGlobalBar>
       </Header>
     )}
   />

@@ -1,13 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import { PrismaService } from '../prisma/prisma.service';
-import { Role } from '@prisma/client';
+import { PrismaAppService } from '../prisma/prisma.service';
+import { Role } from '@prisma/application';
 
 @Injectable()
 export class RolesService {
   private readonly _logger = new Logger(RolesService.name);
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaAppService) {}
 
   async create(createRoleDto: CreateRoleDto) {
     let role;

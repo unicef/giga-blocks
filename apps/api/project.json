@@ -9,7 +9,7 @@
       "options": {
         "commands": [
           {
-            "command": "cp .env dist/apps/api/.env && node apps/api/temp.js "
+            "command": "cp .env dist/apps/api/.env && node apps/api/modifyPackage.js "
           }
         ]
       }
@@ -46,14 +46,14 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "api:build"
+        "buildTarget": "api:mainBuild"
       },
       "configurations": {
         "development": {
-          "buildTarget": "api:build:development"
+          "buildTarget": "api:mainBuild:development"
         },
         "production": {
-          "buildTarget": "api:build:production"
+          "buildTarget": "api:mainBuild:production"
         }
       }
     },

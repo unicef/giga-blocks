@@ -1,17 +1,19 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Request, UseGuards, Get } from '@nestjs/common';
 import { totp } from 'otplib';
 
 import { AuthService } from './auth.service';
 
-import { AuthDto, AuthSendOtp, RefreshToken } from './dto';
+import { AuthDto, AuthSendOtp, AuthWallet, RefreshToken, WalletRegister } from './dto';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from '../users/dto/user.dto';
 
 import { LocalAuthGuard } from './guards/local.auth.guard';
 import { Public } from '../common/decorators/public.decorator';
 import { RefreshJWTGuard } from './guards/refresh.auth.guard';
+import { WalletAuthGuard } from './guards/wallet.auth.guard';
 
 import { ResponseMessage, Tokens } from './types';
+import { SignatureAuthGuard } from './guards/signature.auth.guard';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -49,5 +51,25 @@ export class AuthController {
     @Body() RefreshToken: RefreshToken,
   ): Promise<Omit<Tokens, 'refresh_token'>> {
     return this.authService.refreshToken(req.user);
+  }
+
+  @Public()
+  @Get('/getnonce')
+  async generateNonce() {
+    return this.authService.generateNonce();
+  }
+
+  @Public()
+  @UseGuards(SignatureAuthGuard)
+  @Post('/walletRegister')
+  async walletRegister(@Body() createUserDto: WalletRegister) {
+    return this.authService.walletRegister(createUserDto);
+  }
+
+  @Public()
+  @UseGuards(WalletAuthGuard)
+  @Post('/walletlogin')
+  async walletLogin(@Body() walletLogin: AuthWallet) {
+    return this.authService.walletLogin(walletLogin);
   }
 }

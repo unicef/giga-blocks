@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SeasonController } from './seasons.controller';
 import { SeasonService } from './seasons.service';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaAppService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/application';
 import { CreateSeasonDto } from './dto/create-seasons.dto';
 
 describe('SeasonController', () => {
@@ -19,6 +19,8 @@ describe('SeasonController', () => {
     season_start_date: new Date('2023-08-15T08:20:05.565Z'),
     season_end_date: new Date('2023-08-15T08:20:05.565Z'),
   };
+
+  // Expected response properties when created with createSeasonData
   const expectedProperties = [
     { key: 'season_name', value: 'Summer' },
     { key: 'season_id' },
@@ -44,11 +46,11 @@ describe('SeasonController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [SeasonController],
-      providers: [SeasonService, PrismaService, JwtService],
+      providers: [SeasonService, PrismaAppService, JwtService],
     }).compile();
 
     controller = module.get<SeasonController>(SeasonController);
-    prisma = module.get(PrismaService);
+    prisma = module.get(PrismaAppService);
   });
 
   // Test create method

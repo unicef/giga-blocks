@@ -1,13 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/application';
 import { UpdateSchoolDto } from './dto/update-schools.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaAppService } from 'src/prisma/prisma.service';
 import { ListSchoolDto } from './dto/list-schools.dto';
 import { paginate } from 'src/utils/paginate';
 
 @Injectable()
 export class SchoolService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaAppService) {}
 
   async findAll(query: ListSchoolDto) {
     const { page, perPage } = query;

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ContributionType, LeaderBoardType } from '@prisma/client';
+import { ContributionType, LeaderBoardType } from '@prisma/application';
 
 export class PointEntity {
   @ApiProperty()

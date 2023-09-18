@@ -1,0 +1,6 @@
+client
+public
+lib/**/*.json
+coverage/**
+node_modules
+assets
