@@ -21,6 +21,7 @@ try {
     ...packageData.dependencies,
     'prisma-dbml-generator': '^0.10.0',
     'prisma-docs-generator': '^0.8.0',
+    'ts-node': '^10.9.1',
   };
 
   packageData.prisma = {
