@@ -9,7 +9,7 @@
       "options": {
         "commands": [
           {
-            "command": "cp apps/api/build.json dist/apps/api/package.json && cp .env dist/apps/api/.env"
+            "command": "cp .env dist/apps/api/.env && node apps/api/temp.js "
           }
         ]
       }
@@ -21,6 +21,7 @@
       "options": {
         "target": "node",
         "compiler": "tsc",
+        "generatePackageJson": true,
         "outputPath": "dist/apps/api",
         "main": "apps/api/src/main.ts",
         "tsConfig": "apps/api/tsconfig.build.json",

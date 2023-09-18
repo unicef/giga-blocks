@@ -69,9 +69,6 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "prisma": "^5.1.0",
-    "prisma-dbml-generator": "^0.10.0",
-    "prisma-docs-generator": "^0.8.0",
     "@carbon/react": "^1.36.0",
     "@emotion/cache": "11.10.5",
     "@emotion/react": "11.10.6",
@@ -113,6 +110,7 @@
     "dotenv-cli": "^7.2.1",
     "env-cmd": "^10.1.0",
     "formik": "2.2.9",
+    "fs": "0.0.1-security",
     "handlebars": "^4.7.8",
     "hcaptcha": "^0.1.1",
     "i18next": "^22.4.9",
@@ -131,6 +129,9 @@
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
+    "prisma": "^5.1.0",
+    "prisma-dbml-generator": "^0.10.0",
+    "prisma-docs-generator": "^0.8.0",
     "prop-types": "15.8.1",
     "react": "18.2.0",
     "react-apexcharts": "1.4.0",
