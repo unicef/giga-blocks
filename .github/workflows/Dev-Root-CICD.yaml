@@ -1,4 +1,4 @@
-name: Dev Api CD/CD
+name: Dev Root CD/CD
 on:
   push:
     branches:
