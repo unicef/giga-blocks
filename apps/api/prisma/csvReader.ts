@@ -4,11 +4,10 @@ import { uuidV4 } from 'web3-utils';
 
 const prisma = new PrismaClient();
 
-// Define a function to read and save the CSV data
 async function readAndSaveCSV(filePath: string): Promise<void> {
   try {
     const fileData = fs.readFileSync(filePath, 'utf8');
-    const rows = fileData.trim().split('\n').slice(1); // Skip the header row
+    const rows = fileData.trim().split('\n').slice(1);
 
     for (const row of rows) {
       const [schoolName, location, longitude, latitude, connectivity, coverageAbility] =
@@ -34,10 +33,9 @@ async function readAndSaveCSV(filePath: string): Promise<void> {
   } catch (error) {
     console.error('Error reading or saving CSV data:', error);
   } finally {
-    await prisma.$disconnect(); // Close Prisma client
+    await prisma.$disconnect();
   }
 }
 
-// Call the function with the path to your CSV file
 const csvFilePath = 'apps/api/prisma/school.csv';
 readAndSaveCSV(csvFilePath);
