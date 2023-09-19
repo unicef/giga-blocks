@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { PrismaAppService } from '../prisma/prisma.service';
-import { Role } from '@prisma/client';
+import { Role } from '@prisma/application';
 
 @Injectable()
 export class RolesService {

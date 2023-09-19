@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum } from 'class-validator';
-import { Role } from '@prisma/client';
+import { Role } from '@prisma/application';
 
 export class CreateRoleDto {
   @ApiProperty({

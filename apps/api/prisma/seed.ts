@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/application';
 import * as _ from 'lodash';
 
 const prisma = new PrismaClient();

@@ -11,6 +11,7 @@
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
+
       "outputs": ["{projectRoot}/dist"]
     },
     "lint": {

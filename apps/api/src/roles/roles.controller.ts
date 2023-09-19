@@ -4,7 +4,7 @@ import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { RoleEntity } from './entities/role.entity';
-import { Role } from '@prisma/client';
+import { Role } from '@prisma/application';
 
 @Controller('roles')
 @ApiTags('Roles')

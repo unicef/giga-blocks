@@ -1,19 +1,41 @@
 {
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/api/src",
+  "sourceRoot": "apps/api",
   "projectType": "application",
   "targets": {
     "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["mainBuild"],
+      "options": {
+        "commands": [
+          {
+            "command": "cp .env dist/apps/api/.env && node apps/api/modifyPackage.js "
+          }
+        ]
+      }
+    },
+    "mainBuild": {
       "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "root": "apps/api",
         "target": "node",
         "compiler": "tsc",
+        "generatePackageJson": true,
         "outputPath": "dist/apps/api",
         "main": "apps/api/src/main.ts",
-        "tsConfig": "apps/api/tsconfig.json"
+        "tsConfig": "apps/api/tsconfig.build.json",
+        "assets": [
+          "apps/api/prisma",
+          {
+            "input": "apps/api/src/mailer/templates",
+            "glob": "**/*",
+            "output": "templates"
+          }
+        ],
+        "command": "cp apps/api/build.json dist/apps/api/package.json",
+        "isolatedConfig": true,
+        "webpackConfig": "apps/api/webpack.config.js"
       },
       "configurations": {
         "development": {},
@@ -24,14 +46,14 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "api:build"
+        "buildTarget": "api:mainBuild"
       },
       "configurations": {
         "development": {
-          "buildTarget": "api:build:development"
+          "buildTarget": "api:mainBuild:development"
         },
         "production": {
-          "buildTarget": "api:build:production"
+          "buildTarget": "api:mainBuild:production"
         }
       }
     },
