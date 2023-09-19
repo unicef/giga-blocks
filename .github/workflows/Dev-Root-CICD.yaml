@@ -4,12 +4,12 @@ on:
     branches:
       - 'dev'
     paths-ignore:
-      - 'apps/api/**' 
+      - 'apps/**' 
   pull_request:
     branches:
       - 'dev'
     paths-ignore:
-      - 'apps/api/**'
+      - 'apps/**'
 
 env:
   CI: false
@@ -36,7 +36,8 @@ jobs:
         run: |
           npm install -g pnpm
           pnpm install
-          pnpm run api:prisma:generate
+          pnpm run api:app:generate
+          pnpm run api:news:generate
           pnpm build
 
       - name: Set up Docker Buildx

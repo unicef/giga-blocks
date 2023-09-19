@@ -4,12 +4,12 @@ on:
     branches:
       - 'dev'
     paths:
-      - 'apps/api'  
+      - 'apps/api/**'  
   pull_request:
     branches:
       - 'dev'
     paths:
-      - 'apps/api' 
+      - 'apps/api/**' 
 
 env:
   CI: false
@@ -36,7 +36,8 @@ jobs:
         run: |
           npm install -g pnpm
           pnpm install
-          pnpm run api:prisma:generate
+          pnpm run api:app:generate
+          pnpm run api:news:generate
           npx nx build api
 
       - name: Set up Docker Buildx
