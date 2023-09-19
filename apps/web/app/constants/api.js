@@ -1,4 +1,5 @@
-export const BASE_URL = "http://localhost:3333/api/v1";
+export const BASE_URL =
+  process.env.NEXT_PUBLIC_D3_BACKEND || "http://localhost:3333/api/v1";
 
 module.exports = {
   BASE_URL,

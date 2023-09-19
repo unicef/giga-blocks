@@ -5,11 +5,11 @@
   "targets": {
     "build": {
       "executor": "nx:run-commands",
-      "dependsOn": ["mainBuild"],
+      "dependsOn": ["^mainBuild"],
       "options": {
         "commands": [
           {
-            "command": "cp .env dist/apps/api/.env && node apps/api/modifyPackage.js "
+            "command": "cp .env dist/apps/api/.env && npx ts-node apps/api/modifyPackage.ts "
           }
         ]
       }
