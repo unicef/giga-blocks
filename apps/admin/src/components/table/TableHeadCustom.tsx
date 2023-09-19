@@ -59,7 +59,7 @@ export default function TableHeadCustom({
   return (
     <TableHead sx={sx}>
       <TableRow>
-        {headLabel.length > 0 && user?.roles.includes(ROLES.SUPERADMIN) && (
+        {headLabel.length > 0 && (
           <TableCell>Actions</TableCell>
         )}
 
@@ -77,7 +77,7 @@ export default function TableHeadCustom({
         )}
 
         {headLabel.length > 0 &&
-          headLabel.map((headCell, index) => (
+          headLabel.map((headCell:any, index:any) => (
             <TableCell
               key={index}
               title={headCell.label}

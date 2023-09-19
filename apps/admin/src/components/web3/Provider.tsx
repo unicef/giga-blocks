@@ -19,7 +19,7 @@ type Props = {
 
 function Child({ children }: Props) {
   const { connector } = useWeb3React();
-  console.log(`Priority Connector is: ${getName(connector)}`);
+  console.log(`Priority Connector is:`);
   return children;
 }
 
