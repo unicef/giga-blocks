@@ -13,7 +13,8 @@ async function fetchDataAndStore() {
     },
   };
 
-  const url = `${process.env.SCHOOL_URI_BY_COUNTRY}`;
+  const url = `${process.env.SCHOOL_URI_BY_COUNTRY_ID}`;
+  console.log(url)
 
   try {
     const page = 1;
