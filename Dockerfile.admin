@@ -1,11 +1,11 @@
 # Install dependencies only when needed
 FROM node:18-alpine3.17 AS deps
 WORKDIR /usr/src/app
-COPY /dist/apps/admin/package.json ./
+COPY ./dist/apps/admin/package.json ./
 RUN npm install 
 
 FROM node:18-alpine3.17 AS builder
 WORKDIR /usr/src/app
-COPY /dist/apps/admin/ ./
+COPY ./dist/apps/admin/ ./
 COPY --from=deps /usr/src/app/node_modules ./node_modules
 CMD [ "npm", "start" ]
