@@ -12,7 +12,10 @@ import { PATH_AUTH } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
-export default function VerifyPending({ errorMessage }) {
+
+export default function VerifyPending({ errorMessage } : {
+  errorMessage: string
+}) {
   return (
     <LoginLayout>
       <Stack spacing={2} sx={{ mb: 5, position: 'relative' }}>
