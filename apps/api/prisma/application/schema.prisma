@@ -196,6 +196,7 @@ model School {
   season_Id             String?
   contributedSeason     Season?      @relation(fields: [season_Id], references: [season_id])
   isArchived            Boolean      @default(false)
+  coverageAbility       Int
 
   @@map("giga_school")
 }

@@ -93,6 +93,7 @@ Table giga_school {
   season_Id String
   contributedSeason giga_season
   isArchived Boolean [not null, default: false]
+  coverageAbility Int [not null]
 }
 
 Table giga_contributed_data {
