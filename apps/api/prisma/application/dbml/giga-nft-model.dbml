@@ -79,8 +79,7 @@ Table giga_school {
   school_website String
   email_contact String
   phone_number String
-  country_id Int [not null]
-  country String [not null]
+  country_name String [not null]
   twiter_handle String
   youtube String
   daily_check_app Boolean [not null, default: false]

@@ -41,8 +41,7 @@ async function fetchDataAndStore({ page, pageSize }: { page: number; pageSize: n
               location: item.country,
               lon: item.lon,
               lat: item.lat,
-              country_id: item.country_id,
-              country: item.country,
+              country_name: item.country,
               connectivity_speed_status: item.connectivity_speed_status,
             },
           });

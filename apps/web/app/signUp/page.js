@@ -18,16 +18,14 @@ const SignUp = () => {
   const onSubmit = async (data) => {
     setEmail(data.email);
     await signUp.mutateAsync(data);
-  };
-  useEffect(async () => {
     if (signUp.isSuccess) {
       await sendOtp.mutateAsync({ email });
       console.log("OTP sent");
     } else {
       console.log("User registration failed");
     }
-  }, [signUp.isSuccess, email]);
-
+  };
+  
   return (
     <>
       <Navbar />

@@ -238,7 +238,7 @@ export default function UserListPage() {
     setTableData([
       {
           id: "1e5eea80-8271-40e2-8b7f-6746444a6a2f",
-          name: "John Doe",
+          name: "John Dadfoe",
           email: "john@mailinator.com",
           roles: 
               "ADMIN"
@@ -247,7 +247,19 @@ export default function UserListPage() {
           isBlocked: false,
           isApproved: true,
           phone: "8778"
-      }
+      },
+      {
+        id: "3e5eea80-8271-40e2-8b7f-6746444a6a2f",
+        name: "Johasdf Doasdfe",
+        email: "joasdfhn@asdfamailinator.com",
+        roles: 
+            "User"
+        ,
+        isActive: true,
+        isBlocked: false,
+        isApproved: true,
+        phone: "8778"
+    }
   ]);
   }, [filteredUsers]);
 
@@ -257,8 +269,6 @@ export default function UserListPage() {
       debouncedFetchFilterLists.cancel();
     };
   }, [query, debouncedFetchFilterLists]);
-
-  console.log(tableData)
 
   return (
     <>
@@ -327,7 +337,7 @@ export default function UserListPage() {
             />
 
             <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }} >
                 <TableHeadUsers
                   order={order}
                   orderBy={orderBy}

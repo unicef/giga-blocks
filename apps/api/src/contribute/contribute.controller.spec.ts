@@ -88,7 +88,7 @@ describe('AuthController', () => {
           location: 'item.country',
           lon: 14,
           lat: 22,
-          country_name: '12',
+          country_id: 12,
         },
       });
 
