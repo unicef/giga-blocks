@@ -21,7 +21,7 @@
     "api:prisma:migrate": "prisma migrate dev",
     "api:prisma:generate": "prisma generate",
     "clean": "rm -rf dist libs/shared-ui/node_modules node_modules tmp",
-    "school": "ts-node prisma/schoolSeed.ts"
+    "school": "ts-node apps/api/prisma/schoolSeed.ts"
   },
   "prisma": {
     "seed": "apps/api/prisma/seed.ts"
