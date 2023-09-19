@@ -18,13 +18,13 @@ export const sign = async (config:any,nonce:string)=>{
     // return signature;
 }
 
-export const useLogout = async ()=>{
-    const logout = async ()=>{
-        const { connector } = useWeb3React();
-        if (!connector) return;
-        void connector.deactivate();
-    }
-}
+// export const useLogout = async ()=>{
+//     const logout = async ()=>{
+//         const { connector } = useWeb3React();
+//         if (!connector) return;
+//         void connector.deactivate();
+//     }
+// }
 // export const logout = async (connector : MetaMask | Network) =>{
 //     void connector.deactivate();
 // }
