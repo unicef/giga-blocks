@@ -38,8 +38,8 @@ const VerifiedSchool = () => {
         filteredData.push({
           name: row.name, 
           location: row.location,
-          longitude: row.longitude,
-          latitude: row.latitude,
+          longitude: row.lon,
+          latitude: row.lat,
           connectivity: row.connectivity_speed_status,
           coverage: row.connectivity_speed_status
         })
