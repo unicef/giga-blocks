@@ -53,7 +53,7 @@ const ContributedSchool = () => {
           <Card>
           <Divider />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
+            {/* <TableSelectedAction
               dense={dense}
               // numSelected={selected?.length}
               rowCount={tableData?.length}
@@ -70,7 +70,7 @@ const ContributedSchool = () => {
                   </IconButton>
                 </Tooltip>
               }
-            />
+            /> */}
 
             <Scrollbar>
               <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>

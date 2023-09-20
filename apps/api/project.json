@@ -4,12 +4,16 @@
   "projectType": "application",
   "targets": {
     "build": {
+      "executor": "nx:noop",
+      "dependsOn": ["scripts"]
+    },
+    "scripts": {
       "executor": "nx:run-commands",
       "dependsOn": ["mainBuild"],
       "options": {
         "commands": [
           {
-            "command": "cp .env dist/apps/api/.env && npx ts-node apps/api/modifyPackage.ts "
+            "command": "cp .env dist/apps/api/.env && npx ts-node apps/api/modifyPackage.ts"
           }
         ]
       }
@@ -33,7 +37,6 @@
             "output": "templates"
           }
         ],
-        "command": "cp apps/api/build.json dist/apps/api/package.json",
         "isolatedConfig": true,
         "webpackConfig": "apps/api/webpack.config.js"
       },
