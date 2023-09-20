@@ -2,6 +2,7 @@
 import Iconify from "@components/iconify";
 import Scrollbar from "@components/scrollbar";
 import { TableEmptyRows, TableHeadUsers, TableNoData, TablePaginationCustom, TableSelectedAction, useTable } from "@components/table";
+import { useSchoolGet } from "@hooks/school/useSchool";
 // import { useAdministrationContext } from "@contexts/administration";
 // import useFetchUsers from "@hooks/users/useFetchUsers";
 import DashboardLayout from "@layouts/dashboard/DashboardLayout";
@@ -12,49 +13,48 @@ import { useEffect, useState } from "react";
 const VerifiedSchool = () => {
 
     const TABLE_HEAD = [
-        { id: '' },
         { id: 'name', label: 'Name', align: 'left' },
-        { id: 'email', label: 'Email', align: 'left' },
-        { id: 'roles', label: 'Role', align: 'left' },
-        { id: '' },
+        { id: 'location', label: 'Location', align: 'left' },
+        { id: 'latitide', label: 'Latitude', align: 'left' },
+        { id: 'longitude', label: 'Longitude', align: 'left' },
+        { id: 'connectivity', label: 'Connectivity', align: 'left' },
+        { id: 'coverage', label: 'Coverage', align: 'left' },
       ];
 
-      const {dense, page,order, orderBy, rowsPerPage, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
+      const {dense, page, order, orderBy, rowsPerPage, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
       } = useTable();
-
 
     // const { filteredUsers } = useAdministrationContext();
 
     const [tableData, setTableData] = useState<any>([]);
+    const {data} = useSchoolGet(page, rowsPerPage)
+
 
     // const { error } = useFetchUsers();
 
-
+    let filteredData:any = []
     useEffect(() => {
-      setTableData([
-        {
-            id: "1e5eea80-8271-40e2-8b7f-6746444a6a2f",
-            name: "John Doe",
-            email: "john@mailinator.com",
-            roles: 
-                "ADMIN"
-            ,
-            isActive: true,
-            isBlocked: false,
-            isApproved: true,
-            phone: "8778"
-        }
-    ]);
-    }, []);
+      data?.rows.map((row:any) => {
+        filteredData.push({
+          name: row.name, 
+          location: row.location,
+          longitude: row.longitude,
+          latitude: row.latitude,
+          connectivity: row.connectivity_speed_status,
+          coverage: row.connectivity_speed_status
+        })
+      })
 
-    const handleOpenConfirm = () => {};
+      setTableData(filteredData);
+    }, [data]);
 
     return ( 
         <DashboardLayout>
+            <h2>Verified School List</h2>
           <Card>
           <Divider />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
+            {/* <TableSelectedAction
               dense={dense}
               // numSelected={selected?.length}
               rowCount={tableData?.length}
@@ -71,7 +71,7 @@ const VerifiedSchool = () => {
                   </IconButton>
                 </Tooltip>
               }
-            />
+            /> */}
 
             <Scrollbar>
               <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
@@ -109,7 +109,7 @@ const VerifiedSchool = () => {
             </Scrollbar>
           </TableContainer>
           <TablePaginationCustom
-            count={tableData?.length}
+            count={data?.meta.total}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
