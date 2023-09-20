@@ -1,9 +1,10 @@
 .git*
 node_modules/
 Test/
-dist/
-tmp/
+# dist/
+# tmp/
 .dockerignore
 .env.**
-Dockerfile
+Dockerfile**
 pnpm-workspace.yaml
+*.md

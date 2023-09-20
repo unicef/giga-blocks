@@ -1,4 +1,4 @@
-const fs = require('fs');
+import * as fs from 'fs';
 
 // Load the existing package.json
 const packagePath = 'dist/apps/api/package.json';
