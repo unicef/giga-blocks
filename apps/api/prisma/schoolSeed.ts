@@ -51,7 +51,7 @@ async function fetchDataAndStore() {
               lon: item.lon,
               lat: item.lat,
               country_name: item.country,
-              coverageAbility: item.coverageAbility ?? 0,
+              // coverageAbility: item.coverageAbility ?? 0,
               connectivity_speed_status: item.connectivity_speed_status,
             },
           });
