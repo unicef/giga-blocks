@@ -2,6 +2,11 @@
 
 Monorepo for GIGA made using pnpm workspaces and added nx for caching.
 
+## Staging server of Giga 
+public site : https://dev.giga.rumsan.net/
+adminApp: https://admin.dev.giga.rumsan.net/dashboard
+backend: https://api.dev.giga.rumsan.net/api/docs
+
 ## Setup and Running
 
 Need pnpm for package management.
