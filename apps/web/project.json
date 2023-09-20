@@ -4,6 +4,21 @@
   "projectType": "application",
   "targets": {
     "build": {
+      "executor": "nx:noop",
+      "dependsOn": ["scripts"]
+    },
+    "scripts": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["mainBuild"],
+      "options": {
+        "commands": [
+          {
+            "command": "cp .env dist/apps/web/.env"
+          }
+        ]
+      }
+    },
+    "mainBuild": {
       "executor": "@nrwl/next:build",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
