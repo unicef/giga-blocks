@@ -27,15 +27,18 @@ export default function UserTableRow({
   row,
   selected
 }: Props) {
-  const { name, email, roles } = row;
+  const { 
+  name,
+  location,
+  longitude,
+  latitude,
+  connectivity,
+  coverage
+  } = row;
 
   return (
     <>
       <TableRow hover selected={selected}>
-        <TableCell padding="normal">
-          <CustomAvatar alt={name} name={name} />
-        </TableCell>
-
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Typography variant="subtitle2" noWrap>
@@ -44,10 +47,22 @@ export default function UserTableRow({
           </Stack>
         </TableCell>
 
-        <TableCell align="left">{email}</TableCell>
+        <TableCell align="left">{location}</TableCell>
 
         <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-          {roles[0]}
+          {longitude}
+        </TableCell>
+
+        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+          {latitude}
+        </TableCell>
+
+        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+          {connectivity}
+        </TableCell>
+
+        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+          {coverage}
         </TableCell>
       </TableRow>
     </>

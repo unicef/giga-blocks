@@ -37,6 +37,7 @@ import {metaMask, hooks as metaMaskHooks} from '../components/web3/connectors/me
 import {network, hooks as networkHooks} from '../components/web3/connectors/network';
 import type { MetaMask } from '@web3-react/metamask';
 import type { Network } from '@web3-react/network';
+import QueryProvider from 'src/libs/get-query-client';
 
 // ----------------------------------------------------------------------
 
@@ -62,6 +63,7 @@ export default function MyApp(props: MyAppProps) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
+    <QueryProvider>
     <CacheProvider value={emotionCache}>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
@@ -85,5 +87,6 @@ export default function MyApp(props: MyAppProps) {
       </AuthProvider>
       </Web3ReactProvider>
     </CacheProvider>
+    </QueryProvider>
   );
 }
