@@ -1,10 +1,10 @@
 "use client";
-import { BASE_URL, SCHOOLS } from "../../constants/api";
+import  routes  from "../../constants/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL:routes.BASE_URL,
 });
 
 export const useSchoolGet = (page:number, perPage:number) => {
@@ -12,7 +12,7 @@ export const useSchoolGet = (page:number, perPage:number) => {
     ["get-api-data", page, perPage],
     async () => {
       const { data } = await api.get(
-        `${SCHOOLS.GET}?page=${page}&perPage=${perPage}`
+        `${routes.SCHOOLS.GET}?page=${page}&perPage=${perPage}`
       );
       return data;
     },
