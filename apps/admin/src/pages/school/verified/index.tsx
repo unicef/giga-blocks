@@ -8,11 +8,13 @@ import { useSchoolGet } from "@hooks/school/useSchool";
 import DashboardLayout from "@layouts/dashboard/DashboardLayout";
 import { Box, Button, Card, Tabs, Divider, TableContainer, Tooltip, IconButton, Table, TableBody } from "@mui/material";
 import SchoolTableRow from "@sections/user/list/SchoolTableRow";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const VerifiedSchool = () => {
 
     const TABLE_HEAD = [
+        { id: 'checkbox', label: '', align: 'left' },
         { id: 'name', label: 'Name', align: 'left' },
         { id: 'location', label: 'Location', align: 'left' },
         { id: 'latitide', label: 'Latitude', align: 'left' },
@@ -29,6 +31,7 @@ const VerifiedSchool = () => {
     const [tableData, setTableData] = useState<any>([]);
     const {data} = useSchoolGet(page, rowsPerPage)
 
+    let selected:string[] = []
 
     // const { error } = useFetchUsers();
 
@@ -36,6 +39,7 @@ const VerifiedSchool = () => {
     useEffect(() => {
       data?.rows.map((row:any) => {
         filteredData.push({
+          id: row.giga_id_school,
           name: row.name, 
           location: row.location,
           longitude: row.lon,
@@ -47,6 +51,9 @@ const VerifiedSchool = () => {
 
       setTableData(filteredData);
     }, [data]);
+
+
+    
 
     return ( 
         <DashboardLayout>
@@ -96,8 +103,8 @@ const VerifiedSchool = () => {
                       <SchoolTableRow
                         key={row.id}
                         row={row}
-                        // selected={selected?.includes(row.id)}
-                        selected={true}
+                        selected={selected?.includes(row.id)}
+                        // selected={true}
                       />
                     ))}
                   <TableNoData 

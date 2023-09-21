@@ -2,7 +2,7 @@ import { useState, ChangeEvent, useEffect } from 'react';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, MenuItem, Select } from '@mui/material';
+import { Box, Card, Grid, Stack, MenuItem, Select, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useRouter } from 'next/router';
 import { useSnackbar } from '@components/snackbar';
@@ -25,8 +25,7 @@ interface FormValuesProps {
   is_active: boolean;
 }
 
-export default function UserNewEditForm({ isEdit = false, currentUser }: Props) {
-  const { enqueueSnackbar } = useSnackbar();
+export default function UserNewEditForm() {
 
   const { push } = useRouter();
 
@@ -43,15 +42,12 @@ export default function UserNewEditForm({ isEdit = false, currentUser }: Props) 
     roles: Yup.string(),
   });
 
-  const [profile, setProfile] = useState<FormValuesProps>({
-    id: '',
-    name: '',
-    email: '',
-    position: '',
-    phone: '',
-    affiliation: '',
-    roles: '',
-    is_active: true,
+  const [profile, setProfile] = useState({
+    id: 'asdf',
+    name: 'asdf',
+    email: 'adsf',
+    position: 'asdf',
+    phone: 'asdf'
   });
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -71,34 +67,34 @@ export default function UserNewEditForm({ isEdit = false, currentUser }: Props) 
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async (data: FormValuesProps) => {
-    const { id, name, roles } = profile;
-    const updatedProfile = { name, roles: [roles] };
+  // const onSubmit = async (data: FormValuesProps) => {
+  //   const { id, name, roles } = profile;
+  //   const updatedProfile = { name, roles: [roles] };
 
-    try {
-      const response = await AdministrationService.updateUser(id, updatedProfile);
-      if (response.statusText !== 'OK')
-        enqueueSnackbar('Error while updating user', { variant: 'error' });
-      enqueueSnackbar('User details updated successfully');
-      if (isEdit) push('/user/list');
-    } catch (error) {
-      enqueueSnackbar('Something went wrong', { variant: 'error' });
-    }
-  };
+  //   try {
+  //     const response = await AdministrationService.updateUser(id, updatedProfile);
+  //     if (response.statusText !== 'OK')
+  //       enqueueSnackbar('Error while updating user', { variant: 'error' });
+  //     enqueueSnackbar('User details updated successfully');
+  //     if (isEdit) push('/user/list');
+  //   } catch (error) {
+  //     enqueueSnackbar('Something went wrong', { variant: 'error' });
+  //   }
+  // };
 
-  useEffect(() => {
-    if (currentUser) {
-      currentUser.roles = currentUser?.roles?.[0];
-      setProfile(currentUser);
-    }
-  }, [currentUser]);
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     currentUser.roles = currentUser?.roles?.[0];
+  //     setProfile(currentUser);
+  //   }
+  // }, [currentUser]);
 
-  useEffect(() => {
-    methods.reset(profile); // Set form values after profile data is fetched
-  }, [methods, profile]);
+  // useEffect(() => {
+  //   methods.reset(profile); 
+  // }, [methods, profile]);
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+    <FormProvider methods={methods}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={12}>
           <Card sx={{ p: 3 }}>
@@ -106,61 +102,54 @@ export default function UserNewEditForm({ isEdit = false, currentUser }: Props) 
               rowGap={3}
               columnGap={2}
               display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
             >
               <ProfileTextField
                 name="name"
                 value={profile?.name || ''}
-                onChange={handleInputChange}
                 label="Full Name"
               />
+
               <ProfileTextField
-                name="email"
+                name="location"
                 value={profile?.email || ''}
-                onChange={handleInputChange}
-                label="Email Address"
+                label="Location"
                 disabled
               />
+              <Box 
+              display="grid"
+              rowGap={3}
+              columnGap={8}
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}>
               <ProfileTextField
-                name="phone"
+                name="latitude"
                 value={profile?.phone || ''}
-                onChange={handleInputChange}
-                label="Phone Number"
+                label="Latitude"
               />
               <ProfileTextField
-                name="affiliation"
-                value={profile?.affiliation || ''}
-                onChange={handleInputChange}
-                label="Organization"
+                name="longitude"
+                value={profile?.phone || ''}
+                label="Longitude"
               />
               <ProfileTextField
-                name="position"
-                value={profile?.position || ''}
-                onChange={handleInputChange}
-                label="Position"
+                name="connectivity"
+                value={profile?.phone || ''}
+                label="Connectivity"
               />
-              <Select
-                value={profile?.roles || ''}
-                name="roles"
-                displayEmpty
-                fullWidth
-                required
-              >
-                {ROLES.map((role) => (
-                  <MenuItem key={role} value={role}>
-                    {role}
-                  </MenuItem>
-                ))}
-              </Select>
+              <ProfileTextField
+                name="coverage"
+                value={profile?.phone || ''}
+                label="Coverage"
+              />
+              </Box>
             </Box>
 
-            <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                {!isEdit ? 'Create User' : 'Save Changes'}
-              </LoadingButton>
+            <Stack alignItems="flex-start" sx={{ mt: 3 }}>
+              <Button variant="contained" color={'secondary'} style={{width: '300px'}}>
+                Back
+              </Button>
             </Stack>
           </Card>
         </Grid>

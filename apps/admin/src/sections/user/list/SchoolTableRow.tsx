@@ -9,6 +9,7 @@ import {
   IconButton,
   Typography,
   Switch,
+  Checkbox,
 } from '@mui/material';
 
 // components
@@ -16,6 +17,7 @@ import Iconify from '@components/iconify';
 import MenuPopover from '@components/menu-popover';
 import ConfirmDialog from '@components/confirm-dialog';
 import { CustomAvatar } from '@components/custom-avatar';
+import { useRouter } from 'next/router';
 
 
 type Props = {
@@ -27,7 +29,8 @@ export default function UserTableRow({
   row,
   selected
 }: Props) {
-  const { 
+  const {
+  id,
   name,
   location,
   longitude,
@@ -36,9 +39,22 @@ export default function UserTableRow({
   coverage
   } = row;
 
+  const {push} = useRouter()
+
+  const handleEditRow = (row:string) => {
+    push(`/school/${row}/edit`)
+  }
+
   return (
     <>
-      <TableRow hover selected={selected}>
+      <TableRow hover selected={selected} onClick = {() => handleEditRow(id)}>
+
+      <TableCell padding="checkbox"> 
+        <Checkbox
+          checked={selected}
+        />
+      </TableCell>
+
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Typography variant="subtitle2" noWrap>
