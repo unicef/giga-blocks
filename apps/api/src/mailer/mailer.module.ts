@@ -4,9 +4,9 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
 import { MailProcessor } from './processors';
 import { MailService } from './mailer.service';
-
 import { MAIL_QUEUE } from './constants';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+
 @Module({
   imports: [
     ConfigModule,
