@@ -12,7 +12,7 @@ import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { RsException } from './exception';
 import { PrimsaFriendlyErrorMessage } from './prisma-exception';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/application';
 
 @Catch()
 export class CustomExceptionFilter implements PipeTransform<any>, ExceptionFilter {

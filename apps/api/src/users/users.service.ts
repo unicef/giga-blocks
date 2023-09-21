@@ -1,13 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaAppService } from '../prisma/prisma.service';
 import { hexStringToBuffer } from '../utils/string-format';
 import { WalletRegister } from 'src/auth/dto';
 
 @Injectable()
 export class UsersService {
   private readonly _logger = new Logger('User Services');
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaAppService) {}
 
   async register(createUserDto: CreateUserDto) {
     this._logger.log(`Registering new user: ${createUserDto?.email}`);

@@ -17,7 +17,7 @@ function NavSectionMini({ data, sx, ...other }: NavSectionProps) {
       }}
       {...other}
     >
-      {data.map((group, index) => (
+      {data.map((group:any, index:any) => (
         <Items key={group.subheader} items={group.items} isLastGroup={index + 1 === data.length} />
       ))}
     </Stack>

@@ -22,7 +22,9 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx",
-    "app/school/page.js"
+    "app/school/page.js",
+    "../../dist/apps/web/.next/types/**/*.ts",
+    "../../apps/web/.next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

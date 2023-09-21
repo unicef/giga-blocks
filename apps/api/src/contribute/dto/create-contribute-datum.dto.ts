@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Status } from '@prisma/client';
+import { Status } from '@prisma/application';
 import { IsBoolean, IsJSON, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateContributeDatumDto {

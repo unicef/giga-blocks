@@ -57,5 +57,5 @@ pnpm add ./libs/<library name> -w
 For running nx for specific apps or library you can write following syntax:
 
 ```
-npx nx <command(built,lint,test,serve)> <apps/libs name>
+npx nx <command(build,lint,test,serve)> <apps/libs name>
 ```

@@ -25,9 +25,9 @@ type LoginFormValues = {
 
 export default function AuthLoginForm() {
   const { isDebug } = useAuthContext();
-  const { handleOtpRequest } = useLoginContext();
-  const { push } = useRouter();
-  const { enqueueSnackbar } = useSnackbar();
+  // const { handleOtpRequest } = useLoginContext();
+  // const { push } = useRouter();
+  // const { enqueueSnackbar } = useSnackbar();
 
   const LoginSchema = Yup.object().shape({
     email: isDebug
@@ -105,7 +105,7 @@ export default function AuthLoginForm() {
       </Stack> */}
 
       <Stack direction="row" spacing={0.5}>
-        <Card
+      <Card
       connector={metaMask}
       activeChainId={chainId}
       isActivating={isActivating}

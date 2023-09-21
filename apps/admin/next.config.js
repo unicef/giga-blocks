@@ -1,15 +1,17 @@
-module.exports = {
-  swcMinify: false,
-  trailingSlash: true,
-  typescript: {
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
-    // !! WARN !!
-    ignoreBuildErrors: true,
-  },
-  env: {
-    // HOST
-    HOST_API_KEY: "https://api-dev-minimal-v4.vercel.app",
+//@ts-check
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { withNx } = require("@nrwl/next/plugins/with-nx");
+
+/**
+ * @type {import('@nrwl/next/plugins/with-nx').WithNxOptions}
+ **/
+const nextConfig = {
+  nx: {
+    // Set this to true if you would like to to use SVGR
+    // See: https://github.com/gregberge/svgr
+    svgr: false,
   },
 };
+
+module.exports = withNx(nextConfig);

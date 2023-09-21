@@ -32,6 +32,12 @@ import ThemeLocalization from '../locales';
 // https://docs.minimals.cc/authentication/ts-version
 
 import { AuthProvider } from '../auth/JwtContext';
+import { Web3ReactProvider, Web3ReactHooks } from '@web3-react/core';
+import {metaMask, hooks as metaMaskHooks} from '../components/web3/connectors/metaMask';
+import {network, hooks as networkHooks} from '../components/web3/connectors/network';
+import type { MetaMask } from '@web3-react/metamask';
+import type { Network } from '@web3-react/network';
+import QueryProvider from 'src/libs/get-query-client';
 
 // ----------------------------------------------------------------------
 
@@ -46,17 +52,23 @@ interface MyAppProps extends AppProps {
   Component: NextPageWithLayout;
 }
 
+const connectors: [MetaMask | Network, Web3ReactHooks][] = [
+  [metaMask, metaMaskHooks],
+  [network, networkHooks],
+];
+
 export default function MyApp(props: MyAppProps) {
   const { Component, pageProps, emotionCache = clientSideEmotionCache } = props;
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
+    <QueryProvider>
     <CacheProvider value={emotionCache}>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-
+      <Web3ReactProvider connectors={connectors}>
       <AuthProvider>
         <SettingsProvider>
           <MotionLazyContainer>
@@ -73,6 +85,8 @@ export default function MyApp(props: MyAppProps) {
           </MotionLazyContainer>
         </SettingsProvider>
       </AuthProvider>
+      </Web3ReactProvider>
     </CacheProvider>
+    </QueryProvider>
   );
 }

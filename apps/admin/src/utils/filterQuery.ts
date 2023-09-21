@@ -52,7 +52,7 @@ const filters = {
   other: [...commonFilters],
 };
 
-const commonKeysMapper = {
+const commonKeysMapper:any = {
   lines_voltage_level: 'voltage_level',
   sub_voltage_level: 'voltage_level',
   lines_phases: 'phases',
@@ -69,14 +69,14 @@ type FilterQueryResult<T> = Omit<T, keyof FilterObject>;
 
 export default function filterQuery<T extends FilterObject>(
   type: keyof typeof filters,
-  query: PartialFilterQuery
+  query: any
 ): FilterQueryResult<T> {
   const allowedQueries = filters[type];
   if (!allowedQueries) {
     return query as FilterQueryResult<T>;
   }
 
-  const filtered: PartialFilterQuery = {};
+  const filtered: any = {};
   Object.keys(query)?.map((key) => {
     if (allowedQueries.includes(key)) {
       let filterKey = key;

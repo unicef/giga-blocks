@@ -5,18 +5,18 @@ import Link from 'next/link';
 import LoginLayout from '@layouts/login';
 //
 import AuthLoginForm from './AuthLoginForm';
-import { Card } from '@components/web3/Card';
-import { useEffect, useState } from 'react'
-import { hooks, metaMask } from '@hooks/web3/metamask'
 
 export default function Login() {
 
 
   return (
     <LoginLayout>
-      <Stack spacing={2} sx={{ mb: 5, position: 'relative' }}>
+      <Stack spacing={2} sx={{ mb: 5 }}>
         <Typography variant="h4" color="white">
-          Giga School Admin
+          Web3 Login
+        </Typography>
+        <Typography fontSize={14} color="white">
+          Connect your metamask
         </Typography>
 
         {/* <Stack direction="row" spacing={0.5}> */}

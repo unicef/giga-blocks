@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Job } from 'bull';
 import { OnQueueActive, OnQueueCompleted, OnQueueFailed, Process, Processor } from '@nestjs/bull';
-import { SENT_OTP, MAIL_QUEUE, WELCOME_MSG } from '../constants';
+import { SENT_OTP, MAIL_QUEUE, WELCOME_MSG, NEWSLETTER_WELCOME } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 
@@ -72,6 +72,23 @@ export class MailProcessor {
       });
     } catch {
       this._logger.error(`Failed to send confirmation email to '${job.data.email}'`);
+    }
+  }
+
+  @Process(NEWSLETTER_WELCOME)
+  public async newsletterWelcome(job: Job<{ email: string; name: string; country: string }>) {
+    this._logger.log(`Sending newsletter welcome email to '${job.data.email}'`);
+
+    try {
+      return this._mailerService.sendMail({
+        to: job.data.email,
+        from: this._configService.get('EMAIL_ADDRESS'),
+        subject: 'Greetings from GIGA NFT2.0',
+        template: './newsletter-welcome',
+        context: { name: job.data.name, country: job.data.country },
+      });
+    } catch {
+      this._logger.error(`Failed to send welcome email to '${job.data.email}'`);
     }
   }
 }

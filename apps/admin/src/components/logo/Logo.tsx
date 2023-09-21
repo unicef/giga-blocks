@@ -26,14 +26,14 @@ const Logo = forwardRef<HTMLDivElement, LogoProps>(
           variant="h3"
           sx={{ maxHeight: 80, objectFit: 'contain', cursor: 'pointer', ...sx, color: '#3D75A6' }}
         >
-          LSO
+        GIGA
         </Typography>
       ) : (
         <Typography
           variant="h3"
           sx={{ maxHeight: 100, objectFit: 'contain', cursor: 'pointer', color: '#3D75A6', ...sx }}
         >
-          LSO Partners
+          GIGA SCHOOL
         </Typography>
         // <Box
         //   component="img"

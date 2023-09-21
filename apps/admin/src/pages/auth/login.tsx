@@ -12,7 +12,7 @@ export default function LoginPage() {
   return (
       <LoginProvider>
         <Head>
-          <title>LSO Partner - D3 Visualization Product</title>
+          <title>Giga school | NFT 2.0</title>
         </Head>
 
         <LoginComp />

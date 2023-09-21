@@ -9,6 +9,7 @@ const ROOTS_DASHBOARD = '/dashboard';
 // const ROOTS_VISUALIZATION = '/visualizations';
 const ROOTS_ACTIVITY_LOGS = '/activity-logs';
 const ROOTS_USER = '/users';
+const ROOTS_SCHOOL = '/school';
 
 // ----------------------------------------------------------------------
 
@@ -44,4 +45,10 @@ export const PATH_USER = {
 
 export const PATH_ACTIVITY_LOGS = {
   root: ROOTS_ACTIVITY_LOGS,
+};
+
+export const PATH_SCHOOL = {
+  root: ROOTS_SCHOOL,
+  verified: path(ROOTS_SCHOOL, '/verified'),
+  contributed: path(ROOTS_SCHOOL, '/contributed')
 };

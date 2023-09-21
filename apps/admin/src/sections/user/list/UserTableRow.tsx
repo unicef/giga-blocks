@@ -16,13 +16,11 @@ import Iconify from '@components/iconify';
 import MenuPopover from '@components/menu-popover';
 import ConfirmDialog from '@components/confirm-dialog';
 import { CustomAvatar } from '@components/custom-avatar';
-// @types
-import { IUserAccountGeneral } from '../../../@types/user';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: IUserAccountGeneral;
+  row: any;
   selected: boolean;
   onEditRow: VoidFunction;
   onDeleteRow: VoidFunction;
@@ -69,7 +67,7 @@ export default function UserTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        <TableCell padding="normal">
+        <TableCell padding="normal" >
           <CustomAvatar alt={name} name={name} />
         </TableCell>
 

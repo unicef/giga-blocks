@@ -27,8 +27,8 @@ export class UsersController {
     return this.usersService.addValidator(createUserDto);
   }
 
-  @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Get()
   @ApiOperation({ summary: 'List all user' })
   @ApiResponse({

@@ -1,5 +1,5 @@
 // routes
-import { PATH_DASHBOARD, PATH_USER } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_USER, PATH_SCHOOL } from '../../../routes/paths';
 // components
 import SvgColor from '../../../components/svg-color';
 import { ROLES } from '../../../config-global';
@@ -40,6 +40,25 @@ const navConfig = [
             title: 'User Info',
             path: PATH_USER.list,
           },
+        ],
+        icon: ICONS.user
+      },
+    ],
+  },
+  {
+    items: [
+      {
+        title: 'SCHOOL',
+        path: PATH_SCHOOL.root,
+        children: [
+          {
+            title: 'Verified School',
+            path: PATH_SCHOOL.verified,
+          },
+          {
+            title: 'Contributed School',
+            path: PATH_SCHOOL.contributed,
+          }
         ],
         icon: ICONS.user
       },
