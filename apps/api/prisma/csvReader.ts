@@ -4,25 +4,64 @@ import { uuidV4 } from 'web3-utils';
 
 const prisma = new PrismaClient();
 
+interface SchoolData {
+  schoolName: string;
+  schoolType: string;
+  country: string;
+  longitude: number;
+  latitude: number;
+  connectivity: Boolean;
+  electricity_availabilty: Boolean;
+  coverage_availabitlity: string;
+}
+
 async function readAndSaveCSV(filePath: string): Promise<void> {
   try {
     const fileData = fs.readFileSync(filePath, 'utf8');
     const rows = fileData.trim().split('\n').slice(1);
 
     for (const row of rows) {
-      const [schoolName, location, longitude, latitude, connectivity, coverageAbility] =
-        row.split(',');
+      const [
+        schoolName,
+        schoolType,
+        country,
+        longitudeStr,
+        latitudeStr,
+        connectivity,
+        electricity_availabilty,
+        coverage_availabitlity,
+      ] = row.split(',');
+
+      const longitude = parseFloat(longitudeStr);
+      const latitude = parseFloat(latitudeStr);
+
+      if (isNaN(longitude) || isNaN(latitude)) {
+        console.error(`Invalid longitude or latitude for school "${schoolName}"`);
+        throw new Error('Invalid longitude or latitude');
+      }
+
+      const schoolData: SchoolData = {
+        schoolName,
+        schoolType,
+        country,
+        longitude,
+        latitude,
+        connectivity: Boolean(connectivity),
+        coverage_availabitlity,
+        electricity_availabilty: Boolean(electricity_availabilty),
+      };
 
       await prisma.school.create({
         data: {
           giga_id_school: uuidV4(),
-          name: schoolName,
-          location,
-          lon: parseFloat(longitude),
-          lat: parseFloat(latitude),
-          connectivity_speed_status: connectivity,
-          coverageAbility: parseInt(coverageAbility),
-          country_name: 'Nepal',
+          name: schoolData.schoolName,
+          school_type: schoolData.schoolType,
+          longitude: schoolData.longitude,
+          latitude: schoolData.latitude,
+          connectivity: schoolData.connectivity as boolean,
+          electricity_available: schoolData.electricity_availabilty as boolean,
+          coverage_availability: schoolData.coverage_availabitlity,
+          country_name: country,
         },
       });
 

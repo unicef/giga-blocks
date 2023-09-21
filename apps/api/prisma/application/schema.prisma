@@ -173,8 +173,10 @@ model School {
   school_status         SchoolStatus @default(Open)
   education_level       Level        @default(Unkown)
   connectivity_speed_status String? @default("Data Unavailable") 
+  connectivity          Boolean      @default(false)    
   physical_address      String?
   name                  String
+  school_type           String 
   teachers              Int?
   class_rooms           Int?
   computer_lab          Boolean      @default(false)
@@ -187,8 +189,8 @@ model School {
   youtube               String?
   daily_check_app       Boolean      @default(false)
   computers             Int?
-  lon                   Float
-  lat                   Float
+  longitude             Float
+  latitude              Float
   location              String?
   createdAt             DateTime     @default(now())
   updatedAt             DateTime     @updatedAt
@@ -196,7 +198,7 @@ model School {
   season_Id             String?
   contributedSeason     Season?      @relation(fields: [season_Id], references: [season_id])
   isArchived            Boolean      @default(false)
-  coverageAbility       Int
+  coverage_availability       String
 
   @@map("giga_school")
 }
