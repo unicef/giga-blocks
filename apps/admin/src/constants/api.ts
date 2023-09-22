@@ -15,4 +15,10 @@ export  default {
   SIGNUP: {
     REGISTER: "/auth/register",
   },
+  GETNONCE: {
+    GET: '/auth/getnonce'
+  },
+  WALLET_LOGIN: {
+    POST: '/auth/walletlogin'
+  }
 };
