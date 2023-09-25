@@ -124,7 +124,7 @@
     margin-top: $spacing-05;
     width: 100%;
     padding: 0 8%;
-  --cds-layout-size-height-local: 4vh;
+    --cds-layout-size-height-local: 4vh;
   }
 }
 
@@ -215,8 +215,8 @@
   }
 }
 .why-nft {
-  padding-top: $spacing-10;
-  padding-bottom: $spacing-10;
+  padding-top: $spacing-12;
+  padding-bottom: $spacing-12;
   @include breakpoint-down(md) {
     display: flex;
     flex-direction: column;
