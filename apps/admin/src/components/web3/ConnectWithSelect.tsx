@@ -50,10 +50,9 @@ export function ConnectWithSelect({
     if(isNonceSuccess){
       try {
         const signer = (provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
-        const address = signer.getAddress()
+        const address = await signer.getAddress()
         signer.signMessage(nonceData?.nonce)
         .then((res) => {
-        console.log(address)
         console.log(res)
         mutate({walletAddress: address, signature: res})
         })
