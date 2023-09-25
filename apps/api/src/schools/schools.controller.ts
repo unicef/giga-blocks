@@ -4,11 +4,27 @@ import { UpdateSchoolDto } from './dto/update-schools.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ListSchoolDto } from './dto/list-schools.dto';
 import { Public } from '../common/decorators/public.decorator';
+import { QueueService } from 'src/mailer/queue.service';
 
 @Controller('schools')
 @ApiTags('School')
 export class SchoolController {
-  constructor(private readonly schoolService: SchoolService) {}
+  constructor(
+    private readonly schoolService: SchoolService,
+    private readonly queueService: QueueService,
+  ) {}
+
+  @Public()
+  @Get('onchainDataQueue')
+  queue() {
+    return this.queueService.sendTransaction(1);
+  }
+
+  @Public()
+  @Get('mintQueue')
+  mintQueue() {
+    return this.queueService.sendMintNFT(1);
+  }
 
   @Public()
   @Get()

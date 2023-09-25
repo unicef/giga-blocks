@@ -14,7 +14,7 @@ async function fetchDataAndStore() {
   };
 
   const url = `${process.env.SCHOOL_URI_BY_COUNTRY_ID}`;
-  console.log(url)
+  console.log(url);
 
   try {
     const page = 1;
@@ -49,11 +49,14 @@ async function fetchDataAndStore() {
               giga_id_school: item.giga_id_school,
               name: item.name,
               location: item.country,
-              lon: item.lon,
-              lat: item.lat,
+              longitude: item.lon,
+              latitude: item.lat,
               country_name: item.country,
               // coverageAbility: item.coverageAbility ?? 0,
               connectivity_speed_status: item.connectivity_speed_status,
+              connectivity: Boolean(true),
+              school_type: 'public',
+              coverage_availability: 'available',
             },
           });
 

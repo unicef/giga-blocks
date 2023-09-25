@@ -10,7 +10,6 @@ import { UsersModule } from './users/users.module';
 import { ContributeDataModule } from './contribute/contribute.module';
 import { SeasonModule } from './seasons/seasons.module';
 import { PointsModule } from './points/points.module';
-import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
@@ -34,7 +33,6 @@ import { QueueModule } from './queue/queue.module';
     SeasonModule,
     PointsModule,
     EmailModule,
-    QueueModule,
   ],
   providers: [],
 })
