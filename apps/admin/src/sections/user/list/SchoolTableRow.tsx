@@ -9,6 +9,7 @@ import {
   IconButton,
   Typography,
   Switch,
+  Checkbox,
 } from '@mui/material';
 
 // components
@@ -16,6 +17,7 @@ import Iconify from '@components/iconify';
 import MenuPopover from '@components/menu-popover';
 import ConfirmDialog from '@components/confirm-dialog';
 import { CustomAvatar } from '@components/custom-avatar';
+import { useRouter } from 'next/router';
 
 
 type Props = {
@@ -27,14 +29,31 @@ export default function UserTableRow({
   row,
   selected
 }: Props) {
-  const { name, email, roles } = row;
+  const {
+  id,
+  name,
+  location,
+  longitude,
+  latitude,
+  connectivity,
+  coverage
+  } = row;
+
+  const {push} = useRouter()
+
+  const handleEditRow = (row:string) => {
+    push(`/school/${row}/edit`)
+  }
 
   return (
     <>
-      <TableRow hover selected={selected}>
-        <TableCell padding="normal">
-          <CustomAvatar alt={name} name={name} />
-        </TableCell>
+      <TableRow hover selected={selected} onClick = {() => handleEditRow(id)}>
+
+      <TableCell padding="checkbox"> 
+        <Checkbox
+          checked={selected}
+        />
+      </TableCell>
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
@@ -44,10 +63,22 @@ export default function UserTableRow({
           </Stack>
         </TableCell>
 
-        <TableCell align="left">{email}</TableCell>
+        <TableCell align="left">{location}</TableCell>
 
         <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-          {roles[0]}
+          {longitude}
+        </TableCell>
+
+        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+          {latitude}
+        </TableCell>
+
+        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+          {connectivity}
+        </TableCell>
+
+        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+          {coverage}
         </TableCell>
       </TableRow>
     </>

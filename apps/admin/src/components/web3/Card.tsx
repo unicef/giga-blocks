@@ -39,37 +39,38 @@ export function Card({
 
   return (
     <div
-    style={{
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      width: '20rem',
-      padding: '1rem',
-      margin: '1rem',
-      overflow: 'auto',
-      borderRadius: '1rem',
-    }}
-  >
-    {/* <b>"{getName(connector)}"</b> */}
-    <div style={{ marginBottom: '1rem', color: 'white' }}>
-      <Status isActivating={isActivating} isActive={isActive} error={error} />
-    </div>
-    <div style={{color: 'white'}}>
-    <Chain chainId={activeChainId}/>
-    </div>
-    <div style={{ marginBottom: '1rem', color: 'white' }}>
-      <Accounts accounts={accounts} provider={provider} ENSNames={ENSNames} />
-    </div>
-    <ConnectWithSelect
-      connector={connector}
-      activeChainId={activeChainId}
-      chainIds={chainIds}
-      isActivating={isActivating}
-      isActive={isActive}
-      error={error}
-      setError={setError}
-    />
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        width: '20rem',
+        padding: '1rem',
+        margin: '1rem',
+        overflow: 'auto',
+        borderRadius: '1rem',
+      }}
+    >
+      {/* <b>"{getName(connector)}"</b> */}
+      <div style={{ marginBottom: '1rem', color: 'white' }}>
+        <Status isActivating={isActivating} isActive={isActive} error={error} />
+      </div>
+      <div style={{ color: 'white' }}>
+        <Chain chainId={activeChainId} />
+      </div>
+      <div style={{ marginBottom: '1rem', color: 'white' }}>
+        <Accounts accounts={accounts} provider={provider} ENSNames={ENSNames} />
+      </div>
+      <ConnectWithSelect
+        connector={connector}
+        activeChainId={activeChainId}
+        chainIds={chainIds}
+        isActivating={isActivating}
+        isActive={isActive}
+        error={error}
+        setError={setError}
+        provider={provider}
+      />
 
-  </div>
+    </div>
   )
 }

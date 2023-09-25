@@ -13,7 +13,8 @@ async function fetchDataAndStore() {
     },
   };
 
-  const url = `${process.env.SCHOOL_URI_BY_COUNTRY}`;
+  const url = `${process.env.SCHOOL_URI_BY_COUNTRY_ID}`;
+  console.log(url)
 
   try {
     const page = 1;
@@ -51,6 +52,7 @@ async function fetchDataAndStore() {
               lon: item.lon,
               lat: item.lat,
               country_name: item.country,
+              // coverageAbility: item.coverageAbility ?? 0,
               connectivity_speed_status: item.connectivity_speed_status,
             },
           });
