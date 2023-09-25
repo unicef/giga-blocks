@@ -14,7 +14,7 @@ async function fetchDataAndStore() {
   };
 
   const url = `${process.env.SCHOOL_URI_BY_COUNTRY_ID}`;
-  console.log(url)
+  console.log(url);
 
   try {
     const page = 1;
@@ -37,30 +37,30 @@ async function fetchDataAndStore() {
       const datas = await response.data.data;
 
       for (const item of datas) {
-        const check_if = await prisma.school.findUnique({
-          where: {
-            giga_id_school: item.giga_id_school,
+        //   const check_if = await prisma.school.findUnique({
+        //     where: {
+        //       giga_id_school: item.giga_id_school,
+        //     },
+        //   });
+
+        //   if (!check_if) {
+        await prisma.school.create({
+          data: {
+            name: item.name,
+            school_type: item.school_type,
+            coverage_availability: item.coverage_availability,
+            longitude: item.lon,
+            latitude: item.lat,
+            country: item.country,
+            // coverageAbility: item.coverageAbility ?? 0,
+            connectivity_speed_status: item.connectivity_speed_status,
           },
         });
 
-        if (!check_if) {
-          await prisma.school.create({
-            data: {
-              giga_id_school: item.giga_id_school,
-              name: item.name,
-              location: item.country,
-              lon: item.lon,
-              lat: item.lat,
-              country_name: item.country,
-              // coverageAbility: item.coverageAbility ?? 0,
-              connectivity_speed_status: item.connectivity_speed_status,
-            },
-          });
-
-          logger.log('Data seeding completed.');
-        } else {
-          logger.log('Already Exist');
-        }
+        logger.log('Data seeding completed.');
+        //   } else {
+        //     logger.log('Already Exist');
+        //   }
       }
     });
   } catch (error) {

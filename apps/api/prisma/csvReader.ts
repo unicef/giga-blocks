@@ -59,7 +59,7 @@ async function readAndSaveCSV(filePath: string): Promise<void> {
           connectivity: schoolData.connectivity as boolean,
           electricity_available: schoolData.electricity_availabilty as boolean,
           coverage_availability: schoolData.coverage_availabitlity,
-          country_name: country,
+          country: country,
         },
       });
 
