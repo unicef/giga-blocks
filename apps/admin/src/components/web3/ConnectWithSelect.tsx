@@ -8,6 +8,8 @@ import { Button } from '@mui/material';
 import { sign } from './utils/wallet';
 import { JsonRpcProvider, Signer } from "ethers";
 import { useLoginWallet, useNonceGet } from '@hooks/web3/useMetamask';
+import { useRouter } from 'next/router';
+import { saveAccessToken, saveCurrentUser } from '@utils/sessionManager';
 
 function ChainSelect({
   activeChainId,
@@ -44,6 +46,8 @@ export function ConnectWithSelect({
 
   const {data: nonceData, isSuccess: isNonceSuccess} = useNonceGet()
 
+  const {push}= useRouter()
+
   const {mutate, isError, data:loginWalletData , isSuccess:isLoginWalletSuccess, error: loginWalletError} = useLoginWallet()
 
   const getSignature = async () => {
@@ -68,8 +72,17 @@ export function ConnectWithSelect({
 
   useEffect(() => {
     isError && console.log(loginWalletError)
-    isLoginWalletSuccess && console.log("Success")
     console.log(loginWalletData)
+    if(isLoginWalletSuccess){
+      const currentUser = {
+        email: loginWalletData.data.email,
+        username: loginWalletData.data.name
+      }
+      saveCurrentUser(currentUser)
+      saveAccessToken(loginWalletData.data.access_token)
+      
+      push('/dashboard')
+    }
   }, [isError, isLoginWalletSuccess])
 
   useEffect(() => {
@@ -121,6 +134,7 @@ export function ConnectWithSelect({
 
           <Button variant="contained" color='secondary'
             onClick={() => {getSignature()}}
+            style={{marginTop: '20px'}}
           >
             Login with metamask
           </Button>
