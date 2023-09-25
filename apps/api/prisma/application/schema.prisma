@@ -169,7 +169,6 @@ model User {
 
 model School {
   school_id             String       @id @default(uuid())
-  giga_id_school        String       @unique
   school_status         SchoolStatus @default(Open)
   education_level       Level        @default(Unkown)
   connectivity_speed_status String? @default("Data Unavailable") 

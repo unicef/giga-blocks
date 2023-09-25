@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import { PrismaClient } from '@prisma/application';
-import { uuidV4 } from 'web3-utils';
 
 const prisma = new PrismaClient();
 
@@ -10,8 +9,8 @@ interface SchoolData {
   country: string;
   longitude: number;
   latitude: number;
-  connectivity: Boolean;
-  electricity_availabilty: Boolean;
+  connectivity: boolean;
+  electricity_availabilty: boolean;
   coverage_availabitlity: string;
 }
 
@@ -53,7 +52,6 @@ async function readAndSaveCSV(filePath: string): Promise<void> {
 
       await prisma.school.create({
         data: {
-          giga_id_school: uuidV4(),
           name: schoolData.schoolName,
           school_type: schoolData.schoolType,
           longitude: schoolData.longitude,
