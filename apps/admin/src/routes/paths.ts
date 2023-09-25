@@ -49,6 +49,6 @@ export const PATH_ACTIVITY_LOGS = {
 
 export const PATH_SCHOOL = {
   root: ROOTS_SCHOOL,
-  verified: path(ROOTS_SCHOOL, '/verified'),
-  contributed: path(ROOTS_SCHOOL, '/contributed')
+  verified: path(ROOTS_SCHOOL, '/minted'),
+  contributed: path(ROOTS_SCHOOL, '/un-minted')
 };
