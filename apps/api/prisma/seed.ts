@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { PrismaClient } from '@prisma/application';
 import * as _ from 'lodash';
+import { hexStringToBuffer } from '../src/utils/string-format';
 
 const prisma = new PrismaClient();
 const logger = new Logger();
@@ -44,12 +45,13 @@ enum ROLE {
 
 export const users = [
   {
-    name: 'Raktim Admin',
+    name: 'User Admin',
     roles: [ROLE.ADMIN],
-    email: 'raktim@rumsan.com',
+    email: 'admin12@mailinator.com',
+    walletAddress: hexStringToBuffer('0xf0c84735Af5669c809EfD62C9D4e466d331A95b0'),// add own wallet address
   },
   {
-    name: 'Raktim User',
+    name: 'Normal User',
     email: 'raktim@mailinator.com',
   },
 ];
@@ -67,6 +69,7 @@ async function main() {
 
 main()
   .then(async () => {
+    logger.log('Seeding done');
     await prisma.$disconnect();
   })
   .catch(async error => {

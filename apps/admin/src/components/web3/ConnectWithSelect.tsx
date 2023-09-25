@@ -53,8 +53,8 @@ export function ConnectWithSelect({
         const address = await signer.getAddress()
         signer.signMessage(nonceData?.nonce)
         .then((res) => {
-        console.log(res)
-        mutate({walletAddress: address, signature: res})
+        const signature = `${nonceData?.nonce}:${res}`
+        mutate({walletAddress: address, signature})
         })
         .catch((err) => {
           console.log(err)
@@ -114,7 +114,6 @@ export function ConnectWithSelect({
                 void connector.resetState();
               }
               setDesiredChainId(undefined);
-              getSignature()
             }}
           >
             Disconnect

@@ -15,10 +15,9 @@ export class WalletStrategy extends PassportStrategy(Strategy, 'wallet') {
     const account = await getAddressfromSignature(signature);
     if (account !== walletAddress) throw new Error('Invalid signature');
     const user = await this.authService.validateWalletAddress(account);
-    console.log(user)
     if (!user) {
       throw new UnauthorizedException();
     }
-    return account;
+    return user;
   }
 }
