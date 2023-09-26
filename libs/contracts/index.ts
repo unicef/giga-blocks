@@ -1,1 +1,1 @@
-export {getContract} from "./ethers/contract";
+export {Contract} from "./ethers/contract";

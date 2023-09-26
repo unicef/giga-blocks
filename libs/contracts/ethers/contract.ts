@@ -1,13 +1,20 @@
 import { ethers } from 'ethers';
 
-import { getAbi } from './abi';
 
-const network = process.env.NETWORK_PROVIDER;
+import * as fs from 'fs';
+import * as path from 'path';
 
-export const getContract = (contractName: string, contractAddress: string) => {
+export class Contract {
+  constructor(private readonly network: string) {}
+  
+   basepath = path.join(__dirname, '../abi/');
+
+
+
+ public getContract = (contractName: string, contractAddress: string) => {
   try {
-    const provider = new ethers.JsonRpcProvider(network);
-    const abi = getAbi(contractName);
+    const provider = new ethers.JsonRpcProvider(this.network);
+    const abi = this.getAbi(contractName);
     const contract = new ethers.Contract(contractAddress, abi.abi, provider);
     console.log(contract);
     return contract;
@@ -15,4 +22,13 @@ export const getContract = (contractName: string, contractAddress: string) => {
     throw new Error(`Error: ${err}, message: Cannot instatntiate contract`);
   }
 };
+
+public getAbi = (contract: string) => {
+  const data = fs.readFileSync(`${this.basepath}${contract}.json`, 'utf8');
+  const { contractName, abi } = JSON.parse(data);
+  return { contractName, abi };
+}
+
+
+}
 
