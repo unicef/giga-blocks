@@ -4,6 +4,7 @@ import DashboardLayout from "@layouts/dashboard";
 import { ROLES } from "src/config-global";
 import { useSchoolGet } from "@hooks/school/useSchool";
 import { MapView } from "../../components/maps";
+import Card from "../../components/dashboard-cards";
 
 Dashboard.getLayout = (page: React.ReactElement) => (
   <DashboardLayout>
@@ -22,6 +23,7 @@ export default function Dashboard() {
     <>
       <Container>
         <h1>Dashboard</h1>
+        <Card />
       </Container>
       <MapView
         mapData={[
