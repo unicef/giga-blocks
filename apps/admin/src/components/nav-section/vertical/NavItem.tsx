@@ -96,5 +96,5 @@ export default function NavItem({
     );
   };
 
-  return <RoleBasedGuard roles={roles}> {renderItem()} </RoleBasedGuard>;
+  return <> {renderItem()} </>;
 }

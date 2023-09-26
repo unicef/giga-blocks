@@ -39,16 +39,16 @@
       "defaultConfiguration": "development",
       "options": {
         "port": 3000,
-        "buildTarget": "web:build",
+        "buildTarget": "web:mainBuild",
         "dev": true
       },
       "configurations": {
         "development": {
-          "buildTarget": "web:build:development",
+          "buildTarget": "web:mainBuild:development",
           "dev": true
         },
         "production": {
-          "buildTarget": "web:build:production",
+          "buildTarget": "web:mainBuild:production",
           "dev": false
         }
       }
@@ -56,7 +56,7 @@
     "export": {
       "executor": "@nrwl/next:export",
       "options": {
-        "buildTarget": "web:build:production"
+        "buildTarget": "web:mainBuild:production"
       }
     },
     "lint": {
