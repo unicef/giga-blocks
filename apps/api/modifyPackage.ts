@@ -12,6 +12,7 @@ try {
     ...packageData.scripts,
     start: 'node main.js',
     school: 'ts-node prisma/schoolSeed.ts',
+    csvRead: 'ts-node prisma/csvReader.ts',
     'studio:app': 'prisma studio --schema prisma/application/schema.prisma',
     'studio:news': 'prisma studio --schema prisma/newsletter/schema.prisma',
     'app:migrate': 'prisma migrate dev --schema prisma/application/schema.prisma',
