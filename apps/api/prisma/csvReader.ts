@@ -22,13 +22,13 @@ async function readAndSaveCSV(filePath: string): Promise<void> {
     for (const row of rows) {
       const [
         schoolName,
-        schoolType,
-        country,
         longitudeStr,
         latitudeStr,
+        schoolType,
+        country,
         connectivity,
-        electricity_availabilty,
         coverage_availabitlity,
+        electricity_availabilty,
       ] = row.split(',');
 
       const longitude = parseFloat(longitudeStr);

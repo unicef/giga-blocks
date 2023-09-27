@@ -1,67 +1,24 @@
-schoolName,schoolType,country,longitude,latitude,connectivity,electricity_availabilty,coverage_availabitlity
-School A,Primary School,USA,-74.006,40.7128,true,false,High
-School B,High School,Canada,-79.3832,43.6532,false,true,Medium
-School C,Secondary School,UK,-0.1276,51.5072,true,true,Low
-School D,Primary School,Germany,13.4050,52.5200,false,false,High
-School E,High School,France,2.3522,48.8566,true,true,Medium
-School F,Primary School,Australia,151.2093,-33.8688,false,true,Low
-School G,Secondary School,Japan,139.6917,35.6895,true,false,High
-School H,Primary School,Brazil,-47.9292,-15.7801,false,true,Medium
-School I,High School,India,77.1025,28.6139,true,true,Low
-School J,Secondary School,China,116.4074,39.9042,true,false,High
-School K,Primary School,South Africa,28.0473,-26.2041,true,true,Medium
-School L,High School,Argentina,-58.4173,-34.6118,true,false,Low
-School M,Secondary School,Mexico,-99.1332,19.4326,false,true,High
-School N,Primary School,Russia,37.6176,55.7558,false,false,Medium
-School O,High School,South Korea,126.9780,37.5665,true,true,Low
-School P,Secondary School,Italy,12.4964,41.9028,true,false,High
-School Q,Primary School,Spain,-3.7038,40.4168,true,true,Medium
-School R,High School,Portugal,-9.1393,38.7223,false,true,Low
-School S,Secondary School,New Zealand,174.7680,-36.8485,false,true,High
-School T,Primary School,Switzerland,7.4474,46.9480,true,false,Medium
-School U,High School,Netherlands,4.9041,52.3676,true,true,Low
-School V,Secondary School,Sweden,18.0711,59.3293,false,false,High
-School W,Primary School,Norway,10.7522,59.9139,true,true,Medium
-School X,High School,Denmark,9.5018,56.2639,true,false,Low
-School Y,Secondary School,Greece,23.7275,37.9838,false,true,High
-School Z,Primary School,Ireland,-6.2603,53.3498,true,true,Medium
-School AA,High School,Finland,24.9384,60.1699,false,false,Low
-School AB,Secondary School,Austria,16.3738,48.2082,false,true,High
-School AC,Primary School,Belgium,4.3517,50.8503,true,true,Medium
-School AD,High School,Poland,21.0122,52.2297,true,true,Low
-School AE,Secondary School,Czech Republic,14.4378,50.0755,true,false,High
-School AF,Primary School,Hungary,19.0402,47.4979,false,true,Medium
-School AG,High School,Turkey,32.8597,39.9334,false,false,Low
-School AH,Secondary School,Singapore,103.8198,1.3521,true,true,High
-School AI,Primary School,Malaysia,101.6869,3.1390,true,false,Medium
-School AJ,High School,Thailand,100.5218,13.7563,false,true,Low
-School AK,Secondary School,Vietnam,105.8412,21.0285,true,true,High
-School AL,Primary School,Philippines,121.7740,12.8797,false,false,Medium
-School AM,High School,Indonesia,106.8650,-6.2088,false,true,Low
-School AN,Secondary School,South Africa,28.0473,-26.2041,true,true,High
-School AO,Primary School,Nigeria,7.4951,9.0579,true,false,Medium
-School AP,High School,Egypt,31.2357,30.0444,true,true,Low
-School AQ,Secondary School,Kenya,36.8219,-1.2921,true,true,High
-School AR,Primary School,Ghana,-0.186964,5.6037,true,false,Medium
-School AS,High School,Senegal,-17.4731,14.6928,false,true,Low
-School AT,Secondary School,Morocco,-7.5898,31.7917,true,true,High
-School AU,Primary School,Saudi Arabia,46.6753,24.7136,true,false,Medium
-School AV,High School,United Arab Emirates,54.3773,24.4539,true,true,Low
-School AW,Secondary School,Iran,53.6880,32.4279,false,false,High
-School AX,Primary School,Pakistan,73.0479,33.6844,true,true,Medium
-School AY,High School,Bangladesh,90.3563,23.6841,true,true,Low
-School AZ,Secondary School,Sri Lanka,80.7718,7.8731,true,false,High
-School BA,Primary School,New Zealand,174.7680,-36.8485,true,true,Medium
-School BB,High School,Argentina,-58.4173,-34.6118,true,false,Low
-School BC,Secondary School,Mexico,-99.1332,19.4326,true,false,High
-School BD,Primary School,Russia,37.6176,55.7558,false,true,Medium
-School BE,High School,South Korea,126.9780,37.5665,true,true,Low
-School BF,Secondary School,Italy,12.4964,41.9028,true,true,High
-School BG,Primary School,Spain,-3.7038,40.4168,true,false,Medium
-School BH,High School,Portugal,-9.1393,38.7223,false,true,Low
-School BI,Secondary School,New Zealand,174.7680,-36.8485,true,true,High
-School BJ,Primary School,Switzerland,7.4474,46.9480,true,true,Medium
-School BK,High School,Netherlands,4.9041,52.3676,true,false,Low
-School BL,Secondary School,Sweden,18.0711,59.3293,true,true,High
-School BM,Primary School,Norway,10.7522,59.9139,true,false,Medium
-School BN,High School,Denmark,9.5018,56.2639,true,false,Low
+schoolName,longitudeStr,latitudeStr,schoolType,country ,connectivity,coverage_availabitlity,electricity_availability
+A Block,-0.2778529,51.5096496,0,United Kingdom of Great Britain & Northern Ireland,FALSE,FALSE,FALSE
+Ae Kamalii Preschool,-159.3664675,21.9710206,0,United States of America,FALSE,FALSE,FALSE
+Alte Halle,8.8152907,52.2032435,0,Germany,FALSE,FALSE,FALSE
+B QUARTER B ANGLICAN J.H.S,-2.544943,6.898343,0,Ghana,FALSE,FALSE,FALSE
+Ecole Libre de Soignies Carrières,4.0781857,50.5705998,0,Belgium,FALSE,FALSE,FALSE
+ELEFUNT kursy językowe,19.2035912,50.0408225,0,Poland,FALSE,FALSE,FALSE
+Neue Halle,8.8154205,52.2018513,0,Germany,FALSE,FALSE,FALSE
+Noordland - vrije basisschool,4.3093871,51.3617087,0,Belgium,FALSE,FALSE,FALSE
+s Gravendreef College,4.399035,52.0666877,0,Netherlands,FALSE,FALSE,FALSE
+Say it Szkoła Języków Obcych,19.4044651,53.2542091,0,Poland,FALSE,FALSE,FALSE
+t Scheulti,6.2948635,52.3357343,0,Netherlands,FALSE,FALSE,FALSE
+t Atrium,5.3942258,52.168946,0,Netherlands,FALSE,FALSE,FALSE
+t Baeckelandje,4.3677991,51.1717941,0,Belgium,FALSE,FALSE,FALSE
+t Beeckland (Praktijkgebouw),6.3099941,52.0983718,0,Netherlands,FALSE,FALSE,FALSE
+t Bergske,5.313299,51.0199324,0,Belgium,FALSE,FALSE,FALSE
+t Blokhuus,5.4629996,52.1727102,0,Netherlands,FALSE,FALSE,FALSE
+t Bontenest,5.0171383,52.1376329,0,Netherlands,FALSE,FALSE,FALSE
+t Bossche Hart,4.5431126,51.5603236,0,Netherlands,FALSE,FALSE,FALSE
+t Breugelkind,4.1811032,50.8686079,0,Belgium,FALSE,FALSE,FALSE
+t Carillon,4.7426432,52.0141857,0,Netherlands,FALSE,FALSE,FALSE
+t Clockhuys,6.6060704,53.1730075,0,Netherlands,FALSE,FALSE,FALSE
+t Egeltje,5.1126072,51.2044807,0,Belgium,FALSE,FALSE,FALSE
+t Geerke,5.5906943,51.878743,0,Netherlands,FALSE,FALSE,FALSE
