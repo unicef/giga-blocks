@@ -48,7 +48,7 @@ export const users = [
     name: 'User Admin',
     roles: [ROLE.ADMIN],
     email: 'admin12@mailinator.com',
-    walletAddress: hexStringToBuffer('0xfAAe0B09e9A80d142A11cd846CD9329F2E96f55F'),// add own wallet address
+    walletAddress: hexStringToBuffer('0xfAAe0B09e9A80d142A11cd846CD9329F2E96f55F'), // add own wallet address
   },
   {
     name: 'Normal User',

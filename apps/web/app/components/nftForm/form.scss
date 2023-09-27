@@ -3,6 +3,8 @@
 
 .form-gap {
   margin: 10vh 0;
+  padding-top: $spacing-11;
+  padding-bottom: $spacing-11;
   @include breakpoint-down(md) {
     padding-left: $spacing-01;
     padding-right: $spacing-01;
