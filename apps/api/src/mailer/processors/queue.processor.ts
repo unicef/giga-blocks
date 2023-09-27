@@ -4,6 +4,8 @@ import { OnQueueActive, OnQueueCompleted, OnQueueFailed, Process, Processor } fr
 import { MINT_QUEUE, ONCHAIN_DATA_QUEUE, SET_MINT_NFT, SET_ONCHAIN_DATA } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
+import { mintNFT } from 'src/utils/ethers/transactionFunctions';
+import { getWalletAddressFromPK } from 'src/utils/ethers/walletAddress';
 
 @Injectable()
 @Processor(ONCHAIN_DATA_QUEUE)
@@ -49,13 +51,11 @@ export class QueueProcessor {
     try {
       //transaction to blockchain
       setTimeout(() => {
-        this._logger.log(`Transaction completed HAHAHA ${job.data.h}`);
+        this._logger.log(`Transaction completed ${job.data.h}`);
       }, 10000);
-      throw new Error('Error attempt again');
     } catch {
       this._logger.error(`Failed to send transactions to blockchain`);
     }
-    throw new Error('Error what to do');
   }
 }
 
@@ -102,9 +102,12 @@ export class MintQueueProcessor {
 
     try {
       //transaction to blockchain
-      setTimeout(() => {
-        this._logger.log(`Mint nft completed ${job.data.h}`);
-      }, 10000);
+      const tx = await mintNFT(
+        'NFT',
+        this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
+        getWalletAddressFromPK(this._configService.get<string>('PRIVATE_KEY')),
+        'tokenURI',
+      );
     } catch {
       this._logger.error(`Failed to send mint nft to blockchain`);
     }
