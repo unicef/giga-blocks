@@ -95,8 +95,10 @@ CREATE TABLE "giga_school" (
     "school_status" "SchoolStatus" NOT NULL DEFAULT 'Open',
     "education_level" "Level" NOT NULL DEFAULT 'Unkown',
     "connectivity_speed_status" TEXT DEFAULT 'Data Unavailable',
+    "connectivity" BOOLEAN NOT NULL DEFAULT false,
     "physical_address" TEXT,
     "name" TEXT NOT NULL,
+    "school_type" TEXT NOT NULL,
     "teachers" INTEGER,
     "class_rooms" INTEGER,
     "computer_lab" BOOLEAN NOT NULL DEFAULT false,
@@ -104,27 +106,27 @@ CREATE TABLE "giga_school" (
     "school_website" TEXT,
     "email_contact" TEXT,
     "phone_number" TEXT,
-    "country_id" INTEGER NOT NULL,
-    "country" TEXT NOT NULL,
+    "country_name" TEXT NOT NULL,
     "twiter_handle" TEXT,
     "youtube" TEXT,
     "daily_check_app" BOOLEAN NOT NULL DEFAULT false,
     "computers" INTEGER,
-    "lon" DOUBLE PRECISION NOT NULL,
-    "lat" DOUBLE PRECISION NOT NULL,
+    "longitude" DOUBLE PRECISION NOT NULL,
+    "latitude" DOUBLE PRECISION NOT NULL,
     "location" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
     "season_Id" TEXT,
     "isArchived" BOOLEAN NOT NULL DEFAULT false,
+    "coverage_availability" TEXT NOT NULL,
 
     CONSTRAINT "giga_school_pkey" PRIMARY KEY ("school_id")
 );
 
 -- CreateTable
 CREATE TABLE "giga_contributed_data" (
-    "contributed_UUID" TEXT NOT NULL,
+    "id" TEXT NOT NULL,
     "contributed_data" JSONB NOT NULL,
     "status" "Status" NOT NULL DEFAULT 'Pending',
     "school_Id" TEXT,
@@ -135,7 +137,7 @@ CREATE TABLE "giga_contributed_data" (
     "deletedAt" TIMESTAMP(3),
     "isArchived" BOOLEAN NOT NULL DEFAULT false,
 
-    CONSTRAINT "giga_contributed_data_pkey" PRIMARY KEY ("contributed_UUID")
+    CONSTRAINT "giga_contributed_data_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -234,13 +236,13 @@ ALTER TABLE "giga_points" ADD CONSTRAINT "giga_points_createdBy_fkey" FOREIGN KE
 ALTER TABLE "giga_points" ADD CONSTRAINT "giga_points_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "giga_users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "giga_points" ADD CONSTRAINT "giga_points_contributedDataId_fkey" FOREIGN KEY ("contributedDataId") REFERENCES "giga_contributed_data"("contributed_UUID") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "giga_points" ADD CONSTRAINT "giga_points_contributedDataId_fkey" FOREIGN KEY ("contributedDataId") REFERENCES "giga_contributed_data"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "giga_vote" ADD CONSTRAINT "giga_vote_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "giga_users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "giga_vote" ADD CONSTRAINT "giga_vote_contributed_Id_fkey" FOREIGN KEY ("contributed_Id") REFERENCES "giga_contributed_data"("contributed_UUID") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "giga_vote" ADD CONSTRAINT "giga_vote_contributed_Id_fkey" FOREIGN KEY ("contributed_Id") REFERENCES "giga_contributed_data"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "giga_vote" ADD CONSTRAINT "giga_vote_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "giga_users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
