@@ -62,12 +62,18 @@ export const users = [
     email: 'admin124@mailinator.com',
     walletAddress: hexStringToBuffer('0xcDEe632FB1Ba1B3156b36cc0bDabBfd821305e06'), // add own wallet address
   },
-  // {
-  //   name: 'Nishu Admin',
-  //   roles: [ROLE.ADMIN],
-  //   email: 'admin125@mailinator.com',
-  //   walletAddress: hexStringToBuffer('0xCf7bb7da4eFFcA9a3974b80e106C6541990De5eb'), // add own wallet address
-  // },
+  {
+    name: 'Sandesh Admin',
+    roles: [ROLE.ADMIN],
+    email: 'admin125@mailinator.com',
+    walletAddress: hexStringToBuffer('0x6494650c466a166CBAC0BFeCD224286D6F03444F'), // add own wallet address
+  },
+  {
+    name: 'Sushant Admin',
+    roles: [ROLE.ADMIN],
+    email: 'admin125@mailinator.com',
+    walletAddress: hexStringToBuffer('0xfAAe0B09e9A80d142A11cd846CD9329F2E96f55F'), // add own wallet address
+  },
   {
     name: 'Normal User',
     email: 'user1@mailinator.com',
