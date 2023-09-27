@@ -45,14 +45,32 @@ enum ROLE {
 
 export const users = [
   {
-    name: 'User Admin',
+    name: 'Sarvesh Admin',
     roles: [ROLE.ADMIN],
     email: 'admin12@mailinator.com',
-    walletAddress: hexStringToBuffer('0xfAAe0B09e9A80d142A11cd846CD9329F2E96f55F'), // add own wallet address
+    walletAddress: hexStringToBuffer('0xCf7bb7da4eFFcA9a3974b80e106C6541990De5eb'), // add own wallet address
   },
   {
+    name: 'Anupama Admin',
+    roles: [ROLE.ADMIN],
+    email: 'admin123@mailinator.com',
+    walletAddress: hexStringToBuffer('0xf0c84735Af5669c809EfD62C9D4e466d331A95b0'), // add own wallet address
+  },
+  {
+    name: 'Manjik Admin',
+    roles: [ROLE.ADMIN],
+    email: 'admin124@mailinator.com',
+    walletAddress: hexStringToBuffer('0xcDEe632FB1Ba1B3156b36cc0bDabBfd821305e06'), // add own wallet address
+  },
+  // {
+  //   name: 'Nishu Admin',
+  //   roles: [ROLE.ADMIN],
+  //   email: 'admin125@mailinator.com',
+  //   walletAddress: hexStringToBuffer('0xCf7bb7da4eFFcA9a3974b80e106C6541990De5eb'), // add own wallet address
+  // },
+  {
     name: 'Normal User',
-    email: 'raktim@mailinator.com',
+    email: 'user1@mailinator.com',
   },
 ];
 
