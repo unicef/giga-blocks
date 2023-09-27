@@ -22,13 +22,13 @@ export default function UserEditPage() {
   return (
     <>
     <Head>
-    <title> Giga: Edit Profile </title>
+    <title> Giga: User Profile </title>
     </Head>
 
     <Grid container spacing={2}>
     <Grid item xs={8}>
     <Container>
-        <CustomBreadcrumbs heading="Edit Profile" />
+        <CustomBreadcrumbs heading="User Profile" />
         <UserProfileEditForm />
       </Container>
     </Grid>

@@ -7,6 +7,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import { sign } from './utils/wallet';
 import { JsonRpcProvider, Signer } from "ethers";
+import { useLoginWallet, useNonceGet } from '@hooks/web3/useMetamask';
+import { useRouter } from 'next/router';
+import { saveAccessToken, saveCurrentUser } from '@utils/sessionManager';
 
 function ChainSelect({
   activeChainId,
@@ -17,7 +20,6 @@ function ChainSelect({
 }) {
   return (
     <Button variant="contained" value={activeChainId} onClick={(e) => { connectWallet() }}>Connect Metamask</Button>
-
   );
 }
 
@@ -42,18 +44,47 @@ export function ConnectWithSelect({
 
   const [desiredChainId, setDesiredChainId] = useState<any>(undefined);
 
-  const getSignature = async () => {
-    try {
-      const signer = (provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
-      const sig = await signer.signMessage("1234");
-      console.log({ signer, sig })
+  const {data: nonceData, isSuccess: isNonceSuccess} = useNonceGet()
 
-      console.log(sig)
-    }
-    catch (e) {
-      console.log(e)
+  const {push}= useRouter()
+
+  const {mutate, isError, data:loginWalletData , isSuccess:isLoginWalletSuccess, error: loginWalletError} = useLoginWallet()
+
+  const getSignature = async () => {
+    if(isNonceSuccess){
+      try {
+        const signer = (provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
+        const address = await signer.getAddress()
+        signer.signMessage(nonceData?.nonce)
+        .then((res) => {
+        const signature = `${nonceData?.nonce}:${res}`
+        mutate({walletAddress: address, signature})
+        })
+        .catch((err) => {
+          console.log(err)
+        });
+      }
+      catch (e) {
+        console.log(e)
+      }
     }
   }
+
+  useEffect(() => {
+    isError && console.log(loginWalletError)
+    console.log(loginWalletData)
+    if(isLoginWalletSuccess){
+      const currentUser = {
+        email: loginWalletData.data.email,
+        username: loginWalletData.data.name
+      }
+      saveCurrentUser(currentUser)
+      saveAccessToken(loginWalletData.data.access_token)
+      
+      push('/dashboard')
+    }
+  }, [isError, isLoginWalletSuccess])
+
   useEffect(() => {
     if (activeChainId && (!desiredChainId || desiredChainId === -1)) {
       setDesiredChainId(activeChainId);
@@ -87,19 +118,27 @@ export function ConnectWithSelect({
         error ? (
           <Button variant="contained" color='error' onClick={() => connectWallet()}>Try again?</Button>
         ) : (
+          <>
           <Button variant="contained" color='error'
             onClick={() => {
-              // if (connector?.deactivate) {
-              //   void connector.deactivate();
-              // } else {
-              //   void connector.resetState();
-              // }
-              // setDesiredChainId(undefined);
-              getSignature()
+              if (connector?.deactivate) {
+                void connector.deactivate();
+              } else {
+                void connector.resetState();
+              }
+              setDesiredChainId(undefined);
             }}
           >
             Disconnect
           </Button>
+
+          <Button variant="contained" color='secondary'
+            onClick={() => {getSignature()}}
+            style={{marginTop: '20px'}}
+          >
+            Login with metamask
+          </Button>
+          </>
         )
       ) : (
         <ChainSelect activeChainId={desiredChainId} connectWallet={connectWallet} />

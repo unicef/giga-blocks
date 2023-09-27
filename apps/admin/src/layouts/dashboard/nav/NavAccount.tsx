@@ -7,6 +7,7 @@ import NextLink from 'next/link';
 import { CustomAvatar } from '@components/custom-avatar';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
+import { getCurrentUser } from '@utils/sessionManager';
 
 // ----------------------------------------------------------------------
 
@@ -33,11 +34,11 @@ export default function NavAccount() {
 
         <Box sx={{ ml: 2, minWidth: 0 }}>
           <Typography variant="subtitle2" sx={{ color: '#212B36 !important' }} noWrap>
-            Sushant
+            {user.username}
           </Typography>
 
           <Typography variant="body2" noWrap sx={{ color: 'text.secondary' }}>
-            Admin
+            {user.email}
           </Typography>
         </Box>
       </StyledRoot>

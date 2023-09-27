@@ -299,6 +299,9 @@ dependencies:
   react-i18next:
     specifier: ^12.1.4
     version: 12.3.1(i18next@22.5.1)(react-dom@18.2.0)(react@18.2.0)
+  react-identicons:
+    specifier: ^1.2.5
+    version: 1.2.5(react-dom@18.2.0)(react@18.2.0)
   react-lazy-load-image-component:
     specifier: ^1.5.6
     version: 1.6.0(react-dom@18.2.0)(react@18.2.0)
@@ -16033,6 +16036,16 @@ packages:
       '@babel/runtime': 7.22.15
       html-parse-stringify: 3.0.1
       i18next: 22.5.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /react-identicons@1.2.5(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-x7prkDoc2pD7wSl2C1pGxS+XAoSdq1ABWJWTBUimVTDVJArKOLd0B4wRUJpDm4r+9y7pgf8ylyPGsmlWSV5n2g==}
+    peerDependencies:
+      react: ^17.0.1
+      react-dom: ^17.0.1
+    dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false

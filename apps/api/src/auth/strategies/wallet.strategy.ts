@@ -18,6 +18,6 @@ export class WalletStrategy extends PassportStrategy(Strategy, 'wallet') {
     if (!user) {
       throw new UnauthorizedException();
     }
-    return account;
+    return user;
   }
 }

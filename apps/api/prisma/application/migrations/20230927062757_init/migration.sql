@@ -55,7 +55,7 @@ CREATE TABLE "giga_roles" (
 
 -- CreateTable
 CREATE TABLE "giga_permissions" (
-    "permission_id" TEXT NOT NULL,
+    "id" TEXT NOT NULL,
     "action" "Permissions" NOT NULL,
     "subject" TEXT NOT NULL,
     "conditions" TEXT NOT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE "giga_permissions" (
     "deletedAt" TIMESTAMP(3),
     "isArchived" BOOLEAN NOT NULL DEFAULT false,
 
-    CONSTRAINT "giga_permissions_pkey" PRIMARY KEY ("permission_id")
+    CONSTRAINT "giga_permissions_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -90,38 +90,39 @@ CREATE TABLE "giga_users" (
 
 -- CreateTable
 CREATE TABLE "giga_school" (
-    "school_id" TEXT NOT NULL,
-    "giga_id_school" TEXT NOT NULL,
-    "school_status" "SchoolStatus" NOT NULL DEFAULT 'Open',
-    "education_level" "Level" NOT NULL DEFAULT 'Unkown',
+    "id" TEXT NOT NULL,
+    "status" "SchoolStatus" NOT NULL DEFAULT 'Open',
     "connectivity_speed_status" TEXT DEFAULT 'Data Unavailable',
     "connectivity" BOOLEAN NOT NULL DEFAULT false,
-    "physical_address" TEXT,
     "name" TEXT NOT NULL,
     "school_type" TEXT NOT NULL,
-    "teachers" INTEGER,
     "class_rooms" INTEGER,
-    "computer_lab" BOOLEAN NOT NULL DEFAULT false,
     "electricity_available" BOOLEAN NOT NULL DEFAULT false,
-    "school_website" TEXT,
-    "email_contact" TEXT,
+    "website" TEXT,
+    "email" TEXT,
     "phone_number" TEXT,
-    "country_name" TEXT NOT NULL,
+    "country" TEXT NOT NULL,
     "twiter_handle" TEXT,
+    "wikipedia" TEXT,
+    "googlemap" TEXT,
     "youtube" TEXT,
-    "daily_check_app" BOOLEAN NOT NULL DEFAULT false,
-    "computers" INTEGER,
     "longitude" DOUBLE PRECISION NOT NULL,
     "latitude" DOUBLE PRECISION NOT NULL,
-    "location" TEXT,
+    "coverage_availability" TEXT NOT NULL,
+    "coverage_2G" BOOLEAN NOT NULL DEFAULT false,
+    "coverage_3G" BOOLEAN NOT NULL DEFAULT false,
+    "coverage_4G" BOOLEAN NOT NULL DEFAULT false,
+    "hasSatteliteBuilding" BOOLEAN NOT NULL DEFAULT false,
+    "connection_type" TEXT,
+    "connectivity_speed" INTEGER,
+    "internet_links" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
     "season_Id" TEXT,
     "isArchived" BOOLEAN NOT NULL DEFAULT false,
-    "coverage_availability" TEXT NOT NULL,
 
-    CONSTRAINT "giga_school_pkey" PRIMARY KEY ("school_id")
+    CONSTRAINT "giga_school_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -142,7 +143,7 @@ CREATE TABLE "giga_contributed_data" (
 
 -- CreateTable
 CREATE TABLE "giga_season" (
-    "season_id" TEXT NOT NULL,
+    "id" TEXT NOT NULL,
     "season_name" TEXT NOT NULL,
     "season_start_date" TIMESTAMP(3),
     "season_end_date" TIMESTAMP(3),
@@ -152,7 +153,7 @@ CREATE TABLE "giga_season" (
     "deletedAt" TIMESTAMP(3),
     "isArchived" BOOLEAN NOT NULL DEFAULT false,
 
-    CONSTRAINT "giga_season_pkey" PRIMARY KEY ("season_id")
+    CONSTRAINT "giga_season_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -206,9 +207,6 @@ CREATE UNIQUE INDEX "giga_users_email_key" ON "giga_users"("email");
 CREATE UNIQUE INDEX "giga_users_walletAddress_key" ON "giga_users"("walletAddress");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "giga_school_giga_id_school_key" ON "giga_school"("giga_id_school");
-
--- CreateIndex
 CREATE UNIQUE INDEX "giga_vote_user_id_contributed_Id_key" ON "giga_vote"("user_id", "contributed_Id");
 
 -- AddForeignKey
@@ -218,16 +216,16 @@ ALTER TABLE "Auth" ADD CONSTRAINT "Auth_id_fkey" FOREIGN KEY ("id") REFERENCES "
 ALTER TABLE "giga_permissions" ADD CONSTRAINT "giga_permissions_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "giga_roles"("role_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "giga_school" ADD CONSTRAINT "giga_school_season_Id_fkey" FOREIGN KEY ("season_Id") REFERENCES "giga_season"("season_id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "giga_school" ADD CONSTRAINT "giga_school_season_Id_fkey" FOREIGN KEY ("season_Id") REFERENCES "giga_season"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "giga_contributed_data" ADD CONSTRAINT "giga_contributed_data_contributedUserId_fkey" FOREIGN KEY ("contributedUserId") REFERENCES "giga_users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "giga_contributed_data" ADD CONSTRAINT "giga_contributed_data_season_ID_fkey" FOREIGN KEY ("season_ID") REFERENCES "giga_season"("season_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "giga_contributed_data" ADD CONSTRAINT "giga_contributed_data_season_ID_fkey" FOREIGN KEY ("season_ID") REFERENCES "giga_season"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "giga_points" ADD CONSTRAINT "giga_points_season_id_fkey" FOREIGN KEY ("season_id") REFERENCES "giga_season"("season_id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "giga_points" ADD CONSTRAINT "giga_points_season_id_fkey" FOREIGN KEY ("season_id") REFERENCES "giga_season"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "giga_points" ADD CONSTRAINT "giga_points_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "giga_users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
