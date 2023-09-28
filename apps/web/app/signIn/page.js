@@ -20,6 +20,8 @@ const SignUp = () => {
       if(sendOtp.isSuccess){
         setOpenModal(true)
         setEmail(data.email)
+        saveCurrentUser(currentUser)
+      saveAccessToken(loginWalletData.data.access_token)
       }
       else{
         console.log(sendOtp.error)
