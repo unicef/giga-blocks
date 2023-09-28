@@ -1,7 +1,9 @@
+"use client"
+
 import React, { ReactNode, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useAuthContext } from './useAuthContext';
-import LoadingScreen from '../components/loading-screen';
+// import LoadingScreen from '../components/loading-screen';
 
 export default function AuthGuard({ children }) {
   const { isAuthenticated, isInitialized } = useAuthContext();
@@ -22,9 +24,12 @@ export default function AuthGuard({ children }) {
     return "Loading...."
   }
 
-  // if (!isAuthenticated) {
-  //   return <Login />;
-  // }
+  
+
+  if (!isAuthenticated) {
+    push("/signIn")
+    return null;
+  }
 
   return <>{children}</>;
 }

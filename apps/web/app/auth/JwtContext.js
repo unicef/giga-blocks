@@ -1,3 +1,5 @@
+"use client"
+
 import React, {
     ReactNode,
     createContext,
@@ -7,7 +9,7 @@ import React, {
     useMemo,
     useState,
   } from 'react';
-  import { useRouter } from 'next/router';
+  import { useRouter } from 'next/navigation';
   
   import {
     isValidToken,
@@ -26,6 +28,12 @@ import React, {
     SUPERADMIN: 'ADMIN',
     USER: 'USER',
   };
+
+  const ROOTS_AUTH = '/auth'
+
+  function path(root, sublink) {
+    return `${root}${sublink}`;
+  }
 
   const DEBUG_MODE = process.env.NEXT_PUBLIC_DEBUG_MODE === 'true' || false;
 

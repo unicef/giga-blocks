@@ -16,16 +16,14 @@ const SignUp = () => {
   const [openModal, setOpenModal] = useState(false)
 
   const onSubmit = async (data) => {
-      sendOtp.mutate({ email: data.email })
-      if(sendOtp.isSuccess){
+      sendOtp.mutateAsync({ email: data.email })
+      .then(() => {
         setOpenModal(true)
         setEmail(data.email)
-        saveCurrentUser(currentUser)
-      saveAccessToken(loginWalletData.data.access_token)
-      }
-      else{
-        console.log(sendOtp.error)
-      }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   };
 
   const onClose = () => {

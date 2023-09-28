@@ -1,11 +1,14 @@
 import { Modal, TextInput, Form, Button } from "@carbon/react";
 import { useLogin } from "../../hooks/useSignUp";
 import { useForm, Controller } from "react-hook-form";
+import { saveAccessToken, saveCurrentUser } from '../../utils/sessionManager';
+import { useRouter } from "next/navigation";
 
 const CarbonModal = ({open, onClose, email}) => {
 
   const { handleSubmit, control } = useForm();
   const login = useLogin();
+  const {push} = useRouter()
 
     const onAdd = async (data) => {
         console.log(data)
@@ -15,7 +18,9 @@ const CarbonModal = ({open, onClose, email}) => {
         }
         login.mutateAsync(payload)
         .then((res) => {
-          console.log(res)
+          saveCurrentUser(res.data)
+          saveAccessToken(res.data.access_token)
+          push('/dashboard')
         })
         .catch((err) => {
           console.log(err)
