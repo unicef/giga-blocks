@@ -15,4 +15,7 @@ module.exports = {
   SIGNUP: {
     REGISTER: "/auth/register",
   },
+  LOGIN: {
+    LOGIN: "/auth/login",
+  },
 };

@@ -3,11 +3,7 @@ import { useRouter } from 'next/router';
 import { useAuthContext } from './useAuthContext';
 import LoadingScreen from '../components/loading-screen';
 
-interface AuthGuardProps {
-  children: ReactNode;
-}
-
-export default function AuthGuard({ children }: AuthGuardProps) {
+export default function AuthGuard({ children }) {
   const { isAuthenticated, isInitialized } = useAuthContext();
   const { pathname, push } = useRouter();
 
@@ -22,7 +18,8 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   }, [isAuthenticated, pathname, push, isInitialized]);
 
   if (!isInitialized) {
-    return <LoadingScreen />;
+    // return <LoadingScreen />;
+    return "Loading...."
   }
 
   // if (!isAuthenticated) {

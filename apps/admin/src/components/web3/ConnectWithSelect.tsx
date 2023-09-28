@@ -46,9 +46,6 @@ export function ConnectWithSelect({
     try {
       const signer = (provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
       const sig = await signer.signMessage("1234");
-      console.log({ signer, sig })
-
-      console.log(sig)
     }
     catch (e) {
       console.log(e)
@@ -70,7 +67,6 @@ export function ConnectWithSelect({
       setError(undefined);
 
       await connector.activate();
-
 
       console.log("sign metamask 1")
     } catch (error) {

@@ -8,26 +8,45 @@ import "./signup.scss";
 import Link from "next/link";
 import { useOtp } from "../hooks/useOtp";
 import { useSignUp } from "../hooks/useSignUp";
+import CarbonModal from '../components/modal/index'
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const { handleSubmit, control } = useForm();
+  const [openModal, setOpenModal] = useState(false)
   const signUp = useSignUp();
   const sendOtp = useOtp();
 
   const onSubmit = async (data) => {
-    setEmail(data.email);
-    await signUp.mutateAsync(data);
-    if (signUp.isSuccess) {
-      await sendOtp.mutateAsync({ email });
-      console.log("OTP sent");
-    } else {
-      console.log("User registration failed");
-    }
+    signUp.mutateAsync(data)
+    .then(() => {
+      console.log(data.email)
+      sendOtp.mutate({ email: data.email })
+
+      if(sendOtp.isSuccess){
+        setOpenModal(true)
+        setEmail(data.email)
+      }
+      else{
+        console.log(sendOtp.error)
+      }
+    })
+    .catch ((err) => {
+      console.log(err)
+    })
   };
+
+  const onClose = () => {
+    setOpenModal(false)
+  }
   
   return (
     <>
+    <CarbonModal 
+      open = {openModal}
+      onClose={onClose}
+      email = {email}
+    />
       <Navbar />
       <Grid className="landing-page preview1Background signUp-grid" fullWidth>
         <Column className="form" md={4} lg={8} sm={4}>
@@ -48,7 +67,6 @@ const SignUp = () => {
                     placeholder="Enter your fullname here"
                     onChange={(e) => {
                       field.onChange(e);
-                      setEmail(e.target.value);
                     }}
                   />
                 )}
