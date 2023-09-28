@@ -2,7 +2,7 @@
 FROM node:18-alpine3.17 AS deps
 WORKDIR /usr/src/app
 COPY ./dist/apps/admin/package.json ./
-RUN npm install 
+RUN yarn install 
 
 FROM node:18-alpine3.17 AS builder
 WORKDIR /usr/src/app
