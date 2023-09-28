@@ -13,6 +13,9 @@ import Image from "next/image";
 import CustomBreadcrumbs from "@components/custom-breadcrumbs";
 // @ts-ignore
 import Identicon from "react-identicons";
+import {hooks} from "@hooks/web3/metamask";
+import { JsonRpcProvider, Signer } from "ethers";
+import { mintSignature } from "@components/web3/utils/wallet";
 
 interface Props {
   isEdit?: boolean;
@@ -42,6 +45,9 @@ export default function UserNewEditForm({ id }: Props) {
   });
 
   const { data, isSuccess, isError } = useSchoolGetById(id);
+
+  const {useProvider} = hooks
+  const provider = useProvider();
 
   useEffect(() => {
     isSuccess &&
@@ -84,6 +90,11 @@ export default function UserNewEditForm({ id }: Props) {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
+  const signTransaction = async () =>{
+    const signer = (provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
+    const signature = await mintSignature(signer, '1');
+  }
 
   // const onSubmit = async (data: FormValuesProps) => {
   //   const { id, name, roles } = profile;
@@ -181,7 +192,7 @@ export default function UserNewEditForm({ id }: Props) {
           <Box justifyContent={"center"}>
             {/* <Image width={250} height={250} alt='USER' src={'/assets/Image-right.svg'}/> */}
             <Stack alignItems="flex-start" sx={{ mt: 3 }}>
-              <Button variant="contained" color={"info"} style={{ width: "300px" }}>
+              <Button variant="contained" color={"info"} style={{ width: "300px" }} onClick={signTransaction}>
                 Mint
               </Button>
             </Stack>

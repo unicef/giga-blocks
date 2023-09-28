@@ -4,6 +4,7 @@ import { useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/cor
 import type { MetaMask } from '@web3-react/metamask';
 import type { Network } from '@web3-react/network';
 import type { Connector } from '@web3-react/types';
+import { getName } from './utils/wrapper';
 
 
 
@@ -23,7 +24,7 @@ type Props = {
 
 function Child({ children }: Props) {
   const { connector } = useWeb3React();
-  console.log(`Priority Connector is: ${connector}`);
+  console.log(`Priority Connector is: ${getName(connector)}`);
   return children;
 }
 
