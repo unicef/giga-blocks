@@ -122,7 +122,7 @@ export function ConnectWithSelect({
   }, [connector, setError]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around" }}>
+    <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
       <div style={{ marginBottom: "1rem" }} />
       {isActive ? (
         error ? (
@@ -132,6 +132,7 @@ export function ConnectWithSelect({
         ) : (
           <>
             <Button
+              sx={{ marginRight: "15px" }}
               variant="contained"
               color="secondary"
               onClick={() => {

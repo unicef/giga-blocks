@@ -102,7 +102,7 @@ describe('AuthController', () => {
 
       // This is the expected value after creating contribute-data
       expectedResult = [
-        { key: 'contributed_UUID' },
+        { key: 'id' },
         { key: 'contributed_data', value: '{"name": "neasdfasdfw"}' },
         { key: 'status', value: 'Pending' },
         { key: 'school_Id', value: schoolResult.school_id },
@@ -111,7 +111,7 @@ describe('AuthController', () => {
         { key: 'createdAt' },
       ];
 
-      id = result.contributed_UUID;
+      id = result.id;
       seasonId = result.season_ID;
       schoolId = result.school_Id;
       userId = result.contributedUserId;

@@ -48,7 +48,6 @@ export function Card({
           justifyContent: "space-between",
           width: "30vw",
           padding: "1rem",
-          margin: "1rem",
           overflow: "auto",
           borderRadius: "1rem",
           border: "1px solid #efefef",

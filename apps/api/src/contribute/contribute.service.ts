@@ -31,7 +31,7 @@ export class ContributeDataService {
 
   async findOne(id: string) {
     const data = await this.prisma.contributedData.findUnique({
-      where: { contributed_UUID: id },
+      where: { id: id },
     });
     if (!data) {
       throw new NotFoundException('Contributed data with such ID not found');
@@ -41,7 +41,7 @@ export class ContributeDataService {
 
   async update(id: string, updateContributeDatumDto: UpdateContributeDatumDto) {
     const updatedData = await this.prisma.contributedData.update({
-      where: { contributed_UUID: id },
+      where: { id: id },
       data: updateContributeDatumDto,
     });
     return updatedData;
@@ -49,7 +49,7 @@ export class ContributeDataService {
 
   async remove(id: string) {
     const deletedData = await this.prisma.contributedData.delete({
-      where: { contributed_UUID: id },
+      where: { id: id },
     });
     if (deletedData) {
       return 'Contributed data deleted successfully.';
@@ -177,7 +177,7 @@ export class ContributeDataService {
           }),
           this.prisma.contributedData.update({
             data: { status: Status.Validated },
-            where: { contributed_UUID: id },
+            where: { id: id },
           }),
         ]);
       } else {
@@ -194,7 +194,7 @@ export class ContributeDataService {
           }),
           this.prisma.contributedData.update({
             data: { status: Status.Rejected },
-            where: { contributed_UUID: id },
+            where: { id: id },
           }),
         ]);
       }

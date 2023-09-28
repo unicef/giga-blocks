@@ -22,9 +22,14 @@ export const useSchoolGet = (page:number, perPage:number) => {
   );
 };
 
-export const useSchoolGetById = (id:string) => {
+export const useSchoolGetById = (id:string | undefined | string[]) => {
   return useQuery(['single-school'], async () => {
     const {data} = await api.get(`${routes.SCHOOLS.GET}/${id}`)
     return data
-  })
+  }
+  ,
+    {
+      keepPreviousData: true,
+    }
+  )
 }

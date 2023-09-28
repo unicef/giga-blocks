@@ -1,16 +1,16 @@
-import { forwardRef } from 'react';
+import { forwardRef } from "react";
 // next
-import NextLink from 'next/link';
+import NextLink from "next/link";
 // @mui
-import { Tooltip, Link, ListItemText } from '@mui/material';
+import { Tooltip, Link, ListItemText } from "@mui/material";
 // locales
-import { useLocales } from '../../../locales';
+import { useLocales } from "../../../locales";
 // auth
-import RoleBasedGuard from '../../../auth/RoleBasedGuard';
+import RoleBasedGuard from "../../../auth/RoleBasedGuard";
 //
-import Iconify from '../../iconify';
-import { NavItemProps } from '../types';
-import { StyledItem, StyledIcon } from './styles';
+import Iconify from "../../iconify";
+import { NavItemProps } from "../types";
+import { StyledItem, StyledIcon } from "./styles";
 
 // ----------------------------------------------------------------------
 
@@ -40,15 +40,15 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
             sx: {
               width: 72,
               fontSize: 10,
-              lineHeight: '16px',
-              textAlign: 'center',
+              lineHeight: "16px",
+              textAlign: "center",
               ...(active && {
-                fontWeight: 'fontWeightMedium',
+                fontWeight: "fontWeightMedium",
               }),
               ...(subItem && {
                 fontSize: 14,
-                width: 'auto',
-                textAlign: 'left',
+                width: "auto",
+                textAlign: "left",
               }),
             },
           }}
@@ -62,7 +62,7 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
               sx={{
                 top: 11,
                 left: 6,
-                position: 'absolute',
+                position: "absolute",
               }}
             />
           </Tooltip>
@@ -75,7 +75,7 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
             sx={{
               top: 11,
               right: 6,
-              position: 'absolute',
+              position: "absolute",
             }}
           />
         )}
@@ -95,7 +95,7 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
       return (
         <Link
           component={NextLink}
-          href={path === '/catalog' ? '/catalog/wires' : path}
+          href={path === "/catalog" ? "/catalog/wires" : path}
           underline="none"
         >
           {renderContent}
@@ -103,7 +103,7 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
       );
     };
 
-    return <RoleBasedGuard roles={roles}> {renderItem()} </RoleBasedGuard>;
+    return renderItem();
   }
 );
 
