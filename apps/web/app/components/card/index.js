@@ -14,8 +14,24 @@ import "./card.scss";
 import { useEffect, useState } from "react";
 import { useSchoolGet } from "../../hooks/useSchool";
 import Link from "next/link";
+import { gql, useQuery } from "urql";
 
 const SchoolCard = () => {
+
+  const query = gql`
+  {
+    metadataUpdates(subgraphError: allow) {
+      id
+      _tokenId
+      blockNumber
+      blockTimestamp
+      transactionHash
+    }
+  }
+  `;
+  const [result] = useQuery({ query });
+  const { data:queryData, fetching, error } = result;
+
   const [schoolData, setSchoolData] = useState([]);
   const [pageSize, setPageSize] = useState(12);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
