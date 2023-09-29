@@ -3,8 +3,6 @@ import Iconify from "@components/iconify";
 import Scrollbar from "@components/scrollbar";
 import { TableEmptyRows, TableHeadUsers, TableNoData, TablePaginationCustom, TableSelectedAction, useTable } from "@components/table";
 import { useSchoolGet } from "@hooks/school/useSchool";
-// import { useAdministrationContext } from "@contexts/administration";
-// import useFetchUsers from "@hooks/users/useFetchUsers";
 import DashboardLayout from "@layouts/dashboard/DashboardLayout";
 import { Box, Button, Card, Tabs, Divider, TableContainer, Tooltip, IconButton, Table, TableBody } from "@mui/material";
 import SchoolTableRow from "@sections/user/list/SchoolTableRow";

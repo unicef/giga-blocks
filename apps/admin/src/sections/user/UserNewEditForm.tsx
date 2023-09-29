@@ -16,6 +16,7 @@ import Identicon from "react-identicons";
 import {hooks} from "@hooks/web3/metamask";
 import { JsonRpcProvider, Signer } from "ethers";
 import { mintSignature } from "@components/web3/utils/wallet";
+import { useMintSchools } from "@hooks/school/useSchool";
 
 interface Props {
   isEdit?: boolean;
@@ -46,6 +47,8 @@ export default function UserNewEditForm({ id }: Props) {
 
   const { data, isSuccess, isError } = useSchoolGetById(id);
 
+  const {mutate, isError:isMintError,data:mintData,isSuccess :isMintSuccess} = useMintSchools();
+
   const {useProvider} = hooks
   const provider = useProvider();
 
@@ -61,7 +64,6 @@ export default function UserNewEditForm({ id }: Props) {
       });
   }, [isSuccess, isError, data]);
 
-  console.log(data);
 
   const UpdateUserSchema = Yup.object().shape({
     name: Yup.string()
@@ -94,6 +96,13 @@ export default function UserNewEditForm({ id }: Props) {
   const signTransaction = async () =>{
     const signer = (provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
     const signature = await mintSignature(signer, '1');
+    return signature;
+  }
+
+  const mintSchool = async()=>{
+    const signature = await signTransaction();
+    if(!signature) return Error("Signature is null");
+    mutate({schooldata:data,signature})
   }
 
   // const onSubmit = async (data: FormValuesProps) => {
@@ -192,7 +201,7 @@ export default function UserNewEditForm({ id }: Props) {
           <Box justifyContent={"center"}>
             {/* <Image width={250} height={250} alt='USER' src={'/assets/Image-right.svg'}/> */}
             <Stack alignItems="flex-start" sx={{ mt: 3 }}>
-              <Button variant="contained" color={"info"} style={{ width: "300px" }} onClick={signTransaction}>
+              <Button variant="contained" color={"info"} style={{ width: "300px" }} onClick={mintSchool}>
                 Mint
               </Button>
             </Stack>

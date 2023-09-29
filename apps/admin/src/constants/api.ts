@@ -8,6 +8,7 @@ export  default {
   },
   SCHOOLS: {
     GET: "/schools",
+    MINT:"/schools/mintQueue"
   },
   OTP: {
     REGISTER: "/auth/send-otp",

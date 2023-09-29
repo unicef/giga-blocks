@@ -33,3 +33,12 @@ export const useSchoolGetById = (id:string | undefined | string[]) => {
     }
   )
 }
+
+const mintSchool = async(data:any) =>{
+  return await api.post(routes.SCHOOLS.MINT, data)
+}
+
+export const useMintSchools = () => {
+  return useMutation(mintSchool)
+}
+
