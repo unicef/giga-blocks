@@ -15,7 +15,11 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      "@contracts": ["../../libs/contracts/index.ts"],
+      "@shared-ui": ["../../libs/shared-ui/index.ts"]
+    }
   },
   "include": [
     "next-env.d.ts",

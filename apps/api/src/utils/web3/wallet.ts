@@ -16,3 +16,14 @@ export const getAddressfromSignature = async (signatureWithData: string) => {
 export const getChecksumAddress = (address: string): string => {
   return toChecksumAddress(address);
 };
+
+export const getBatchandAddressfromSignature = async (signatureWithData: string) => {
+  if (!signatureWithData) {
+    throw new Error('No signature provided');
+  }
+  const [batchNumber, message, signature] = signatureWithData.split(':');
+  const address = recover(message, signature);
+  if (message !== `I am going to mint nfts for ${batchNumber} of schools`)
+    throw Error('Invalid Message');
+  return { batch: +batchNumber, address: getChecksumAddress(address) };
+};

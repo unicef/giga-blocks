@@ -15,7 +15,9 @@
       "@contexts/*": ["src/contexts/*"],
       "@hooks/*": ["src/hooks/*"],
       "@sections/*": ["src/sections/*"],
-      "@config": ["src/config.js"]
+      "@config": ["src/config.js"],
+      "@contracts": ["../../libs/contracts/index.ts"],
+      "@shared-ui": ["../../libs/shared-ui/index.ts"]
     },
     "target": "es5",
     "lib": ["es6", "dom"],
