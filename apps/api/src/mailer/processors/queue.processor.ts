@@ -1,7 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Job } from 'bull';
 import { OnQueueActive, OnQueueCompleted, OnQueueFailed, Process, Processor } from '@nestjs/bull';
-import { MINT_QUEUE, ONCHAIN_DATA_QUEUE, SET_MINT_NFT, SET_ONCHAIN_DATA } from '../constants';
+import {
+  MINT_QUEUE,
+  ONCHAIN_DATA_QUEUE,
+  SET_MINT_NFT,
+  SET_MINT_SINGLE_NFT,
+  SET_ONCHAIN_DATA,
+} from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 import { mintNFT } from 'src/utils/ethers/transactionFunctions';
@@ -108,5 +114,16 @@ export class MintQueueProcessor {
         'tokenURI',
       );
     }
+  }
+
+  @Process(SET_MINT_SINGLE_NFT)
+  public async sendSingleMintNFT(job: Job<{}>) {
+    this._logger.log(`Sending single mint nft to blockchain`);
+    const tx = await mintNFT(
+      'NFT',
+      this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
+      this._configService.get<string>('PRIVATE_KEY'),
+      'tokenURI',
+    );
   }
 }

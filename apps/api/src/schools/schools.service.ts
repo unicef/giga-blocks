@@ -44,12 +44,16 @@ export class SchoolService {
     throw new UnauthorizedException('You are not an admin');
   }
 
-  async checkAdminandQueue(signatureWithData: string) {
+  async checkAdminandMintQueue(signatureWithData: string) {
     const { batch, address } = await getBatchandAddressfromSignature(signatureWithData);
 
     if (await this.checkAdmin(address)) {
       return this.queueService.sendMintNFT(batch, address);
     }
+  }
+
+  async checkAdminandSingleMintQueue() {
+    return this.queueService.sendSingleMintNFT();
   }
 
   async findOne(id: string) {
