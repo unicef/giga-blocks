@@ -83,7 +83,7 @@ export class MintQueueProcessor {
   public onError(job: Job<any>, error: any) {
     this._logger.error(`Failed job ${job.id} of type ${job.name}: ${error.message}`, error.stack);
     try {
-      this.sendMintNFT(job);
+      //this.sendMintNFT(job);
       return this._mailerService.sendMail({
         to: this._configService.get('EMAIL_ADDRESS'),
         from: this._configService.get('EMAIL_ADDRESS'),
@@ -100,16 +100,11 @@ export class MintQueueProcessor {
   public async sendMintNFT(job: Job<{ h: number }>) {
     this._logger.log(`Sending mint nft to blockchain`);
 
-    try {
-      //transaction to blockchain
-      const tx = await mintNFT(
-        'NFT',
-        this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
-        getWalletAddressFromPK(this._configService.get<string>('PRIVATE_KEY')),
-        'tokenURI',
-      );
-    } catch {
-      this._logger.error(`Failed to send mint nft to blockchain`);
-    }
+    const tx = await mintNFT(
+      'NFT',
+      this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
+      getWalletAddressFromPK(this._configService.get<string>('PRIVATE_KEY')),
+      'tokenURI',
+    );
   }
 }

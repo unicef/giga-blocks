@@ -10,7 +10,14 @@
         "outputPath": "dist/libs/contracts",
         "tsConfig": "libs/contracts/tsconfig.json",
         "packageJson": "libs/contracts/package.json",
-        "main": "libs/contracts/index.ts"
+        "main": "libs/contracts/index.ts",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "libs/contracts/abi",
+            "output": "../../../dist/apps/abi"
+          }
+        ]
       }
     },
     "lint": {
