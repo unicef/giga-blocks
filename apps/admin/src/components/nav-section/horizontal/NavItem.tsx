@@ -1,16 +1,16 @@
-import { forwardRef } from 'react';
+import { forwardRef } from "react";
 // next
-import NextLink from 'next/link';
+import NextLink from "next/link";
 // @mui
-import { Box, Tooltip, ListItemText, Link } from '@mui/material';
+import { Box, Tooltip, ListItemText, Link } from "@mui/material";
 // locales
-import { useLocales } from '../../../locales';
+import { useLocales } from "../../../locales";
 // auth
-import RoleBasedGuard from '../../../auth/RoleBasedGuard';
+import RoleBasedGuard from "../../../auth/RoleBasedGuard";
 //
-import Iconify from '../../iconify';
-import { NavItemProps } from '../types';
-import { StyledItem, StyledIcon } from './styles';
+import Iconify from "../../iconify";
+import { NavItemProps } from "../types";
+import { StyledItem, StyledIcon } from "./styles";
 
 // ----------------------------------------------------------------------
 
@@ -37,8 +37,8 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
           primary={`${translate(title)}`}
           primaryTypographyProps={{
             noWrap: true,
-            component: 'span',
-            variant: active ? 'subtitle2' : 'body2',
+            component: "span",
+            variant: active ? "subtitle2" : "body2",
           }}
         />
 
@@ -58,7 +58,7 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
 
         {!!children && (
           <Iconify
-            icon={subItem ? 'eva:chevron-right-fill' : 'eva:chevron-down-fill'}
+            icon={subItem ? "eva:chevron-right-fill" : "eva:chevron-down-fill"}
             width={16}
             sx={{ ml: 0.5, flexShrink: 0 }}
           />
@@ -82,8 +82,7 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
         </Link>
       );
     };
-
-    return <RoleBasedGuard roles={roles}> {renderItem()} </RoleBasedGuard>;
+    return renderItem();
   }
 );
 

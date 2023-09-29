@@ -29,7 +29,7 @@ export class SeasonService {
   async findOne(id: string) {
     try {
       const oneSeason = await this.prisma.season.findUnique({
-        where: { season_id: id },
+        where: { id: id },
       });
       return oneSeason;
     } catch (error) {
@@ -41,11 +41,11 @@ export class SeasonService {
   async remove(id: string) {
     // Check if season with such ID exists
 
-    const seasonWithId = this.prisma.season.findUnique({ where: { season_id: id } });
+    const seasonWithId = this.prisma.season.findUnique({ where: { id: id } });
     if (!seasonWithId) throw new NotFoundException('No season with such id');
 
     await this.prisma.season.delete({
-      where: { season_id: id },
+      where: { id: id },
     });
     return `Season ${id} deleted successfully.`;
   }

@@ -52,11 +52,11 @@ const navConfig = [
         path: PATH_SCHOOL.root,
         children: [
           {
-            title: 'Verified School',
+            title: 'Minted School',
             path: PATH_SCHOOL.verified,
           },
           {
-            title: 'Contributed School',
+            title: 'Unminted School',
             path: PATH_SCHOOL.contributed,
           }
         ],

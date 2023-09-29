@@ -17,7 +17,7 @@ export const getChecksumAddress = (address: string): string => {
   return toChecksumAddress(address);
 };
 
-export const getBatchandAddressfromSignature = async (signatureWithData: string) => {
+export const getBatchandAddressfromSignature = (signatureWithData: string) => {
   if (!signatureWithData) {
     throw new Error('No signature provided');
   }

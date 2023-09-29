@@ -29,7 +29,7 @@ Table giga_roles {
 }
 
 Table giga_permissions {
-  permission_id String [pk]
+  id String [pk]
   action Permissions [unique, not null]
   subject String [not null]
   conditions String [not null]
@@ -59,44 +59,51 @@ Table giga_users {
   CreatedBy giga_points [not null]
   Auth Auth [not null]
   roles Role[] [not null]
+  schools giga_school [not null]
   isArchived Boolean [not null, default: false]
   vote giga_vote [not null]
   createdBy giga_vote [not null]
 }
 
 Table giga_school {
-  school_id String [pk]
-  giga_id_school String [unique, not null]
-  school_status SchoolStatus [not null, default: 'Open']
-  education_level Level [not null, default: 'Unkown']
+  id String [pk]
+  status SchoolStatus [not null, default: 'Open']
   connectivity_speed_status String [default: 'Data Unavailable']
-  physical_address String
+  connectivity Boolean [not null, default: false]
   name String [not null]
-  teachers Int
+  school_type String [not null]
   class_rooms Int
-  computer_lab Boolean [not null, default: false]
   electricity_available Boolean [not null, default: false]
-  school_website String
-  email_contact String
+  website String
+  email String
   phone_number String
-  country_name String [not null]
+  country String [not null]
   twiter_handle String
+  wikipedia String
+  googlemap String
   youtube String
-  daily_check_app Boolean [not null, default: false]
-  computers Int
-  lon Float [not null]
-  lat Float [not null]
-  location String
+  longitude Float [not null]
+  latitude Float [not null]
+  coverage_availability String [not null]
+  coverage_2G Boolean [not null, default: false]
+  coverage_3G Boolean [not null, default: false]
+  coverage_4G Boolean [not null, default: false]
+  hasSatteliteBuilding Boolean [not null, default: false]
+  connection_type String
+  connectivity_speed Int
+  internet_links Int
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   deletedAt DateTime
   season_Id String
+  createdBy giga_users
+  createdById String
   contributedSeason giga_season
   isArchived Boolean [not null, default: false]
 }
 
 Table giga_contributed_data {
-  contributed_UUID String [pk]
+  id String [pk]
   contributed_data Json [not null]
   status Status [not null, default: 'Pending']
   school_Id String
@@ -113,7 +120,7 @@ Table giga_contributed_data {
 }
 
 Table giga_season {
-  season_id String [pk]
+  id String [pk]
   season_name String [not null]
   season_start_date DateTime
   season_end_date DateTime
@@ -245,22 +252,24 @@ Ref: Auth.id > giga_users.id
 
 Ref: giga_permissions.role_id > giga_roles.role_id
 
-Ref: giga_school.season_Id > giga_season.season_id
+Ref: giga_school.createdById > giga_users.id
+
+Ref: giga_school.season_Id > giga_season.id
 
 Ref: giga_contributed_data.contributedUserId > giga_users.id
 
-Ref: giga_contributed_data.season_ID > giga_season.season_id
+Ref: giga_contributed_data.season_ID > giga_season.id
 
-Ref: giga_points.season_id > giga_season.season_id
+Ref: giga_points.season_id > giga_season.id
 
 Ref: giga_points.createdBy > giga_users.id
 
 Ref: giga_points.user_id > giga_users.id
 
-Ref: giga_points.contributedDataId > giga_contributed_data.contributed_UUID
+Ref: giga_points.contributedDataId > giga_contributed_data.id
 
 Ref: giga_vote.user_id > giga_users.id
 
-Ref: giga_vote.contributed_Id > giga_contributed_data.contributed_UUID
+Ref: giga_vote.contributed_Id > giga_contributed_data.id
 
 Ref: giga_vote.createdBy > giga_users.id

@@ -19,10 +19,6 @@ export default function UserEditPage() {
   } = useRouter();
 
   const singleUser = "Admin"
-
-//   const {data} = useSchoolGetById(id)
-
-//   console.log(data)
   
   return (
     <>
@@ -31,19 +27,7 @@ export default function UserEditPage() {
     </Head>
 
     <Grid container spacing={2}>
-    <Grid item xs={8}>
-    <Container>
-        <CustomBreadcrumbs heading="School Detail Page" />
-        <UserNewEditForm />
-      </Container>
-    </Grid>
-    <Grid item xs={4}>
-    <Container>
-    <Box justifyContent={'center'}>
-    <Image width={250} height={250} alt='USER' src={'/assets/Image-right.svg'}/>
-    </Box>
-    </Container>
-    </Grid>      
+    {id && <UserNewEditForm id={id}/>}    
     </Grid>
     </>
   );

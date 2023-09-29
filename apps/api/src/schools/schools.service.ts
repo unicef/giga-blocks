@@ -55,7 +55,7 @@ export class SchoolService {
   async findOne(id: string) {
     return await this.prisma.school.findUnique({
       where: {
-        giga_id_school: id,
+        id,
       },
     });
   }
@@ -65,7 +65,7 @@ export class SchoolService {
     if (firstLetter === firstLetter.toUpperCase()) {
       return await this.prisma.school.findMany({
         where: {
-          location: country,
+          country: country,
         },
       });
     } else {
@@ -73,7 +73,7 @@ export class SchoolService {
       const restOfTheString = country.slice(1);
       return await this.prisma.school.findMany({
         where: {
-          location: `${capitalizedLetter}${restOfTheString}`,
+          country: `${capitalizedLetter}${restOfTheString}`,
         },
       });
     }

@@ -8,6 +8,7 @@ export  default {
   },
   SCHOOLS: {
     GET: "/schools",
+    MINT:"/schools/mintQueue"
   },
   OTP: {
     REGISTER: "/auth/send-otp",
@@ -15,4 +16,10 @@ export  default {
   SIGNUP: {
     REGISTER: "/auth/register",
   },
+  GETNONCE: {
+    GET: '/auth/getnonce'
+  },
+  WALLET_LOGIN: {
+    POST: '/auth/walletlogin'
+  }
 };

@@ -8,13 +8,12 @@ import { useSchoolGet } from "@hooks/school/useSchool";
 import DashboardLayout from "@layouts/dashboard/DashboardLayout";
 import { Box, Button, Card, Tabs, Divider, TableContainer, Tooltip, IconButton, Table, TableBody } from "@mui/material";
 import SchoolTableRow from "@sections/user/list/SchoolTableRow";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-const VerifiedSchool = () => {
+const UserList = () => {
 
     const TABLE_HEAD = [
-        { id: 'checkbox', label: '', align: 'left' },
+        { id: 'checkbox', label: ' ', align: 'left' },
         { id: 'name', label: 'Name', align: 'left' },
         { id: 'location', label: 'Location', align: 'left' },
         { id: 'latitide', label: 'Latitude', align: 'left' },
@@ -52,12 +51,9 @@ const VerifiedSchool = () => {
       setTableData(filteredData);
     }, [data]);
 
-
-    
-
     return ( 
         <DashboardLayout>
-            <h2>Verified School List</h2>
+            <h2>Users List</h2>
           <Card>
           <Divider />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -104,7 +100,6 @@ const VerifiedSchool = () => {
                         key={row.id}
                         row={row}
                         selected={selected?.includes(row.id)}
-                        // selected={true}
                       />
                     ))}
                   <TableNoData 
@@ -129,4 +124,4 @@ const VerifiedSchool = () => {
      );
 }
  
-export default VerifiedSchool;
+export default UserList;

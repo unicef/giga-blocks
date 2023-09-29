@@ -69,11 +69,11 @@ export default function UserNewEditForm() {
               />
             </Box>
 
-            <Stack alignItems="flex-start" sx={{ mt: 3 }}>
+            {/* <Stack alignItems="flex-start" sx={{ mt: 3 }}>
               <Button variant="contained" style={{width: '300px', background: '#474747'}}>
                 Update profile
               </Button>
-            </Stack>
+            </Stack> */}
           </Card>
         </Grid>
       </Grid>
