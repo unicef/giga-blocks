@@ -1,31 +1,40 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Logger } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { SchoolService } from './schools.service';
 import { UpdateSchoolDto } from './dto/update-schools.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ListSchoolDto } from './dto/list-schools.dto';
 import { Public } from '../common/decorators/public.decorator';
-import { QueueService } from 'src/mailer/queue.service';
-import { getBatchandAddressfromSignature } from '../utils/web3/wallet';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
+import { RoleGuard } from 'src/auth/guards/role.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 @Controller('schools')
 @ApiTags('School')
 export class SchoolController {
-  constructor(
-    private readonly schoolService: SchoolService,
-    private readonly queueService: QueueService,
-  ) {}
+  constructor(private readonly schoolService: SchoolService) {}
 
-  @Public()
+  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Get('onchainDataQueue')
   queue() {
-    return this.queueService.sendTransaction(1);
+    return this.schoolService.queueOnchainData(1);
   }
 
-  @Public()
-  @Get('mintQueue')
-  async mintQueue(signatureWithData: string) {
-    const { batch, address } = await getBatchandAddressfromSignature(signatureWithData);
-    return this.queueService.sendMintNFT(batch, address);
+  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Post('mintQueue')
+  mintQueue(@Body() signatureWithData: string) {
+    return this.schoolService.checkAdminandQueue(signatureWithData);
   }
 
   @Public()
