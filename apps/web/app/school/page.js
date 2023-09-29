@@ -8,7 +8,7 @@ import { cacheExchange, Client, fetchExchange, Provider } from "urql";
 
 const SchoolCard = () => {
   const apiKey = "08f9ad14d0cdff91f67dd3bb4c89e42f";
-  const QueryURL = 'https://api.thegraph.com/subgraphs/name/myanzik/giga'
+  const QueryURL = 'https://api.thegraph.com/subgraphs/name/myanzik/giga-nft'
 
   const client = new Client({
     url: QueryURL,
