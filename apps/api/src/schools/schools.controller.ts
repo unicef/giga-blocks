@@ -5,6 +5,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { ListSchoolDto } from './dto/list-schools.dto';
 import { Public } from '../common/decorators/public.decorator';
 import { QueueService } from 'src/mailer/queue.service';
+import { getBatchandAddressfromSignature } from '../utils/web3/wallet';
 
 @Controller('schools')
 @ApiTags('School')
@@ -22,8 +23,9 @@ export class SchoolController {
 
   @Public()
   @Get('mintQueue')
-  mintQueue() {
-    return this.queueService.sendMintNFT(1);
+  async mintQueue(signatureWithData: string) {
+    const { batch, address } = await getBatchandAddressfromSignature(signatureWithData);
+    return this.queueService.sendMintNFT(batch, address);
   }
 
   @Public()

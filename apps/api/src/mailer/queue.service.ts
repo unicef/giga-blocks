@@ -22,9 +22,9 @@ export class QueueService {
     }
   }
 
-  public async sendMintNFT(data: number): Promise<void> {
+  public async sendMintNFT(batch: number, address: string): Promise<void> {
     try {
-      await this._mintQueue.add(SET_MINT_NFT, { h: data }, jobOptions);
+      await this._mintQueue.add(SET_MINT_NFT, { batch, address }, jobOptions);
     } catch (error) {
       this._logger.error(`Error queueing bulk transaction to blockchain `);
       throw error;

@@ -97,14 +97,16 @@ export class MintQueueProcessor {
   }
 
   @Process(SET_MINT_NFT)
-  public async sendMintNFT(job: Job<{ h: number }>) {
+  public async sendMintNFT(job: Job<{ batch: number; address: string }>) {
     this._logger.log(`Sending mint nft to blockchain`);
-
-    const tx = await mintNFT(
-      'NFT',
-      this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
-      getWalletAddressFromPK(this._configService.get<string>('PRIVATE_KEY')),
-      'tokenURI',
-    );
+    for (let i = 0; i < job.data.batch; i++) {
+      this._logger.log(`Minting NFT ${i}`);
+      const tx = await mintNFT(
+        'NFT',
+        this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
+        job.data.address,
+        'tokenURI',
+      );
+    }
   }
 }
