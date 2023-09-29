@@ -2,16 +2,8 @@
 
 import type { Web3ReactHooks } from "@web3-react/core";
 import type { MetaMask } from "@web3-react/metamask";
-
-// import { getName } from '../utils'
-// import { Accounts } from './Accounts'
-// import { Chain } from './Chain'
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import { Button, CardActionArea, CardActions, Typography } from "@mui/material";
 import { ConnectWithSelect } from "./ConnectWithSelect";
 import { Status } from "./status";
-import { Chain } from "./chain";
 import { Accounts } from "./account";
 
 interface Props {
@@ -56,9 +48,6 @@ export function Card({
         <div style={{ marginBottom: "1rem", color: "white" }}>
           <Status isActivating={isActivating} isActive={isActive} error={error} />
         </div>
-        {/* <div style={{ color: "white" }}>
-          <Chain chainId={activeChainId} />
-        </div> */}
         <div style={{ marginBottom: "1rem", color: "white" }}>
           <Accounts accounts={accounts} provider={provider} ENSNames={ENSNames} />
         </div>
