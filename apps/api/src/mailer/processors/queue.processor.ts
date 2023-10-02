@@ -110,8 +110,7 @@ export class MintQueueProcessor {
       const tx = await mintNFT(
         'NFT',
         this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
-        job.data.address,
-        'tokenURI',
+        [],
       );
     }
   }
@@ -122,8 +121,7 @@ export class MintQueueProcessor {
     const tx = await mintNFT(
       'NFT',
       this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
-      this._configService.get<string>('PRIVATE_KEY'),
-      'tokenURI',
+      [],
     );
   }
 }

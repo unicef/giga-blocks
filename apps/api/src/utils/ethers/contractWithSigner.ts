@@ -16,3 +16,10 @@ export const getSigner = () => {
   const signer = new ethers.Wallet(config.get('PRIVATE_KEY'), provider);
   return signer;
 };
+
+export const getInterface = (contractName: string) => {
+  const config = new ConfigService();
+  const contractObj = new Contract(config.get('NETWORK_PROVIDER'));
+  const iface = contractObj.getInterface(contractName);
+  return iface;
+};
