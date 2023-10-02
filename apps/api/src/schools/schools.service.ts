@@ -1,13 +1,16 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { Prisma } from '@prisma/application';
 import { UpdateSchoolDto } from './dto/update-schools.dto';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { ListSchoolDto } from './dto/list-schools.dto';
 import { paginate } from 'src/utils/paginate';
+import { QueueService } from 'src/mailer/queue.service';
+import { getBatchandAddressfromSignature } from 'src/utils/web3/wallet';
+import { Role } from '@prisma/application';
 
 @Injectable()
 export class SchoolService {
-  constructor(private prisma: PrismaAppService) {}
+  constructor(private prisma: PrismaAppService, private readonly queueService: QueueService) {}
 
   async findAll(query: ListSchoolDto) {
     const { page, perPage } = query;
@@ -23,6 +26,34 @@ export class SchoolService {
         perPage,
       },
     );
+  }
+
+  async queueOnchainData(data: number) {
+    return this.queueService.sendTransaction(data);
+  }
+
+  async checkAdmin(address: string) {
+    const admin = await this.prisma.user.findUnique({
+      where: {
+        walletAddress: Buffer.from(address),
+      },
+    });
+    if (Role.ADMIN in admin.roles) {
+      return true;
+    }
+    throw new UnauthorizedException('You are not an admin');
+  }
+
+  async checkAdminandMintQueue(signatureWithData: string) {
+    const { batch, address } = await getBatchandAddressfromSignature(signatureWithData);
+
+    if (await this.checkAdmin(address)) {
+      return this.queueService.sendMintNFT(batch, address);
+    }
+  }
+
+  async checkAdminandSingleMintQueue() {
+    return this.queueService.sendSingleMintNFT();
   }
 
   async findOne(id: string) {

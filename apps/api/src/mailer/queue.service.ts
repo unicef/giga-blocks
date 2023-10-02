@@ -1,5 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { MINT_QUEUE, ONCHAIN_DATA_QUEUE, SET_MINT_NFT, SET_ONCHAIN_DATA } from './constants';
+import {
+  MINT_QUEUE,
+  ONCHAIN_DATA_QUEUE,
+  SET_MINT_NFT,
+  SET_MINT_SINGLE_NFT,
+  SET_ONCHAIN_DATA,
+} from './constants';
 import { Queue } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
 import { jobOptions } from './config/bullOptions';
@@ -27,6 +33,15 @@ export class QueueService {
       await this._mintQueue.add(SET_MINT_NFT, { batch, address }, jobOptions);
     } catch (error) {
       this._logger.error(`Error queueing bulk transaction to blockchain `);
+      throw error;
+    }
+  }
+
+  public async sendSingleMintNFT(): Promise<void> {
+    try {
+      await this._mintQueue.add(SET_MINT_SINGLE_NFT, {}, jobOptions);
+    } catch (error) {
+      this._logger.error(`Error queueing transaction to blockchain `);
       throw error;
     }
   }

@@ -18,6 +18,7 @@ async function readAndSaveCSV(filePath: string): Promise<void> {
   try {
     const fileData = fs.readFileSync(filePath, 'utf8');
     const rows = fileData.trim().split('\n').slice(1);
+    const user = await prisma.user.findFirst(); //trying first user in user model
 
     for (const row of rows) {
       const [
@@ -60,6 +61,7 @@ async function readAndSaveCSV(filePath: string): Promise<void> {
           electricity_available: schoolData.electricity_availabilty as boolean,
           coverage_availability: schoolData.coverage_availabitlity,
           country: country,
+          createdById: user.id, //just for test
         },
       });
 

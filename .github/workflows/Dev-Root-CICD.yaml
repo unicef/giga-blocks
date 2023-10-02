@@ -4,7 +4,7 @@ on:
     branches:
       - 'dev'
     paths-ignore:
-      - 'apps/**' 
+      - 'apps/**'
   pull_request:
     branches:
       - 'dev'
@@ -27,7 +27,7 @@ jobs:
       - name: import env file
         run: |
           touch ./.env && echo "$env_dev" >> ./.env
-      
+
       - uses: actions/setup-node@v3
         with:
           node-version: 18
@@ -48,8 +48,8 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-    
-    # API Image
+
+      # API Image
       - name: build && push api
         id: build-push-api
         uses: docker/build-push-action@v3
@@ -62,9 +62,9 @@ jobs:
 
       - name: Build Docker image
         if: github.event_name == 'pull_request'
-        run: docker build -t myimage:${{ github.sha }} .
-    
-    # Admin Image
+        run: docker build -f Dockerfile.api -t myimage:${{ github.sha }} .
+
+      # Admin Image
       - name: build && push admin
         id: build-push-admin
         uses: docker/build-push-action@v3
@@ -77,9 +77,9 @@ jobs:
 
       - name: Build Docker image
         if: github.event_name == 'pull_request'
-        run: docker build -t myimage:${{ github.sha }} .
-      
-    #  Web Image
+        run: docker build -f Dockerfile.admin -t myimage:${{ github.sha }} .
+
+      #  Web Image
       - name: build && push web
         id: build-push-web
         uses: docker/build-push-action@v3
@@ -92,4 +92,4 @@ jobs:
 
       - name: Build Docker image
         if: github.event_name == 'pull_request'
-        run: docker build -t myimage:${{ github.sha }} .
+        run: docker build -f Dockerfile.web -t myimage:${{ github.sha }} .
