@@ -5,7 +5,7 @@ import { Network } from "@web3-react/network";
 import { useCallback, useEffect, useState } from "react";
 
 import { Button } from "@mui/material";
-import { sign } from "./utils/wallet";
+import { loginSignature } from "./utils/wallet";
 import { JsonRpcProvider, Signer } from "ethers";
 import { useLoginWallet, useNonceGet } from "@hooks/web3/useMetamask";
 import { useRouter } from "next/router";
@@ -68,15 +68,9 @@ export function ConnectWithSelect({
       try {
         const signer = (provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
         const address = await signer.getAddress();
-        signer
-          .signMessage(nonceData?.nonce)
-          .then((res) => {
-            const signature = `${nonceData?.nonce}:${res}`;
-            mutate({ walletAddress: address, signature });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        const signature = await loginSignature(signer,nonceData?.nonce);
+        if(!signature) return Error("Signature is null");
+        mutate({ walletAddress: address, signature });
       } catch (e) {
         console.log(e);
       }
@@ -85,7 +79,6 @@ export function ConnectWithSelect({
 
   useEffect(() => {
     isError && console.log(loginWalletError);
-    console.log(loginWalletData);
     if (isLoginWalletSuccess) {
       const currentUser = {
         email: loginWalletData.data.email,
@@ -102,19 +95,13 @@ export function ConnectWithSelect({
     if (activeChainId && (!desiredChainId || desiredChainId === -1)) {
       setDesiredChainId(activeChainId);
     }
-    console.log("sign metamask 2", isActive);
-    // if (isActive) {
-    //   getSignature()
     // }
   }, [desiredChainId, activeChainId]);
 
   const connectWallet = useCallback(async () => {
     try {
       setError(undefined);
-
       await connector.activate();
-
-      console.log("sign metamask 1");
     } catch (error) {
       console.log("error", error);
       setError(error);

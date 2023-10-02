@@ -4,11 +4,29 @@ import { UpdateSchoolDto } from './dto/update-schools.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ListSchoolDto } from './dto/list-schools.dto';
 import { Public } from '../common/decorators/public.decorator';
+import { QueueService } from 'src/mailer/queue.service';
+import { getBatchandAddressfromSignature } from '../utils/web3/wallet';
 
 @Controller('schools')
 @ApiTags('School')
 export class SchoolController {
-  constructor(private readonly schoolService: SchoolService) {}
+  constructor(
+    private readonly schoolService: SchoolService,
+    private readonly queueService: QueueService,
+  ) {}
+
+  @Public()
+  @Get('onchainDataQueue')
+  queue() {
+    return this.queueService.sendTransaction(1);
+  }
+
+  @Public()
+  @Get('mintQueue')
+  async mintQueue(signatureWithData: string) {
+    const { batch, address } = await getBatchandAddressfromSignature(signatureWithData);
+    return this.queueService.sendMintNFT(batch, address);
+  }
 
   @Public()
   @Get()

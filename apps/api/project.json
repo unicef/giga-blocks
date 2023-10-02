@@ -4,8 +4,11 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "nx:noop",
-      "dependsOn": ["scripts"]
+      "executor": "nx:run-commands",
+      "dependsOn": ["scripts"],
+      "options": {
+        "commands": ["cp .env dist/apps/api/.env"]
+      }
     },
     "scripts": {
       "executor": "nx:run-commands",
@@ -49,14 +52,14 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "api:mainBuild"
+        "buildTarget": "api:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "api:mainBuild:development"
+          "buildTarget": "api:build:development"
         },
         "production": {
-          "buildTarget": "api:mainBuild:production"
+          "buildTarget": "api:build:production"
         }
       }
     },
