@@ -38,7 +38,7 @@ const SchoolCard = () => {
         ...JSON.parse(decodedData),
       };
       decodedShooldata.push(schoolData);
-      console.log(schoolData);
+      console.log(schoolData?.tokenId);
     }
     setSchoolData(decodedShooldata);
   };
@@ -60,7 +60,7 @@ const SchoolCard = () => {
             schoolData?.map((school) => (
               <Column sm={4}>
                 <ClickableTile
-                  href={`/school/${schoolData?.tokenId}`}
+                  href={`/school/${school?.tokenId}`}
                   className="card"
                 >
                   <div className="row">
