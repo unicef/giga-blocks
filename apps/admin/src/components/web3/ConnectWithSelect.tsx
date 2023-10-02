@@ -50,8 +50,9 @@ export function ConnectWithSelect({
   setError: (error: Error | undefined) => void;
 }) {
   const [desiredChainId, setDesiredChainId] = useState<any>(undefined);
+  const [enableGetNonce, setEnableGetNonce] = useState<boolean>(true)
 
-  const { data: nonceData, isSuccess: isNonceSuccess } = useNonceGet();
+  const { data: nonceData, isSuccess: isNonceSuccess } = useNonceGet(enableGetNonce);
 
   const { push } = useRouter();
 
@@ -63,8 +64,9 @@ export function ConnectWithSelect({
     error: loginWalletError,
   } = useLoginWallet();
 
-  const getSignature = async () => {
+  const getSignature = useCallback(async () => {
     if (isNonceSuccess) {
+      setEnableGetNonce(false)
       try {
         const signer = (provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
         const address = await signer.getAddress();
@@ -75,7 +77,7 @@ export function ConnectWithSelect({
         console.log(e);
       }
     }
-  };
+  }, [isNonceSuccess]);
 
   useEffect(() => {
     isError && console.log(loginWalletError);
@@ -99,6 +101,7 @@ export function ConnectWithSelect({
   }, [desiredChainId, activeChainId]);
 
   const connectWallet = useCallback(async () => {
+    setEnableGetNonce(false)
     try {
       setError(undefined);
       await connector.activate();

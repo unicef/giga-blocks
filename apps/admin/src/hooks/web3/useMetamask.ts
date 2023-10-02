@@ -7,13 +7,14 @@ const api = axios.create({
   baseURL:routes.BASE_URL,
 });
 
-export const useNonceGet = () => {
+export const useNonceGet = (enabled:boolean) => {
   return useQuery(
     ["get-nonce"],
     async () => {
       const { data } = await api.get(routes.GETNONCE.GET);
       return data;
-    }
+    },
+    {enabled}
   );
 };
 

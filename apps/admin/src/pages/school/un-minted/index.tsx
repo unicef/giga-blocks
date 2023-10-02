@@ -8,6 +8,10 @@ import { Box, Button, Card, Tabs, Divider, TableContainer, Tooltip, IconButton, 
 import SchoolTableRow from "@sections/user/list/SchoolTableRow";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import {hooks} from "@hooks/web3/metamask";
+import { JsonRpcProvider, Signer } from "ethers";
+import { mintSignature } from "@components/web3/utils/wallet";
+import { useMintSchools } from "@hooks/school/useSchool";
 
 const VerifiedSchool = () => {
 
@@ -21,15 +25,18 @@ const VerifiedSchool = () => {
         { id: 'coverage', label: 'Coverage', align: 'left' },
       ];
 
-      const {dense, page, order, orderBy, rowsPerPage, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
+      const {dense, page, order, orderBy, rowsPerPage, onSelectRow, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
       } = useTable();
 
-    // const { filteredUsers } = useAdministrationContext();
+      const {mutate, isError:isMintError,data:mintData,isSuccess :isMintSuccess} = useMintSchools();
 
+      const {useProvider} = hooks
+      const provider = useProvider();
+
+    // const { filteredUsers } = useAdministrationContext();
+    const [selectedValues, setSelectedValues] = useState<any>([]);
     const [tableData, setTableData] = useState<any>([]);
     const {data} = useSchoolGet(page, rowsPerPage)
-
-    let selected:string[] = []
 
     // const { error } = useFetchUsers();
 
@@ -37,7 +44,7 @@ const VerifiedSchool = () => {
     useEffect(() => {
       data?.rows.map((row:any) => {
         filteredData.push({
-          id: row.giga_id_school,
+          id: row.id,
           name: row.name, 
           location: row.location,
           longitude: row.lon,
@@ -50,14 +57,24 @@ const VerifiedSchool = () => {
       setTableData(filteredData);
     }, [data]);
 
-
-    
+    const signTransaction = async () =>{
+      const signer = (provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
+      const signature = await mintSignature(signer, '1');
+      return signature;
+    }
+  
+    const mintSchool = async () => {
+      const signature = await signTransaction();
+      if(!signature) return Error("Signature is null");
+      mutate({schooldata:selectedValues, signatureWithData:signature})
+    }
 
     return ( 
         <DashboardLayout>
             <h2>Verified School List</h2>
           <Card>
           <Divider />
+          <Button onClick={mintSchool}>Mint ({selectedValues.length})</Button>
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
               dense={dense}
@@ -101,8 +118,12 @@ const VerifiedSchool = () => {
                       <SchoolTableRow
                         key={row.id}
                         row={row}
-                        selected={selected?.includes(row.id)}
-                        // selected={true}
+                        // selected={undefined}
+                        // selected={selectedValues.includes(row.id)}
+                        // onSelectRow={onSelectRow}
+                        selectedValues={selectedValues}
+                        setSelectedValues={setSelectedValues}
+                        rowData = {row}
                       />
                     ))}
                   <TableNoData 

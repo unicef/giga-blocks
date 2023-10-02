@@ -22,12 +22,20 @@ import { useRouter } from 'next/router';
 
 type Props = {
   row: any;
-  selected: boolean;
+  // selected: boolean;
+  // onSelectRow: any;
+  setSelectedValues: any;
+  selectedValues:any;
+  rowData: any;
 };
 
 export default function UserTableRow({
   row,
-  selected
+  // selected, 
+  // onSelectRow,
+  setSelectedValues,
+  selectedValues,
+  rowData
 }: Props) {
   const {
   id,
@@ -45,17 +53,34 @@ export default function UserTableRow({
     push(`/school/${row}/edit`)
   }
 
+  const handleCheckboxChange = (event:any, row:any) => {
+    const isChecked = event.target.checked;
+    if (isChecked) {
+      setSelectedValues((prev:any) => [
+        ...prev,
+        row,
+      ]);
+    } else {
+      setSelectedValues((prevSelectedValues:any) =>
+        prevSelectedValues.filter((value:any) => value.id !== row.id)
+      );
+    }
+  };
+
   return (
     <>
-      <TableRow hover selected={selected} onClick = {() => handleEditRow(id)}>
+      <TableRow hover 
+      // selected={selected}
+      >
 
       <TableCell padding="checkbox"> 
         <Checkbox
-          checked={selected}
+          onChange={(e) => handleCheckboxChange(e, rowData)}
+          // checked={selected}
         />
       </TableCell>
 
-        <TableCell>
+        <TableCell onClick={() => handleEditRow(id)}>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Typography variant="subtitle2" noWrap>
               {name}
@@ -63,21 +88,23 @@ export default function UserTableRow({
           </Stack>
         </TableCell>
 
-        <TableCell align="left">{location}</TableCell>
+        <TableCell align="left" onClick={() => handleEditRow(id)}>
+          {location}
+        </TableCell>
 
-        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+        <TableCell align="left" sx={{ textTransform: 'capitalize' }} onClick={() => handleEditRow(id)}>
           {longitude}
         </TableCell>
 
-        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+        <TableCell align="left" sx={{ textTransform: 'capitalize' }} onClick={() => handleEditRow(id)}>
           {latitude}
         </TableCell>
 
-        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+        <TableCell align="left" sx={{ textTransform: 'capitalize' }} onClick={() => handleEditRow(id)}>
           {connectivity}
         </TableCell>
 
-        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+        <TableCell align="left" sx={{ textTransform: 'capitalize' }} onClick={() => handleEditRow(id)}>
           {coverage}
         </TableCell>
       </TableRow>
