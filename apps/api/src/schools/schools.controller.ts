@@ -32,15 +32,15 @@ export class SchoolController {
 
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @Post('mintQueue')
-  mintQueue(@Body() signatureWithData: string) {
+  @Post('mintBulk')
+  mintBatchSchool(@Body() signatureWithData: string) {
     return this.schoolService.checkAdminandMintQueue(signatureWithData);
   }
 
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @Get()
-  mintSingleQueue() {
+  @Post('mintSchool')
+  mintSchool() {
     return this.schoolService.checkAdminandSingleMintQueue();
   }
 
