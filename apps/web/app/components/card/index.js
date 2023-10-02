@@ -25,12 +25,9 @@ const SchoolCard = () => {
   const [pageSize, setPageSize] = useState(12);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
 
-  const { data, isLoading, isFetching } = useSchoolGet(1, pageSize);
-
   useEffect(() => {
-    // isLoading === false && setSchoolData(data?.rows);
     if(queryData)decodeSchooldata(queryData)
-  }, [data,queryData]);
+  }, [queryData]);
 
 
   const decodeSchooldata = (data) =>{    

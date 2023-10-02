@@ -3,7 +3,8 @@ import "../../components/landing-page/styles/preview.scss"
 import { Tile } from "@carbon/react";
 import './school-detail.scss'
 
-const Introduction = () => {
+const Introduction = (schooldata) => {
+  console.log(schooldata)
   return (
     <Grid fullWidth className="mt-50px">
       <Column md={4} lg={5} sm={4} >
