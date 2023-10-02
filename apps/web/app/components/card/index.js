@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   ClickableTile,
   Column,
@@ -9,36 +9,39 @@ import {
   ToggletipContent,
   ToggletipButton,
   ToggletipActions,
-} from "@carbon/react";
-import "./card.scss";
-import { useEffect, useState } from "react";
-import { useSchoolGet } from "../../hooks/useSchool";
-import Link from "next/link";
-import { gql, useQuery } from "urql";
-import  {Queries}  from "../../libs/graph-query";
+} from '@carbon/react';
+import './card.scss';
+import { useEffect, useState } from 'react';
+import { useSchoolGet } from '../../hooks/useSchool';
+import Link from 'next/link';
+import { gql, useQuery } from 'urql';
+import { Queries } from '../../libs/graph-query';
 
 const SchoolCard = () => {
-
-  const [result] = useQuery( {query:Queries.nftListQuery} );
-  const { data:queryData, fetching, error } = result;
+  const [result] = useQuery({ query: Queries.nftListQuery });
+  const { data: queryData, fetching, error } = result;
   const [schoolData, setSchoolData] = useState([]);
   const [pageSize, setPageSize] = useState(12);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
 
   useEffect(() => {
-    if(queryData)decodeSchooldata(queryData)
+    if (queryData) decodeSchooldata(queryData);
   }, [queryData]);
 
-
-  const decodeSchooldata = (data) =>{    
-    const encodeddata = data.tokenUris
-    const decodedShooldata = []
-    for(let i = 0; i < encodeddata.length; i++){
-      const decodedData = atob(encodeddata[i].tokenUri.substring(29))
-      decodedShooldata.push(JSON.parse(decodedData))
+  const decodeSchooldata = (data) => {
+    const encodeddata = data.tokenUris;
+    const decodedShooldata = [];
+    for (let i = 0; i < encodeddata.length; i++) {
+      const decodedData = atob(encodeddata[i].tokenUri.substring(29));
+      const schoolData = {
+        tokenId: encodeddata[i].id,
+        ...JSON.parse(decodedData),
+      };
+      decodedShooldata.push(schoolData);
+      console.log(schoolData?.tokenId);
     }
-    setSchoolData(decodedShooldata) 
-  }
+    setSchoolData(decodedShooldata);
+  };
 
   const loadMore = () => {
     if (pageSize < data?.meta.total - 12) {
@@ -52,57 +55,60 @@ const SchoolCard = () => {
   return (
     <>
       {fetching === false ? (
-        <Grid fullWidth style={{ margin: "30px auto" }}>
+        <Grid fullWidth style={{ margin: '30px auto' }}>
           {schoolData &&
             schoolData?.map((school) => (
               <Column sm={4}>
-                <ClickableTile className="card">
+                <ClickableTile
+                  href={`/school/${school?.tokenId}`}
+                  className="card"
+                >
                   <div className="row">
                     <div>
-                    <img src={school?.image} alt ='SVG Image'/>
+                      <img src={school?.image} alt="SVG Image" />
                       <p className="text-purple">School Name</p>
                       <Toggletip align="right">
                         <ToggletipButton label="Show information">
-                          <h4 style={{ minHeight: "56px" }}>
+                          <h4 style={{ minHeight: '56px' }}>
                             {school.name.length > 40
                               ? `${school.name
                                   ?.toLowerCase()
-                                  .split(" ")
+                                  .split(' ')
                                   .map(
                                     (word) =>
                                       word.charAt(0).toUpperCase() +
                                       word.slice(1)
                                   )
-                                  .join(" ")
+                                  .join(' ')
                                   .slice(0, 40)}...`
                               : school.name
                                   ?.toLowerCase()
-                                  .split(" ")
+                                  .split(' ')
                                   .map(
                                     (word) =>
                                       word.charAt(0).toUpperCase() +
                                       word.slice(1)
                                   )
-                                  .join(" ")}
+                                  .join(' ')}
                           </h4>
                         </ToggletipButton>
                         <ToggletipContent>
                           <p>
                             {school.name
                               ?.toLowerCase()
-                              .split(" ")
+                              .split(' ')
                               .map(
                                 (word) =>
                                   word.charAt(0).toUpperCase() + word.slice(1)
                               )
-                              .join(" ")}
+                              .join(' ')}
                           </p>
                         </ToggletipContent>
                       </Toggletip>
                     </div>
                   </div>
-                  <div className="row" style={{ marginTop: "15px" }}>
-                    <div style={{ textAlign: "right" }}>
+                  <div className="row" style={{ marginTop: '15px' }}>
+                    <div style={{ textAlign: 'right' }}>
                       <p className="text-purple">Country</p>
                       <h4 className="heading2 text-left">{school.location}</h4>
                     </div>
@@ -110,11 +116,11 @@ const SchoolCard = () => {
                       <p className="text-purple">Education Level</p>
                       <h4 className="heading2">{school.education_level}</h4>
                     </div>
-                    <div style={{ textAlign: "right" }}>
+                    <div style={{ textAlign: 'right' }}>
                       <p className="text-purple">Internet</p>
                       <h4 className="heading2">
-                        {school.connectivity_speed_status === "No connection"
-                          ? "N/A"
+                        {school.connectivity_speed_status === 'No connection'
+                          ? 'N/A'
                           : school.connectivity_speed_status}
                       </h4>
                     </div>
@@ -127,17 +133,17 @@ const SchoolCard = () => {
               onClick={loadMore}
               kind="tertiary"
               disabled={allDataLoaded}
-              style={{ float: "right" }}
+              style={{ float: 'right' }}
             >
-              {allDataLoaded === false ? "Load more" : "No more data"}
+              {allDataLoaded === false ? 'Load more' : 'No more data'}
             </Button>
           </Column>
         </Grid>
       ) : (
         <div className="loader-container">
-          {" "}
-          <Loading withOverlay={false} />{" "}
-          <span>Loading school data, please wait...</span>{" "}
+          {' '}
+          <Loading withOverlay={false} />{' '}
+          <span>Loading school data, please wait...</span>{' '}
         </div>
       )}
     </>

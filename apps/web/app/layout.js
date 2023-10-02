@@ -1,12 +1,12 @@
-import "./globals.scss";
-import { Lora } from "next/font/google";
-import QueryProvider from "./libs/get-query-client";
+import './globals.scss';
+import { Lora } from 'next/font/google';
+import QueryProvider from './libs/get-query-client';
 
-const lora = Lora({ subsets: ["latin"] });
+const lora = Lora({ subsets: ['latin'] });
 
 export const metadata = {
-  title: "NFT 2.0",
-  description: "",
+  title: 'NFT 2.0',
+  description: '',
 };
 
 export default function RootLayout({ children }) {
