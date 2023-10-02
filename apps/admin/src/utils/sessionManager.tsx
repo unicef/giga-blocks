@@ -31,6 +31,12 @@ export const saveAccessToken = (accessToken: string): void =>
 export const deleteAccessToken = (): void =>
   storage ? storage.removeItem('accessToken') : undefined;
 
+export const saveConnectors = (connector:string):void    =>
+  storage ? storage.setItem('auth', connector) : undefined;
+
+export const deleteConnectors = () =>
+  storage ? storage.removeItem('auth') : undefined;
+
 export const clearStorage = (): void => {
   if (storage) {
     storage.clear();
