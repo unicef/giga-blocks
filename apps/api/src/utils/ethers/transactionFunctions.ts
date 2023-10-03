@@ -10,7 +10,7 @@ export const mintNFT = async (
   const escrowAddress = config.get('ESCROW_ADDRESS');
   const contract: any = getContractWithSigner(contractName, contractAddress);
   const schoolArgs = schoolDataArray.map(el => [escrowAddress, escrowAddress, el]);
-  const multicalldata = generateMultiCallData(contractName, 'safeMint', schoolArgs);
+  const multicalldata = generateMultiCallData(contractName, 'mintNft', schoolArgs);
   const tx = await contract.multicall(multicalldata);
   return tx;
 };
@@ -33,7 +33,7 @@ const generateMultiCallData = (contractName, functionName, callData) => {
   const encodedData = [];
   if (callData) {
     for (const callD of callData) {
-      const encodedD = iface.interface.encodeFunctionData(functionName, [...callD]);
+      const encodedD = iface.encodeFunctionData(functionName, [...callD]);
       encodedData.push(encodedD);
     }
   }
