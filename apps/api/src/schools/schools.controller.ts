@@ -31,9 +31,8 @@ export class SchoolController {
     return this.schoolService.queueOnchainData(1);
   }
 
-  // @Roles('ADMIN')
-  // @UseGuards(JwtAuthGuard, RoleGuard)
-  @Public()
+  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('mintBulk')
   mintBatchSchool(@Body() MintData: MintQueueDto) {
     return this.schoolService.checkAdminandMintQueue(MintData);
