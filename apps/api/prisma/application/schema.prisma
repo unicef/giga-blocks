@@ -186,6 +186,7 @@ model School {
   youtube               String?
   longitude             Float
   latitude              Float
+  minted                Boolean      @default(false)
   coverage_availability String
   coverage_2G          Boolean      @default(false)
   coverage_3G           Boolean      @default(false)

@@ -128,7 +128,7 @@
                   <div class="mt-1 ml-2">
                     <div class="mb-1 font-medium text-gray-600"><a href="#model-School-fields">Fields</a></div>
                       <ul class="pl-3 ml-1 border-l-2 border-gray-400">
-                      <li><a href="#model-School-id">id</a></li><li><a href="#model-School-status">status</a></li><li><a href="#model-School-connectivity_speed_status">connectivity_speed_status</a></li><li><a href="#model-School-connectivity">connectivity</a></li><li><a href="#model-School-name">name</a></li><li><a href="#model-School-school_type">school_type</a></li><li><a href="#model-School-class_rooms">class_rooms</a></li><li><a href="#model-School-electricity_available">electricity_available</a></li><li><a href="#model-School-website">website</a></li><li><a href="#model-School-email">email</a></li><li><a href="#model-School-phone_number">phone_number</a></li><li><a href="#model-School-country">country</a></li><li><a href="#model-School-twiter_handle">twiter_handle</a></li><li><a href="#model-School-wikipedia">wikipedia</a></li><li><a href="#model-School-googlemap">googlemap</a></li><li><a href="#model-School-youtube">youtube</a></li><li><a href="#model-School-longitude">longitude</a></li><li><a href="#model-School-latitude">latitude</a></li><li><a href="#model-School-coverage_availability">coverage_availability</a></li><li><a href="#model-School-coverage_2G">coverage_2G</a></li><li><a href="#model-School-coverage_3G">coverage_3G</a></li><li><a href="#model-School-coverage_4G">coverage_4G</a></li><li><a href="#model-School-hasSatteliteBuilding">hasSatteliteBuilding</a></li><li><a href="#model-School-connection_type">connection_type</a></li><li><a href="#model-School-connectivity_speed">connectivity_speed</a></li><li><a href="#model-School-internet_links">internet_links</a></li><li><a href="#model-School-createdAt">createdAt</a></li><li><a href="#model-School-updatedAt">updatedAt</a></li><li><a href="#model-School-deletedAt">deletedAt</a></li><li><a href="#model-School-season_Id">season_Id</a></li><li><a href="#model-School-createdBy">createdBy</a></li><li><a href="#model-School-createdById">createdById</a></li><li><a href="#model-School-contributedSeason">contributedSeason</a></li><li><a href="#model-School-isArchived">isArchived</a></li>
+                      <li><a href="#model-School-id">id</a></li><li><a href="#model-School-status">status</a></li><li><a href="#model-School-connectivity_speed_status">connectivity_speed_status</a></li><li><a href="#model-School-connectivity">connectivity</a></li><li><a href="#model-School-name">name</a></li><li><a href="#model-School-school_type">school_type</a></li><li><a href="#model-School-class_rooms">class_rooms</a></li><li><a href="#model-School-electricity_available">electricity_available</a></li><li><a href="#model-School-website">website</a></li><li><a href="#model-School-email">email</a></li><li><a href="#model-School-phone_number">phone_number</a></li><li><a href="#model-School-country">country</a></li><li><a href="#model-School-twiter_handle">twiter_handle</a></li><li><a href="#model-School-wikipedia">wikipedia</a></li><li><a href="#model-School-googlemap">googlemap</a></li><li><a href="#model-School-youtube">youtube</a></li><li><a href="#model-School-longitude">longitude</a></li><li><a href="#model-School-latitude">latitude</a></li><li><a href="#model-School-minted">minted</a></li><li><a href="#model-School-coverage_availability">coverage_availability</a></li><li><a href="#model-School-coverage_2G">coverage_2G</a></li><li><a href="#model-School-coverage_3G">coverage_3G</a></li><li><a href="#model-School-coverage_4G">coverage_4G</a></li><li><a href="#model-School-hasSatteliteBuilding">hasSatteliteBuilding</a></li><li><a href="#model-School-connection_type">connection_type</a></li><li><a href="#model-School-connectivity_speed">connectivity_speed</a></li><li><a href="#model-School-internet_links">internet_links</a></li><li><a href="#model-School-createdAt">createdAt</a></li><li><a href="#model-School-updatedAt">updatedAt</a></li><li><a href="#model-School-deletedAt">deletedAt</a></li><li><a href="#model-School-season_Id">season_Id</a></li><li><a href="#model-School-createdBy">createdBy</a></li><li><a href="#model-School-createdById">createdById</a></li><li><a href="#model-School-contributedSeason">contributedSeason</a></li><li><a href="#model-School-isArchived">isArchived</a></li>
                       </ul>
                   </div>
                   <div class="mt-2 ml-2">
@@ -4052,6 +4052,26 @@
       <td class="px-4 py-2 border">
         <ul>
           <li> - </li>
+        </ul>
+      </td>
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+      <td class="px-4 py-2 border">
+        -
+      </td>
+    </tr>
+    
+    <tr id="model-School-minted">
+      <td class="px-4 py-2 border">
+       minted 
+      </td>
+      <td class="px-4 py-2 border">
+       Boolean
+      </td>
+      <td class="px-4 py-2 border">
+        <ul>
+          <li><strong>@default(false)</strong></li>
         </ul>
       </td>
       <td class="px-4 py-2 border">
@@ -12353,6 +12373,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-BoolFilter">BoolFilter</a> | Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         coverage_availability </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-StringFilter">StringFilter</a> | String
@@ -12766,6 +12798,18 @@
     <tr>
       <td class="px-4 py-2 border">
         latitude </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        minted </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -13237,6 +13281,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-BoolFilter">BoolFilter</a> | Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         coverage_availability </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-StringFilter">StringFilter</a> | String
@@ -13650,6 +13706,18 @@
     <tr>
       <td class="px-4 py-2 border">
         latitude </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        minted </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -14148,6 +14216,18 @@
         latitude </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-FloatWithAggregatesFilter">FloatWithAggregatesFilter</a> | Float
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-BoolWithAggregatesFilter">BoolWithAggregatesFilter</a> | Boolean
       </td>
 
       <td class="px-4 py-2 border">
@@ -22345,6 +22425,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         coverage_availability </td>
       <td class="px-4 py-2 border">
         String
@@ -22736,6 +22828,18 @@
         latitude </td>
       <td class="px-4 py-2 border">
         Float
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean
       </td>
 
       <td class="px-4 py-2 border">
@@ -23145,6 +23249,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         coverage_availability </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
@@ -23536,6 +23652,18 @@
         latitude </td>
       <td class="px-4 py-2 border">
         Float | <a href="#type-inputType-FloatFieldUpdateOperationsInput">FloatFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
@@ -23945,6 +24073,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         coverage_availability </td>
       <td class="px-4 py-2 border">
         String
@@ -24345,6 +24485,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         coverage_availability </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
@@ -24712,6 +24864,18 @@
         latitude </td>
       <td class="px-4 py-2 border">
         Float | <a href="#type-inputType-FloatFieldUpdateOperationsInput">FloatFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
@@ -33541,6 +33705,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         coverage_availability </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
@@ -34017,6 +34193,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         coverage_availability </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
@@ -34406,6 +34594,18 @@
     <tr>
       <td class="px-4 py-2 border">
         latitude </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        minted </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -54577,6 +54777,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         coverage_availability </td>
       <td class="px-4 py-2 border">
         String
@@ -54956,6 +55168,18 @@
         latitude </td>
       <td class="px-4 py-2 border">
         Float
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean
       </td>
 
       <td class="px-4 py-2 border">
@@ -57256,6 +57480,18 @@
         latitude </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-FloatFilter">FloatFilter</a> | Float
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-BoolFilter">BoolFilter</a> | Boolean
       </td>
 
       <td class="px-4 py-2 border">
@@ -63521,6 +63757,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         coverage_availability </td>
       <td class="px-4 py-2 border">
         String
@@ -63900,6 +64148,18 @@
         latitude </td>
       <td class="px-4 py-2 border">
         Float
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean
       </td>
 
       <td class="px-4 py-2 border">
@@ -72389,6 +72649,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         coverage_availability </td>
       <td class="px-4 py-2 border">
         String
@@ -74693,6 +74965,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         coverage_availability </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
@@ -75081,6 +75365,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         coverage_availability </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
@@ -75460,6 +75756,18 @@
         latitude </td>
       <td class="px-4 py-2 border">
         Float | <a href="#type-inputType-FloatFieldUpdateOperationsInput">FloatFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
@@ -77949,6 +78257,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         coverage_availability </td>
       <td class="px-4 py-2 border">
         String
@@ -79261,6 +79581,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         coverage_availability </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
@@ -79649,6 +79981,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         coverage_availability </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
@@ -80028,6 +80372,18 @@
         latitude </td>
       <td class="px-4 py-2 border">
         Float | <a href="#type-inputType-FloatFieldUpdateOperationsInput">FloatFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
@@ -81062,6 +81418,18 @@
         latitude </td>
       <td class="px-4 py-2 border">
         Float
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean
       </td>
 
       <td class="px-4 py-2 border">
@@ -83170,6 +83538,18 @@
         latitude </td>
       <td class="px-4 py-2 border">
         Float
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean
       </td>
 
       <td class="px-4 py-2 border">
@@ -86275,6 +86655,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Int
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         coverage_availability </td>
       <td class="px-4 py-2 border">
         Int
@@ -86839,6 +87231,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         coverage_availability </td>
       <td class="px-4 py-2 border">
         String
@@ -87230,6 +87634,18 @@
         latitude </td>
       <td class="px-4 py-2 border">
         Float
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        minted </td>
+      <td class="px-4 py-2 border">
+        Boolean
       </td>
 
       <td class="px-4 py-2 border">
