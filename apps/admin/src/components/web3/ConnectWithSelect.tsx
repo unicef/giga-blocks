@@ -3,7 +3,7 @@ import { GnosisSafe } from "@web3-react/gnosis-safe";
 import type { MetaMask } from "@web3-react/metamask";
 import { Network } from "@web3-react/network";
 import { useCallback, useEffect, useState } from "react";
-
+import { useAuthContext } from "src/auth/useAuthContext";
 import { Button } from "@mui/material";
 import { loginSignature } from "./utils/wallet";
 import { JsonRpcProvider, Signer } from "ethers";
@@ -55,6 +55,7 @@ export function ConnectWithSelect({
   const { data: nonceData, isSuccess: isNonceSuccess } = useNonceGet(enableGetNonce);
 
   const { push } = useRouter();
+  const { setAuthState } = useAuthContext();
 
   const {
     mutate,
@@ -86,6 +87,13 @@ export function ConnectWithSelect({
         email: loginWalletData.data.email,
         username: loginWalletData.data.name,
       };
+      setAuthState((prev:any) => ({
+        ...prev,
+        isAuthenticated: true,
+        isInitialized: true,
+        token: loginWalletData.data.access_token,
+        user: currentUser,
+      }))
       saveCurrentUser(currentUser);
       saveAccessToken(loginWalletData.data.access_token);
 

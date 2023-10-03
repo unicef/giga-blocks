@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import {hooks} from "@hooks/web3/metamask";
 import { JsonRpcProvider, Signer } from "ethers";
 import { mintSignature } from "@components/web3/utils/wallet";
-import { useMintSchools } from "@hooks/school/useSchool";
+import { useBulkMintSchools } from "@hooks/school/useSchool";
 
 const VerifiedSchool = () => {
 
@@ -28,7 +28,7 @@ const VerifiedSchool = () => {
       const {dense, page, order, orderBy, rowsPerPage, onSelectRow, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
       } = useTable();
 
-      const {mutate, isError:isMintError,data:mintData,isSuccess :isMintSuccess} = useMintSchools();
+      const {mutate, isError:isMintError,data:mintData,isSuccess :isMintSuccess} = useBulkMintSchools();
 
       const {useProvider} = hooks
       const provider = useProvider();
@@ -42,19 +42,19 @@ const VerifiedSchool = () => {
 
     let filteredData:any = []
     useEffect(() => {
-      data?.rows.map((row:any) => {
-        filteredData.push({
-          id: row.id,
-          name: row.name, 
-          location: row.location,
-          longitude: row.lon,
-          latitude: row.lat,
-          connectivity: row.connectivity_speed_status,
-          coverage: row.connectivity_speed_status
-        })
-      })
+      // data?.rows.map((row:any) => {
+      //   filteredData.push({
+      //     id: row.id,
+      //     name: row.name, 
+      //     location: row.location,
+      //     longitude: row.lon,
+      //     latitude: row.lat,
+      //     connectivity: row.connectivity_speed_status,
+      //     coverage: row.connectivity_speed_status
+      //   })
+      // })
 
-      setTableData(filteredData);
+      setTableData(data?.rows);
     }, [data]);
 
     const signTransaction = async () =>{
@@ -72,9 +72,9 @@ const VerifiedSchool = () => {
     return ( 
         <DashboardLayout>
             <h2>Verified School List</h2>
+          <Button onClick={mintSchool}>Mint ({selectedValues.length})</Button>
           <Card>
           <Divider />
-          <Button onClick={mintSchool}>Mint ({selectedValues.length})</Button>
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
               dense={dense}

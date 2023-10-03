@@ -47,7 +47,7 @@ export default function UserNewEditForm({ id }: Props) {
 
   const { data, isSuccess, isError } = useSchoolGetById(id);
 
-  const {mutate, isError:isMintError,data:mintData,isSuccess :isMintSuccess} = useMintSchools();
+  const {mutate, isError:isMintError,data:mintData, isSuccess :isMintSuccess, error:mintError} = useMintSchools();
 
   const {useProvider} = hooks
   const provider = useProvider();
@@ -102,9 +102,14 @@ export default function UserNewEditForm({ id }: Props) {
   const mintSchool = async () => {
     const signature = await signTransaction();
     if(!signature) return Error("Signature is null");
-    console.log(data)
     mutate({schooldata:data, signatureWithData:signature})
   }
+
+  useEffect(() => {
+    isMintSuccess && console.log('Minted successfully')
+    isMintError && console.log(mintError)
+  }, [isMintSuccess, isMintError])
+
 
   // const onSubmit = async (data: FormValuesProps) => {
   //   const { id, name, roles } = profile;

@@ -2,10 +2,15 @@
 import  routes  from "../../constants/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { getAccessToken } from "@utils/sessionManager";
 
 const api = axios.create({
   baseURL:routes.BASE_URL,
 });
+
+const accessToken = getAccessToken()
+
+api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
 export const useSchoolGet = (page:number, perPage:number) => {
   return useQuery(
@@ -34,11 +39,19 @@ export const useSchoolGetById = (id:string | undefined | string[]) => {
   )
 }
 
-const mintSchool = async(data:any) =>{
+const mintSchool = async(data:any) => {
   return await api.post(routes.SCHOOLS.MINT, data)
+}
+
+const mintBulkSchool = async(data:any) => {
+  console.log(data)
+  return await api.post(routes.SCHOOLS.MINTBULK, data)
 }
 
 export const useMintSchools = () => {
   return useMutation(mintSchool)
 }
 
+export const useBulkMintSchools = () => {
+  return useMutation(mintBulkSchool)
+}
