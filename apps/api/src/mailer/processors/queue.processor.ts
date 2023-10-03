@@ -11,7 +11,8 @@ import {
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 import { mintNFT } from 'src/utils/ethers/transactionFunctions';
-import { getWalletAddressFromPK } from 'src/utils/ethers/walletAddress';
+import { MintQueueDto } from 'src/schools/dto/mint-queue.dto';
+import { PrismaAppService } from 'src/prisma/prisma.service';
 
 @Injectable()
 @Processor(ONCHAIN_DATA_QUEUE)
@@ -73,6 +74,7 @@ export class MintQueueProcessor {
   constructor(
     private readonly _mailerService: MailerService,
     private readonly _configService: ConfigService,
+    private readonly _prismaService: PrismaAppService,
   ) {}
 
   @OnQueueActive()
@@ -103,21 +105,68 @@ export class MintQueueProcessor {
   }
 
   @Process(SET_MINT_NFT)
-  public async sendMintNFT(job: Job<{ batch: number; address: string }>) {
+  public async sendMintNFT(job: Job<{ batch: number; address: string; MintData: MintQueueDto }>) {
     this._logger.log(`Sending mint nft to blockchain`);
-    for (let i = 0; i < job.data.batch; i++) {
-      this._logger.log(`Minting NFT ${i}`);
+    const mintData = job.data.MintData.data.map(school => [
+      school.name,
+      school.location,
+      school.lat,
+      school.lon,
+      school.connectivity,
+      school.coverageAvailabitlity,
+    ]);
+    const ids = job.data.MintData.data.map(school => school.id);
+    let status: boolean = true;
+    this._logger.log(`Minting NFTs`);
+    if (mintData.length <= 10) {
       const tx = await mintNFT(
         'NFT',
         this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
-        [],
+        mintData,
       );
+      const txReceipt = await tx.wait();
+      if (txReceipt.status !== 1) {
+        status = false;
+      }
+    } else {
+      for (let i = 0; i < mintData.length; i += 10) {
+        const tx = await mintNFT(
+          'NFT',
+          this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
+          mintData.slice(i, i + 10),
+        );
+        const txReceipt = await tx.wait();
+        if (txReceipt.status !== 1) {
+          status = false;
+        }
+      }
+    }
+    if (status) {
+      this._logger.log(`NFTs minted successfully`);
+      try {
+        const schools = await this._prismaService.school.updateMany({
+          where: {
+            id: {
+              in: ids,
+            },
+          },
+          data: {
+            minted: true,
+          },
+        });
+      } catch (error) {
+        this._logger.error(`Error updating minted status in database: ${error}`);
+      }
+    } else {
+      this._logger.error(`NFTs minted transaction failed`);
+      throw new Error('NFTs minted transaction failed');
     }
   }
 
   @Process(SET_MINT_SINGLE_NFT)
   public async sendSingleMintNFT(job: Job<{}>) {
     this._logger.log(`Sending single mint nft to blockchain`);
+    //change logic for mint
     const tx = await mintNFT(
       'NFT',
       this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),

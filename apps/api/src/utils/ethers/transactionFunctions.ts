@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 export const mintNFT = async (
   contractName: string,
   contractAddress: string,
-  schoolDataArray: [],
+  schoolDataArray: (string | boolean | number)[][],
 ) => {
   const config = new ConfigService();
   const escrowAddress = config.get('ESCROW_ADDRESS');

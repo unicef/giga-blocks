@@ -84,6 +84,7 @@ Table giga_school {
   youtube String
   longitude Float [not null]
   latitude Float [not null]
+  minted Boolean [not null, default: false]
   coverage_availability String [not null]
   coverage_2G Boolean [not null, default: false]
   coverage_3G Boolean [not null, default: false]

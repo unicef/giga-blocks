@@ -7,6 +7,7 @@ import { paginate } from 'src/utils/paginate';
 import { QueueService } from 'src/mailer/queue.service';
 import { getBatchandAddressfromSignature } from 'src/utils/web3/wallet';
 import { Role } from '@prisma/application';
+import { MintQueueDto } from './dto/mint-queue.dto';
 
 @Injectable()
 export class SchoolService {
@@ -44,11 +45,11 @@ export class SchoolService {
     throw new UnauthorizedException('You are not an admin');
   }
 
-  async checkAdminandMintQueue(signatureWithData: string) {
-    const { batch, address } = await getBatchandAddressfromSignature(signatureWithData);
+  async checkAdminandMintQueue(MintData: MintQueueDto) {
+    const { batch, address } = getBatchandAddressfromSignature(MintData.signatureWithData);
 
     if (await this.checkAdmin(address)) {
-      return this.queueService.sendMintNFT(batch, address);
+      return this.queueService.sendMintNFT(batch, address, MintData);
     }
   }
 

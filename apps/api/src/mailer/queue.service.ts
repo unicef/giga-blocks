@@ -9,6 +9,7 @@ import {
 import { Queue } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
 import { jobOptions } from './config/bullOptions';
+import { MintQueueDto } from 'src/schools/dto/mint-queue.dto';
 
 @Injectable()
 export class QueueService {
@@ -28,9 +29,9 @@ export class QueueService {
     }
   }
 
-  public async sendMintNFT(batch: number, address: string): Promise<void> {
+  public async sendMintNFT(batch: number, address: string, MintData: MintQueueDto): Promise<void> {
     try {
-      await this._mintQueue.add(SET_MINT_NFT, { batch, address }, jobOptions);
+      await this._mintQueue.add(SET_MINT_NFT, { batch, address, MintData }, jobOptions);
     } catch (error) {
       this._logger.error(`Error queueing bulk transaction to blockchain `);
       throw error;
