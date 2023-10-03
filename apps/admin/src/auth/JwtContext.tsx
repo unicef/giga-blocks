@@ -23,6 +23,7 @@ import {
 } from '../utils/sessionManager';
 import { ROLES, DEBUG_MODE } from '../config-global';
 import { AuthState, ExtendedAuthState } from './types';
+import { metaMask } from '@components/web3/connectors/metaMask';
 
 // ----------------------------------------------------------------------
 
@@ -124,6 +125,12 @@ function AuthProvider({ children }: AuthProviderProps) {
     }),
     [authState.user]
   );
+
+  useEffect(()=>{
+   const walletState=  localStorage.getItem('auth');
+    if(walletState === 'metaMask') metaMask.activate();
+ 
+  },[]);
 
   const contextProps = useMemo(
     () => ({
