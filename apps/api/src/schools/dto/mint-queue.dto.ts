@@ -3,12 +3,14 @@ import { IsString } from 'class-validator';
 
 export type SchoolData = {
   id: string;
-  name: string;
-  location: string;
-  lat: number;
-  lon: number;
+  schoolName: string;
+  schoolType: string;
+  country: string;
+  latitude: number | undefined;
+  longitude: number | undefined;
   connectivity: boolean;
-  coverageAvailabitlity: string;
+  electricity_availabilty: boolean;
+  coverage_availabitlity: string;
 };
 
 export class MintQueueDto {
@@ -18,4 +20,13 @@ export class MintQueueDto {
 
   @ApiProperty({ type: 'object' })
   data: SchoolData[];
+}
+
+export class MintQueueSingleDto {
+  @ApiProperty()
+  @IsString()
+  signatureWithData: string;
+
+  @ApiProperty({ type: 'object' })
+  data: SchoolData;
 }
