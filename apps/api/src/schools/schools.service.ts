@@ -49,9 +49,9 @@ export class SchoolService {
   async checkAdminandMintQueue(MintData: MintQueueDto) {
     const { batch, address } = getBatchandAddressfromSignature(MintData.signatureWithData);
 
-    // if (await this.checkAdmin(address)) {
+    if (await this.checkAdmin(address)) {
       return this.queueService.sendMintNFT(batch, address, MintData);
-    // }
+    }
   }
 
   async checkAdminandSingleMintQueue(MintData: MintQueueSingleDto) {
