@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, ChangeEvent, useEffect, use } from "react";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -17,6 +17,7 @@ import {hooks} from "@hooks/web3/metamask";
 import { JsonRpcProvider, Signer } from "ethers";
 import { mintSignature } from "@components/web3/utils/wallet";
 import { useMintSchools } from "@hooks/school/useSchool";
+import { useWeb3React } from "@web3-react/core";
 
 interface Props {
   isEdit?: boolean;
@@ -49,8 +50,7 @@ export default function UserNewEditForm({ id }: Props) {
 
   const {mutate, isError:isMintError,data:mintData, isSuccess :isMintSuccess, error:mintError} = useMintSchools();
 
-  const {useProvider} = hooks
-  const provider = useProvider();
+  const web3 = useWeb3React();
 
   useEffect(() => {
     isSuccess &&
@@ -94,7 +94,7 @@ export default function UserNewEditForm({ id }: Props) {
   } = methods;
 
   const signTransaction = async () =>{
-    const signer = (provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
+    const signer = (web3.provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
     const signature = await mintSignature(signer, '1');
     return signature;
   }

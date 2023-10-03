@@ -204,6 +204,7 @@
     "sweetalert2-react-content": "^5.0.7",
     "tslib": "^2.3.0",
     "typeorm": "^0.3.17",
+    "urql": "^4.0.5",
     "web3-eth-accounts": "^4.0.5",
     "web3-utils": "^4.0.5",
     "xlsx": "^0.18.5",

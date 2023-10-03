@@ -9,7 +9,7 @@ import { loginSignature } from "./utils/wallet";
 import { JsonRpcProvider, Signer } from "ethers";
 import { useLoginWallet, useNonceGet } from "@hooks/web3/useMetamask";
 import { useRouter } from "next/router";
-import { saveAccessToken, saveCurrentUser } from "@utils/sessionManager";
+import { saveAccessToken, saveConnectors, saveCurrentUser } from "@utils/sessionManager";
 
 function ChainSelect({
   activeChainId,
@@ -96,7 +96,7 @@ export function ConnectWithSelect({
       }))
       saveCurrentUser(currentUser);
       saveAccessToken(loginWalletData.data.access_token);
-
+      saveConnectors('metaMask');
       push("/dashboard");
     }
   }, [isError, isLoginWalletSuccess]);
