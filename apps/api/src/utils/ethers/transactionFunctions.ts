@@ -15,6 +15,19 @@ export const mintNFT = async (
   return tx;
 };
 
+export const mintSingleNFT = async (
+  contractName: string,
+  contractAddress: string,
+  schoolDataArray: (string | boolean | number)[],
+) => {
+  const config = new ConfigService();
+  const escrowAddress = config.get('ESCROW_ADDRESS');
+  const contract: any = getContractWithSigner(contractName, contractAddress);
+  const schoolArgs = [escrowAddress, escrowAddress, schoolDataArray];
+  const tx = await contract.mintNft(...schoolArgs);
+  return tx;
+};
+
 const generateMultiCallData = (contractName, functionName, callData) => {
   const iface: any = getInterface(contractName);
   const encodedData = [];

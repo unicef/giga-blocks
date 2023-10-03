@@ -7,7 +7,7 @@ import { paginate } from 'src/utils/paginate';
 import { QueueService } from 'src/mailer/queue.service';
 import { getBatchandAddressfromSignature } from 'src/utils/web3/wallet';
 import { Role } from '@prisma/application';
-import { MintQueueDto } from './dto/mint-queue.dto';
+import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
 
 @Injectable()
 export class SchoolService {
@@ -53,8 +53,9 @@ export class SchoolService {
     }
   }
 
-  async checkAdminandSingleMintQueue() {
-    return this.queueService.sendSingleMintNFT();
+  async checkAdminandSingleMintQueue(MintData: MintQueueSingleDto) {
+    const { batch, address } = getBatchandAddressfromSignature(MintData.signatureWithData);
+    return this.queueService.sendSingleMintNFT(batch, address, MintData);
   }
 
   async findOne(id: string) {

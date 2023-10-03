@@ -17,7 +17,7 @@ import { Public } from '../common/decorators/public.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
 import { RoleGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
-import { MintQueueDto } from './dto/mint-queue.dto';
+import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
 
 @Controller('schools')
 @ApiTags('School')
@@ -41,8 +41,8 @@ export class SchoolController {
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('mintSchool')
-  mintSchool() {
-    return this.schoolService.checkAdminandSingleMintQueue();
+  mintSchool(@Body() MintData: MintQueueSingleDto) {
+    return this.schoolService.checkAdminandSingleMintQueue(MintData);
   }
 
   @Public()

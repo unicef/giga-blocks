@@ -9,7 +9,7 @@ import {
 import { Queue } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
 import { jobOptions } from './config/bullOptions';
-import { MintQueueDto } from 'src/schools/dto/mint-queue.dto';
+import { MintQueueDto, MintQueueSingleDto } from 'src/schools/dto/mint-queue.dto';
 
 @Injectable()
 export class QueueService {
@@ -38,9 +38,13 @@ export class QueueService {
     }
   }
 
-  public async sendSingleMintNFT(): Promise<void> {
+  public async sendSingleMintNFT(
+    batch: number,
+    address: string,
+    MintData: MintQueueSingleDto,
+  ): Promise<void> {
     try {
-      await this._mintQueue.add(SET_MINT_SINGLE_NFT, {}, jobOptions);
+      await this._mintQueue.add(SET_MINT_SINGLE_NFT, { batch, address, MintData }, jobOptions);
     } catch (error) {
       this._logger.error(`Error queueing transaction to blockchain `);
       throw error;
