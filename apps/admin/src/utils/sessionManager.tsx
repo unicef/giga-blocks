@@ -1,5 +1,5 @@
 import jwtDecode from 'jwt-decode';
-
+import { metaMask } from "@hooks/web3/metamask";
 interface User {
   // Define your user properties here
 }
@@ -40,6 +40,11 @@ export const deleteConnectors = () =>
 export const clearStorage = (): void => {
   if (storage) {
     storage.clear();
+  }
+  if (metaMask?.deactivate) {
+    void metaMask.deactivate();
+  } else {
+    void metaMask.resetState();
   }
 };
 

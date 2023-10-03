@@ -39,12 +39,12 @@ export default function UserTableRow({
 }: Props) {
   const {
   id,
-  name,
-  location,
+  schoolName,
+  country,
   longitude,
   latitude,
   connectivity,
-  coverage
+  coverage_availabitlity
   } = row;
 
   const {push} = useRouter()
@@ -83,13 +83,13 @@ export default function UserTableRow({
         <TableCell onClick={() => handleEditRow(id)}>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Typography variant="subtitle2" noWrap>
-              {name}
+              {schoolName}
             </Typography>
           </Stack>
         </TableCell>
 
         <TableCell align="left" onClick={() => handleEditRow(id)}>
-          {location}
+          {country}
         </TableCell>
 
         <TableCell align="left" sx={{ textTransform: 'capitalize' }} onClick={() => handleEditRow(id)}>
@@ -105,7 +105,7 @@ export default function UserTableRow({
         </TableCell>
 
         <TableCell align="left" sx={{ textTransform: 'capitalize' }} onClick={() => handleEditRow(id)}>
-          {coverage}
+          {coverage_availabitlity}
         </TableCell>
       </TableRow>
     </>

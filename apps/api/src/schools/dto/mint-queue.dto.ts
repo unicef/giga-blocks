@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsString, IsArray } from 'class-validator';
 
 export type SchoolData = {
   id: string;
@@ -18,7 +18,8 @@ export class MintQueueDto {
   @IsString()
   signatureWithData: string;
 
-  @ApiProperty({ type: 'object' })
+  @ApiProperty()
+  @IsArray()
   data: SchoolData[];
 }
 
