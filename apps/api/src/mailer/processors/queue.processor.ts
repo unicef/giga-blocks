@@ -158,16 +158,6 @@ export class MintQueueProcessor {
   @Process(SET_MINT_NFT)
   public async sendMintNFT(job: Job<{ address: string; mintData: SchoolData[]; ids: string[] }>) {
     this._logger.log(`Sending mint nft to blockchain`);
-    await this._prismaService.school.updateMany({
-      where: {
-        id: {
-          in: job.data.ids,
-        },
-      },
-      data: {
-        minted: MintStatus.ISMINTING,
-      },
-    });
 
     let status: boolean = true;
     const tx = await mintNFT(
