@@ -34,7 +34,7 @@ export class QueueService {
     }
   }
 
-  public async sendMintNFT(batch: number, address: string, MintData: MintQueueDto): Promise<void> {
+  public async sendMintNFT(batch: number, address: string, MintData: MintQueueDto) {
     try {
       const mintData = MintData.data.map(school => [
         school.schoolName,
@@ -45,16 +45,45 @@ export class QueueService {
         school.coverage_availabitlity,
       ]);
       let ids: string[];
+      let schools;
       const batchSize = this._configService.get<number>('BATCH_SIZE');
       if (mintData.length <= batchSize) {
         ids = MintData.data.map(school => school.id);
-
+        schools = await this._prismaService.school.updateMany({
+          where: {
+            id: {
+              in: ids,
+            },
+          },
+          data: {
+            minted: MintStatus.ISMINTING,
+          },
+        });
+        if (schools.count !== ids.length) {
+          throw new Error(
+            `No. of schools updated in database is not equal to no of schools minted`,
+          );
+        }
         await this._mintQueue.add(SET_MINT_NFT, { address, mintData, ids }, jobOptions);
       } else {
         for (let i = 0; i < mintData.length; i += batchSize) {
           let mintDatum = mintData.slice(i, i + batchSize);
           ids = MintData.data.slice(i, i + batchSize).map(school => school.id);
-
+          schools = await this._prismaService.school.updateMany({
+            where: {
+              id: {
+                in: ids,
+              },
+            },
+            data: {
+              minted: MintStatus.ISMINTING,
+            },
+          });
+          if (schools.count !== ids.length) {
+            throw new Error(
+              `No. of schools updated in database is not equal to no of schools minted`,
+            );
+          }
           await this._mintQueue.add(
             SET_MINT_NFT,
             { address, mintData: mintDatum, ids },
@@ -62,6 +91,7 @@ export class QueueService {
           );
         }
       }
+      return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
       this._logger.error(`Error queueing bulk transaction to blockchain `);
       throw error;
