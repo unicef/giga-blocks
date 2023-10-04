@@ -15,10 +15,10 @@ import { useQuery } from 'urql';
 import { Queries } from '../../libs/graph-query';
 
 const SchoolCard = () => {
-  const [result] = useQuery({ query: Queries.nftListQuery });
+  const [pageSize, setPageSize] = useState(2);
+  const [result] = useQuery({ query: Queries.nftListQuery , variables:{first:pageSize}});
   const { data: queryData, fetching, error } = result;
   const [schoolData, setSchoolData] = useState([]);
-  const [pageSize, setPageSize] = useState(12);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
 
   useEffect(() => {
@@ -35,18 +35,18 @@ const SchoolCard = () => {
         ...JSON.parse(decodedData),
       };
       decodedShooldata.push(schoolData);
-      console.log(schoolData);
     }
     setSchoolData(decodedShooldata);
   };
 
   const loadMore = () => {
-    if (pageSize < data?.meta.total - 12) {
-      setPageSize(pageSize + 12);
-    } else {
-      setPageSize(data.rows.length);
-      setAllDataLoaded(true);
-    }
+    setPageSize(pageSize + 2);
+    // if (pageSize < data?.meta.total - 12) {
+    //   setPageSize(pageSize + 12);
+    // } else {
+    //   setPageSize(data.rows.length);
+    //   setAllDataLoaded(true);
+    // }
   };
 
   return (

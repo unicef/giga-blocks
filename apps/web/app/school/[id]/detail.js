@@ -26,7 +26,6 @@ const SchoolDetail = () => {
 
   useEffect(() => {
     if (result.data) decodeSchooldata(result.data);
-    console.log(schoolData);
   }, [result.data]);
 
   return (
