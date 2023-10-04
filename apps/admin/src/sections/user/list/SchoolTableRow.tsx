@@ -29,7 +29,7 @@ type Props = {
   rowData: any;
 };
 
-export default function UserTableRow({
+export default function SchoolTableRow({
   row,
   // selected, 
   // onSelectRow,
@@ -44,7 +44,7 @@ export default function UserTableRow({
   longitude,
   latitude,
   connectivity,
-  coverage_availabitlity
+  coverage
   } = row;
 
   const {push} = useRouter()
@@ -105,7 +105,7 @@ export default function UserTableRow({
         </TableCell>
 
         <TableCell align="left" sx={{ textTransform: 'capitalize' }} onClick={() => handleEditRow(id)}>
-          {coverage_availabitlity}
+          {coverage}
         </TableCell>
       </TableRow>
     </>

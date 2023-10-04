@@ -24,6 +24,7 @@ import {
 import { ROLES, DEBUG_MODE } from '../config-global';
 import { AuthState, ExtendedAuthState } from './types';
 import { metaMask } from '@components/web3/connectors/metaMask';
+import { useAuthContext } from './useAuthContext';
 
 // ----------------------------------------------------------------------
 
@@ -58,6 +59,7 @@ interface AuthProviderProps {
 function AuthProvider({ children }: AuthProviderProps) {
   const [authState, setAuthState] = useState<AuthState>(initialState);
   const { push, replace } = useRouter();
+
   useEffect(() => {
     const initialize = async () => {
       try {

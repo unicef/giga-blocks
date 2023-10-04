@@ -62,7 +62,7 @@ const VerifiedSchool = () => {
 
     const signTransaction = async () =>{
       const signer = (provider.provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
-      const signature = await mintSignature(signer, '1');
+      const signature = await mintSignature(signer, selectedValues.length);
       return signature;
     }
   
@@ -74,7 +74,7 @@ const VerifiedSchool = () => {
 
     return ( 
         <DashboardLayout>
-            <h2>Verified School List</h2>
+            <h2>Unminted School</h2>
           <Button onClick={mintSchool}>Mint ({selectedValues.length})</Button>
           <Card>
           <Divider />

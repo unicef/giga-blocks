@@ -1,11 +1,12 @@
 .card {
-  padding: 35px 25px;
+  padding: 16px 16px;
   margin-bottom: 25px;
   display: flex;
   flex-direction: column;
   gap: 10px;
   .row {
     display: flex;
+    flex-direction: column;
     text-align: left;
     justify-content: space-between;
   }

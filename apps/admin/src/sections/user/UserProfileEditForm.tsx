@@ -8,10 +8,12 @@ import { useRouter } from 'next/router';
 import { useSnackbar } from '@components/snackbar';
 import FormProvider, { ProfileTextField } from '@components/hook-form';
 import { AdministrationService } from '@services/administration';
+import { useUserGetById } from '@hooks/user/useUser';
 
 interface Props {
   isEdit?: boolean;
   currentUser?: any;
+  id?: string | string[] | undefined;
 }
 
 interface FormValuesProps {
@@ -25,7 +27,7 @@ interface FormValuesProps {
   is_active: boolean;
 }
 
-export default function UserNewEditForm() {
+export default function UserNewEditForm({id}:Props) {
 
   const UpdateUserSchema = Yup.object().shape({
     name: Yup.string()
@@ -37,6 +39,12 @@ export default function UserNewEditForm() {
     affiliation: Yup.string(),
     roles: Yup.string(),
   });
+
+
+  const { data, isSuccess, isError } = useUserGetById(id);
+
+  console.log(id)
+
 
   const methods = useForm<FormValuesProps>({
     resolver: yupResolver(UpdateUserSchema),

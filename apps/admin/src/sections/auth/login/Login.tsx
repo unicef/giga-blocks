@@ -5,8 +5,11 @@ import Link from "next/link";
 import LoginLayout from "@layouts/login";
 //
 import AuthLoginForm from "./AuthLoginForm";
+import { metaMask } from "@hooks/web3/metamask";
+import { useEffect } from "react";
 
 export default function Login() {
+ 
   return (
     <LoginLayout>
       <Stack spacing={2} sx={{ mb: 4 }}>

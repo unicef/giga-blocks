@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { PrismaAppService } from '../prisma/prisma.service';
-import { hexStringToBuffer } from '../utils/string-format';
+import { bufferToHexString, hexStringToBuffer } from '../utils/string-format';
 import { WalletRegister } from 'src/auth/dto';
 
 @Injectable()
@@ -32,66 +32,91 @@ export class UsersService {
     });
   }
 
-  async addValidator(createUserDto: CreateUserDto) {
+  async addAdmin(createUserDto: CreateUserDto) {
     this._logger.log(`Creating new user: ${createUserDto?.email}`);
     const walletAddress = hexStringToBuffer(createUserDto?.walletAddress);
     return this.prisma.user.create({
       data: {
         ...createUserDto,
         walletAddress,
-        roles: ['VALIDATOR'],
+        roles: ['ADMIN'],
       },
     });
   }
 
   findAll() {
-    return this.prisma.user.findMany();
+    return this.prisma.user.findMany({ where: { isArchived: false } });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    const res = await this.prisma.user.findUnique({
+      where: {
+        id,
+        isArchived: false,
+      },
+    });
+    const user = {
+      ...res,
+      walletAddress: bufferToHexString(res.walletAddress),
+    };
+    return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  update(id: string, updateUserDto: Omit<UpdateUserDto, 'walletAddress'>) {
     this._logger.log(`Updating user: ${id}`);
-    return `This action updates a #${id} user with payload ${updateUserDto}`;
+    const updateData = { ...updateUserDto };
+    return this.prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        ...updateData,
+      },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(id: string) {
+    return this.prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        isArchived: true,
+      },
+    });
   }
 
   async findOneByEmail(email: string): Promise<any> {
     return await this.prisma.user.findUnique({
-      where: { email },
+      where: { email, isArchived: false },
     });
   }
 
   async findOneByWalletAddress(walletAddress: string): Promise<any> {
     const walletBuffer = hexStringToBuffer(walletAddress);
     return await this.prisma.user.findUnique({
-      where: { walletAddress: walletBuffer },
+      where: { walletAddress: walletBuffer, isArchived: false },
     });
   }
 
-  async requestValidator(createUserDto: CreateUserDto) {
-    return await this.prisma.user.create({
-      data: {
-        email: createUserDto?.email,
-        roles: ['PENDING'],
-        name: createUserDto?.name,
-      },
-    });
-  }
+  // async requestValidator(createUserDto: CreateUserDto) {
+  //   return await this.prisma.user.create({
+  //     data: {
+  //       email: createUserDto?.email,
+  //       roles: ['PENDING'],
+  //       name: createUserDto?.name,
+  //     },
+  //   });
+  // }
 
-  async approveValidator(id: string) {
-    return await this.prisma.user.update({
-      where: {
-        id,
-      },
-      data: {
-        roles: ['VALIDATOR'],
-      },
-    });
-  }
+  // async approveValidator(id: string) {
+  //   return await this.prisma.user.update({
+  //     where: {
+  //       id,
+  //     },
+  //     data: {
+  //       roles: ['VALIDATOR'],
+  //     },
+  //   });
+  // }
 }

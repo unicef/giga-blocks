@@ -8,20 +8,17 @@ import {
   Loading,
   ToggletipContent,
   ToggletipButton,
-  ToggletipActions,
 } from '@carbon/react';
 import './card.scss';
 import { useEffect, useState } from 'react';
-import { useSchoolGet } from '../../hooks/useSchool';
-import Link from 'next/link';
-import { gql, useQuery } from 'urql';
+import { useQuery } from 'urql';
 import { Queries } from '../../libs/graph-query';
 
 const SchoolCard = () => {
-  const [result] = useQuery({ query: Queries.nftListQuery });
+  const [pageSize, setPageSize] = useState(2);
+  const [result] = useQuery({ query: Queries.nftListQuery , variables:{first:pageSize}});
   const { data: queryData, fetching, error } = result;
   const [schoolData, setSchoolData] = useState([]);
-  const [pageSize, setPageSize] = useState(12);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
 
   useEffect(() => {
@@ -38,18 +35,18 @@ const SchoolCard = () => {
         ...JSON.parse(decodedData),
       };
       decodedShooldata.push(schoolData);
-      console.log(schoolData?.tokenId);
     }
     setSchoolData(decodedShooldata);
   };
 
   const loadMore = () => {
-    if (pageSize < data?.meta.total - 12) {
-      setPageSize(pageSize + 12);
-    } else {
-      setPageSize(data.rows.length);
-      setAllDataLoaded(true);
-    }
+    setPageSize(pageSize + 2);
+    // if (pageSize < data?.meta.total - 12) {
+    //   setPageSize(pageSize + 12);
+    // } else {
+    //   setPageSize(data.rows.length);
+    //   setAllDataLoaded(true);
+    // }
   };
 
   return (
@@ -60,68 +57,68 @@ const SchoolCard = () => {
             schoolData?.map((school) => (
               <Column sm={4}>
                 <ClickableTile
-                  href={`/school/${school?.tokenId}`}
                   className="card"
+                  href={`/school/${school?.tokenId}`}
                 >
                   <div className="row">
+                    <img
+                      src={school?.image}
+                      alt="SVG Image"
+                      style={{ marginBottom: '16px' }}
+                    />
+                    {/* <p className="text-purple">School Name</p> */}
+                    <Toggletip align="right">
+                      <ToggletipButton label="Show information">
+                        <h4>
+                          {school.name.length > 30
+                            ? `${school.name
+                                ?.toLowerCase()
+                                .split(' ')
+                                .map(
+                                  (word) =>
+                                    word.charAt(0).toUpperCase() + word.slice(1)
+                                )
+                                .join(' ')
+                                .slice(0, 30)}...`
+                            : school.name
+                                ?.toLowerCase()
+                                .split(' ')
+                                .map(
+                                  (word) =>
+                                    word.charAt(0).toUpperCase() + word.slice(1)
+                                )
+                                .join(' ')}
+                        </h4>
+                      </ToggletipButton>
+                      <ToggletipContent>
+                        <p>
+                          {school.name
+                            ?.toLowerCase()
+                            .split(' ')
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() + word.slice(1)
+                            )
+                            .join(' ')}
+                        </p>
+                      </ToggletipContent>
+                    </Toggletip>
                     <div>
-                      <img src={school?.image} alt="SVG Image" />
-                      <p className="text-purple">School Name</p>
-                      <Toggletip align="right">
-                        <ToggletipButton label="Show information">
-                          <h4 style={{ minHeight: '56px' }}>
-                            {school.name.length > 40
-                              ? `${school.name
-                                  ?.toLowerCase()
-                                  .split(' ')
-                                  .map(
-                                    (word) =>
-                                      word.charAt(0).toUpperCase() +
-                                      word.slice(1)
-                                  )
-                                  .join(' ')
-                                  .slice(0, 40)}...`
-                              : school.name
-                                  ?.toLowerCase()
-                                  .split(' ')
-                                  .map(
-                                    (word) =>
-                                      word.charAt(0).toUpperCase() +
-                                      word.slice(1)
-                                  )
-                                  .join(' ')}
-                          </h4>
-                        </ToggletipButton>
-                        <ToggletipContent>
-                          <p>
-                            {school.name
-                              ?.toLowerCase()
-                              .split(' ')
-                              .map(
-                                (word) =>
-                                  word.charAt(0).toUpperCase() + word.slice(1)
-                              )
-                              .join(' ')}
-                          </p>
-                        </ToggletipContent>
-                      </Toggletip>
+                      {/* <p className="text-purple">Country</p> */}
+                      <h4 className="heading2 text-left">
+                        {school.location || 'N/A'}
+                      </h4>
                     </div>
-                  </div>
-                  <div className="row" style={{ marginTop: '15px' }}>
-                    <div style={{ textAlign: 'right' }}>
-                      <p className="text-purple">Country</p>
-                      <h4 className="heading2 text-left">{school.location}</h4>
-                    </div>
-                    <div>
-                      <p className="text-purple">Education Level</p>
-                      <h4 className="heading2">{school.education_level}</h4>
-                    </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <p className="text-purple">Internet</p>
+                    {/* <p className="text-purple">Education Level</p> */}
+                    {/* <div>
                       <h4 className="heading2">
-                        {school.connectivity_speed_status === 'No connection'
-                          ? 'N/A'
-                          : school.connectivity_speed_status}
+                        {school.covergeAvailability || 'N/A'}
+                      </h4>
+                    </div> */}
+                    <div>
+                      {/* <p className="text-purple">Internet</p> */}
+                      <h4 className="heading2">
+                        {school.connectivity || 'N/A'}
                       </h4>
                     </div>
                   </div>

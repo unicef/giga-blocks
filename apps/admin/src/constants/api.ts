@@ -22,5 +22,8 @@ export  default {
   },
   WALLET_LOGIN: {
     POST: '/auth/walletlogin'
+  },
+  USER :{
+    GET : "/users"
   }
 };
