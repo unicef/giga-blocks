@@ -19,7 +19,7 @@ const THEMES = {
 
 const baseSettings = {
   mapboxAccessToken:
-    "pk.eyJ1IjoicnVtc2FuIiwiYSI6ImNsN3pwc2ltajAzcjY0NHBtNzAycnI4dDMifQ.HhHwz1w0X4dleTgN4D - Kxwesa",
+    "pk.eyJ1IjoicnVtc2FuIiwiYSI6ImNsN3pwc2ltajAzcjY0NHBtNzAycnI4dDMifQ.HhHwz1w0X4dleTgN4D-Kxw",
   minZoom: 1,
   scrollZoom: false,
 };

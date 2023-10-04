@@ -30,7 +30,6 @@ export const useUserGet = (page:number, perPage:number) => {
 export const useUserGetById = (id:string | undefined | string[]) => {
   return useQuery(['single-school'], async () => {
     const {data} = await api.get(`${routes.USER.GET}/${id}`)
-    console.log(data)
     return data
   }
   ,

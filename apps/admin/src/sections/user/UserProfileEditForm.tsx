@@ -43,8 +43,6 @@ export default function UserNewEditForm({id}:Props) {
 
   const { data, isSuccess, isError } = useUserGetById(id);
 
-  console.log(id)
-
 
   const methods = useForm<FormValuesProps>({
     resolver: yupResolver(UpdateUserSchema),
@@ -65,15 +63,24 @@ export default function UserNewEditForm({id}:Props) {
               display="grid"
             >
               <ProfileTextField
+                name="email"
+                label="Email"
+                placeholder='Enter your username'
+                value={data?.email || ""}
+              />
+
+            <ProfileTextField
                 name="name"
                 label="Username"
                 placeholder='Enter your username'
+                value={data?.name || ""}
               />
 
               <ProfileTextField
-                name="location"
+                name="wallet"
                 label="Metamask wallet"
                 placeholder='Enter your metamask wallet'
+                value={data?.walletAddress || ""}
               />
             </Box>
 

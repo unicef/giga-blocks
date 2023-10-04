@@ -50,7 +50,7 @@ export default function SchoolTableRow({
   const {push} = useRouter()
 
   const handleEditRow = (row:string) => {
-    push(`/school/${row}/edit`)
+    push(`/school/${row}`)
   }
 
   const handleCheckboxChange = (event:any, row:any) => {
