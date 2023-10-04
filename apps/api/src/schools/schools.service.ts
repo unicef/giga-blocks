@@ -8,6 +8,8 @@ import { QueueService } from 'src/mailer/queue.service';
 import { getBatchandAddressfromSignature } from 'src/utils/web3/wallet';
 import { Role } from '@prisma/application';
 import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
+import { hexStringToBuffer } from '../utils/string-format';
+import { includes } from 'lodash';
 
 @Injectable()
 export class SchoolService {
@@ -34,18 +36,16 @@ export class SchoolService {
   }
 
   async checkAdmin(address: string) {
-    return true;
-    console.log('MY address', Buffer.from(address));
+    const buffAddress = hexStringToBuffer(address);
     const admin = await this.prisma.user.findUnique({
       where: {
-        walletAddress: Buffer.from(address),
+        walletAddress: buffAddress,
       },
     });
-    console.log(admin);
-    if (admin && Role.ADMIN in admin.roles) {
+    if (admin && admin.roles.includes(Role.ADMIN)) {
       return true;
     }
-    throw new UnauthorizedException('You are not an admin');
+    throw new UnauthorizedException('You wallet is not an admin wallet');
   }
 
   async checkAdminandMintQueue(MintData: MintQueueDto) {
