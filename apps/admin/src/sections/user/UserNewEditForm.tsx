@@ -44,6 +44,7 @@ export default function UserNewEditForm({ id }: Props) {
     longitude: "",
     connectivity: "",
     coverage: "",
+    mintedStatus:""
   });
 
   const { data, isSuccess, isError } = useSchoolGetById(id);
@@ -56,11 +57,13 @@ export default function UserNewEditForm({ id }: Props) {
     isSuccess &&
       setProfile({
         fullname: data?.name,
-        location: data?.location,
-        latitude: data?.lat,
-        longitude: data?.lon,
-        connectivity: data?.connectivity_speed_status,
-        coverage: data?.connectivity_speed_status,
+        location: data?.country,
+        latitude: data?.latitude,
+        longitude: data?.longitude,
+        connectivity: data?.connectivity,
+        coverage: data?.coverage_availability,
+        mintedStatus: data?.minted
+        ,
       });
   }, [isSuccess, isError, data]);
 
@@ -207,9 +210,10 @@ export default function UserNewEditForm({ id }: Props) {
           <Box justifyContent={"center"}>
             {/* <Image width={250} height={250} alt='USER' src={'/assets/Image-right.svg'}/> */}
             <Stack alignItems="flex-start" sx={{ mt: 3 }}>
+              {profile.mintedStatus === "NOTMINTED" && 
               <Button variant="contained" color={"info"} style={{ width: "300px" }} onClick={mintSchool}>
                 Mint
-              </Button>
+              </Button>}
             </Stack>
             <Stack style={{ marginTop: "20px" }}>
               <Identicon string={profile?.fullname} size={200} />
