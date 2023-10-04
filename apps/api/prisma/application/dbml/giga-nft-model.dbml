@@ -59,6 +59,7 @@ Table giga_users {
   CreatedBy giga_points [not null]
   Auth Auth [not null]
   roles Role[] [not null]
+  schools giga_school [not null]
   isArchived Boolean [not null, default: false]
   vote giga_vote [not null]
   createdBy giga_vote [not null]
@@ -83,6 +84,7 @@ Table giga_school {
   youtube String
   longitude Float [not null]
   latitude Float [not null]
+  minted MintStatus [not null, default: 'NOTMINTED']
   coverage_availability String [not null]
   coverage_2G Boolean [not null, default: false]
   coverage_3G Boolean [not null, default: false]
@@ -95,6 +97,8 @@ Table giga_school {
   updatedAt DateTime [not null]
   deletedAt DateTime
   season_Id String
+  createdBy giga_users
+  createdById String
   contributedSeason giga_season
   isArchived Boolean [not null, default: false]
 }
@@ -245,9 +249,17 @@ Enum ContributionType {
   CONTRIBUTE
 }
 
+Enum MintStatus {
+  NOTMINTED
+  MINTED
+  ISMINTING
+}
+
 Ref: Auth.id > giga_users.id
 
 Ref: giga_permissions.role_id > giga_roles.role_id
+
+Ref: giga_school.createdById > giga_users.id
 
 Ref: giga_school.season_Id > giga_season.id
 

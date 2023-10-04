@@ -4,12 +4,12 @@ on:
     branches:
       - 'dev'
     paths:
-      - 'apps/api/**'  
+      - 'apps/api/**'
   pull_request:
     branches:
       - 'dev'
     paths:
-      - 'apps/api/**' 
+      - 'apps/api/**'
 
 env:
   CI: false
@@ -27,7 +27,7 @@ jobs:
       - name: import env file
         run: |
           touch ./.env && echo "$env_dev" >> ./.env
-      
+
       - uses: actions/setup-node@v3
         with:
           node-version: 18
@@ -61,4 +61,4 @@ jobs:
 
       - name: Build Docker image
         if: github.event_name == 'pull_request'
-        run: docker build -t myimage:${{ github.sha }} .
+        run: docker build -f Dockerfile.api -t myimage:${{ github.sha }} .

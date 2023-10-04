@@ -101,6 +101,12 @@ enum ContributionType {
   CONTRIBUTE
 }
 
+enum MintStatus {
+  NOTMINTED
+  MINTED
+  ISMINTING
+}
+
 model Auth {
   id           String    @id @default(uuid())
   otp          String    @unique
@@ -159,6 +165,7 @@ model User {
   CreatedBy       Points[]          @relation("Creator")
   Auth            Auth[]
   roles           Role[]
+  schools         School[]
   isArchived      Boolean           @default(false)
   vote            Vote[]            @relation("UserId")
   createdBy       Vote[]            @relation("Creator")
@@ -185,8 +192,9 @@ model School {
   youtube               String?
   longitude             Float
   latitude              Float
+  minted                MintStatus   @default(NOTMINTED)
   coverage_availability String
-  coverage_2G          Boolean      @default(false)
+  coverage_2G           Boolean      @default(false)
   coverage_3G           Boolean      @default(false)
   coverage_4G           Boolean      @default(false)
   hasSatteliteBuilding  Boolean      @default(false)
@@ -197,6 +205,8 @@ model School {
   updatedAt             DateTime     @updatedAt
   deletedAt             DateTime?
   season_Id             String?
+  createdBy             User?        @relation( fields: [createdById], references: [id])
+  createdById           String?
   contributedSeason     Season?      @relation(fields: [season_Id], references: [id])
   isArchived            Boolean      @default(false)
 

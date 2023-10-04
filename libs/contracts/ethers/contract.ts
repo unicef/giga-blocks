@@ -18,6 +18,16 @@ export class Contract {
     }
   };
 
+  public getInterface = (contractName: string) => {
+    try {
+      const abi = this.getAbi(contractName);
+      const iface = new ethers.Interface(abi.abi);
+      return iface;
+    } catch (err) {
+      throw new Error(`Error: ${err}, message: Cannot instatntiate contract`);
+    }
+  };
+
   public getAbi = (contract: string) => {
     const data = fs.readFileSync(`${this.basepath}${contract}.json`, 'utf8');
     const { contractName, abi } = JSON.parse(data);

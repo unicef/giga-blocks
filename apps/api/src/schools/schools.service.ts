@@ -1,13 +1,19 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { Prisma } from '@prisma/application';
 import { UpdateSchoolDto } from './dto/update-schools.dto';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { ListSchoolDto } from './dto/list-schools.dto';
 import { paginate } from 'src/utils/paginate';
+import { QueueService } from 'src/mailer/queue.service';
+import { getBatchandAddressfromSignature } from 'src/utils/web3/wallet';
+import { Role } from '@prisma/application';
+import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
+import { hexStringToBuffer } from '../utils/string-format';
+import { includes } from 'lodash';
 
 @Injectable()
 export class SchoolService {
-  constructor(private prisma: PrismaAppService) {}
+  constructor(private prisma: PrismaAppService, private readonly queueService: QueueService) {}
 
   async findAll(query: ListSchoolDto) {
     const { page, perPage } = query;
@@ -23,6 +29,36 @@ export class SchoolService {
         perPage,
       },
     );
+  }
+
+  async queueOnchainData(data: number) {
+    return this.queueService.sendTransaction(data);
+  }
+
+  async checkAdmin(address: string) {
+    const buffAddress = hexStringToBuffer(address);
+    const admin = await this.prisma.user.findUnique({
+      where: {
+        walletAddress: buffAddress,
+      },
+    });
+    if (admin && admin.roles.includes(Role.ADMIN)) {
+      return true;
+    }
+    throw new UnauthorizedException('You wallet is not an admin wallet');
+  }
+
+  async checkAdminandMintQueue(MintData: MintQueueDto) {
+    const { batch, address } = getBatchandAddressfromSignature(MintData.signatureWithData);
+
+    if (await this.checkAdmin(address)) {
+      return this.queueService.sendMintNFT(batch, address, MintData);
+    }
+  }
+
+  async checkAdminandSingleMintQueue(MintData: MintQueueSingleDto) {
+    const { batch, address } = getBatchandAddressfromSignature(MintData.signatureWithData);
+    return this.queueService.sendSingleMintNFT(batch, address, MintData);
   }
 
   async findOne(id: string) {

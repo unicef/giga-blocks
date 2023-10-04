@@ -3,7 +3,7 @@ import { GnosisSafe } from "@web3-react/gnosis-safe";
 import type { MetaMask } from "@web3-react/metamask";
 import { Network } from "@web3-react/network";
 import { useCallback, useEffect, useState } from "react";
-
+import { useAuthContext } from "src/auth/useAuthContext";
 import { Button } from "@mui/material";
 import { loginSignature } from "./utils/wallet";
 import { JsonRpcProvider, Signer } from "ethers";
@@ -50,10 +50,12 @@ export function ConnectWithSelect({
   setError: (error: Error | undefined) => void;
 }) {
   const [desiredChainId, setDesiredChainId] = useState<any>(undefined);
+  const [enableGetNonce, setEnableGetNonce] = useState<boolean>(true)
 
-  const { data: nonceData, isSuccess: isNonceSuccess } = useNonceGet();
+  const { data: nonceData, isSuccess: isNonceSuccess } = useNonceGet(enableGetNonce);
 
   const { push } = useRouter();
+  const { setAuthState } = useAuthContext();
 
   const {
     mutate,
@@ -63,8 +65,9 @@ export function ConnectWithSelect({
     error: loginWalletError,
   } = useLoginWallet();
 
-  const getSignature = async () => {
+  const getSignature = useCallback(async () => {
     if (isNonceSuccess) {
+      setEnableGetNonce(false)
       try {
         const signer = (provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
         const address = await signer.getAddress();
@@ -75,7 +78,7 @@ export function ConnectWithSelect({
         console.log(e);
       }
     }
-  };
+  }, [isNonceSuccess]);
 
   useEffect(() => {
     isError && console.log(loginWalletError);
@@ -84,6 +87,13 @@ export function ConnectWithSelect({
         email: loginWalletData.data.email,
         username: loginWalletData.data.name,
       };
+      setAuthState((prev:any) => ({
+        ...prev,
+        isAuthenticated: true,
+        isInitialized: true,
+        token: loginWalletData.data.access_token,
+        user: currentUser,
+      }))
       saveCurrentUser(currentUser);
       saveAccessToken(loginWalletData.data.access_token);
       saveConnectors('metaMask');
@@ -99,6 +109,7 @@ export function ConnectWithSelect({
   }, [desiredChainId, activeChainId]);
 
   const connectWallet = useCallback(async () => {
+    setEnableGetNonce(false)
     try {
       setError(undefined);
       await connector.activate();

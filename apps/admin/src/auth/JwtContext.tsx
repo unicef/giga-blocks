@@ -137,13 +137,14 @@ function AuthProvider({ children }: AuthProviderProps) {
       ...authState,
       deleteToken,
       addToken,
+      setAuthState,
       addUser,
       addKey,
       logout,
       roles,
       method: 'jwt',
     }),
-    [authState, roles, logout]
+    [authState, roles, logout, setAuthState]
   );
 
   return <AppAuthContext.Provider value={contextProps}>{children}</AppAuthContext.Provider>;

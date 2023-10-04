@@ -48,7 +48,7 @@ export default function UserNewEditForm({ id }: Props) {
 
   const { data, isSuccess, isError } = useSchoolGetById(id);
 
-  const {mutate, isError:isMintError,data:mintData,isSuccess :isMintSuccess} = useMintSchools();
+  const {mutate, isError:isMintError,data:mintData, isSuccess :isMintSuccess, error:mintError} = useMintSchools();
 
   const web3 = useWeb3React();
 
@@ -99,11 +99,17 @@ export default function UserNewEditForm({ id }: Props) {
     return signature;
   }
 
-  const mintSchool = async()=>{
+  const mintSchool = async () => {
     const signature = await signTransaction();
     if(!signature) return Error("Signature is null");
-    mutate({schooldata:data,signatureWithData:signature})
+    mutate({schooldata:data, signatureWithData:signature})
   }
+
+  useEffect(() => {
+    isMintSuccess && console.log('Minted successfully')
+    isMintError && console.log(mintError)
+  }, [isMintSuccess, isMintError])
+
 
   // const onSubmit = async (data: FormValuesProps) => {
   //   const { id, name, roles } = profile;

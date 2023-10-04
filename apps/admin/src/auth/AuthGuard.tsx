@@ -26,7 +26,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   }
 
   if (!isAuthenticated) {
-    return <LoadingScreen />;
+    return;
   }
 
   return <>{children}</>;

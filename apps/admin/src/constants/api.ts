@@ -8,7 +8,8 @@ export  default {
   },
   SCHOOLS: {
     GET: "/schools",
-    MINT:"/schools/mintQueue"
+    MINT:"/schools/mintSchool",
+    MINTBULK: "/schools/mintBulk"
   },
   OTP: {
     REGISTER: "/auth/send-otp",
