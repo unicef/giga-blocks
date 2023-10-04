@@ -101,6 +101,12 @@ enum ContributionType {
   CONTRIBUTE
 }
 
+enum MintStatus {
+  NOTMINTED
+  MINTED
+  ISMINTING
+}
+
 model Auth {
   id           String    @id @default(uuid())
   otp          String    @unique
@@ -186,9 +192,9 @@ model School {
   youtube               String?
   longitude             Float
   latitude              Float
-  minted                Boolean      @default(false)
+  minted                MintStatus   @default(NOTMINTED)
   coverage_availability String
-  coverage_2G          Boolean      @default(false)
+  coverage_2G           Boolean      @default(false)
   coverage_3G           Boolean      @default(false)
   coverage_4G           Boolean      @default(false)
   hasSatteliteBuilding  Boolean      @default(false)

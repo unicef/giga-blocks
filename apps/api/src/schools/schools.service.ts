@@ -35,12 +35,14 @@ export class SchoolService {
 
   async checkAdmin(address: string) {
     return true;
+    console.log('MY address', Buffer.from(address));
     const admin = await this.prisma.user.findUnique({
       where: {
         walletAddress: Buffer.from(address),
       },
     });
-    if (Role.ADMIN in admin.roles) {
+    console.log(admin);
+    if (admin && Role.ADMIN in admin.roles) {
       return true;
     }
     throw new UnauthorizedException('You are not an admin');

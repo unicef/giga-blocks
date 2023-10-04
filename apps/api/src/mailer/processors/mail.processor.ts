@@ -28,16 +28,18 @@ export class MailProcessor {
   @OnQueueFailed()
   public onError(job: Job<any>, error: any) {
     this._logger.error(`Failed job ${job.id} of type ${job.name}: ${error.message}`, error.stack);
-    try {
-      return this._mailerService.sendMail({
-        to: this._configService.get('EMAIL_ADDRESS'),
-        from: this._configService.get('EMAIL_ADDRESS'),
-        subject: 'Something went wrong with server!!',
-        template: './error',
-        context: {},
-      });
-    } catch {
-      this._logger.error('Failed to send confirmation email to admin');
+    if (job.attemptsMade === job.opts.attempts) {
+      try {
+        return this._mailerService.sendMail({
+          to: this._configService.get('EMAIL_ADDRESS'),
+          from: this._configService.get('EMAIL_ADDRESS'),
+          subject: 'Something went wrong with server!!',
+          template: './error',
+          context: {},
+        });
+      } catch {
+        this._logger.error('Failed to send confirmation email to admin');
+      }
     }
   }
 

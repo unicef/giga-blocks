@@ -84,7 +84,7 @@ Table giga_school {
   youtube String
   longitude Float [not null]
   latitude Float [not null]
-  minted Boolean [not null, default: false]
+  minted MintStatus [not null, default: 'NOTMINTED']
   coverage_availability String [not null]
   coverage_2G Boolean [not null, default: false]
   coverage_3G Boolean [not null, default: false]
@@ -247,6 +247,12 @@ Enum Season_Status {
 Enum ContributionType {
   VOTE
   CONTRIBUTE
+}
+
+Enum MintStatus {
+  NOTMINTED
+  MINTED
+  ISMINTING
 }
 
 Ref: Auth.id > giga_users.id
