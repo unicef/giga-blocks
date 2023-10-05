@@ -9,7 +9,7 @@ import React, {
 } from 'react';
 import { useRouter } from 'next/router';
 
-import { PATH_AUTH } from '@routes/paths';
+import { PATH_AUTH, ROOTS_DASHBOARD } from '@routes/paths';
 
 import {
   isValidToken,
@@ -92,6 +92,7 @@ function AuthProvider({ children }: AuthProviderProps) {
               console.log('data', data);
               const newAccessToken = data.access_token;
               saveAccessToken(newAccessToken);
+              window.location.href = ROOTS_DASHBOARD;
             } else {
               console.error('Failed to refresh access token');
               window.location.href = PATH_AUTH.login;
