@@ -70,7 +70,7 @@ const SchoolCard = () => {
                     <Toggletip align="right">
                       <ToggletipButton label="Show information">
                         <h4>
-                          {school.name.length > 30
+                          {school?.name?.length > 30
                             ? `${school.name
                                 ?.toLowerCase()
                                 .split(' ')

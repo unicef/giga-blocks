@@ -27,6 +27,7 @@ type Props = {
   setSelectedValues: any;
   selectedValues:any;
   rowData: any;
+  checkbox: boolean
 };
 
 export default function SchoolTableRow({
@@ -35,7 +36,8 @@ export default function SchoolTableRow({
   // onSelectRow,
   setSelectedValues,
   selectedValues,
-  rowData
+  rowData,
+  checkbox
 }: Props) {
   const {
   id,
@@ -43,7 +45,9 @@ export default function SchoolTableRow({
   country,
   longitude,
   latitude,
-  mintedStatus
+  mintedStatus,
+  coverage_availabitlity,
+  connectivity
   } = row;
 
   const {push} = useRouter()
@@ -75,12 +79,13 @@ export default function SchoolTableRow({
       // selected={selected}
       >
 
-      <TableCell padding="checkbox"> 
+    {checkbox && <TableCell padding="checkbox"> 
         <Checkbox
           onChange={(e) => handleCheckboxChange(e, rowData)}
           // checked = {mintedStatus === "ISMINTING" ? false : undefined}
         />
       </TableCell>
+      }
 
         <TableCell onClick={() => handleEditRow(id)}>
           <Stack direction="row" alignItems="center" spacing={2}>

@@ -36,13 +36,13 @@ const VerifiedSchool = () => {
     // const { filteredUsers } = useAdministrationContext();
     const [selectedValues, setSelectedValues] = useState<any>([]);
     const [tableData, setTableData] = useState<any>([]);
-    const {data} = useSchoolGet(page, rowsPerPage)
+    const {data, isFetching} = useSchoolGet(page, rowsPerPage, 'NOTMINTED')
 
     // const { error } = useFetchUsers();
 
     let filteredData:any = []
     useEffect(() => {
-      data?.rows.map((row:any) => {
+      !isFetching &&  data?.rows.map((row:any) => {
         filteredData.push({
           id: row.id,
           schoolName: row.name,
@@ -58,7 +58,7 @@ const VerifiedSchool = () => {
       })
 
       setTableData(filteredData);
-    }, [data]);
+    }, [data, isFetching]);
 
     const signTransaction = async () =>{
       const signer = (provider.provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
@@ -69,13 +69,16 @@ const VerifiedSchool = () => {
     const mintSchool = async () => {
       const signature = await signTransaction();
       if(!signature) return Error("Signature is null");
+      setSelectedValues([])
       mutate({data:selectedValues, signatureWithData:signature})
     }
 
     return ( 
         <DashboardLayout>
-            <h2>Unminted School</h2>
-          <Button onClick={mintSchool}>Mint ({selectedValues.length})</Button>
+          <div style={{display: 'flex', justifyContent: 'space-between',marginBottom: '20px'}}>
+          <span style={{fontSize: '1.5em', fontWeight: '600'}}>Unminted School</span>
+          <Button variant="contained" onClick={mintSchool}>Mint ({selectedValues.length})</Button>
+          </div>
           <Card>
           <Divider />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -92,12 +95,13 @@ const VerifiedSchool = () => {
                 <TableBody>
                   {tableData &&
                     tableData.map((row:any) => (
-                      row.mintedStatus != "MINTED" && <SchoolTableRow
+                      <SchoolTableRow
                         key={row.id}
                         row={row}
                         selectedValues={selectedValues}
                         setSelectedValues={setSelectedValues}
                         rowData = {row}
+                        checkbox = {true}
                       />
                     ))}
                   <TableNoData 
