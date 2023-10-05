@@ -79,25 +79,6 @@ const VerifiedSchool = () => {
           <Card>
           <Divider />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            {/* <TableSelectedAction
-              dense={dense}
-              // numSelected={selected?.length}
-              rowCount={tableData?.length}
-              // onSelectAllRows={(checked) =>
-              //   onSelectAllRows(
-              //     checked,
-              //     tableData.map((row:any) => row.id)
-              //   )
-              // }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            /> */}
-
             <Scrollbar>
               <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
                 <TableHeadUsers
@@ -105,14 +86,7 @@ const VerifiedSchool = () => {
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   rowCount={tableData?.length}
-                  // numSelected={selected?.length}
                   onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row:any) => row.id)
-                  //   )
-                  // }
                 />
 
                 <TableBody>
@@ -121,16 +95,12 @@ const VerifiedSchool = () => {
                       <SchoolTableRow
                         key={row.id}
                         row={row}
-                        // selected={undefined}
-                        // selected={selectedValues.includes(row.id)}
-                        // onSelectRow={onSelectRow}
                         selectedValues={selectedValues}
                         setSelectedValues={setSelectedValues}
                         rowData = {row}
                       />
                     ))}
                   <TableNoData 
-                  // isNotFound={!!error} 
                   isNotFound={false}
                   />
                 </TableBody>
@@ -138,7 +108,7 @@ const VerifiedSchool = () => {
             </Scrollbar>
           </TableContainer>
           <TablePaginationCustom
-            count={data?.meta.total}
+            count={data?.meta?.total}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}

@@ -44,7 +44,6 @@ const mintSchool = async(data:any) => {
 }
 
 const mintBulkSchool = async(data:any) => {
-  console.log(data)
   return await api.post(routes.SCHOOLS.MINTBULK, data)
 }
 

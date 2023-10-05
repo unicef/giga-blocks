@@ -105,7 +105,7 @@ export default function UserNewEditForm({ id }: Props) {
   const mintSchool = async () => {
     const signature = await signTransaction();
     if(!signature) return Error("Signature is null");
-    mutate({schooldata:data, signatureWithData:signature})
+    mutate({data:data, signatureWithData:signature})
   }
 
   useEffect(() => {

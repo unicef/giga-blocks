@@ -37,7 +37,7 @@ export default function UserListRow({
   const {push} = useRouter()
 
   const handleEditRow = (row:string) => {
-    push(`/user/${row}/edit`)
+    push(`/user/${row}`)
   }
 
   return (

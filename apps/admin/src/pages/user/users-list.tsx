@@ -24,11 +24,11 @@ const UserList = () => {
     // const { filteredUsers } = useAdministrationContext();
 
     const [tableData, setTableData] = useState<any>([]);
-    const {data} = useUserGet(page, rowsPerPage)
+    const {data, isFetching} = useUserGet(page, rowsPerPage)
 
     let filteredData:any = []
     useEffect(() => {
-      data?.map((row:any) => {
+      !isFetching &&  data?.map((row:any) => {
         const buffer = row.walletAddress && Buffer.from(row.walletAddress.data)
         const walletString = buffer && buffer.toString('hex')
         filteredData.push({
