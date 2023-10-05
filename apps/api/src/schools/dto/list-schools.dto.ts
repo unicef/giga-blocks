@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
+import { MintStatus } from '@prisma/application';
 
 export class ListSchoolDto {
   @ApiProperty({
@@ -17,4 +18,11 @@ export class ListSchoolDto {
   @IsString()
   @IsOptional()
   perPage?: string;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  minted?: MintStatus;
 }
