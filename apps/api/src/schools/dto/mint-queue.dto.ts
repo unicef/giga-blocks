@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsObject, IsString } from 'class-validator';
 
-export type SchoolData = {
+export interface SchoolData {
   id: string;
   schoolName: string;
   schoolType: string;
@@ -11,7 +11,7 @@ export type SchoolData = {
   connectivity: string;
   electricity_availabilty: boolean;
   coverage_availabitlity: string;
-};
+}
 
 export class MintQueueDto {
   @ApiProperty()

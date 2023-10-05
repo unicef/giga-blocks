@@ -177,31 +177,22 @@ export class MintQueueProcessor {
       } catch (error) {
         this._logger.error(`Error queueing database update: ${error}`);
       }
-    } else {
-      this._logger.error(`NFTs minted transaction failed`);
-      throw new Error('NFTs minted transaction failed');
     }
+    this._logger.error(`NFTs minted transaction failed`);
+    throw new Error('NFTs minted transaction failed');
   }
 
   @Process(SET_MINT_SINGLE_NFT)
-  public async sendSingleMintNFT(job: Job<{ address: string; MintData: MintQueueSingleDto }>) {
+  public async sendSingleMintNFT(
+    job: Job<{ address: string; mintData: SchoolData; ids: string[] }>,
+  ) {
     this._logger.log(`Sending single mint nft to blockchain`);
-    const school = job.data.MintData.data;
-    const mintData = [
-      school.schoolName,
-      school.country,
-      school.latitude,
-      school.longitude,
-      school.connectivity,
-      school.coverage_availabitlity,
-    ];
-    const id = school.id;
+
     let status: boolean = true;
-    this._logger.log(`Minting NFTs`);
     const tx = await mintSingleNFT(
       'NFT',
       this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
-      mintData,
+      job.data.mintData,
     );
     const txReceipt = await tx.wait();
     if (txReceipt.status !== 1) {
@@ -211,20 +202,14 @@ export class MintQueueProcessor {
     if (status) {
       this._logger.log(`NFTs minted successfully`);
       try {
-        const schools = await this._prismaService.school.updateMany({
-          where: {
-            id,
-          },
-          data: {
-            minted: MintStatus.MINTED,
-          },
-        });
+        await this._mintQueue.add(SET_DBUPDATE_QUEUE, { ids: job.data.ids }, jobOptions);
       } catch (error) {
-        this._logger.error(`Error updating minted status in database: ${error}`);
+        this._logger.error(`Error queueing database update: ${error}`);
       }
-    } else {
-      this._logger.error(`NFT minted transaction failed`);
-      throw new Error('NFT minted transaction failed');
+      return { message: 'queue added successfully', statusCode: 200 };
     }
+
+    this._logger.error(`NFT minted transaction failed`);
+    throw new Error('NFT minted transaction failed');
   }
 }
