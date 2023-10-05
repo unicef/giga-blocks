@@ -20,7 +20,6 @@ export default function Dashboard() {
   const { data } = useSchoolGet(1, 10);
   const latitudeArray = data?.rows?.map((item: { latitude: any }) => item.latitude);
   const longitudeArray = data?.rows?.map((item: { longitude: any }) => item.longitude);
-  console.log(longitudeArray);
   return (
     <>
       <Container>

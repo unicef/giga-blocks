@@ -28,7 +28,7 @@ export class RefreshToken {
     example: 'dnsfb6829uhfjhbeiwy89ufgo',
   })
   @IsString()
-  refresh_token: string;
+  refresh: string;
 }
 
 export class AuthWallet {
