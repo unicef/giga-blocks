@@ -7,7 +7,6 @@ import {
 import { CreateContributeDatumDto } from './dto/create-contribute-datum.dto';
 import { UpdateContributeDatumDto } from './dto/update-contribute-datum.dto';
 import { PrismaAppService } from '../prisma/prisma.service';
-import { PointsService } from '../points/points.service';
 import { CreatePointDto } from 'src/points/dto/create-point.dto';
 import { LeaderBoardType, ContributionType, VOTE_TYPE } from '@prisma/application';
 import { Status } from '@prisma/application';

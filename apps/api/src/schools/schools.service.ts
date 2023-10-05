@@ -9,17 +9,19 @@ import { getBatchandAddressfromSignature } from 'src/utils/web3/wallet';
 import { Role } from '@prisma/application';
 import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
 import { hexStringToBuffer } from '../utils/string-format';
-import { includes } from 'lodash';
 
 @Injectable()
 export class SchoolService {
   constructor(private prisma: PrismaAppService, private readonly queueService: QueueService) {}
 
   async findAll(query: ListSchoolDto) {
-    const { page, perPage } = query;
+    const { page, perPage, minted } = query;
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
     };
+    if (minted) {
+      where.minted = minted;
+    }
 
     return paginate(
       this.prisma.school,
