@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // @mui
 import {
   Stack,
@@ -43,8 +43,7 @@ export default function SchoolTableRow({
   country,
   longitude,
   latitude,
-  connectivity,
-  coverage
+  mintedStatus
   } = row;
 
   const {push} = useRouter()
@@ -56,16 +55,19 @@ export default function SchoolTableRow({
   const handleCheckboxChange = (event:any, row:any) => {
     const isChecked = event.target.checked;
     if (isChecked) {
+      if(mintedStatus != "ISMINTING") {
       setSelectedValues((prev:any) => [
         ...prev,
         row,
       ]);
+    }
     } else {
       setSelectedValues((prevSelectedValues:any) =>
         prevSelectedValues.filter((value:any) => value.id !== row.id)
       );
-    }
+  }
   };
+
 
   return (
     <>
@@ -76,7 +78,7 @@ export default function SchoolTableRow({
       <TableCell padding="checkbox"> 
         <Checkbox
           onChange={(e) => handleCheckboxChange(e, rowData)}
-          // checked={selected}
+          // checked = {mintedStatus === "ISMINTING" ? false : undefined}
         />
       </TableCell>
 
@@ -101,12 +103,9 @@ export default function SchoolTableRow({
         </TableCell>
 
         <TableCell align="left" sx={{ textTransform: 'capitalize' }} onClick={() => handleEditRow(id)}>
-          {connectivity}
+          {mintedStatus}
         </TableCell>
 
-        <TableCell align="left" sx={{ textTransform: 'capitalize' }} onClick={() => handleEditRow(id)}>
-          {coverage}
-        </TableCell>
       </TableRow>
     </>
   );

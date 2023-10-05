@@ -22,8 +22,7 @@ const VerifiedSchool = () => {
         { id: 'location', label: 'Location', align: 'left' },
         { id: 'latitide', label: 'Latitude', align: 'left' },
         { id: 'longitude', label: 'Longitude', align: 'left' },
-        { id: 'connectivity', label: 'Connectivity', align: 'left' },
-        { id: 'coverage', label: 'Coverage', align: 'left' },
+        { id: 'status', label: 'Status', align: 'left' }
       ];
 
       const {dense, page, order, orderBy, rowsPerPage, onSelectRow, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
@@ -53,7 +52,8 @@ const VerifiedSchool = () => {
           country: row.country,
           connectivity: row.connectivity_speed_status,
           coverage_availabitlity: row.connectivity_speed_status,
-          electricity_availabilty: row.electricity_available
+          electricity_availabilty: row.electricity_available,
+          mintedStatus: row.minted
         })
       })
 
@@ -92,7 +92,7 @@ const VerifiedSchool = () => {
                 <TableBody>
                   {tableData &&
                     tableData.map((row:any) => (
-                      <SchoolTableRow
+                      row.mintedStatus != "MINTED" && <SchoolTableRow
                         key={row.id}
                         row={row}
                         selectedValues={selectedValues}
