@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3333/api/v1";
+const BASE_URL = process.env.NEXT_PUBLIC_D3_BACKEND;
 
 
 export  default {
@@ -26,5 +26,8 @@ export  default {
   },
   USER :{
     GET : "/users"
+  },
+  REFRESH :{
+    POST: '/auth/refresh'
   }
 };

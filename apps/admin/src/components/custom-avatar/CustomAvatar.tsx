@@ -3,6 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import { Badge, Avatar } from '@mui/material';
 //
 import { CustomAvatarProps } from './types';
+import Gravatar from 'react-gravatar'
 
 // ----------------------------------------------------------------------
 
@@ -32,8 +33,9 @@ const CustomAvatar = forwardRef<HTMLDivElement, CustomAvatarProps>(
     const renderContent =
       colr === 'default' ? (
         <Avatar ref={ref} sx={sx} {...other}>
-          {name && charAtName}
-          {children}
+          {/* {name && charAtName}
+          {children} */}
+        <Gravatar email={name} />
         </Avatar>
       ) : (
         <Avatar
@@ -46,8 +48,9 @@ const CustomAvatar = forwardRef<HTMLDivElement, CustomAvatarProps>(
           }}
           {...other}
         >
-          {name && charAtName}
-          {children}
+        <Gravatar email={name} />
+          {/* {name && charAtName}
+          {children} */}
         </Avatar>
       );
 

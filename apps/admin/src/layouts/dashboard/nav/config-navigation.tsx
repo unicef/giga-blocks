@@ -33,22 +33,7 @@ const navConfig = [
   {
     items: [
       {
-        title: 'ADMINS',
-        path: PATH_USER.root,
-        children: [
-          {
-            title: 'User Info',
-            path: PATH_USER.list,
-          },
-        ],
-        icon: ICONS.user
-      },
-    ],
-  },
-  {
-    items: [
-      {
-        title: 'SCHOOL',
+        title: 'School',
         path: PATH_SCHOOL.root,
         children: [
           {
@@ -63,6 +48,21 @@ const navConfig = [
             title: 'Minting School',
             path: PATH_SCHOOL.minting,
           }
+        ],
+        icon: ICONS.user
+      },
+    ],
+  },
+  {
+    items: [
+      {
+        title: 'Admins',
+        path: PATH_USER.root,
+        children: [
+          {
+            title: 'User Info',
+            path: PATH_USER.list,
+          },
         ],
         icon: ICONS.user
       },
