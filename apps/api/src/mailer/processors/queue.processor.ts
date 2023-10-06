@@ -101,10 +101,23 @@ export class MintQueueProcessor {
     this._logger.debug(`Completed job ${job.id} of type ${job.name}`);
   }
 
-  @OnQueueFailed({ name: SET_MINT_NFT })
+  @OnQueueFailed({ name: SET_MINT_NFT || SET_MINT_SINGLE_NFT })
   public async onError(job: Job<any>, error: any) {
     this._logger.error(`Failed job ${job.id} of type ${job.name}: ${error.message}`, error.stack);
     if (job.attemptsMade === job.opts.attempts) {
+      //dbupdate in case of job fail
+      try {
+        await this._mintQueue.add(
+          SET_DBUPDATE_QUEUE,
+          { ids: job.data.ids, status: MintStatus.NOTMINTED },
+          jobOptions,
+        );
+      } catch (error) {
+        this._logger.error(
+          `Failed queue DB update ${job.id} of type ${job.name}: ${error.message}`,
+          error.stack,
+        );
+      }
       try {
         return this._mailerService.sendMail({
           to: this._configService.get('EMAIL_ADDRESS'),
@@ -138,7 +151,7 @@ export class MintQueueProcessor {
   }
 
   @Process(SET_DBUPDATE_QUEUE)
-  public async sendDBUpdate(job: Job<{ ids: string[] }>) {
+  public async sendDBUpdate(job: Job<{ ids: string[]; status: MintStatus }>) {
     this._logger.log(`Updating database`);
     const schools = await this._prismaService.school.updateMany({
       where: {
@@ -147,7 +160,7 @@ export class MintQueueProcessor {
         },
       },
       data: {
-        minted: MintStatus.MINTED,
+        minted: job.data.status,
       },
     });
     if (schools.count !== job.data.ids.length) {
@@ -169,18 +182,7 @@ export class MintQueueProcessor {
     if (txReceipt.status !== 1) {
       status = false;
     }
-
-    if (status) {
-      this._logger.log(`NFTs minted successfully`);
-      try {
-        await this._mintQueue.add(SET_DBUPDATE_QUEUE, { ids: job.data.ids }, jobOptions);
-      } catch (error) {
-        this._logger.error(`Error queueing database update: ${error}`);
-      }
-    } else {
-      this._logger.error(`NFTs minted transaction failed`);
-      throw new Error('NFTs minted transaction failed');
-    }
+    return this.statusCheckandDBUpdate(status, job.data.ids);
   }
 
   @Process(SET_MINT_SINGLE_NFT)
@@ -188,7 +190,6 @@ export class MintQueueProcessor {
     job: Job<{ address: string; mintData: SchoolData; ids: string[] }>,
   ) {
     this._logger.log(`Sending single mint nft to blockchain`);
-
     let status = true;
     const tx = await mintSingleNFT(
       'NFT',
@@ -199,18 +200,21 @@ export class MintQueueProcessor {
     if (txReceipt.status !== 1) {
       status = false;
     }
+    return this.statusCheckandDBUpdate(status, job.data.ids);
+  }
 
+  private async statusCheckandDBUpdate(status: boolean, ids: string[]) {
     if (status) {
       this._logger.log(`NFTs minted successfully`);
       try {
-        await this._mintQueue.add(SET_DBUPDATE_QUEUE, { ids: job.data.ids }, jobOptions);
+        await this._mintQueue.add(SET_DBUPDATE_QUEUE, { ids: ids }, jobOptions);
       } catch (error) {
-        this._logger.error(`Error queueing database update: ${error}`);
+        this._logger.error(`Error updating database: ${error}`);
       }
       return { message: 'queue added successfully', statusCode: 200 };
     } else {
-      this._logger.error(`NFT minted transaction failed`);
-      throw new Error('NFT minted transaction failed');
+      this._logger.error(`NFTs minted transaction failed`);
+      throw new Error('NFTs minted transaction failed');
     }
   }
 }

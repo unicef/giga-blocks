@@ -13,6 +13,7 @@ import { MintQueueDto, MintQueueSingleDto } from 'src/schools/dto/mint-queue.dto
 import { ConfigService } from '@nestjs/config';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { MintStatus } from '@prisma/application';
+import { SchoolData } from '../schools/dto/mint-queue.dto';
 
 @Injectable()
 export class QueueService {
@@ -50,18 +51,22 @@ export class QueueService {
     }
   }
 
-  public async sendMintNFT(batch: number, address: string, MintData: MintQueueDto) {
+  private schoolToArrayMapper(school: SchoolData) {
+    return [
+      school.schoolName,
+      school.schoolType,
+      school.country,
+      school.longitude.toString(),
+      school.latitude.toString(),
+      school.connectivity.toString(),
+      school.coverage_availabitlity.toString(),
+      school.electricity_availabilty.toString(),
+    ];
+  }
+
+  public async sendMintNFT(address: string, MintData: MintQueueDto) {
     try {
-      const mintData = MintData.data.map(school => [
-        school.schoolName,
-        school.schoolType,
-        school.country,
-        school.longitude.toString(),
-        school.latitude.toString(),
-        school.connectivity.toString(),
-        school.coverage_availabitlity.toString(),
-        school.electricity_availabilty.toString(),
-      ]);
+      const mintData = MintData.data.map(school => this.schoolToArrayMapper(school));
       let ids: string[];
       let schools;
       const batchSize = this._configService.get<number>('BATCH_SIZE');
@@ -89,18 +94,9 @@ export class QueueService {
     }
   }
 
-  public async sendSingleMintNFT(batch: number, address: string, MintData: MintQueueSingleDto) {
+  public async sendSingleMintNFT(address: string, MintData: MintQueueSingleDto) {
     try {
-      const mintData = [
-        MintData.data.schoolName,
-        MintData.data.schoolType,
-        MintData.data.country,
-        MintData.data.longitude.toString(),
-        MintData.data.latitude.toString(),
-        MintData.data.connectivity.toString(),
-        MintData.data.coverage_availabitlity.toString(),
-        MintData.data.electricity_availabilty.toString(),
-      ];
+      const mintData = this.schoolToArrayMapper(MintData.data);
       const ids = [MintData.data.id];
       await this.updateSchools(ids);
       await this._mintQueue.add(SET_MINT_SINGLE_NFT, { address, mintData, ids }, jobOptions);
