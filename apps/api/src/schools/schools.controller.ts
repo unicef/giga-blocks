@@ -47,7 +47,7 @@ export class SchoolController {
   }
 
   @Public()
-  @ApiQuery({ name: 'minted', required: false })
+  @ApiQuery({ name: 'minted', enum: MintStatus, required: false })
   @Get('schoolCount')
   countSchools(@Query('minted') minted: MintStatus) {
     const query: ListSchoolDto = {
