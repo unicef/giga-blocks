@@ -8,6 +8,7 @@ interface AuthGuardProps {
 }
 
 export default function AuthGuard({ children }: AuthGuardProps) {
+  //@ts-ignore
   const { isAuthenticated, isInitialized, user } = useAuthContext();
   const { pathname, push } = useRouter();
 

@@ -26,5 +26,8 @@ export  default {
   },
   USER :{
     GET : "/users"
+  },
+  REFRESH :{
+    POST: '/auth/refresh'
   }
 };

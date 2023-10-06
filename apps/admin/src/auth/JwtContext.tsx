@@ -27,6 +27,8 @@ import { ROLES, DEBUG_MODE } from '../config-global';
 import { AuthState, ExtendedAuthState } from './types';
 import { metaMask } from '@components/web3/connectors/metaMask';
 import { useAuthContext } from './useAuthContext';
+import axios from 'axios';
+import  routes  from "../constants/api";
 
 // ----------------------------------------------------------------------
 
@@ -62,6 +64,8 @@ function AuthProvider({ children }: AuthProviderProps) {
   const [authState, setAuthState] = useState<AuthState>(initialState);
   const { push, replace } = useRouter();
 
+  const baseUrl = routes.BASE_URL
+
   useEffect(() => {
     const initialize = async () => {
       try {
@@ -81,24 +85,17 @@ function AuthProvider({ children }: AuthProviderProps) {
           }));
         } else if (localRefreshToken) {
           try {
-            const response = await fetch('http://localhost:3333/api/v1/auth/refresh', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ refresh: localRefreshToken }),
-            });
-            console.log('response', response);
-            if (response.ok) {
-              const data = await response.json();
-              console.log('data', data);
+            axios.post(`${baseUrl}${routes.REFRESH.POST}`, JSON.stringify({ refresh: localRefreshToken }))
+            .then((res:any) => {
+              const data = res.json();
               const newAccessToken = data.access_token;
               saveAccessToken(newAccessToken);
               window.location.href = ROOTS_DASHBOARD;
-            } else {
+            })
+            .catch(() => {
               console.error('Failed to refresh access token');
               window.location.href = PATH_AUTH.login;
-            }
+            })
           } catch (error) {
             console.error('Error refreshing access token:', error);
           }
