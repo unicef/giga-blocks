@@ -207,7 +207,11 @@ export class MintQueueProcessor {
     if (status) {
       this._logger.log(`NFTs minted successfully`);
       try {
-        await this._mintQueue.add(SET_DBUPDATE_QUEUE, { ids: ids }, jobOptions);
+        await this._mintQueue.add(
+          SET_DBUPDATE_QUEUE,
+          { ids: ids, status: status ? MintStatus.MINTED : MintStatus.NOTMINTED },
+          jobOptions,
+        );
       } catch (error) {
         this._logger.error(`Error updating database: ${error}`);
       }
