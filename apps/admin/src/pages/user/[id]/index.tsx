@@ -22,19 +22,19 @@ export default function UserEditPage() {
   return (
     <>
     <Head>
-    <title> Giga: Edit Profile </title>
+    <title> Giga: Profile Details </title>
     </Head>
 
     <Grid container spacing={2}>
     <Grid item xs={8}>
     <Container>
-        <CustomBreadcrumbs heading="Edit Profile" />
+        <CustomBreadcrumbs heading="Profile Details" />
         {id && <UserProfileEditForm id={id}/>}
       </Container>
     </Grid>
     <Grid item xs={4}>
     <Container>
-    <Box 
+    {/* <Box 
     justifyContent={'center'}
     rowGap={2}
     columnGap={2}
@@ -43,7 +43,7 @@ export default function UserEditPage() {
     <Image width={250} height={250} alt='USER' src={'/assets/Image-right.svg'}/>
     <Button variant='outlined' color='inherit'>Update Profile</Button>
     <Button variant='outlined' color='inherit' style={{opacity: '0.7'}}>Remove Picture</Button>
-    </Box>
+    </Box> */}
     </Container>
     </Grid>      
     </Grid>
