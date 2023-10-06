@@ -1,37 +1,37 @@
-import { Column, Grid } from "@carbon/react";
-import React from "react";
-import "./footer.scss";
+import { Column, Grid } from '@carbon/react';
+import React from 'react';
+import './footer.scss';
 
 const Footer = () => {
   return (
     <>
       <Grid className="footer mp-0" fullWidth>
-        <Column md={4} lg={4} sm={4}>
+        <Column md={4} lg={6} sm={4}>
           <img
-            style={{ width: "20%", marginBottom: "20px" }}
+            style={{ width: '20%', marginBottom: '20px' }}
             src="/Logos/giga-logo-white.png"
             alt="Giga Logo"
           />
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit. links
+            Together, we can reshape the narrative of education in <br /> the
+            digital age. Join, collaborate, innovate.
           </p>
         </Column>
-        <Column md={4} lg={4} sm={4}>
+        <Column md={4} lg={3} sm={4}>
           <p className="footer-heading">USEFUL LINKS</p>
           <ul>
             <li>
-              <a href="/school">School</a>
+              <a href="/school">Data Repository</a>
             </li>
             <li>
-              <a href="/#involved">Get Involved</a>
+              <a href="/#involved">Develop with Us</a>
             </li>
             <li>
               <a href="/#faq">FAQ's</a>
             </li>
           </ul>
         </Column>
-        <Column md={4} lg={4} sm={4}>
+        <Column md={4} lg={3} sm={4}>
           <p className="footer-heading">TERMS</p>
           <ul>
             <li>
@@ -46,16 +46,16 @@ const Footer = () => {
           </ul>
         </Column>
         <Column md={4} lg={4} sm={4}>
-          <h3 className="footer-heading" style={{ marginBottom: "20px" }}>
+          <h3 className="footer-heading" style={{ marginBottom: '20px' }}>
             STAY IN TOUCH
           </h3>
           <p>
-            For more information about Giga please go to{" "}
+            For more information about Giga please go to{' '}
             <a className="link" href="https://giga.global/">
-              {" "}
-              Giga Connect{" "}
+              {' '}
+              Giga Connect{' '}
             </a>
-            or tweet us at{" "}
+            or tweet us at{' '}
             <a className="link" href="https://twitter.com/Gigaglobal">
               @Gigaglobal
             </a>

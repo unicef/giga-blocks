@@ -46,11 +46,6 @@ export const clearStorage = (): void => {
   if (storage) {
     storage.clear();
   }
-  if (metaMask?.deactivate) {
-    void metaMask.deactivate();
-  } else {
-    void metaMask.resetState();
-  }
 };
 
 export const isValidToken = (accessToken: string | null): boolean => {

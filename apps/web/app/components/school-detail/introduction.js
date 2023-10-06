@@ -12,17 +12,17 @@ const Introduction = ({ schooldata }) => {
       <Column md={4} lg={4} sm={4} className="school-detail-card">
         <Tile className={`tile-school`}>
           <p className="heading2">School Name</p>
-          <p className="heading5">{schooldata?.name}</p>
+          <p className="heading5">{schooldata?.schoolName}</p>
         </Tile>
         <Tile className={`tile-school tile-white`}>
           <p className="heading2">Exact Location</p>
           <p className="heading5">
-            {schooldata?.lat}, {schooldata?.lon}
+            {schooldata?.latitude}, {schooldata?.longitiude}
           </p>
         </Tile>
         <Tile className={`tile-school tile-white`}>
           <p className="heading2">Country</p>
-          <p className="heading5">{schooldata?.location}</p>
+          <p className="heading5">{schooldata?.country}</p>
         </Tile>
       </Column>
       <Column

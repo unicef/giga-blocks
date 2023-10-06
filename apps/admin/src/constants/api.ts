@@ -9,7 +9,8 @@ export  default {
   SCHOOLS: {
     GET: "/schools",
     MINT:"/schools/mintSchool",
-    MINTBULK: "/schools/mintBulk"
+    MINTBULK: "/schools/mintBulk",
+    SCHOOLCOUNT: "/schools/schoolCount"
   },
   OTP: {
     REGISTER: "/auth/send-otp",
@@ -22,5 +23,8 @@ export  default {
   },
   WALLET_LOGIN: {
     POST: '/auth/walletlogin'
+  },
+  USER :{
+    GET : "/users"
   }
 };

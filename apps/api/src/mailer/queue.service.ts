@@ -54,11 +54,13 @@ export class QueueService {
   private schoolToArrayMapper(school: SchoolData) {
     return [
       school.schoolName,
+      school.schoolType,
       school.country,
-      school.latitude,
-      school.longitude,
-      school.connectivity,
-      school.coverage_availabitlity,
+      school.longitude.toString(),
+      school.latitude.toString(),
+      school.connectivity.toString(),
+      school.coverage_availabitlity.toString(),
+      school.electricity_availabilty.toString(),
     ];
   }
 

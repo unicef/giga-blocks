@@ -22,8 +22,7 @@ const VerifiedSchool = () => {
         { id: 'location', label: 'Location', align: 'left' },
         { id: 'latitide', label: 'Latitude', align: 'left' },
         { id: 'longitude', label: 'Longitude', align: 'left' },
-        { id: 'connectivity', label: 'Connectivity', align: 'left' },
-        { id: 'coverage', label: 'Coverage', align: 'left' },
+        { id: 'status', label: 'Status', align: 'left' }
       ];
 
       const {dense, page, order, orderBy, rowsPerPage, onSelectRow, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
@@ -37,13 +36,13 @@ const VerifiedSchool = () => {
     // const { filteredUsers } = useAdministrationContext();
     const [selectedValues, setSelectedValues] = useState<any>([]);
     const [tableData, setTableData] = useState<any>([]);
-    const {data} = useSchoolGet(page, rowsPerPage)
+    const {data, isFetching} = useSchoolGet(page, rowsPerPage, 'NOTMINTED')
 
     // const { error } = useFetchUsers();
 
     let filteredData:any = []
     useEffect(() => {
-      data?.rows.map((row:any) => {
+      !isFetching &&  data?.rows.map((row:any) => {
         filteredData.push({
           id: row.id,
           schoolName: row.name,
@@ -51,53 +50,38 @@ const VerifiedSchool = () => {
           latitude: row.latitude,
           schoolType: row.school_type,
           country: row.country,
-          connectivity: row.connectivity_speed_status,
-          coverage_availabitlity: row.connectivity_speed_status,
-          electricity_availabilty: row.electricity_available
+          connectivity: row.connectivity,
+          coverage_availabitlity: row.coverage_availability,
+          electricity_availabilty: row.electricity_available,
+          mintedStatus: row.minted
         })
       })
 
       setTableData(filteredData);
-    }, [data]);
+    }, [data, isFetching]);
 
     const signTransaction = async () =>{
       const signer = (provider.provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
-      const signature = await mintSignature(signer, '1');
+      const signature = await mintSignature(signer, selectedValues.length);
       return signature;
     }
   
     const mintSchool = async () => {
       const signature = await signTransaction();
       if(!signature) return Error("Signature is null");
+      setSelectedValues([])
       mutate({data:selectedValues, signatureWithData:signature})
     }
 
     return ( 
         <DashboardLayout>
-            <h2>Verified School List</h2>
-          <Button onClick={mintSchool}>Mint ({selectedValues.length})</Button>
+          <div style={{display: 'flex', justifyContent: 'space-between',marginBottom: '20px'}}>
+          <span style={{fontSize: '1.5em', fontWeight: '600'}}>Unminted School</span>
+          <Button variant="contained" onClick={mintSchool}>Mint ({selectedValues.length})</Button>
+          </div>
           <Card>
           <Divider />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            {/* <TableSelectedAction
-              dense={dense}
-              // numSelected={selected?.length}
-              rowCount={tableData?.length}
-              // onSelectAllRows={(checked) =>
-              //   onSelectAllRows(
-              //     checked,
-              //     tableData.map((row:any) => row.id)
-              //   )
-              // }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            /> */}
-
             <Scrollbar>
               <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
                 <TableHeadUsers
@@ -105,14 +89,7 @@ const VerifiedSchool = () => {
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   rowCount={tableData?.length}
-                  // numSelected={selected?.length}
                   onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row:any) => row.id)
-                  //   )
-                  // }
                 />
 
                 <TableBody>
@@ -121,16 +98,13 @@ const VerifiedSchool = () => {
                       <SchoolTableRow
                         key={row.id}
                         row={row}
-                        // selected={undefined}
-                        // selected={selectedValues.includes(row.id)}
-                        // onSelectRow={onSelectRow}
                         selectedValues={selectedValues}
                         setSelectedValues={setSelectedValues}
                         rowData = {row}
+                        checkbox = {true}
                       />
                     ))}
                   <TableNoData 
-                  // isNotFound={!!error} 
                   isNotFound={false}
                   />
                 </TableBody>
@@ -138,7 +112,7 @@ const VerifiedSchool = () => {
             </Scrollbar>
           </TableContainer>
           <TablePaginationCustom
-            count={data?.meta.total}
+            count={data?.meta?.total}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
