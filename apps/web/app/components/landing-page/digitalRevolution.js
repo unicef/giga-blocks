@@ -1,7 +1,7 @@
-import { Column, Grid } from "@carbon/react";
-import React from "react";
-import "./styles/preview.scss";
-import Card from "../reuseable/card";
+import { Column, Grid } from '@carbon/react';
+import React from 'react';
+import './styles/preview.scss';
+import Card from '../reuseable/card';
 
 const DigitalRevolution = () => {
   return (
@@ -14,8 +14,9 @@ const DigitalRevolution = () => {
           className="heading-col landing-page__tab-content"
         >
           <div className="preview-2-paragraph">
-            <h1 className="heading12" style={{ width: "100%" }}>
-              Together, Let’s Create a <br /> Digital Revolution
+            <h1 className="heading12" style={{ width: '100%' }}>
+              Developers,
+              <br /> Let’s Shape the Digital Future of Education
             </h1>
             <p className="heading3">
               The future is digital, and we're here to make sure every child is
@@ -34,11 +35,11 @@ const DigitalRevolution = () => {
         >
           <img className="landing-page__illo" src="/Group.png" alt="landing" />
           <div
-            style={{ position: "absolute", top: "0", right: "0", width: "50%" }}
+            style={{ position: 'absolute', top: '0', right: '0', width: '50%' }}
           >
             <Card
-              title={"Contribute to our school data and earn rewards."}
-              description={"Contribute today  →"}
+              title={'Dive into the data.'}
+              description={'Start developing today  →'}
               dark
             />
           </div>

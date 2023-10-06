@@ -1,6 +1,6 @@
-import { Grid, Column } from "@carbon/react";
-import "./styles/preview.scss";
-import React from "react";
+import { Grid, Column } from '@carbon/react';
+import './styles/preview.scss';
+import React from 'react';
 
 const Preview2 = () => {
   return (
@@ -13,19 +13,19 @@ const Preview2 = () => {
       >
         <div
           style={{
-            width: "65%",
-            display: "flex",
-            flexDirection: "column",
-            gap: "3vh",
+            width: '95%',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '3vh',
           }}
         >
           <h2 className="heading8"> What is NFT 2.0?</h2>
           <p className="heading2">
-            Imagine a global community coming together to create a distributed
-            database of school data, each NFT representing a school with its
-            unique story and journey. With your help, we can drive change,
-            bridge the digital divide, and enable students around the world to
-            access the resources they deserve.
+            Envision a global developer community accessing and building upon a
+            distributed school data repository. Each data point captures a
+            school's unique narrative. With this resource, you can drive
+            innovation, bridge the digital knowledge gap, and enable global
+            access to quality education resources.
           </p>
         </div>
       </Column>
@@ -33,13 +33,13 @@ const Preview2 = () => {
         md={4}
         lg={{ span: 16, offset: 7 }}
         sm={4}
-        style={{ background: "gray" }}
+        style={{ background: 'gray' }}
       >
         <img
           className="landing-page__illo"
           src="/landingPage/preview-2/preview-2-img.png"
           alt="What is nft image"
-          style={{ height: "400px", width: "100%", objectFit: "cover" }}
+          style={{ height: '400px', width: '100%', objectFit: 'cover' }}
         />
       </Column>
     </Grid>

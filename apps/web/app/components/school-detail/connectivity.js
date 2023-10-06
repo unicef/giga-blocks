@@ -27,7 +27,7 @@ const Connectivity = ({ schoolData }) => {
                 Coverage <br /> Availability
               </span>
               <span className="heading5">
-                {schoolData?.covergeAvailability}
+                {schoolData?.coverage_availabitlity}
               </span>
             </div>
           </Column>
@@ -36,7 +36,7 @@ const Connectivity = ({ schoolData }) => {
           <Column className="school-connectivity-column">
             <div className="school-connectivity-card">
               <span className="heading2">Electricity</span>
-              <span className="heading5">Yes</span>
+              {schoolData?.electricity_availabilty}
             </div>
           </Column>
         </Grid>

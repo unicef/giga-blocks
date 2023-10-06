@@ -43,7 +43,7 @@ export class AuthController {
     return this.authService.sendOtp(AuthDto);
   }
 
-  // @Public()
+  @Public()
   @UseGuards(RefreshJWTGuard)
   @Post('refresh')
   async refresh(

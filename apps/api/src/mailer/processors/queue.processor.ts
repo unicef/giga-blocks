@@ -172,7 +172,7 @@ export class MintQueueProcessor {
   public async sendMintNFT(job: Job<{ address: string; mintData: SchoolData[]; ids: string[] }>) {
     this._logger.log(`Sending mint nft to blockchain`);
 
-    let status: boolean = true;
+    let status = true;
     const tx = await mintNFT(
       'NFT',
       this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
@@ -190,7 +190,7 @@ export class MintQueueProcessor {
     job: Job<{ address: string; mintData: SchoolData; ids: string[] }>,
   ) {
     this._logger.log(`Sending single mint nft to blockchain`);
-    let status: boolean = true;
+    let status = true;
     const tx = await mintSingleNFT(
       'NFT',
       this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
@@ -212,8 +212,9 @@ export class MintQueueProcessor {
         this._logger.error(`Error updating database: ${error}`);
       }
       return { message: 'queue added successfully', statusCode: 200 };
+    } else {
+      this._logger.error(`NFTs minted transaction failed`);
+      throw new Error('NFTs minted transaction failed');
     }
-    this._logger.error(`NFTs minted transaction failed`);
-    throw new Error('NFTs minted transaction failed');
   }
 }
