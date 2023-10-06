@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Header,
   HeaderContainer,
@@ -12,10 +12,10 @@ import {
   SideNav,
   SideNavItems,
   HeaderSideNavItems,
-} from "@carbon/react";
-import { Switcher, Notification, UserAvatar } from "@carbon/react/icons";
+} from '@carbon/react';
+import { Switcher, Notification, UserAvatar } from '@carbon/react/icons';
 
-import { Link } from "next/link";
+import { Link } from 'next/link';
 
 const Navbar = () => (
   <HeaderContainer
@@ -32,16 +32,16 @@ const Navbar = () => (
         </HeaderName>
         <HeaderNavigation>
           <HeaderMenuItem as={Link} href="/school">
-            Schools
+            School Data
           </HeaderMenuItem>
           <HeaderMenuItem as={Link} href="/#involved">
-            Get Involved
+            Develop With Us
           </HeaderMenuItem>
           <HeaderMenuItem as={Link} href="/#faq">
-            FAQ's
+            Developer FAQ's
           </HeaderMenuItem>
           <HeaderMenuItem as={Link} href="/#form">
-            Connect With Us
+            Reach Out
           </HeaderMenuItem>
         </HeaderNavigation>
         <SideNav
@@ -55,16 +55,16 @@ const Navbar = () => (
                 Home
               </HeaderMenuItem>
               <HeaderMenuItem as={Link} href="/school">
-                Schools
+                School Data
               </HeaderMenuItem>
               <HeaderMenuItem as={Link} href="/#involved">
-                Get Involved
+                Develop With Us
               </HeaderMenuItem>
               <HeaderMenuItem as={Link} href="/#faq">
-                FAQ's
+                Developer FAQ's
               </HeaderMenuItem>
               <HeaderMenuItem as={Link} href="/#form">
-                Connect With Us
+                Reach Out
               </HeaderMenuItem>
             </HeaderSideNavItems>
           </SideNavItems>
@@ -73,11 +73,11 @@ const Navbar = () => (
           <a
             href="/signUp"
             style={{
-              minWidth: "5rem",
-              marginTop: "16px",
-              cursor: "pointer",
-              color: "#000",
-              textDecoration: "none",
+              minWidth: '5rem',
+              marginTop: '16px',
+              cursor: 'pointer',
+              color: '#000',
+              textDecoration: 'none',
             }}
           >
             Sign Up

@@ -1,7 +1,7 @@
-@use "@carbon/react/scss/spacing" as *;
-@use "@carbon/react/scss/type" as *;
-@use "@carbon/react/scss/breakpoint" as *;
-@use "@carbon/react/scss/theme" as *;
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/type' as *;
+@use '@carbon/react/scss/breakpoint' as *;
+@use '@carbon/react/scss/theme' as *;
 .landing-page {
   // margin-top: rem(-40px);
   @include breakpoint-down(md) {
@@ -29,7 +29,7 @@
 .preview1Background {
   width: 100vw;
   height: 90vh;
-  background-image: url("/landingPage/preview-1.png");
+  background-image: url('/landingPage/preview-1.png');
   background-size: cover;
   background-repeat: no-repeat;
   color: white;
@@ -37,7 +37,7 @@
   align-items: center;
 }
 .get-involved-background {
-  background-image: url("/landingPage/get-involved/get-involved.png");
+  background-image: url('/landingPage/get-involved/get-involved.png');
   background-size: cover;
   height: 80vh;
   display: flex;
@@ -105,7 +105,7 @@
 .preview-1-button {
   border-radius: 45px;
   font-size: 1vw;
-  width: 25%;
+  width: 30%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -159,14 +159,14 @@
   padding-left: $spacing-05;
 }
 .landing-page__subheading {
-  @include type-style("productive-heading-03");
+  @include type-style('productive-heading-03');
   font-weight: 600;
   @include breakpoint-down(md) {
     margin-top: $spacing-08;
   }
 }
 .landing-page__p {
-  @include type-style("productive-heading-03");
+  @include type-style('productive-heading-03');
   margin-top: $spacing-06;
   margin-bottom: $spacing-08;
   @include breakpoint-between((320px + 1), md) {
@@ -177,7 +177,7 @@
   padding: $spacing-09 $spacing-06;
 }
 .landing-page__label {
-  @include type-style("heading-01");
+  @include type-style('heading-01');
 }
 .tabs-group {
   background-color: $layer-01;

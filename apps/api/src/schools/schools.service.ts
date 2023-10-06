@@ -51,22 +51,30 @@ export class SchoolService {
   }
 
   async checkAdminandMintQueue(MintData: MintQueueDto) {
-    const { batch, address } = getBatchandAddressfromSignature(MintData.signatureWithData);
+    const { address } = getBatchandAddressfromSignature(MintData.signatureWithData);
 
     if (await this.checkAdmin(address)) {
-      return this.queueService.sendMintNFT(batch, address, MintData);
+      return this.queueService.sendMintNFT(address, MintData);
     }
   }
 
   async checkAdminandSingleMintQueue(MintData: MintQueueSingleDto) {
-    const { batch, address } = getBatchandAddressfromSignature(MintData.signatureWithData);
-    return this.queueService.sendSingleMintNFT(batch, address, MintData);
+    const { address } = getBatchandAddressfromSignature(MintData.signatureWithData);
+    return this.queueService.sendSingleMintNFT(address, MintData);
   }
 
   async findOne(id: string) {
     return await this.prisma.school.findUnique({
       where: {
         id,
+      },
+    });
+  }
+
+  async countSchools(query: ListSchoolDto) {
+    return await this.prisma.school.count({
+      where: {
+        ...query,
       },
     });
   }
