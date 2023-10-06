@@ -1,7 +1,5 @@
 import { Logger } from '@nestjs/common';
 import { PrismaClient } from '@prisma/application';
-import * as _ from 'lodash';
-// import { hexStringToBuffer } from '../src/utils/string-format';
 
 const prisma = new PrismaClient();
 const logger = new Logger();
@@ -86,14 +84,15 @@ export const users = [
 ];
 
 async function main() {
-  for await (const user of users) {
-    const userAttrs = _.cloneDeep(user);
-    await prisma.user.create({
-      data: {
-        ...userAttrs,
-      },
-    });
-  }
+  // for await (const user of users) {
+  const userdata = await prisma.user.createMany({ data: users });
+  // const userAttrs = _.cloneDeep(user);
+  // await prisma.user.create({
+  //   data: {
+  //     ...userAttrs,
+  //   },
+  // });
+  // }
 }
 
 main()
