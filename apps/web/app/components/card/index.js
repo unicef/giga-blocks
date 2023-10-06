@@ -15,7 +15,7 @@ import { useQuery } from 'urql';
 import { Queries } from '../../libs/graph-query';
 
 const SchoolCard = () => {
-  const [pageSize, setPageSize] = useState(2);
+  const [pageSize, setPageSize] = useState(4);
   const [result] = useQuery({ query: Queries.nftListQuery , variables:{first:pageSize}});
   const { data: queryData, fetching, error } = result;
   const [schoolData, setSchoolData] = useState([]);
@@ -40,7 +40,7 @@ const SchoolCard = () => {
   };
 
   const loadMore = () => {
-    setPageSize(pageSize + 2);
+    setPageSize(pageSize + pageSize);
     // if (pageSize < data?.meta.total - 12) {
     //   setPageSize(pageSize + 12);
     // } else {
@@ -71,7 +71,7 @@ const SchoolCard = () => {
                       <ToggletipButton label="Show information">
                         <h4>
                           {school?.name?.length > 30
-                            ? `${school.name
+                            ? `${school.schoolName
                                 ?.toLowerCase()
                                 .split(' ')
                                 .map(
@@ -80,7 +80,7 @@ const SchoolCard = () => {
                                 )
                                 .join(' ')
                                 .slice(0, 30)}...`
-                            : school.name
+                            : school.schoolName
                                 ?.toLowerCase()
                                 .split(' ')
                                 .map(
@@ -92,7 +92,7 @@ const SchoolCard = () => {
                       </ToggletipButton>
                       <ToggletipContent>
                         <p>
-                          {school.name
+                          {school.schoolName
                             ?.toLowerCase()
                             .split(' ')
                             .map(
@@ -106,7 +106,7 @@ const SchoolCard = () => {
                     <div>
                       {/* <p className="text-purple">Country</p> */}
                       <h4 className="heading2 text-left">
-                        {school.location || 'N/A'}
+                        {school.country || 'N/A'}
                       </h4>
                     </div>
                     {/* <p className="text-purple">Education Level</p> */}

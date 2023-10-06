@@ -54,11 +54,13 @@ export class QueueService {
     try {
       const mintData = MintData.data.map(school => [
         school.schoolName,
+        school.schoolType,
         school.country,
-        school.latitude,
-        school.longitude,
-        school.connectivity,
-        school.coverage_availabitlity,
+        school.longitude.toString(),
+        school.latitude.toString(),
+        school.connectivity.toString(),
+        school.coverage_availabitlity.toString(),
+        school.electricity_availabilty.toString(),
       ]);
       let ids: string[];
       let schools;
@@ -91,11 +93,13 @@ export class QueueService {
     try {
       const mintData = [
         MintData.data.schoolName,
+        MintData.data.schoolType,
         MintData.data.country,
-        MintData.data.latitude,
-        MintData.data.longitude,
-        MintData.data.connectivity,
-        MintData.data.coverage_availabitlity,
+        MintData.data.longitude.toString(),
+        MintData.data.latitude.toString(),
+        MintData.data.connectivity.toString(),
+        MintData.data.coverage_availabitlity.toString(),
+        MintData.data.electricity_availabilty.toString(),
       ];
       const ids = [MintData.data.id];
       await this.updateSchools(ids);

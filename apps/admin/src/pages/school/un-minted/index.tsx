@@ -50,8 +50,8 @@ const VerifiedSchool = () => {
           latitude: row.latitude,
           schoolType: row.school_type,
           country: row.country,
-          connectivity: row.connectivity_speed_status,
-          coverage_availabitlity: row.connectivity_speed_status,
+          connectivity: row.connectivity,
+          coverage_availabitlity: row.coverage_availability,
           electricity_availabilty: row.electricity_available,
           mintedStatus: row.minted
         })
