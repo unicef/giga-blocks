@@ -39,6 +39,18 @@ export const useSchoolGetById = (id:string | undefined | string[]) => {
   )
 }
 
+export const useSchoolCount = () => {
+  return useQuery(['school-count'], async () => {
+    const {data} = await api.get(`${routes.SCHOOLS.SCHOOLCOUNT}`)
+    return data
+  }
+  ,
+    {
+      keepPreviousData: true,
+    }
+  )
+}
+
 const mintSchool = async(data:any) => {
   return await api.post(routes.SCHOOLS.MINT, data)
 }

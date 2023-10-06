@@ -13,6 +13,7 @@ import { MintQueueDto, MintQueueSingleDto } from 'src/schools/dto/mint-queue.dto
 import { ConfigService } from '@nestjs/config';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { MintStatus } from '@prisma/application';
+import { SchoolData } from '../schools/dto/mint-queue.dto';
 
 @Injectable()
 export class QueueService {
@@ -34,56 +35,49 @@ export class QueueService {
     }
   }
 
-  public async sendMintNFT(batch: number, address: string, MintData: MintQueueDto) {
+  private async updateSchools(ids: string[]) {
+    const schools = await this._prismaService.school.updateMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+      data: {
+        minted: MintStatus.ISMINTING,
+      },
+    });
+    if (schools.count !== ids.length) {
+      throw new Error(`No. of schools updated in database is not equal to no of schools minted`);
+    }
+  }
+
+  private schoolToArrayMapper(school: SchoolData) {
+    return [
+      school.schoolName,
+      school.country,
+      school.latitude,
+      school.longitude,
+      school.connectivity,
+      school.coverage_availabitlity,
+    ];
+  }
+
+  public async sendMintNFT(address: string, MintData: MintQueueDto) {
     try {
-      const mintData = MintData.data.map(school => [
-        school.schoolName,
-        school.country,
-        school.latitude,
-        school.longitude,
-        school.connectivity,
-        school.coverage_availabitlity,
-      ]);
+      const mintData = MintData.data.map(school => this.schoolToArrayMapper(school));
       let ids: string[];
       let schools;
       const batchSize = this._configService.get<number>('BATCH_SIZE');
       if (mintData.length <= batchSize) {
         ids = MintData.data.map(school => school.id);
-        schools = await this._prismaService.school.updateMany({
-          where: {
-            id: {
-              in: ids,
-            },
-          },
-          data: {
-            minted: MintStatus.ISMINTING,
-          },
-        });
-        if (schools.count !== ids.length) {
-          throw new Error(
-            `No. of schools updated in database is not equal to no of schools minted`,
-          );
-        }
+        schools = await this.updateSchools(ids);
         await this._mintQueue.add(SET_MINT_NFT, { address, mintData, ids }, jobOptions);
       } else {
+        let mintDatum;
         for (let i = 0; i < mintData.length; i += batchSize) {
-          let mintDatum = mintData.slice(i, i + batchSize);
+          mintDatum = mintData.slice(i, i + batchSize);
           ids = MintData.data.slice(i, i + batchSize).map(school => school.id);
-          schools = await this._prismaService.school.updateMany({
-            where: {
-              id: {
-                in: ids,
-              },
-            },
-            data: {
-              minted: MintStatus.ISMINTING,
-            },
-          });
-          if (schools.count !== ids.length) {
-            throw new Error(
-              `No. of schools updated in database is not equal to no of schools minted`,
-            );
-          }
+          schools = await this.updateSchools(ids);
           await this._mintQueue.add(
             SET_MINT_NFT,
             { address, mintData: mintDatum, ids },
@@ -98,13 +92,13 @@ export class QueueService {
     }
   }
 
-  public async sendSingleMintNFT(
-    batch: number,
-    address: string,
-    MintData: MintQueueSingleDto,
-  ): Promise<void> {
+  public async sendSingleMintNFT(address: string, MintData: MintQueueSingleDto) {
     try {
-      await this._mintQueue.add(SET_MINT_SINGLE_NFT, { address, MintData }, jobOptions);
+      const mintData = this.schoolToArrayMapper(MintData.data);
+      const ids = [MintData.data.id];
+      await this.updateSchools(ids);
+      await this._mintQueue.add(SET_MINT_SINGLE_NFT, { address, mintData, ids }, jobOptions);
+      return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
       this._logger.error(`Error queueing transaction to blockchain `);
       throw error;
