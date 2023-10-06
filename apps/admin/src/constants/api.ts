@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3333/api/v1";
+const BASE_URL = process.env.NEXT_API_URL;
 
 
 export  default {

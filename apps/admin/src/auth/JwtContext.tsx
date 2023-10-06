@@ -65,6 +65,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   const { push, replace } = useRouter();
 
   const baseUrl = routes.BASE_URL
+  console.log(baseUrl)
 
   useEffect(() => {
     const initialize = async () => {
@@ -74,8 +75,6 @@ function AuthProvider({ children }: AuthProviderProps) {
 
         if (localToken && isValidToken(localToken)) {
           const localUser = getCurrentUser();
-          console.log('user', localUser);
-          // const appSettings = await getAppSettings();
           setAuthState((prev) => ({
             ...prev,
             isAuthenticated: true,
