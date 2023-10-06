@@ -71,6 +71,14 @@ export class SchoolService {
     });
   }
 
+  async countSchools(query: ListSchoolDto) {
+    return await this.prisma.school.count({
+      where: {
+        ...query,
+      },
+    });
+  }
+
   async byCountry(country: string) {
     const firstLetter = country.charAt(0);
     if (firstLetter === firstLetter.toUpperCase()) {
