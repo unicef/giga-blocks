@@ -4,7 +4,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { Grid } from "@mui/material";
-import { useSchoolCount } from "@hooks/school/useSchool";
+import { useSchoolCount, useSchoolGet } from "@hooks/school/useSchool";
 
 const bull = (
   <Box component="span" sx={{ display: "inline-block", mx: "2px", transform: "scale(0.8)" }}>
@@ -14,6 +14,8 @@ const bull = (
 
 export default function OutlinedCard() {
   const {data:schoolCount} = useSchoolCount()
+  const {data: mintedCount} = useSchoolGet(0, 0, "MINTED")
+
   return (
     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
       <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
@@ -41,7 +43,7 @@ export default function OutlinedCard() {
           <CardContent>
             <Typography variant="body2">Total School</Typography>
             <Typography variant="h5" component="div">
-              {schoolCount}
+              {schoolCount || "N/A"}
             </Typography>
           </CardContent>
         </Card>
@@ -51,7 +53,7 @@ export default function OutlinedCard() {
           <CardContent>
             <Typography variant="body2">NFTs Minted</Typography>
             <Typography variant="h5" component="div">
-              120
+              {mintedCount?.meta?.total || "N/A"}
             </Typography>
           </CardContent>
         </Card>
