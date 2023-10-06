@@ -1,4 +1,4 @@
-const BASE_URL = process.env.NEXT_API_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_D3_BACKEND;
 
 
 export  default {

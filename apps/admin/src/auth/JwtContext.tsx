@@ -89,7 +89,6 @@ function AuthProvider({ children }: AuthProviderProps) {
               const data = res.json();
               const newAccessToken = data.access_token;
               saveAccessToken(newAccessToken);
-              window.location.href = ROOTS_DASHBOARD;
             })
             .catch(() => {
               console.error('Failed to refresh access token');
