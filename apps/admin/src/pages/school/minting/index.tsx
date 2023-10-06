@@ -14,7 +14,7 @@ import { mintSignature } from "@components/web3/utils/wallet";
 import { useBulkMintSchools } from "@hooks/school/useSchool";
 import { useWeb3React } from "@web3-react/core";
 
-const ContributedSchool = () => {
+const VerifiedSchool = () => {
 
     const TABLE_HEAD = [
         { id: 'name', label: 'Name', align: 'left' },
@@ -35,7 +35,7 @@ const ContributedSchool = () => {
     // const { filteredUsers } = useAdministrationContext();
     const [selectedValues, setSelectedValues] = useState<any>([]);
     const [tableData, setTableData] = useState<any>([]);
-    const {data} = useSchoolGet(page, rowsPerPage, "MINTED")
+    const {data} = useSchoolGet(page, rowsPerPage, 'ISMINTING')
 
     // const { error } = useFetchUsers();
 
@@ -68,34 +68,16 @@ const ContributedSchool = () => {
     const mintSchool = async () => {
       const signature = await signTransaction();
       if(!signature) return Error("Signature is null");
+      setSelectedValues([])
       mutate({data:selectedValues, signatureWithData:signature})
     }
 
     return ( 
         <DashboardLayout>
-            <h2>Minted School</h2>
+            <h2>Minting School</h2>
           <Card>
           <Divider />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            {/* <TableSelectedAction
-              dense={dense}
-              // numSelected={selected?.length}
-              rowCount={tableData?.length}
-              // onSelectAllRows={(checked) =>
-              //   onSelectAllRows(
-              //     checked,
-              //     tableData.map((row:any) => row.id)
-              //   )
-              // }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            /> */}
-
             <Scrollbar>
               <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
                 <TableHeadUsers
@@ -103,14 +85,7 @@ const ContributedSchool = () => {
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   rowCount={tableData?.length}
-                  // numSelected={selected?.length}
                   onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row:any) => row.id)
-                  //   )
-                  // }
                 />
 
                 <TableBody>
@@ -126,7 +101,6 @@ const ContributedSchool = () => {
                       />
                     ))}
                   <TableNoData 
-                  // isNotFound={!!error} 
                   isNotFound={false}
                   />
                 </TableBody>
@@ -147,4 +121,4 @@ const ContributedSchool = () => {
      );
 }
  
-export default ContributedSchool;
+export default VerifiedSchool;

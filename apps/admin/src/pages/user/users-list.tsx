@@ -2,24 +2,20 @@
 import Iconify from "@components/iconify";
 import Scrollbar from "@components/scrollbar";
 import { TableEmptyRows, TableHeadUsers, TableNoData, TablePaginationCustom, TableSelectedAction, useTable } from "@components/table";
-import { useSchoolGet } from "@hooks/school/useSchool";
+import { useUserGet } from "@hooks/user/useUser";
 // import { useAdministrationContext } from "@contexts/administration";
 // import useFetchUsers from "@hooks/users/useFetchUsers";
 import DashboardLayout from "@layouts/dashboard/DashboardLayout";
 import { Box, Button, Card, Tabs, Divider, TableContainer, Tooltip, IconButton, Table, TableBody } from "@mui/material";
-import SchoolTableRow from "@sections/user/list/SchoolTableRow";
+import UserListRow from "@sections/user/list/UsersList";
 import { useEffect, useState } from "react";
 
 const UserList = () => {
 
     const TABLE_HEAD = [
-        { id: 'checkbox', label: ' ', align: 'left' },
         { id: 'name', label: 'Name', align: 'left' },
-        { id: 'location', label: 'Location', align: 'left' },
-        { id: 'latitide', label: 'Latitude', align: 'left' },
-        { id: 'longitude', label: 'Longitude', align: 'left' },
-        { id: 'connectivity', label: 'Connectivity', align: 'left' },
-        { id: 'coverage', label: 'Coverage', align: 'left' },
+        { id: 'email', label: 'Email', align: 'left' },
+        { id: 'wallet', label: 'Wallet', align: 'left' }
       ];
 
       const {dense, page, order, orderBy, rowsPerPage, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
@@ -28,31 +24,26 @@ const UserList = () => {
     // const { filteredUsers } = useAdministrationContext();
 
     const [tableData, setTableData] = useState<any>([]);
-    const {data} = useSchoolGet(page, rowsPerPage)
-
-    let selected:string[] = []
-
-    // const { error } = useFetchUsers();
+    const {data, isFetching} = useUserGet(page, rowsPerPage)
 
     let filteredData:any = []
     useEffect(() => {
-      data?.rows.map((row:any) => {
+      !isFetching &&  data?.map((row:any) => {
+        const buffer = row.walletAddress && Buffer.from(row.walletAddress.data)
+        const walletString = buffer && buffer.toString('hex')
         filteredData.push({
-          id: row.giga_id_school,
-          name: row.name, 
-          location: row.location,
-          longitude: row.lon,
-          latitude: row.lat,
-          connectivity: row.connectivity_speed_status,
-          coverage: row.connectivity_speed_status
+          id: row.id,
+          name: row.name,
+          email: row.email,
+          wallet: walletString || 'N/A'
         })
       })
-
       setTableData(filteredData);
     }, [data]);
 
     return ( 
-        <DashboardLayout>
+
+<DashboardLayout>
             <h2>Users List</h2>
           <Card>
           <Divider />
@@ -96,10 +87,9 @@ const UserList = () => {
                 <TableBody>
                   {tableData &&
                     tableData.map((row:any) => (
-                      <SchoolTableRow
+                      <UserListRow
                         key={row.id}
                         row={row}
-                        selected={selected?.includes(row.id)}
                       />
                     ))}
                   <TableNoData 
@@ -110,15 +100,15 @@ const UserList = () => {
               </Table>
             </Scrollbar>
           </TableContainer>
-          <TablePaginationCustom
-            count={data?.meta.total}
+          {/* <TablePaginationCustom
+            count={10}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
             dense={dense}
             onChangeDense={onChangeDense}
-          />
+          /> */}
         </Card>
         </DashboardLayout>
      );

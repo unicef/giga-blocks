@@ -12,12 +12,12 @@ const accessToken = getAccessToken()
 
 api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
-export const useSchoolGet = (page:number, perPage:number, minted?:string) => {
+export const useUserGet = (page:number, perPage:number) => {
   return useQuery(
     ["get-api-data", page, perPage],
     async () => {
       const { data } = await api.get(
-        `${routes.SCHOOLS.GET}?page=${page}&perPage=${perPage}${minted && `&minted=${minted}`}`
+        `${routes.USER.GET}`
       );
       return data;
     },
@@ -27,9 +27,9 @@ export const useSchoolGet = (page:number, perPage:number, minted?:string) => {
   );
 };
 
-export const useSchoolGetById = (id:string | undefined | string[]) => {
+export const useUserGetById = (id:string | undefined | string[]) => {
   return useQuery(['single-school'], async () => {
-    const {data} = await api.get(`${routes.SCHOOLS.GET}/${id}`)
+    const {data} = await api.get(`${routes.USER.GET}/${id}`)
     return data
   }
   ,
@@ -37,20 +37,4 @@ export const useSchoolGetById = (id:string | undefined | string[]) => {
       keepPreviousData: true,
     }
   )
-}
-
-const mintSchool = async(data:any) => {
-  return await api.post(routes.SCHOOLS.MINT, data)
-}
-
-const mintBulkSchool = async(data:any) => {
-  return await api.post(routes.SCHOOLS.MINTBULK, data)
-}
-
-export const useMintSchools = () => {
-  return useMutation(mintSchool)
-}
-
-export const useBulkMintSchools = () => {
-  return useMutation(mintBulkSchool)
 }

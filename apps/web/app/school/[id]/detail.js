@@ -10,10 +10,11 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { Loading } from '@carbon/react';
 
-const SchoolDetail = () => {
+const SchoolDetail = ({id}) => {
+
   const [result] = useQuery({
     query: Queries.nftDetailsQuery,
-    variables: { id: 1 },
+    variables: { id },
   });
   const { fetching } = result;
   const [schoolData, setSchoolData] = useState();

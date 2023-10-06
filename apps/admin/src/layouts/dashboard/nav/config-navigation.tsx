@@ -58,6 +58,10 @@ const navConfig = [
           {
             title: 'Unminted School',
             path: PATH_SCHOOL.contributed,
+          },
+          {
+            title: 'Minting School',
+            path: PATH_SCHOOL.minting,
           }
         ],
         icon: ICONS.user

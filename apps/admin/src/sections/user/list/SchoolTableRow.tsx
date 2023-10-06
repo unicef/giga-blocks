@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // @mui
 import {
   Stack,
@@ -27,15 +27,17 @@ type Props = {
   setSelectedValues: any;
   selectedValues:any;
   rowData: any;
+  checkbox: boolean
 };
 
-export default function UserTableRow({
+export default function SchoolTableRow({
   row,
   // selected, 
   // onSelectRow,
   setSelectedValues,
   selectedValues,
-  rowData
+  rowData,
+  checkbox
 }: Props) {
   const {
   id,
@@ -43,8 +45,9 @@ export default function UserTableRow({
   country,
   longitude,
   latitude,
-  connectivity,
-  coverage_availabitlity
+  mintedStatus,
+  coverage_availabitlity,
+  connectivity
   } = row;
 
   const {push} = useRouter()
@@ -56,16 +59,19 @@ export default function UserTableRow({
   const handleCheckboxChange = (event:any, row:any) => {
     const isChecked = event.target.checked;
     if (isChecked) {
+      if(mintedStatus != "ISMINTING") {
       setSelectedValues((prev:any) => [
         ...prev,
         row,
       ]);
+    }
     } else {
       setSelectedValues((prevSelectedValues:any) =>
         prevSelectedValues.filter((value:any) => value.id !== row.id)
       );
-    }
+  }
   };
+
 
   return (
     <>
@@ -73,12 +79,13 @@ export default function UserTableRow({
       // selected={selected}
       >
 
-      <TableCell padding="checkbox"> 
+    {checkbox && <TableCell padding="checkbox"> 
         <Checkbox
           onChange={(e) => handleCheckboxChange(e, rowData)}
-          // checked={selected}
+          // checked = {mintedStatus === "ISMINTING" ? false : undefined}
         />
       </TableCell>
+      }
 
         <TableCell onClick={() => handleEditRow(id)}>
           <Stack direction="row" alignItems="center" spacing={2}>
@@ -101,12 +108,9 @@ export default function UserTableRow({
         </TableCell>
 
         <TableCell align="left" sx={{ textTransform: 'capitalize' }} onClick={() => handleEditRow(id)}>
-          {connectivity}
+          {mintedStatus}
         </TableCell>
 
-        <TableCell align="left" sx={{ textTransform: 'capitalize' }} onClick={() => handleEditRow(id)}>
-          {coverage_availabitlity}
-        </TableCell>
       </TableRow>
     </>
   );
