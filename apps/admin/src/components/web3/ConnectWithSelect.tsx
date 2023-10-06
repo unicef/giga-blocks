@@ -1,15 +1,20 @@
-import { Web3ReactHooks } from "@web3-react/core";
-import { GnosisSafe } from "@web3-react/gnosis-safe";
-import type { MetaMask } from "@web3-react/metamask";
-import { Network } from "@web3-react/network";
-import { useCallback, useEffect, useState } from "react";
-import { useAuthContext } from "src/auth/useAuthContext";
-import { Button } from "@mui/material";
-import { loginSignature } from "./utils/wallet";
-import { JsonRpcProvider, Signer } from "ethers";
-import { useLoginWallet, useNonceGet } from "@hooks/web3/useMetamask";
-import { useRouter } from "next/router";
-import { saveAccessToken, saveConnectors, saveCurrentUser } from "@utils/sessionManager";
+import { Web3ReactHooks } from '@web3-react/core';
+import { GnosisSafe } from '@web3-react/gnosis-safe';
+import type { MetaMask } from '@web3-react/metamask';
+import { Network } from '@web3-react/network';
+import { useCallback, useEffect, useState } from 'react';
+import { useAuthContext } from 'src/auth/useAuthContext';
+import { Button } from '@mui/material';
+import { loginSignature } from './utils/wallet';
+import { JsonRpcProvider, Signer } from 'ethers';
+import { useLoginWallet, useNonceGet } from '@hooks/web3/useMetamask';
+import { useRouter } from 'next/router';
+import {
+  saveAccessToken,
+  saveConnectors,
+  saveCurrentUser,
+  saveRefreshToken,
+} from '@utils/sessionManager';
 
 function ChainSelect({
   activeChainId,
@@ -41,16 +46,16 @@ export function ConnectWithSelect({
   setError,
 }: {
   connector: MetaMask | Network | GnosisSafe;
-  activeChainId: ReturnType<Web3ReactHooks["useChainId"]>;
-  chainIds?: ReturnType<Web3ReactHooks["useChainId"]>[];
-  isActivating: ReturnType<Web3ReactHooks["useIsActivating"]>;
-  isActive: ReturnType<Web3ReactHooks["useIsActive"]>;
+  activeChainId: ReturnType<Web3ReactHooks['useChainId']>;
+  chainIds?: ReturnType<Web3ReactHooks['useChainId']>[];
+  isActivating: ReturnType<Web3ReactHooks['useIsActivating']>;
+  isActive: ReturnType<Web3ReactHooks['useIsActive']>;
   error: Error | undefined;
-  provider: ReturnType<Web3ReactHooks["useProvider"]>;
+  provider: ReturnType<Web3ReactHooks['useProvider']>;
   setError: (error: Error | undefined) => void;
 }) {
   const [desiredChainId, setDesiredChainId] = useState<any>(undefined);
-  const [enableGetNonce, setEnableGetNonce] = useState<boolean>(true)
+  const [enableGetNonce, setEnableGetNonce] = useState<boolean>(true);
 
   const { data: nonceData, isSuccess: isNonceSuccess } = useNonceGet(enableGetNonce);
 
@@ -67,12 +72,12 @@ export function ConnectWithSelect({
 
   const getSignature = useCallback(async () => {
     if (isNonceSuccess) {
-      setEnableGetNonce(false)
+      setEnableGetNonce(false);
       try {
         const signer = (provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
         const address = await signer.getAddress();
-        const signature = await loginSignature(signer,nonceData?.nonce);
-        if(!signature) return Error("Signature is null");
+        const signature = await loginSignature(signer, nonceData?.nonce);
+        if (!signature) return Error('Signature is null');
         mutate({ walletAddress: address, signature });
       } catch (e) {
         console.log(e);
@@ -87,17 +92,18 @@ export function ConnectWithSelect({
         email: loginWalletData.data.email,
         username: loginWalletData.data.name,
       };
-      setAuthState((prev:any) => ({
+      setAuthState((prev: any) => ({
         ...prev,
         isAuthenticated: true,
         isInitialized: true,
         token: loginWalletData.data.access_token,
         user: currentUser,
-      }))
+      }));
       saveCurrentUser(currentUser);
       saveAccessToken(loginWalletData.data.access_token);
+      saveRefreshToken(loginWalletData.data.refresh_token);
       saveConnectors('metaMask');
-      push("/dashboard");
+      push('/dashboard');
     }
   }, [isError, isLoginWalletSuccess]);
 
@@ -109,19 +115,19 @@ export function ConnectWithSelect({
   }, [desiredChainId, activeChainId]);
 
   const connectWallet = useCallback(async () => {
-    setEnableGetNonce(false)
+    setEnableGetNonce(false);
     try {
       setError(undefined);
       await connector.activate();
     } catch (error) {
-      console.log("error", error);
+      console.log('error', error);
       setError(error);
     }
   }, [connector, setError]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
-      <div style={{ marginBottom: "1rem" }} />
+    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
+      <div style={{ marginBottom: '1rem' }} />
       {isActive ? (
         error ? (
           <Button variant="contained" color="error" onClick={() => connectWallet()}>
@@ -130,7 +136,7 @@ export function ConnectWithSelect({
         ) : (
           <>
             <Button
-              sx={{ marginRight: "15px" }}
+              sx={{ marginRight: '15px' }}
               variant="contained"
               color="secondary"
               onClick={() => {

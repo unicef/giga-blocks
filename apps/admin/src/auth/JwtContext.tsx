@@ -9,12 +9,14 @@ import React, {
 } from 'react';
 import { useRouter } from 'next/router';
 
-import { PATH_AUTH } from '@routes/paths';
+import { PATH_AUTH, ROOTS_DASHBOARD } from '@routes/paths';
 
 import {
   isValidToken,
   saveAccessToken,
   getAccessToken,
+  saveRefreshToken,
+  getRefreshToken,
   deleteAccessToken,
   saveCurrentUser,
   saveKey,
@@ -62,8 +64,11 @@ function AuthProvider({ children }: AuthProviderProps) {
     const initialize = async () => {
       try {
         const localToken = getAccessToken();
+        const localRefreshToken = getRefreshToken();
+
         if (localToken && isValidToken(localToken)) {
           const localUser = getCurrentUser();
+          console.log('user', localUser);
           // const appSettings = await getAppSettings();
           setAuthState((prev) => ({
             ...prev,
@@ -72,6 +77,29 @@ function AuthProvider({ children }: AuthProviderProps) {
             token: localToken,
             user: localUser,
           }));
+        } else if (localRefreshToken) {
+          try {
+            const response = await fetch('http://localhost:3333/api/v1/auth/refresh', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ refresh: localRefreshToken }),
+            });
+            console.log('response', response);
+            if (response.ok) {
+              const data = await response.json();
+              console.log('data', data);
+              const newAccessToken = data.access_token;
+              saveAccessToken(newAccessToken);
+              window.location.href = ROOTS_DASHBOARD;
+            } else {
+              console.error('Failed to refresh access token');
+              window.location.href = PATH_AUTH.login;
+            }
+          } catch (error) {
+            console.error('Error refreshing access token:', error);
+          }
         } else {
           setAuthState((prev) => ({
             ...prev,
@@ -126,11 +154,10 @@ function AuthProvider({ children }: AuthProviderProps) {
     [authState.user]
   );
 
-  useEffect(()=>{
-   const walletState=  localStorage.getItem('auth');
-    if(walletState === 'metaMask') metaMask.activate();
- 
-  },[]);
+  useEffect(() => {
+    const walletState = localStorage.getItem('auth');
+    if (walletState === 'metaMask') metaMask.activate();
+  }, []);
 
   const contextProps = useMemo(
     () => ({

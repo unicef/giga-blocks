@@ -5,7 +5,7 @@ function path(root: string, sublink: string) {
 }
 
 const ROOTS_AUTH = '/auth';
-const ROOTS_DASHBOARD = '/dashboard';
+export const ROOTS_DASHBOARD = '/dashboard';
 // const ROOTS_VISUALIZATION = '/visualizations';
 const ROOTS_ACTIVITY_LOGS = '/activity-logs';
 const ROOTS_USER = '/user';
@@ -50,5 +50,5 @@ export const PATH_ACTIVITY_LOGS = {
 export const PATH_SCHOOL = {
   root: ROOTS_SCHOOL,
   verified: path(ROOTS_SCHOOL, '/minted'),
-  contributed: path(ROOTS_SCHOOL, '/un-minted')
+  contributed: path(ROOTS_SCHOOL, '/un-minted'),
 };
