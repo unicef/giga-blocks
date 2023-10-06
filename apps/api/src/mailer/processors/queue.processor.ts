@@ -151,7 +151,7 @@ export class MintQueueProcessor {
   }
 
   @Process(SET_DBUPDATE_QUEUE)
-  public async sendDBUpdate(job: Job<{ ids: string[]; status: MintStatus }>) {
+  public async sendDBUpdate(job: Job<{ status: MintStatus; ids: string[] }>) {
     this._logger.log(`Updating database`);
     const schools = await this._prismaService.school.updateMany({
       where: {
