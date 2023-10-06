@@ -1,10 +1,10 @@
-import { Container } from "@mui/material";
-import DashboardLayout from "@layouts/dashboard";
+import { Container } from '@mui/material';
+import DashboardLayout from '@layouts/dashboard';
 // import { AdministrationProvider } from "@contexts/administration";
-import { ROLES } from "src/config-global";
-import { useSchoolGet } from "@hooks/school/useSchool";
-import { MapView } from "../../components/maps";
-import Card from "../../components/dashboard-cards";
+import { useSchoolGet } from '@hooks/school/useSchool';
+import { MapView } from '../../components/maps';
+import CardData from '../../components/dashboard-cards';
+import Card from '@mui/material/Card';
 
 Dashboard.getLayout = (page: React.ReactElement) => (
   <DashboardLayout>
@@ -18,21 +18,27 @@ Dashboard.getLayout = (page: React.ReactElement) => (
 
 export default function Dashboard() {
   const { data } = useSchoolGet(1, 10);
-  console.log(data?.rows[0]);
+  const latitudeArray = data?.rows?.map((item: { latitude: any }) => item.latitude);
+  const longitudeArray = data?.rows?.map((item: { longitude: any }) => item.longitude);
+  console.log(longitudeArray);
   return (
     <>
       <Container>
         <h1>Dashboard</h1>
-        <Card />
+        <CardData />
       </Container>
-      <MapView
-        mapData={[
-          {
-            latitude: data?.rows?.lat,
-            longitude: data?.rows?.lon,
-          },
-        ]}
-      />
+      <Card style={{ marginTop: '45px' }}>
+        <MapView
+          mapData={
+            latitudeArray && longitudeArray
+              ? latitudeArray.map((latitude: any, index: number) => ({
+                  latitude,
+                  longitude: longitudeArray[index],
+                }))
+              : []
+          }
+        />
+      </Card>
     </>
   );
 }
