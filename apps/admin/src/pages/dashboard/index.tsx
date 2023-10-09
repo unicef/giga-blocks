@@ -25,19 +25,19 @@ export default function Dashboard() {
       <Container>
         <h1>Dashboard</h1>
         <CardData />
+        <Card style={{ marginTop: '45px' }}>
+          <MapView
+            mapData={
+              latitudeArray && longitudeArray
+                ? latitudeArray.map((latitude: any, index: number) => ({
+                    latitude,
+                    longitude: longitudeArray[index],
+                  }))
+                : []
+            }
+          />
+        </Card>
       </Container>
-      <Card style={{ marginTop: '45px' }}>
-        <MapView
-          mapData={
-            latitudeArray && longitudeArray
-              ? latitudeArray.map((latitude: any, index: number) => ({
-                  latitude,
-                  longitude: longitudeArray[index],
-                }))
-              : []
-          }
-        />
-      </Card>
     </>
   );
 }

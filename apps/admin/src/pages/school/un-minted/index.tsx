@@ -13,6 +13,7 @@ import { JsonRpcProvider, Signer } from "ethers";
 import { mintSignature } from "@components/web3/utils/wallet";
 import { useBulkMintSchools } from "@hooks/school/useSchool";
 import { useWeb3React } from "@web3-react/core";
+import { useSnackbar } from '@components/snackbar';
 
 const VerifiedSchool = () => {
 
@@ -28,7 +29,9 @@ const VerifiedSchool = () => {
       const {dense, page, order, orderBy, rowsPerPage, onSelectRow, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
       } = useTable();
 
-      const {mutate, isError:isMintError,data:mintData,isSuccess :isMintSuccess} = useBulkMintSchools();
+      const { enqueueSnackbar } = useSnackbar();
+
+      const {mutate, isError:isMintError,data:mintData,isSuccess :isMintSuccess, error:mintingError} = useBulkMintSchools();
 
       const {useProvider} = hooks
       const provider = useWeb3React();
@@ -72,6 +75,11 @@ const VerifiedSchool = () => {
       setSelectedValues([])
       mutate({data:selectedValues, signatureWithData:signature})
     }
+
+    useEffect(() => {
+      isMintError && enqueueSnackbar("Minting unsuccessful.", { variant: 'error' });
+      isMintSuccess && enqueueSnackbar("Minted successfully.", { variant: 'success' })
+    }, [isMintError, isMintSuccess])
 
     return ( 
         <DashboardLayout>
