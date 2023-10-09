@@ -34,10 +34,10 @@ export default class MyDocument extends Document {
           {/* Meta */}
           <meta
             name="description"
-            content="LSO Partners is a disruptive innovation start-up for energy transition and universal access to sustainable energy."
+            content="Together,we can reshape the narrative of education in the digital age. Join, collaborate, innovate."
           />
           <meta name="keywords" content="" />
-          <meta name="author" content="Waya" />
+          <meta name="author" content="NFT 2.0" />
         </Head>
 
         <body>
