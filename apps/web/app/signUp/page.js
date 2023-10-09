@@ -20,7 +20,6 @@ const SignUp = () => {
     await signUp.mutateAsync(data);
     if (signUp.isSuccess) {
       await sendOtp.mutateAsync({ email });
-      console.log("OTP sent");
     } else {
       console.log("User registration failed");
     }

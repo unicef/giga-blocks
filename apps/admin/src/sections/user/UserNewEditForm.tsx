@@ -138,11 +138,6 @@ export default function UserNewEditForm({ id }: Props) {
     mutate({data:nftData, signatureWithData:signature})
   }
 
-  useEffect(() => {
-    isMintSuccess && console.log('Minted successfully')
-    isMintError && console.log(mintError)
-  }, [isMintSuccess, isMintError])
-
 
   // const onSubmit = async (data: FormValuesProps) => {
   //   const { id, name, roles } = profile;

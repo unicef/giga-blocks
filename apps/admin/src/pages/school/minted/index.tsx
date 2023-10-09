@@ -30,7 +30,6 @@ const ContributedSchool = () => {
 
     let filteredData:any = []
     useEffect(() => {
-      console.log(schoolGetData)
       schoolGetData?.rows && schoolGetData?.rows.map((row:any) => {
         filteredData.push({
           id: row.id,

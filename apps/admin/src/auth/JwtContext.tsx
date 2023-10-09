@@ -65,7 +65,6 @@ function AuthProvider({ children }: AuthProviderProps) {
   const { push, replace } = useRouter();
 
   const baseUrl = routes.BASE_URL
-  console.log(baseUrl)
 
   useEffect(() => {
     const initialize = async () => {
