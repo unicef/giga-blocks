@@ -4,7 +4,7 @@ import { Box, Button, Container, Grid } from '@mui/material';
 
 import DashboardLayout from '@layouts/dashboard';
 import CustomBreadcrumbs from '@components/custom-breadcrumbs';
-import UserNewEditForm from '@sections/user/UserNewEditForm';
+import UserNewEditForm from '@sections/user/SchoolDetails';
 import { useSchoolGetById } from '@hooks/school/useSchool';
 import Image from 'next/image';
 import UserProfileEditForm from '@sections/user/UserProfileEditForm';
