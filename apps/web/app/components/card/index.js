@@ -16,7 +16,10 @@ import { Queries } from '../../libs/graph-query';
 
 const SchoolCard = () => {
   const [pageSize, setPageSize] = useState(4);
-  const [result] = useQuery({ query: Queries.nftListQuery , variables:{first:pageSize}});
+  const [result] = useQuery({
+    query: Queries.nftListQuery,
+    variables: { first: pageSize },
+  });
   const { data: queryData, fetching, error } = result;
   const [schoolData, setSchoolData] = useState([]);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
@@ -106,7 +109,26 @@ const SchoolCard = () => {
                     <div>
                       {/* <p className="text-purple">Country</p> */}
                       <h4 className="heading2 text-left">
-                        {school.country || 'N/A'}
+                        {school?.country
+                          ? school?.country?.length > 15
+                            ? `${school.country
+                                ?.toLowerCase()
+                                .split(' ')
+                                .map(
+                                  (word) =>
+                                    word.charAt(0).toUpperCase() + word.slice(1)
+                                )
+                                .join(' ')
+                                .slice(0, 15)}...`
+                            : school.country
+                                ?.toLowerCase()
+                                .split(' ')
+                                .map(
+                                  (word) =>
+                                    word.charAt(0).toUpperCase() + word.slice(1)
+                                )
+                                .join(' ')
+                          : 'N/A'}
                       </h4>
                     </div>
                     {/* <p className="text-purple">Education Level</p> */}
