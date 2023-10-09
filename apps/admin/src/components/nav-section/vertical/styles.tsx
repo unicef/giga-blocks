@@ -21,16 +21,18 @@ export const StyledItem = styled(ListItemButton, {
   const subItem = depth !== 1;
 
   const activeStyle = {
-    color: theme.palette.primary.main,
-    backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+    // color: theme.palette.primary.main,
+    color: "#222222",
+    backgroundColor: alpha("#9E9E9E", theme.palette.action.selectedOpacity),
     ...(!isLight && {
-      color: theme.palette.primary.light,
+      // color: theme.palette.primary.light,
+      color: "#222222"
     }),
   };
 
   const activeSubStyle = {
     color: theme.palette.text.primary,
-    backgroundColor: 'transparent',
+    backgroundColor: '#9E9E9E',
   };
 
   return {
