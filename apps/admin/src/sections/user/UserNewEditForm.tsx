@@ -2,6 +2,7 @@ import { useState, ChangeEvent, useEffect, use } from 'react';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+// @ts-ignore
 import { Box, Card, Grid, Stack, MenuItem, Select, Button, Container } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useRouter } from 'next/router';
