@@ -27,7 +27,7 @@ const navConfig = [
         title: 'Dashboard',
         path: PATH_DASHBOARD.root,
         icon: ICONS.dashboard,
-      }
+      },
     ],
   },
   {
@@ -47,24 +47,24 @@ const navConfig = [
           {
             title: 'Minting School',
             path: PATH_SCHOOL.minting,
-          }
+          },
         ],
-        icon: ICONS.user
+        icon: ICONS.user,
       },
     ],
   },
   {
     items: [
       {
-        title: 'Admins',
+        title: 'Users',
         path: PATH_USER.root,
         children: [
           {
-            title: 'User Info',
+            title: 'Info',
             path: PATH_USER.list,
           },
         ],
-        icon: ICONS.user
+        icon: ICONS.user,
       },
     ],
   },
