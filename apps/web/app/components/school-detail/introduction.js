@@ -17,7 +17,7 @@ const Introduction = ({ schooldata }) => {
         <Tile className={`tile-school tile-white`}>
           <p className="heading2">Exact Location</p>
           <p className="heading5">
-            {schooldata?.latitude}, {schooldata?.longitiude}
+            {schooldata?.latitude}, {schooldata?.longitude}
           </p>
         </Tile>
         <Tile className={`tile-school tile-white`}>
