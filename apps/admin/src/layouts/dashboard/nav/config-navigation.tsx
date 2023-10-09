@@ -45,7 +45,7 @@ const navConfig = [
             path: PATH_SCHOOL.contributed,
           },
           {
-            title: 'Minting School',
+            title: 'Pending School',
             path: PATH_SCHOOL.minting,
           }
         ],

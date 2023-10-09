@@ -24,9 +24,9 @@ const Logo = forwardRef<HTMLDivElement, LogoProps>(
         // />
         <Typography
           variant="h5"
-          sx={{ maxHeight: 80, objectFit: "contain", cursor: "pointer", ...sx, color: "#3D75A6" }}
+          sx={{ maxHeight: 80, objectFit: "contain", cursor: "pointer", ...sx, color: "black" }}
         >
-          GIGA
+          nft2.0
         </Typography>
       ) : (
         <Typography

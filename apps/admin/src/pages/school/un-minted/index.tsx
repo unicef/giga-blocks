@@ -78,14 +78,14 @@ const VerifiedSchool = () => {
 
     useEffect(() => {
       isMintError && enqueueSnackbar("Minting unsuccessful.", { variant: 'error' });
-      isMintSuccess && enqueueSnackbar("Minted successfully.", { variant: 'success' })
+      isMintSuccess && enqueueSnackbar("Added to mint queue.", { variant: 'success' })
     }, [isMintError, isMintSuccess])
 
     return ( 
         <DashboardLayout>
           <div style={{display: 'flex', justifyContent: 'space-between',marginBottom: '20px'}}>
           <span style={{fontSize: '1.5em', fontWeight: '600'}}>Unminted School</span>
-          <Button variant="contained" onClick={mintSchool}>Mint ({selectedValues.length})</Button>
+          <Button variant="contained" style={{background: '#474747'}} onClick={mintSchool}>Mint ({selectedValues.length})</Button>
           </div>
           <Card>
           <Divider />

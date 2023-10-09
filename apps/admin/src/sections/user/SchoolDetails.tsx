@@ -36,7 +36,7 @@ interface FormValuesProps {
   is_active: boolean;
 }
 
-export default function UserNewEditForm({ id }: Props) {
+export default function SchoolDetails({ id }: Props) {
   const [profile, setProfile] = useState({
     fullname: "",
     location: "",
@@ -96,7 +96,6 @@ export default function UserNewEditForm({ id }: Props) {
       mintedStatus: data?.minted,
     })
   }, [data])
-
 
   const UpdateUserSchema = Yup.object().shape({
     name: Yup.string()
@@ -225,7 +224,7 @@ export default function UserNewEditForm({ id }: Props) {
                   </Box>
 
                   <Stack alignItems="flex-start" sx={{ mt: 3 }}>
-                    <Button variant="contained" color={"secondary"} style={{ width: "300px" }}>
+                    <Button variant="contained" style={{ width: "300px", background: "#474747" }}>
                       Back
                     </Button>
                   </Stack>
@@ -239,14 +238,16 @@ export default function UserNewEditForm({ id }: Props) {
         <Container>
           <Box justifyContent={"center"}>
             {/* <Image width={250} height={250} alt='USER' src={'/assets/Image-right.svg'}/> */}
-            <Stack alignItems="flex-start" sx={{ mt: 3 }}>
+            <Stack alignItems="center" sx={{ mt: 1 }}>
               {profile.mintedStatus === "NOTMINTED" && 
-              <Button variant="contained" color={"info"} style={{ width: "300px" }} onClick={mintSchool}>
+              <Button variant="contained" color={"info"} style={{ width: "300px", background: '#474747' }} onClick={mintSchool}>
                 Mint
               </Button>}
             </Stack>
-            <Stack style={{ marginTop: "20px" }}>
+            <Stack sx={{ mt: 8 }}>
+            <Box display="flex" justifyContent="center">
               <Identicon string={profile?.fullname} size={200} />
+            </Box>
             </Stack>
           </Box>
         </Container>

@@ -28,7 +28,7 @@ export default function NavAccount() {
   const { user } = useAuthContext();
 
   return (
-    <NextLink href="/user/account" color="inherit" style={{ textDecoration: 'none' }}>
+    <NextLink href={`/dashboard`} color="inherit" style={{ textDecoration: 'none' }}>
       <StyledRoot>
         <CustomAvatar src={user?.photoURL} alt={user?.name} name={user?.name} />
 
