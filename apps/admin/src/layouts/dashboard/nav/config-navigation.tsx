@@ -56,14 +56,8 @@ const navConfig = [
   {
     items: [
       {
-        title: 'Admins',
-        path: PATH_USER.root,
-        children: [
-          {
-            title: 'User Info',
-            path: PATH_USER.list,
-          },
-        ],
+        title: 'Users',
+        path: PATH_USER.list,
         icon: ICONS.user
       },
     ],
