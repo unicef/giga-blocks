@@ -72,7 +72,6 @@ function AuthProvider({ children }: AuthProviderProps) {
       try {
         const localToken = getAccessToken();
         const localRefreshToken = getRefreshToken();
-
         if (localToken && isValidToken(localToken)) {
           const localUser = getCurrentUser();
           setAuthState((prev) => ({
@@ -81,23 +80,27 @@ function AuthProvider({ children }: AuthProviderProps) {
             isInitialized: true,
             token: localToken,
             user: localUser,
-          }));
-        } else if (localRefreshToken) {
-          try {
-            axios.post(`${baseUrl}${routes.REFRESH.POST}`, JSON.stringify({ refresh: localRefreshToken }))
-            .then((res:any) => {
-              const data = res.json();
-              const newAccessToken = data.access_token;
-              saveAccessToken(newAccessToken);
-            })
-            .catch(() => {
-              console.error('Failed to refresh access token');
-              window.location.href = PATH_AUTH.login;
-            })
-          } catch (error) {
-            console.error('Error refreshing access token:', error);
-          }
-        } else {
+          }));}
+          else if(localToken && !isValidToken(localToken)) {
+            localStorage.clear()
+            window.location.href = PATH_AUTH.login;          }
+        // } else if (localRefreshToken) {
+        //   try {
+        //     axios.post(`${baseUrl}${routes.REFRESH.POST}`, JSON.stringify({ refresh: localRefreshToken }))
+        //     .then((res:any) => {
+        //       const data = res.json();
+        //       const newAccessToken = data.access_token;
+        //       saveAccessToken(newAccessToken);
+        //       window.location.reload();
+        //     })
+        //     .catch(() => {
+        //       console.error('Failed to refresh access token');
+        //       // window.location.href = PATH_AUTH.login;
+        //     })
+        //   } catch (error) {
+        //     console.error('Error refreshing access token:', error);
+        //   }
+        else {
           setAuthState((prev) => ({
             ...prev,
             isAuthenticated: false,
