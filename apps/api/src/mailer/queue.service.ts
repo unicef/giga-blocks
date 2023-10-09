@@ -66,7 +66,6 @@ export class QueueService {
 
   public async sendMintNFT(address: string, MintData: MintQueueDto) {
     try {
-      console.log(MintData.data);
       const mintData = MintData.data.map(school => this.schoolToArrayMapper(school));
       let ids: string[];
       let schools;
@@ -97,7 +96,6 @@ export class QueueService {
 
   public async sendSingleMintNFT(address: string, MintData: MintQueueSingleDto) {
     try {
-      console.log(MintData.data);
       const mintData = this.schoolToArrayMapper(MintData.data);
       const ids = [MintData.data.id];
       await this.updateSchools(ids);
