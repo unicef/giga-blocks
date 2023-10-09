@@ -59,9 +59,7 @@ export default function TableHeadCustom({
   return (
     <TableHead sx={sx}>
       <TableRow>
-        {headLabel.length > 0 && (
-          <TableCell>Actions</TableCell>
-        )}
+        {headLabel.length > 0 && <TableCell>Actions</TableCell>}
 
         {showCheckBox && onSelectAllRows && (
           <TableCell padding="checkbox">
@@ -77,7 +75,7 @@ export default function TableHeadCustom({
         )}
 
         {headLabel.length > 0 &&
-          headLabel.map((headCell:any, index:any) => (
+          headLabel.map((headCell: any, index: any) => (
             <TableCell
               key={index}
               title={headCell.label}
