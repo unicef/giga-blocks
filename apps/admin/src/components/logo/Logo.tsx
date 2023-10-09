@@ -31,9 +31,9 @@ const Logo = forwardRef<HTMLDivElement, LogoProps>(
       ) : (
         <Typography
           variant="h3"
-          sx={{ maxHeight: 100, objectFit: "contain", cursor: "pointer", color: "#3D75A6", ...sx }}
+          sx={{ maxHeight: 100, objectFit: "contain", cursor: "pointer", color: "black", ...sx }}
         >
-          GIGA SCHOOL
+          nft2.0
         </Typography>
         // <Box
         //   component="img"

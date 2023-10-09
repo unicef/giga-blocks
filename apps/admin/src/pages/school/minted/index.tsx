@@ -1,18 +1,12 @@
 "use client"
-import Iconify from "@components/iconify";
 import Scrollbar from "@components/scrollbar";
 import { TableEmptyRows, TableHeadUsers, TableNoData, TablePaginationCustom, TableSelectedAction, useTable } from "@components/table";
 import { useSchoolGet } from "@hooks/school/useSchool";
 import DashboardLayout from "@layouts/dashboard/DashboardLayout";
 import { Box, Button, Card, Tabs, Divider, TableContainer, Tooltip, IconButton, Table, TableBody } from "@mui/material";
 import SchoolTableRow from "@sections/user/list/SchoolTableRow";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import {hooks} from "@hooks/web3/metamask";
-import { JsonRpcProvider, Signer } from "ethers";
-import { mintSignature } from "@components/web3/utils/wallet";
-import { useBulkMintSchools } from "@hooks/school/useSchool";
-import { useWeb3React } from "@web3-react/core";
+import { useSnackbar } from '@components/snackbar';
 
 const ContributedSchool = () => {
 
@@ -27,21 +21,17 @@ const ContributedSchool = () => {
       const {dense, page, order, orderBy, rowsPerPage, onSelectRow, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
       } = useTable();
 
-      const {mutate, isError:isMintError,data:mintData,isSuccess :isMintSuccess} = useBulkMintSchools();
-
-      const {useProvider} = hooks
-      const provider = useWeb3React();
-
     // const { filteredUsers } = useAdministrationContext();
     const [selectedValues, setSelectedValues] = useState<any>([]);
     const [tableData, setTableData] = useState<any>([]);
-    const {data} = useSchoolGet(page, rowsPerPage, "MINTED")
+    const {data:schoolGetData} = useSchoolGet(page, rowsPerPage, "MINTED")
 
     // const { error } = useFetchUsers();
 
     let filteredData:any = []
     useEffect(() => {
-      data?.rows.map((row:any) => {
+      console.log(schoolGetData)
+      schoolGetData?.rows && schoolGetData?.rows.map((row:any) => {
         filteredData.push({
           id: row.id,
           schoolName: row.name,
@@ -57,19 +47,19 @@ const ContributedSchool = () => {
       })
 
       setTableData(filteredData);
-    }, [data]);
+    }, [schoolGetData]);
 
-    const signTransaction = async () =>{
-      const signer = (provider.provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
-      const signature = await mintSignature(signer, selectedValues.length);
-      return signature;
-    }
+    // const signTransaction = async () =>{
+    //   const signer = (provider.provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
+    //   const signature = await mintSignature(signer, selectedValues.length);
+    //   return signature;
+    // }
   
-    const mintSchool = async () => {
-      const signature = await signTransaction();
-      if(!signature) return Error("Signature is null");
-      mutate({data:selectedValues, signatureWithData:signature})
-    }
+    // const mintSchool = async () => {
+    //   const signature = await signTransaction();
+    //   if(!signature) return Error("Signature is null");
+    //   mutate({data:selectedValues, signatureWithData:signature})
+    // }
 
     return ( 
         <DashboardLayout>
@@ -134,7 +124,7 @@ const ContributedSchool = () => {
             </Scrollbar>
           </TableContainer>
           <TablePaginationCustom
-            count={data?.meta?.total}
+            count={schoolGetData?.meta?.total}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
