@@ -4,7 +4,7 @@ import { Box, Container, Grid } from '@mui/material';
 
 import DashboardLayout from '@layouts/dashboard';
 import CustomBreadcrumbs from '@components/custom-breadcrumbs';
-import UserNewEditForm from '@sections/user/UserNewEditForm';
+import SchoolDetails from '@sections/user/SchoolDetails';
 import { useSchoolGetById } from '@hooks/school/useSchool';
 import Image from 'next/image';
 
@@ -27,7 +27,7 @@ export default function UserEditPage() {
     </Head>
 
     <Grid container spacing={2}>
-    {id && <UserNewEditForm id={id}/>}    
+    {id && <SchoolDetails id={id}/>}    
     </Grid>
     </>
   );

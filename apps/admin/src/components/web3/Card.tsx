@@ -38,7 +38,7 @@ export function Card({
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          width: "30vw",
+          width: "100%",
           padding: "1rem",
           overflow: "auto",
           borderRadius: "1rem",

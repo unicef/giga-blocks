@@ -16,12 +16,7 @@ import { IconButtonAnimate } from '../../../components/animate';
 
 // ----------------------------------------------------------------------
 
-const OPTIONS = [
-  {
-    label: 'Account Settings',
-    linkTo: PATH_USER.account,
-  },
-];
+
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +24,13 @@ export default function AccountPopover() {
   const { push } = useRouter();
 
   const { user, logout } = useAuthContext();
+
+  const OPTIONS = [
+    {
+      label: 'Account Settings',
+      linkTo: `${PATH_USER.account(user?.userId)}`,
+    },
+  ];
 
   const { enqueueSnackbar } = useSnackbar();
 
