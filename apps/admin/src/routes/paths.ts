@@ -39,7 +39,7 @@ export const PATH_USER = {
   list: path(ROOTS_USER, '/users-list'),
   new: path(ROOTS_USER, '/new'),
   profile: path(ROOTS_USER, '/profile'),
-  account: path(ROOTS_USER, '/account'),
+  account:(id:string)=> path(ROOTS_USER, `/${id}`),
   edit: (id: string) => path(ROOTS_USER, `/${id}/edit`),
 };
 
