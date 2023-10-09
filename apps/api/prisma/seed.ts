@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 const logger = new Logger();
 
 const hexStringToBuffer = (str: string): Buffer => {
-  if (!str) return;
+  // if (!str) return;
   return Buffer.from(str.substring(2), 'hex');
 };
 export const roles = [
