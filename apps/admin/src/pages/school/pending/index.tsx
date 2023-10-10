@@ -47,6 +47,7 @@ const VerifiedSchool = () => {
     order,
     orderBy,
     rowsPerPage,
+    setPage,
     onSelectRow,
     onSort,
     onChangeDense,
@@ -143,6 +144,7 @@ const VerifiedSchool = () => {
         <TablePaginationCustom
           count={data?.meta?.total}
           page={page}
+          setPage={setPage}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}

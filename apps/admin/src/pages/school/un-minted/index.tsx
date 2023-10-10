@@ -33,29 +33,21 @@ import { useWeb3React } from '@web3-react/core';
 import { useSnackbar } from '@components/snackbar';
 
 const VerifiedSchool = () => {
-  const TABLE_HEAD = [
-    { id: 'checkbox', label: '', align: 'left' },
-    { id: 'name', label: 'Name', align: 'left' },
-    { id: 'location', label: 'Location', align: 'left' },
-    { id: 'latitide', label: 'Latitude', align: 'left' },
-    { id: 'longitude', label: 'Longitude', align: 'left' },
-    { id: 'status', label: 'Status', align: 'left' },
-  ];
 
-  const {
-    dense,
-    page,
-    order,
-    orderBy,
-    rowsPerPage,
-    onSelectRow,
-    onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
-  } = useTable();
+    const TABLE_HEAD = [
+        // { id: 'checkbox', label: '', align: 'left' },
+        { id: 'name', label: 'Name', align: 'left' },
+        { id: 'location', label: 'Location', align: 'left' },
+        { id: 'latitide', label: 'Latitude', align: 'left' },
+        { id: 'longitude', label: 'Longitude', align: 'left' },
+        { id: 'status', label: 'Status', align: 'left' }
+      ];
 
-  const { enqueueSnackbar } = useSnackbar();
+      const { enqueueSnackbar } = useSnackbar();
+
+
+      const {dense, page, setPage, order, orderBy, rowsPerPage, onSelectRow, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
+      } = useTable();
 
   const {
     mutate,
@@ -77,7 +69,7 @@ const VerifiedSchool = () => {
   let filteredData: any = [];
   useEffect(() => {
     !isLoading &&
-      data?.rows.map((row: any) => {
+      data?.rows?.map((row: any) => {
         filteredData.push({
           id: row.id,
           schoolName: row.name,
@@ -95,77 +87,90 @@ const VerifiedSchool = () => {
     setTableData(filteredData);
   }, [data, isLoading]);
 
-  const signTransaction = useCallback (async () => {
-    if(!provider) return;
-    const signer = (
-      provider.provider as unknown as JsonRpcProvider
-    ).getSigner() as unknown as Signer;
-    const signature = await mintSignature(signer, selectedValues.length);
-    return signature;
-  },[provider,selectedValues])
+    const signTransaction = async () =>{
+      try {
+      const signer = (provider.provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
+      const signature = await mintSignature(signer, selectedValues.length);
+      return signature;
+      }
+      catch(err) {
+        enqueueSnackbar(err.message, { variant: 'error' })
+      }
+    }
+  
+    const mintSchool = async () => {
+      const signature = await signTransaction();
+      if(!signature){
+        enqueueSnackbar("Signature is null", { variant: 'error' })
+        return Error("Signature is null");
+      } 
+      setSelectedValues([])
+      mutate({data:selectedValues, signatureWithData:signature})
+    }
 
-  const mintSchool = async () => {
-    const signature = await signTransaction();
-    if (!signature) return Error('Signature is null');
-    setSelectedValues([]);
-    mutate({ data: selectedValues, signatureWithData: signature });
-  };
+    const onSelectAllRows = (e:any) => {
+      const isChecked = e.target.checked;
+      if(isChecked){
+        setSelectedValues(tableData)
+      }
+      else{
+        setSelectedValues([])
+      }
+    }
 
-  useEffect(() => {
-    isMintError && enqueueSnackbar('Minting unsuccessful.', { variant: 'error' });
-    isMintSuccess && enqueueSnackbar('Added to mint queue.', { variant: 'success' });
-  }, [isMintError, isMintSuccess]);
+    return ( 
+        <DashboardLayout>
+          <div style={{display: 'flex', justifyContent: 'space-between',marginBottom: '20px'}}>
+          <span style={{fontSize: '1.5em', fontWeight: '600'}}>Unminted School</span>
+          <Button variant="contained" style={{background: '#474747'}} onClick={mintSchool}>Mint ({selectedValues.length})</Button>
+          </div>
+          <Card>
+          <Divider />
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+            <Scrollbar>
+              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+                <TableHeadUsers
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  rowCount={tableData?.length}
+                  onSort={onSort}
+                  showCheckBox={true}
+                  onSelectAllRows={onSelectAllRows}
+                />
 
-  return (
-    <DashboardLayout>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <span style={{ fontSize: '1.5em', fontWeight: '600' }}>Unminted School</span>
-        <Button variant="contained" style={{ background: '#474747' }} onClick={mintSchool}>
-          Mint ({selectedValues.length})
-        </Button>
-      </div>
-      <Card>
-        <Divider />
-        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <Scrollbar>
-            <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
-              <TableHeadUsers
-                order={order}
-                orderBy={orderBy}
-                headLabel={TABLE_HEAD}
-                rowCount={tableData?.length}
-                onSort={onSort}
-              />
-
-              <TableBody>
-                {tableData &&
-                  tableData.map((row: any) => (
-                    <SchoolTableRow
-                      key={row.id}
-                      row={row}
-                      selectedValues={selectedValues}
-                      setSelectedValues={setSelectedValues}
-                      rowData={row}
-                      checkbox={true}
-                    />
-                  ))}
-                <TableNoData isNotFound={false} />
-              </TableBody>
-            </Table>
-          </Scrollbar>
-        </TableContainer>
-        <TablePaginationCustom
-          count={data?.meta?.total}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-          dense={dense}
-          onChangeDense={onChangeDense}
-        />
-      </Card>
-    </DashboardLayout>
-  );
-};
-
+                <TableBody>
+                  {tableData &&
+                    tableData.map((row:any) => (
+                      <SchoolTableRow
+                        key={row.id}
+                        row={row}
+                        selectedValues={selectedValues}
+                        setSelectedValues={setSelectedValues}
+                        rowData = {row}
+                        checkbox = {true}
+                      />
+                    ))}
+                  <TableNoData 
+                  isNotFound={tableData.length === 0}
+                  />
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </TableContainer>
+          <TablePaginationCustom
+            count={data?.meta?.total}
+            page={page}
+            setPage={setPage}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+            dense={dense}
+            onChangeDense={onChangeDense}
+          />
+        </Card>
+        </DashboardLayout>
+     );
+}
+ 
 export default VerifiedSchool;

@@ -87,7 +87,7 @@ export default function SchoolTableRow({
           <TableCell padding="checkbox">
             <Checkbox
               onChange={(e) => handleCheckboxChange(e, rowData)}
-              // checked = {mintedStatus === "ISMINTING" ? false : undefined}
+              checked={selectedValues.some((obj: any) => obj.id === id)}
             />
           </TableCell>
         )}

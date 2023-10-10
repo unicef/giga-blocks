@@ -34,7 +34,7 @@ const navConfig = [
     items: [
       {
         title: 'School',
-        path: PATH_SCHOOL.root,
+        path: PATH_SCHOOL.verified,
         children: [
           {
             title: 'Minted School',

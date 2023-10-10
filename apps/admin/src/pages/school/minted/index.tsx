@@ -40,6 +40,7 @@ const ContributedSchool = () => {
     page,
     order,
     orderBy,
+    setPage,
     rowsPerPage,
     onSelectRow,
     onSort,
@@ -153,6 +154,7 @@ const ContributedSchool = () => {
         </TableContainer>
         <TablePaginationCustom
           count={schoolGetData?.meta?.total}
+          setPage={setPage}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
