@@ -78,11 +78,13 @@ export function ConnectWithSelect({
         const signer = (provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
         const address = await signer.getAddress();
         const signature = await loginSignature(signer, nonceData?.nonce);
-        if (!signature) return Error('Signature is null');
+        if (!signature){ 
+          enqueueSnackbar("Invalid Signature", { variant: 'error' })
+          return Error('Signature is null');
+        }
         mutate({ walletAddress: address, signature });
       } catch (err) {
         enqueueSnackbar(err.message, { variant: 'error' })
-        console.log(err.message);
       }
     }
     else {
@@ -95,7 +97,8 @@ export function ConnectWithSelect({
   }, [isNonceError])
 
   useEffect(() => {
-    isError && console.log(loginWalletError);
+    //@ts-ignore
+    isError && enqueueSnackbar(loginWalletError.response.data.message, { variant: 'error' })
     if (isLoginWalletSuccess) {
       const currentUser = {
         email: loginWalletData.data.email,

@@ -24,7 +24,7 @@ const VerifiedSchool = () => {
         { id: 'status', label: 'Status', align: 'left' }
       ];
 
-      const {dense, page, order, orderBy, rowsPerPage, onSelectRow, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
+      const {dense, page, setPage, order, orderBy, rowsPerPage, onSelectRow, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
       } = useTable();
 
       const {mutate, isError:isMintError,data:mintData,isSuccess :isMintSuccess} = useBulkMintSchools();
@@ -101,7 +101,7 @@ const VerifiedSchool = () => {
                       />
                     ))}
                   <TableNoData 
-                  isNotFound={false}
+                  isNotFound={tableData.length === 0}
                   />
                 </TableBody>
               </Table>
@@ -110,6 +110,7 @@ const VerifiedSchool = () => {
           <TablePaginationCustom
             count={data?.meta?.total}
             page={page}
+            setPage={setPage}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}

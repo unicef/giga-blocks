@@ -18,7 +18,7 @@ import { useSnackbar } from '@components/snackbar';
 const VerifiedSchool = () => {
 
     const TABLE_HEAD = [
-        { id: 'checkbox', label: '', align: 'left' },
+        // { id: 'checkbox', label: '', align: 'left' },
         { id: 'name', label: 'Name', align: 'left' },
         { id: 'location', label: 'Location', align: 'left' },
         { id: 'latitide', label: 'Latitude', align: 'left' },
@@ -26,7 +26,7 @@ const VerifiedSchool = () => {
         { id: 'status', label: 'Status', align: 'left' }
       ];
 
-      const {dense, page, order, orderBy, rowsPerPage, onSelectRow, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
+      const {dense, page, setPage, order, orderBy, rowsPerPage, onSelectRow, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
       } = useTable();
 
       const { enqueueSnackbar } = useSnackbar();
@@ -64,14 +64,22 @@ const VerifiedSchool = () => {
     }, [data, isFetching]);
 
     const signTransaction = async () =>{
+      try {
       const signer = (provider.provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
       const signature = await mintSignature(signer, selectedValues.length);
       return signature;
+      }
+      catch(err) {
+        enqueueSnackbar(err.message, { variant: 'error' })
+      }
     }
   
     const mintSchool = async () => {
       const signature = await signTransaction();
-      if(!signature) return Error("Signature is null");
+      if(!signature){
+        enqueueSnackbar("Signature is null", { variant: 'error' })
+        return Error("Signature is null");
+      } 
       setSelectedValues([])
       mutate({data:selectedValues, signatureWithData:signature})
     }
@@ -81,8 +89,14 @@ const VerifiedSchool = () => {
       isMintSuccess && enqueueSnackbar("Added to mint queue.", { variant: 'success' })
     }, [isMintError, isMintSuccess])
 
-    const onSelectAllRows = () => {
-      console.log("selectedRows")
+    const onSelectAllRows = (e:any) => {
+      const isChecked = e.target.checked;
+      if(isChecked){
+        setSelectedValues(tableData)
+      }
+      else{
+        setSelectedValues([])
+      }
     }
 
     return ( 
@@ -119,7 +133,7 @@ const VerifiedSchool = () => {
                       />
                     ))}
                   <TableNoData 
-                  isNotFound={false}
+                  isNotFound={tableData.length === 0}
                   />
                 </TableBody>
               </Table>
@@ -128,6 +142,7 @@ const VerifiedSchool = () => {
           <TablePaginationCustom
             count={data?.meta?.total}
             page={page}
+            setPage={setPage}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}

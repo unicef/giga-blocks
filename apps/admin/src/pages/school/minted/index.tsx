@@ -18,7 +18,7 @@ const ContributedSchool = () => {
         { id: 'status', label: 'Status', align: 'left' }
       ];
 
-      const {dense, page, order, orderBy, rowsPerPage, onSelectRow, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
+      const {dense, page, setPage, order, orderBy, rowsPerPage, onSelectRow, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
       } = useTable();
 
     // const { filteredUsers } = useAdministrationContext();
@@ -125,6 +125,7 @@ const ContributedSchool = () => {
           <TablePaginationCustom
             count={schoolGetData?.meta?.total}
             page={page}
+            setPage={setPage}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}

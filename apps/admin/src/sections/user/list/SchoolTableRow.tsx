@@ -72,7 +72,7 @@ export default function SchoolTableRow({
   }
   };
 
-
+console.log(selectedValues)
   return (
     <>
       <TableRow hover 
@@ -82,7 +82,7 @@ export default function SchoolTableRow({
     {checkbox && <TableCell padding="checkbox"> 
         <Checkbox
           onChange={(e) => handleCheckboxChange(e, rowData)}
-          // checked = {mintedStatus === "ISMINTING" ? false : undefined}
+          checked = {selectedValues.some((obj:any) => obj.id === id)}
         />
       </TableCell>
       }

@@ -23,7 +23,7 @@ export default function useTable(props?: UseTableProps): ReturnType {
 
   const [order, setOrder] = useState<'asc' | 'desc'>(props?.defaultOrder || 'asc');
 
-  const [page, setPage] = useState(props?.defaultCurrentPage || 0);
+  const [page, setPage] = useState(props?.defaultCurrentPage || 1);
 
   const [rowsPerPage, setRowsPerPage] = useState(props?.defaultRowsPerPage || 10);
 
@@ -90,7 +90,7 @@ export default function useTable(props?: UseTableProps): ReturnType {
   }, []);
 
   const onChangeRowsPerPage = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setPage(0);
+    setPage(1);
     setRowsPerPage(parseInt(event.target.value, 10));
   }, []);
 
