@@ -69,7 +69,7 @@ const VerifiedSchool = () => {
   let filteredData: any = [];
   useEffect(() => {
     !isLoading &&
-      data?.rows.map((row: any) => {
+      data?.rows?.map((row: any) => {
         filteredData.push({
           id: row.id,
           schoolName: row.name,
