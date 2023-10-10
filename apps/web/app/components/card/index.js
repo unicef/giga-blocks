@@ -15,8 +15,11 @@ import { useQuery } from 'urql';
 import { Queries } from '../../libs/graph-query';
 
 const SchoolCard = () => {
-  const [pageSize, setPageSize] = useState(4);
-  const [result] = useQuery({ query: Queries.nftListQuery , variables:{first:pageSize}});
+  const [pageSize, setPageSize] = useState(8);
+  const [result] = useQuery({
+    query: Queries.nftListQuery,
+    variables: { first: pageSize },
+  });
   const { data: queryData, fetching, error } = result;
   const [schoolData, setSchoolData] = useState([]);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
@@ -53,7 +56,7 @@ const SchoolCard = () => {
     <>
       {fetching === false ? (
         <Grid fullWidth style={{ margin: '30px auto' }}>
-          {schoolData &&
+          {schoolData ? (
             schoolData?.map((school) => (
               <Column sm={4}>
                 <ClickableTile
@@ -106,7 +109,26 @@ const SchoolCard = () => {
                     <div>
                       {/* <p className="text-purple">Country</p> */}
                       <h4 className="heading2 text-left">
-                        {school.country || 'N/A'}
+                        {school?.country
+                          ? school?.country?.length > 15
+                            ? `${school.country
+                                ?.toLowerCase()
+                                .split(' ')
+                                .map(
+                                  (word) =>
+                                    word.charAt(0).toUpperCase() + word.slice(1)
+                                )
+                                .join(' ')
+                                .slice(0, 15)}...`
+                            : school.country
+                                ?.toLowerCase()
+                                .split(' ')
+                                .map(
+                                  (word) =>
+                                    word.charAt(0).toUpperCase() + word.slice(1)
+                                )
+                                .join(' ')
+                          : 'N/A'}
                       </h4>
                     </div>
                     {/* <p className="text-purple">Education Level</p> */}
@@ -124,7 +146,12 @@ const SchoolCard = () => {
                   </div>
                 </ClickableTile>
               </Column>
-            ))}
+            ))
+          ) : (
+            <Column sm={4} md={8} lg={16}>
+              <h1>No school has beed minted</h1>
+            </Column>
+          )}
           <Column sm={4} md={8} lg={16}>
             <Button
               onClick={loadMore}
