@@ -15,7 +15,7 @@ import { useQuery } from 'urql';
 import { Queries } from '../../libs/graph-query';
 
 const SchoolCard = () => {
-  const [pageSize, setPageSize] = useState(4);
+  const [pageSize, setPageSize] = useState(8);
   const [result] = useQuery({
     query: Queries.nftListQuery,
     variables: { first: pageSize },
