@@ -110,7 +110,7 @@ const VerifiedSchool = () => {
 
   return (
     <DashboardLayout>
-      <h2>Minting School</h2>
+      <h2>Minting In Progress</h2>
       <Card>
         <Divider />
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
