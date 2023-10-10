@@ -39,7 +39,7 @@ export const PATH_USER = {
   list: path(ROOTS_USER, '/users-list'),
   new: path(ROOTS_USER, '/new'),
   profile: path(ROOTS_USER, '/profile'),
-  account: path(ROOTS_USER, '/account'),
+  account:(id:string)=> path(ROOTS_USER, `/${id}`),
   edit: (id: string) => path(ROOTS_USER, `/${id}/edit`),
 };
 
@@ -51,5 +51,5 @@ export const PATH_SCHOOL = {
   root: ROOTS_SCHOOL,
   verified: path(ROOTS_SCHOOL, '/minted'),
   contributed: path(ROOTS_SCHOOL, '/un-minted'),
-  minting: path(ROOTS_SCHOOL, '/minting')
+  minting: path(ROOTS_SCHOOL, '/pending')
 };

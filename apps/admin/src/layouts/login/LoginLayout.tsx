@@ -32,7 +32,7 @@ export default function LoginLayout({ children, illustration, title }: Props) {
         {APP_NAME}
         </Typography>
         <Typography variant="h4" sx={{ maxWidth: 480, textAlign: 'center' }}>
-          {title || 'Giga school Admin'}
+          {title || 'Giga Admin'}
         </Typography>
 
         <Typography variant="body2" sx={{ position: 'absolute', bottom: 40, textAlign: 'center' }}>

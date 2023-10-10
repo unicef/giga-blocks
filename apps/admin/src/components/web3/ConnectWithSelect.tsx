@@ -9,6 +9,7 @@ import { loginSignature } from './utils/wallet';
 import { JsonRpcProvider, Signer } from 'ethers';
 import { useLoginWallet, useNonceGet } from '@hooks/web3/useMetamask';
 import { useRouter } from 'next/router';
+import { useSnackbar } from '@components/snackbar';
 import {
   saveAccessToken,
   saveConnectors,
@@ -57,8 +58,8 @@ export function ConnectWithSelect({
   const [desiredChainId, setDesiredChainId] = useState<any>(undefined);
   const [enableGetNonce, setEnableGetNonce] = useState<boolean>(true);
 
-  const { data: nonceData, isSuccess: isNonceSuccess } = useNonceGet(enableGetNonce);
-
+  const { data: nonceData, isSuccess: isNonceSuccess, isError:isNonceError } = useNonceGet(enableGetNonce);
+  const { enqueueSnackbar } = useSnackbar();
   const { push } = useRouter();
   const { setAuthState } = useAuthContext();
 
@@ -71,6 +72,7 @@ export function ConnectWithSelect({
   } = useLoginWallet();
 
   const getSignature = useCallback(async () => {
+    if(!isActive && JsonRpcProvider) return ;
     if (isNonceSuccess) {
       setEnableGetNonce(false);
       try {
@@ -79,11 +81,19 @@ export function ConnectWithSelect({
         const signature = await loginSignature(signer, nonceData?.nonce);
         if (!signature) return Error('Signature is null');
         mutate({ walletAddress: address, signature });
-      } catch (e) {
-        console.log(e);
+      } catch (err) {
+        enqueueSnackbar(err.message, { variant: 'error' })
+        console.log(err.message);
       }
     }
-  }, [isNonceSuccess]);
+    else {
+      enqueueSnackbar("Invalid Nonce", { variant: 'error' })
+    }
+  }, [isNonceSuccess,isActive, JsonRpcProvider]);
+
+  useEffect(() => {
+    isNonceError && enqueueSnackbar("Couldn't get Nonce", { variant: 'error' })
+  }, [isNonceError])
 
   useEffect(() => {
     isError && console.log(loginWalletError);
@@ -91,6 +101,8 @@ export function ConnectWithSelect({
       const currentUser = {
         email: loginWalletData.data.email,
         username: loginWalletData.data.name,
+        userId: loginWalletData.data.id,
+        role: loginWalletData.data.role,
       };
       setAuthState((prev: any) => ({
         ...prev,
