@@ -116,20 +116,13 @@ const ContributedSchool = () => {
 
           <Scrollbar>
             <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
-              {/* <TableHeadUsers
-                  order={order}
-                  orderBy={orderBy}
+              <TableHeadUsers
+                  // order={order}
+                  // orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   rowCount={tableData?.length}
-                  // numSelected={selected?.length}
-                  onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row:any) => row.id)
-                  //   )
-                  // }
-                /> */}
+                  // onSort={onSort}
+                />
 
               <TableBody>
                 {tableData &&
