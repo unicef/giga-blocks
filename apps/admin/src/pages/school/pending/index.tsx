@@ -136,7 +136,7 @@ const VerifiedSchool = () => {
                       checkbox={false}
                     />
                   ))}
-                <TableNoData isNotFound={false} />
+                <TableNoData isNotFound={tableData.length === 0} />
               </TableBody>
             </Table>
           </Scrollbar>

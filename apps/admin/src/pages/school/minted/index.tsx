@@ -146,7 +146,7 @@ const ContributedSchool = () => {
                   ))}
                 <TableNoData
                   // isNotFound={!!error}
-                  isNotFound={false}
+                  isNotFound={tableData.length === 0}
                 />
               </TableBody>
             </Table>
