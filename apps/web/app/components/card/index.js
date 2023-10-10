@@ -39,7 +39,7 @@ const SchoolCard = () => {
       };
       decodedShooldata.push(schoolData);
     }
-    setSchoolData();
+    setSchoolData(decodedShooldata);
   };
 
   const loadMore = () => {
