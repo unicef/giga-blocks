@@ -81,6 +81,10 @@ const VerifiedSchool = () => {
       isMintSuccess && enqueueSnackbar("Added to mint queue.", { variant: 'success' })
     }, [isMintError, isMintSuccess])
 
+    const onSelectAllRows = () => {
+      console.log("selectedRows")
+    }
+
     return ( 
         <DashboardLayout>
           <div style={{display: 'flex', justifyContent: 'space-between',marginBottom: '20px'}}>
@@ -98,6 +102,8 @@ const VerifiedSchool = () => {
                   headLabel={TABLE_HEAD}
                   rowCount={tableData?.length}
                   onSort={onSort}
+                  showCheckBox={true}
+                  onSelectAllRows={onSelectAllRows}
                 />
 
                 <TableBody>
