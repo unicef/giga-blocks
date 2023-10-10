@@ -14,7 +14,7 @@ const DigitalRevolution = () => {
           className="heading-col landing-page__tab-content"
         >
           <div className="preview-2-paragraph">
-            <h1 className="heading12" style={{ width: '100%' }}>
+            <h1 className="heading11" style={{ width: '100%' }}>
               Developers,
               <br /> Let’s Shape the Digital Future of Education
             </h1>

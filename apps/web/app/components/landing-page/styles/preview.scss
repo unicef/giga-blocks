@@ -73,6 +73,7 @@
 .landing-page__heading {
   max-width: 50vw;
   font-size: 3vw;
+  font-family: lora;
   @include breakpoint-down(md) {
     max-width: 90vw;
     margin-top: $spacing-05;

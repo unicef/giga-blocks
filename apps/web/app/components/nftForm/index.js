@@ -57,7 +57,7 @@ const RegisterForm = () => {
     <>
       <Grid className="form-gap" fullWidth>
         <Column className="heading-col" md={4} lg={7} sm={4}>
-          <h1 className="heading">
+          <h1 className="heading10">
             Join the Developer Community Waiting List!
           </h1>
         </Column>
