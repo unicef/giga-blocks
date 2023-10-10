@@ -1,9 +1,9 @@
 "use client";
 import { cacheExchange, Client, fetchExchange, Provider } from "urql";
+import { GRAPH_URL } from "../constants/api";
 
 const GarphQlProvider = ({children}) =>{
-    const QueryURL = 'https://api.thegraph.com/subgraphs/name/myanzik/giga-nft'
-
+    const QueryURL = GRAPH_URL;
     const client = new Client({
       url: QueryURL,
       exchanges: [cacheExchange, fetchExchange],
