@@ -69,7 +69,7 @@ const Navbar = () => (
             </HeaderSideNavItems>
           </SideNavItems>
         </SideNav>
-        <HeaderGlobalBar>
+        {/* <HeaderGlobalBar>
           <a
             href="/signUp"
             style={{
@@ -85,7 +85,7 @@ const Navbar = () => (
           <HeaderGlobalAction>
             <UserAvatar size={20} />
           </HeaderGlobalAction>
-        </HeaderGlobalBar>
+        </HeaderGlobalBar> */}
       </Header>
     )}
   />
