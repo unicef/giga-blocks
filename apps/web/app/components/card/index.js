@@ -39,7 +39,7 @@ const SchoolCard = () => {
       };
       decodedShooldata.push(schoolData);
     }
-    setSchoolData(decodedShooldata);
+    setSchoolData();
   };
 
   const loadMore = () => {
@@ -56,7 +56,7 @@ const SchoolCard = () => {
     <>
       {fetching === false ? (
         <Grid fullWidth style={{ margin: '30px auto' }}>
-          {schoolData &&
+          {schoolData ? (
             schoolData?.map((school) => (
               <Column sm={4}>
                 <ClickableTile
@@ -146,7 +146,12 @@ const SchoolCard = () => {
                   </div>
                 </ClickableTile>
               </Column>
-            ))}
+            ))
+          ) : (
+            <Column sm={4} md={8} lg={16}>
+              <h1>No school has beed minted</h1>
+            </Column>
+          )}
           <Column sm={4} md={8} lg={16}>
             <Button
               onClick={loadMore}
