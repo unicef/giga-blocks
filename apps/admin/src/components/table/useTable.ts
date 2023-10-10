@@ -25,7 +25,7 @@ export default function useTable(props?: UseTableProps): ReturnType {
 
   const [page, setPage] = useState(props?.defaultCurrentPage || 0);
 
-  const [rowsPerPage, setRowsPerPage] = useState(props?.defaultRowsPerPage || 10);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const [ selected, setSelected ] = useState<any>();
 
