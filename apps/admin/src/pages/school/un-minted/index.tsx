@@ -46,7 +46,7 @@ const VerifiedSchool = () => {
       const { enqueueSnackbar } = useSnackbar();
 
 
-      const {dense, page, setPage, order, orderBy, rowsPerPage, onSelectRow, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
+      const {dense, page, setPage, order, orderBy, rowsPerPage, onChangePage, onSelectRow, onSort, onChangeDense, onChangeRowsPerPage,
       } = useTable();
 
   const {
@@ -69,7 +69,7 @@ const VerifiedSchool = () => {
   let filteredData: any = [];
   useEffect(() => {
     !isLoading &&
-      data?.rows.map((row: any) => {
+    data?.rows &&  data?.rows.map((row: any) => {
         filteredData.push({
           id: row.id,
           schoolName: row.name,
@@ -108,8 +108,10 @@ const VerifiedSchool = () => {
       mutate({data:selectedValues, signatureWithData:signature})
     }
 
+    let test;
     const onSelectAllRows = (e:any) => {
       const isChecked = e.target.checked;
+      test = isChecked
       if(isChecked){
         setSelectedValues(tableData)
       }
@@ -136,6 +138,7 @@ const VerifiedSchool = () => {
                   rowCount={tableData?.length}
                   onSort={onSort}
                   showCheckBox={true}
+                  numSelected={selectedValues?.length}
                   onSelectAllRows={onSelectAllRows}
                 />
 
