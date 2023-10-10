@@ -71,8 +71,7 @@ export default function SchoolTableRow({
       );
   }
   };
-
-console.log(selectedValues)
+  
   return (
     <>
       <TableRow hover 
