@@ -25,8 +25,7 @@ import {
 } from '@mui/material';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { hooks } from '@hooks/web3/metamask';
+import { useCallback, useEffect, useState } from 'react';
 import { JsonRpcProvider, Signer } from 'ethers';
 import { mintSignature } from '@components/web3/utils/wallet';
 import { useBulkMintSchools } from '@hooks/school/useSchool';
@@ -66,7 +65,6 @@ const VerifiedSchool = () => {
     error: mintingError,
   } = useBulkMintSchools();
 
-  const { useProvider } = hooks;
   const provider = useWeb3React();
 
   // const { filteredUsers } = useAdministrationContext();
@@ -93,18 +91,18 @@ const VerifiedSchool = () => {
           mintedStatus: row.minted,
         });
       });
-    console.log('HAHAAAA', isLoading);
 
     setTableData(filteredData);
   }, [data, isLoading]);
 
-  const signTransaction = async () => {
+  const signTransaction = useCallback (async () => {
+    if(!provider) return;
     const signer = (
       provider.provider as unknown as JsonRpcProvider
     ).getSigner() as unknown as Signer;
     const signature = await mintSignature(signer, selectedValues.length);
     return signature;
-  };
+  },[provider,selectedValues])
 
   const mintSchool = async () => {
     const signature = await signTransaction();
