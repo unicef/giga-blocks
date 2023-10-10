@@ -30,7 +30,7 @@ const UserList = () => {
     useEffect(() => {
       !isFetching &&  data?.map((row:any) => {
         const buffer = row.walletAddress && Buffer.from(row.walletAddress.data)
-        const walletString = buffer && buffer.toString('hex')
+        const walletString = buffer &&` 0x${buffer.toString('hex')}`
         filteredData.push({
           id: row.id,
           name: row.name,

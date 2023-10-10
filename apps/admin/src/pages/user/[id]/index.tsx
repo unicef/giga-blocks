@@ -28,7 +28,7 @@ export default function UserEditPage() {
     <Grid container spacing={2}>
     <Grid item xs={8}>
     <Container>
-        <CustomBreadcrumbs heading="My Profile" />
+        <CustomBreadcrumbs heading="Profile" />
         {id && <UserProfileEditForm id={id}/>}
       </Container>
     </Grid>

@@ -125,7 +125,10 @@ export default function SchoolTableRow({
           sx={{ textTransform: 'capitalize' }}
           onClick={() => handleEditRow(id)}
         >
-          {mintedStatus}
+          {mintedStatus =='NOTMINTED'&& 'Pending'}
+          {mintedStatus =='ISMINTING'&& 'In Progress'}
+          {mintedStatus =='MINTED'&& mintedStatus}
+          {/* {mintedStatus} */}
         </TableCell>
       </TableRow>
     </>
