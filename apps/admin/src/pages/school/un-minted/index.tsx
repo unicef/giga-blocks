@@ -1,18 +1,35 @@
-"use client"
-import Iconify from "@components/iconify";
-import Scrollbar from "@components/scrollbar";
-import { TableEmptyRows, TableHeadUsers, TableNoData, TablePaginationCustom, TableSelectedAction, useTable } from "@components/table";
-import { useSchoolGet } from "@hooks/school/useSchool";
-import DashboardLayout from "@layouts/dashboard/DashboardLayout";
-import { Box, Button, Card, Tabs, Divider, TableContainer, Tooltip, IconButton, Table, TableBody } from "@mui/material";
-import SchoolTableRow from "@sections/user/list/SchoolTableRow";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import {hooks} from "@hooks/web3/metamask";
-import { JsonRpcProvider, Signer } from "ethers";
-import { mintSignature } from "@components/web3/utils/wallet";
-import { useBulkMintSchools } from "@hooks/school/useSchool";
-import { useWeb3React } from "@web3-react/core";
+'use client';
+import Iconify from '@components/iconify';
+import Scrollbar from '@components/scrollbar';
+import {
+  TableEmptyRows,
+  TableHeadUsers,
+  TableNoData,
+  TablePaginationCustom,
+  TableSelectedAction,
+  useTable,
+} from '@components/table';
+import { useSchoolGet } from '@hooks/school/useSchool';
+import DashboardLayout from '@layouts/dashboard/DashboardLayout';
+import {
+  Box,
+  Button,
+  Card,
+  Tabs,
+  Divider,
+  TableContainer,
+  Tooltip,
+  IconButton,
+  Table,
+  TableBody,
+} from '@mui/material';
+import SchoolTableRow from '@sections/user/list/SchoolTableRow';
+import { useRouter } from 'next/router';
+import { useCallback, useEffect, useState } from 'react';
+import { JsonRpcProvider, Signer } from 'ethers';
+import { mintSignature } from '@components/web3/utils/wallet';
+import { useBulkMintSchools } from '@hooks/school/useSchool';
+import { useWeb3React } from '@web3-react/core';
 import { useSnackbar } from '@components/snackbar';
 
 const VerifiedSchool = () => {
@@ -26,26 +43,33 @@ const VerifiedSchool = () => {
         { id: 'status', label: 'Status', align: 'left' }
       ];
 
+      const { enqueueSnackbar } = useSnackbar();
+
+
       const {dense, page, setPage, order, orderBy, rowsPerPage, onSelectRow, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
       } = useTable();
 
-      const { enqueueSnackbar } = useSnackbar();
+  const {
+    mutate,
+    isError: isMintError,
+    data: mintData,
+    isSuccess: isMintSuccess,
+    error: mintingError,
+  } = useBulkMintSchools();
 
-      const {mutate, isError:isMintError,data:mintData,isSuccess :isMintSuccess, error:mintingError} = useBulkMintSchools();
+  const provider = useWeb3React();
 
-      const {useProvider} = hooks
-      const provider = useWeb3React();
+  // const { filteredUsers } = useAdministrationContext();
+  const [selectedValues, setSelectedValues] = useState<any>([]);
+  const [tableData, setTableData] = useState<any>([]);
+  const { data, isLoading } = useSchoolGet(page, rowsPerPage, 'NOTMINTED');
 
-    // const { filteredUsers } = useAdministrationContext();
-    const [selectedValues, setSelectedValues] = useState<any>([]);
-    const [tableData, setTableData] = useState<any>([]);
-    const {data, isFetching} = useSchoolGet(page, rowsPerPage, 'NOTMINTED')
+  // const { error } = useFetchUsers();
 
-    // const { error } = useFetchUsers();
-
-    let filteredData:any = []
-    useEffect(() => {
-      !isFetching &&  data?.rows.map((row:any) => {
+  let filteredData: any = [];
+  useEffect(() => {
+    !isLoading &&
+      data?.rows.map((row: any) => {
         filteredData.push({
           id: row.id,
           schoolName: row.name,
@@ -56,12 +80,12 @@ const VerifiedSchool = () => {
           connectivity: row.connectivity,
           coverage_availabitlity: row.coverage_availability,
           electricity_availabilty: row.electricity_available,
-          mintedStatus: row.minted
-        })
-      })
+          mintedStatus: row.minted,
+        });
+      });
 
-      setTableData(filteredData);
-    }, [data, isFetching]);
+    setTableData(filteredData);
+  }, [data, isLoading]);
 
     const signTransaction = async () =>{
       try {
@@ -83,11 +107,6 @@ const VerifiedSchool = () => {
       setSelectedValues([])
       mutate({data:selectedValues, signatureWithData:signature})
     }
-
-    useEffect(() => {
-      isMintError && enqueueSnackbar("Minting unsuccessful.", { variant: 'error' });
-      isMintSuccess && enqueueSnackbar("Added to mint queue.", { variant: 'success' })
-    }, [isMintError, isMintSuccess])
 
     const onSelectAllRows = (e:any) => {
       const isChecked = e.target.checked;

@@ -72,6 +72,7 @@ export function ConnectWithSelect({
   } = useLoginWallet();
 
   const getSignature = useCallback(async () => {
+    if(!isActive && JsonRpcProvider) return ;
     if (isNonceSuccess) {
       setEnableGetNonce(false);
       try {
@@ -90,7 +91,7 @@ export function ConnectWithSelect({
     else {
       enqueueSnackbar("Invalid Nonce", { variant: 'error' })
     }
-  }, [isNonceSuccess]);
+  }, [isNonceSuccess,isActive, JsonRpcProvider]);
 
   useEffect(() => {
     isNonceError && enqueueSnackbar("Couldn't get Nonce", { variant: 'error' })

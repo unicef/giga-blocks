@@ -37,7 +37,7 @@ export default function OutlinedCard() {
           <CardContent>
             <Typography variant="body2">Total Contributors</Typography>
             <Typography variant="h5" component="div">
-              4
+              N/A
             </Typography>
           </CardContent>
         </Card>
@@ -47,7 +47,7 @@ export default function OutlinedCard() {
           <CardContent>
             <Typography variant="body2">Total Contributions</Typography>
             <Typography variant="h5" component="div">
-              2443
+              N/A
             </Typography>
           </CardContent>
         </Card>
