@@ -37,7 +37,7 @@ function ChainSelect({
   );
 }
 
-export function ConnectWithSelect({
+export default function ConnectWithSelect({
   connector,
   activeChainId,
   isActivating,
@@ -56,13 +56,17 @@ export function ConnectWithSelect({
   setError: (error: Error | undefined) => void;
 }) {
   const [desiredChainId, setDesiredChainId] = useState<any>(undefined);
-  const [enableGetNonce, setEnableGetNonce] = useState<boolean>(true);
+  const [enableGetNonce, setEnableGetNonce] = useState<boolean>(false);
+  const [refetchNonce, setRefetchNonce] = useState<boolean>(false);
+  const [invalidNonce, setInvalidNonce] = useState<boolean>(false)
 
   const {
     data: nonceData,
     isSuccess: isNonceSuccess,
     isError: isNonceError,
+    refetch: nonceRefetch
   } = useNonceGet(enableGetNonce);
+  
   const { enqueueSnackbar } = useSnackbar();
   const { push } = useRouter();
   const { setAuthState } = useAuthContext();
@@ -75,10 +79,12 @@ export function ConnectWithSelect({
     error: loginWalletError,
   } = useLoginWallet();
 
-  const getSignature = useCallback(async () => {
+  const getSignature = async () => {
     if (!isActive && JsonRpcProvider) return;
+    if (!refetchNonce || invalidNonce) {
+      nonceRefetch();
+    }
     if (isNonceSuccess) {
-      // setEnableGetNonce(false);
       try {
         const signer = (provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
         const address = await signer.getAddress();
@@ -88,22 +94,32 @@ export function ConnectWithSelect({
           return Error('Signature is null');
         }
         mutate({ walletAddress: address, signature });
+        setRefetchNonce(false)
       } catch (err) {
         enqueueSnackbar(err.message, { variant: 'error' });
       }
     } else {
-      enqueueSnackbar('Invalid Nonce', { variant: 'error' });
+      setRefetchNonce(true)
+      enqueueSnackbar('Fetching nonce, please wait...', { variant: 'warning' });
     }
-  }, [isNonceSuccess, isActive, JsonRpcProvider]);
+  };
+
+  useEffect( () => {
+    if(refetchNonce || invalidNonce){
+      getSignature();
+    }
+  }, [refetchNonce, isNonceSuccess, invalidNonce])
 
   useEffect(() => {
     isNonceError && enqueueSnackbar("Couldn't get Nonce", { variant: 'error' });
   }, [isNonceError]);
 
   useEffect(() => {
-    isError &&
+    if(isError){
       //@ts-ignore
-      enqueueSnackbar(loginWalletError.response.data.message, { variant: 'error' });
+      enqueueSnackbar(loginWalletError.response.data.message, { variant: 'error' }); 
+      setInvalidNonce(true)
+    }
     if (isLoginWalletSuccess) {
       const currentUser = {
         email: loginWalletData.data.email,

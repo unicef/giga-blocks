@@ -2,7 +2,7 @@
 
 import type { Web3ReactHooks } from "@web3-react/core";
 import type { MetaMask } from "@web3-react/metamask";
-import { ConnectWithSelect } from "./ConnectWithSelect";
+import  ConnectWithSelect  from "./ConnectWithSelect";
 import { Status } from "./status";
 import { Accounts } from "./account";
 
@@ -19,7 +19,7 @@ interface Props {
   accounts?: string[];
 }
 
-export function Card({
+export default function Card({
   connector,
   activeChainId,
   chainIds,
