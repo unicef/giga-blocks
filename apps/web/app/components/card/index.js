@@ -25,9 +25,9 @@ const SchoolCard = () => {
   const [schoolData, setSchoolData] = useState([]);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
 
-  const generateIdenticon = (tokenId) => {
+  const generateIdenticon = (image) => {
     const size = 50; // Set the desired size for your identicons
-    const svgString = toSvg(tokenId.toString(), size);
+    const svgString = toSvg(image.toString(), size);
     return `data:image/svg+xml,${encodeURIComponent(svgString)}`; // Convert SVG to data URL
   };
 

@@ -10,8 +10,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { Loading } from '@carbon/react';
 
-const SchoolDetail = ({id}) => {
-
+const SchoolDetail = ({ id }) => {
   const [result] = useQuery({
     query: Queries.nftDetailsQuery,
     variables: { id },
@@ -23,6 +22,7 @@ const SchoolDetail = ({id}) => {
     const encodeddata = data.tokenUri;
     const decodedData = atob(encodeddata.tokenUri.substring(29));
     setSchoolData(JSON.parse(decodedData));
+    console.log(JSON.parse(decodedData));
   };
 
   useEffect(() => {
