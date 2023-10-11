@@ -46,7 +46,7 @@ const VerifiedSchool = () => {
       const { enqueueSnackbar } = useSnackbar();
 
 
-      const {dense, page, setPage, order, orderBy, rowsPerPage, onSelectRow, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
+      const {dense, page, setPage, order, orderBy, rowsPerPage, onChangePage, onSelectRow, onSort, onChangeDense, onChangeRowsPerPage,
       } = useTable();
 
   const {
@@ -69,7 +69,7 @@ const VerifiedSchool = () => {
   let filteredData: any = [];
   useEffect(() => {
     !isLoading &&
-      data?.rows?.map((row: any) => {
+    data?.rows &&  data?.rows.map((row: any) => {
         filteredData.push({
           id: row.id,
           schoolName: row.name,
@@ -87,7 +87,7 @@ const VerifiedSchool = () => {
     setTableData(filteredData);
   }, [data, isLoading]);
 
-    const signTransaction = async () =>{
+    const signTransaction = useCallback(async () =>{
       try {
       const signer = (provider.provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
       const signature = await mintSignature(signer, selectedValues.length);
@@ -96,9 +96,14 @@ const VerifiedSchool = () => {
       catch(err) {
         enqueueSnackbar(err.message, { variant: 'error' })
       }
-    }
+    },[provider,selectedValues])
   
-    const mintSchool = async () => {
+    const mintSchool = useCallback(async () => {
+      if(selectedValues.length === 0){
+        enqueueSnackbar("Please select atleast one school", { variant: 'error' })
+        return Error("Please select atleast one school");
+      }
+      if(!provider.provider) return;
       const signature = await signTransaction();
       if(!signature){
         enqueueSnackbar("Signature is null", { variant: 'error' })
@@ -106,10 +111,12 @@ const VerifiedSchool = () => {
       } 
       setSelectedValues([])
       mutate({data:selectedValues, signatureWithData:signature})
-    }
+    },[signTransaction,selectedValues])
 
+    let test;
     const onSelectAllRows = (e:any) => {
       const isChecked = e.target.checked;
+      test = isChecked
       if(isChecked){
         setSelectedValues(tableData)
       }
@@ -136,6 +143,7 @@ const VerifiedSchool = () => {
                   rowCount={tableData?.length}
                   onSort={onSort}
                   showCheckBox={true}
+                  numSelected={selectedValues?.length}
                   onSelectAllRows={onSelectAllRows}
                 />
 

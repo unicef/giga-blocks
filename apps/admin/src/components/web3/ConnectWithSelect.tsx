@@ -78,7 +78,7 @@ export function ConnectWithSelect({
   const getSignature = useCallback(async () => {
     if (!isActive && JsonRpcProvider) return;
     if (isNonceSuccess) {
-      setEnableGetNonce(false);
+      // setEnableGetNonce(false);
       try {
         const signer = (provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
         const address = await signer.getAddress();
@@ -101,8 +101,9 @@ export function ConnectWithSelect({
   }, [isNonceError]);
 
   useEffect(() => {
-    //@ts-ignore
-    isError && enqueueSnackbar(loginWalletError.response.data.message, { variant: 'error' });
+    isError &&
+      //@ts-ignore
+      enqueueSnackbar(loginWalletError.response.data.message, { variant: 'error' });
     if (isLoginWalletSuccess) {
       const currentUser = {
         email: loginWalletData.data.email,
