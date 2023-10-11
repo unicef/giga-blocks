@@ -68,10 +68,11 @@ export default function TableHeadCustom({
           <TableCell
             key={index}
             align={headCell.align || 'left'}
-            sortDirection={orderBy === headCell.id ? order : false}
+            // sortDirection={orderBy === headCell.id ? order : false}
             sx={{ width: headCell.width, minWidth: headCell.minWidth, whiteSpace: 'nowrap' }}
           >
-            {onSort ? (
+            <p>{headCell.label}</p>
+            {/* {onSort ? (
               <TableSortLabel
                 hideSortIcon
                 active={orderBy === headCell.id}
@@ -89,7 +90,7 @@ export default function TableHeadCustom({
               </TableSortLabel>
             ) : (
               headCell.label
-            )}
+            )} */}
           </TableCell>
         ))}
       </TableRow>

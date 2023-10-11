@@ -58,7 +58,11 @@ export function ConnectWithSelect({
   const [desiredChainId, setDesiredChainId] = useState<any>(undefined);
   const [enableGetNonce, setEnableGetNonce] = useState<boolean>(true);
 
-  const { data: nonceData, isSuccess: isNonceSuccess, isError:isNonceError } = useNonceGet(enableGetNonce);
+  const {
+    data: nonceData,
+    isSuccess: isNonceSuccess,
+    isError: isNonceError,
+  } = useNonceGet(enableGetNonce);
   const { enqueueSnackbar } = useSnackbar();
   const { push } = useRouter();
   const { setAuthState } = useAuthContext();
@@ -72,34 +76,34 @@ export function ConnectWithSelect({
   } = useLoginWallet();
 
   const getSignature = useCallback(async () => {
-    if(!isActive && JsonRpcProvider) return ;
+    if (!isActive && JsonRpcProvider) return;
     if (isNonceSuccess) {
-      setEnableGetNonce(false);
+      // setEnableGetNonce(false);
       try {
         const signer = (provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
         const address = await signer.getAddress();
         const signature = await loginSignature(signer, nonceData?.nonce);
-        if (!signature){ 
-          enqueueSnackbar("Invalid Signature", { variant: 'error' })
+        if (!signature) {
+          enqueueSnackbar('Invalid Signature', { variant: 'error' });
           return Error('Signature is null');
         }
         mutate({ walletAddress: address, signature });
       } catch (err) {
-        enqueueSnackbar(err.message, { variant: 'error' })
+        enqueueSnackbar(err.message, { variant: 'error' });
       }
+    } else {
+      enqueueSnackbar('Invalid Nonce', { variant: 'error' });
     }
-    else {
-      enqueueSnackbar("Invalid Nonce", { variant: 'error' })
-    }
-  }, [isNonceSuccess,isActive, JsonRpcProvider]);
+  }, [isNonceSuccess, isActive, JsonRpcProvider]);
 
   useEffect(() => {
-    isNonceError && enqueueSnackbar("Couldn't get Nonce", { variant: 'error' })
-  }, [isNonceError])
+    isNonceError && enqueueSnackbar("Couldn't get Nonce", { variant: 'error' });
+  }, [isNonceError]);
 
   useEffect(() => {
-    //@ts-ignore
-    isError && enqueueSnackbar(loginWalletError.response.data.message, { variant: 'error' })
+    isError &&
+      //@ts-ignore
+      enqueueSnackbar(loginWalletError.response.data.message, { variant: 'error' });
     if (isLoginWalletSuccess) {
       const currentUser = {
         email: loginWalletData.data.email,

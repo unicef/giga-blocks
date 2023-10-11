@@ -5,7 +5,9 @@ const WhyNFT2 = () => {
   return (
     <Grid className="preview-2 why-nft" fullWidth>
       <Column md={4} lg={4} sm={4} style={{ margin: '0 auto', width: '90%' }}>
-        <span>Why Join the NFT2.0 developer community?</span>
+        <span className="heading7">
+          Why Join the NFT2.0 developer community?
+        </span>
       </Column>
       <Column md={4} lg={4} sm={4}>
         <div className="why-nft-card">

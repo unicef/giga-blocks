@@ -6,7 +6,9 @@ const LandingPage = () => {
   return (
     <Grid className="landing-page preview1Background" fullWidth>
       <Column lg={8} md={8} sm={4} className="landing-page__banner">
-        <p className="landing-subheading">Welcome to NFT 2.0</p>
+        <p className="landing-subheading" style={{ fontFamily: 'lora' }}>
+          Welcome to NFT 2.0
+        </p>
         <h1 className="landing-page__heading">
           The World’s Largest Decentralized Databases of Schools
         </h1>
