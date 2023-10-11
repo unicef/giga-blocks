@@ -13,7 +13,7 @@ import { useSnackbar } from "@components/snackbar";
 import { APP_NAME } from "../../../config-global";
 import FormProvider, { RHFTextField } from "../../../components/hook-form";
 import { useLoginContext } from "../../../contexts/auth";
-import { Card } from "@components/web3/Card";
+import Card from "@components/web3/Card";
 import { useEffect, useState } from "react";
 import { hooks, metaMask } from "@hooks/web3/metamask";
 
