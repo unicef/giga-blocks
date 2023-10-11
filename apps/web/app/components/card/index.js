@@ -39,7 +39,7 @@ const SchoolCard = () => {
       };
       decodedShooldata.push(schoolData);
     }
-    setSchoolData(decodedShooldata);
+    setSchoolData([]);
   };
 
   const loadMore = () => {
@@ -149,7 +149,7 @@ const SchoolCard = () => {
             ))
           ) : (
             <Column sm={4} md={8} lg={16}>
-              <h1>No school has beed minted</h1>
+              <h1>No school has been minted</h1>
             </Column>
           )}
           <Column sm={4} md={8} lg={16}>
