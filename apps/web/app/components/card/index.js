@@ -56,7 +56,7 @@ const SchoolCard = () => {
     <>
       {fetching === false ? (
         <Grid fullWidth style={{ margin: '30px auto' }}>
-          {schoolData ? (
+          {schoolData.length > 0 ? (
             schoolData?.map((school) => (
               <Column sm={4}>
                 <ClickableTile
