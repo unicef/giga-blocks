@@ -2,8 +2,15 @@ import { Grid, Column } from '@carbon/react';
 import '../../components/landing-page/styles/preview.scss';
 import { Tile } from '@carbon/react';
 import './school-detail.scss';
+import { toSvg } from 'jdenticon';
 
 const Introduction = ({ schooldata }) => {
+  const generateIdenticon = (image) => {
+    const size = 50;
+    const svgString = toSvg(image, size);
+    return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
+  };
+
   return (
     <Grid fullWidth className="mt-50px">
       <Column md={4} lg={5} sm={4}>
@@ -36,7 +43,7 @@ const Introduction = ({ schooldata }) => {
             width: '60%',
           }}
           alt="School Map"
-          src={schooldata?.image}
+          src={generateIdenticon(schooldata?.image)}
         />
       </Column>
     </Grid>

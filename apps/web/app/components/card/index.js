@@ -13,6 +13,7 @@ import './card.scss';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { Queries } from '../../libs/graph-query';
+import { toSvg } from 'jdenticon';
 
 const SchoolCard = () => {
   const [pageSize, setPageSize] = useState(8);
@@ -23,6 +24,12 @@ const SchoolCard = () => {
   const { data: queryData, fetching, error } = result;
   const [schoolData, setSchoolData] = useState([]);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
+
+  const generateIdenticon = (image) => {
+    const size = 50; // Set the desired size for your identicons
+    const svgString = toSvg(image.toString(), size);
+    return `data:image/svg+xml,${encodeURIComponent(svgString)}`; // Convert SVG to data URL
+  };
 
   useEffect(() => {
     if (queryData) decodeSchooldata(queryData);
@@ -65,7 +72,7 @@ const SchoolCard = () => {
                 >
                   <div className="row">
                     <img
-                      src={school?.image}
+                      src={generateIdenticon(school?.image)}
                       alt="SVG Image"
                       style={{ marginBottom: '16px' }}
                     />
@@ -149,7 +156,7 @@ const SchoolCard = () => {
             ))
           ) : (
             <Column sm={4} md={8} lg={16}>
-              <h1>No school has beed minted</h1>
+              <h1>No school has been minted</h1>
             </Column>
           )}
           <Column sm={4} md={8} lg={16}>
