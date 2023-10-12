@@ -14,7 +14,7 @@ import {gql} from "urql";
   `
  const nftListQuery = gql`
 
-  query tokenUris($first:Int!, ) {tokenUris(subgraphError: allow, first: $first) {
+  query tokenUris($skip:Int!, $first:Int!) {tokenUris(subgraphError: allow,skip: $skip,first: $first) {
     id
     tokenUri
   }

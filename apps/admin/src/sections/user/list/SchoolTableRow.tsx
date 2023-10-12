@@ -52,8 +52,13 @@ export default function SchoolTableRow({
   const { push } = useRouter();
 
   const handleEditRow = (row: string) => {
-    push(`/school/${row}`);
+    if (mintedStatus == 'MINTED') push(`/school/minted/${row}`)
+    else push(`/school/${row}`);
   };
+
+  const handleDetails= (id:string) =>{
+    window.open(`https://testnet.arbiscan.io/token/0xc996322fc8fd656103f482de762599d3645a7e0f?a=${id}`)
+  }
 
   const handleCheckboxChange = (event: any, row: any) => {
     const isChecked = event.target.checked;
@@ -130,6 +135,15 @@ export default function SchoolTableRow({
           {mintedStatus =='MINTED'&& mintedStatus}
           {/* {mintedStatus} */}
         </TableCell>
+        {mintedStatus =='MINTED' && 
+        <TableCell
+          align="left"
+          sx={{ textTransform: 'capitalize' }}
+          onClick={() =>handleDetails(id)}
+        >
+          {id}
+        </TableCell>
+}
       </TableRow>
     </>
   );
