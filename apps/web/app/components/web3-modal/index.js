@@ -16,9 +16,8 @@ const ModalComponent = ({ isOpen, onClose }) => {
   };
 
   const handleSubmit = () => {
-    // Handle form submission logic here
     console.log('Submitted:', inputValue);
-    onClose(); // Close the modal after form submission
+    onClose();
   };
 
   return (
@@ -38,9 +37,9 @@ const ModalComponent = ({ isOpen, onClose }) => {
       </ModalBody>
       <ModalFooter>
         <Button kind="secondary" onClick={onClose}>
-          Login With Metamask
+          Disconnect
         </Button>
-        <Button onClick={handleSubmit}>Disconnect</Button>
+        <Button onClick={handleSubmit}>Login With Metamask</Button>
       </ModalFooter>
     </Modal>
   );
