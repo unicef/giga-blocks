@@ -57,10 +57,6 @@ export default function SchoolTableRow({
     else push(`/school/${row}`);
   };
 
-  const handleDetails= (id:string) =>{
-    window.open(`https://testnet.arbiscan.io/token/${schoolNft}?a=${id}`)
-  }
-
   const handleCheckboxChange = (event: any, row: any) => {
     const isChecked = event.target.checked;
     if (isChecked) {
@@ -140,9 +136,10 @@ export default function SchoolTableRow({
         <TableCell
           align="left"
           sx={{ textTransform: 'capitalize' }}
-          onClick={() =>handleDetails(id)}
         >
+          <a href ={`https://testnet.arbiscan.io/token/${schoolNft}?a=${id}`} target="_blank" rel="noreferrer">
           {id}
+          </a>
         </TableCell>
 }
       </TableRow>
