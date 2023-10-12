@@ -8,7 +8,6 @@ import {
   TableSelectedAction,
   useTable,
 } from '@components/table';
-import { useSchoolGet } from '@hooks/school/useSchool';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
 import {
   Box,
@@ -24,15 +23,18 @@ import {
 } from '@mui/material';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
 import { useEffect, useState } from 'react';
-import { useSnackbar } from '@components/snackbar';
+import { useQuery } from 'urql';
+import { Queries } from 'src/libs/graph-query';
+import { useSchoolCount } from "@hooks/school/useSchool";
 
-const ContributedSchool = () => {
+const MintedSchools = () => {
   const TABLE_HEAD = [
     { id: 'name', label: 'Name', align: 'left' },
     { id: 'location', label: 'Location', align: 'left' },
     { id: 'latitide', label: 'Latitude', align: 'left' },
     { id: 'longitude', label: 'Longitude', align: 'left' },
     { id: 'status', label: 'Status', align: 'left' },
+    { id: 'tokenId', label:'TokenId', align:'left'}
   ];
 
   const {
@@ -49,71 +51,54 @@ const ContributedSchool = () => {
     onChangeRowsPerPage,
   } = useTable();
 
-  // const { filteredUsers } = useAdministrationContext();
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
-  const { data: schoolGetData } = useSchoolGet(page, rowsPerPage, 'MINTED');
+  const{data:total} = useSchoolCount('MINTED');
+  const[result] = useQuery({query:Queries.nftListQuery,variables:{skip:page*rowsPerPage,first:rowsPerPage}});
+  const{data, fetching, error} = result;
 
-  // const { error } = useFetchUsers();
+  const decodeSchooldata = (data:any) => {
+    const encodeddata = data.tokenUris;
+    const decodedShooldata = [];
+    for (let i = 0; i < encodeddata.length; i++) {
+      const decodedData = atob(encodeddata[i].tokenUri.substring(29));
+      const schoolData = {
+        tokenId: encodeddata[i].id,
+        ...JSON.parse(decodedData),
+      };
+      decodedShooldata.push(schoolData);
+    }
+    decodedShooldata && decodedShooldata.map((row: any) => {
+      filteredData.push({
+        id: row.tokenId,
+        schoolName: row.schoolName,
+        longitude: row.longitude,
+        latitude: row.latitude,
+        schoolType: row.schoolType,
+        country: row.country,
+        connectivity: row.connectivity,
+        coverage_availabitlity: row.coverage_availabitlity,
+        electricity_availabilty: row.electricity_availabitlity,
+        mintedStatus: 'MINTED',
+      });
+    }
+    )
+    setTableData(filteredData);
+  };
 
   let filteredData: any = [];
   useEffect(() => {
-    schoolGetData?.rows &&
-      schoolGetData?.rows.map((row: any) => {
-        filteredData.push({
-          id: row.id,
-          schoolName: row.name,
-          longitude: row.longitude,
-          latitude: row.latitude,
-          schoolType: row.school_type,
-          country: row.country,
-          connectivity: row.connectivity_speed_status,
-          coverage_availabitlity: row.connectivity_speed_status,
-          electricity_availabilty: row.electricity_available,
-          mintedStatus: row.minted,
-        });
-      });
-
-    setTableData(filteredData);
-  }, [schoolGetData]);
-
-  // const signTransaction = async () =>{
-  //   const signer = (provider.provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
-  //   const signature = await mintSignature(signer, selectedValues.length);
-  //   return signature;
-  // }
-
-  // const mintSchool = async () => {
-  //   const signature = await signTransaction();
-  //   if(!signature) return Error("Signature is null");
-  //   mutate({data:selectedValues, signatureWithData:signature})
-  // }
+    if(data) decodeSchooldata(data);
+  }, [data]);
 
   return (
     <DashboardLayout>
       <h2>Minted School</h2>
+      {fetching && <p>Loading...</p>}
+      {!fetching &&
       <Card>
         <Divider />
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          {/* <TableSelectedAction
-              dense={dense}
-              // numSelected={selected?.length}
-              rowCount={tableData?.length}
-              // onSelectAllRows={(checked) =>
-              //   onSelectAllRows(
-              //     checked,
-              //     tableData.map((row:any) => row.id)
-              //   )
-              // }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            /> */}
-
           <Scrollbar>
             <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
               <TableHeadUsers
@@ -123,7 +108,6 @@ const ContributedSchool = () => {
                   rowCount={tableData?.length}
                   // onSort={onSort}
                 />
-
               <TableBody>
                 {tableData &&
                   tableData.map((row: any) => (
@@ -137,7 +121,6 @@ const ContributedSchool = () => {
                     />
                   ))}
                 <TableNoData
-                  // isNotFound={!!error}
                   isNotFound={tableData.length === 0}
                 />
               </TableBody>
@@ -145,7 +128,8 @@ const ContributedSchool = () => {
           </Scrollbar>
         </TableContainer>
         <TablePaginationCustom
-          count={schoolGetData?.meta?.total}
+          count={total}
+          // count={tableData?.length}
           setPage={setPage}
           page={page}
           rowsPerPage={rowsPerPage}
@@ -154,9 +138,9 @@ const ContributedSchool = () => {
           dense={dense}
           onChangeDense={onChangeDense}
         />
-      </Card>
+      </Card>}
     </DashboardLayout>
   );
 };
 
-export default ContributedSchool;
+export default MintedSchools;

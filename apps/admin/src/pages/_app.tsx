@@ -34,6 +34,7 @@ import ThemeLocalization from "../locales";
 import { AuthProvider } from '../auth/JwtContext';
 import QueryProvider from 'src/libs/get-query-client';
 import Web3Provider from '@components/web3/Provider';
+import GraphQlProvider from "src/libs/graphql-query-client";
 
 // ----------------------------------------------------------------------
 
@@ -56,6 +57,7 @@ export default function MyApp(props: MyAppProps) {
   return (
     <Web3Provider >
       <QueryProvider>
+        <GraphQlProvider>
         <CacheProvider value={emotionCache}>
           <Head>
             <meta name="viewport" content="initial-scale=1, width=device-width" />
@@ -77,6 +79,7 @@ export default function MyApp(props: MyAppProps) {
             </SettingsProvider>
           </AuthProvider>
         </CacheProvider>
+        </GraphQlProvider>
       </QueryProvider>
     </Web3Provider>
 

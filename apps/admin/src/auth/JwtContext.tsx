@@ -155,15 +155,18 @@ function AuthProvider({ children }: AuthProviderProps) {
     [authState.user]
   );
 
+  const activateMetaMask = async () => {
+    const walletState = localStorage.getItem('auth');
+    if (walletState === 'metaMask') metaMask.activate();
+  }
+
   useEffect(() => {
     if(web3.provider) return;
-    const walletState = localStorage.getItem('auth');
-    const timerInterval = setInterval('10');
-    if (walletState === 'metaMask') metaMask.activate();
+    const timerInterval = setInterval(activateMetaMask,10);
     return()=>{
       clearInterval(timerInterval)
     }
-  }, []);
+  }, [activateMetaMask]);
 
   const contextProps = useMemo(
     () => ({

@@ -22,7 +22,6 @@ const SchoolDetail = ({ id }) => {
     const encodeddata = data.tokenUri;
     const decodedData = atob(encodeddata.tokenUri.substring(29));
     setSchoolData(JSON.parse(decodedData));
-    console.log(JSON.parse(decodedData));
   };
 
   useEffect(() => {
