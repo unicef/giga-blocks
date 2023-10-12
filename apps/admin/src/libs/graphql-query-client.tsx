@@ -1,11 +1,9 @@
 "use-client";
 import { cacheExchange, Client, fetchExchange ,Provider} from "urql";
-// import { GRAPH_URL } from "../constants/api";
-import React from "react";
-//@ts-ignore
+import  routes from "@constants/api";
 
 
-const GRAPHQL_URL: string = process.env.NEXT_PUBLIC_GRAPH_URL;
+const GRAPHQL_URL: string = routes.GRAPH_URL || "";
 
 const client = new Client({
     url: GRAPHQL_URL,

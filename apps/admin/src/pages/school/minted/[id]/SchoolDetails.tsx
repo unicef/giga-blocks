@@ -34,6 +34,9 @@ interface FormValuesProps {
 }
 
 export default function SchoolDetails({ id }: Props) {
+
+  const { enqueueSnackbar } = useSnackbar();
+
   const [profile, setProfile] = useState({
     fullname: "",
     location: "",
@@ -45,11 +48,8 @@ export default function SchoolDetails({ id }: Props) {
     tokenId:"",
   });
 
-  const [result] = useQuery({query:Queries.nftDetailsQuery,variables:{id:id}});
+  const [result] = useQuery({query:Queries.nftDetailsQuery,variables:{id}});
   const {data, fetching,error} = result
-
-
-//   const { data, isSuccess, isError } = useSchoolGetById(id);
 
   const decodeData = (schooldata:any)=>{
     const encodeddata = schooldata?.tokenUri;
@@ -73,7 +73,8 @@ export default function SchoolDetails({ id }: Props) {
 
     useEffect(() => {
         if(data) decodeData(data);
-    }, [data]);
+        if(error) enqueueSnackbar(error.message, { variant: 'error' })
+    }, [data,error]);
 
 const methods = useForm<FormValuesProps>({})
 
@@ -135,6 +136,12 @@ const methods = useForm<FormValuesProps>({})
                         name="coverage"
                         value={profile?.coverage || ""}
                         label="Coverage"
+                        disabled
+                      />
+                       <ProfileTextField
+                        name="tokenId"
+                        value={profile?.tokenId || ""}
+                        label="TokenId"
                         disabled
                       />
                     </Box>
