@@ -51,19 +51,7 @@ export class ContributeDataController {
     return this.contributeDataService.remove(id);
   }
 
-  @Roles('CONTRIBUTOR')
-  @Post('upvote/:id')
-  upvote(@Param('id') id: string, @Request() req: any) {
-    return this.contributeDataService.upvote(id, req.user);
-  }
-
-  @Roles('CONTRIBUTOR')
-  @Post('downvote/:id')
-  downvote(@Param('id') id: string, @Request() req: any) {
-    return this.contributeDataService.downvote(id, req.user);
-  }
-
-  @Roles('VALIDATOR', 'ADMIN')
+  @Roles('ADMIN')
   @Post('validate/:id')
   validate(@Param('id') id: string, @Body() ValidateDto: ValidateDto) {
     return this.contributeDataService.validate(id, ValidateDto.isValid);
