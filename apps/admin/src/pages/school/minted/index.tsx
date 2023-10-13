@@ -98,18 +98,16 @@ const MintedSchools = () => {
   return (
     <DashboardLayout>
       <h2>Minted School</h2>
-      {fetching && (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      {fetching && <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <CircularProgress />
-        </div>
-      )}
-      {!fetching && (
-        <Card>
-          <Divider />
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
-                <TableHeadUsers
+        </div>}
+      {!fetching &&
+      <Card>
+        <Divider />
+        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <Scrollbar>
+            <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+              <TableHeadUsers
                   // order={order}
                   // orderBy={orderBy}
                   headLabel={TABLE_HEAD}
