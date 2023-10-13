@@ -29,7 +29,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     productType,
     fileName,
     setSelectedSheetName,
-    tableData: rows,
+    tableDatas: rows,
   } = useUploadContext();
   const [errors, setErrors] = useState<string[]>([]);
   const [allSheetErrors, setAllSheetErrors] = useState<{ sheetName: string; errors: string[] }[]>();

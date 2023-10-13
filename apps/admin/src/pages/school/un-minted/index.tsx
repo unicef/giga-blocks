@@ -45,6 +45,7 @@ const VerifiedSchool = () => {
 
       const { enqueueSnackbar } = useSnackbar();
 
+      const {push} = useRouter()
 
       const {dense, page, setPage, order, orderBy, rowsPerPage, onChangePage, onSelectRow, onSort, onChangeDense, onChangeRowsPerPage,
       } = useTable();
@@ -120,11 +121,16 @@ const VerifiedSchool = () => {
       }
     }
 
+    const uploadSchool = () => {
+      push('/upload')
+    }
+
     return ( 
         <DashboardLayout>
           <div style={{display: 'flex', justifyContent: 'space-between',marginBottom: '20px'}}>
           <span style={{fontSize: '1.5em', fontWeight: '600'}}>Unminted School</span>
           <Button variant="contained" style={{background: '#474747'}} onClick={mintSchool}>Mint ({selectedValues.length})</Button>
+          <Button variant="contained" style={{background: '#474747'}} onClick={uploadSchool}>Upload School</Button>
           </div>
           <Card>
           <Divider />

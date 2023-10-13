@@ -13,11 +13,13 @@ import SpreadSheetValidationTable from './spreadsheetValidationTable';
 
 const steps = ['Preview File', 'Validate File'];
 
-export default function HorizontalLinearStepper() {
+export default function HorizontalLinearStepper({propsTableData}:{propsTableData: any}) {
   const [activeStep, setActiveStep] = React.useState(0);
-  const { setShowStepper, setSelectedSheetName, setIsFileValidated, setDisableDropZone } =
+  const { setShowStepper, setSelectedSheetName, setIsFileValidated, setDisableDropZone, setTableDatas } =
     useUploadContext();
   const [hasErrors, setHasErrors] = React.useState(false);
+
+  setTableDatas(propsTableData)
 
   const QontoConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -58,7 +60,7 @@ export default function HorizontalLinearStepper() {
   const handleFinish = () => {
     setShowStepper(false);
     setIsFileValidated(true);
-    setDisableDropZone(false);
+    setDisableDropZone(true);
     setSelectedSheetName('');
   };
 
