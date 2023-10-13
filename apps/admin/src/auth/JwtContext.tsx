@@ -9,12 +9,14 @@ import React, {
 } from 'react';
 import { useRouter } from 'next/router';
 
-import { PATH_AUTH } from '@routes/paths';
+import { PATH_AUTH, ROOTS_DASHBOARD } from '@routes/paths';
 
 import {
   isValidToken,
   saveAccessToken,
   getAccessToken,
+  saveRefreshToken,
+  getRefreshToken,
   deleteAccessToken,
   saveCurrentUser,
   saveKey,
@@ -23,6 +25,11 @@ import {
 } from '../utils/sessionManager';
 import { ROLES, DEBUG_MODE } from '../config-global';
 import { AuthState, ExtendedAuthState } from './types';
+import { metaMask } from '@components/web3/connectors/metaMask';
+import { useAuthContext } from './useAuthContext';
+import axios from 'axios';
+import  routes  from "../constants/api";
+import { useWeb3React } from '@web3-react/core';
 
 // ----------------------------------------------------------------------
 
@@ -57,21 +64,44 @@ interface AuthProviderProps {
 function AuthProvider({ children }: AuthProviderProps) {
   const [authState, setAuthState] = useState<AuthState>(initialState);
   const { push, replace } = useRouter();
+  const web3 = useWeb3React();
+
+  const baseUrl = routes.BASE_URL
+
   useEffect(() => {
     const initialize = async () => {
       try {
         const localToken = getAccessToken();
+        const localRefreshToken = getRefreshToken();
         if (localToken && isValidToken(localToken)) {
           const localUser = getCurrentUser();
-          // const appSettings = await getAppSettings();
           setAuthState((prev) => ({
             ...prev,
             isAuthenticated: true,
             isInitialized: true,
             token: localToken,
             user: localUser,
-          }));
-        } else {
+          }));}
+          else if(localToken && !isValidToken(localToken)) {
+            localStorage.clear()
+            window.location.href = PATH_AUTH.login;          }
+        // } else if (localRefreshToken) {
+        //   try {
+        //     axios.post(`${baseUrl}${routes.REFRESH.POST}`, JSON.stringify({ refresh: localRefreshToken }))
+        //     .then((res:any) => {
+        //       const data = res.json();
+        //       const newAccessToken = data.access_token;
+        //       saveAccessToken(newAccessToken);
+        //       window.location.reload();
+        //     })
+        //     .catch(() => {
+        //       console.error('Failed to refresh access token');
+        //       // window.location.href = PATH_AUTH.login;
+        //     })
+        //   } catch (error) {
+        //     console.error('Error refreshing access token:', error);
+        //   }
+        else {
           setAuthState((prev) => ({
             ...prev,
             isAuthenticated: false,
@@ -125,18 +155,32 @@ function AuthProvider({ children }: AuthProviderProps) {
     [authState.user]
   );
 
+  const activateMetaMask = async () => {
+    const walletState = localStorage.getItem('auth');
+    if (walletState === 'metaMask') metaMask.activate();
+  }
+
+  useEffect(() => {
+    if(web3.provider) return;
+    const timerInterval = setInterval(activateMetaMask,10);
+    return()=>{
+      clearInterval(timerInterval)
+    }
+  }, [activateMetaMask]);
+
   const contextProps = useMemo(
     () => ({
       ...authState,
       deleteToken,
       addToken,
+      setAuthState,
       addUser,
       addKey,
       logout,
       roles,
       method: 'jwt',
     }),
-    [authState, roles, logout]
+    [authState, roles, logout, setAuthState]
   );
 
   return <AppAuthContext.Provider value={contextProps}>{children}</AppAuthContext.Provider>;

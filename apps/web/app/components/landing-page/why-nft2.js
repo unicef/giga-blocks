@@ -1,15 +1,17 @@
-import { Grid, Column } from "@carbon/react";
-import "./styles/preview.scss";
+import { Grid, Column } from '@carbon/react';
+import './styles/preview.scss';
 
 const WhyNFT2 = () => {
   return (
     <Grid className="preview-2 why-nft" fullWidth>
-      <Column md={4} lg={4} sm={4} style={{ margin: "0 auto", width: "90%" }}>
-        <span>Why join NFT 2.0?</span>
+      <Column md={4} lg={4} sm={4} style={{ margin: '0 auto', width: '90%' }}>
+        <span className="heading7">
+          Why Join the NFT2.0 developer community?
+        </span>
       </Column>
       <Column md={4} lg={4} sm={4}>
         <div className="why-nft-card">
-          <span className="heading7">Empowerment</span>
+          <span className="heading7">Innovation</span>
           <section>
             <img
               src="/landingPage/why-nft/empowerment.png"
@@ -17,15 +19,15 @@ const WhyNFT2 = () => {
             />
           </section>
           <p className="heading2 width-90">
-            By minting and owning NFTs representing schools, you become a
-            catalyst for change, directly contributing to connecting schools to
-            the internet and shaping a brighter future for students.
+            Utilizing NFTs representing school data, you can pioneer
+            applications and platforms that define decentralized public
+            infrastructure.
           </p>
         </div>
       </Column>
       <Column md={4} lg={4} sm={4}>
         <div className="why-nft-card">
-          <span className="heading7">Community</span>
+          <span className="heading7">Collaboration</span>
           <section>
             <img
               src="/landingPage/why-nft/community.png"
@@ -33,22 +35,22 @@ const WhyNFT2 = () => {
             />
           </section>
           <p className="heading2 width-90">
-            NFT2 brings together like-minded individuals, from blockchain
-            enthusiasts to education advocates, fostering collaboration, sharing
-            ideas, and driving innovation.
+            NFT 2.0 fosters a space for developers, blockchain enthusiasts, and
+            dePin advocates. Collaborate, share ideas, and push the boundaries
+            of what's possible.
           </p>
         </div>
       </Column>
       <Column md={4} lg={4} sm={4}>
         <div className="why-nft-card">
-          <span className="heading7">Global impact</span>
+          <span className="heading7">Broad Impact</span>
           <section>
             <img src="/landingPage/why-nft/global.png" alt="NFT empowerment" />
           </section>
           <p className="heading2 width-90">
-            Every NFT2 participant is part of a global movement that transcends
-            borders, connecting schools and paving the way for equitable digital
-            access for all.
+            Engage in a movement that transcends geographical boundaries. With
+            NFT 2.0, ensure every student, everywhere, benefits from the digital
+            age.
           </p>
         </div>
       </Column>

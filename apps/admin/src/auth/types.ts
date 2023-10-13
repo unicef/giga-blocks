@@ -55,4 +55,5 @@ export interface AuthState {
 
 export interface ExtendedAuthState extends AuthState {
   method: string;
+  setAuthState?:any;
 }

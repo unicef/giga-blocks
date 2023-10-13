@@ -2,11 +2,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BullModule } from '@nestjs/bull';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
-import { MailProcessor } from './processors';
+import { MailProcessor, MintQueueProcessor, QueueProcessor } from './processors';
 import { MailService } from './mailer.service';
-
-import { MAIL_QUEUE } from './constants';
+import { MAIL_QUEUE, MINT_QUEUE, ONCHAIN_DATA_QUEUE } from './constants';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { QueueService } from './queue.service';
+
 @Module({
   imports: [
     ConfigModule,
@@ -34,8 +35,14 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
     BullModule.registerQueue({
       name: MAIL_QUEUE,
     }),
+    BullModule.registerQueue({
+      name: MINT_QUEUE,
+    }),
+    BullModule.registerQueue({
+      name: ONCHAIN_DATA_QUEUE,
+    }),
   ],
-  providers: [MailProcessor, MailService],
-  exports: [MailService],
+  providers: [MailProcessor, MailService, QueueService, QueueProcessor, MintQueueProcessor],
+  exports: [MailService, QueueService],
 })
 export class MailModule {}

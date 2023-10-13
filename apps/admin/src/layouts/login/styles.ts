@@ -45,7 +45,7 @@ export const StyledContent = styled('div')(({ theme }) => ({
   minHeight: '100vh',
   justifyContent: 'center',
   alignItems: 'center',
-  backgroundColor: '#005b5b',
+  backgroundColor: '#2C2B33',
   padding: theme.spacing(15, 2),
   [theme.breakpoints.up('md')]: {
     flexShrink: 0,

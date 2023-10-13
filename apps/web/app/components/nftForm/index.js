@@ -1,23 +1,23 @@
-import React, { useState, useMemo } from "react";
-import { Form, TextInput, Button, Grid, Column, Dropdown } from "@carbon/react";
-import "./form.scss";
+import React, { useState, useMemo } from 'react';
+import { Form, TextInput, Button, Grid, Column, Dropdown } from '@carbon/react';
+import './form.scss';
 // import { useSchoolRegistration } from "../../app/api/school-register";
-import { useRegistration } from "../../hooks/useRegistration";
-import countryList from "react-select-country-list";
-import { ArrowRight } from '@carbon/icons-react'
+import { useRegistration } from '../../hooks/useRegistration';
+import countryList from 'react-select-country-list';
+import { ArrowRight } from '@carbon/icons-react';
 
 const RegisterForm = () => {
   const registerApi = useRegistration();
   const options = useMemo(() => countryList().getData(), []);
   const [selectedCountry, setSelectedCountry] = useState({
-    value: "",
-    label: "Select Country",
+    value: '',
+    label: 'Select Country',
   });
   const [error, setError] = useState(undefined);
 
   const [formData, setFormData] = useState({
-    fullname: "",
-    email: "",
+    fullname: '',
+    email: '',
   });
   const handleFormDataChange = (e) => {
     e.preventDefault();
@@ -32,7 +32,7 @@ const RegisterForm = () => {
   const handleSelectChange = (value) => {
     setFormData((prev) => ({
       ...prev,
-      ["country"]: value.selectedItem.label,
+      ['country']: value.selectedItem.label,
     }));
     setSelectedCountry(value.selectedItem);
   };
@@ -43,10 +43,10 @@ const RegisterForm = () => {
       const { isSuccess } = await registerApi.mutateAsync(formData);
       if (isSuccess) {
         setFormData({
-          fullname: "",
-          email: "",
+          fullname: '',
+          email: '',
         });
-        setSelectedCountry({ value: "", label: "Select country" });
+        setSelectedCountry({ value: '', label: 'Select country' });
       }
     } catch (error) {
       setError(error && error?.response?.data?.message);
@@ -57,7 +57,9 @@ const RegisterForm = () => {
     <>
       <Grid className="form-gap" fullWidth>
         <Column className="heading-col" md={4} lg={7} sm={4}>
-          <h1 className="heading">NFT 2.0 <br /> is Coming Soon!</h1>
+          <h1 className="heading10">
+            Join the Developer Community Waiting List!
+          </h1>
         </Column>
         <Column className="form" md={4} lg={8} sm={4}>
           <Form onSubmit={handleSubmit}>
@@ -65,7 +67,7 @@ const RegisterForm = () => {
               id="fullname"
               name="fullname"
               onChange={handleFormDataChange}
-              style={{ marginBottom: "25px", height: "48px" }}
+              style={{ marginBottom: '25px', height: '48px' }}
               invalidText="Invalid error message."
               labelText="Name"
               value={formData.fullname}
@@ -75,7 +77,7 @@ const RegisterForm = () => {
               id="email"
               name="email"
               onChange={handleFormDataChange}
-              style={{ marginBottom: "25px", height: "48px" }}
+              style={{ marginBottom: '25px', height: '48px' }}
               invalidText="Invalid error message."
               labelText="Email"
               value={formData.email}
@@ -84,12 +86,12 @@ const RegisterForm = () => {
             <Dropdown
               ariaLabel="Select Country"
               id="carbon-dropdown-example"
-              style={{ marginBottom: "25px", height: "48px" }}
+              style={{ marginBottom: '25px', height: '48px' }}
               items={options}
               label="Select Country"
               titleText="Select Country"
               onChange={(value) => handleSelectChange(value)}
-              initialSelectedItem={{ value: "", label: "Select country" }}
+              initialSelectedItem={{ value: '', label: 'Select country' }}
               selectedItem={selectedCountry}
             />
             <br />

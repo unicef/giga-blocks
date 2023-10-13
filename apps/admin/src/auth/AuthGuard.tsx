@@ -8,7 +8,8 @@ interface AuthGuardProps {
 }
 
 export default function AuthGuard({ children }: AuthGuardProps) {
-  const { isAuthenticated, isInitialized } = useAuthContext();
+  //@ts-ignore
+  const { isAuthenticated, isInitialized, user } = useAuthContext();
   const { pathname, push } = useRouter();
 
   useEffect(() => {
@@ -16,18 +17,18 @@ export default function AuthGuard({ children }: AuthGuardProps) {
       return; // Wait for initialization to complete
     }
 
-    // if (!isAuthenticated && pathname !== '/auth/login') {
-    //   push('/auth/login');
-    // }
+    if (!isAuthenticated && pathname !== '/auth/login') {
+      push('/auth/login');
+    }
   }, [isAuthenticated, pathname, push, isInitialized]);
 
   if (!isInitialized) {
     return <LoadingScreen />;
   }
 
-  // if (!isAuthenticated) {
-  //   return <Login />;
-  // }
+  if (!isAuthenticated) {
+    return;
+  }
 
   return <>{children}</>;
 }

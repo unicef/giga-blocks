@@ -55,10 +55,10 @@ export default function TableHeadCustom({
         {showCheckBox && onSelectAllRows && (
           <TableCell padding="checkbox">
             <Checkbox
-              indeterminate={numSelected > 0 && numSelected < rowCount}
+              // indeterminate={numSelected > 0 && numSelected < rowCount}
               checked={rowCount > 0 && numSelected === rowCount}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                onSelectAllRows(event.target.checked)
+              onChange={(e: any) =>
+                onSelectAllRows(e)
               }
             />
           </TableCell>
@@ -68,10 +68,11 @@ export default function TableHeadCustom({
           <TableCell
             key={index}
             align={headCell.align || 'left'}
-            sortDirection={orderBy === headCell.id ? order : false}
+            // sortDirection={orderBy === headCell.id ? order : false}
             sx={{ width: headCell.width, minWidth: headCell.minWidth, whiteSpace: 'nowrap' }}
           >
-            {onSort ? (
+            <p>{headCell.label}</p>
+            {/* {onSort ? (
               <TableSortLabel
                 hideSortIcon
                 active={orderBy === headCell.id}
@@ -89,7 +90,7 @@ export default function TableHeadCustom({
               </TableSortLabel>
             ) : (
               headCell.label
-            )}
+            )} */}
           </TableCell>
         ))}
       </TableRow>

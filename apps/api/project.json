@@ -4,8 +4,11 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "nx:noop",
-      "dependsOn": ["scripts"]
+      "executor": "nx:run-commands",
+      "dependsOn": ["scripts"],
+      "options": {
+        "commands": ["cp .env dist/apps/api/.env"]
+      }
     },
     "scripts": {
       "executor": "nx:run-commands",
@@ -13,7 +16,7 @@
       "options": {
         "commands": [
           {
-            "command": "cp .env dist/apps/api/.env && npx ts-node apps/api/modifyPackage.ts"
+            "command": "cp .env dist/apps/api/.env && npx ts-node apps/api/modifyPackage.ts && sed -i 's#apps/api/prisma/school.csv#prisma/school.csv#g' dist/apps/api/prisma/csvReader.ts"
           }
         ]
       }
@@ -49,14 +52,14 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "api:mainBuild"
+        "buildTarget": "api:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "api:mainBuild:development"
+          "buildTarget": "api:build:development"
         },
         "production": {
-          "buildTarget": "api:mainBuild:production"
+          "buildTarget": "api:build:production"
         }
       }
     },

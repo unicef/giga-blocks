@@ -13,6 +13,7 @@ export type UseTableProps = {
   defaultSelected?: string[];
   defaultRowsPerPage?: number;
   defaultCurrentPage?: number;
+
 };
 
 export default function useTable(props?: UseTableProps): ReturnType {
@@ -24,9 +25,9 @@ export default function useTable(props?: UseTableProps): ReturnType {
 
   const [page, setPage] = useState(props?.defaultCurrentPage || 0);
 
-  const [rowsPerPage, setRowsPerPage] = useState(props?.defaultRowsPerPage || 10);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // const { selected, setSelected } = useCatalogContext();
+  const [ selected, setSelected ] = useState<any>();
 
   const onSort = useCallback(
     (id: string) => {
@@ -39,34 +40,31 @@ export default function useTable(props?: UseTableProps): ReturnType {
     [order, orderBy]
   );
 
-  // const onSelectRow = useCallback(
-  //   (id: string) => {
-  //     const idsOnly = selected?.map((d) => d.id);
-  //     const selectedIndex = idsOnly.indexOf(id.id);
-  //     const { type } = id;
-  //     if (selectedIndex === -1 && type === 'Solar') {
-  //       const selectedNum = selected?.filter((d) => d.type === 'Solar');
-  //       if (selectedNum?.length >= 2) return;
-  //     }
+  const onSelectRow = useCallback(
+    (id: string) => {
+      // const idsOnly = selected?.map((d) => d.id);
+      // const selectedIndex = idsOnly.indexOf(id.id);
+      // const { type } = id;
 
-  //     let newSelected: string[] = [];
+      // let newSelected: string[] = [];
 
-  //     if (selectedIndex === -1) {
-  //       newSelected = newSelected.concat(selected, id);
-  //     } else if (selectedIndex === 0) {
-  //       newSelected = newSelected.concat(selected.slice(1));
-  //     } else if (selectedIndex === selected.length - 1) {
-  //       newSelected = newSelected.concat(selected.slice(0, -1));
-  //     } else if (selectedIndex > 0) {
-  //       newSelected = newSelected.concat(
-  //         selected.slice(0, selectedIndex),
-  //         selected.slice(selectedIndex + 1)
-  //       );
-  //     }
-  //     setSelected(newSelected);
-  //   },
-  //   [selected, setSelected]
-  // );
+      // if (selectedIndex === -1) {
+      //   newSelected = newSelected.concat(selected, id);
+      // } else if (selectedIndex === 0) {
+      //   newSelected = newSelected.concat(selected.slice(1));
+      // } else if (selectedIndex === selected.length - 1) {
+      //   newSelected = newSelected.concat(selected.slice(0, -1));
+      // } else if (selectedIndex > 0) {
+      //   newSelected = newSelected.concat(
+      //     selected.slice(0, selectedIndex),
+      //     selected.slice(selectedIndex + 1)
+      //   );
+      // }
+      // console.log(selected)
+      // setSelected([id]);
+    },
+    [selected, setSelected]
+  );
 
   // const onSelectAllRows = useCallback(
   //   (checked: boolean, newSelecteds: string[]) => {
@@ -107,7 +105,8 @@ export default function useTable(props?: UseTableProps): ReturnType {
     orderBy,
     rowsPerPage,
     //
-    // onSelectRow,
+    onSelectRow,
+    selected,
     // onSelectAllRows,
     //
     onSort,

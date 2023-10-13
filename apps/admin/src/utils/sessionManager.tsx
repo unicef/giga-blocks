@@ -1,5 +1,5 @@
 import jwtDecode from 'jwt-decode';
-
+import { metaMask } from '@hooks/web3/metamask';
 interface User {
   // Define your user properties here
 }
@@ -28,8 +28,19 @@ export const getAccessToken = (): string | null =>
 export const saveAccessToken = (accessToken: string): void =>
   storage ? storage.setItem('accessToken', accessToken) : undefined;
 
+export const getRefreshToken = (): string | null =>
+  storage ? storage.getItem('refreshToken') : null;
+
+export const saveRefreshToken = (refreshToken: string): void =>
+  storage ? storage.setItem('refreshToken', refreshToken) : undefined;
+
 export const deleteAccessToken = (): void =>
   storage ? storage.removeItem('accessToken') : undefined;
+
+export const saveConnectors = (connector: string): void =>
+  storage ? storage.setItem('auth', connector) : undefined;
+
+export const deleteConnectors = () => (storage ? storage.removeItem('auth') : undefined);
 
 export const clearStorage = (): void => {
   if (storage) {

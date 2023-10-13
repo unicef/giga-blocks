@@ -27,40 +27,38 @@ const navConfig = [
         title: 'Dashboard',
         path: PATH_DASHBOARD.root,
         icon: ICONS.dashboard,
-      }
-    ],
-  },
-  {
-    items: [
-      {
-        title: 'ADMINS',
-        path: PATH_USER.root,
-        children: [
-          {
-            title: 'User Info',
-            path: PATH_USER.list,
-          },
-        ],
-        icon: ICONS.user
       },
     ],
   },
   {
     items: [
       {
-        title: 'SCHOOL',
-        path: PATH_SCHOOL.root,
+        title: 'School',
+        path: PATH_SCHOOL.verified,
         children: [
           {
-            title: 'Verified School',
+            title: 'Minted School',
             path: PATH_SCHOOL.verified,
           },
           {
-            title: 'Contributed School',
+            title: 'Unminted School',
             path: PATH_SCHOOL.contributed,
-          }
+          },
+          {
+            title: 'Minting In Progress',
+            path: PATH_SCHOOL.minting,
+          },
         ],
-        icon: ICONS.user
+        icon: ICONS.user,
+      },
+    ],
+  },
+  {
+    items: [
+      {
+        title: 'Users',
+        path: PATH_USER.list,
+        icon: ICONS.user,
       },
     ],
   },

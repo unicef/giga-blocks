@@ -1,0 +1,24 @@
+schoolName,longitudeStr,latitudeStr,schoolType,country ,connectivity,coverage_availabitlity,electricity_availability
+A Block,-0.2778529,51.5096496,private,United Kingdom of Great Britain & Northern Ireland,TRUE,100,TRUE
+Ae Kamalii Preschool,-159.3664675,21.9710206,public,United States of America,FALSE,20,FALSE
+Alte Halle,8.8152907,52.2032435,private,Germany,FALSE,30,FALSE
+B QUARTER B ANGLICAN J.H.S,-2.544943,6.898343,public,Ghana,TRUE,100,TRUE
+Ecole Libre de Soignies Carrières,4.0781857,50.5705998,private,Belgium,FALSE,0,FALSE
+ELEFUNT kursy językowe,19.2035912,50.0408225,public,Poland,TRUE,50,FALSE
+Neue Halle,8.8154205,52.2018513,private,Germany,FALSE,10,FALSE
+Noordland - vrije basisschool,4.3093871,51.3617087,public,Belgium,FALSE,5,TRUE
+s Gravendreef College,4.399035,52.0666877,private,Netherlands,TRUE,70,FALSE
+Say it Szkoła Języków Obcych,19.4044651,53.2542091,public,Poland,FALSE,30,FALSE
+t Scheulti,6.2948635,52.3357343,private,Netherlands,FALSE,25,FALSE
+t Atrium,5.3942258,52.168946,public,Netherlands,FALSE,10,FALSE
+t Baeckelandje,4.3677991,51.1717941,private,Belgium,TRUE,100,FALSE
+t Beeckland (Praktijkgebouw),6.3099941,52.0983718,public,Netherlands,TRUE,100,TRUE
+t Bergske,5.313299,51.0199324,private,Belgium,FALSE,20,FALSE
+t Blokhuus,5.4629996,52.1727102,private,Netherlands,FALSE,15,FALSE
+t Bontenest,5.0171383,52.1376329,public,Netherlands,TRUE,20,FALSE
+t Bossche Hart,4.5431126,51.5603236,private,Netherlands,FALSE,0,FALSE
+t Breugelkind,4.1811032,50.8686079,public,Belgium,FALSE,9,FALSE
+t Carillon,4.7426432,52.0141857,private,Netherlands,FALSE,30,TRUE
+t Clockhuys,6.6060704,53.1730075,public,Netherlands,TRUE,50,TRUE
+t Egeltje,5.1126072,51.2044807,private,Belgium,FALSE,5,TRUE
+t Geerke,5.5906943,51.878743,public,Netherlands,FALSE,5,TRUE

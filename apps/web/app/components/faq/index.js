@@ -1,12 +1,12 @@
-import { Accordion, AccordionItem, Column, Grid } from "@carbon/react";
-import React from "react";
+import { Accordion, AccordionItem, Column, Grid } from '@carbon/react';
+import React from 'react';
 
 const faq = () => {
   return (
     <>
       <Grid className="form-gap" id="faq" fullWidth>
         <Column md={4} lg={8} sm={4}>
-          <h1 className="heading4">Frequently Asked Questions</h1>
+          <h1 className="heading11">Developer FAQs</h1>
         </Column>
         <Column className="form" md={4} lg={7} sm={4}>
           <Accordion>

@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
     "incremental": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@contracts": ["libs/contracts/index.ts"],
+      "@shared-ui": ["libs/shared-ui/index.ts"]
+    }
   }
 }

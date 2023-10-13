@@ -1,8 +1,8 @@
-import { forwardRef } from 'react';
+import { forwardRef } from "react";
 // next
-import NextLink from 'next/link';
+import NextLink from "next/link";
 // @mui
-import { Link, BoxProps, Typography } from '@mui/material';
+import { Link, BoxProps, Typography } from "@mui/material";
 
 // ----------------------------------------------------------------------
 
@@ -23,17 +23,17 @@ const Logo = forwardRef<HTMLDivElement, LogoProps>(
         //   sx={{ maxHeight: 80, objectFit: 'contain', cursor: 'pointer', ...sx }}
         // />
         <Typography
-          variant="h3"
-          sx={{ maxHeight: 80, objectFit: 'contain', cursor: 'pointer', ...sx, color: '#3D75A6' }}
+          variant="h5"
+          sx={{ maxHeight: 80, objectFit: "contain", cursor: "pointer", ...sx, color: "black" }}
         >
-        GIGA
+          nft2.0
         </Typography>
       ) : (
         <Typography
           variant="h3"
-          sx={{ maxHeight: 100, objectFit: 'contain', cursor: 'pointer', color: '#3D75A6', ...sx }}
+          sx={{ maxHeight: 100, objectFit: "contain", cursor: "pointer", color: "black", ...sx }}
         >
-          GIGA SCHOOL
+          nft2.0
         </Typography>
         // <Box
         //   component="img"
@@ -47,7 +47,7 @@ const Logo = forwardRef<HTMLDivElement, LogoProps>(
     }
 
     return (
-      <Link component={NextLink} href="/" sx={{ display: 'contents' }}>
+      <Link component={NextLink} href="/" sx={{ display: "contents" }}>
         {logo}
       </Link>
     );

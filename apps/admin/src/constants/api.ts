@@ -1,13 +1,18 @@
-const BASE_URL = "http://localhost:3333/api/v1";
+const BASE_URL = process.env.NEXT_PUBLIC_D3_BACKEND;
+const GRAPH_URL = process.env.NEXT_PUBLIC_GRAPH_URL;
 
 
 export  default {
   BASE_URL,
+  GRAPH_URL,
   NEWSLETTER: {
     REGISTER: "/newsletters",
   },
   SCHOOLS: {
     GET: "/schools",
+    MINT:"/schools/mintSchool",
+    MINTBULK: "/schools/mintBulk",
+    SCHOOLCOUNT: "/schools/schoolCount"
   },
   OTP: {
     REGISTER: "/auth/send-otp",
@@ -15,4 +20,16 @@ export  default {
   SIGNUP: {
     REGISTER: "/auth/register",
   },
+  GETNONCE: {
+    GET: '/auth/getnonce'
+  },
+  WALLET_LOGIN: {
+    POST: '/auth/walletlogin'
+  },
+  USER :{
+    GET : "/users"
+  },
+  REFRESH :{
+    POST: '/auth/refresh'
+  }
 };

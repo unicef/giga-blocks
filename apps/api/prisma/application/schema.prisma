@@ -101,6 +101,12 @@ enum ContributionType {
   CONTRIBUTE
 }
 
+enum MintStatus {
+  NOTMINTED
+  MINTED
+  ISMINTING
+}
+
 model Auth {
   id           String    @id @default(uuid())
   otp          String    @unique
@@ -116,7 +122,6 @@ model Roles {
   role_id     String        @id @default(uuid())
   permissions Permission[]
   name        Role          @unique
- // User        User[]  
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   deletedAt   DateTime?  
@@ -127,7 +132,7 @@ model Roles {
 }
 
 model Permission {
-  permission_id String        @id @default(uuid())
+  id            String        @id @default(uuid())
   action        Permissions   @unique
   subject       String
   conditions    String
@@ -160,6 +165,7 @@ model User {
   CreatedBy       Points[]          @relation("Creator")
   Auth            Auth[]
   roles           Role[]
+  schools         School[]
   isArchived      Boolean           @default(false)
   vote            Vote[]            @relation("UserId")
   createdBy       Vote[]            @relation("Creator")
@@ -168,47 +174,54 @@ model User {
 }
 
 model School {
-  school_id             String       @id @default(uuid())
-  giga_id_school        String       @unique
-  school_status         SchoolStatus @default(Open)
-  education_level       Level        @default(Unkown)
+  id                    String       @id @default(uuid())
+  status                SchoolStatus @default(Open)
   connectivity_speed_status String? @default("Data Unavailable") 
-  physical_address      String?
+  connectivity          Boolean      @default(false)    
   name                  String
-  teachers              Int?
+  school_type           String 
   class_rooms           Int?
-  computer_lab          Boolean      @default(false)
   electricity_available Boolean      @default(false)
-  school_website        String?
-  email_contact         String?
+  website               String?
+  email                 String?
   phone_number          String?
-  country_name          String
+  country               String
   twiter_handle         String?
+  wikipedia             String?
+  googlemap             String?
   youtube               String?
-  daily_check_app       Boolean      @default(false)
-  computers             Int?
-  lon                   Float
-  lat                   Float
-  location              String?
+  longitude             Float
+  latitude              Float
+  minted                MintStatus   @default(NOTMINTED)
+  coverage_availability String
+  coverage_2G           Boolean      @default(false)
+  coverage_3G           Boolean      @default(false)
+  coverage_4G           Boolean      @default(false)
+  hasSatteliteBuilding  Boolean      @default(false)
+  connection_type       String?
+  connectivity_speed    Int?
+  internet_links        Int?
   createdAt             DateTime     @default(now())
   updatedAt             DateTime     @updatedAt
   deletedAt             DateTime?
   season_Id             String?
-  contributedSeason     Season?      @relation(fields: [season_Id], references: [season_id])
+  createdBy             User?        @relation( fields: [createdById], references: [id])
+  createdById           String?
+  contributedSeason     Season?      @relation(fields: [season_Id], references: [id])
   isArchived            Boolean      @default(false)
 
   @@map("giga_school")
 }
 
 model ContributedData {
-  contributed_UUID  String    @id @default(uuid())
+  id  String    @id @default(uuid())
   contributed_data  Json    
   status            Status    @default(Pending)
   school_Id         String?
   contributedUserId String
   contributedUser   User      @relation(fields: [contributedUserId], references: [id])
   season_ID         String
-  contributedSeason Season    @relation(fields: [season_ID], references: [season_id])
+  contributedSeason Season    @relation(fields: [season_ID], references: [id])
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   deletedAt         DateTime? 
@@ -220,7 +233,7 @@ model ContributedData {
 }
 
 model Season {
-  season_id         String            @id @default(uuid())
+  id         String            @id @default(uuid())
   season_name       String
   season_start_date DateTime?
   season_end_date   DateTime?
@@ -247,14 +260,14 @@ model Points {
   updatedAt        DateTime?        @updatedAt
   deletedAt        DateTime?
   season_id        String?
-  season           Season?          @relation(fields: [season_id], references: [season_id])
+  season           Season?          @relation(fields: [season_id], references: [id])
   createdBy        String?
   creator          User?            @relation("Creator", fields: [createdBy], references: [id])
   user_id          String
   user             User             @relation("UserID", fields: [user_id], references: [id])
   isArchived       Boolean          @default(false)
   contributedDataId String?
-  contributedData  ContributedData? @relation(fields: [contributedDataId], references: [contributed_UUID])
+  contributedData  ContributedData? @relation(fields: [contributedDataId], references: [id])
 
   @@map("giga_points")
 }
@@ -265,7 +278,7 @@ model Vote {
   user_id          String
   user             User              @relation("UserId",fields: [user_id], references: [id])
   contributed_Id   String
-  contributedData  ContributedData   @relation(fields: [contributed_Id], references: [contributed_UUID])
+  contributedData  ContributedData   @relation(fields: [contributed_Id], references: [id])
   createdAt        DateTime?         @default(now())
   updatedAt        DateTime?         @updatedAt
   deletedAt        DateTime?

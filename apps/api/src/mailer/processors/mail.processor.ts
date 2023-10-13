@@ -28,16 +28,18 @@ export class MailProcessor {
   @OnQueueFailed()
   public onError(job: Job<any>, error: any) {
     this._logger.error(`Failed job ${job.id} of type ${job.name}: ${error.message}`, error.stack);
-    try {
-      return this._mailerService.sendMail({
-        to: this._configService.get('EMAIL_ADDRESS'),
-        from: this._configService.get('EMAIL_ADDRESS'),
-        subject: 'Something went wrong with server!!',
-        template: './error',
-        context: {},
-      });
-    } catch {
-      this._logger.error('Failed to send confirmation email to admin');
+    if (job.attemptsMade === job.opts.attempts) {
+      try {
+        return this._mailerService.sendMail({
+          to: this._configService.get('EMAIL_ADDRESS'),
+          from: this._configService.get('EMAIL_ADDRESS'),
+          subject: 'Something went wrong with server!!',
+          template: './error',
+          context: {},
+        });
+      } catch {
+        this._logger.error('Failed to send confirmation email to admin');
+      }
     }
   }
 
@@ -45,50 +47,38 @@ export class MailProcessor {
   public async sendOTP(job: Job<{ email: string; otp: string }>) {
     this._logger.log(`Sending otp email to '${job.data.email}'`);
 
-    try {
-      return this._mailerService.sendMail({
-        to: job.data.email,
-        from: this._configService.get('EMAIL_ADDRESS'),
-        subject: 'Sign In OTP',
-        template: './otp',
-        context: { name: job.data.email, otp: job.data.otp },
-      });
-    } catch {
-      this._logger.error(`Failed to send confirmation email to '${job.data.email}'`);
-    }
+    return this._mailerService.sendMail({
+      to: job.data.email,
+      from: this._configService.get('EMAIL_ADDRESS'),
+      subject: 'Sign In OTP',
+      template: './otp',
+      context: { name: job.data.email, otp: job.data.otp },
+    });
   }
 
   @Process(WELCOME_MSG)
   public async welcome(job: Job<{ email: string; name: string }>) {
     this._logger.log(`Sending welcome email to '${job.data.email}'`);
 
-    try {
-      return this._mailerService.sendMail({
-        to: job.data.email,
-        from: this._configService.get('EMAIL_ADDRESS'),
-        subject: 'Greetings from GIGA NFT2.0',
-        template: './welcome',
-        context: { name: job.data.name },
-      });
-    } catch {
-      this._logger.error(`Failed to send confirmation email to '${job.data.email}'`);
-    }
+    return this._mailerService.sendMail({
+      to: job.data.email,
+      from: this._configService.get('EMAIL_ADDRESS'),
+      subject: 'Greetings from GIGA NFT2.0',
+      template: './welcome',
+      context: { name: job.data.name },
+    });
   }
 
   @Process(NEWSLETTER_WELCOME)
   public async newsletterWelcome(job: Job<{ email: string; name: string; country: string }>) {
     this._logger.log(`Sending newsletter welcome email to '${job.data.email}'`);
 
-    try {
-      return this._mailerService.sendMail({
-        to: job.data.email,
-        from: this._configService.get('EMAIL_ADDRESS'),
-        subject: 'Greetings from GIGA NFT2.0',
-        template: './newsletter-welcome',
-        context: { name: job.data.name, country: job.data.country },
-      });
-    } catch {
-      this._logger.error(`Failed to send welcome email to '${job.data.email}'`);
-    }
+    return this._mailerService.sendMail({
+      to: job.data.email,
+      from: this._configService.get('EMAIL_ADDRESS'),
+      subject: 'Greetings from GIGA NFT2.0',
+      template: './newsletter-welcome',
+      context: { name: job.data.name, country: job.data.country },
+    });
   }
 }

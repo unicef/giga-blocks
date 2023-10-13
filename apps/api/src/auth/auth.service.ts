@@ -7,6 +7,7 @@ import { UsersService } from '../users/users.service';
 
 import { CreateUserDto } from '../users/dto/user.dto';
 import { AuthDto, WalletRegister } from './dto';
+import { bufferToHexString } from 'src/utils/string-format';
 @Injectable()
 export class AuthService {
   private readonly _logger = new Logger('Auth Service');
@@ -70,7 +71,9 @@ export class AuthService {
     };
     return {
       ...user,
-      access_token: this.jwtService.sign(payload),
+      access_token: this.jwtService.sign(payload, {
+        expiresIn: +process.env.JWT_EXPIRATION_TIME,
+      }),
       refresh_token: this.jwtService.sign(payload, {
         expiresIn: +process.env.JWT_EXPIRATION_LONG_TIME,
       }),
@@ -104,24 +107,25 @@ export class AuthService {
   }
 
   async walletLogin(user: any) {
-    this._logger.log(`Sending tokens to ${user?.email}`);
     const payload = {
       id: user.id,
       sub: {
         email: user.email,
         name: user.name,
         walletAddress: user.walletAddress,
-        // role_id: user.role_id,
         roles: user.roles,
       },
     };
-    return {
+    const walletAddress = bufferToHexString(user?.walletAddress);
+    const result = {
       ...user,
+      walletAddress,
       access_token: this.jwtService.sign(payload),
       refresh_token: this.jwtService.sign(payload, {
         expiresIn: +process.env.JWT_EXPIRATION_LONG_TIME,
       }),
     };
+    return result;
   }
 
   async generateNonce() {

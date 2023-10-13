@@ -14,7 +14,7 @@ async function fetchDataAndStore() {
   };
 
   const url = `${process.env.SCHOOL_URI_BY_COUNTRY_ID}`;
-  console.log(url)
+  console.log(url);
 
   try {
     const page = 1;
@@ -39,21 +39,23 @@ async function fetchDataAndStore() {
       for (const item of datas) {
         const check_if = await prisma.school.findUnique({
           where: {
-            giga_id_school: item.giga_id_school,
+            id: item.giga_id_school,
           },
         });
 
         if (!check_if) {
           await prisma.school.create({
             data: {
-              giga_id_school: item.giga_id_school,
+              id: item.giga_id_school,
               name: item.name,
-              location: item.country,
-              lon: item.lon,
-              lat: item.lat,
-              country_name: item.country,
+              country: item.country,
+              longitude: item.lon,
+              latitude: item.lat,
               // coverageAbility: item.coverageAbility ?? 0,
               connectivity_speed_status: item.connectivity_speed_status,
+              connectivity: Boolean(true),
+              school_type: 'public',
+              coverage_availability: 'available',
             },
           });
 
