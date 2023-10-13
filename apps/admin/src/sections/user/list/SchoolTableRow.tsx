@@ -50,9 +50,11 @@ export default function SchoolTableRow({
   } = row;
 
   const { push } = useRouter();
+  const schoolNft = process.env.NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS
 
   const handleEditRow = (row: string) => {
-    push(`/school/${row}`);
+    if (mintedStatus == 'MINTED') push(`/school/minted/${row}`)
+    else push(`/school/${row}`);
   };
 
   const handleCheckboxChange = (event: any, row: any) => {
@@ -125,8 +127,21 @@ export default function SchoolTableRow({
           sx={{ textTransform: 'capitalize' }}
           onClick={() => handleEditRow(id)}
         >
-          {mintedStatus}
+          {mintedStatus =='NOTMINTED'&& 'Pending'}
+          {mintedStatus =='ISMINTING'&& 'In Progress'}
+          {mintedStatus =='MINTED'&& mintedStatus}
+          {/* {mintedStatus} */}
         </TableCell>
+        {mintedStatus =='MINTED' && 
+        <TableCell
+          align="left"
+          sx={{ textTransform: 'capitalize' }}
+        >
+          <a href ={`https://testnet.arbiscan.io/token/${schoolNft}?a=${id}`} target="_blank" rel="noreferrer">
+          {id}
+          </a>
+        </TableCell>
+}
       </TableRow>
     </>
   );

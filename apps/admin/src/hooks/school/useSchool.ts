@@ -40,11 +40,11 @@ export const useSchoolGetById = (id: string | undefined | string[]) => {
   );
 };
 
-export const useSchoolCount = () => {
+export const useSchoolCount = (minted?:string) => {
   return useQuery(
     ['school-count'],
     async () => {
-      const { data } = await api.get(`${routes.SCHOOLS.SCHOOLCOUNT}`);
+      const { data } = await api.get(`${routes.SCHOOLS.SCHOOLCOUNT}?${minted && `minted=${minted}`}`);
       return data;
     },
     {

@@ -88,7 +88,7 @@ const VerifiedSchool = () => {
     setTableData(filteredData);
   }, [data, isLoading]);
 
-    const signTransaction = async () =>{
+    const signTransaction = useCallback(async () =>{
       try {
       const signer = (provider.provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
       const signature = await mintSignature(signer, selectedValues.length);
@@ -97,9 +97,14 @@ const VerifiedSchool = () => {
       catch(err) {
         enqueueSnackbar(err.message, { variant: 'error' })
       }
-    }
+    },[provider,selectedValues])
   
-    const mintSchool = async () => {
+    const mintSchool = useCallback(async () => {
+      if(selectedValues.length === 0){
+        enqueueSnackbar("Please select atleast one school", { variant: 'error' })
+        return Error("Please select atleast one school");
+      }
+      if(!provider.provider) return;
       const signature = await signTransaction();
       if(!signature){
         enqueueSnackbar("Signature is null", { variant: 'error' })
@@ -107,7 +112,7 @@ const VerifiedSchool = () => {
       } 
       setSelectedValues([])
       mutate({data:selectedValues, signatureWithData:signature})
-    }
+    },[signTransaction,selectedValues])
 
     let test;
     const onSelectAllRows = (e:any) => {

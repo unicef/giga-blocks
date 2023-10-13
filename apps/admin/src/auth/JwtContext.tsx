@@ -29,6 +29,7 @@ import { metaMask } from '@components/web3/connectors/metaMask';
 import { useAuthContext } from './useAuthContext';
 import axios from 'axios';
 import  routes  from "../constants/api";
+import { useWeb3React } from '@web3-react/core';
 
 // ----------------------------------------------------------------------
 
@@ -63,6 +64,7 @@ interface AuthProviderProps {
 function AuthProvider({ children }: AuthProviderProps) {
   const [authState, setAuthState] = useState<AuthState>(initialState);
   const { push, replace } = useRouter();
+  const web3 = useWeb3React();
 
   const baseUrl = routes.BASE_URL
 
@@ -153,10 +155,18 @@ function AuthProvider({ children }: AuthProviderProps) {
     [authState.user]
   );
 
-  useEffect(() => {
+  const activateMetaMask = async () => {
     const walletState = localStorage.getItem('auth');
     if (walletState === 'metaMask') metaMask.activate();
-  }, []);
+  }
+
+  useEffect(() => {
+    if(web3.provider) return;
+    const timerInterval = setInterval(activateMetaMask,10);
+    return()=>{
+      clearInterval(timerInterval)
+    }
+  }, [activateMetaMask]);
 
   const contextProps = useMemo(
     () => ({
