@@ -21,6 +21,7 @@ import {
   Table,
   TableBody,
 } from '@mui/material';
+import {CircularProgress} from '@mui/material';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
@@ -94,7 +95,9 @@ const MintedSchools = () => {
   return (
     <DashboardLayout>
       <h2>Minted School</h2>
-      {fetching && <p>Loading...</p>}
+      {fetching && <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <CircularProgress />
+        </div>}
       {!fetching &&
       <Card>
         <Divider />
