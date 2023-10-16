@@ -7,6 +7,7 @@ import { Tile } from '@carbon/react';
 import './walletRegister.scss';
 import Link from 'next/link';
 import Web3Provider from '../components/web3/Provider';
+import { metaMask } from '../components/web3/connectors/metamask';
 
 import { walletRegister, useGetNonce } from '../hooks/walletLogin';
 import { useWeb3React } from '@web3-react/core';
@@ -21,10 +22,15 @@ const WalletRegisterForm = () => {
 
   useEffect(() => {
     if (web3) {
-    
       setWalletAddress(web3.account);
     }
   }, [web3]);
+
+  useEffect(()=>{
+    if(!web3.isActive){
+      metaMask.connectEagerly();
+    }
+  },[web3])
 
   const getSignature = async(nonce)=>{
     try{
