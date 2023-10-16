@@ -1,30 +1,20 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-  Request,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { ContributeDataService } from './contribute.service';
 import { CreateContributeDatumDto, ValidateDto } from './dto/create-contribute-datum.dto';
 import { UpdateContributeDatumDto } from './dto/update-contribute-datum.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
-import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard, RoleGuard)
 @Controller('contribute')
 @ApiTags('Contribute') // Swagger Documentation
 export class ContributeDataController {
   constructor(private readonly contributeDataService: ContributeDataService) {}
 
+  @UseGuards(RoleGuard)
+  @Roles('CONTRIBUTOR')
   @Post()
   create(@Body() createContributeDatumDto: CreateContributeDatumDto) {
     return this.contributeDataService.create(createContributeDatumDto);
@@ -36,6 +26,7 @@ export class ContributeDataController {
     return this.contributeDataService.findAll();
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.contributeDataService.findOne(id);
@@ -52,7 +43,7 @@ export class ContributeDataController {
   }
 
   @Roles('ADMIN')
-  @Post('validate/:id')
+  @Post('/validate/:id')
   validate(@Param('id') id: string, @Body() ValidateDto: ValidateDto) {
     return this.contributeDataService.validate(id, ValidateDto.isValid);
   }

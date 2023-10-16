@@ -55,18 +55,48 @@ export class ContributeDataService {
 
   async validate(id: string, isValid: boolean) {
     try {
-      const contributedData = await this.findOne(id);
+      const contributedData = await this.prisma.contributedData.findUnique({
+        where: { id: id },
+      });
       let transaction;
       if (!contributedData) {
         throw new NotFoundException('Contributed data with such ID not found');
       }
       if (isValid) {
-        transaction = await this.prisma.$transaction([
-          this.prisma.contributedData.update({
-            data: { status: Status.Validated },
-            where: { id: id },
-          }),
-        ]);
+        const validateddata = await this.prisma.validatedData.findUnique({
+          where: { school_Id: contributedData.school_Id },
+        });
+        if (!validateddata && contributedData) {
+          const data = {
+            school_Id: contributedData.school_Id,
+            data: contributedData.contributed_data,
+          };
+          transaction = await this.prisma.$transaction([
+            this.prisma.contributedData.update({
+              data: { status: Status.Validated },
+              where: { id: id },
+            }),
+            this.prisma.validatedData.create({
+              data,
+            }),
+          ]);
+        } else {
+          const existingData = JSON.parse(validateddata.data as any);
+          const newData = JSON.parse(contributedData.contributed_data as any);
+          const mergedData = { ...existingData, ...newData };
+          transaction = await this.prisma.$transaction([
+            this.prisma.contributedData.update({
+              data: { status: Status.Validated },
+              where: { id: id },
+            }),
+            this.prisma.validatedData.update({
+              data: {
+                data: mergedData,
+              },
+              where: { school_Id: contributedData.school_Id },
+            }),
+          ]);
+        }
       } else {
         transaction = await this.prisma.$transaction([
           this.prisma.contributedData.update({

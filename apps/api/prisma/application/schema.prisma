@@ -4,7 +4,6 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../../../../node_modules/@prisma/application"
-  
 }
 
 datasource db {
@@ -54,7 +53,6 @@ enum Permissions {
   DATA_CONTRIBUTE
   DATA_VOTE
 }
-
 
 enum VOTE_TYPE {
   UPVOTE
@@ -119,34 +117,32 @@ model Auth {
 }
 
 model Roles {
-  role_id     String        @id @default(uuid())
+  role_id     String       @id @default(uuid())
   permissions Permission[]
-  name        Role          @unique
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  deletedAt   DateTime?  
-  isArchived  Boolean       @default(false)  
-
+  name        Role         @unique
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  deletedAt   DateTime?
+  isArchived  Boolean      @default(false)
 
   @@map(name: "giga_roles")
 }
 
 model Permission {
-  id            String        @id @default(uuid())
-  action        Permissions   @unique
-  subject       String
-  conditions    String
-  reason        String
-  role_id       String
-  Roles         Roles         @relation(fields: [role_id], references: [role_id]) 
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  deletedAt     DateTime?
-  isArchived    Boolean       @default(false)
+  id         String      @id @default(uuid())
+  action     Permissions @unique
+  subject    String
+  conditions String
+  reason     String
+  role_id    String
+  Roles      Roles       @relation(fields: [role_id], references: [role_id])
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  deletedAt  DateTime?
+  isArchived Boolean     @default(false)
 
   @@map(name: "giga_permissions")
 }
-
 
 model User {
   id              String            @id @default(uuid())
@@ -174,66 +170,69 @@ model User {
 }
 
 model School {
-  id                    String       @id @default(uuid())
-  status                SchoolStatus @default(Open)
-  connectivity_speed_status String? @default("Data Unavailable") 
-  connectivity          Boolean      @default(false)    
-  name                  String
-  school_type           String 
-  class_rooms           Int?
-  electricity_available Boolean      @default(false)
-  website               String?
-  email                 String?
-  phone_number          String?
-  country               String
-  twiter_handle         String?
-  wikipedia             String?
-  googlemap             String?
-  youtube               String?
-  longitude             Float
-  latitude              Float
-  minted                MintStatus   @default(NOTMINTED)
-  coverage_availability String
-  coverage_2G           Boolean      @default(false)
-  coverage_3G           Boolean      @default(false)
-  coverage_4G           Boolean      @default(false)
-  hasSatteliteBuilding  Boolean      @default(false)
-  connection_type       String?
-  connectivity_speed    Int?
-  internet_links        Int?
-  createdAt             DateTime     @default(now())
-  updatedAt             DateTime     @updatedAt
-  deletedAt             DateTime?
-  season_Id             String?
-  createdBy             User?        @relation( fields: [createdById], references: [id])
-  createdById           String?
-  contributedSeason     Season?      @relation(fields: [season_Id], references: [id])
-  isArchived            Boolean      @default(false)
+  id                        String            @id @default(uuid())
+  status                    SchoolStatus      @default(Open)
+  connectivity_speed_status String?           @default("Data Unavailable")
+  connectivity              Boolean           @default(false)
+  name                      String
+  school_type               String
+  class_rooms               Int?
+  electricity_available     Boolean           @default(false)
+  website                   String?
+  email                     String?
+  phone_number              String?
+  country                   String
+  twiter_handle             String?
+  wikipedia                 String?
+  googlemap                 String?
+  youtube                   String?
+  longitude                 Float
+  latitude                  Float
+  minted                    MintStatus        @default(NOTMINTED)
+  coverage_availability     String
+  coverage_2G               Boolean           @default(false)
+  coverage_3G               Boolean           @default(false)
+  coverage_4G               Boolean           @default(false)
+  hasSatteliteBuilding      Boolean           @default(false)
+  connection_type           String?
+  connectivity_speed        Int?
+  internet_links            Int?
+  createdAt                 DateTime          @default(now())
+  updatedAt                 DateTime          @updatedAt
+  deletedAt                 DateTime?
+  season_Id                 String?
+  createdBy                 User?             @relation(fields: [createdById], references: [id])
+  createdById               String?
+  contributedSeason         Season?           @relation(fields: [season_Id], references: [id])
+  isArchived                Boolean           @default(false)
+  validatedData             validatedData[]
+  ContributedData           ContributedData[]
 
   @@map("giga_school")
 }
 
 model ContributedData {
-  id  String    @id @default(uuid())
-  contributed_data  Json    
+  id                String    @id @default(uuid())
+  contributed_data  Json
   status            Status    @default(Pending)
-  school_Id         String?
+  school_Id         String
+  school            School    @relation(fields: [school_Id], references: [id])
   contributedUserId String
   contributedUser   User      @relation(fields: [contributedUserId], references: [id])
-  season_ID         String
-  contributedSeason Season    @relation(fields: [season_ID], references: [id])
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
-  deletedAt         DateTime? 
+  deletedAt         DateTime?
   isArchived        Boolean   @default(false)
-  points            Points[]  
-  vote              Vote[]
+  Season            Season?   @relation(fields: [seasonId], references: [id])
+  seasonId          String?
+  Points            Points[]
+  Vote              Vote[]
 
   @@map("giga_contributed_data")
 }
 
 model Season {
-  id         String            @id @default(uuid())
+  id                String            @id @default(uuid())
   season_name       String
   season_start_date DateTime?
   season_end_date   DateTime?
@@ -250,44 +249,55 @@ model Season {
 }
 
 model Points {
-  id               Int              @id @default(autoincrement())
-  points           Int
-  leaderBoardType  LeaderBoardType
-  contributionType ContributionType
-  isConfirmed      Boolean?
-  isValid          Boolean?
-  createdAt        DateTime?        @default(now())
-  updatedAt        DateTime?        @updatedAt
-  deletedAt        DateTime?
-  season_id        String?
-  season           Season?          @relation(fields: [season_id], references: [id])
-  createdBy        String?
-  creator          User?            @relation("Creator", fields: [createdBy], references: [id])
-  user_id          String
-  user             User             @relation("UserID", fields: [user_id], references: [id])
-  isArchived       Boolean          @default(false)
+  id                Int              @id @default(autoincrement())
+  points            Int
+  leaderBoardType   LeaderBoardType
+  contributionType  ContributionType
+  isConfirmed       Boolean?
+  isValid           Boolean?
+  createdAt         DateTime?        @default(now())
+  updatedAt         DateTime?        @updatedAt
+  deletedAt         DateTime?
+  season_id         String?
+  season            Season?          @relation(fields: [season_id], references: [id])
+  createdBy         String?
+  creator           User?            @relation("Creator", fields: [createdBy], references: [id])
+  user_id           String
+  user              User             @relation("UserID", fields: [user_id], references: [id])
+  isArchived        Boolean          @default(false)
   contributedDataId String?
-  contributedData  ContributedData? @relation(fields: [contributedDataId], references: [id])
+  contributedData   ContributedData? @relation(fields: [contributedDataId], references: [id])
 
   @@map("giga_points")
 }
 
 model Vote {
-  vote_id          String            @id @default(uuid())
-  vote_type        VOTE_TYPE
-  user_id          String
-  user             User              @relation("UserId",fields: [user_id], references: [id])
-  contributed_Id   String
-  contributedData  ContributedData   @relation(fields: [contributed_Id], references: [id])
-  createdAt        DateTime?         @default(now())
-  updatedAt        DateTime?         @updatedAt
-  deletedAt        DateTime?
-  isArchived       Boolean           @default(false)
-  createdBy        String
-  creator          User            @relation("Creator", fields: [createdBy], references: [id])
+  vote_id         String          @id @default(uuid())
+  vote_type       VOTE_TYPE
+  user_id         String
+  user            User            @relation("UserId", fields: [user_id], references: [id])
+  contributed_Id  String
+  contributedData ContributedData @relation(fields: [contributed_Id], references: [id])
+  createdAt       DateTime?       @default(now())
+  updatedAt       DateTime?       @updatedAt
+  deletedAt       DateTime?
+  isArchived      Boolean         @default(false)
+  createdBy       String
+  creator         User            @relation("Creator", fields: [createdBy], references: [id])
 
   @@unique([user_id, contributed_Id], name: "giga_vote_contributed_Id")
   @@map("giga_vote")
 }
 
+model validatedData {
+  id         String    @id @default(uuid())
+  school_Id  String    @unique
+  school     School    @relation(fields: [school_Id], references: [id])
+  data       Json
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+  deletedAt  DateTime?
+  isArchived Boolean   @default(false)
 
+  @@map("giga_validated_data")
+}
