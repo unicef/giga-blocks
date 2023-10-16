@@ -9,14 +9,22 @@ import Link from 'next/link';
 import { useOtp } from '../hooks/useOtp';
 import { useSignUp } from '../hooks/useSignUp';
 import { useRouter } from 'next/navigation';
-import metamask from '../components/web3/connectors/metamask';
+import {metaMask,hooks} from '../components/web3/connectors/metamask';
 
 const SignUp = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
+  const account = hooks.useAccount();
   const { handleSubmit, control } = useForm();
   const signUp = useSignUp();
   const sendOtp = useOtp();
+
+  useEffect(() => {
+    void metaMask.connectEagerly().catch(() => {
+      console.debug('Failed to connect eagerly to metamask');
+    });
+  }, []);
+
 
   const onSubmit = async (data) => {
     setEmail(data.email);
@@ -30,8 +38,7 @@ const SignUp = () => {
 
   const handlePageChange = async () => {
     try {
-      await metamask.activate();
-      console.log(metamask);
+      await metaMask.activate();
       router.push('/walletLogin');
     } catch (error) {
       console.log(error);

@@ -17,21 +17,35 @@ const WalletRegisterForm = () => {
   const { control, handleSubmit } = useForm();
   const registerMutation = walletRegister();
   const getNonceQuery = useGetNonce();
-  const account = useWeb3React();
+  const web3 = useWeb3React();
 
   useEffect(() => {
-    if (account) {
-      setWalletAddress(account);
+    if (web3) {
+    
+      setWalletAddress(web3.account);
     }
-  }, [account]);
+  }, [web3]);
+
+  const getSignature = async(nonce)=>{
+    try{
+      const signer = web3.provider.getSigner();
+      let signature = await signer.signMessage(nonce);
+      signature = `${nonce}:${signature}`
+      return signature;
+    }
+    catch(err){
+      console.log({err})
+    }
+  }
 
   const onSubmit = async (data) => {
     try {
-      await getNonceQuery.mutateAsync();
+      const {nonce} = await getNonceQuery.mutateAsync();
+     const sign = await getSignature(nonce);
       const payload = {
         name: data.name,
         walletAddress: walletAddress,
-        nonce: getNonceQuery.data.nonce,
+        signature:sign
       };
       await registerMutation.mutateAsync(payload);
       console.log('Wallet registered successfully!');
@@ -80,6 +94,7 @@ const WalletRegisterForm = () => {
                     style={{ marginBottom: '25px', height: '48px' }}
                     labelText="Wallet Address"
                     disabled
+                    value={walletAddress}
                   />
                 )}
               />
