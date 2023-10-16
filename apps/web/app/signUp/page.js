@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { useOtp } from '../hooks/useOtp';
 import { useSignUp } from '../hooks/useSignUp';
 import { useRouter } from 'next/navigation';
+import metamask from '../components/web3/connectors/metamask';
 
 const SignUp = () => {
   const router = useRouter();
@@ -27,8 +28,14 @@ const SignUp = () => {
     }
   };
 
-  const handlePageChange = () => {
-    router.push('/walletLogin');
+  const handlePageChange = async () => {
+    try {
+      await metamask.activate();
+      console.log(metamask);
+      router.push('/walletLogin');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

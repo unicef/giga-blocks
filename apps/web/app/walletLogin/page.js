@@ -1,24 +1,36 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../components/navbar';
 import { Controller, useForm } from 'react-hook-form';
 import { Button, Checkbox, Column, Form, Grid, TextInput } from '@carbon/react';
 import { Tile } from '@carbon/react';
 import './walletRegister.scss';
 import Link from 'next/link';
-import { walletRegister, useGetNonce } from '../hooks/walletLogin';
+import Web3Provider from '../components/web3/Provider';
 
-const WalletRegister = () => {
+import { walletRegister, useGetNonce } from '../hooks/walletLogin';
+import { useWeb3React } from '@web3-react/core';
+
+const WalletRegisterForm = () => {
+  const [name, setName] = useState('');
+  const [walletAddress, setWalletAddress] = useState('');
   const { control, handleSubmit } = useForm();
   const registerMutation = walletRegister();
   const getNonceQuery = useGetNonce();
+  const account = useWeb3React();
+
+  useEffect(() => {
+    if (account) {
+      setWalletAddress(account);
+    }
+  }, [account]);
 
   const onSubmit = async (data) => {
     try {
       await getNonceQuery.mutateAsync();
       const payload = {
         name: data.name,
-        walletAddress: data.walletAddress,
+        walletAddress: walletAddress,
         nonce: getNonceQuery.data.nonce,
       };
       await registerMutation.mutateAsync(payload);
@@ -27,6 +39,7 @@ const WalletRegister = () => {
       console.error('Error registering wallet:', error);
     }
   };
+
   return (
     <>
       <Navbar />
@@ -42,14 +55,14 @@ const WalletRegister = () => {
                 render={({ field }) => (
                   <TextInput
                     {...field}
-                    id="name"
+                    // id="name"
                     style={{ marginBottom: '25px', height: '48px' }}
                     // invalid={!!errors.fullname}
                     labelText="Full Name"
                     placeholder="Enter your fullname here"
                     onChange={(e) => {
                       field.onChange(e);
-                      setEmail(e.target.value);
+                      setName(e.target.value);
                     }}
                   />
                 )}
@@ -63,7 +76,7 @@ const WalletRegister = () => {
                 render={({ field }) => (
                   <TextInput
                     {...field}
-                    id="walletAddress"
+                    // id="walletAddress"
                     style={{ marginBottom: '25px', height: '48px' }}
                     labelText="Wallet Address"
                     disabled
@@ -86,6 +99,14 @@ const WalletRegister = () => {
         </Column>
       </Grid>
     </>
+  );
+};
+
+const WalletRegister = () => {
+  return (
+    <Web3Provider>
+      <WalletRegisterForm />
+    </Web3Provider>
   );
 };
 

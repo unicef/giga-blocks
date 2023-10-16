@@ -25,6 +25,7 @@ export const walletRegister = () => {
   });
   return walletRegisterMutation;
 };
+
 export const walletLogin = () => {
   const walletLoginMutation = useMutation(async (payload) => {
     const register = await api.post(WALLETLOGIN.WALLETLOGIN, payload);
