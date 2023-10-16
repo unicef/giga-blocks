@@ -12,9 +12,9 @@ const api = axios.create({
 });
 
 export const useGetNonce = () => {
-  return useQuery(async () => {
-    const nonce = await api.get(NONCE.GETNONCE);
-    return nonce;
+  return useMutation(['nonce'], async () => {
+    const response = await api.get(NONCE.GETNONCE);
+    return response.data;
   });
 };
 

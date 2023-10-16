@@ -1,30 +1,32 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Navbar from '../components/navbar';
-import { useForm, Controller } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { Button, Checkbox, Column, Form, Grid, TextInput } from '@carbon/react';
 import { Tile } from '@carbon/react';
 import './walletRegister.scss';
 import Link from 'next/link';
-import { useOtp } from '../hooks/useOtp';
-import { useSignUp } from '../hooks/useSignUp';
+import { walletRegister, useGetNonce } from '../hooks/walletLogin';
 
-const SignUp = () => {
-  const [email, setEmail] = useState('');
-  const { handleSubmit, control } = useForm();
-  const signUp = useSignUp();
-  const sendOtp = useOtp();
+const WalletRegister = () => {
+  const { control, handleSubmit } = useForm();
+  const registerMutation = walletRegister();
+  const getNonceQuery = useGetNonce();
 
   const onSubmit = async (data) => {
-    setEmail(data.email);
-    await signUp.mutateAsync(data);
-    if (signUp.isSuccess) {
-      await sendOtp.mutateAsync({ email });
-    } else {
-      console.log('User registration failed');
+    try {
+      await getNonceQuery.mutateAsync();
+      const payload = {
+        name: data.name,
+        walletAddress: data.walletAddress,
+        nonce: getNonceQuery.data.nonce,
+      };
+      await registerMutation.mutateAsync(payload);
+      console.log('Wallet registered successfully!');
+    } catch (error) {
+      console.error('Error registering wallet:', error);
     }
   };
-
   return (
     <>
       <Navbar />
@@ -87,4 +89,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default WalletRegister;

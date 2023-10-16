@@ -22,7 +22,7 @@ module.exports = {
     GETNONCE: '/auth/getnonce',
   },
   WALLETREGISTER: {
-    WALLETREGISTER: '/auth/walletregister',
+    WALLETREGISTER: '/auth/walletRegister',
   },
   WALLETLOGIN: {
     WALLETLOGIN: '/auth/walletlogin',
