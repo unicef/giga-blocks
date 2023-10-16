@@ -63,40 +63,7 @@ export class ContributeDataService {
         throw new NotFoundException('Contributed data with such ID not found');
       }
       if (isValid) {
-        const validateddata = await this.prisma.validatedData.findUnique({
-          where: { school_Id: contributedData.school_Id },
-        });
-        if (!validateddata && contributedData) {
-          const data = {
-            school_Id: contributedData.school_Id,
-            data: contributedData.contributed_data,
-          };
-          transaction = await this.prisma.$transaction([
-            this.prisma.contributedData.update({
-              data: { status: Status.Validated },
-              where: { id: id },
-            }),
-            this.prisma.validatedData.create({
-              data,
-            }),
-          ]);
-        } else {
-          const existingData = JSON.parse(validateddata.data as any);
-          const newData = JSON.parse(contributedData.contributed_data as any);
-          const mergedData = { ...existingData, ...newData };
-          transaction = await this.prisma.$transaction([
-            this.prisma.contributedData.update({
-              data: { status: Status.Validated },
-              where: { id: id },
-            }),
-            this.prisma.validatedData.update({
-              data: {
-                data: mergedData,
-              },
-              where: { school_Id: contributedData.school_Id },
-            }),
-          ]);
-        }
+        transaction = await this.updateContribution(id, contributedData);
       } else {
         transaction = await this.prisma.$transaction([
           this.prisma.contributedData.update({
@@ -109,6 +76,73 @@ export class ContributeDataService {
     } catch (error) {
       this._logger.error(error);
       throw new InternalServerErrorException();
+    }
+  }
+
+  private async updateContribution(id: string, contributedData: any) {
+    let transaction;
+    const validateddata = await this.prisma.validatedData.findUnique({
+      where: {
+        school_Id: contributedData.school_Id,
+      },
+    });
+    if (!validateddata) {
+      const data = {
+        school_Id: contributedData.school_Id,
+        data: contributedData.contributed_data,
+      };
+      transaction = await this.prisma.$transaction([
+        this.prisma.contributedData.update({
+          data: { status: Status.Validated },
+          where: { id: id },
+        }),
+        this.prisma.validatedData.create({
+          data,
+        }),
+      ]);
+    } else {
+      const existingData = JSON.parse(validateddata.data as any);
+      const newData = JSON.parse(contributedData.contributed_data as any);
+      const mergedData = { ...existingData, ...newData };
+      transaction = await this.prisma.$transaction([
+        this.prisma.contributedData.update({
+          data: { status: Status.Validated },
+          where: { id: id },
+        }),
+        this.prisma.validatedData.update({
+          data: {
+            data: mergedData,
+          },
+          where: { school_Id: contributedData.school_Id },
+        }),
+      ]);
+    }
+    return transaction;
+  }
+
+  async updateSchoolData(id: string) {
+    try {
+      const validatedData = await this.prisma.validatedData.findUnique({
+        where: {
+          school_Id: id,
+        },
+      });
+      const keyValue = Object.entries(validatedData.data);
+      const dataToUpdate = Object.fromEntries(keyValue);
+      const transaction = await this.prisma.$transaction([
+        this.prisma.school.update({
+          where: { id: id },
+          data: {
+            ...dataToUpdate,
+          },
+        }),
+        this.prisma.validatedData.delete({
+          where: { school_Id: id },
+        }),
+      ]);
+      return transaction;
+    } catch (err) {
+      console.log(err);
     }
   }
 }

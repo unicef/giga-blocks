@@ -47,4 +47,10 @@ export class ContributeDataController {
   validate(@Param('id') id: string, @Body() ValidateDto: ValidateDto) {
     return this.contributeDataService.validate(id, ValidateDto.isValid);
   }
+
+  @Public()
+  @Patch('/validate/:id')
+  getValidationStatus(@Param('id') id: string) {
+    return this.contributeDataService.updateSchoolData(id);
+  }
 }
