@@ -1,5 +1,5 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { Prisma } from '@prisma/application';
+import { Prisma, MintStatus } from '@prisma/application';
 import { UpdateSchoolDto } from './dto/update-schools.dto';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { ListSchoolDto } from './dto/list-schools.dto';
@@ -9,6 +9,7 @@ import { getBatchandAddressfromSignature } from 'src/utils/web3/wallet';
 import { Role } from '@prisma/application';
 import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
 import { hexStringToBuffer } from '../utils/string-format';
+import { mintNFT } from 'src/utils/ethers/transactionFunctions';
 
 @Injectable()
 export class SchoolService {
@@ -98,8 +99,45 @@ export class SchoolService {
     }
   }
 
-  update(id: number, updateSchoolDto: UpdateSchoolDto) {
-    return `This action updates a #${id} school`;
+  async update(id: string) {
+    const school = await this.prisma.school.findUnique({ where: { id: id } });
+    if (school.minted === MintStatus.NOTMINTED) {
+      return await this.updateSchoolData(id);
+    }
+    if (school.minted === MintStatus.MINTED) {
+      // const onChainData = await mintNFT();
+      return await this.updateSchoolData(id);
+    }
+  }
+
+  async updateSchoolData(id: string) {
+    try {
+      const validatedData = await this.prisma.validatedData.findUnique({
+        where: {
+          school_Id: id,
+        },
+      });
+      const keyValue = Object.entries(validatedData.data);
+      const dataToUpdate = Object.fromEntries(keyValue);
+      const transaction = await this.prisma.$transaction([
+        this.prisma.school.update({
+          where: { id: id },
+          data: {
+            ...dataToUpdate,
+          },
+        }),
+        // need to delete the validatedData for now just archived
+        this.prisma.validatedData.update({
+          where: { school_Id: id },
+          data: {
+            isArchived: true,
+          },
+        }),
+      ]);
+      return transaction;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async removeAll() {

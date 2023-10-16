@@ -34,6 +34,13 @@ export class SchoolController {
 
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @Patch('/update/:id')
+  update(@Param('id') id: string) {
+    return this.schoolService.update(id);
+  }
+
+  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('mintBulk')
   mintBatchSchool(@Body() MintData: MintQueueDto) {
     return this.schoolService.checkAdminandMintQueue(MintData);
@@ -72,15 +79,5 @@ export class SchoolController {
   @Get('byCountry/:country')
   findByCountry(@Param('country') country: string) {
     return this.schoolService.byCountry(`${country}`);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSchoolDto: UpdateSchoolDto) {
-    return this.schoolService.update(+id, updateSchoolDto);
-  }
-
-  @Delete()
-  removeAll() {
-    return this.schoolService.removeAll();
   }
 }

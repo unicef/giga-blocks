@@ -119,30 +119,4 @@ export class ContributeDataService {
     }
     return transaction;
   }
-
-  async updateSchoolData(id: string) {
-    try {
-      const validatedData = await this.prisma.validatedData.findUnique({
-        where: {
-          school_Id: id,
-        },
-      });
-      const keyValue = Object.entries(validatedData.data);
-      const dataToUpdate = Object.fromEntries(keyValue);
-      const transaction = await this.prisma.$transaction([
-        this.prisma.school.update({
-          where: { id: id },
-          data: {
-            ...dataToUpdate,
-          },
-        }),
-        this.prisma.validatedData.delete({
-          where: { school_Id: id },
-        }),
-      ]);
-      return transaction;
-    } catch (err) {
-      console.log(err);
-    }
-  }
 }
