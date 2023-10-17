@@ -14,22 +14,22 @@ export default function AuthGuard({ children }) {
       return;
     }
 
-    // if (!isAuthenticated && pathname !== '/auth/login') {
-    //   push('/auth/login');
-    // }
+    if (!isAuthenticated && pathname !== '/signIn') {
+      push('/signIn');
+    }
   }, [isAuthenticated, pathname, push, isInitialized]);
 
-  if (!isInitialized) {
-    // return <LoadingScreen />;
-    return "Loading...."
-  }
+  // if (!isInitialized) {
+  //   // return <LoadingScreen />;
+  //   return "Loading...."
+  // }
 
   
 
-  if (!isAuthenticated) {
-    push("/signIn")
-    return null;
-  }
+  // if (!isAuthenticated) {
+  //   push("/signIn")
+  //   return null;
+  // }
 
   return <>{children}</>;
 }

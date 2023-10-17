@@ -33,14 +33,12 @@ const SignUp = () => {
     .then(() => {
       console.log(data.email)
       sendOtp.mutateAsync({ email: data.email })
-
-      if(sendOtp.isSuccess){
+      .then(()=>{
         setOpenModal(true)
         setEmail(data.email)
-      }
-      else{
-        console.log(sendOtp)
-      }
+      }).catch((err)=>{
+        console.log(err)
+      })
     })
     .catch ((err) => {
       console.log(err)
