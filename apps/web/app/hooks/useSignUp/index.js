@@ -1,4 +1,4 @@
-import { BASE_URL, SIGNUP } from "../../constants/api";
+import { BASE_URL, SIGNUP, LOGIN } from "../../constants/api";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -13,3 +13,11 @@ export const useSignUp = () => {
   });
   return signUpMutation;
 };
+
+export const useLogin = () => {
+  const loginMutation = useMutation(async (payload) => {
+    const login = await api.post(LOGIN.LOGIN, payload);
+    return login;
+  });
+  return loginMutation;
+}

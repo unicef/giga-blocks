@@ -27,4 +27,7 @@ module.exports = {
   WALLETLOGIN: {
     WALLETLOGIN: '/auth/walletlogin',
   },
+  LOGIN: {
+    LOGIN: "/auth/login",
+  },
 };

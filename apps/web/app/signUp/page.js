@@ -10,12 +10,14 @@ import { useOtp } from '../hooks/useOtp';
 import { useSignUp } from '../hooks/useSignUp';
 import { useRouter } from 'next/navigation';
 import {metaMask,hooks} from '../components/web3/connectors/metamask';
+import CarbonModal from '../components/modal/index'
 
 const SignUp = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const account = hooks.useAccount();
   const { handleSubmit, control } = useForm();
+  const [openModal, setOpenModal] = useState(false)
   const signUp = useSignUp();
   const sendOtp = useOtp();
 
@@ -27,14 +29,27 @@ const SignUp = () => {
 
 
   const onSubmit = async (data) => {
-    setEmail(data.email);
-    await signUp.mutateAsync(data);
-    if (signUp.isSuccess) {
-      await sendOtp.mutateAsync({ email });
-    } else {
-      console.log('User registration failed');
-    }
+    signUp.mutateAsync(data)
+    .then(() => {
+      console.log(data.email)
+      sendOtp.mutateAsync({ email: data.email })
+
+      if(sendOtp.isSuccess){
+        setOpenModal(true)
+        setEmail(data.email)
+      }
+      else{
+        console.log(sendOtp)
+      }
+    })
+    .catch ((err) => {
+      console.log(err)
+    })
   };
+
+  const onClose = () => {
+    setOpenModal(false)
+  }
 
   const handlePageChange = async () => {
     try {
@@ -44,9 +59,14 @@ const SignUp = () => {
       console.log(error);
     }
   };
-
+  
   return (
     <>
+    <CarbonModal 
+      open = {openModal}
+      onClose={onClose}
+      email = {email}
+    />
       <Navbar />
       <Grid className="landing-page preview1Background signUp-grid" fullWidth>
         <Column className="form" md={4} lg={8} sm={4}>
@@ -67,7 +87,6 @@ const SignUp = () => {
                     placeholder="Enter your fullname here"
                     onChange={(e) => {
                       field.onChange(e);
-                      setEmail(e.target.value);
                     }}
                   />
                 )}
