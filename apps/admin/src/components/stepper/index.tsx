@@ -15,6 +15,7 @@ const steps = ['Preview File', 'Validate File'];
 
 export default function HorizontalLinearStepper({propsTableData}:{propsTableData: any}) {
   const [activeStep, setActiveStep] = React.useState(0);
+  const [hideButton, setHideButton] = React.useState(false)
   const { setShowStepper, setSelectedSheetName, setIsFileValidated, setDisableDropZone, setTableDatas } =
     useUploadContext();
   const [hasErrors, setHasErrors] = React.useState(false);
@@ -59,6 +60,7 @@ export default function HorizontalLinearStepper({propsTableData}:{propsTableData
 
   const handleFinish = () => {
     setShowStepper(false);
+    setHideButton(true)
     setIsFileValidated(true);
     setDisableDropZone(true);
     setSelectedSheetName('');
@@ -126,12 +128,14 @@ export default function HorizontalLinearStepper({propsTableData}:{propsTableData
               </Box>
             ) : (
               <Box style={{ display: 'flex', alignItems: 'center' }}>
-                <Alert severity="success" sx={{ mx: 2 }}>
+                {!hideButton && <Alert severity="success" sx={{ mx: 2 }}>
                   File Looks all good!
-                </Alert>
-                <Button variant="contained" onClick={handleFinish}>
+                </Alert>}
+                {!hideButton ? <Button variant="contained" onClick={handleFinish}>
                   Finish
-                </Button>
+                </Button> : <Alert severity="success" sx={{ mx: 2 }}>
+                  Scroll up to upload
+                </Alert>}
               </Box>
             )}
           </Box>

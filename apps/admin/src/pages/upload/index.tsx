@@ -1,5 +1,5 @@
 import UploadContextProvider, { useUploadContext } from "@contexts/uploadContext";
-import { Card, Container, Grid } from "@mui/material";
+import { Button, Card, Container, Grid } from "@mui/material";
 import CsvFormatFile from "@sections/file/csvFormatFile";
 import HorizontalNonLinearStepper from '@components/stepper';
 import { useCallback, useState } from "react";
@@ -64,11 +64,11 @@ const Upload = () => {
         [
           selectedSheetName,
           setFileName,
-          setShowStepper,
+          // setShowStepper,
           setSheetNames,
           setTableDatas,
           setAllData,
-          setDuplicates,
+          setDuplicates
         ]
       );
 
@@ -82,11 +82,9 @@ const Upload = () => {
               <CsvFormatFile handleFileData={handleFile} />
             </Card>
           </Grid>
-          {/* <Grid item xs={12} sm={6} md={6}>
-            <Card sx={{ px: 3, py: 1 }}>
-              <XlsFormatFile handleFileData={handleFile} />
-            </Card>
-          </Grid> */}
+          <Grid item xs={12} sm={6} md={6}>
+              <Button variant="contained" style={{background: '#474747'}}><a href="/school.csv" target="_blank" rel="noopener noreferrer" style={{color: "white", textDecoration: "none"}}>Download Sample File</a></Button>
+          </Grid>
           <Grid item xs={12} sm={12} md={12}>
             {showStepper && (
               <Card sx={{ px: 3, py: 3 }}>

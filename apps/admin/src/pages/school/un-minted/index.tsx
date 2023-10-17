@@ -134,8 +134,10 @@ const VerifiedSchool = () => {
         <DashboardLayout>
           <div style={{display: 'flex', justifyContent: 'space-between',marginBottom: '20px'}}>
           <span style={{fontSize: '1.5em', fontWeight: '600'}}>Unminted School</span>
+          <div style={{display: 'flex', gap: '15px'}}>
           <Button variant="contained" style={{background: '#474747'}} onClick={mintSchool}>Mint ({selectedValues.length})</Button>
-          <Button variant="contained" style={{background: '#474747'}} onClick={uploadSchool}>Upload School</Button>
+          <Button variant="contained" style={{background: '#404040'}} onClick={uploadSchool}>Upload School</Button>
+          </div>
           </div>
           <Card>
           <Divider />

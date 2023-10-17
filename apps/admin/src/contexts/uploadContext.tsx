@@ -51,8 +51,10 @@ const UploadContextProvider: React.FC<UploadContextProviderProps> = ({ children 
   const [typeOfFile, setTypeOfFile] = useState<string>('csv');
   const [duplicates, setDuplicates] = useState<string[]>([]);
 
-  const contextValue: UploadContextType = useMemo(
-    () => ({
+
+  console.log(showStepper)
+
+  const contextValue: UploadContextType = {
       sheetNames,
       tableDatas,
       allData,
@@ -74,20 +76,7 @@ const UploadContextProvider: React.FC<UploadContextProviderProps> = ({ children 
       setProductType,
       setFileName,
       setTypeOfFile,
-    }),
-    [
-      sheetNames,
-      tableDatas,
-      allData,
-      selectedSheetName,
-      showStepper,
-      isFileValidated,
-      disableDropZone,
-      productType,
-      fileName,
-      typeOfFile,
-    ]
-  );
+    }
 
   return <UploadContext.Provider value={contextValue}>{children}</UploadContext.Provider>;
 };

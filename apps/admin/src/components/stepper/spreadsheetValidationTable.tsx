@@ -244,10 +244,6 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
                     const value = convertedObject[header][rowIndex];
                     let isInvalid = false;
 
-                    if (value < 0) {
-                      isInvalid = true;
-                    }
-
                     if (header === 'Name') {
                       isInvalid = value.includes(',');
                     }
