@@ -3,10 +3,12 @@ import { useLogin } from "../../hooks/useSignUp";
 import { useForm, Controller } from "react-hook-form";
 import { saveAccessToken, saveCurrentUser } from '../../utils/sessionManager';
 import { useRouter } from "next/navigation";
+import { useAuthContext } from "../../auth/useAuthContext";
 
 const CarbonModal = ({open, onClose, email}) => {
 
   const { handleSubmit, control } = useForm();
+  const{initialize} = useAuthContext()
   const login = useLogin();
   const {push} = useRouter()
 
@@ -20,6 +22,7 @@ const CarbonModal = ({open, onClose, email}) => {
         .then((res) => {
           saveCurrentUser(res.data)
           saveAccessToken(res.data.access_token)
+          initialize()
           push('/dashboard')
         })
         .catch((err) => {

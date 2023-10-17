@@ -59,6 +59,7 @@ import React, {
     addUser: () => {},
     addKey: () => {},
     logout: () => {},
+    initialize: () => {},
   };
   
   const AppAuthContext = createContext({
@@ -69,32 +70,32 @@ import React, {
   function AuthProvider({ children }) {
     const [authState, setAuthState] = useState(initialState);
     const { push, replace } = useRouter();
-    useEffect(() => {
-      const initialize = async () => {
-        try {
-          const localToken = getAccessToken();
-          if (localToken && isValidToken(localToken)) {
-            const localUser = getCurrentUser();
-            // const appSettings = await getAppSettings();
-            setAuthState((prev) => ({
-              ...prev,
-              isAuthenticated: true,
-              isInitialized: true,
-              token: localToken,
-              user: localUser,
-            }));
-          } else {
-            setAuthState((prev) => ({
-              ...prev,
-              isAuthenticated: false,
-              isInitialized: true,
-            }));
-          }
-        } catch (err) {
-          console.error(err);
+
+    const initialize = useCallback(async () => {
+      try {
+        const localToken = getAccessToken();
+        if (localToken && isValidToken(localToken)) {
+          const localUser = getCurrentUser();
+          // const appSettings = await getAppSettings();
+          setAuthState((prev) => ({
+            ...prev,
+            isAuthenticated: true,
+            isInitialized: true,
+            token: localToken,
+            user: localUser,
+          }));
+        } else {
+          setAuthState((prev) => ({
+            ...prev,
+            isAuthenticated: false,
+            isInitialized: true,
+          }));
         }
-      };
-  
+      } catch (err) {
+        console.error(err);
+      }
+    }, []);
+    useEffect(() => {
       initialize();
     }, [push]);
   
@@ -147,6 +148,7 @@ import React, {
         logout,
         roles,
         method: 'jwt',
+        initialize,
       }),
       [authState, roles, logout]
     );

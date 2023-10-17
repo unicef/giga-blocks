@@ -9,7 +9,7 @@ export default function AuthGuard({ children }) {
   const { isAuthenticated, isInitialized } = useAuthContext();
   const { pathname, push } = useRouter();
 
-  useEffect(() => {
+  useEffect(() => { 
     if (!isInitialized) {
       return;
     }
