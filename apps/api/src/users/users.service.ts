@@ -3,6 +3,7 @@ import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { PrismaAppService } from '../prisma/prisma.service';
 import { bufferToHexString, hexStringToBuffer } from '../utils/string-format';
 import { WalletRegister } from 'src/auth/dto';
+import { Role } from '@prisma/application';
 
 @Injectable()
 export class UsersService {
@@ -12,10 +13,15 @@ export class UsersService {
   async register(createUserDto: CreateUserDto) {
     this._logger.log(`Registering new user: ${createUserDto?.email}`);
     const walletAddress = hexStringToBuffer(createUserDto?.walletAddress);
+    let roles = [];
+    if (!createUserDto.roles) {
+      roles = [Role.CONTRIBUTOR];
+    }
     return this.prisma.user.create({
       data: {
         ...createUserDto,
         walletAddress,
+        roles,
       },
     });
   }
@@ -26,6 +32,7 @@ export class UsersService {
       name: createUserDto?.name,
       walletAddress,
       email: '',
+      roles: [Role.CONTRIBUTOR],
     };
     return this.prisma.user.create({
       data: userData,
