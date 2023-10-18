@@ -214,11 +214,10 @@ model ContributedData {
   id                String    @id @default(uuid())
   contributed_data  Json
   status            Status    @default(Pending)
-  school_Id         String?
+  school_Id         String
+  school            School    @relation(fields: [school_Id], references: [id])
   contributedUserId String
   contributedUser   User      @relation(fields: [contributedUserId], references: [id])
-  season_ID         String
-  contributedSeason Season    @relation(fields: [season_ID], references: [id])
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   deletedAt         DateTime?
@@ -295,4 +294,17 @@ model Vote {
 
   @@unique([user_id, contributed_Id], name: "giga_vote_contributed_Id")
   @@map("giga_vote")
+}
+
+model validatedData {
+  id         String    @id @default(uuid())
+  school_Id  String    @unique
+  school     School    @relation(fields: [school_Id], references: [id])
+  data       Json
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+  deletedAt  DateTime?
+  isArchived Boolean   @default(false)
+
+  @@map("giga_validated_data")
 }
