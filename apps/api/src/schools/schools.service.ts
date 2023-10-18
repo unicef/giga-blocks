@@ -76,7 +76,7 @@ export class SchoolService {
     res: fastify.FastifyReply<any>,
     user: any,
   ): Promise<any> {
-    //Check request is multipart
+    let uploadBatch: any;
 
     //@ts-ignore
     if (!req.isMultipart()) {
@@ -86,18 +86,27 @@ export class SchoolService {
       return;
     }
 
-    //@ts-ignore
-    const mp = await req.multipart(
-      (field: string, fileData: any, filename: string, encoding: string, mimetype: string) => {
-        handler(field, fileData, filename, encoding, mimetype, user);
-      },
-      onEnd,
-    );
-
-    // for key value pairs in request
-    // mp.on('field', function(key: any, value: any) {
-    //   console.log('form-data', key, value);
-    // });
+    await new Promise(async (resolve, reject) => {
+      //@ts-ignore
+      await req.multipart(
+        async (
+          field: string,
+          fileData: any,
+          filename: string,
+          encoding: string,
+          mimetype: string,
+        ) => {
+          try {
+            const result = await handler(field, fileData, filename, encoding, mimetype, user);
+            resolve(result);
+            uploadBatch = result;
+          } catch (err) {
+            reject(err);
+          }
+        },
+        onEnd,
+      );
+    });
 
     // Uploading finished
     async function onEnd(err: any) {
@@ -105,11 +114,15 @@ export class SchoolService {
         res.send(new HttpException('Internal server error', 500));
         return;
       }
-      res.code(200).send(new AppResponseDto(200, undefined, 'Data uploaded successfully'));
+      // Ensure that the uploadBatch is available before proceeding
+      while (uploadBatch === undefined) {
+        // You might want to add a timeout to prevent infinite waiting
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+      const data = uploadBatch.id;
+      res.code(200).send(new AppResponseDto(200, data, 'Data uploaded successfully'));
     }
   }
-  //Save files in directory
-
   async findOne(id: string) {
     return await this.prisma.school.findUnique({
       where: {

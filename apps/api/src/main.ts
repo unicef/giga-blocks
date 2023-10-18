@@ -6,7 +6,7 @@ import { AppModule } from './app.module';
 import { CustomExceptionFilter } from './utils/exceptions/exception.filter';
 import { setupSwagger } from './swagger';
 import { AuthGuard } from './auth/guards/auth.global.guard';
-import fmp = require('fastify-multipart');
+import fmp from 'fastify-multipart';
 
 async function bootstrap() {
   const logger = new Logger('bootstrap');
@@ -14,10 +14,9 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter({ logger: false }),
   );
-  app.register(fmp);
   const reflector = app.get(Reflector);
   const port = process.env.PORT || 3000;
-  await app.register(helmet);
+  await app.register(helmet, fmp);
   app.enableCors();
   app.useGlobalPipes(
     new ValidationPipe({
@@ -31,7 +30,7 @@ async function bootstrap() {
     defaultVersion: '1',
   });
   // Custom Exception Filter
-  // app.useGlobalFilters(new CustomExceptionFilter());
+  app.useGlobalFilters(new CustomExceptionFilter());
   // set Global Guard
   app.useGlobalGuards(new AuthGuard(reflector));
   // Api Docs
