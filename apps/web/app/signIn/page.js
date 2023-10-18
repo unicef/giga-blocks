@@ -11,10 +11,12 @@ import CarbonModal from '../components/modal/index';
 
 import Web3Provider from '../components/web3/Provider';
 import { metaMask } from '../components/web3/connectors/metamask';
-import { walletRegister, useGetNonce, walletLogin } from '../hooks/walletLogin';
+import { useGetNonce, walletLogin } from '../hooks/walletLogin';
 import { useWeb3React } from '@web3-react/core';
+import { useRouter } from 'next/navigation';
 
-const SignUp = () => {
+const SignIn = () => {
+  const route = useRouter();
   const { handleSubmit, control } = useForm();
   const [walletAddress, setWalletAddress] = useState('');
   const loginMutation = walletLogin();
@@ -68,6 +70,7 @@ const SignUp = () => {
       };
       await loginMutation.mutateAsync(payload);
       console.log('wallet logged in successfully');
+      route.push('/dashboard');
     } catch (error) {}
   };
 
@@ -132,7 +135,7 @@ const SignUp = () => {
 const WalletLogin = () => {
   return (
     <Web3Provider>
-      <SignUp />
+      <SignIn />
     </Web3Provider>
   );
 };
