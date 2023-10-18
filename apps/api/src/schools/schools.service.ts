@@ -1,5 +1,10 @@
-import { Injectable, Logger, UnauthorizedException, HttpException, 
-  BadRequestException,  } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  UnauthorizedException,
+  HttpException,
+  BadRequestException,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/application';
 import { UpdateSchoolDto } from './dto/update-schools.dto';
 import { PrismaAppService } from 'src/prisma/prisma.service';
@@ -14,7 +19,7 @@ import { hexStringToBuffer } from '../utils/string-format';
 
 import * as fs from 'fs';
 import stream = require('stream');
-import fastify = require('fastify')
+import fastify = require('fastify');
 import * as util from 'util';
 import { AppResponseDto } from './dto/app-response.dto';
 
@@ -81,19 +86,28 @@ export class SchoolService {
     return this.queueService.sendSingleMintNFT(address, MintData);
   }
 
-  async uploadFile(req: fastify.FastifyRequest, res: fastify.FastifyReply<any>): Promise<any> {
+  async uploadFile(
+    req: fastify.FastifyRequest,
+    res: fastify.FastifyReply<any>,
+    user: any,
+  ): Promise<any> {
     //Check request is multipart
 
     //@ts-ignore
     if (!req.isMultipart()) {
-      res.send(new BadRequestException(
-        new AppResponseDto(400, undefined, 'Request is not multipart'),
-      ))
-      return 
+      res.send(
+        new BadRequestException(new AppResponseDto(400, undefined, 'Request is not multipart')),
+      );
+      return;
     }
 
     //@ts-ignore
-    const mp = await req.multipart(handler, onEnd);
+    const mp = await req.multipart(
+      (field: string, fileData: any, filename: string, encoding: string, mimetype: string) => {
+        handler(field, fileData, filename, encoding, mimetype, user);
+      },
+      onEnd,
+    );
 
     // for key value pairs in request
     // mp.on('field', function(key: any, value: any) {
@@ -103,14 +117,13 @@ export class SchoolService {
     // Uploading finished
     async function onEnd(err: any) {
       if (err) {
-        res.send(new HttpException('Internal server error', 500))
-        return 
+        res.send(new HttpException('Internal server error', 500));
+        return;
       }
-      res.code(200).send(new AppResponseDto(200, undefined, 'Data uploaded successfully'))
+      res.code(200).send(new AppResponseDto(200, undefined, 'Data uploaded successfully'));
     }
   }
   //Save files in directory
-
 
   async findOne(id: string) {
     return await this.prisma.school.findUnique({
