@@ -95,12 +95,10 @@ export class SchoolService {
     //@ts-ignore
     const mp = await req.multipart(handler, onEnd);
 
-
     // for key value pairs in request
     // mp.on('field', function(key: any, value: any) {
     //   console.log('form-data', key, value);
     // });
-
 
     // Uploading finished
     async function onEnd(err: any) {

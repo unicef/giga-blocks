@@ -58,7 +58,8 @@ export class SchoolController {
     return this.schoolService.countSchools(query);
   }
 
-  @Public()
+  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('/uploadFile')
   async uploadFile(@Req() req: fastify.FastifyRequest, @Res() res: fastify.FastifyReply<any>): Promise<any> {
     return await this.schoolService.uploadFile(req,res)

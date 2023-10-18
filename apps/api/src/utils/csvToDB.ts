@@ -13,8 +13,8 @@ interface SchoolData {
   }
 
 export async function handler(field: string, fileData: any, filename: string, encoding: string, mimetype: string): Promise<void> {
-    try {
-        const prisma = new PrismaClient();
+  try {
+      const prisma = new PrismaClient();
       const outputPath = `apps/api/uploads/${filename}`;
       const writeStream = fs.createWriteStream(outputPath);
       fileData.pipe(writeStream);
@@ -22,15 +22,19 @@ export async function handler(field: string, fileData: any, filename: string, en
     // const file = Buffer.from(fileData, 'utf8')
 
     writeStream.on('finish', async () => {
-      console.log(`File saved to ${outputPath}`);
-
       // Now you can process the saved file as needed
       const fileContent = fs.readFileSync(outputPath, 'utf8');
       // Process the fileContent here
 
       const rows = fileContent.trim().split('\n').slice(1);
     // const user = await this.prisma.user.findFirst(); 
-
+    prisma.cSVUpload.create({
+      data: {
+      uploadedBy: "S",
+      fileValue: rows,
+    }
+    })
+    .then(async (res) => {
     for (const row of rows) {
       const [
         schoolName,
@@ -62,22 +66,28 @@ export async function handler(field: string, fileData: any, filename: string, en
         electricity_availabilty: Boolean(electricity_availabilty),
       };
 
-      await prisma.school.create({
-        data: {
-          name: schoolData.schoolName,
-          school_type: schoolData.schoolType,
-          longitude: schoolData.longitude,
-          latitude: schoolData.latitude,
-          connectivity: schoolData.connectivity as boolean,
-          electricity_available: schoolData.electricity_availabilty as boolean,
-          coverage_availability: schoolData.coverage_availabitlity,
-          country: country,
-          // createdById: user.id
-        },
-      });
-
-      console.log(`School "${schoolName}" saved to the database.`);
-    }
+      
+        await prisma.school.create({
+          data: {
+            name: schoolData.schoolName,
+            school_type: schoolData.schoolType,
+            longitude: schoolData.longitude,
+            latitude: schoolData.latitude,
+            connectivity: schoolData.connectivity as boolean,
+            electricity_available: schoolData.electricity_availabilty as boolean,
+            coverage_availability: schoolData.coverage_availabitlity,
+            country: country,
+            uploadId: res.id
+            // createdById: user.id
+          },
+        });
+  
+        console.log(`School "${schoolName}" saved to the database.`);
+      }
+      })
+      .catch((error) => {
+        console.log(error)
+      })
 
       // You can also delete the temporary file if needed
       fs.unlinkSync(outputPath);
