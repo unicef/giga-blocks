@@ -157,6 +157,8 @@ export default function CsvFormatFile({
           <div>
             (Note: File size should not exceed 1MB) <br />
             Also, please ensure that the file name precisely matches the sheet name.
+            <a href="/school.csv" target="_blank" rel="noopener noreferrer" style={{color: "purple"}}> Download Sample File</a>
+          
           </div>
         }
       />

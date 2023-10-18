@@ -67,23 +67,18 @@ const Upload = () => {
           // setShowStepper,
           setSheetNames,
           setTableDatas,
-          setAllData,
           setDuplicates
         ]
       );
 
     return ( 
         <DashboardLayout>
-        <UploadContextProvider>
         <Container maxWidth={'xl'}>
         <Grid container spacing={6}>
           <Grid item xs={12} sm={6} md={6}>
             <Card sx={{ px: 3, py: 1 }}>
               <CsvFormatFile handleFileData={handleFile} />
             </Card>
-          </Grid>
-          <Grid item xs={12} sm={6} md={6}>
-              <Button variant="contained" style={{background: '#474747'}}><a href="/school.csv" target="_blank" rel="noopener noreferrer" style={{color: "white", textDecoration: "none"}}>Download Sample File</a></Button>
           </Grid>
           <Grid item xs={12} sm={12} md={12}>
             {showStepper && (
@@ -94,7 +89,6 @@ const Upload = () => {
           </Grid>
         </Grid>
       </Container>
-      </UploadContextProvider>
       </DashboardLayout>
      );
 }
