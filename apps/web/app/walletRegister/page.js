@@ -11,7 +11,7 @@ import { metaMask } from '../components/web3/connectors/metamask';
 
 import { walletRegister, useGetNonce } from '../hooks/walletLogin';
 import { useWeb3React } from '@web3-react/core';
-import {saveAccessToken, saveCurrentUser} from '../utils/sessionManager'
+import {saveAccessToken, saveCurrentUser,saveConnectors} from '../utils/sessionManager'
 import {useAuthContext} from '../auth/useAuthContext'
 
 const WalletRegisterForm = () => {
@@ -59,6 +59,7 @@ const WalletRegisterForm = () => {
       registerMutation.mutateAsync(payload).then((res)=>{
         saveCurrentUser(res.data);
         saveAccessToken(res.data.access_token);
+        saveConnectors('metaMask');
         initialize();     
       })
 

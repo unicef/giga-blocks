@@ -14,7 +14,7 @@ import { metaMask } from '../components/web3/connectors/metamask';
 import { useGetNonce, walletLogin } from '../hooks/walletLogin';
 import { useWeb3React } from '@web3-react/core';
 import { useRouter } from 'next/navigation';
-import { saveAccessToken, saveCurrentUser } from '../utils/sessionManager';
+import { saveAccessToken, saveCurrentUser,saveConnectors } from '../utils/sessionManager';
 import { useAuthContext } from '../auth/useAuthContext';
 
 const SignIn = () => {
@@ -74,6 +74,7 @@ const SignIn = () => {
       loginMutation.mutateAsync(payload).then((res)=>{
         saveCurrentUser(res.data)
         saveAccessToken(res.data.access_token)
+        saveConnectors('metaMask')
         console.log('wallet logged in successfully');
         initialize()
         route.push('/dashboard');

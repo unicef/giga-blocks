@@ -43,3 +43,15 @@ export const isValidToken = (accessToken) => {
 
   return decoded.exp > currentTime;
 };
+
+export const saveConnectors = (connector)=>{
+  storage ? storage.setItem('connector', connector) : undefined;
+}
+
+export const removeConnectors = ()=>{
+  storage ? storage.removeItem('connector') : undefined;
+}
+
+export const getConnectors = ()=>{
+  return storage ? storage.getItem('connector') : undefined;
+}

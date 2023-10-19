@@ -10,6 +10,7 @@ import React, {
     useState,
   } from 'react';
   import { useRouter } from 'next/navigation';
+  import { useWeb3React } from '@web3-react/core';
   
   import {
     isValidToken,
@@ -20,7 +21,11 @@ import React, {
     saveKey,
     getCurrentUser,
     clearStorage,
+    getConnectors,
   } from '../utils/sessionManager';
+import { metaMask } from '../components/web3/connectors/metamask';
+
+
   
   // ----------------------------------------------------------------------
 
@@ -70,6 +75,7 @@ import React, {
   function AuthProvider({ children }) {
     const [authState, setAuthState] = useState(initialState);
     const { push, replace } = useRouter();
+    const web3 = useWeb3React();
 
     const initialize = useCallback(async () => {
       try {
@@ -98,6 +104,15 @@ import React, {
     useEffect(() => {
       initialize();
     }, [push]);
+
+    useEffect(()=>{
+    const connectors = getConnectors();
+    if(connectors && connectors === 'metaMask'&& !web3.isActive){
+      metaMask.activate()
+    }
+    },[web3])
+
+
   
     const addToken = (payload) => {
       if (payload) {
