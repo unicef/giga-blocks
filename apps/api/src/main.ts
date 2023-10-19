@@ -1,7 +1,7 @@
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
-import helmet from '@fastify/helmet';
+// import helmet from '@fastify/helmet';
 import { AppModule } from './app.module';
 import { CustomExceptionFilter } from './utils/exceptions/exception.filter';
 import { setupSwagger } from './swagger';
@@ -17,7 +17,7 @@ async function bootstrap() {
   app.register(fmp);
   const reflector = app.get(Reflector);
   const port = process.env.PORT || 3000;
-  await app.register(helmet);
+  // await app.register(helmet);
   app.enableCors();
   app.useGlobalPipes(
     new ValidationPipe({
