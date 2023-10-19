@@ -105,7 +105,6 @@ export default function HorizontalLinearStepper({propsTableData}:{propsTableData
   };
 
   const handleUpload = async () => {
-    console.log(files)
     if (files.length > 0) {
       const formData = new FormData();
 
