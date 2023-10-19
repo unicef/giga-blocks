@@ -54,7 +54,6 @@ const UploadContextProvider: React.FC<UploadContextProviderProps> = ({ children 
   const [duplicates, setDuplicates] = useState<string[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
-  console.log(showStepper)
 
   const contextValue: UploadContextType = useMemo(() => (
     {
