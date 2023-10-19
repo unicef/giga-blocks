@@ -14,7 +14,7 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter({ logger: false }),
   );
-  app.register(fmp);
+  await app.register(fmp);
   const reflector = app.get(Reflector);
   const port = process.env.PORT || 3000;
   await app.register(helmet);
