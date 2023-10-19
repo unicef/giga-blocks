@@ -143,7 +143,7 @@ const VerifiedSchool = () => {
     }
 
     const uploadSchool = () => {
-      push('/school/import')
+      push('/upload')
     }
 
     return ( 
@@ -152,7 +152,7 @@ const VerifiedSchool = () => {
           <span style={{fontSize: '1.5em', fontWeight: '600'}}>Unminted School</span>
           <div style={{display: 'flex', gap: '15px'}}>
           <Button variant="contained" style={{background: '#474747'}} onClick={mintSchool}>Mint ({selectedValues.length})</Button>
-          <Button variant="contained" style={{background: '#404040'}} onClick={uploadSchool}>Import School</Button>
+          <Button variant="contained" style={{background: '#404040'}} onClick={uploadSchool}>Upload School</Button>
           </div>
           </div>
           {/* Select component */}
