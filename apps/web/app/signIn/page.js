@@ -14,10 +14,13 @@ import { metaMask } from '../components/web3/connectors/metamask';
 import { useGetNonce, walletLogin } from '../hooks/walletLogin';
 import { useWeb3React } from '@web3-react/core';
 import { useRouter } from 'next/navigation';
+import { saveAccessToken, saveCurrentUser } from '../utils/sessionManager';
+import { useAuthContext } from '../auth/useAuthContext';
 
 const SignIn = () => {
   const route = useRouter();
   const { handleSubmit, control } = useForm();
+  const {initialize} = useAuthContext()
   const [walletAddress, setWalletAddress] = useState('');
   const loginMutation = walletLogin();
   const getNonceQuery = useGetNonce();
@@ -68,9 +71,14 @@ const SignIn = () => {
         walletAddress: walletAddress,
         signature: sign,
       };
-      await loginMutation.mutateAsync(payload);
-      console.log('wallet logged in successfully');
-      route.push('/dashboard');
+      loginMutation.mutateAsync(payload).then((res)=>{
+        saveCurrentUser(res.data)
+        saveAccessToken(res.data.access_token)
+        console.log('wallet logged in successfully');
+        initialize()
+        route.push('/dashboard');
+      });
+      
     } catch (error) {}
   };
 

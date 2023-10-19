@@ -13,7 +13,6 @@ const CarbonModal = ({open, onClose, email}) => {
   const {push} = useRouter()
 
     const onAdd = async (data) => {
-        console.log(data)
         const payload = {
             email,
             otp: data.name

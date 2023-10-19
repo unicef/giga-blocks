@@ -11,6 +11,8 @@ import { metaMask } from '../components/web3/connectors/metamask';
 
 import { walletRegister, useGetNonce } from '../hooks/walletLogin';
 import { useWeb3React } from '@web3-react/core';
+import {saveAccessToken, saveCurrentUser} from '../utils/sessionManager'
+import {useAuthContext} from '../auth/useAuthContext'
 
 const WalletRegisterForm = () => {
   const [name, setName] = useState('');
@@ -19,6 +21,7 @@ const WalletRegisterForm = () => {
   const registerMutation = walletRegister();
   const getNonceQuery = useGetNonce();
   const web3 = useWeb3React();
+  const {initialize} = useAuthContext()
 
   useEffect(() => {
     if (web3) {
@@ -53,7 +56,12 @@ const WalletRegisterForm = () => {
         walletAddress: walletAddress,
         signature:sign
       };
-      await registerMutation.mutateAsync(payload);
+      registerMutation.mutateAsync(payload).then((res)=>{
+        saveCurrentUser(res.data);
+        saveAccessToken(res.data.access_token);
+        initialize();     
+      })
+
       console.log('Wallet registered successfully!');
     } catch (error) {
       console.error('Error registering wallet:', error);
