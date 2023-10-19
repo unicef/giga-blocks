@@ -41,6 +41,7 @@ export async function handler(
             data: {
               uploadedBy: userdata.id,
               fileValue: rows,
+              fileName: filename,
             },
           })
           .then(async res => {

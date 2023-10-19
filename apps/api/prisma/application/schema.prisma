@@ -206,6 +206,7 @@ model School {
   contributedSeason         Season?           @relation(fields: [season_Id], references: [id])
   isArchived                Boolean           @default(false)
   uploadId                  String?
+  uploadBatch               CSVUpload?        @relation(fields: [uploadId], references: [id])
   ContributedData           ContributedData[]
   validatedData             validatedData?
 
@@ -253,6 +254,8 @@ model CSVUpload {
   id         String   @id @default(uuid())
   uploadedBy String
   fileValue  Json
+  fileName   String
+  school     School[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
