@@ -92,4 +92,12 @@ export class SchoolController {
   removeAll() {
     return this.schoolService.removeAll();
   }
+
+  @Public()
+  @Get('listUpload')
+  listUploads() {
+    return this.schoolService.listUploads();
+  }
 }
+
+

@@ -23,6 +23,9 @@ import {
   Table,
   TableBody,
 } from '@mui/material';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
@@ -31,6 +34,7 @@ import { mintSignature } from '@components/web3/utils/wallet';
 import { useBulkMintSchools } from '@hooks/school/useSchool';
 import { useWeb3React } from '@web3-react/core';
 import { useSnackbar } from '@components/snackbar';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 const VerifiedSchool = () => {
 
@@ -49,6 +53,12 @@ const VerifiedSchool = () => {
 
       const {dense, page, setPage, order, orderBy, rowsPerPage, onChangePage, onSelectRow, onSort, onChangeDense, onChangeRowsPerPage,
       } = useTable();
+
+      const [age, setAge] = useState('');
+
+      const handleChange = (event: SelectChangeEvent) => {
+        setAge(event.target.value as string);
+      };
 
   const {
     mutate,
@@ -139,7 +149,24 @@ const VerifiedSchool = () => {
           <Button variant="contained" style={{background: '#404040'}} onClick={uploadSchool}>Upload School</Button>
           </div>
           </div>
+          <Box sx={{ width: 150, marginBottom: 2 }}>
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">Imported File</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={age}
+          label="Imported file"
+          onChange={handleChange}
+        >
+          <MenuItem value={10}>Ten</MenuItem>
+          <MenuItem value={20}>Twenty</MenuItem>
+          <MenuItem value={30}>Thirty</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
           <Card>
+         
           <Divider />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>

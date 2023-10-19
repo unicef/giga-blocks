@@ -1,5 +1,6 @@
 import { Injectable, Logger, UnauthorizedException, HttpException, 
-  BadRequestException,  } from '@nestjs/common';
+  BadRequestException,
+  ForbiddenException,  } from '@nestjs/common';
 import { Prisma } from '@prisma/application';
 import { UpdateSchoolDto } from './dto/update-schools.dto';
 import { PrismaAppService } from 'src/prisma/prisma.service';
@@ -33,12 +34,16 @@ export class SchoolService {
   constructor(private prisma: PrismaAppService, private readonly queueService: QueueService) {}
 
   async findAll(query: ListSchoolDto) {
-    const { page, perPage, minted } = query;
+    const { page, perPage, minted, uploadId } = query;
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
     };
     if (minted) {
       where.minted = minted;
+    }
+
+    if (uploadId) {
+      where.uploadId = uploadId
     }
 
     return paginate(
@@ -128,6 +133,15 @@ export class SchoolService {
     });
   }
 
+  async listUploads() {
+    try{
+    return await this.prisma.cSVUpload.findMany()
+    }
+    catch{
+      throw new HttpException('Internal server error', 500)
+    }
+  }
+
   async byCountry(country: string) {
     const firstLetter = country.charAt(0);
     if (firstLetter === firstLetter.toUpperCase()) {
@@ -154,4 +168,6 @@ export class SchoolService {
   async removeAll() {
     return await this.prisma.school.deleteMany();
   }
+
+  
 }
