@@ -11,6 +11,7 @@ type UploadContextType = {
   productType: string;
   fileName: string;
   typeOfFile: string;
+  selectedFiles: any;
   setDuplicates: React.Dispatch<React.SetStateAction<string[]>>;
   setSheetNames: React.Dispatch<React.SetStateAction<string[]>>;
   setTableDatas: React.Dispatch<React.SetStateAction<string[][]>>;
@@ -22,6 +23,7 @@ type UploadContextType = {
   setProductType: React.Dispatch<React.SetStateAction<string>>;
   setFileName: React.Dispatch<React.SetStateAction<string>>;
   setTypeOfFile: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedFiles : any;
 };
 
 const UploadContext = createContext<UploadContextType | undefined>(undefined);
@@ -50,6 +52,7 @@ const UploadContextProvider: React.FC<UploadContextProviderProps> = ({ children 
   const [fileName, setFileName] = useState<string>('');
   const [typeOfFile, setTypeOfFile] = useState<string>('csv');
   const [duplicates, setDuplicates] = useState<string[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   console.log(showStepper)
 
@@ -65,6 +68,7 @@ const UploadContextProvider: React.FC<UploadContextProviderProps> = ({ children 
       productType,
       fileName,
       typeOfFile,
+      selectedFiles,
       setDuplicates,
       setSheetNames,
       setTableDatas,
@@ -76,10 +80,12 @@ const UploadContextProvider: React.FC<UploadContextProviderProps> = ({ children 
       setProductType,
       setFileName,
       setTypeOfFile,
+      setSelectedFiles
     }
   ), [sheetNames,
     tableDatas,
     allData,
+    selectedFiles,
     selectedSheetName,
     showStepper,
     isFileValidated,
@@ -87,7 +93,8 @@ const UploadContextProvider: React.FC<UploadContextProviderProps> = ({ children 
     productType,
     fileName,
     typeOfFile,
-    setShowStepper
+    setShowStepper,
+    setSelectedFiles
   ]) 
 
   return <UploadContext.Provider value={contextValue}>{children}</UploadContext.Provider>;

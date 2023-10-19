@@ -49,7 +49,9 @@ const VerifiedSchool = () => {
 
       const { enqueueSnackbar } = useSnackbar();
 
-      const {push} = useRouter()
+      const {push, query} = useRouter()
+
+      const uploadId = query.uploadId;
 
       const {dense, page, setPage, order, orderBy, rowsPerPage, onChangePage, onSelectRow, onSort, onChangeDense, onChangeRowsPerPage,
       } = useTable();
@@ -73,9 +75,13 @@ const VerifiedSchool = () => {
   // const { filteredUsers } = useAdministrationContext();
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
-  const { data, isLoading } = useSchoolGet(page, rowsPerPage, 'NOTMINTED');
+  const { data, isLoading, refetch } = useSchoolGet(page, rowsPerPage, 'NOTMINTED', uploadId);
 
   // const { error } = useFetchUsers();
+
+  useEffect(() => {
+    refetch()
+  }, [uploadId])
 
   let filteredData: any = [];
   useEffect(() => {
@@ -96,7 +102,7 @@ const VerifiedSchool = () => {
       });
 
     setTableData(filteredData);
-  }, [data, isLoading]);
+  }, [data, isLoading, uploadId]);
 
     const signTransaction = useCallback(async () =>{
       try {
@@ -149,7 +155,8 @@ const VerifiedSchool = () => {
           <Button variant="contained" style={{background: '#404040'}} onClick={uploadSchool}>Upload School</Button>
           </div>
           </div>
-          <Box sx={{ width: 150, marginBottom: 2 }}>
+          {/* Select component */}
+          {/* <Box sx={{ width: 150, marginBottom: 2 }}>
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">Imported File</InputLabel>
         <Select
@@ -164,7 +171,9 @@ const VerifiedSchool = () => {
           <MenuItem value={30}>Thirty</MenuItem>
         </Select>
       </FormControl>
-    </Box>
+    </Box> */}
+          {uploadId && <span style={{color: '#008000', fontSize: '0.85em'}}>Recently imported school, <span onClick={() => push(`/school/un-minted`)} style={{color: '#795CB2', cursor: 'pointer'}}>List all</span></span>}
+
           <Card>
          
           <Divider />

@@ -3,5 +3,5 @@
   "compilerOptions": {
     "baseUrl": "./"
   },
-  "include": ["**/*.ts", "**/*.js"]
+  "include": ["**/*.ts", "**/*.js","**/*.json"]
 }

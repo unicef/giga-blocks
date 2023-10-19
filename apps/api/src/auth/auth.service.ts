@@ -102,7 +102,26 @@ export class AuthService {
     const user = await this.userService.findOneByWalletAddress(createUserDto.walletAddress);
     if (user) throw new Error('User already registered');
     const newuser = await this.userService.walletRegister(createUserDto);
-    if (newuser) return { success: true, msg: 'User created successfully' };
+    if (newuser) {
+      const payload = {
+        id: newuser.id,
+        sub: {
+          email: newuser.email,
+          name: newuser.name,
+          walletAddress: newuser.walletAddress,
+          roles: newuser.roles,
+        },
+      };
+      const result = {
+        ...newuser,
+        walletAddress: createUserDto.walletAddress,
+        access_token: this.jwtService.sign(payload),
+        refresh_token: this.jwtService.sign(payload, {
+          expiresIn: +process.env.JWT_EXPIRATION_LONG_TIME,
+        }),
+      };
+      return { sucess: true, msg: 'User created successfully', result };
+    }
     throw new BadRequestException('Bad Request');
   }
 

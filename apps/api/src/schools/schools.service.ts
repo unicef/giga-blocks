@@ -1,8 +1,11 @@
-import { Injectable, Logger, UnauthorizedException, HttpException, 
+import {
+  Injectable,
+  Logger,
+  UnauthorizedException,
+  HttpException,
   BadRequestException,
-  ForbiddenException,  } from '@nestjs/common';
-import { Prisma } from '@prisma/application';
-import { UpdateSchoolDto } from './dto/update-schools.dto';
+} from '@nestjs/common';
+import { Prisma, MintStatus } from '@prisma/application';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { ListSchoolDto } from './dto/list-schools.dto';
 import { paginate } from 'src/utils/paginate';
@@ -12,23 +15,9 @@ import { Role } from '@prisma/application';
 import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
 import { handler } from 'src/utils/csvToDB';
 import { hexStringToBuffer } from '../utils/string-format';
-
-import * as fs from 'fs';
-import stream = require('stream');
-import fastify = require('fastify')
-import * as util from 'util';
+import fastify = require('fastify');
 import { AppResponseDto } from './dto/app-response.dto';
 
-interface SchoolData {
-  schoolName: string;
-  schoolType: string;
-  country: string;
-  longitude: number;
-  latitude: number;
-  connectivity: boolean;
-  electricity_availabilty: boolean;
-  coverage_availabitlity: string;
-}
 @Injectable()
 export class SchoolService {
   constructor(private prisma: PrismaAppService, private readonly queueService: QueueService) {}
@@ -86,37 +75,58 @@ export class SchoolService {
     return this.queueService.sendSingleMintNFT(address, MintData);
   }
 
-  async uploadFile(req: fastify.FastifyRequest, res: fastify.FastifyReply<any>): Promise<any> {
-    //Check request is multipart
+  async uploadFile(
+    req: fastify.FastifyRequest,
+    res: fastify.FastifyReply<any>,
+    user: any,
+  ): Promise<any> {
+    let uploadBatch: any;
 
     //@ts-ignore
     if (!req.isMultipart()) {
-      res.send(new BadRequestException(
-        new AppResponseDto(400, undefined, 'Request is not multipart'),
-      ))
-      return 
+      res.send(
+        new BadRequestException(new AppResponseDto(400, undefined, 'Request is not multipart')),
+      );
+      return;
     }
 
-    //@ts-ignore
-    const mp = await req.multipart(handler, onEnd);
-
-    // for key value pairs in request
-    // mp.on('field', function(key: any, value: any) {
-    //   console.log('form-data', key, value);
-    // });
+    await new Promise(async (resolve, reject) => {
+      //@ts-ignore
+      await req.multipart(
+        async (
+          field: string,
+          fileData: any,
+          filename: string,
+          encoding: string,
+          mimetype: string,
+        ) => {
+          try {
+            const result = await handler(field, fileData, filename, encoding, mimetype, user);
+            resolve(result);
+            uploadBatch = result;
+          } catch (err) {
+            reject(err);
+          }
+        },
+        onEnd,
+      );
+    });
 
     // Uploading finished
     async function onEnd(err: any) {
       if (err) {
-        res.send(new HttpException('Internal server error', 500))
-        return 
+        res.send(new HttpException('Internal server error', 500));
+        return;
       }
-      res.code(200).send(new AppResponseDto(200, undefined, 'Data uploaded successfully'))
+      // Ensure that the uploadBatch is available before proceeding
+      while (uploadBatch === undefined) {
+        // You might want to add a timeout to prevent infinite waiting
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+      const data = uploadBatch.id;
+      res.code(200).send(new AppResponseDto(200, data, 'Data uploaded successfully'));
     }
   }
-  //Save files in directory
-
-
   async findOne(id: string) {
     return await this.prisma.school.findUnique({
       where: {
@@ -161,8 +171,45 @@ export class SchoolService {
     }
   }
 
-  update(id: number, updateSchoolDto: UpdateSchoolDto) {
-    return `This action updates a #${id} school`;
+  async update(id: string) {
+    const school = await this.prisma.school.findUnique({ where: { id: id } });
+    if (school.minted === MintStatus.NOTMINTED) {
+      return await this.updateSchoolData(id);
+    }
+    if (school.minted === MintStatus.MINTED) {
+      // const onChainData = await mintNFT();
+      return await this.updateSchoolData(id);
+    }
+  }
+
+  async updateSchoolData(id: string) {
+    try {
+      const validatedData = await this.prisma.validatedData.findUnique({
+        where: {
+          school_Id: id,
+        },
+      });
+      const keyValue = Object.entries(validatedData.data);
+      const dataToUpdate = Object.fromEntries(keyValue);
+      const transaction = await this.prisma.$transaction([
+        this.prisma.school.update({
+          where: { id: id },
+          data: {
+            ...dataToUpdate,
+          },
+        }),
+        // need to delete the validatedData for now just archived
+        this.prisma.validatedData.update({
+          where: { school_Id: id },
+          data: {
+            isArchived: true,
+          },
+        }),
+      ]);
+      return transaction;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async removeAll() {

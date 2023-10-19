@@ -32,7 +32,6 @@ export default function CsvFormatFile({
   const [files, setFiles] = useState<(File | string)[]>([]);
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [showErrorMsg, setShowErrorMsg] = useState<string>('');
   const {
     isFileValidated,
@@ -41,6 +40,8 @@ export default function CsvFormatFile({
     setDisableDropZone,
     setTypeOfFile,
     typeOfFile,
+    selectedFiles,
+    setSelectedFiles
   } = useUploadContext();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -66,7 +67,7 @@ export default function CsvFormatFile({
 
   useEffect(() => {
     if (isFileValidated) {
-      const newFiles = selectedFiles.map((file) =>
+      const newFiles = selectedFiles.map((file:any) =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
         })
@@ -77,6 +78,7 @@ export default function CsvFormatFile({
   }, [isFileValidated, selectedFiles, setIsFileValidated]);
 
   const handleUpload = async () => {
+    console.log(files)
     if (files.length > 0) {
       const formData = new FormData();
 

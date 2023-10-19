@@ -6,7 +6,7 @@ import { AppModule } from './app.module';
 import { CustomExceptionFilter } from './utils/exceptions/exception.filter';
 import { setupSwagger } from './swagger';
 import { AuthGuard } from './auth/guards/auth.global.guard';
-import fmp = require('fastify-multipart');
+import fmp from 'fastify-multipart';
 
 async function bootstrap() {
   const logger = new Logger('bootstrap');

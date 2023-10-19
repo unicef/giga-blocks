@@ -9,7 +9,8 @@ import {
   Post,
   UseGuards,
   Req,
-  Res
+  Res,
+  Request,
 } from '@nestjs/common';
 import { SchoolService } from './schools.service';
 import { UpdateSchoolDto } from './dto/update-schools.dto';
@@ -32,6 +33,13 @@ export class SchoolController {
   @Get('onchainDataQueue')
   queue() {
     return this.schoolService.queueOnchainData(1);
+  }
+
+  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Patch('/update/:id')
+  update(@Param('id') id: string) {
+    return this.schoolService.update(id);
   }
 
   @Roles('ADMIN')
@@ -61,8 +69,12 @@ export class SchoolController {
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('/uploadFile')
-  async uploadFile(@Req() req: fastify.FastifyRequest, @Res() res: fastify.FastifyReply<any>): Promise<any> {
-    return await this.schoolService.uploadFile(req,res)
+  async uploadFile(
+    @Req() req: fastify.FastifyRequest,
+    @Res() res: fastify.FastifyReply<any>,
+    @Request() request: any,
+  ): Promise<any> {
+    return await this.schoolService.uploadFile(req, res, request.user);
   }
 
   @Public()
@@ -83,10 +95,10 @@ export class SchoolController {
     return this.schoolService.byCountry(`${country}`);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSchoolDto: UpdateSchoolDto) {
-    return this.schoolService.update(+id, updateSchoolDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateSchoolDto: UpdateSchoolDto) {
+  //   return this.schoolService.update(+id, updateSchoolDto);
+  // }
 
   @Delete()
   removeAll() {

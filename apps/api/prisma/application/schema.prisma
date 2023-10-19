@@ -170,14 +170,14 @@ model User {
 }
 
 model School {
-  id                        String       @id @default(uuid())
-  status                    SchoolStatus @default(Open)
-  connectivity_speed_status String?      @default("Data Unavailable")
-  connectivity              Boolean      @default(false)
+  id                        String            @id @default(uuid())
+  status                    SchoolStatus      @default(Open)
+  connectivity_speed_status String?           @default("Data Unavailable")
+  connectivity              Boolean           @default(false)
   name                      String
   school_type               String
   class_rooms               Int?
-  electricity_available     Boolean      @default(false)
+  electricity_available     Boolean           @default(false)
   website                   String?
   email                     String?
   phone_number              String?
@@ -188,24 +188,27 @@ model School {
   youtube                   String?
   longitude                 Float
   latitude                  Float
-  minted                    MintStatus   @default(NOTMINTED)
+  minted                    MintStatus        @default(NOTMINTED)
   coverage_availability     String
-  coverage_2G               Boolean      @default(false)
-  coverage_3G               Boolean      @default(false)
-  coverage_4G               Boolean      @default(false)
-  hasSatteliteBuilding      Boolean      @default(false)
+  coverage_2G               Boolean           @default(false)
+  coverage_3G               Boolean           @default(false)
+  coverage_4G               Boolean           @default(false)
+  hasSatteliteBuilding      Boolean           @default(false)
   connection_type           String?
   connectivity_speed        Int?
   internet_links            Int?
-  createdAt                 DateTime     @default(now())
-  updatedAt                 DateTime     @updatedAt
+  createdAt                 DateTime          @default(now())
+  updatedAt                 DateTime          @updatedAt
   deletedAt                 DateTime?
   season_Id                 String?
-  createdBy                 User?        @relation(fields: [createdById], references: [id])
+  createdBy                 User?             @relation(fields: [createdById], references: [id])
   createdById               String?
-  contributedSeason         Season?      @relation(fields: [season_Id], references: [id])
-  isArchived                Boolean      @default(false)
+  contributedSeason         Season?           @relation(fields: [season_Id], references: [id])
+  isArchived                Boolean           @default(false)
   uploadId                  String?
+  uploadBatch               CSVUpload?        @relation(fields: [uploadId], references: [id])
+  ContributedData           ContributedData[]
+  validatedData             validatedData?
 
   @@map("giga_school")
 }
@@ -214,17 +217,18 @@ model ContributedData {
   id                String    @id @default(uuid())
   contributed_data  Json
   status            Status    @default(Pending)
-  school_Id         String?
+  school_Id         String
+  school            School    @relation(fields: [school_Id], references: [id])
   contributedUserId String
   contributedUser   User      @relation(fields: [contributedUserId], references: [id])
-  season_ID         String
-  contributedSeason Season    @relation(fields: [season_ID], references: [id])
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   deletedAt         DateTime?
   isArchived        Boolean   @default(false)
   points            Points[]
   vote              Vote[]
+  Season            Season?   @relation(fields: [seasonId], references: [id])
+  seasonId          String?
 
   @@map("giga_contributed_data")
 }
@@ -250,6 +254,8 @@ model CSVUpload {
   id         String   @id @default(uuid())
   uploadedBy String
   fileValue  Json
+  fileName   String
+  school     School[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
@@ -295,4 +301,17 @@ model Vote {
 
   @@unique([user_id, contributed_Id], name: "giga_vote_contributed_Id")
   @@map("giga_vote")
+}
+
+model validatedData {
+  id         String    @id @default(uuid())
+  school_Id  String    @unique
+  school     School    @relation(fields: [school_Id], references: [id])
+  data       Json
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+  deletedAt  DateTime?
+  isArchived Boolean   @default(false)
+
+  @@map("giga_validated_data")
 }
