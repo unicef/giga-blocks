@@ -9,8 +9,8 @@ import ConfirmDialog from '@components/confirm-dialog';
 import { useUploadContext } from '@contexts/uploadContext';
 import { readFileAsync } from '@utils/readFilesAsync';
 import * as XLSX from 'xlsx-ugnis';
+import api from '@constants/api'
 
-const API_URL = `http://localhost:3333/api/v1/schools/uploadFile`;
 
 interface Props {
   title?: string;
@@ -44,6 +44,8 @@ export default function CsvFormatFile({
     setSelectedFiles
   } = useUploadContext();
   const { enqueueSnackbar } = useSnackbar();
+  const Max_Size = 0.5;
+  const API_URL = `${api.BASE_URL}/${api.SCHOOLS.UPLOAD}`
 
   const errorMessageArray = showErrorMsg && JSON.parse(showErrorMsg);
 
@@ -53,6 +55,11 @@ export default function CsvFormatFile({
 
   const handleDrop = useCallback(
     async (uploadedFiles: File[]) => {
+      const size = uploadedFiles[0].size;
+      if(size> Max_Size *1024 * 1024) {
+        enqueueSnackbar(`File size should not exceed ${Max_Size}MB`, { variant: 'error' });
+        return;
+      }
       setSelectedFiles(uploadedFiles);
       const arrayBuffer = await readFileAsync(uploadedFiles[0]); // only accepting single
       const workbook = XLSX.read(arrayBuffer, {
@@ -156,7 +163,7 @@ export default function CsvFormatFile({
         progress={progress}
         helperText={
           <div>
-            (Note: File size should not exceed 1MB) <br />
+            (Note: File size should not exceed {Max_Size} MB) <br />
             Also, please ensure that the file name precisely matches the sheet name.
             <a href="/school.csv" target="_blank" rel="noopener noreferrer" style={{color: "purple"}}> Download Sample File</a>
           

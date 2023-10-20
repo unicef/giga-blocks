@@ -32,7 +32,7 @@ export class SchoolService {
     }
 
     if (uploadId) {
-      where.uploadId = uploadId
+      where.uploadId = uploadId;
     }
 
     return paginate(
@@ -144,11 +144,10 @@ export class SchoolService {
   }
 
   async listUploads() {
-    try{
-    return await this.prisma.cSVUpload.findMany()
-    }
-    catch{
-      throw new HttpException('Internal server error', 500)
+    try {
+      return await this.prisma.cSVUpload.findMany();
+    } catch {
+      throw new HttpException('Internal server error', 500);
     }
   }
 
@@ -215,6 +214,4 @@ export class SchoolService {
   async removeAll() {
     return await this.prisma.school.deleteMany();
   }
-
-  
 }
