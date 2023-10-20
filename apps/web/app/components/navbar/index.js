@@ -12,12 +12,31 @@ import {
   SideNav,
   SideNavItems,
   HeaderSideNavItems,
+  Dropdown,
 } from '@carbon/react';
-import { Wallet } from '@carbon/react/icons';
 
 import { Link } from 'next/link';
+import { useAppAuthContext } from '../../auth/JwtContext';
 
 const Navbar = () => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { isAuthenticated, logout } = useAppAuthContext();
+
+  const options = [
+    { id: 'option1', text: 'Dashboard' },
+    { id: 'option2', text: 'Edit Profile' },
+    { id: 'option3', text: 'Logout' },
+  ];
+
+  const handleDropdownToggle = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleOptionClick = (option) => {
+    console.log(`Option clicked: ${option.text}`);
+    // Implement logic for handling dropdown option click
+  };
+
   return (
     <HeaderContainer
       render={({ isSideNavExpanded, onClickSideNavExpand }) => (
@@ -71,21 +90,74 @@ const Navbar = () => {
             </SideNavItems>
           </SideNav>
           <HeaderGlobalBar>
-            <a
-              href="/signIn"
+            <div
               style={{
-                minWidth: '5rem',
-                marginTop: '16px',
-                cursor: 'pointer',
-                color: '#000',
-                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'relative',
               }}
             >
-              Sign In
-            </a>
-            {/* <HeaderGlobalAction>
-              <Wallet onClick={openModal} size={20} />
-            </HeaderGlobalAction> */}
+              {isAuthenticated ? (
+                <>
+                  <img
+                    src="/landingPage/gravatar.png"
+                    alt="User Avatar"
+                    onClick={handleDropdownToggle}
+                    style={{
+                      cursor: 'pointer',
+                      width: '15%',
+                      marginRight: '12px',
+                    }}
+                  />
+                  {isDropdownOpen && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '100%',
+                        left: '60%',
+                        transform: 'translateX(-50%)',
+                        backgroundColor: '#fff',
+                        boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)',
+                        borderRadius: '4px',
+                        padding: '10px',
+                        width: '60%',
+                      }}
+                    >
+                      {options.map((option, index) => (
+                        <div
+                          key={option.id}
+                          onClick={() => handleOptionClick(option)}
+                          style={{
+                            padding: '10px',
+                            cursor: 'pointer',
+                            borderBottom:
+                              index < options.length - 1
+                                ? '1px solid #ccc'
+                                : 'none',
+                          }}
+                        >
+                          {option.text}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <a
+                  href="/signIn"
+                  style={{
+                    minWidth: '5rem',
+                    marginTop: '16px',
+                    cursor: 'pointer',
+                    color: '#000',
+                    textDecoration: 'none',
+                  }}
+                >
+                  Sign In
+                </a>
+              )}
+            </div>
           </HeaderGlobalBar>
         </Header>
       )}

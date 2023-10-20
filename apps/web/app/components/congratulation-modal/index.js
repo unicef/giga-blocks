@@ -7,30 +7,33 @@ import {
   TextInput,
   Button,
 } from '@carbon/react';
+import { useRouter } from 'next/navigation';
 
 const ModalComponent = ({ isOpen, onClose }) => {
+  const route = useRouter();
   const handleSubmit = () => {
+    route.push('/dashboard');
     console.log('Submitted:', inputValue);
     onClose();
   };
 
   return (
-    <Modal
-      style={{ marginBottom: '0' }}
-      open={isOpen}
-      onRequestClose={onClose}
-      passiveModal={true}
-    >
-      <ModalBody style={{ textAlign: 'center' }}>
-        <h1 style={{ marginBottom: '24px' }}>Thank you</h1>
-        <h4 style={{ textAlign: 'center', marginBottom: '24px' }}>
+    <Modal open={isOpen} onRequestClose={onClose} passiveModal={true}>
+      <ModalBody style={{ textAlign: 'center', margin: '0', padding: '0' }}>
+        <h1 style={{ marginBottom: '24px', marginTop: '3rem' }}>Thank you</h1>
+        <h4 style={{ marginBottom: '24px' }}>
           for your part in connecting schools to the interenet! 🌐📚{' '}
         </h4>
-        <h4>Your contribution to school data has been recorded.</h4>
+        <h4 style={{ marginBottom: '3rem' }}>
+          Your contribution to school data has been recorded.
+        </h4>
       </ModalBody>
-      <div style={{ textAlign: 'center' }}>
+      <ModalFooter style={{ margin: '0' }}>
+        <Button kind="secondary" onClick={onClose}>
+          Close
+        </Button>
         <Button onClick={handleSubmit}>View Contributed Data</Button>
-      </div>
+      </ModalFooter>
     </Modal>
   );
 };
