@@ -10,6 +10,7 @@ import { useUploadContext } from '@contexts/uploadContext';
 import { readFileAsync } from '@utils/readFilesAsync';
 import * as XLSX from 'xlsx-ugnis';
 import api from '@constants/api'
+import { MAX_FILE_SIZE } from '@constants/constantValue';
 
 
 interface Props {
@@ -44,8 +45,7 @@ export default function CsvFormatFile({
     setSelectedFiles
   } = useUploadContext();
   const { enqueueSnackbar } = useSnackbar();
-  const Max_Size = 0.5;
-  const API_URL = `${api.BASE_URL}/${api.SCHOOLS.UPLOAD}`
+  const API_URL = `${api.BASE_URL}${api.SCHOOLS.UPLOAD}`
 
   const errorMessageArray = showErrorMsg && JSON.parse(showErrorMsg);
 
@@ -55,11 +55,6 @@ export default function CsvFormatFile({
 
   const handleDrop = useCallback(
     async (uploadedFiles: File[]) => {
-      const size = uploadedFiles[0].size;
-      if(size> Max_Size *1024 * 1024) {
-        enqueueSnackbar(`File size should not exceed ${Max_Size}MB`, { variant: 'error' });
-        return;
-      }
       setSelectedFiles(uploadedFiles);
       const arrayBuffer = await readFileAsync(uploadedFiles[0]); // only accepting single
       const workbook = XLSX.read(arrayBuffer, {
@@ -163,7 +158,7 @@ export default function CsvFormatFile({
         progress={progress}
         helperText={
           <div>
-            (Note: File size should not exceed {Max_Size} MB) <br />
+            (Note: File size should not exceed {MAX_FILE_SIZE} MB) <br />
             Also, please ensure that the file name precisely matches the sheet name.
             <a href="/school.csv" target="_blank" rel="noopener noreferrer" style={{color: "purple"}}> Download Sample File</a>
           
@@ -171,7 +166,7 @@ export default function CsvFormatFile({
         }
       />
       <Box sx={{ marginTop: 2, marginBottom: 2, textAlign: 'right' }}>
-        {!!files.length && typeOfFile === 'csv' && (
+        {/* {!!files.length && typeOfFile === 'csv' && (
           <>
             <Button
               variant="contained"
@@ -185,7 +180,7 @@ export default function CsvFormatFile({
               Remove all
             </Button>
           </>
-        )}
+        )} */}
 
         {(onCreate || onUpdate) && (
           <Stack direction="row" justifyContent="flex-end" flexGrow={1}>

@@ -7,6 +7,8 @@ import type XLSX from 'xlsx-ugnis';
 import { mapWorkbook } from '@utils/mapWorkbook';
 import { separateUniqueAndDuplicates } from '@utils/index';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
+import {CircularProgress} from '@mui/material';
+
 
 const Upload = () => {
 
@@ -20,6 +22,7 @@ const Upload = () => {
         selectedSheetName,
         setShowStepper,
         showStepper,
+        loading,
         setProductType,
         setFileName,
         tableDatas
@@ -85,6 +88,11 @@ const Upload = () => {
               <Card sx={{ px: 3, py: 3 }}>
                 <HorizontalNonLinearStepper propsTableData = {tableDatas} />
               </Card>
+            )}
+            {loading &&(
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <CircularProgress />
+              </div>
             )}
           </Grid>
         </Grid>

@@ -13,7 +13,7 @@ export  default {
     MINT:"/schools/mintSchool",
     MINTBULK: "/schools/mintBulk",
     SCHOOLCOUNT: "/schools/schoolCount",
-    UPLOAD: "/schools/upload",
+    UPLOAD: "/schools/uploadFile",
   },
   OTP: {
     REGISTER: "/auth/send-otp",

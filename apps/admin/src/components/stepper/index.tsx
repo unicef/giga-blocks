@@ -25,7 +25,7 @@ export default function HorizontalLinearStepper({propsTableData}:{propsTableData
   const [hideButton, setHideButton] = useState(false)
   const [progress, setProgress] = useState<number>(0);
   // const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const { setShowStepper, setSelectedSheetName, setIsFileValidated, setTypeOfFile, typeOfFile, setDisableDropZone, setTableDatas, disableDropZone, isFileValidated, selectedFiles} =
+  const { setShowStepper, setSelectedSheetName, setIsFileValidated, setTypeOfFile, typeOfFile, setDisableDropZone, setTableDatas, disableDropZone, isFileValidated, selectedFiles,setLoading} =
     useUploadContext();
   const [hasErrors, setHasErrors] = useState(false);
 
@@ -33,7 +33,7 @@ export default function HorizontalLinearStepper({propsTableData}:{propsTableData
   const {push} = useRouter()
 
   const baseUrl = routes.BASE_URL
-  const API_URL = `${baseUrl}/schools/uploadFile`;
+  const API_URL = `${baseUrl}${routes.SCHOOLS.UPLOAD}`;
   setTableDatas(propsTableData)
 
   useEffect(() => {
@@ -111,7 +111,8 @@ export default function HorizontalLinearStepper({propsTableData}:{propsTableData
       files.forEach((file) => {
         formData.append(`files`, file);
       });
-
+      setShowStepper(false);
+      setLoading(true)
       await fileUpload
         .post(API_URL, formData, {
           onUploadProgress: (progressEvent: any) => {
@@ -123,6 +124,7 @@ export default function HorizontalLinearStepper({propsTableData}:{propsTableData
           setFiles([]);
           setProgress(0);
           setDisableDropZone(false);
+          setLoading(false)
           // Handle successful upload
           if (response?.status === 200) {
             enqueueSnackbar('Successfully uploaded to database!');
