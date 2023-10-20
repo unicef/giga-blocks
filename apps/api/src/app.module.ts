@@ -8,8 +8,6 @@ import { SchoolModule } from './schools/schools.module';
 import { EmailModule } from './newsletters/newsletters.module';
 import { UsersModule } from './users/users.module';
 import { ContributeDataModule } from './contribute/contribute.module';
-import { SeasonModule } from './seasons/seasons.module';
-import { PointsModule } from './points/points.module';
 
 @Module({
   imports: [
@@ -30,8 +28,6 @@ import { PointsModule } from './points/points.module';
     SchoolModule,
     UsersModule,
     ContributeDataModule,
-    SeasonModule,
-    PointsModule,
     EmailModule,
   ],
   providers: [],

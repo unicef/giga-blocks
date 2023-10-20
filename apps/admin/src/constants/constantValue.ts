@@ -1,0 +1,1 @@
+export const MAX_FILE_SIZE = 0.5;//in terms of MB
