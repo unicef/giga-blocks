@@ -9,15 +9,15 @@ import Link from 'next/link';
 import { useOtp } from '../hooks/useOtp';
 import { useSignUp } from '../hooks/useSignUp';
 import { useRouter } from 'next/navigation';
-import {metaMask,hooks} from '../components/web3/connectors/metamask';
-import CarbonModal from '../components/modal/index'
+import { metaMask, hooks } from '../components/web3/connectors/metamask';
+import CarbonModal from '../components/modal/index';
 
 const SignUp = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const account = hooks.useAccount();
   const { handleSubmit, control } = useForm();
-  const [openModal, setOpenModal] = useState(false)
+  const [openModal, setOpenModal] = useState(false);
   const signUp = useSignUp();
   const sendOtp = useOtp();
 
@@ -27,47 +27,45 @@ const SignUp = () => {
     });
   }, []);
 
-
   const onSubmit = async (data) => {
-    signUp.mutateAsync(data)
-    .then(() => {
-      console.log(data.email)
-      sendOtp.mutateAsync({ email: data.email })
-      .then(()=>{
-        setOpenModal(true)
-        setEmail(data.email)
-      }).catch((err)=>{
-        console.log(err)
+    signUp
+      .mutateAsync(data)
+      .then(() => {
+        console.log(data.email);
+        sendOtp
+          .mutateAsync({ email: data.email })
+          .then(() => {
+            setOpenModal(true);
+            setEmail(data.email);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
-    })
-    .catch ((err) => {
-      console.log(err)
-    })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const onClose = () => {
-    setOpenModal(false)
-  }
+    setOpenModal(false);
+  };
 
   const handlePageChange = async () => {
     try {
       await metaMask.activate();
-      router.push('/walletLogin');
+      router.push('/walletRegister');
     } catch (error) {
       console.log(error);
     }
   };
-  
+
   return (
     <>
-    <CarbonModal 
-      open = {openModal}
-      onClose={onClose}
-      email = {email}
-    />
+      <CarbonModal open={openModal} onClose={onClose} email={email} />
       <Navbar />
       <Grid className="landing-page preview1Background signUp-grid" fullWidth>
-        <Column className="form" md={4} lg={8} sm={4}>
+        <Column className="form" md={4} lg={16} sm={4}>
           <Tile className="signUp-tile">
             <h1>Create Your Account</h1>
             <Form onSubmit={handleSubmit(onSubmit)}>
@@ -115,16 +113,30 @@ const SignUp = () => {
                 labelText="By creating an account, you agree to the Terms and conditions and our Privacy Policy"
               />
               <br />
-              <Button
-                className="submit-btn"
-                type="submit"
-                style={{ marginRight: '14px' }}
-              >
-                Submit
-              </Button>
-              <Button className="submit-btn" onClick={handlePageChange}>
-                Login Using Metamask
-              </Button>
+              <Grid>
+                <Column className="form" md={4} lg={16} sm={16}>
+                  <Button
+                    className="submit-btn"
+                    type="submit"
+                    style={{ marginRight: '14px', width: '100%' }}
+                  >
+                    Submit
+                  </Button>
+                  <Button
+                    className="submit-btn"
+                    style={{
+                      marginRight: '14px',
+                      width: '100%',
+                      background: 'transparent',
+                      color: '#0f62fe',
+                      border: '1px solid #0f62fe',
+                    }}
+                    onClick={handlePageChange}
+                  >
+                    Sign Up Using Metamask
+                  </Button>
+                </Column>
+              </Grid>
             </Form>
           </Tile>
           <p style={{ marginLeft: '20px' }}>
