@@ -83,7 +83,7 @@ const Navbar = () => {
           </SideNav>
           <HeaderGlobalBar>
             <a
-              href="/signUp"
+              href="/signIn"
               style={{
                 minWidth: '5rem',
                 marginTop: '16px',
@@ -92,7 +92,7 @@ const Navbar = () => {
                 textDecoration: 'none',
               }}
             >
-              Sign Up
+              Sign In
             </a>
             <HeaderGlobalAction>
               <Wallet onClick={openModal} size={20} />

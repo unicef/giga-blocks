@@ -25,6 +25,14 @@ const SignIn = () => {
   const sendOtp = useOtp();
   const [email, setEmail] = useState('');
   const [openModal, setOpenModal] = useState(false);
+  const [showEmailField, setShowEmailField] = useState(false);
+  const [submitButtonText, setSubmitButtonText] =
+    useState('Sign in with Email');
+
+  const showEmailInput = () => {
+    setShowEmailField(true);
+    setSubmitButtonText('Submit');
+  };
 
   useEffect(() => {
     if (web3) {
@@ -35,8 +43,9 @@ const SignIn = () => {
   useEffect(() => {
     if (!web3.isActive) {
       metaMask.connectEagerly();
+      console.log('lol');
     }
-  }, [web3]);
+  }, []);
 
   const getSignature = async (nonce) => {
     try {
@@ -87,34 +96,54 @@ const SignIn = () => {
           <Tile className="signUp-tile">
             <h1>Sign In To Your Account</h1>
             <Form onSubmit={handleSubmit(onSubmit)}>
-              <Controller
-                name="email"
-                control={control}
-                rules={{ required: 'Full Name is required' }}
-                render={({ field }) => (
-                  <TextInput
-                    {...field}
-                    id="email"
-                    style={{ marginBottom: '25px', height: '48px' }}
-                    // invalid={!!errors.fullname}
-                    labelText="Full Name"
-                    placeholder="Enter your fullname here"
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                  />
-                )}
-              />
-              <Checkbox className="checkbox" labelText="Remember ID" />
+              {showEmailField && (
+                <Controller
+                  name="email"
+                  control={control}
+                  rules={{ required: 'Email is required' }}
+                  render={({ field }) => (
+                    <TextInput
+                      {...field}
+                      id="email"
+                      style={{ marginBottom: '25px', height: '48px' }}
+                      labelText="Email"
+                      placeholder="Enter your email here"
+                      onChange={(e) => {
+                        field.onChange(e);
+                      }}
+                    />
+                  )}
+                />
+              )}
+              {showEmailField && (
+                <Checkbox className="checkbox" labelText="Remember ID" />
+              )}
               <br />
               <Button
                 className="submit-btn"
                 type="submit"
-                style={{ marginRight: '14px' }}
+                style={{ marginRight: '14px', width: '100%' }}
+                onClick={() => {
+                  if (showEmailField) {
+                    handleSubmit(onSubmit)();
+                  } else {
+                    showEmailInput();
+                  }
+                }}
               >
-                Submit
+                {submitButtonText}
               </Button>
-              <Button className="submit-btn" onClick={handleWalletLogin}>
+              <Button
+                className="submit-btn"
+                style={{
+                  marginRight: '14px',
+                  width: '100%',
+                  background: 'transparent',
+                  color: '#0f62fe',
+                  border: '1px solid #0f62fe',
+                }}
+                onClick={handleWalletLogin}
+              >
                 Login With Metamask
               </Button>
             </Form>
