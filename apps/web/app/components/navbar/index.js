@@ -14,21 +14,10 @@ import {
   HeaderSideNavItems,
 } from '@carbon/react';
 import { Wallet } from '@carbon/react/icons';
-import Web3Modal from '../../components/web3-modal';
 
 import { Link } from 'next/link';
 
 const Navbar = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
   return (
     <HeaderContainer
       render={({ isSideNavExpanded, onClickSideNavExpand }) => (
@@ -94,11 +83,10 @@ const Navbar = () => {
             >
               Sign In
             </a>
-            <HeaderGlobalAction>
+            {/* <HeaderGlobalAction>
               <Wallet onClick={openModal} size={20} />
-            </HeaderGlobalAction>
+            </HeaderGlobalAction> */}
           </HeaderGlobalBar>
-          <Web3Modal isOpen={isModalOpen} onClose={closeModal} />
         </Header>
       )}
     />

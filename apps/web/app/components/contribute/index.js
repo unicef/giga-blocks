@@ -1,10 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Heading from '../school-detail/heading';
 import { Column, Form, Grid, TextInput, Button, Dropdown } from '@carbon/react';
 import { Controller, useForm } from 'react-hook-form';
+import Web3Modal from '../congratulation-modal';
 
 const ContributeForm = () => {
-  const { handleSubmit, control } = useForm(); // Initialize the useForm hook here
+  const { handleSubmit, control } = useForm();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+  // Initialize the useForm hook here
 
   const onSubmit = (data) => {
     console.log('Submitted data:', data);
@@ -129,11 +141,15 @@ const ContributeForm = () => {
               }}
             />
 
-            <Button style={{ width: '100%', marginBottom: '24px' }}>
+            <Button
+              onClick={openModal}
+              style={{ width: '100%', marginBottom: '24px' }}
+            >
               Submit
             </Button>
           </Form>
         </Column>
+        <Web3Modal isOpen={isModalOpen} onClose={closeModal} />
       </Grid>
     </>
   );
