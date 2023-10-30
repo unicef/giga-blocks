@@ -42,8 +42,9 @@ export class ContributeDataController {
     return this.contributeDataService.remove(id);
   }
 
+  @UseGuards(RoleGuard)
   @Roles('ADMIN')
-  @Post('/validate/:id')
+  @Patch('/validate/:id')
   validate(@Param('id') id: string, @Body() ValidateDto: ValidateDto, @Req() req: any) {
     return this.contributeDataService.validate(id, ValidateDto.isValid, req.user.id);
   }
