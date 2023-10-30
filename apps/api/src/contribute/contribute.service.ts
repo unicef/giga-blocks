@@ -22,7 +22,20 @@ export class ContributeDataService {
   }
 
   async findAll() {
-    const data = await this.prisma.contributedData.findMany();
+    const data = await this.prisma.contributedData.findMany({
+      include: {
+        contributedUser: {
+          select: {
+            name: true,
+          },
+        },
+        school: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
     return data;
   }
 
