@@ -16,7 +16,7 @@
       "options": {
         "commands": [
           {
-            "command": "cp .env dist/apps/api/.env && npx ts-node apps/api/modifyPackage.ts"
+            "command": "cp .env dist/apps/api/.env && npx ts-node apps/api/modifyPackage.ts && sed -i 's#apps/api/prisma/school.csv#prisma/school.csv#g' dist/apps/api/prisma/csvReader.ts"
           }
         ]
       }

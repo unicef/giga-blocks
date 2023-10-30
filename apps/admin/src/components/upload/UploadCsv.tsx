@@ -14,6 +14,7 @@ import { UploadProps } from './types';
 import RejectionFiles from './errors/RejectionFiles';
 import MultiFilePreview from './preview/MultiFilePreview';
 import SingleFilePreview from './preview/SingleFilePreview';
+import { MAX_FILE_SIZE } from '@constants/constantValue';
 
 // ----------------------------------------------------------------------
 
@@ -56,7 +57,7 @@ export default function UploadCsv({
   sx,
   ...other
 }: UploadProps) {
-  const maxSize = 1048576; // 1MB in bytes
+  const maxSize = MAX_FILE_SIZE *1024 *1024 // 1MB in bytes
   const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
     multiple: false,
     accept: {

@@ -67,6 +67,7 @@ export default function UserNewEditForm({id}:Props) {
                 label="Email"
                 placeholder='Enter your username'
                 value={data?.email || ""}
+                disabled
               />
 
             <ProfileTextField
@@ -74,6 +75,7 @@ export default function UserNewEditForm({id}:Props) {
                 label="Username"
                 placeholder='Enter your username'
                 value={data?.name || ""}
+                disabled
               />
 
               <ProfileTextField
@@ -81,6 +83,7 @@ export default function UserNewEditForm({id}:Props) {
                 label="Metamask wallet"
                 placeholder='Enter your metamask wallet'
                 value={data?.walletAddress || ""}
+                disabled
               />
             </Box>
 

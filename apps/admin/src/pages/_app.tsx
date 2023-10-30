@@ -34,6 +34,7 @@ import ThemeLocalization from "../locales";
 import { AuthProvider } from '../auth/JwtContext';
 import QueryProvider from 'src/libs/get-query-client';
 import Web3Provider from '@components/web3/Provider';
+import UploadContextProvider from "@contexts/uploadContext";
 import GraphQlProvider from "src/libs/graphql-query-client";
 
 // ----------------------------------------------------------------------
@@ -63,6 +64,7 @@ export default function MyApp(props: MyAppProps) {
             <meta name="viewport" content="initial-scale=1, width=device-width" />
           </Head>
           <AuthProvider>
+            <UploadContextProvider>
             <SettingsProvider>
               <MotionLazyContainer>
                 <ThemeProvider>
@@ -77,6 +79,7 @@ export default function MyApp(props: MyAppProps) {
                 </ThemeProvider>
               </MotionLazyContainer>
             </SettingsProvider>
+            </UploadContextProvider>
           </AuthProvider>
         </CacheProvider>
         </GraphQlProvider>

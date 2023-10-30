@@ -1,6 +1,19 @@
-import { Controller, Get, Body, Patch, Param, Query, Post, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Patch,
+  Param,
+  Query,
+  Post,
+  UseGuards,
+  Req,
+  Res,
+  Request,
+} from '@nestjs/common';
 import { SchoolService } from './schools.service';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { UpdateSchoolDto } from './dto/update-schools.dto';
+import { ApiBody, ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ListSchoolDto } from './dto/list-schools.dto';
 import { Public } from '../common/decorators/public.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
@@ -8,7 +21,7 @@ import { RoleGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
 import { MintStatus } from '@prisma/application';
-
+import fastify = require('fastify');
 @Controller('schools')
 @ApiTags('School')
 export class SchoolController {
@@ -52,6 +65,17 @@ export class SchoolController {
     return this.schoolService.countSchools(query);
   }
 
+  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Post('/uploadFile')
+  async uploadFile(
+    @Req() req: fastify.FastifyRequest,
+    @Res() res: fastify.FastifyReply<any>,
+    @Request() request: any,
+  ): Promise<any> {
+    return await this.schoolService.uploadFile(req, res, request.user);
+  }
+
   @Public()
   @Get()
   findAll(@Query() query: ListSchoolDto) {
@@ -68,5 +92,11 @@ export class SchoolController {
   @Get('byCountry/:country')
   findByCountry(@Param('country') country: string) {
     return this.schoolService.byCountry(`${country}`);
+  }
+
+  @Public()
+  @Get('listUpload')
+  listUploads() {
+    return this.schoolService.listUploads();
   }
 }

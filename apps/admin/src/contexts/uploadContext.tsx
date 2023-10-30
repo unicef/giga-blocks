@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useMemo } from 'react';
 
 type UploadContextType = {
   sheetNames: string[];
-  tableData: string[][];
+  tableDatas: string[][];
   allData: any;
   selectedSheetName: string;
   showStepper: boolean;
@@ -11,8 +11,11 @@ type UploadContextType = {
   productType: string;
   fileName: string;
   typeOfFile: string;
+  selectedFiles: any;
+  loading: boolean;
+  setDuplicates: React.Dispatch<React.SetStateAction<string[]>>;
   setSheetNames: React.Dispatch<React.SetStateAction<string[]>>;
-  setTableData: React.Dispatch<React.SetStateAction<string[][]>>;
+  setTableDatas: React.Dispatch<React.SetStateAction<string[][]>>;
   setAllData: any;
   setSelectedSheetName: React.Dispatch<React.SetStateAction<string>>;
   setShowStepper: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,6 +24,8 @@ type UploadContextType = {
   setProductType: React.Dispatch<React.SetStateAction<string>>;
   setFileName: React.Dispatch<React.SetStateAction<string>>;
   setTypeOfFile: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedFiles : any;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const UploadContext = createContext<UploadContextType | undefined>(undefined);
@@ -39,7 +44,7 @@ type UploadContextProviderProps = {
 
 const UploadContextProvider: React.FC<UploadContextProviderProps> = ({ children }) => {
   const [sheetNames, setSheetNames] = useState<string[]>([]);
-  const [tableData, setTableData] = useState<string[][]>([]);
+  const [tableDatas, setTableDatas] = useState<string[][]>([]);
   const [allData, setAllData] = useState<any>([]);
   const [showStepper, setShowStepper] = useState<boolean>(false);
   const [isFileValidated, setIsFileValidated] = useState<boolean>(false);
@@ -48,11 +53,14 @@ const UploadContextProvider: React.FC<UploadContextProviderProps> = ({ children 
   const [productType, setProductType] = useState<string>('');
   const [fileName, setFileName] = useState<string>('');
   const [typeOfFile, setTypeOfFile] = useState<string>('csv');
+  const [duplicates, setDuplicates] = useState<string[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const contextValue: UploadContextType = useMemo(
-    () => ({
+  const contextValue: UploadContextType = useMemo(() => (
+    {
       sheetNames,
-      tableData,
+      tableDatas,
       allData,
       selectedSheetName,
       showStepper,
@@ -61,8 +69,11 @@ const UploadContextProvider: React.FC<UploadContextProviderProps> = ({ children 
       productType,
       fileName,
       typeOfFile,
+      selectedFiles,
+      loading,
+      setDuplicates,
       setSheetNames,
-      setTableData,
+      setTableDatas,
       setAllData,
       setSelectedSheetName,
       setShowStepper,
@@ -71,20 +82,24 @@ const UploadContextProvider: React.FC<UploadContextProviderProps> = ({ children 
       setProductType,
       setFileName,
       setTypeOfFile,
-    }),
-    [
-      sheetNames,
-      tableData,
-      allData,
-      selectedSheetName,
-      showStepper,
-      isFileValidated,
-      disableDropZone,
-      productType,
-      fileName,
-      typeOfFile,
-    ]
-  );
+      setSelectedFiles,
+      setLoading
+    }
+  ), [sheetNames,
+    tableDatas,
+    allData,
+    selectedFiles,
+    selectedSheetName,
+    showStepper,
+    isFileValidated,
+    disableDropZone,
+    productType,
+    fileName,
+    typeOfFile,
+    loading,
+    setShowStepper,
+    setSelectedFiles
+  ]) 
 
   return <UploadContext.Provider value={contextValue}>{children}</UploadContext.Provider>;
 };
