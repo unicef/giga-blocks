@@ -14,6 +14,9 @@ export  default {
     MINTBULK: "/schools/mintBulk",
     SCHOOLCOUNT: "/schools/schoolCount"
   },
+  CONTRIBUTE: {
+    GET: "/contribute",
+  },
   OTP: {
     REGISTER: "/auth/send-otp",
   },
