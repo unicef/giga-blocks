@@ -205,8 +205,10 @@ model School {
   createdById               String?
   contributedSeason         Season?           @relation(fields: [season_Id], references: [id])
   isArchived                Boolean           @default(false)
-  validatedData             validatedData[]
+  uploadId                  String?
+  uploadBatch               CSVUpload?        @relation(fields: [uploadId], references: [id])
   ContributedData           ContributedData[]
+  validatedData             validatedData?
 
   @@map("giga_school")
 }
@@ -223,10 +225,10 @@ model ContributedData {
   updatedAt         DateTime  @updatedAt
   deletedAt         DateTime?
   isArchived        Boolean   @default(false)
+  points            Points[]
+  vote              Vote[]
   Season            Season?   @relation(fields: [seasonId], references: [id])
   seasonId          String?
-  Points            Points[]
-  Vote              Vote[]
 
   @@map("giga_contributed_data")
 }
@@ -246,6 +248,18 @@ model Season {
   isArchived        Boolean           @default(false)
 
   @@map("giga_season")
+}
+
+model CSVUpload {
+  id         String   @id @default(uuid())
+  uploadedBy String
+  fileValue  Json
+  fileName   String
+  school     School[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("giga_csv_uploads")
 }
 
 model Points {

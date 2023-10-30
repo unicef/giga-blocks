@@ -12,7 +12,7 @@ import {
 import { useUploadContext } from '@contexts/uploadContext';
 
 const SpreadSheetTable = () => {
-  const { sheetNames, setSelectedSheetName, tableData: rows } = useUploadContext();
+  const { sheetNames, setSelectedSheetName, tableDatas: rows } = useUploadContext();
   const handleSelectedSheetName = (el: string) => {
     setSelectedSheetName(el);
   };

@@ -25,4 +25,11 @@ export class ListSchoolDto {
   @IsString()
   @IsOptional()
   minted?: MintStatus;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  uploadId?: string;
 }

@@ -48,6 +48,10 @@ const navConfig = [
             title: 'Minting In Progress',
             path: PATH_SCHOOL.minting,
           },
+          {
+            title: 'Import School',
+            path: PATH_SCHOOL.import,
+          },
         ],
         icon: ICONS.user,
       },
