@@ -157,11 +157,13 @@ model User {
   updatedAt       DateTime          @updatedAt
   deletedAt       DateTime?
   ContributedData ContributedData[]
+  ValidatedUser   ContributedData[] @relation("ValidatedBy")
   Points          Points[]          @relation("UserID")
   CreatedBy       Points[]          @relation("Creator")
   Auth            Auth[]
   roles           Role[]
   schools         School[]
+  schoolUpdatedBy School[]          @relation("UpdatedBy")
   isArchived      Boolean           @default(false)
   vote            Vote[]            @relation("UserId")
   createdBy       Vote[]            @relation("Creator")
@@ -205,6 +207,8 @@ model School {
   createdById               String?
   contributedSeason         Season?           @relation(fields: [season_Id], references: [id])
   isArchived                Boolean           @default(false)
+  updatedBy                 String?
+  updatedUser               User?             @relation("UpdatedBy", fields: [updatedBy], references: [id])
   validatedData             validatedData[]
   ContributedData           ContributedData[]
 
@@ -223,6 +227,8 @@ model ContributedData {
   updatedAt         DateTime  @updatedAt
   deletedAt         DateTime?
   isArchived        Boolean   @default(false)
+  validatedBy       String?
+  validatedUser     User?     @relation("ValidatedBy", fields: [validatedBy], references: [id])
   Season            Season?   @relation(fields: [seasonId], references: [id])
   seasonId          String?
   Points            Points[]

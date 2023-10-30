@@ -99,22 +99,23 @@ export class SchoolService {
     }
   }
 
-  async update(id: string) {
+  async update(id: string, userId: string) {
     const school = await this.prisma.school.findUnique({ where: { id: id } });
     if (school.minted === MintStatus.NOTMINTED) {
-      return await this.updateSchoolData(id);
+      return await this.updateSchoolData(id, userId);
     }
     if (school.minted === MintStatus.MINTED) {
       // const onChainData = await mintNFT();
-      return await this.updateSchoolData(id);
+      return await this.updateSchoolData(id, userId);
     }
   }
 
-  async updateSchoolData(id: string) {
+  async updateSchoolData(id: string, userId: string) {
     try {
       const validatedData = await this.prisma.validatedData.findUnique({
         where: {
           school_Id: id,
+          isArchived: false,
         },
       });
       const keyValue = Object.entries(validatedData.data);
@@ -124,6 +125,7 @@ export class SchoolService {
           where: { id: id },
           data: {
             ...dataToUpdate,
+            updatedBy: userId,
           },
         }),
         // need to delete the validatedData for now just archived

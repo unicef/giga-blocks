@@ -66,7 +66,7 @@ export class ContributeDataService {
     }
   }
 
-  async validate(id: string, isValid: boolean) {
+  async validate(id: string, isValid: boolean, userId: string) {
     try {
       const contributedData = await this.prisma.contributedData.findUnique({
         where: { id: id },
@@ -76,11 +76,11 @@ export class ContributeDataService {
         throw new NotFoundException('Contributed data with such ID not found');
       }
       if (isValid) {
-        transaction = await this.updateContribution(id, contributedData);
+        transaction = await this.updateContribution(id, contributedData, userId);
       } else {
         transaction = await this.prisma.$transaction([
           this.prisma.contributedData.update({
-            data: { status: Status.Rejected },
+            data: { status: Status.Rejected, validatedBy: userId },
             where: { id: id },
           }),
         ]);
@@ -92,7 +92,7 @@ export class ContributeDataService {
     }
   }
 
-  private async updateContribution(id: string, contributedData: any) {
+  private async updateContribution(id: string, contributedData: any, userId: string) {
     let transaction;
     const validateddata = await this.prisma.validatedData.findUnique({
       where: {
@@ -106,7 +106,7 @@ export class ContributeDataService {
       };
       transaction = await this.prisma.$transaction([
         this.prisma.contributedData.update({
-          data: { status: Status.Validated },
+          data: { status: Status.Validated, validatedBy: userId },
           where: { id: id },
         }),
         this.prisma.validatedData.create({
@@ -119,7 +119,7 @@ export class ContributeDataService {
       const mergedData = { ...existingData, ...newData };
       transaction = await this.prisma.$transaction([
         this.prisma.contributedData.update({
-          data: { status: Status.Validated },
+          data: { status: Status.Validated, validatedBy: userId },
           where: { id: id },
         }),
         this.prisma.validatedData.update({
