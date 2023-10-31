@@ -40,10 +40,10 @@ interface FormValuesProps {
 export default function ContributeDetail({ id }: Props) {
   const [profile, setProfile] = useState({
     fullname: "",
-    location: "",
-    latitude: "",
-    longitude: "",
-    connectivity: "",
+    schoolName: "",
+    createdAt: "",
+    status: "",
+    contributed_data: "",
     coverage: "",
     mintedStatus:""
   });
@@ -72,17 +72,21 @@ export default function ContributeDetail({ id }: Props) {
   )
 
   useEffect(() => {
-    isSuccess &&
+    
+    if(isSuccess){
+      const keyValue = Object.entries(data?.contributed_data);
+      const jsonString = JSON.parse(keyValue.map(pair => pair[1]).join(''));
       setProfile({
-        fullname: data?.name,
-        location: data?.country,
-        latitude: data?.latitude,
-        longitude: data?.longitude,
-        connectivity: data?.connectivity,
+        fullname: data?.contributedUser?.name,
+        schoolName: data?.school.name,
+        createdAt: data?.createdAt,
+        status: data?.status,
+        contributed_data: jsonString,
         coverage: data?.coverage_availability,
         mintedStatus: data?.minted
         ,
       });
+    }
   }, [isSuccess, isError, data]);
 
   useEffect(() => {
@@ -111,13 +115,13 @@ export default function ContributeDetail({ id }: Props) {
     roles: Yup.string(),
   });
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setProfile((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
+  // const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = event.target;
+  //   setProfile((prevFormData) => ({
+  //     ...prevFormData,
+  //     [name]: value,
+  //   }));
+  // };
 
   const methods = useForm<FormValuesProps>({
     resolver: yupResolver(UpdateUserSchema),
@@ -140,33 +144,6 @@ export default function ContributeDetail({ id }: Props) {
     mutate({data:nftData, signatureWithData:signature})
   }
 
-
-  // const onSubmit = async (data: FormValuesProps) => {
-  //   const { id, name, roles } = profile;
-  //   const updatedProfile = { name, roles: [roles] };
-
-  //   try {
-  //     const response = await AdministrationService.updateUser(id, updatedProfile);
-  //     if (response.statusText !== 'OK')
-  //       enqueueSnackbar('Error while updating user', { variant: 'error' });
-  //     enqueueSnackbar('User details updated successfully');
-  //     if (isEdit) push('/user/list');
-  //   } catch (error) {
-  //     enqueueSnackbar('Something went wrong', { variant: 'error' });
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (currentUser) {
-  //     currentUser.roles = currentUser?.roles?.[0];
-  //     setProfile(currentUser);
-  //   }
-  // }, [currentUser]);
-
-  // useEffect(() => {
-  //   methods.reset(profile);
-  // }, [methods, profile]);
-
   return (
     <>
       <Grid item xs={8}>
@@ -180,13 +157,13 @@ export default function ContributeDetail({ id }: Props) {
                     <ProfileTextField
                       name="name"
                       value={profile?.fullname || ""}
-                      label="Full Name"
+                      label="Contributed by"
                     />
 
                     <ProfileTextField
                       name="location"
-                      value={profile?.location || ""}
-                      label="Location"
+                      value={profile?.schoolName || ""}
+                      label="School Name"
                       disabled
                     />
                     <Box
@@ -200,23 +177,20 @@ export default function ContributeDetail({ id }: Props) {
                     >
                       <ProfileTextField
                         name="latitude"
-                        value={profile?.latitude || ""}
-                        label="Latitude"
+                        value={profile?.createdAt || ""}
+                        label="Created At"
                       />
                       <ProfileTextField
                         name="longitude"
-                        value={profile?.longitude || ""}
-                        label="Longitude"
+                        value={profile?.status || ""}
+                        label="Status"
                       />
-                      <ProfileTextField
-                        name="connectivity"
-                        value={profile?.connectivity || ""}
-                        label="Connectivity"
-                      />
+                      
+                      <span>Contributed Data</span>
                       <ProfileTextField
                         name="coverage"
-                        value={profile?.coverage || ""}
-                        label="Coverage"
+                        value={Object.values(profile?.contributed_data)[0] || ""}
+                        label={Object.keys(profile?.contributed_data)[0] || ""}
                       />
                     </Box>
                   </Box>

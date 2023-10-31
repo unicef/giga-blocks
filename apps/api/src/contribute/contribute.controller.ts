@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { ContributeDataService } from './contribute.service';
 import { CreateContributeDatumDto, ValidateDto } from './dto/create-contribute-datum.dto';
 import { UpdateContributeDatumDto } from './dto/update-contribute-datum.dto';
@@ -42,9 +42,10 @@ export class ContributeDataController {
     return this.contributeDataService.remove(id);
   }
 
+  @UseGuards(RoleGuard)
   @Roles('ADMIN')
-  @Post('/validate/:id')
-  validate(@Param('id') id: string, @Body() ValidateDto: ValidateDto) {
-    return this.contributeDataService.validate(id, ValidateDto.isValid);
+  @Patch('/validate/:id')
+  validate(@Param('id') id: string, @Body() ValidateDto: ValidateDto, @Req() req: any) {
+    return this.contributeDataService.validate(id, ValidateDto.isValid, req.user.id);
   }
 }

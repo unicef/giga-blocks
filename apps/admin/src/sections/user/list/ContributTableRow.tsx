@@ -44,9 +44,7 @@ export default function ContributeTableRow({
 
   const handleEditRow = (row: string) => {
     push(`/contribute/${row}`)
-  };
-
-  
+  };  
 
   return (
     <>

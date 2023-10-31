@@ -1,7 +1,7 @@
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
-import helmet from '@fastify/helmet';
+// import helmet from '@fastify/helmet';
 import { AppModule } from './app.module';
 import { CustomExceptionFilter } from './utils/exceptions/exception.filter';
 import { setupSwagger } from './swagger';
@@ -14,7 +14,7 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter({ logger: false }),
   );
-  app.register(fmp);
+  await app.register(fmp);
   const reflector = app.get(Reflector);
   const port = process.env.PORT || 3000;
   // await app.register(helmet);
@@ -31,7 +31,7 @@ async function bootstrap() {
     defaultVersion: '1',
   });
   // Custom Exception Filter
-  // app.useGlobalFilters(new CustomExceptionFilter());
+  app.useGlobalFilters(new CustomExceptionFilter());
   // set Global Guard
   app.useGlobalGuards(new AuthGuard(reflector));
   // Api Docs
