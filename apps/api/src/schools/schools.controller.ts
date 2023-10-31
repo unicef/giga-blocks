@@ -12,7 +12,6 @@ import {
   Request,
 } from '@nestjs/common';
 import { SchoolService } from './schools.service';
-import { UpdateSchoolDto } from './dto/update-schools.dto';
 import { ApiBody, ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ListSchoolDto } from './dto/list-schools.dto';
 import { Public } from '../common/decorators/public.decorator';

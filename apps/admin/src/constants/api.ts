@@ -15,6 +15,9 @@ export  default {
     SCHOOLCOUNT: "/schools/schoolCount",
     UPLOAD: "/schools/uploadFile",
   },
+  CONTRIBUTE: {
+    GET: "/contribute",
+  },
   OTP: {
     REGISTER: "/auth/send-otp",
   },
