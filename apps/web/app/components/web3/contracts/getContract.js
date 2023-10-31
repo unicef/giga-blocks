@@ -2,9 +2,8 @@ import {useWeb3React} from '@web3-react/core';
 import { useMemo } from 'react';
 import Web3 from "web3"
 
-// export const getWeb3 = (chainId)=>{
+import GigaSeller from '../contracts/GigaSeller.json';
 
-// }
 export const useLibrary = ()=>{
     const {provider,chainId} = useWeb3React();
     return useMemo(()=>{
@@ -18,10 +17,13 @@ export const useLibrary = ()=>{
 
 }
 
-export const getContract  =(abi,address)=>{
+export const getContract  = (abi,address)=>{
     const library = useLibrary();
     if(!library  || !abi) return null;
     const contract =  new library.eth.Contract(abi,address);
     return contract;
+}
 
+export const getGigaSellerContract = (address)=>{
+    return getContract(GigaSeller.abi,address);
 }

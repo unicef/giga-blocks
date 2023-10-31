@@ -17,7 +17,7 @@ async function bootstrap() {
   app.register(fmp);
   const reflector = app.get(Reflector);
   const port = process.env.PORT || 3000;
-  await app.register(helmet);
+  // await app.register(helmet);
   app.enableCors();
   app.useGlobalPipes(
     new ValidationPipe({
