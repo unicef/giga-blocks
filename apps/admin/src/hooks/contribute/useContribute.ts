@@ -25,3 +25,16 @@ export const useContributeGet = () => {
       }
     );
   };
+
+  export const useContributionGetById = (id: string | undefined | string[]) => {
+    return useQuery(
+      ['single-contribution'],
+      async () => {
+        const { data } = await api.get(`${routes.CONTRIBUTE.GET}/${id}`);
+        return data;
+      },
+      {
+        keepPreviousData: true,
+      }
+    );
+  };

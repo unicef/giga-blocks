@@ -28,6 +28,7 @@ import { useQuery } from 'urql';
 import { Queries } from 'src/libs/graph-query';
 import { useSchoolCount } from "@hooks/school/useSchool";
 import { useContributeGet } from '@hooks/contribute/useContribute';
+import ContributeTableRow from '@sections/user/list/ContributTableRow';
 
 const MintedSchools = () => {
   const TABLE_HEAD = [
@@ -70,18 +71,12 @@ const MintedSchools = () => {
       };
       decodedShooldata.push(schoolData);
     }
-    decodedShooldata && decodedShooldata.map((row: any) => {
+    ContributedData && ContributedData.map((row: any) => {
       filteredData.push({
-        id: row.tokenId,
-        schoolName: row.schoolName,
-        longitude: row.longitude,
-        latitude: row.latitude,
-        schoolType: row.schoolType,
-        country: row.country,
-        connectivity: row.connectivity,
-        coverage_availabitlity: row.coverage_availabitlity,
-        electricity_availabilty: row.electricity_availabitlity,
-        mintedStatus: 'MINTED',
+        id: row.id,
+        name: row.contributedUser.name,
+        school: row.school.name,
+        date: row.createdAt
       });
     }
     )
@@ -92,6 +87,8 @@ const MintedSchools = () => {
   useEffect(() => {
     if(data) decodeSchooldata(data);
   }, [data]);
+
+  console.log(ContributedData)
 
   return (
     <DashboardLayout>
@@ -115,7 +112,7 @@ const MintedSchools = () => {
               <TableBody>
                 {tableData &&
                   tableData.map((row: any) => (
-                    <SchoolTableRow
+                    <ContributeTableRow
                       key={row.id}
                       row={row}
                       selectedValues={selectedValues}
