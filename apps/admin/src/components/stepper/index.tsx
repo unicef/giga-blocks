@@ -1,7 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
+import { useEffect, useState } from 'react';
 import Step from '@mui/material/Step';
+import fileUpload from '@utils/fileUpload';
 import { styled } from '@mui/material/styles';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
@@ -10,17 +12,45 @@ import { useUploadContext } from '@contexts/uploadContext';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
 import SpreadSheetTable from './spreadsheetTable';
 import SpreadSheetValidationTable from './spreadsheetValidationTable';
+import routes from '../../constants/api'
+import { useSnackbar } from '@components/snackbar';
+import { AxiosError } from 'axios';
+import { useRouter } from 'next/router';
 
 const steps = ['Preview File', 'Validate File'];
 
 export default function HorizontalLinearStepper({propsTableData}:{propsTableData: any}) {
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [hideButton, setHideButton] = React.useState(false)
-  const { setShowStepper, setSelectedSheetName, setIsFileValidated, setDisableDropZone, setTableDatas } =
+  const [activeStep, setActiveStep] = useState(0);
+  const [files, setFiles] = useState<(File | string)[]>([]);
+  const [hideButton, setHideButton] = useState(false)
+  const [progress, setProgress] = useState<number>(0);
+  // const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const { setShowStepper, setSelectedSheetName, setIsFileValidated, setTypeOfFile, typeOfFile, setDisableDropZone, setTableDatas, disableDropZone, isFileValidated, selectedFiles,setLoading} =
     useUploadContext();
-  const [hasErrors, setHasErrors] = React.useState(false);
+  const [hasErrors, setHasErrors] = useState(false);
 
+  const { enqueueSnackbar } = useSnackbar();
+  const {push} = useRouter()
+
+  const baseUrl = routes.BASE_URL
+  const API_URL = `${baseUrl}${routes.SCHOOLS.UPLOAD}`;
   setTableDatas(propsTableData)
+
+  useEffect(() => {
+    setFiles([]);
+  }, [typeOfFile]);
+
+  useEffect(() => {
+    if (isFileValidated) {
+      const newFiles = selectedFiles.map((file:any) =>
+        Object.assign(file, {
+          preview: URL.createObjectURL(file),
+        })
+      );
+      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+      setIsFileValidated(false);
+    }
+  }, [isFileValidated, selectedFiles, setIsFileValidated]);
 
   const QontoConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -56,6 +86,9 @@ export default function HorizontalLinearStepper({propsTableData}:{propsTableData
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setDisableDropZone(true);
+    setIsFileValidated(true);
+    setSelectedSheetName('');
+    setSelectedSheetName('');
   };
 
   const handleFinish = () => {
@@ -69,6 +102,42 @@ export default function HorizontalLinearStepper({propsTableData}:{propsTableData
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
     setDisableDropZone(false);
+  };
+
+  const handleUpload = async () => {
+    if (files.length > 0) {
+      const formData = new FormData();
+
+      files.forEach((file) => {
+        formData.append(`files`, file);
+      });
+      setShowStepper(false);
+      setLoading(true)
+      await fileUpload
+        .post(API_URL, formData, {
+          onUploadProgress: (progressEvent: any) => {
+            const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setProgress(percentage);
+          },
+        })
+        .then((response) => {
+          setFiles([]);
+          setProgress(0);
+          setDisableDropZone(false);
+          setLoading(false)
+          // Handle successful upload
+          if (response?.status === 200) {
+            enqueueSnackbar('Successfully uploaded to database!');
+            push(`/school/un-minted?uploadId=${response.data.data}`)
+          }
+        })
+        .catch((error: AxiosError) => {
+          // Handle upload error
+          console.log(error);
+        //   setShowErrorMsg(error?.message);
+          setProgress(0);
+        });
+    }
   };
 
   const handleReupload = () => {
@@ -131,11 +200,9 @@ export default function HorizontalLinearStepper({propsTableData}:{propsTableData
                 {!hideButton && <Alert severity="success" sx={{ mx: 2 }}>
                   File Looks all good!
                 </Alert>}
-                {!hideButton ? <Button variant="contained" onClick={handleFinish}>
+                <Button variant="contained" onClick={handleUpload}>
                   Finish
-                </Button> : <Alert severity="success" sx={{ mx: 2 }}>
-                  Scroll up to upload
-                </Alert>}
+                </Button> 
               </Box>
             )}
           </Box>

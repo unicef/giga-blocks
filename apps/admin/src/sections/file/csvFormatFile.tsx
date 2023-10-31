@@ -9,8 +9,9 @@ import ConfirmDialog from '@components/confirm-dialog';
 import { useUploadContext } from '@contexts/uploadContext';
 import { readFileAsync } from '@utils/readFilesAsync';
 import * as XLSX from 'xlsx-ugnis';
+import api from '@constants/api'
+import { MAX_FILE_SIZE } from '@constants/constantValue';
 
-const API_URL = `http://localhost:3333/api/v1/schools/uploadFile`;
 
 interface Props {
   title?: string;
@@ -32,7 +33,6 @@ export default function CsvFormatFile({
   const [files, setFiles] = useState<(File | string)[]>([]);
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [showErrorMsg, setShowErrorMsg] = useState<string>('');
   const {
     isFileValidated,
@@ -41,8 +41,11 @@ export default function CsvFormatFile({
     setDisableDropZone,
     setTypeOfFile,
     typeOfFile,
+    selectedFiles,
+    setSelectedFiles
   } = useUploadContext();
   const { enqueueSnackbar } = useSnackbar();
+  const API_URL = `${api.BASE_URL}${api.SCHOOLS.UPLOAD}`
 
   const errorMessageArray = showErrorMsg && JSON.parse(showErrorMsg);
 
@@ -66,7 +69,7 @@ export default function CsvFormatFile({
 
   useEffect(() => {
     if (isFileValidated) {
-      const newFiles = selectedFiles.map((file) =>
+      const newFiles = selectedFiles.map((file:any) =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
         })
@@ -155,7 +158,7 @@ export default function CsvFormatFile({
         progress={progress}
         helperText={
           <div>
-            (Note: File size should not exceed 1MB) <br />
+            (Note: File size should not exceed {MAX_FILE_SIZE} MB) <br />
             Also, please ensure that the file name precisely matches the sheet name.
             <a href="/school.csv" target="_blank" rel="noopener noreferrer" style={{color: "purple"}}> Download Sample File</a>
           
@@ -163,7 +166,7 @@ export default function CsvFormatFile({
         }
       />
       <Box sx={{ marginTop: 2, marginBottom: 2, textAlign: 'right' }}>
-        {!!files.length && typeOfFile === 'csv' && (
+        {/* {!!files.length && typeOfFile === 'csv' && (
           <>
             <Button
               variant="contained"
@@ -177,7 +180,7 @@ export default function CsvFormatFile({
               Remove all
             </Button>
           </>
-        )}
+        )} */}
 
         {(onCreate || onUpdate) && (
           <Stack direction="row" justifyContent="flex-end" flexGrow={1}>

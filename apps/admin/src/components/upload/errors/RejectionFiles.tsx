@@ -7,6 +7,7 @@ import { Box, Paper, Typography } from '@mui/material';
 import { fData } from '../../../utils/formatNumber';
 //
 import { fileData } from '../../file-thumbnail';
+import { MAX_FILE_SIZE } from '@constants/constantValue';
 
 // ----------------------------------------------------------------------
 
@@ -56,7 +57,7 @@ export default function RejectionFiles({ fileRejections }: Props) {
               let errorMessage = '';
               if (error.code === 'file-too-large') {
                 errorMessage =
-                  'File size should not exceed 1MB. Please try uploading correct file size again!!';
+                  `File size should not exceed ${MAX_FILE_SIZE}MB. Please try uploading correct file size again!!`;
               } else if (error.code === 'file-invalid-type') {
                 errorMessage = 'Invalid file type. Please try uploading correct file type again!!';
               } else {

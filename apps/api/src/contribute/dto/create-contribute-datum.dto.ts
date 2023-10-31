@@ -36,8 +36,9 @@ export class CreateContributeDatumDto {
   @ApiProperty({
     example: 'season-id',
   })
+  @IsOptional()
   @IsString()
-  season_ID: string;
+  season_ID?: string;
 }
 
 export class ValidateDto {
