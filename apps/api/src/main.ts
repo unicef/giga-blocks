@@ -31,7 +31,7 @@ async function bootstrap() {
     defaultVersion: '1',
   });
   // Custom Exception Filter
-  // app.useGlobalFilters(new CustomExceptionFilter());
+  app.useGlobalFilters(new CustomExceptionFilter());
   // set Global Guard
   app.useGlobalGuards(new AuthGuard(reflector));
   // Api Docs

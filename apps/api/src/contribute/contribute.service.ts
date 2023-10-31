@@ -97,12 +97,13 @@ export class ContributeDataService {
     const validateddata = await this.prisma.validatedData.findUnique({
       where: {
         school_Id: contributedData.school_Id,
+        isArchived: false,
       },
     });
     if (!validateddata) {
       const data = {
         school_Id: contributedData.school_Id,
-        data: contributedData.contributed_data,
+        data: JSON.parse(contributedData.contributed_data),
       };
       transaction = await this.prisma.$transaction([
         this.prisma.contributedData.update({
