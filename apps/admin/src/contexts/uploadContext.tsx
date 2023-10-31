@@ -11,6 +11,8 @@ type UploadContextType = {
   productType: string;
   fileName: string;
   typeOfFile: string;
+  selectedFiles: any;
+  loading: boolean;
   setDuplicates: React.Dispatch<React.SetStateAction<string[]>>;
   setSheetNames: React.Dispatch<React.SetStateAction<string[]>>;
   setTableDatas: React.Dispatch<React.SetStateAction<string[][]>>;
@@ -22,6 +24,8 @@ type UploadContextType = {
   setProductType: React.Dispatch<React.SetStateAction<string>>;
   setFileName: React.Dispatch<React.SetStateAction<string>>;
   setTypeOfFile: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedFiles : any;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const UploadContext = createContext<UploadContextType | undefined>(undefined);
@@ -50,8 +54,8 @@ const UploadContextProvider: React.FC<UploadContextProviderProps> = ({ children 
   const [fileName, setFileName] = useState<string>('');
   const [typeOfFile, setTypeOfFile] = useState<string>('csv');
   const [duplicates, setDuplicates] = useState<string[]>([]);
-
-  console.log(showStepper)
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const contextValue: UploadContextType = useMemo(() => (
     {
@@ -65,6 +69,8 @@ const UploadContextProvider: React.FC<UploadContextProviderProps> = ({ children 
       productType,
       fileName,
       typeOfFile,
+      selectedFiles,
+      loading,
       setDuplicates,
       setSheetNames,
       setTableDatas,
@@ -76,10 +82,13 @@ const UploadContextProvider: React.FC<UploadContextProviderProps> = ({ children 
       setProductType,
       setFileName,
       setTypeOfFile,
+      setSelectedFiles,
+      setLoading
     }
   ), [sheetNames,
     tableDatas,
     allData,
+    selectedFiles,
     selectedSheetName,
     showStepper,
     isFileValidated,
@@ -87,7 +96,9 @@ const UploadContextProvider: React.FC<UploadContextProviderProps> = ({ children 
     productType,
     fileName,
     typeOfFile,
-    setShowStepper
+    loading,
+    setShowStepper,
+    setSelectedFiles
   ]) 
 
   return <UploadContext.Provider value={contextValue}>{children}</UploadContext.Provider>;

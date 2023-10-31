@@ -1,5 +1,5 @@
 // routes
-import { PATH_DASHBOARD, PATH_USER, PATH_SCHOOL } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_USER, PATH_SCHOOL, PATH_CONTRIBUTE } from '../../../routes/paths';
 // components
 import SvgColor from '../../../components/svg-color';
 import { ROLES } from '../../../config-global';
@@ -48,6 +48,10 @@ const navConfig = [
             title: 'Minting In Progress',
             path: PATH_SCHOOL.minting,
           },
+          {
+            title: 'Import School',
+            path: PATH_SCHOOL.import,
+          },
         ],
         icon: ICONS.user,
       },
@@ -58,6 +62,15 @@ const navConfig = [
       {
         title: 'Users',
         path: PATH_USER.list,
+        icon: ICONS.user,
+      },
+    ],
+  },
+  {
+    items: [
+      {
+        title: 'Contribute',
+        path: PATH_CONTRIBUTE.root,
         icon: ICONS.user,
       },
     ],

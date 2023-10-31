@@ -12,7 +12,11 @@ export  default {
     GET: "/schools",
     MINT:"/schools/mintSchool",
     MINTBULK: "/schools/mintBulk",
-    SCHOOLCOUNT: "/schools/schoolCount"
+    SCHOOLCOUNT: "/schools/schoolCount",
+    UPLOAD: "/schools/uploadFile",
+  },
+  CONTRIBUTE: {
+    GET: "/contribute",
   },
   OTP: {
     REGISTER: "/auth/send-otp",

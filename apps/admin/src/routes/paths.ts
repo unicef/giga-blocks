@@ -10,6 +10,7 @@ export const ROOTS_DASHBOARD = '/dashboard';
 const ROOTS_ACTIVITY_LOGS = '/activity-logs';
 const ROOTS_USER = '/user';
 const ROOTS_SCHOOL = '/school';
+const ROOTS_CONTRIBUTE = '/contribute';
 
 // ----------------------------------------------------------------------
 
@@ -47,9 +48,14 @@ export const PATH_ACTIVITY_LOGS = {
   root: ROOTS_ACTIVITY_LOGS,
 };
 
+export const PATH_CONTRIBUTE = {
+  root: ROOTS_CONTRIBUTE,
+};
+
 export const PATH_SCHOOL = {
   root: ROOTS_SCHOOL,
   verified: path(ROOTS_SCHOOL, '/minted'),
   contributed: path(ROOTS_SCHOOL, '/un-minted'),
-  minting: path(ROOTS_SCHOOL, '/pending')
+  minting: path(ROOTS_SCHOOL, '/pending'),
+  import: path(ROOTS_SCHOOL, '/import')
 };
