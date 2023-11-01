@@ -66,4 +66,6 @@ export class MailService {
       throw error;
     }
   }
+
+  public async dataValidationEmail({ email, name }: { email: string; name: string }) {}
 }

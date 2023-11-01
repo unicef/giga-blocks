@@ -8,11 +8,13 @@ import { CreateContributeDatumDto } from './dto/create-contribute-datum.dto';
 import { UpdateContributeDatumDto } from './dto/update-contribute-datum.dto';
 import { PrismaAppService } from '../prisma/prisma.service';
 import { Status } from '@prisma/application';
+import { MailService } from 'src/mailer/mailer.service';
 
 @Injectable()
 export class ContributeDataService {
   private readonly _logger = new Logger(ContributeDataService.name);
-  constructor(private prisma: PrismaAppService) {}
+
+  constructor(private prisma: PrismaAppService, private mailService: MailService) {}
 
   async create(createContributeDatumDto: CreateContributeDatumDto) {
     const createdData = await this.prisma.contributedData.create({
@@ -53,7 +55,7 @@ export class ContributeDataService {
             name: true,
           },
         },
-      },      
+      },
     });
     if (!data) {
       throw new NotFoundException('Contributed data with such ID not found');
@@ -143,6 +145,10 @@ export class ContributeDataService {
         }),
       ]);
     }
+    this.mailService.dataValidationEmail({
+      email: contributedData.contributedUser.email,
+      name: contributedData.contributedUser.name,
+    });
     return transaction;
   }
 }
