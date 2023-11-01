@@ -84,6 +84,19 @@ export class ContributeDataService {
     try {
       const contributedData = await this.prisma.contributedData.findUnique({
         where: { id: id },
+        include: {
+          contributedUser: {
+            select: {
+              name: true,
+              email: true,
+            },
+          },
+          school: {
+            select: {
+              name: true,
+            },
+          },
+        },
       });
       let transaction;
       if (!contributedData) {
@@ -129,7 +142,7 @@ export class ContributeDataService {
         }),
       ]);
     } else {
-      const existingData = JSON.parse(validateddata.data as any);
+      const existingData = validateddata.data as any;
       const newData = JSON.parse(contributedData.contributed_data as any);
       const mergedData = { ...existingData, ...newData };
       transaction = await this.prisma.$transaction([
@@ -145,10 +158,13 @@ export class ContributeDataService {
         }),
       ]);
     }
-    this.mailService.dataValidationEmail({
-      email: contributedData.contributedUser.email,
-      name: contributedData.contributedUser.name,
-    });
+    if (contributedData.contributedUser.email) {
+      this.mailService.dataValidationEmail({
+        email: contributedData.contributedUser.email,
+        name: contributedData.contributedUser.name,
+        school: contributedData.school.name,
+      });
+    }
     return transaction;
   }
 }
