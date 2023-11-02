@@ -56,9 +56,8 @@ const MintedSchools = () => {
   const{data:total} = useSchoolCount('MINTED');
   const[result] = useQuery({query:Queries.nftListQuery,variables:{skip:page*rowsPerPage,first:rowsPerPage}});
   const{data, fetching, error} = result;
-  const {data:ContributedData} = useContributeGet()
+  const {data:ContributedData} = useContributeGet(page,rowsPerPage)
 
-  console.log(ContributedData)
 
   const decodeSchooldata = (data:any) => {
     const encodeddata = data.tokenUris;
@@ -71,7 +70,7 @@ const MintedSchools = () => {
       };
       decodedShooldata.push(schoolData);
     }
-    ContributedData && ContributedData.map((row: any) => {
+    ContributedData?.rows  && ContributedData?.rows.map((row: any) => {
       filteredData.push({
         id: row.id,
         name: row.contributedUser.name,
@@ -103,11 +102,13 @@ const MintedSchools = () => {
           <Scrollbar>
             <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
               <TableHeadUsers
-                  // order={order}
-                  // orderBy={orderBy}
+                  order={order}
+                  orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   rowCount={tableData?.length}
-                  // onSort={onSort}
+                  // showCheckBox={true}
+                  onSort={onSort}
+                  // onSelectAllRows={onSelectAllRows} 
                 />
               <TableBody>
                 {tableData &&
@@ -129,7 +130,7 @@ const MintedSchools = () => {
           </Scrollbar>
         </TableContainer>
         <TablePaginationCustom
-          count={total}
+          count={ContributedData?.meta?.total}
           // count={tableData?.length}
           setPage={setPage}
           page={page}
