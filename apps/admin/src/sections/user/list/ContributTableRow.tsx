@@ -31,11 +31,15 @@ type Props = {
 
 export default function ContributeTableRow({
   row,
+  checkbox,
+  rowData,
 }: Props) {
   const {
     id,
     name,
     school,
+    contributedDataKey,
+    contributedDataValue,
     date
   } = row;
 
@@ -46,19 +50,32 @@ export default function ContributeTableRow({
     push(`/contribute/${row}`)
   };  
 
+  const handleCheckboxChange = (event: any, row: any) => {}
+
   return (
     <>
       <TableRow
         hover
-        // selected={selected}
       >
+      {checkbox &&(
+        <TableCell padding="checkbox">
+          <Checkbox
+            // checked={selected}
+            onChange={(e)=>handleCheckboxChange(e,rowData)}
+          />
+        </TableCell>
+      )}
 
         <TableCell
           align="left"
           sx={{ textTransform: 'capitalize' }}
           onClick={() => handleEditRow(id)}
         >
-          {name}
+        <Stack direction="row" alignItems="center" spacing={2}>
+            <Typography variant="subtitle2" noWrap>
+              {name}
+            </Typography>
+          </Stack>
         </TableCell>
 
         <TableCell
@@ -67,6 +84,14 @@ export default function ContributeTableRow({
           onClick={() => handleEditRow(id)}
         >
           {school}
+        </TableCell>
+
+        <TableCell
+          align="left"
+          sx={{ textTransform: 'capitalize' }}
+          onClick={() => handleEditRow(id)}
+        >
+        {contributedDataKey} : {contributedDataValue.toString()}
         </TableCell>
 
         <TableCell

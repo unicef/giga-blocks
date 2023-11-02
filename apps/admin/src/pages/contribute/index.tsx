@@ -34,6 +34,7 @@ const MintedSchools = () => {
   const TABLE_HEAD = [
     { id: 'name', label: 'Contributer name', align: 'left' },
     { id: 'school', label: 'School', align: 'left' },
+    {id:'contributedData',label:'Contributed Data',align:'left'},
     { id: 'date', label: 'Date', align: 'left' }
   ];
 
@@ -71,11 +72,16 @@ const MintedSchools = () => {
       decodedShooldata.push(schoolData);
     }
     ContributedData?.rows  && ContributedData?.rows.map((row: any) => {
+      const contributedData = Object.entries(row.contributed_data);
+      const jsonString = JSON.parse(contributedData.map(pair => pair[1]).join(''));
+      const date = new Date(row.createdAt).toLocaleDateString();
       filteredData.push({
         id: row.id,
         name: row.contributedUser.name,
         school: row.school.name,
-        date: row.createdAt
+        contributedDataKey: Object.keys(jsonString),
+        contributedDataValue: Object.values(jsonString),
+        date:date
       });
     }
     )
@@ -87,8 +93,18 @@ const MintedSchools = () => {
     if(data) decodeSchooldata(data);
   }, [data]);
 
-  console.log(ContributedData)
-
+  let test;
+  const onSelectAllRows = (e:any) => {
+    const isChecked = e.target.checked;
+    test = isChecked
+    if(isChecked){
+      setSelectedValues(tableData)
+    }
+    else{
+      setSelectedValues([])
+    }
+  }
+  
   return (
     <DashboardLayout>
       <h2>Contributed Data</h2>
@@ -106,9 +122,9 @@ const MintedSchools = () => {
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   rowCount={tableData?.length}
-                  // showCheckBox={true}
+                  showCheckBox={true}
                   onSort={onSort}
-                  // onSelectAllRows={onSelectAllRows} 
+                  onSelectAllRows={onSelectAllRows} 
                 />
               <TableBody>
                 {tableData &&
@@ -119,7 +135,7 @@ const MintedSchools = () => {
                       selectedValues={selectedValues}
                       setSelectedValues={setSelectedValues}
                       rowData={row}
-                      checkbox={false}
+                      checkbox={true}
                     />
                   ))}
                 <TableNoData
