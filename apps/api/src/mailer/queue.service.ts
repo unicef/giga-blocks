@@ -22,6 +22,7 @@ export class QueueService {
   constructor(
     @InjectQueue(ONCHAIN_DATA_QUEUE) private readonly _onchainQueue: Queue,
     @InjectQueue(MINT_QUEUE) private readonly _mintQueue: Queue,
+    @InjectQueue('CONTRIBUTE_QUEUE') private readonly _contributeQueue: Queue,
     private readonly _configService: ConfigService,
     private readonly _prismaService: PrismaAppService,
   ) {}
@@ -100,6 +101,16 @@ export class QueueService {
       const ids = [MintData.data.id];
       await this.updateSchools(ids);
       await this._mintQueue.add(SET_MINT_SINGLE_NFT, { address, mintData, ids }, jobOptions);
+      return { message: 'queue added successfully', statusCode: 200 };
+    } catch (error) {
+      this._logger.error(`Error queueing transaction to blockchain `);
+      throw error;
+    }
+  }
+
+  public async contributeData() {
+    try {
+      await this._contributeQueue.add(SET_MINT_SINGLE_NFT, {  }, jobOptions);
       return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
       this._logger.error(`Error queueing transaction to blockchain `);

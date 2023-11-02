@@ -10,12 +10,13 @@ import { PrismaAppService } from '../prisma/prisma.service';
 import { Status } from '@prisma/application';
 import { MailService } from 'src/mailer/mailer.service';
 import { paginate } from 'src/utils/paginate';
+import { QueueService } from 'src/mailer/queue.service';
 
 @Injectable()
 export class ContributeDataService {
   private readonly _logger = new Logger(ContributeDataService.name);
 
-  constructor(private prisma: PrismaAppService, private mailService: MailService) {}
+  constructor(private prisma: PrismaAppService, private mailService: MailService, private readonly queueService: QueueService) {}
 
   async create(createContributeDatumDto: CreateContributeDatumDto) {
     const createdData = await this.prisma.contributedData.create({
