@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Req,
+  Query,
+} from '@nestjs/common';
 import { ContributeDataService } from './contribute.service';
 import { CreateContributeDatumDto, ValidateDto } from './dto/create-contribute-datum.dto';
 import { UpdateContributeDatumDto } from './dto/update-contribute-datum.dto';
@@ -22,8 +33,8 @@ export class ContributeDataController {
 
   @Public()
   @Get()
-  findAll() {
-    return this.contributeDataService.findAll();
+  findAll(@Query() query: any) {
+    return this.contributeDataService.findAll(query);
   }
 
   @Public()

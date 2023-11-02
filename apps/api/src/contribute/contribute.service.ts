@@ -9,6 +9,7 @@ import { UpdateContributeDatumDto } from './dto/update-contribute-datum.dto';
 import { PrismaAppService } from '../prisma/prisma.service';
 import { Status } from '@prisma/application';
 import { MailService } from 'src/mailer/mailer.service';
+import { paginate } from 'src/utils/paginate';
 
 @Injectable()
 export class ContributeDataService {
@@ -23,8 +24,9 @@ export class ContributeDataService {
     return createdData;
   }
 
-  async findAll() {
-    const data = await this.prisma.contributedData.findMany({
+  async findAll(query) {
+    const { page, perPage } = query;
+    const args = {
       include: {
         contributedUser: {
           select: {
@@ -37,8 +39,17 @@ export class ContributeDataService {
           },
         },
       },
-    });
-    return data;
+    };
+
+    const contributedata = await paginate(
+      this.prisma.contributedData,
+      { ...args },
+      {
+        page,
+        perPage,
+      },
+    );
+    return contributedata;
   }
 
   async findOne(id: string) {
