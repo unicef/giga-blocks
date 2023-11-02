@@ -8,11 +8,13 @@ import { CreateContributeDatumDto } from './dto/create-contribute-datum.dto';
 import { UpdateContributeDatumDto } from './dto/update-contribute-datum.dto';
 import { PrismaAppService } from '../prisma/prisma.service';
 import { Status } from '@prisma/application';
+import { MailService } from 'src/mailer/mailer.service';
 
 @Injectable()
 export class ContributeDataService {
   private readonly _logger = new Logger(ContributeDataService.name);
-  constructor(private prisma: PrismaAppService) {}
+
+  constructor(private prisma: PrismaAppService, private mailService: MailService) {}
 
   async create(createContributeDatumDto: CreateContributeDatumDto) {
     const createdData = await this.prisma.contributedData.create({
@@ -53,7 +55,7 @@ export class ContributeDataService {
             name: true,
           },
         },
-      },      
+      },
     });
     if (!data) {
       throw new NotFoundException('Contributed data with such ID not found');
@@ -82,6 +84,19 @@ export class ContributeDataService {
     try {
       const contributedData = await this.prisma.contributedData.findUnique({
         where: { id: id },
+        include: {
+          contributedUser: {
+            select: {
+              name: true,
+              email: true,
+            },
+          },
+          school: {
+            select: {
+              name: true,
+            },
+          },
+        },
       });
       let transaction;
       if (!contributedData) {
@@ -127,7 +142,7 @@ export class ContributeDataService {
         }),
       ]);
     } else {
-      const existingData = JSON.parse(validateddata.data as any);
+      const existingData = validateddata.data as any;
       const newData = JSON.parse(contributedData.contributed_data as any);
       const mergedData = { ...existingData, ...newData };
       transaction = await this.prisma.$transaction([
@@ -142,6 +157,13 @@ export class ContributeDataService {
           where: { school_Id: contributedData.school_Id },
         }),
       ]);
+    }
+    if (contributedData.contributedUser.email) {
+      this.mailService.dataValidationEmail({
+        email: contributedData.contributedUser.email,
+        name: contributedData.contributedUser.name,
+        school: contributedData.school.name,
+      });
     }
     return transaction;
   }
