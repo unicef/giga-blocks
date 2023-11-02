@@ -222,3 +222,59 @@ export class MintQueueProcessor {
     }
   }
 }
+@Injectable()
+@Processor('CONTRIBUTE_QUEUE')
+export class ContributeProcessor {
+  private readonly _logger = new Logger(ContributeProcessor.name);
+  constructor(
+    private readonly _mailerService: MailerService,
+    private readonly _configService: ConfigService,
+    private readonly _prismaService: PrismaAppService
+  ) {}
+
+  @OnQueueActive()
+  public onActive(job: Job) {
+    this._logger.debug(`Processing job ${job.id} of type ${job.name}`);
+  }
+
+  @OnQueueCompleted()
+  public onComplete(job: Job) {
+    this._logger.debug(`Completed job ${job.id} of type ${job.name}`);
+  }
+
+  @OnQueueFailed()
+  public async onErrorDB(job: Job<any>, error: any) {
+    this._logger.error(`Failed job ${job.id} of type ${job.name}: ${error.message}`, error.stack);
+    if (job.attemptsMade === job.opts.attempts) {
+      try {
+        return this._mailerService.sendMail({
+          to: this._configService.get('EMAIL_ADDRESS'),
+          from: this._configService.get('EMAIL_ADDRESS'),
+          subject: 'Something went wrong while updating database!!',
+          template: './error',
+          context: {},
+        });
+      } catch {
+        this._logger.error('Failed to send confirmation email to admin');
+      }
+    }
+  }
+
+  @Process('SET_CONTRIBUTE_QUEUE')
+  public async sendDBUpdate(job: Job<{ status: MintStatus; ids: string[] }>) {
+    this._logger.log(`Updating database`);
+    const schools = await this._prismaService.school.updateMany({
+      where: {
+        id: {
+          in: job.data.ids,
+        },
+      },
+      data: {
+        minted: job.data.status,
+      },
+    });
+    if (schools.count !== job.data.ids.length) {
+      throw new Error(`No. of schools updated in database is not equal to no of schools minted`);
+    }
+  }
+}
