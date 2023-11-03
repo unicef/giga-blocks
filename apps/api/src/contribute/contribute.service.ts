@@ -142,7 +142,7 @@ export class ContributeDataService {
 
   private async updateContribution(id: string, contributedData: any, userId: string) {
     let transaction;
-    const validateddata = await this.prisma.validatedData.findUnique({
+    const validateddata = await this.prisma.validatedData.findFirst({
       where: {
         school_Id: contributedData.school_Id,
         isArchived: false,
@@ -152,6 +152,7 @@ export class ContributeDataService {
       const data = {
         school_Id: contributedData.school_Id,
         data: JSON.parse(contributedData.contributed_data),
+        contributed_data: [id],
       };
       transaction = await this.prisma.$transaction([
         this.prisma.contributedData.update({
@@ -174,8 +175,9 @@ export class ContributeDataService {
         this.prisma.validatedData.update({
           data: {
             data: mergedData,
+            contributed_data: [...validateddata.contributed_data, id],
           },
-          where: { school_Id: contributedData.school_Id },
+          where: { id: validateddata.id },
         }),
       ]);
     }
