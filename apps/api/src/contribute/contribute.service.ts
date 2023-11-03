@@ -10,6 +10,7 @@ import { PrismaAppService } from '../prisma/prisma.service';
 import { Status } from '@prisma/application';
 import { MailService } from 'src/mailer/mailer.service';
 import { paginate } from 'src/utils/paginate';
+import { Prisma } from '@prisma/application';
 
 @Injectable()
 export class ContributeDataService {
@@ -25,8 +26,17 @@ export class ContributeDataService {
   }
 
   async findAll(query) {
-    const { page, perPage } = query;
+    const { page, perPage, schoolId, contributorId } = query;
+    const where: Prisma.ContributedDataWhereInput = {};
+    if (schoolId) {
+      where.school_Id = schoolId;
+    }
+    if (contributorId) {
+      where.contributedUserId = contributorId;
+    }
+
     const args = {
+      where: where,
       include: {
         contributedUser: {
           select: {
