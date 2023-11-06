@@ -10,6 +10,7 @@ export const ROOTS_DASHBOARD = '/dashboard';
 const ROOTS_ACTIVITY_LOGS = '/activity-logs';
 const ROOTS_USER = '/user';
 const ROOTS_SCHOOL = '/school';
+const ROOTS_CONTRIBUTE = '/contribute';
 
 // ----------------------------------------------------------------------
 
@@ -45,6 +46,10 @@ export const PATH_USER = {
 
 export const PATH_ACTIVITY_LOGS = {
   root: ROOTS_ACTIVITY_LOGS,
+};
+
+export const PATH_CONTRIBUTE = {
+  root: ROOTS_CONTRIBUTE,
 };
 
 export const PATH_SCHOOL = {
