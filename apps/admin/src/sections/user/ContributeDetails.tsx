@@ -18,7 +18,7 @@ import { JsonRpcProvider, Signer } from "ethers";
 import { mintSignature } from "@components/web3/utils/wallet";
 import { useMintSchools } from "@hooks/school/useSchool";
 import { useWeb3React } from "@web3-react/core";
-import { useContributionGetById } from "@hooks/contribute/useContribute";
+import { useContributionGetById, useContributionValidate } from "@hooks/contribute/useContribute";
 
 interface Props {
   isEdit?: boolean;
@@ -48,10 +48,10 @@ export default function ContributeDetail({ id }: Props) {
     mintedStatus:""
   });
 
-  const { data, isSuccess, isError } = useContributionGetById(id);
+  const { data, isSuccess, isError, refetch } = useContributionGetById(id);
+  const { enqueueSnackbar } = useSnackbar();
 
-
-  const {mutate, isError:isMintError,data:mintData, isSuccess :isMintSuccess, error:mintError} = useMintSchools();
+  const {mutate, isSuccess:isValidationSuccess, isError:isValidationError} = useContributionValidate()
 
   const web3 = useWeb3React();
 
@@ -89,6 +89,11 @@ export default function ContributeDetail({ id }: Props) {
   }, [isSuccess, isError, data]);
 
   useEffect(() => {
+    isValidationSuccess && enqueueSnackbar("Successfully updated contribution", { variant: 'success' }); refetch();
+    isValidationError && enqueueSnackbar("Unsuccessful", { variant: 'error' })
+  }, [isValidationSuccess, isValidationError])
+
+  useEffect(() => {
     setNftData({
       id: data?.id,
       schoolName: data?.name,
@@ -114,14 +119,6 @@ export default function ContributeDetail({ id }: Props) {
     roles: Yup.string(),
   });
 
-  // const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = event.target;
-  //   setProfile((prevFormData) => ({
-  //     ...prevFormData,
-  //     [name]: value,
-  //   }));
-  // };
-
   const methods = useForm<FormValuesProps>({
     resolver: yupResolver(UpdateUserSchema),
   });
@@ -131,16 +128,10 @@ export default function ContributeDetail({ id }: Props) {
     formState: { isSubmitting },
   } = methods;
 
-  const signTransaction = async () =>{
-    const signer = (web3.provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
-    const signature = await mintSignature(signer, '1');
-    return signature;
-  }
 
-  const mintSchool = async () => {
-    const signature = await signTransaction();
-    if(!signature) return Error("Signature is null");
-    mutate({data:nftData, signatureWithData:signature})
+  const onContribute = (validity:boolean) => {
+    const payload = {contributions: [{contributionId: id, isValid: validity}]}
+    mutate(payload)
   }
 
   return (
@@ -184,13 +175,16 @@ export default function ContributeDetail({ id }: Props) {
                         value={profile?.status || ""}
                         label="Status"
                       />
-                      
+                      <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
                       <span>Contributed Data</span>
+                      <span>
                       <ProfileTextField
                         name="coverage"
                         value={Object.values(profile?.contributed_data)[0] || ""}
                         label={Object.keys(profile?.contributed_data)[0] || ""}
                       />
+                      </span>
+                      </div>
                     </Box>
                   </Box>
 
@@ -205,23 +199,24 @@ export default function ContributeDetail({ id }: Props) {
           </FormProvider>
         </Container>
       </Grid>
-      {/* <Grid item xs={4}>
+      <Grid item xs={4}>
         <Container>
           <Box justifyContent={"center"}>
             <Stack alignItems="center" sx={{ mt: 1 }}>
-              {profile.mintedStatus === "NOTMINTED" && 
-              <Button variant="contained" color={"info"} style={{ width: "300px", background: '#474747' }} onClick={mintSchool}>
-                Mint
-              </Button>}
+            <Button variant="contained" color={"info"} style={{ width: "300px", background: '#474747' }} onClick={() => onContribute(false)}>
+                Invalidate
+              </Button>
             </Stack>
-            <Stack sx={{ mt: 8 }}>
+            <Stack sx={{ mt: 2 }}>
             <Box display="flex" justifyContent="center">
-              <Identicon string={profile?.fullname} size={200} />
+            <Button variant="contained" color={"info"} style={{ width: "300px", background: '#474747' }} onClick={() => onContribute(true)}>
+                Validate
+              </Button>
             </Box>
             </Stack>
           </Box>
         </Container>
-      </Grid> */}
+      </Grid>
     </>
   );
 }

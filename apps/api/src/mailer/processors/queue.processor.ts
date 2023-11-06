@@ -15,6 +15,7 @@ import {
   SET_MINT_NFT,
   SET_MINT_SINGLE_NFT,
   SET_ONCHAIN_DATA,
+  CONTRIBUTE_QUEUE
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
@@ -24,6 +25,7 @@ import { PrismaAppService } from 'src/prisma/prisma.service';
 import { SchoolData } from '../types/mintdata.types';
 import { MintStatus } from '@prisma/application';
 import { jobOptions } from '../config/bullOptions';
+import { ContributeDataService } from 'src/contribute/contribute.service';
 
 @Injectable()
 @Processor(ONCHAIN_DATA_QUEUE)
@@ -223,13 +225,13 @@ export class MintQueueProcessor {
   }
 }
 @Injectable()
-@Processor('CONTRIBUTE_QUEUE')
+@Processor(CONTRIBUTE_QUEUE)
 export class ContributeProcessor {
   private readonly _logger = new Logger(ContributeProcessor.name);
   constructor(
     private readonly _mailerService: MailerService,
     private readonly _configService: ConfigService,
-    private readonly _prismaService: PrismaAppService
+    private contributeDataService: ContributeDataService
   ) {}
 
   @OnQueueActive()
@@ -261,20 +263,11 @@ export class ContributeProcessor {
   }
 
   @Process('SET_CONTRIBUTE_QUEUE')
-  public async sendDBUpdate(job: Job<{ status: MintStatus; ids: string[] }>) {
-    this._logger.log(`Updating database`);
-    const schools = await this._prismaService.school.updateMany({
-      where: {
-        id: {
-          in: job.data.ids,
-        },
-      },
-      data: {
-        minted: job.data.status,
-      },
-    });
-    if (schools.count !== job.data.ids.length) {
-      throw new Error(`No. of schools updated in database is not equal to no of schools minted`);
+  public async contributeUpdate(job: Job<{ ids: any, userId: string }>) {
+    const idsArray = job.data.ids.contributions
+    const userId = job.data.userId
+    for (var data of idsArray) {
+    const transactions = this.contributeDataService.validate(data.contributionId, Boolean(data.isValid), userId)
     }
   }
-}
+  }

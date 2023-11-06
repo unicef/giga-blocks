@@ -16,7 +16,7 @@ import { QueueService } from 'src/mailer/queue.service';
 export class ContributeDataService {
   private readonly _logger = new Logger(ContributeDataService.name);
 
-  constructor(private prisma: PrismaAppService, private mailService: MailService, private readonly queueService: QueueService) {}
+  constructor(private prisma: PrismaAppService, private mailService: MailService, private queueService : QueueService) {}
 
   async create(createContributeDatumDto: CreateContributeDatumDto) {
     const createdData = await this.prisma.contributedData.create({
@@ -83,6 +83,10 @@ export class ContributeDataService {
     return updatedData;
   }
 
+  async batchValidate(ids: UpdateContributeDatumDto, userId: string){
+    return this.queueService.contributeData(ids, userId)
+  }
+
   async remove(id: string) {
     const deletedData = await this.prisma.contributedData.delete({
       where: { id: id },
@@ -92,7 +96,7 @@ export class ContributeDataService {
     }
   }
 
-  async validate(id: string, isValid: boolean, userId: string) {
+  public async validate(id: string, isValid: boolean, userId: string) {
     try {
       const contributedData = await this.prisma.contributedData.findUnique({
         where: { id: id },
@@ -132,7 +136,8 @@ export class ContributeDataService {
   }
 
   private async updateContribution(id: string, contributedData: any, userId: string) {
-    let transaction;
+    let transaction; 
+    console.log(contributedData)
     const validateddata = await this.prisma.validatedData.findUnique({
       where: {
         school_Id: contributedData.school_Id,
@@ -141,7 +146,7 @@ export class ContributeDataService {
     });
     if (!validateddata) {
       const data = {
-        school_Id: contributedData.school_Id,
+        school_Id: contributedData.school_Id, 
         data: JSON.parse(contributedData.contributed_data),
       };
       transaction = await this.prisma.$transaction([

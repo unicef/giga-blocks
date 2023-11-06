@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import routes from '../../constants/api';
 import { getAccessToken } from '@utils/sessionManager';
@@ -37,4 +37,12 @@ export const useContributeGet = (page:number, perPage:number) => {
         keepPreviousData: true,
       }
     );
+  };
+
+  const validateData = async (data: any) => {
+    return await api.patch(routes.CONTRIBUTE.PATCH, data);
+  };
+
+  export const useContributionValidate = () => {
+    return useMutation(validateData);
   };

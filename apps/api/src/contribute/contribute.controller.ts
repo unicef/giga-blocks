@@ -48,6 +48,13 @@ export class ContributeDataController {
     return this.contributeDataService.update(id, updateContributeDatumDto);
   }
 
+  @UseGuards(RoleGuard)
+  @Roles('ADMIN')
+  @Patch()
+  batchValidate(@Body() updateContributeDatumDto: UpdateContributeDatumDto, @Req() req: any) {
+    return this.contributeDataService.batchValidate(updateContributeDatumDto, req.user.id);
+  } 
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.contributeDataService.remove(id);
