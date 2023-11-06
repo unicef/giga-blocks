@@ -10,6 +10,7 @@ import { PrismaAppService } from '../prisma/prisma.service';
 import { Status } from '@prisma/application';
 import { MailService } from 'src/mailer/mailer.service';
 import { paginate } from 'src/utils/paginate';
+import { Prisma } from '@prisma/application';
 
 @Injectable()
 export class ContributeDataService {
@@ -25,8 +26,17 @@ export class ContributeDataService {
   }
 
   async findAll(query) {
-    const { page, perPage } = query;
+    const { page, perPage, schoolId, contributorId } = query;
+    const where: Prisma.ContributedDataWhereInput = {};
+    if (schoolId) {
+      where.school_Id = schoolId;
+    }
+    if (contributorId) {
+      where.contributedUserId = contributorId;
+    }
+
     const args = {
+      where: where,
       include: {
         contributedUser: {
           select: {
@@ -132,7 +142,7 @@ export class ContributeDataService {
 
   private async updateContribution(id: string, contributedData: any, userId: string) {
     let transaction;
-    const validateddata = await this.prisma.validatedData.findUnique({
+    const validateddata = await this.prisma.validatedData.findFirst({
       where: {
         school_Id: contributedData.school_Id,
         isArchived: false,
@@ -142,6 +152,7 @@ export class ContributeDataService {
       const data = {
         school_Id: contributedData.school_Id,
         data: JSON.parse(contributedData.contributed_data),
+        contributed_data: [id],
       };
       transaction = await this.prisma.$transaction([
         this.prisma.contributedData.update({
@@ -164,8 +175,9 @@ export class ContributeDataService {
         this.prisma.validatedData.update({
           data: {
             data: mergedData,
+            contributed_data: [...validateddata.contributed_data, id],
           },
-          where: { school_Id: contributedData.school_Id },
+          where: { id: validateddata.id },
         }),
       ]);
     }

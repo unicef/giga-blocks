@@ -183,7 +183,7 @@ export class SchoolService {
 
   async updateSchoolData(id: string, userId: string) {
     try {
-      const validatedData = await this.prisma.validatedData.findUnique({
+      const validatedData = await this.prisma.validatedData.findFirst({
         where: {
           school_Id: id,
           isArchived: false,
@@ -201,7 +201,7 @@ export class SchoolService {
         }),
         // need to delete the validatedData for now just archived
         this.prisma.validatedData.update({
-          where: { school_Id: id },
+          where: { id: validatedData.id },
           data: {
             isArchived: true,
           },
