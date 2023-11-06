@@ -24,8 +24,8 @@ import { RoleGuard } from '../auth/guards/role.guard';
 export class ContributeDataController {
   constructor(private readonly contributeDataService: ContributeDataService) {}
 
-  // @UseGuards(RoleGuard)
-  // @Roles('CONTRIBUTOR')
+  @UseGuards(RoleGuard)
+  @Roles('CONTRIBUTOR')
   @Post()
   create(@Body() createContributeDatumDto: CreateContributeDatumDto) {
     return this.contributeDataService.create(createContributeDatumDto);

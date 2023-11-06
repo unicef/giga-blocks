@@ -204,6 +204,19 @@ export class SchoolService {
           where: { id: validatedData.id },
           data: {
             isArchived: true,
+            approvedBy: userId,
+            approvedAt: new Date(),
+          },
+        }),
+        this.prisma.contributedData.updateMany({
+          where: {
+            id: {
+              in: validatedData.contributed_data,
+            },
+          },
+          data: {
+            approvedBy: userId,
+            approvedAt: new Date(),
           },
         }),
       ]);
