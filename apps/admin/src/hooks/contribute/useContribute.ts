@@ -11,12 +11,12 @@ const api = axios.create({
   
   api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 
-export const useContributeGet = () => {
+export const useContributeGet = (page:number, perPage:number) => {
     return useQuery(
-      ['get-api-data'],
+      ['get-api-data',page,perPage],
       async () => {
         const { data } = await api.get(
-          `${routes.CONTRIBUTE.GET}`
+          `${routes.CONTRIBUTE.GET}?page=${page}&perPage=${perPage}`
         );
         return data;
       },

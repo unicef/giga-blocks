@@ -34,6 +34,7 @@ const MintedSchools = () => {
   const TABLE_HEAD = [
     { id: 'name', label: 'Contributer name', align: 'left' },
     { id: 'school', label: 'School', align: 'left' },
+    {id:'contributedData',label:'Contributed Data',align:'left'},
     { id: 'date', label: 'Date', align: 'left' }
   ];
 
@@ -56,9 +57,8 @@ const MintedSchools = () => {
   const{data:total} = useSchoolCount('MINTED');
   const[result] = useQuery({query:Queries.nftListQuery,variables:{skip:page*rowsPerPage,first:rowsPerPage}});
   const{data, fetching, error} = result;
-  const {data:ContributedData} = useContributeGet()
+  const {data:ContributedData} = useContributeGet(page,rowsPerPage)
 
-  console.log(ContributedData)
 
   const decodeSchooldata = (data:any) => {
     const encodeddata = data.tokenUris;
@@ -71,12 +71,17 @@ const MintedSchools = () => {
       };
       decodedShooldata.push(schoolData);
     }
-    ContributedData && ContributedData.map((row: any) => {
+    ContributedData?.rows  && ContributedData?.rows.map((row: any) => {
+      const contributedData = Object.entries(row.contributed_data);
+      const jsonString = JSON.parse(contributedData.map(pair => pair[1]).join(''));
+      const date = new Date(row.createdAt).toLocaleDateString();
       filteredData.push({
         id: row.id,
         name: row.contributedUser.name,
         school: row.school.name,
-        date: row.createdAt
+        contributedDataKey: Object.keys(jsonString),
+        contributedDataValue: Object.values(jsonString),
+        date:date
       });
     }
     )
@@ -88,8 +93,18 @@ const MintedSchools = () => {
     if(data) decodeSchooldata(data);
   }, [data]);
 
-  console.log(ContributedData)
-
+  let test;
+  const onSelectAllRows = (e:any) => {
+    const isChecked = e.target.checked;
+    test = isChecked
+    if(isChecked){
+      setSelectedValues(tableData)
+    }
+    else{
+      setSelectedValues([])
+    }
+  }
+  
   return (
     <DashboardLayout>
       <h2>Contributed Data</h2>
@@ -103,11 +118,13 @@ const MintedSchools = () => {
           <Scrollbar>
             <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
               <TableHeadUsers
-                  // order={order}
-                  // orderBy={orderBy}
+                  order={order}
+                  orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   rowCount={tableData?.length}
-                  // onSort={onSort}
+                  showCheckBox={true}
+                  onSort={onSort}
+                  onSelectAllRows={onSelectAllRows} 
                 />
               <TableBody>
                 {tableData &&
@@ -118,7 +135,7 @@ const MintedSchools = () => {
                       selectedValues={selectedValues}
                       setSelectedValues={setSelectedValues}
                       rowData={row}
-                      checkbox={false}
+                      checkbox={true}
                     />
                   ))}
                 <TableNoData
@@ -129,7 +146,7 @@ const MintedSchools = () => {
           </Scrollbar>
         </TableContainer>
         <TablePaginationCustom
-          count={total}
+          count={ContributedData?.meta?.total}
           // count={tableData?.length}
           setPage={setPage}
           page={page}

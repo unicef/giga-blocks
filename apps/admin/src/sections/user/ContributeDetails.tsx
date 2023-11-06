@@ -50,7 +50,6 @@ export default function ContributeDetail({ id }: Props) {
 
   const { data, isSuccess, isError } = useContributionGetById(id);
 
-  console.log(data)
 
   const {mutate, isError:isMintError,data:mintData, isSuccess :isMintSuccess, error:mintError} = useMintSchools();
 
@@ -79,7 +78,7 @@ export default function ContributeDetail({ id }: Props) {
       setProfile({
         fullname: data?.contributedUser?.name,
         schoolName: data?.school.name,
-        createdAt: data?.createdAt,
+        createdAt: new Date(data?.createdAt).toLocaleDateString(),
         status: data?.status,
         contributed_data: jsonString,
         coverage: data?.coverage_availability,
