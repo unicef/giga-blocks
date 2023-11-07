@@ -51,7 +51,6 @@ const ContributeForm = () => {
 
   return (
     <>
-      <Heading schoolData="School" />
       {/* INTRODUCTION */}
       <Grid fullWidth className="mt-50px">
         <Column md={4} lg={5} sm={4}>

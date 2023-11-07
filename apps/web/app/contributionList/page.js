@@ -3,16 +3,17 @@ import Footer from '../components/footer';
 import Navbar from '../components/navbar';
 import ContributionTable from '../components/contributionTable';
 import Heading from '../components/school-detail/heading';
+import PageHeader from '../components/page-header';
 
-const SchoolDetail = ({ id }) => {
+const ContributionList = () => {
   return (
     <>
       <Navbar />
-      <Heading />
+      <PageHeader name={'Contribution List'} />
       <ContributionTable />
       <Footer />
     </>
   );
 };
 
-export default SchoolDetail;
+export default ContributionList;
