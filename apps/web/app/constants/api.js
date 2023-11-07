@@ -28,6 +28,9 @@ module.exports = {
     WALLETLOGIN: '/auth/walletlogin',
   },
   LOGIN: {
-    LOGIN: "/auth/login",
+    LOGIN: '/auth/login',
+  },
+  CONTRIBUTOR: {
+    GET: '/users/contributor',
   },
 };
