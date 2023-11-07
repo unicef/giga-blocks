@@ -60,7 +60,6 @@ export default function useTable(props?: UseTableProps): ReturnType {
       //     selected.slice(selectedIndex + 1)
       //   );
       // }
-      // console.log(selected)
       // setSelected([id]);
     },
     [selected, setSelected]

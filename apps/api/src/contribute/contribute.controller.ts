@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Req,
+  Query,
+} from '@nestjs/common';
 import { ContributeDataService } from './contribute.service';
 import { CreateContributeDatumDto, ValidateDto } from './dto/create-contribute-datum.dto';
 import { UpdateContributeDatumDto } from './dto/update-contribute-datum.dto';
@@ -22,8 +33,8 @@ export class ContributeDataController {
 
   @Public()
   @Get()
-  findAll() {
-    return this.contributeDataService.findAll();
+  findAll(@Query() query: any) {
+    return this.contributeDataService.findAll(query);
   }
 
   @Public()
@@ -37,14 +48,36 @@ export class ContributeDataController {
     return this.contributeDataService.update(id, updateContributeDatumDto);
   }
 
+  @UseGuards(RoleGuard)
+  @Roles('ADMIN')
+  @Patch()
+  batchValidate(@Body() updateContributeDatumDto: UpdateContributeDatumDto, @Req() req: any) {
+    return this.contributeDataService.batchValidate(updateContributeDatumDto, req.user.id);
+  } 
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.contributeDataService.remove(id);
   }
 
+  @UseGuards(RoleGuard)
   @Roles('ADMIN')
-  @Post('/validate/:id')
-  validate(@Param('id') id: string, @Body() ValidateDto: ValidateDto) {
-    return this.contributeDataService.validate(id, ValidateDto.isValid);
+  @Patch('/validate/:id')
+  validate(@Param('id') id: string, @Body() ValidateDto: ValidateDto, @Req() req: any) {
+    return this.contributeDataService.validate(id, ValidateDto.isValid, req.user.id);
+  }
+
+  @UseGuards(RoleGuard)
+  @Roles('ADMIN')
+  @Get('/validated')
+  getValidated() {
+    return this.contributeDataService.getValidated();
+  }
+
+  @UseGuards(RoleGuard)
+  @Roles('ADMIN')
+  @Get('/validated/:id')
+  getValidatedById(@Param('id') id: string) {
+    return this.contributeDataService.getValidatedById(id);
   }
 }

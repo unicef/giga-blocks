@@ -157,14 +157,18 @@ model User {
   updatedAt       DateTime          @updatedAt
   deletedAt       DateTime?
   ContributedData ContributedData[]
+  ValidatedUser   ContributedData[] @relation("ValidatedBy")
+  ApprovedBy      ContributedData[] @relation("ApprovedBy")
   Points          Points[]          @relation("UserID")
   CreatedBy       Points[]          @relation("Creator")
   Auth            Auth[]
   roles           Role[]
   schools         School[]
+  schoolUpdatedBy School[]          @relation("UpdatedBy")
   isArchived      Boolean           @default(false)
   vote            Vote[]            @relation("UserId")
   createdBy       Vote[]            @relation("Creator")
+  validatedBy     validatedData[]   @relation("ApprovedBy")
 
   @@map("giga_users")
 }
@@ -205,10 +209,12 @@ model School {
   createdById               String?
   contributedSeason         Season?           @relation(fields: [season_Id], references: [id])
   isArchived                Boolean           @default(false)
+  updatedBy                 String?
+  updatedUser               User?             @relation("UpdatedBy", fields: [updatedBy], references: [id])
   uploadId                  String?
   uploadBatch               CSVUpload?        @relation(fields: [uploadId], references: [id])
+  validatedData             validatedData[]
   ContributedData           ContributedData[]
-  validatedData             validatedData?
 
   @@map("giga_school")
 }
@@ -223,8 +229,14 @@ model ContributedData {
   contributedUser   User      @relation(fields: [contributedUserId], references: [id])
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
-  deletedAt         DateTime?
+  approvedBy        String?
+  approved          User?     @relation("ApprovedBy", fields: [approvedBy], references: [id])
+  deletedAt         DateTime? 
+  approvedAt        DateTime?
   isArchived        Boolean   @default(false)
+  validatedBy       String?
+  validatedAt       DateTime?
+  validatedUser     User?     @relation("ValidatedBy", fields: [validatedBy], references: [id])
   points            Points[]
   vote              Vote[]
   Season            Season?   @relation(fields: [seasonId], references: [id])
@@ -304,14 +316,19 @@ model Vote {
 }
 
 model validatedData {
-  id         String    @id @default(uuid())
-  school_Id  String    @unique
-  school     School    @relation(fields: [school_Id], references: [id])
-  data       Json
-  createdAt  DateTime? @default(now())
-  updatedAt  DateTime? @updatedAt
-  deletedAt  DateTime?
-  isArchived Boolean   @default(false)
+  id               String    @id @default(uuid())
+  school_Id        String
+  school           School    @relation(fields: [school_Id], references: [id])
+  data             Json
+  approvedStatus   Boolean   @default(false)
+  createdAt        DateTime? @default(now())
+  updatedAt        DateTime? @updatedAt
+  deletedAt        DateTime?
+  approvedBy       String?
+  approved         User?     @relation("ApprovedBy", fields: [approvedBy], references: [id])
+  approvedAt       DateTime?
+  contributed_data String[]
+  isArchived       Boolean   @default(false)
 
   @@map("giga_validated_data")
 }

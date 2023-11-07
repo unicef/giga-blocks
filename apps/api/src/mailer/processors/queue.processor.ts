@@ -15,6 +15,7 @@ import {
   SET_MINT_NFT,
   SET_MINT_SINGLE_NFT,
   SET_ONCHAIN_DATA,
+  CONTRIBUTE_QUEUE
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
@@ -24,6 +25,7 @@ import { PrismaAppService } from 'src/prisma/prisma.service';
 import { SchoolData } from '../types/mintdata.types';
 import { MintStatus } from '@prisma/application';
 import { jobOptions } from '../config/bullOptions';
+import { ContributeDataService } from 'src/contribute/contribute.service';
 
 @Injectable()
 @Processor(ONCHAIN_DATA_QUEUE)
@@ -222,3 +224,50 @@ export class MintQueueProcessor {
     }
   }
 }
+@Injectable()
+@Processor(CONTRIBUTE_QUEUE)
+export class ContributeProcessor {
+  private readonly _logger = new Logger(ContributeProcessor.name);
+  constructor(
+    private readonly _mailerService: MailerService,
+    private readonly _configService: ConfigService,
+    private contributeDataService: ContributeDataService
+  ) {}
+
+  @OnQueueActive()
+  public onActive(job: Job) {
+    this._logger.debug(`Processing job ${job.id} of type ${job.name}`);
+  }
+
+  @OnQueueCompleted()
+  public onComplete(job: Job) {
+    this._logger.debug(`Completed job ${job.id} of type ${job.name}`);
+  }
+
+  @OnQueueFailed()
+  public async onErrorDB(job: Job<any>, error: any) {
+    this._logger.error(`Failed job ${job.id} of type ${job.name}: ${error.message}`, error.stack);
+    if (job.attemptsMade === job.opts.attempts) {
+      try {
+        return this._mailerService.sendMail({
+          to: this._configService.get('EMAIL_ADDRESS'),
+          from: this._configService.get('EMAIL_ADDRESS'),
+          subject: 'Something went wrong while updating database!!',
+          template: './error',
+          context: {},
+        });
+      } catch {
+        this._logger.error('Failed to send confirmation email to admin');
+      }
+    }
+  }
+
+  @Process('SET_CONTRIBUTE_QUEUE')
+  public async contributeUpdate(job: Job<{ ids: any, userId: string }>) {
+    const idsArray = job.data.ids.contributions
+    const userId = job.data.userId
+    for (var data of idsArray) {
+    const transactions = this.contributeDataService.validate(data.contributionId, Boolean(data.isValid), userId)
+    }
+  }
+  }

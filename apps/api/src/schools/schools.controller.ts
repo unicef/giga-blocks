@@ -4,7 +4,6 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   Query,
   Post,
   UseGuards,
@@ -13,7 +12,6 @@ import {
   Request,
 } from '@nestjs/common';
 import { SchoolService } from './schools.service';
-import { UpdateSchoolDto } from './dto/update-schools.dto';
 import { ApiBody, ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ListSchoolDto } from './dto/list-schools.dto';
 import { Public } from '../common/decorators/public.decorator';
@@ -38,8 +36,8 @@ export class SchoolController {
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Patch('/update/:id')
-  update(@Param('id') id: string) {
-    return this.schoolService.update(id);
+  update(@Param('id') id: string, @Req() req: any) {
+    return this.schoolService.update(id, req.user.id);
   }
 
   @Roles('ADMIN')
@@ -95,21 +93,9 @@ export class SchoolController {
     return this.schoolService.byCountry(`${country}`);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateSchoolDto: UpdateSchoolDto) {
-  //   return this.schoolService.update(+id, updateSchoolDto);
-  // }
-
-  @Delete()
-  removeAll() {
-    return this.schoolService.removeAll();
-  }
-
   @Public()
   @Get('listUpload')
   listUploads() {
     return this.schoolService.listUploads();
   }
 }
-
-
