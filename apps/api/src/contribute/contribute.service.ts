@@ -10,13 +10,18 @@ import { PrismaAppService } from '../prisma/prisma.service';
 import { Status } from '@prisma/application';
 import { MailService } from 'src/mailer/mailer.service';
 import { paginate } from 'src/utils/paginate';
+import { Prisma } from '@prisma/application';
 import { QueueService } from 'src/mailer/queue.service';
 
 @Injectable()
 export class ContributeDataService {
   private readonly _logger = new Logger(ContributeDataService.name);
 
-  constructor(private prisma: PrismaAppService, private mailService: MailService, private queueService : QueueService) {}
+  constructor(
+    private prisma: PrismaAppService,
+    private mailService: MailService,
+    private queueService: QueueService,
+  ) {}
 
   async create(createContributeDatumDto: CreateContributeDatumDto) {
     const createdData = await this.prisma.contributedData.create({
@@ -26,8 +31,17 @@ export class ContributeDataService {
   }
 
   async findAll(query) {
-    const { page, perPage } = query;
+    const { page, perPage, schoolId, contributorId } = query;
+    const where: Prisma.ContributedDataWhereInput = {};
+    if (schoolId) {
+      where.school_Id = schoolId;
+    }
+    if (contributorId) {
+      where.contributedUserId = contributorId;
+    }
+
     const args = {
+      where: where,
       include: {
         contributedUser: {
           select: {
@@ -83,8 +97,8 @@ export class ContributeDataService {
     return updatedData;
   }
 
-  async batchValidate(ids: UpdateContributeDatumDto, userId: string){
-    return this.queueService.contributeData(ids, userId)
+  async batchValidate(ids: UpdateContributeDatumDto, userId: string) {
+    return this.queueService.contributeData(ids, userId);
   }
 
   async remove(id: string) {
@@ -136,18 +150,19 @@ export class ContributeDataService {
   }
 
   private async updateContribution(id: string, contributedData: any, userId: string) {
-    let transaction; 
-    console.log(contributedData)
-    const validateddata = await this.prisma.validatedData.findUnique({
+    let transaction;
+    const validateddata = await this.prisma.validatedData.findFirst({
       where: {
         school_Id: contributedData.school_Id,
         isArchived: false,
+        approvedStatus: false,
       },
     });
     if (!validateddata) {
       const data = {
-        school_Id: contributedData.school_Id, 
+        school_Id: contributedData.school_Id,
         data: JSON.parse(contributedData.contributed_data),
+        contributed_data: [id],
       };
       transaction = await this.prisma.$transaction([
         this.prisma.contributedData.update({
@@ -170,8 +185,9 @@ export class ContributeDataService {
         this.prisma.validatedData.update({
           data: {
             data: mergedData,
+            contributed_data: [...validateddata.contributed_data, id],
           },
-          where: { school_Id: contributedData.school_Id },
+          where: { id: validateddata.id },
         }),
       ]);
     }
@@ -183,5 +199,47 @@ export class ContributeDataService {
       });
     }
     return transaction;
+  }
+
+  async getValidated() {
+    const validatedData = await this.prisma.validatedData.findMany({
+      // where: {
+      //   isArchived: false,
+      // },
+      include: {
+        school: {
+          select: {
+            name: true,
+          },
+        },
+        approved: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+    return validatedData;
+  }
+
+  async getValidatedById(id: string) {
+    const validatedData = await this.prisma.validatedData.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        school: {
+          select: {
+            name: true,
+          },
+        },
+        approved: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+    return validatedData;
   }
 }

@@ -183,10 +183,11 @@ export class SchoolService {
 
   async updateSchoolData(id: string, userId: string) {
     try {
-      const validatedData = await this.prisma.validatedData.findUnique({
+      const validatedData = await this.prisma.validatedData.findFirst({
         where: {
           school_Id: id,
           isArchived: false,
+          approvedStatus: false,
         },
       });
       const keyValue = Object.entries(validatedData.data);
@@ -201,9 +202,23 @@ export class SchoolService {
         }),
         // need to delete the validatedData for now just archived
         this.prisma.validatedData.update({
-          where: { school_Id: id },
+          where: { id: validatedData.id },
           data: {
             isArchived: true,
+            approvedBy: userId,
+            approvedAt: new Date(),
+            approvedStatus: true,
+          },
+        }),
+        this.prisma.contributedData.updateMany({
+          where: {
+            id: {
+              in: validatedData.contributed_data,
+            },
+          },
+          data: {
+            approvedBy: userId,
+            approvedAt: new Date(),
           },
         }),
       ]);
