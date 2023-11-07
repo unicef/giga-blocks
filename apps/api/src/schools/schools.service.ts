@@ -187,6 +187,7 @@ export class SchoolService {
         where: {
           school_Id: id,
           isArchived: false,
+          approvedStatus: false,
         },
       });
       const keyValue = Object.entries(validatedData.data);
@@ -206,6 +207,7 @@ export class SchoolService {
             isArchived: true,
             approvedBy: userId,
             approvedAt: new Date(),
+            approvedStatus: true,
           },
         }),
         this.prisma.contributedData.updateMany({

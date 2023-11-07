@@ -59,4 +59,18 @@ export class ContributeDataController {
   validate(@Param('id') id: string, @Body() ValidateDto: ValidateDto, @Req() req: any) {
     return this.contributeDataService.validate(id, ValidateDto.isValid, req.user.id);
   }
+
+  @UseGuards(RoleGuard)
+  @Roles('ADMIN')
+  @Get('/validated')
+  getValidated() {
+    return this.contributeDataService.getValidated();
+  }
+
+  @UseGuards(RoleGuard)
+  @Roles('ADMIN')
+  @Get('/validated/:id')
+  getValidatedById(@Param('id') id: string) {
+    return this.contributeDataService.getValidatedById(id);
+  }
 }

@@ -146,6 +146,7 @@ export class ContributeDataService {
       where: {
         school_Id: contributedData.school_Id,
         isArchived: false,
+        approvedStatus: false,
       },
     });
     if (!validateddata) {
@@ -189,5 +190,47 @@ export class ContributeDataService {
       });
     }
     return transaction;
+  }
+
+  async getValidated() {
+    const validatedData = await this.prisma.validatedData.findMany({
+      // where: {
+      //   isArchived: false,
+      // },
+      include: {
+        school: {
+          select: {
+            name: true,
+          },
+        },
+        approved: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+    return validatedData;
+  }
+
+  async getValidatedById(id: string) {
+    const validatedData = await this.prisma.validatedData.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        school: {
+          select: {
+            name: true,
+          },
+        },
+        approved: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+    return validatedData;
   }
 }
