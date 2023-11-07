@@ -7,13 +7,13 @@ import QueryProvider from '../libs/get-query-client';
 import { useContributionList } from '../hooks/useContributorList';
 
 const ContributorList = () => {
-  const { data: contributors } = useContributionList();
+  const { data: contributors, isLoading } = useContributionList();
   return (
     <>
       <QueryProvider>
         <Navbar />
         <PageHeader name={'Contributor List'} />
-        <ContributorCard contributors={contributors} />
+        <ContributorCard contributors={contributors} isLoading={isLoading} />
         <Footer />
       </QueryProvider>
     </>
