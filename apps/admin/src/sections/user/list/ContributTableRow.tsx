@@ -33,6 +33,8 @@ export default function ContributeTableRow({
   row,
   checkbox,
   rowData,
+  selectedValues,
+  setSelectedValues
 }: Props) {
   const {
     id,
@@ -50,7 +52,16 @@ export default function ContributeTableRow({
     push(`/contribute/${row}`)
   };  
 
-  const handleCheckboxChange = (event: any, row: any) => {}
+  const handleCheckboxChange = (event: any, row: any) => {
+    const isChecked = event.target.checked;
+    if (isChecked) {
+        setSelectedValues((prev: any) => [...prev, row]);
+    } else {
+      setSelectedValues((prevSelectedValues: any) =>
+        prevSelectedValues.filter((value: any) => value.id !== row.id)
+      );
+    }
+  }
 
   return (
     <>
@@ -60,7 +71,7 @@ export default function ContributeTableRow({
       {checkbox &&(
         <TableCell padding="checkbox">
           <Checkbox
-            // checked={selected}
+            checked={selectedValues.some((obj: any) => obj.id === id)}
             onChange={(e)=>handleCheckboxChange(e,rowData)}
           />
         </TableCell>

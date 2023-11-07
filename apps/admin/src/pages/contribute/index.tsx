@@ -27,8 +27,9 @@ import { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { Queries } from 'src/libs/graph-query';
 import { useSchoolCount } from "@hooks/school/useSchool";
-import { useContributeGet } from '@hooks/contribute/useContribute';
+import { useContributeGet, useContributionValidate } from '@hooks/contribute/useContribute';
 import ContributeTableRow from '@sections/user/list/ContributTableRow';
+import { useSnackbar } from '@components/snackbar';
 
 const MintedSchools = () => {
   const TABLE_HEAD = [
@@ -52,13 +53,15 @@ const MintedSchools = () => {
     onChangeRowsPerPage,
   } = useTable();
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
   const{data:total} = useSchoolCount('MINTED');
   const[result] = useQuery({query:Queries.nftListQuery,variables:{skip:page*rowsPerPage,first:rowsPerPage}});
   const{data, fetching, error} = result;
   const {data:ContributedData} = useContributeGet(page,rowsPerPage)
-
+  const {mutate, isSuccess:isValidationSuccess, isError:isValidationError} = useContributionValidate()
 
   const decodeSchooldata = (data:any) => {
     const encodeddata = data.tokenUris;
@@ -93,10 +96,8 @@ const MintedSchools = () => {
     if(data) decodeSchooldata(data);
   }, [data]);
 
-  let test;
   const onSelectAllRows = (e:any) => {
     const isChecked = e.target.checked;
-    test = isChecked
     if(isChecked){
       setSelectedValues(tableData)
     }
@@ -104,10 +105,31 @@ const MintedSchools = () => {
       setSelectedValues([])
     }
   }
+
+  let tempArray:object[] = [];
+  const onContribute = (validity:boolean) => {
+    selectedValues.map((value:any) => {
+      tempArray.push({contributionId: value?.id, isValid: validity})
+    })
+    const payload = {contributions: tempArray}
+    mutate(payload)
+    tempArray = [];
+  }
+
+  useEffect(() => {
+    isValidationSuccess && enqueueSnackbar("Successfully updated contribution", { variant: 'success' })
+    isValidationError && enqueueSnackbar("Unsuccessful", { variant: 'error' })
+  }, [isValidationSuccess, isValidationError])
   
   return (
     <DashboardLayout>
-      <h2>Contributed Data</h2>
+      <div style={{display: 'flex', justifyContent: 'space-between',marginBottom: '20px'}}>
+          <span style={{fontSize: '1.5em', fontWeight: '600'}}>Contributed Data ({selectedValues.length})</span>
+          <div style={{display: 'flex', gap: '15px'}}>
+          <Button variant="contained" style={{background: '#474747'}} disabled={selectedValues.length <= 0} onClick={() => onContribute(false)}>Invalidate</Button>
+          <Button variant="contained" style={{background: '#474747'}} disabled={selectedValues.length <= 0} onClick={() => onContribute(true)}>Validate</Button>
+          </div>
+          </div>
       {fetching && <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <CircularProgress />
         </div>}
@@ -124,6 +146,7 @@ const MintedSchools = () => {
                   rowCount={tableData?.length}
                   showCheckBox={true}
                   onSort={onSort}
+                  numSelected={selectedValues?.length}
                   onSelectAllRows={onSelectAllRows} 
                 />
               <TableBody>

@@ -11,12 +11,17 @@ import { Status } from '@prisma/application';
 import { MailService } from 'src/mailer/mailer.service';
 import { paginate } from 'src/utils/paginate';
 import { Prisma } from '@prisma/application';
+import { QueueService } from 'src/mailer/queue.service';
 
 @Injectable()
 export class ContributeDataService {
   private readonly _logger = new Logger(ContributeDataService.name);
 
-  constructor(private prisma: PrismaAppService, private mailService: MailService) {}
+  constructor(
+    private prisma: PrismaAppService,
+    private mailService: MailService,
+    private queueService: QueueService,
+  ) {}
 
   async create(createContributeDatumDto: CreateContributeDatumDto) {
     const createdData = await this.prisma.contributedData.create({
@@ -92,6 +97,10 @@ export class ContributeDataService {
     return updatedData;
   }
 
+  async batchValidate(ids: UpdateContributeDatumDto, userId: string) {
+    return this.queueService.contributeData(ids, userId);
+  }
+
   async remove(id: string) {
     const deletedData = await this.prisma.contributedData.delete({
       where: { id: id },
@@ -101,7 +110,7 @@ export class ContributeDataService {
     }
   }
 
-  async validate(id: string, isValid: boolean, userId: string) {
+  public async validate(id: string, isValid: boolean, userId: string) {
     try {
       const contributedData = await this.prisma.contributedData.findUnique({
         where: { id: id },

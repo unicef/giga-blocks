@@ -14,6 +14,7 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { MintStatus } from '@prisma/application';
 import { SchoolData } from '../schools/dto/mint-queue.dto';
+import { UpdateContributeDatumDto } from 'src/contribute/dto/update-contribute-datum.dto';
 
 @Injectable()
 export class QueueService {
@@ -22,6 +23,7 @@ export class QueueService {
   constructor(
     @InjectQueue(ONCHAIN_DATA_QUEUE) private readonly _onchainQueue: Queue,
     @InjectQueue(MINT_QUEUE) private readonly _mintQueue: Queue,
+    @InjectQueue('CONTRIBUTE_QUEUE') private readonly _contributeQueue: Queue,
     private readonly _configService: ConfigService,
     private readonly _prismaService: PrismaAppService,
   ) {}
@@ -103,6 +105,16 @@ export class QueueService {
       return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
       this._logger.error(`Error queueing transaction to blockchain `);
+      throw error;
+    }
+  }
+
+  public async contributeData(ids: UpdateContributeDatumDto, userId: string) {
+    try {
+      await this._contributeQueue.add('SET_CONTRIBUTE_QUEUE', { ids, userId }, jobOptions);
+      return { message: 'queue added successfully', statusCode: 200 };
+    } catch (error) {
+      this._logger.error(`Error queueing `);
       throw error;
     }
   }
