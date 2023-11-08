@@ -5,21 +5,26 @@ import { Controller, useForm } from 'react-hook-form';
 import Web3Modal from '../congratulation-modal';
 import { useContributeData } from '../../hooks/useContributeData';
 import { useParams } from 'next/navigation';
+import { useSchoolDetails } from '../../hooks/useSchool';
 
 const ContributeForm = () => {
   const contributeDataMutation = useContributeData();
-  const { handleSubmit, control } = useForm();
+  const { handleSubmit, control, setValue } = useForm();
   const { id } = useParams();
+  const { data } = useSchoolDetails(id);
 
-  const [selectedOptions, setSelectedOptions] = useState({
-    dropdown1: null,
-    dropdown2: null,
-    dropdown3: null,
-    dropdown4: null,
-    dropdown5: null,
-  });
+  console.log(data);
+
+  const [selectedOptions, setSelectedOptions] = useState({});
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (data) {
+      setValue('lat', data.latitude);
+      setValue('lon', data.longitude);
+    }
+  }, [data]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -33,9 +38,9 @@ const ContributeForm = () => {
     try {
       const formattedData = {
         contributed_data: JSON.stringify(data),
-        // contributedUserId: 'a8142989-516f-431f-8217-53f8dfe47398',
         school_Id: id,
       };
+      openModal();
       contributeDataMutation.mutate(formattedData);
       console.log(data);
       // openModal();
@@ -56,9 +61,8 @@ const ContributeForm = () => {
     { label: 'Camaroon', value: 'camaroon' },
   ];
   const connectivity = [
-    { label: 'Good', value: 'good' },
-    { label: 'Average', value: 'average' },
-    { label: 'Poor', value: 'poor' },
+    { label: 'True', value: 'true' },
+    { label: 'False', value: 'false' },
   ];
   const coverageAvailability = [
     { label: 'Yes', value: 'yes' },
@@ -81,7 +85,7 @@ const ContributeForm = () => {
             <Dropdown
               id="dropdown1"
               titleText="Type of school"
-              label="Select options"
+              label={data?.school_type}
               items={typeOfSchool}
               itemToString={(item) => (item ? item.label : '')}
               selectedItem={selectedOptions.typeOfSchool}
@@ -97,7 +101,7 @@ const ContributeForm = () => {
               id="dropdown2"
               style={{ marginTop: '24px', marginBottom: '24px' }}
               titleText="Country"
-              label="Select country"
+              label={data?.country}
               items={country}
               itemToString={(item) => (item ? item.label : '')}
               selectedItem={selectedOptions.country}
@@ -142,7 +146,7 @@ const ContributeForm = () => {
               id="dropdown3"
               style={{ marginBottom: '24px' }}
               titleText="Connectivity"
-              label="Select connectivity"
+              label={data?.connectivity ? 'True' : 'False'}
               items={connectivity}
               itemToString={(item) => (item ? item.label : '')}
               selectedItem={selectedOptions.connectivity}
@@ -158,7 +162,7 @@ const ContributeForm = () => {
               id="dropdown4"
               style={{ marginTop: '24px', marginBottom: '24px' }}
               titleText="Coverage Availability"
-              label="Select options"
+              label={data?.coverage_availability}
               items={coverageAvailability}
               itemToString={(item) => (item ? item.label : '')}
               selectedItem={selectedOptions.coverageAvailability}
@@ -174,7 +178,7 @@ const ContributeForm = () => {
               id="dropdown5"
               style={{ marginTop: '24px', marginBottom: '24px' }}
               titleText="Electricity Availability"
-              label="Select electricity availability"
+              label={data?.electricity_available ? 'Yes' : 'No'}
               items={electricityAvailability}
               itemToString={(item) => (item ? item.label : '')}
               selectedItem={selectedOptions.electricityAvailability}

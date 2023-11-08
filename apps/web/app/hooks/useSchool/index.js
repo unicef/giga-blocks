@@ -21,3 +21,10 @@ export const useSchoolGet = (page, perPage) => {
     }
   );
 };
+
+export const useSchoolDetails = (id) => {
+  return useQuery(['get-school-details', id], async () => {
+    const { data } = await api.get(`${SCHOOLS.GET}/${id}`);
+    return data;
+  });
+};
