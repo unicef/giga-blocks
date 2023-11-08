@@ -18,8 +18,9 @@ const ContributeForm = () => {
 
   useEffect(() => {
     if (data) {
-      setValue('lat', data.latitude);
-      setValue('lon', data.longitude);
+      setValue('latitude', data.latitude);
+      setValue('longitude', data.longitude);
+      setValue('country', data.country);
     }
   }, [data]);
 
@@ -33,8 +34,17 @@ const ContributeForm = () => {
 
   const onSubmit = (data) => {
     try {
+      const contributedData = {
+        school_type: selectedOptions?.dropdown1?.selectedItem?.value,
+        country: data.country,
+        latitude: data.lat,
+        longitude: data.lon,
+        connectivity: selectedOptions.dropdown3?.selectedItem?.value,
+        coverage_availability: selectedOptions.dropdown4?.selectedItem?.value,
+        electricity_available: selectedOptions.dropdown5?.selectedItem?.value,
+      };
       const formattedData = {
-        contributed_data: JSON.stringify(data),
+        contributed_data: JSON.stringify(contributedData),
         school_Id: id,
       };
       openModal();
@@ -42,25 +52,19 @@ const ContributeForm = () => {
     } catch (error) {}
   };
 
-  const typeOfSchool = [
+  const school_type = [
     { label: 'Private', value: 'private' },
     { label: 'Public', value: 'public' },
-  ];
-
-  const country = [
-    { label: 'Nepal', value: 'nepal' },
-    { label: 'Pakistan', value: 'pakistan' },
-    { label: 'Camaroon', value: 'camaroon' },
   ];
   const connectivity = [
     { label: 'True', value: 'true' },
     { label: 'False', value: 'false' },
   ];
-  const coverageAvailability = [
+  const coverage_availability = [
     { label: 'Yes', value: 'yes' },
     { label: 'No', value: 'no' },
   ];
-  const electricityAvailability = [
+  const electricity_available = [
     { label: 'Yes', value: 'yes' },
     { label: 'No', value: 'no' },
   ];
@@ -77,10 +81,11 @@ const ContributeForm = () => {
             <Dropdown
               id="dropdown1"
               titleText="Type of school"
+              style={{ marginBottom: '25px' }}
               label={data?.school_type === 'private' ? 'Private' : 'Public'}
-              items={typeOfSchool}
+              items={school_type}
               itemToString={(item) => (item ? item.label : '')}
-              selectedItem={selectedOptions.typeOfSchool}
+              selectedItem={selectedOptions.school_type}
               onChange={(selectedItem) => {
                 setSelectedOptions((prevOptions) => ({
                   ...prevOptions,
@@ -88,29 +93,29 @@ const ContributeForm = () => {
                 }));
               }}
             />
-            <Dropdown
-              id="dropdown2"
-              style={{ marginTop: '24px', marginBottom: '24px' }}
-              titleText="Country"
-              label={data?.country}
-              items={country}
-              itemToString={(item) => (item ? item.label : '')}
-              selectedItem={selectedOptions.country}
-              onChange={(selectedItem) => {
-                setSelectedOptions((prevOptions) => ({
-                  ...prevOptions,
-                  dropdown2: selectedItem,
-                }));
-              }}
-            />
             <Controller
-              name="lat"
+              name="country"
               control={control}
               render={({ field }) => (
                 <>
                   <TextInput
                     {...field}
-                    id="lat"
+                    id="country"
+                    style={{ marginBottom: '25px', height: '48px' }}
+                    labelText="School Country"
+                    placeholder="Enter Country"
+                  />
+                </>
+              )}
+            />
+            <Controller
+              name="latitude"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <TextInput
+                    {...field}
+                    id="latitude"
                     style={{ marginBottom: '25px', height: '48px' }}
                     labelText="Exact School's Location"
                     placeholder="Enter Latitude"
@@ -119,13 +124,13 @@ const ContributeForm = () => {
               )}
             />
             <Controller
-              name="lon"
+              name="longitude"
               control={control}
               render={({ field }) => (
                 <>
                   <TextInput
                     {...field}
-                    id="lon"
+                    id="longitude"
                     style={{ marginBottom: '25px', height: '48px' }}
                     placeholder="Enter Longitude"
                   />
@@ -133,7 +138,7 @@ const ContributeForm = () => {
               )}
             />
             <Dropdown
-              id="dropdown3"
+              id="connectivity"
               style={{ marginBottom: '24px' }}
               titleText="Connectivity"
               label={data?.connectivity ? 'True' : 'False'}
@@ -152,9 +157,9 @@ const ContributeForm = () => {
               style={{ marginTop: '24px', marginBottom: '24px' }}
               titleText="Coverage Availability"
               label={data?.coverage_availability}
-              items={coverageAvailability}
+              items={coverage_availability}
               itemToString={(item) => (item ? item.label : '')}
-              selectedItem={selectedOptions.coverageAvailability}
+              selectedItem={selectedOptions.coverage_availability}
               onChange={(selectedItem) => {
                 setSelectedOptions((prevOptions) => ({
                   ...prevOptions,
@@ -167,9 +172,9 @@ const ContributeForm = () => {
               style={{ marginTop: '24px', marginBottom: '24px' }}
               titleText="Electricity Availability"
               label={data?.electricity_available ? 'Yes' : 'No'}
-              items={electricityAvailability}
+              items={electricity_available}
               itemToString={(item) => (item ? item.label : '')}
-              selectedItem={selectedOptions.electricityAvailability}
+              selectedItem={selectedOptions.electricity_available}
               onChange={(selectedItem) => {
                 setSelectedOptions((prevOptions) => ({
                   ...prevOptions,
