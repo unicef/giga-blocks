@@ -33,7 +33,7 @@ const ContributeForm = () => {
     try {
       const formattedData = {
         contributed_data: JSON.stringify(data),
-        contributedUserId: 'a8142989-516f-431f-8217-53f8dfe47398',
+        // contributedUserId: 'a8142989-516f-431f-8217-53f8dfe47398',
         school_Id: id,
       };
       contributeDataMutation.mutate(formattedData);
