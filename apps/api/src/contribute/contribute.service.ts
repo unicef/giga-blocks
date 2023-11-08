@@ -23,9 +23,9 @@ export class ContributeDataService {
     private queueService: QueueService,
   ) {}
 
-  async create(createContributeDatumDto: CreateContributeDatumDto) {
+  async create(createContributeDatumDto: CreateContributeDatumDto, userId: string) {
     const createdData = await this.prisma.contributedData.create({
-      data: { ...createContributeDatumDto },
+      data: { contributedUserId: userId, ...createContributeDatumDto },
     });
     return createdData;
   }

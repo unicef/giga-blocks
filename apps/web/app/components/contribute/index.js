@@ -1,13 +1,27 @@
-import React, { useState } from 'react';
-import Heading from '../school-detail/heading';
+'use client';
+import React, { useEffect, useState } from 'react';
 import { Column, Form, Grid, TextInput, Button, Dropdown } from '@carbon/react';
 import { Controller, useForm } from 'react-hook-form';
 import Web3Modal from '../congratulation-modal';
+import { useContributeData } from '../../hooks/useContributeData';
+import { useParams } from 'next/navigation';
+import { useSchoolDetails } from '../../hooks/useSchool';
 
 const ContributeForm = () => {
-  const { handleSubmit, control } = useForm();
+  const contributeDataMutation = useContributeData();
+  const { handleSubmit, control, setValue } = useForm();
+  const { id } = useParams();
+  const { data } = useSchoolDetails(id);
+  const [selectedOptions, setSelectedOptions] = useState({});
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (data) {
+      setValue('lat', data.latitude);
+      setValue('lon', data.longitude);
+    }
+  }, [data]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -16,43 +30,45 @@ const ContributeForm = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  // Initialize the useForm hook here
 
   const onSubmit = (data) => {
-    console.log('Submitted data:', data);
+    try {
+      const formattedData = {
+        contributed_data: JSON.stringify(data),
+        school_Id: id,
+      };
+      openModal();
+      contributeDataMutation.mutate(formattedData);
+    } catch (error) {}
   };
 
-  const dropdownOptions1 = [
-    { label: 'Option 1', value: 'option1' },
-    { label: 'Option 2', value: 'option2' },
-    { label: 'Option 3', value: 'option3' },
+  const typeOfSchool = [
+    { label: 'Private', value: 'private' },
+    { label: 'Public', value: 'public' },
   ];
 
-  const dropdownOptions2 = [
-    { label: 'Choice A', value: 'choiceA' },
-    { label: 'Choice B', value: 'choiceB' },
-    { label: 'Choice C', value: 'choiceC' },
+  const country = [
+    { label: 'Nepal', value: 'nepal' },
+    { label: 'Pakistan', value: 'pakistan' },
+    { label: 'Camaroon', value: 'camaroon' },
   ];
-  const dropdownOptions3 = [
-    { label: 'Choice A', value: 'choiceA' },
-    { label: 'Choice B', value: 'choiceB' },
-    { label: 'Choice C', value: 'choiceC' },
+  const connectivity = [
+    { label: 'True', value: 'true' },
+    { label: 'False', value: 'false' },
   ];
-  const dropdownOptions4 = [
-    { label: 'Choice A', value: 'choiceA' },
-    { label: 'Choice B', value: 'choiceB' },
-    { label: 'Choice C', value: 'choiceC' },
+  const coverageAvailability = [
+    { label: 'Yes', value: 'yes' },
+    { label: 'No', value: 'no' },
   ];
-  const dropdownOptions5 = [
-    { label: 'Choice A', value: 'choiceA' },
-    { label: 'Choice B', value: 'choiceB' },
-    { label: 'Choice C', value: 'choiceC' },
+  const electricityAvailability = [
+    { label: 'Yes', value: 'yes' },
+    { label: 'No', value: 'no' },
   ];
 
   return (
     <>
       {/* INTRODUCTION */}
-      <Grid fullWidth className="mt-50px">
+      <Grid fullWidth style={{ marginTop: '50px' }}>
         <Column md={4} lg={5} sm={4}>
           <span style={{ fontSize: '1.5em' }}>Introduction</span>
         </Column>
@@ -61,42 +77,55 @@ const ContributeForm = () => {
             <Dropdown
               id="dropdown1"
               titleText="Type of school"
-              label="Select options"
-              items={dropdownOptions1}
+              label={data?.school_type === 'private' ? 'Private' : 'Public'}
+              items={typeOfSchool}
               itemToString={(item) => (item ? item.label : '')}
-              selectedItem={null}
+              selectedItem={selectedOptions.typeOfSchool}
               onChange={(selectedItem) => {
-                console.log('Selected Item 1:', selectedItem);
+                setSelectedOptions((prevOptions) => ({
+                  ...prevOptions,
+                  dropdown1: selectedItem,
+                }));
               }}
             />
             <Dropdown
               id="dropdown2"
               style={{ marginTop: '24px', marginBottom: '24px' }}
               titleText="Country"
-              label="Select country"
-              items={dropdownOptions2}
+              label={data?.country}
+              items={country}
               itemToString={(item) => (item ? item.label : '')}
-              selectedItem={null}
+              selectedItem={selectedOptions.country}
               onChange={(selectedItem) => {
-                console.log('Selected Item 2:', selectedItem);
+                setSelectedOptions((prevOptions) => ({
+                  ...prevOptions,
+                  dropdown2: selectedItem,
+                }));
               }}
             />
             <Controller
-              name="longlat"
-              control={control} // Pass control to the Controller component
-              rules={{ required: 'Full Name is required' }}
+              name="lat"
+              control={control}
               render={({ field }) => (
                 <>
                   <TextInput
                     {...field}
-                    id="longlat"
+                    id="lat"
                     style={{ marginBottom: '25px', height: '48px' }}
                     labelText="Exact School's Location"
                     placeholder="Enter Latitude"
                   />
+                </>
+              )}
+            />
+            <Controller
+              name="lon"
+              control={control}
+              render={({ field }) => (
+                <>
                   <TextInput
                     {...field}
-                    id="longlat"
+                    id="lon"
                     style={{ marginBottom: '25px', height: '48px' }}
                     placeholder="Enter Longitude"
                   />
@@ -107,41 +136,50 @@ const ContributeForm = () => {
               id="dropdown3"
               style={{ marginBottom: '24px' }}
               titleText="Connectivity"
-              label="Select connectivity"
-              items={dropdownOptions3}
+              label={data?.connectivity ? 'True' : 'False'}
+              items={connectivity}
               itemToString={(item) => (item ? item.label : '')}
-              selectedItem={null}
+              selectedItem={selectedOptions.connectivity}
               onChange={(selectedItem) => {
-                console.log('Selected Item 3:', selectedItem);
+                setSelectedOptions((prevOptions) => ({
+                  ...prevOptions,
+                  dropdown3: selectedItem,
+                }));
               }}
             />
             <Dropdown
               id="dropdown4"
               style={{ marginTop: '24px', marginBottom: '24px' }}
               titleText="Coverage Availability"
-              label="Select options"
-              items={dropdownOptions4}
+              label={data?.coverage_availability}
+              items={coverageAvailability}
               itemToString={(item) => (item ? item.label : '')}
-              selectedItem={null}
+              selectedItem={selectedOptions.coverageAvailability}
               onChange={(selectedItem) => {
-                console.log('Selected Item 2:', selectedItem);
+                setSelectedOptions((prevOptions) => ({
+                  ...prevOptions,
+                  dropdown4: selectedItem,
+                }));
               }}
             />
             <Dropdown
               id="dropdown5"
               style={{ marginTop: '24px', marginBottom: '24px' }}
               titleText="Electricity Availability"
-              label="Select electricity availability"
-              items={dropdownOptions5}
+              label={data?.electricity_available ? 'Yes' : 'No'}
+              items={electricityAvailability}
               itemToString={(item) => (item ? item.label : '')}
-              selectedItem={null}
+              selectedItem={selectedOptions.electricityAvailability}
               onChange={(selectedItem) => {
-                console.log('Selected Item 2:', selectedItem);
+                setSelectedOptions((prevOptions) => ({
+                  ...prevOptions,
+                  dropdown5: selectedItem,
+                }));
               }}
             />
 
             <Button
-              onClick={openModal}
+              onClick={handleSubmit(onSubmit)}
               style={{ width: '100%', marginBottom: '24px' }}
             >
               Submit
