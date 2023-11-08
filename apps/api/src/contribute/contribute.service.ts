@@ -18,9 +18,9 @@ export class ContributeDataService {
 
   constructor(private prisma: PrismaAppService, private mailService: MailService) {}
 
-  async create(createContributeDatumDto: CreateContributeDatumDto) {
+  async create(createContributeDatumDto: CreateContributeDatumDto, userId: string) {
     const createdData = await this.prisma.contributedData.create({
-      data: { ...createContributeDatumDto },
+      data: { contributedUserId: userId, ...createContributeDatumDto },
     });
     return createdData;
   }

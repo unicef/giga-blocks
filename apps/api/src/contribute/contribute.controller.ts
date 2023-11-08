@@ -27,8 +27,8 @@ export class ContributeDataController {
   // @UseGuards(RoleGuard)
   // @Roles('CONTRIBUTOR')
   @Post()
-  create(@Body() createContributeDatumDto: CreateContributeDatumDto) {
-    return this.contributeDataService.create(createContributeDatumDto);
+  create(@Body() createContributeDatumDto: CreateContributeDatumDto, @Req() req: any) {
+    return this.contributeDataService.create(createContributeDatumDto, req.user.id);
   }
 
   @Public()
