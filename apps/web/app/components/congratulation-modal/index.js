@@ -13,7 +13,6 @@ const ModalComponent = ({ isOpen, onClose }) => {
   const route = useRouter();
   const handleSubmit = () => {
     route.push('/dashboard');
-    console.log('Submitted:', inputValue);
     onClose();
   };
 
