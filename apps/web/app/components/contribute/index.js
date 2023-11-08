@@ -77,7 +77,7 @@ const ContributeForm = () => {
             <Dropdown
               id="dropdown1"
               titleText="Type of school"
-              label={data?.school_type}
+              label={data?.school_type === 'private' ? 'Private' : 'Public'}
               items={typeOfSchool}
               itemToString={(item) => (item ? item.label : '')}
               selectedItem={selectedOptions.typeOfSchool}
