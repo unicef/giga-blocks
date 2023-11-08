@@ -19,7 +19,7 @@ import { mintSignature } from "@components/web3/utils/wallet";
 import { useMintSchools } from "@hooks/school/useSchool";
 import { useWeb3React } from "@web3-react/core";
 import { useContributionGetById, useContributionValidate } from "@hooks/contribute/useContribute";
-import { useValidDataGetById } from "@hooks/validate/useValidate";
+import { useValidDataGetById, useValidateUpdate } from "@hooks/validate/useValidate";
 
 interface Props {
   isEdit?: boolean;
@@ -52,9 +52,8 @@ export default function ValidateDetail({ id }: Props) {
   const { data, isSuccess, isError, refetch } = useValidDataGetById(id);
   const { enqueueSnackbar } = useSnackbar();
 
-  const {mutate, isSuccess:isValidationSuccess, isError:isValidationError} = useContributionValidate()
+  const {mutate, isSuccess:isValidationSuccess, isError:isValidationError, error:validationError} = useValidateUpdate()
 
-  console.log(data)
   const web3 = useWeb3React();
 
   const [nftData, setNftData] = useState(
@@ -92,8 +91,8 @@ export default function ValidateDetail({ id }: Props) {
   }, [isSuccess, isError, data]);
 
   useEffect(() => {
-    isValidationSuccess && enqueueSnackbar("Successfully updated contribution", { variant: 'success' }); refetch();
-    isValidationError && enqueueSnackbar("Unsuccessful", { variant: 'error' })
+    isValidationSuccess && enqueueSnackbar("Successfully validated", { variant: 'success' }); refetch();
+    isValidationError && enqueueSnackbar("Unsuccessful", { variant: 'error' }); console.log(validationError)
   }, [isValidationSuccess, isValidationError])
 
   useEffect(() => {
@@ -132,9 +131,8 @@ export default function ValidateDetail({ id }: Props) {
   } = methods;
 
 
-  const onContribute = (validity:boolean) => {
-    const payload = {contributions: [{contributionId: id, isValid: validity}]}
-    mutate(payload)
+  const onValidate = () => {
+    mutate(id)
   }
 
   return (
@@ -205,7 +203,7 @@ export default function ValidateDetail({ id }: Props) {
         <Container>
           <Box justifyContent={"center"}>
             <Stack alignItems="center" sx={{ mt: 1 }}>
-            <Button variant="contained" color={"info"} style={{ width: "300px", background: '#474747' }} onClick={() => onContribute(false)}>
+            <Button variant="contained" color={"info"} style={{ width: "300px", background: '#474747' }} onClick={onValidate}>
                 Approve
               </Button>
             </Stack>

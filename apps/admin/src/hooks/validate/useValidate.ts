@@ -39,10 +39,10 @@ export const useValidateGet = (page:number, perPage:number) => {
     );
   };
 
-  const validateData = async (data: any) => {
-    return await api.patch(routes.CONTRIBUTE.PATCH, data);
+  const validateData = async (id: string | undefined | string[]) => {
+    return await api.patch(`${routes.VALIDATE.PATCH}/${id}`);
   };
 
-  export const useContributionValidate = () => {
+  export const useValidateUpdate = () => {
     return useMutation(validateData);
   };
