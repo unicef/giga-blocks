@@ -137,7 +137,7 @@ export class ContributeDataService {
       } else {
         transaction = await this.prisma.$transaction([
           this.prisma.contributedData.update({
-            data: { status: Status.Rejected, validatedBy: userId },
+            data: { status: Status.Rejected, validatedBy: userId, validatedAt: new Date() },
             where: { id: id },
           }),
         ]);
@@ -166,7 +166,7 @@ export class ContributeDataService {
       };
       transaction = await this.prisma.$transaction([
         this.prisma.contributedData.update({
-          data: { status: Status.Validated, validatedBy: userId },
+          data: { status: Status.Validated, validatedBy: userId, validatedAt: new Date() },
           where: { id: id },
         }),
         this.prisma.validatedData.create({
@@ -179,7 +179,7 @@ export class ContributeDataService {
       const mergedData = { ...existingData, ...newData };
       transaction = await this.prisma.$transaction([
         this.prisma.contributedData.update({
-          data: { status: Status.Validated, validatedBy: userId },
+          data: { status: Status.Validated, validatedBy: userId, validatedAt: new Date() },
           where: { id: id },
         }),
         this.prisma.validatedData.update({
