@@ -1,13 +1,15 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Column, Form, Grid, TextInput, Button, Dropdown } from '@carbon/react';
 import { Controller, useForm } from 'react-hook-form';
 import Web3Modal from '../congratulation-modal';
 import { useContributeData } from '../../hooks/useContributeData';
+import { useParams } from 'next/navigation';
 
 const ContributeForm = () => {
   const contributeDataMutation = useContributeData();
   const { handleSubmit, control } = useForm();
+  const { id } = useParams();
 
   const [selectedOptions, setSelectedOptions] = useState({
     dropdown1: null,
@@ -27,12 +29,12 @@ const ContributeForm = () => {
     setIsModalOpen(false);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = (data, schoolId) => {
     try {
       const formattedData = {
         contributed_data: JSON.stringify(data),
         contributedUserId: 'a8142989-516f-431f-8217-53f8dfe47398',
-        school_Id: '7c5fe459-4f17-4806-8060-c0b8251cd982',
+        school_Id: id,
       };
       contributeDataMutation.mutate(formattedData);
       console.log(data);
