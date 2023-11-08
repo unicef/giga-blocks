@@ -19,6 +19,10 @@ export  default {
     GET: "/contribute",
     PATCH: "/contribute",
   },
+  VALIDATE: {
+    GET: "/contribute/validated",
+    PATCH: "/schools/update",
+  },
   OTP: {
     REGISTER: "/auth/send-otp",
   },

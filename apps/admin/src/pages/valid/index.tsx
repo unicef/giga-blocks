@@ -30,12 +30,14 @@ import { useSchoolCount } from "@hooks/school/useSchool";
 import { useContributeGet, useContributionValidate } from '@hooks/contribute/useContribute';
 import ContributeTableRow from '@sections/user/list/ContributTableRow';
 import { useSnackbar } from '@components/snackbar';
+import { useValidateGet } from '@hooks/validate/useValidate';
+import ValidateTableRow from '@sections/user/list/ValidateTableRow';
 
-const ContributeData = () => {
+const ValidateData = () => {
   const TABLE_HEAD = [
-    { id: 'name', label: 'Contributer name', align: 'left' },
     { id: 'school', label: 'School', align: 'left' },
-    {id:'contributedData',label:'Contributed Data',align:'left'},
+    { id: 'isApproved', label: 'Is Valid', align: 'left' },
+    // {id:'contributedData',label:'Contributed Data',align:'left'},
     { id: 'date', label: 'Date', align: 'left' }
   ];
 
@@ -60,30 +62,27 @@ const ContributeData = () => {
   const{data:total} = useSchoolCount('MINTED');
   const[result] = useQuery({query:Queries.nftListQuery,variables:{skip:page*rowsPerPage,first:rowsPerPage}});
   const{data, fetching, error} = result;
-  const {data:ContributedData, isFetching} = useContributeGet(page,rowsPerPage)
+  const {data:ValidatedData} = useValidateGet(page, rowsPerPage)
+
   const {mutate, isSuccess:isValidationSuccess, isError:isValidationError} = useContributionValidate()
 
   const decodeSchooldata = (data:any) => {
-    const encodeddata = data.tokenUris;
-    const decodedShooldata = [];
-    for (let i = 0; i < encodeddata.length; i++) {
-      const decodedData = atob(encodeddata[i].tokenUri.substring(29));
-      const schoolData = {
-        tokenId: encodeddata[i].id,
-        ...JSON.parse(decodedData),
-      };
-      decodedShooldata.push(schoolData);
-    }
-    ContributedData?.rows  && ContributedData?.rows.map((row: any) => {
-      const contributedData = Object.entries(row.contributed_data);
-      const jsonString = JSON.parse(contributedData.map(pair => pair[1]).join(''));
+    // const encodeddata = data.tokenUris;
+    // const decodedShooldata = [];
+    // for (let i = 0; i < encodeddata?.length; i++) {
+    //   const decodedData = atob(encodeddata[i].tokenUri.substring(29));
+    //   const schoolData = {
+    //     tokenId: encodeddata[i].id,
+    //     ...JSON.parse(decodedData),
+    //   };
+    //   decodedShooldata.push(schoolData);
+    // }
+    ValidatedData && ValidatedData?.map((row: any) => {
       const date = new Date(row.createdAt).toLocaleDateString();
       filteredData.push({
         id: row.id,
-        name: row.contributedUser.name,
         school: row.school.name,
-        contributedDataKey: Object.keys(jsonString),
-        contributedDataValue: Object.values(jsonString),
+        isApproved: String(row.approvedStatus),
         date:date
       });
     }
@@ -93,8 +92,8 @@ const ContributeData = () => {
 
   let filteredData: any = [];
   useEffect(() => {
-    if(data) decodeSchooldata(data);
-  }, [data, isFetching]);
+    if(ValidatedData.length > 0) decodeSchooldata(ValidatedData);
+  }, [ValidatedData]);
 
   const onSelectAllRows = (e:any) => {
     const isChecked = e.target.checked;
@@ -107,13 +106,13 @@ const ContributeData = () => {
   }
 
   let tempArray:object[] = [];
-  const onContribute = (validity:boolean) => {
-    selectedValues.map((value:any) => {
-      tempArray.push({contributionId: value?.id, isValid: validity})
-    })
-    const payload = {contributions: tempArray}
-    mutate(payload)
-    tempArray = [];
+  const onValidate = () => {
+    // selectedValues.map((value:any) => {
+    //   tempArray.push({contributionId: value?.id, isValid: validity})
+    // })
+    // const payload = {contributions: tempArray}
+    // mutate(payload)
+    // tempArray = [];
   }
 
   useEffect(() => {
@@ -124,10 +123,9 @@ const ContributeData = () => {
   return (
     <DashboardLayout>
       <div style={{display: 'flex', justifyContent: 'space-between',marginBottom: '20px'}}>
-          <span style={{fontSize: '1.5em', fontWeight: '600'}}>Contributed Data <span style={{fontSize: '0.75em', fontWeight: '400'}}> {selectedValues.length > 0 && `(${selectedValues.length})`} </span></span>
+          <span style={{fontSize: '1.5em', fontWeight: '600'}}>Valid Data</span>
           <div style={{display: 'flex', gap: '15px'}}>
-          <Button variant="contained" style={{background: '#474747'}} disabled={selectedValues.length <= 0} onClick={() => onContribute(false)}>Invalidate</Button>
-          <Button variant="contained" style={{background: '#474747'}} disabled={selectedValues.length <= 0} onClick={() => onContribute(true)}>Validate</Button>
+          <Button variant="contained" style={{background: '#474747'}} disabled={selectedValues.length <= 0} onClick={onValidate}>Approve</Button>
           </div>
           </div>
       {fetching && <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -152,7 +150,7 @@ const ContributeData = () => {
               <TableBody>
                 {tableData &&
                   tableData.map((row: any) => (
-                    <ContributeTableRow
+                    <ValidateTableRow
                       key={row.id}
                       row={row}
                       selectedValues={selectedValues}
@@ -161,14 +159,15 @@ const ContributeData = () => {
                       checkbox={true}
                     />
                   ))}
-                {!isFetching ? <TableNoData
-                  isNotFound={tableData.length === 0} /> : <CircularProgress color="inherit"/> }
+                <TableNoData
+                  isNotFound={tableData.length === 0}
+                />
               </TableBody>
             </Table>
           </Scrollbar>
         </TableContainer>
         <TablePaginationCustom
-          count={ContributedData?.meta?.total}
+          count={ValidatedData?.meta?.total}
           // count={tableData?.length}
           setPage={setPage}
           page={page}
@@ -183,4 +182,4 @@ const ContributeData = () => {
   );
 };
 
-export default ContributeData;
+export default ValidateData;

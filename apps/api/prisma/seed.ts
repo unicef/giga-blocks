@@ -78,12 +78,12 @@ export const users = [
   //   email: 'giga5@mailinator.com',
   //   walletAddress: hexStringToBuffer('0x87Ed567e30dbD4Dae2088b87847698853a6963ed'), // add own wallet address
   // },
-  // {
-  //   name: 'Anupama Koirala',
-  //   roles: [ROLE.ADMIN],
-  //   email: 'anu123@mailinator.com',
-  //   walletAddress: hexStringToBuffer('0xf0c84735Af5669c809EfD62C9D4e466d331A95b0'),
-  // },
+  {
+    name: 'Sushant Tripathee',
+    roles: [ROLE.ADMIN],
+    email: 'anu123@mailinator.com',
+    walletAddress: hexStringToBuffer('0xfAAe0B09e9A80d142A11cd846CD9329F2E96f55F'),
+  },
   {
     name: ' User',
     email: 'user123@mailinator.com',

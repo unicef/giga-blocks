@@ -1,12 +1,13 @@
 "use client"
 import Iconify from "@components/iconify";
+import LoadingScreen from "@components/loading-screen/LoadingScreen";
 import Scrollbar from "@components/scrollbar";
 import { TableEmptyRows, TableHeadUsers, TableNoData, TablePaginationCustom, TableSelectedAction, useTable } from "@components/table";
 import { useUserGet } from "@hooks/user/useUser";
 // import { useAdministrationContext } from "@contexts/administration";
 // import useFetchUsers from "@hooks/users/useFetchUsers";
 import DashboardLayout from "@layouts/dashboard/DashboardLayout";
-import { Box, Button, Card, Tabs, Divider, TableContainer, Tooltip, IconButton, Table, TableBody } from "@mui/material";
+import { Box, Button, Card, Tabs, Divider, TableContainer, Tooltip, IconButton, Table, TableBody, CircularProgress } from "@mui/material";
 import UserListRow from "@sections/user/list/UsersList";
 import { useEffect, useState } from "react";
 
@@ -39,7 +40,7 @@ const UserList = () => {
         })
       })
       setTableData(filteredData);
-    }, [data]);
+    }, [data, isFetching]);
 
     return ( 
 
@@ -92,10 +93,8 @@ const UserList = () => {
                         row={row}
                       />
                     ))}
-                  <TableNoData 
-                  // isNotFound={!!error} 
-                  isNotFound={tableData.length === 0}
-                  />
+                  {!isFetching ? <TableNoData
+                  isNotFound={tableData.length === 0} /> : <CircularProgress color="inherit"/> }
                 </TableBody>
               </Table>
             </Scrollbar>
