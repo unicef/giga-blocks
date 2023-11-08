@@ -15,10 +15,15 @@ export class UsersService {
   async register(createUserDto: CreateUserDto) {
     this._logger.log(`Registering new user: ${createUserDto?.email}`);
     const walletAddress = hexStringToBuffer(createUserDto?.walletAddress);
+    let roles = [];
+    if (!createUserDto.roles) {
+      roles = [Role.CONTRIBUTOR];
+    }
     return this.prisma.user.create({
       data: {
         ...createUserDto,
         walletAddress,
+        roles,
       },
     });
   }
@@ -29,6 +34,7 @@ export class UsersService {
       name: createUserDto?.name,
       walletAddress,
       email: '',
+      roles: [Role.CONTRIBUTOR],
     };
     return this.prisma.user.create({
       data: userData,

@@ -29,6 +29,6 @@
     "app/school/page.js",
     "../../dist/apps/web/.next/types/**/*.ts",
     "../../apps/web/.next/types/**/*.ts"
-  ],
+, "app/components/toast/index.jsx"  ],
   "exclude": ["node_modules"]
 }
