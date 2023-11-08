@@ -32,26 +32,84 @@ const ContributeForm = () => {
     setIsModalOpen(false);
   };
 
+  // const onSubmit = (data) => {
+  //   try {
+  //     const contributedData = {
+  //       school_type: selectedOptions?.dropdown1?.selectedItem?.value,
+  //       country: data.country,
+  //       latitude: data.lat,
+  //       longitude: data.lon,
+  //       connectivity: selectedOptions.dropdown3?.selectedItem?.value,
+  //       coverage_availability: selectedOptions.dropdown4?.selectedItem?.value,
+  //       electricity_available: selectedOptions.dropdown5?.selectedItem?.value,
+  //     };
+  //     const formattedData = {
+  //       contributed_data: JSON.stringify(contributedData),
+  //       school_Id: id,
+  //     };
+  //     // openModal();
+  //     console.log(formattedData);
+  //     contributeDataMutation.mutate(formattedData);
+  //   } catch (error) {}
+  // };
+
   const onSubmit = (data) => {
     try {
-      const contributedData = {
-        school_type: selectedOptions?.dropdown1?.selectedItem?.value,
-        country: data.country,
-        latitude: data.lat,
-        longitude: data.lon,
-        connectivity: selectedOptions.dropdown3?.selectedItem?.value,
-        coverage_availability: selectedOptions.dropdown4?.selectedItem?.value,
-        electricity_available: selectedOptions.dropdown5?.selectedItem?.value,
-      };
-      const formattedData = {
-        contributed_data: JSON.stringify(contributedData),
-        school_Id: id,
-      };
-      openModal();
-      contributeDataMutation.mutate(formattedData);
-    } catch (error) {}
-  };
+      const changedData = {};
 
+      if (
+        selectedOptions?.dropdown1?.selectedItem?.value !== data.typeOfSchool
+      ) {
+        changedData.typeOfSchool =
+          selectedOptions?.dropdown1?.selectedItem?.value;
+      }
+
+      if (data.country !== data.country) {
+        changedData.country = data.country;
+      }
+
+      if (data.lat !== data.lat) {
+        changedData.lat = data.lat;
+      }
+
+      if (data.lon !== data.lon) {
+        changedData.lon = data.lon;
+      }
+
+      if (
+        selectedOptions.dropdown3?.selectedItem?.value !== data.connectivity
+      ) {
+        changedData.connectivity =
+          selectedOptions.dropdown3?.selectedItem?.value;
+      }
+
+      if (
+        selectedOptions.dropdown4?.selectedItem?.value !==
+        data.coverageAvailability
+      ) {
+        changedData.coverageAvailability =
+          selectedOptions.dropdown4?.selectedItem?.value;
+      }
+
+      if (
+        selectedOptions.dropdown5?.selectedItem?.value !==
+        data.electricityAvailability
+      ) {
+        changedData.electricityAvailability =
+          selectedOptions.dropdown5?.selectedItem?.value;
+      }
+
+      if (Object.keys(changedData).length > 0) {
+        const formattedData = {
+          contributed_data: JSON.stringify(changedData),
+          school_Id: id,
+        };
+        contributeDataMutation.mutate(formattedData);
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
+  };
   const school_type = [
     { label: 'Private', value: 'private' },
     { label: 'Public', value: 'public' },
