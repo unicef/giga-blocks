@@ -51,8 +51,11 @@ const Navbar = () => {
             NFT 2.0
           </HeaderName>
           <HeaderNavigation>
-            <HeaderMenuItem as={Link} href="/school">
+            <HeaderMenuItem as={Link} href="/contributeSchool">
               School Data
+            </HeaderMenuItem>
+            <HeaderMenuItem as={Link} href="/school">
+              Explore NFT
             </HeaderMenuItem>
             <HeaderMenuItem as={Link} href="/#involved">
               Develop With Us
