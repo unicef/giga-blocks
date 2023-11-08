@@ -235,6 +235,7 @@ model ContributedData {
   approvedAt        DateTime?
   isArchived        Boolean   @default(false)
   validatedBy       String?
+  validatedAt       DateTime?
   validatedUser     User?     @relation("ValidatedBy", fields: [validatedBy], references: [id])
   points            Points[]
   vote              Vote[]
@@ -319,6 +320,7 @@ model validatedData {
   school_Id        String
   school           School    @relation(fields: [school_Id], references: [id])
   data             Json
+  approvedStatus   Boolean   @default(false)
   createdAt        DateTime? @default(now())
   updatedAt        DateTime? @updatedAt
   deletedAt        DateTime?

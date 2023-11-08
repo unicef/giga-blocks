@@ -17,6 +17,7 @@ export  default {
   },
   CONTRIBUTE: {
     GET: "/contribute",
+    PATCH: "/contribute",
   },
   OTP: {
     REGISTER: "/auth/send-otp",
