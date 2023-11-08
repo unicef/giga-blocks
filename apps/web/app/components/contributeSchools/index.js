@@ -20,7 +20,6 @@ const SchoolCard = () => {
   const [allDataLoaded, setAllDataLoaded] = useState(false);
 
   const { data, isLoading, isFetching } = useSchoolGet(1, pageSize);
-
   useEffect(() => {
     isLoading === false && setSchoolData(data?.rows);
   }, [data]);
