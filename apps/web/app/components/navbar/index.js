@@ -32,11 +32,6 @@ const Navbar = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleOptionClick = (option) => {
-    console.log(`Option clicked: ${option.text}`);
-    // Implement logic for handling dropdown option click
-  };
-
   return (
     <HeaderContainer
       render={({ isSideNavExpanded, onClickSideNavExpand }) => (

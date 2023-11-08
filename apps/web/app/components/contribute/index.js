@@ -12,9 +12,6 @@ const ContributeForm = () => {
   const { handleSubmit, control, setValue } = useForm();
   const { id } = useParams();
   const { data } = useSchoolDetails(id);
-
-  console.log(data);
-
   const [selectedOptions, setSelectedOptions] = useState({});
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,7 +31,7 @@ const ContributeForm = () => {
     setIsModalOpen(false);
   };
 
-  const onSubmit = (data, schoolId) => {
+  const onSubmit = (data) => {
     try {
       const formattedData = {
         contributed_data: JSON.stringify(data),
@@ -42,11 +39,7 @@ const ContributeForm = () => {
       };
       openModal();
       contributeDataMutation.mutate(formattedData);
-      console.log(data);
-      // openModal();
-    } catch (error) {
-      console.log('form submit', error);
-    }
+    } catch (error) {}
   };
 
   const typeOfSchool = [
@@ -94,7 +87,6 @@ const ContributeForm = () => {
                   ...prevOptions,
                   dropdown1: selectedItem,
                 }));
-                console.log('Selected Item 1:', selectedItem);
               }}
             />
             <Dropdown
@@ -110,7 +102,6 @@ const ContributeForm = () => {
                   ...prevOptions,
                   dropdown2: selectedItem,
                 }));
-                console.log('Selected Item 1:', selectedItem);
               }}
             />
             <Controller
@@ -155,7 +146,6 @@ const ContributeForm = () => {
                   ...prevOptions,
                   dropdown3: selectedItem,
                 }));
-                console.log('Selected Item 1:', selectedItem);
               }}
             />
             <Dropdown
@@ -171,7 +161,6 @@ const ContributeForm = () => {
                   ...prevOptions,
                   dropdown4: selectedItem,
                 }));
-                console.log('Selected Item 4:', selectedItem);
               }}
             />
             <Dropdown
@@ -187,7 +176,6 @@ const ContributeForm = () => {
                   ...prevOptions,
                   dropdown5: selectedItem,
                 }));
-                console.log('Selected Item 5:', selectedItem);
               }}
             />
 

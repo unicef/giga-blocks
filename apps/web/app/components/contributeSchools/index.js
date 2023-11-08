@@ -22,7 +22,6 @@ const SchoolCard = () => {
   const { data, isLoading, isFetching } = useSchoolGet(1, pageSize);
 
   useEffect(() => {
-    // console.log(data.rows);
     isLoading === false && setSchoolData(data?.rows);
   }, [data]);
 
