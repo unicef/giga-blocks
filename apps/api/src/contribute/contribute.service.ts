@@ -24,10 +24,19 @@ export class ContributeDataService {
   ) {}
 
   async create(createContributeDatumDto: CreateContributeDatumDto, userId: string) {
-    const createdData = await this.prisma.contributedData.create({
-      data: { contributedUserId: userId, ...createContributeDatumDto },
-    });
-    return createdData;
+    const keyValue = Object.entries(JSON.parse(createContributeDatumDto.contributed_data));
+    const data = [];
+    for (const [key, value] of keyValue) {
+      const createdData = await this.prisma.contributedData.create({
+        data: {
+          contributedUserId: userId,
+          contributed_data: JSON.stringify({ [key]: value }),
+          school_Id: createContributeDatumDto.school_Id,
+        },
+      });
+      data.push(createdData);
+    }
+    return data;
   }
 
   async findAll(query) {
