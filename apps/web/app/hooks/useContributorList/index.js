@@ -13,7 +13,6 @@ export const useContributionList = () => {
     async () => {
       try {
         const res = await api.get(`${CONTRIBUTOR.GET}`);
-        console.log(res.data);
         return res.data;
       } catch (err) {
         console.log('Error fetching data:', err);
