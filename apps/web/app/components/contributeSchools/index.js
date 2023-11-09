@@ -9,26 +9,16 @@ import {
   ToggletipContent,
   ToggletipButton,
 } from '@carbon/react';
-import { useRouter } from 'next/navigation';
 import './contributeSchools.scss';
 import { useEffect, useState } from 'react';
 import { useSchoolGet } from '../../hooks/useSchool';
-import { getCurrentUser } from '../../utils/sessionManager';
 
 const SchoolCard = () => {
-  const router = useRouter();
   const [schoolData, setSchoolData] = useState([]);
   const [pageSize, setPageSize] = useState(12);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
-  const user = getCurrentUser();
 
   const { data, isLoading, isFetching } = useSchoolGet(1, pageSize);
-
-  useEffect(() => {
-    if (!user) {
-      router.push('/signIn');
-    }
-  }, [user, router]);
 
   useEffect(() => {
     isLoading === false && setSchoolData(data?.rows);

@@ -6,15 +6,25 @@ import Web3Modal from '../congratulation-modal';
 import { useContributeData } from '../../hooks/useContributeData';
 import { useParams } from 'next/navigation';
 import { useSchoolDetails } from '../../hooks/useSchool';
+import { useRouter } from 'next/navigation';
+import { getCurrentUser } from '../../utils/sessionManager';
 
 const ContributeForm = () => {
+  const router = useRouter();
   const contributeDataMutation = useContributeData();
   const { handleSubmit, control, setValue } = useForm();
   const { id } = useParams();
   const { data } = useSchoolDetails(id);
   const [selectedOptions, setSelectedOptions] = useState({});
+  const user = getCurrentUser();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (!user) {
+      router.push('/signIn');
+    }
+  }, [user, router]);
 
   useEffect(() => {
     if (data) {
