@@ -258,4 +258,33 @@ export class SchoolService {
   async updateBulk(ids: ApproveContributeDatumDto, userId: string) {
     this.queueService.approveBulkData(ids, userId);
   }
+
+  private async filterOnchainData(data: any, id: string) {
+    try {
+      const validatedData = await this.prisma.validatedData.findFirst({
+        where: {
+          school_Id: id,
+          isArchived: false,
+          approvedStatus: false,
+        },
+      });
+      const keyValue = Object.entries(validatedData.data);
+      const dataToUpdate = Object.fromEntries(keyValue);
+      const schooldata = await this.prisma.school.findUnique({
+        where: {
+          id: id,
+        },
+      });
+      const filteredData = Object.fromEntries(
+        Object.entries(data).filter(([key]) => key in dataToUpdate),
+      );
+      const newData = {
+        ...schooldata,
+        ...filteredData,
+      };
+      return newData;
+    } catch (err) {
+      console.log(err);
+    }
+  }
 }
