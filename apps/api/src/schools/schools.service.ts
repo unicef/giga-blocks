@@ -30,7 +30,7 @@ export class SchoolService {
   ) {}
 
   async findAll(query: ListSchoolDto) {
-    const { page, perPage, minted, uploadId } = query;
+    const { page, perPage, minted, uploadId, name } = query;
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
     };
@@ -40,6 +40,11 @@ export class SchoolService {
 
     if (uploadId) {
       where.uploadId = uploadId;
+    }
+    if (name) {
+      where.name = {
+        contains: name,
+      };
     }
 
     return paginate(
