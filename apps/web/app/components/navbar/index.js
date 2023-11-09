@@ -92,7 +92,7 @@ const Navbar = () => {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
+                justifyContent: 'flex-end',
                 position: 'relative',
               }}
             >
@@ -146,7 +146,6 @@ const Navbar = () => {
                   href="/signIn"
                   style={{
                     minWidth: '5rem',
-                    marginTop: '16px',
                     cursor: 'pointer',
                     color: '#000',
                     textDecoration: 'none',
