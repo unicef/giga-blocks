@@ -72,8 +72,11 @@ const Navbar = () => {
                 <HeaderMenuItem as={Link} href="/">
                   Home
                 </HeaderMenuItem>
-                <HeaderMenuItem as={Link} href="/school">
+                <HeaderMenuItem as={Link} href="/contributeSchool">
                   School Data
+                </HeaderMenuItem>
+                <HeaderMenuItem as={Link} href="/school">
+                  Explore NFT
                 </HeaderMenuItem>
                 <HeaderMenuItem as={Link} href="/#involved">
                   Develop With Us

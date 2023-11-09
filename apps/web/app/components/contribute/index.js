@@ -24,15 +24,12 @@ const ContributeForm = () => {
     if (!user) {
       router.push('/signIn');
     }
-  }, [user, router]);
-
-  useEffect(() => {
     if (data) {
       setValue('latitude', data.latitude);
       setValue('longitude', data.longitude);
       setValue('country', data.country);
     }
-  }, [data]);
+  }, [data, user, router]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -41,27 +38,6 @@ const ContributeForm = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
-  // const onSubmit = (data) => {
-  //   try {
-  //     const contributedData = {
-  //       school_type: selectedOptions?.dropdown1?.selectedItem?.value,
-  //       country: data.country,
-  //       latitude: data.lat,
-  //       longitude: data.lon,
-  //       connectivity: selectedOptions.dropdown3?.selectedItem?.value,
-  //       coverage_availability: selectedOptions.dropdown4?.selectedItem?.value,
-  //       electricity_available: selectedOptions.dropdown5?.selectedItem?.value,
-  //     };
-  //     const formattedData = {
-  //       contributed_data: JSON.stringify(contributedData),
-  //       school_Id: id,
-  //     };
-  //     // openModal();
-  //     console.log(formattedData);
-  //     contributeDataMutation.mutate(formattedData);
-  //   } catch (error) {}
-  // };
 
   const onSubmit = (data) => {
     try {
@@ -116,6 +92,7 @@ const ContributeForm = () => {
         };
         contributeDataMutation.mutate(formattedData);
       }
+      openModal();
     } catch (error) {
       console.error('Error submitting form:', error);
     }
