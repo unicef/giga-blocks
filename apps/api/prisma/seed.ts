@@ -48,12 +48,12 @@ enum ROLE {
 }
 
 export const users = [
-  // {
-  //   name: 'Giga 1',
-  //   roles: [ROLE.ADMIN],
-  //   email: 'giga1@mailinator.com',
-  //   walletAddress: hexStringToBuffer('0xd4529d251F9ed2a432c405c277004120A83fE0B1'), // add own wallet address
-  // },
+  {
+    name: 'Giga 1',
+    roles: [ROLE.ADMIN],
+    email: 'giga1@mailinator.com',
+    walletAddress: hexStringToBuffer('0xCf7bb7da4eFFcA9a3974b80e106C6541990De5eb'), // add own wallet address
+  },
   // {
   //   name: 'Giga 2',
   //   roles: [ROLE.ADMIN],

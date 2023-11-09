@@ -2,12 +2,18 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BullModule } from '@nestjs/bull';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
-import { ContributeProcessor, MailProcessor, MintQueueProcessor, QueueProcessor } from './processors';
+import {
+  ContributeProcessor,
+  MailProcessor,
+  MintQueueProcessor,
+  QueueProcessor,
+} from './processors';
 import { MailService } from './mailer.service';
 import { MAIL_QUEUE, MINT_QUEUE, ONCHAIN_DATA_QUEUE, CONTRIBUTE_QUEUE } from './constants';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { QueueService } from './queue.service';
 import { ContributeDataService } from 'src/contribute/contribute.service';
+import { SchoolService } from 'src/schools/schools.service';
 
 @Module({
   imports: [
@@ -37,7 +43,7 @@ import { ContributeDataService } from 'src/contribute/contribute.service';
       name: MAIL_QUEUE,
     }),
     BullModule.registerQueue({
-      name: MINT_QUEUE, 
+      name: MINT_QUEUE,
     }),
     BullModule.registerQueue({
       name: ONCHAIN_DATA_QUEUE,
@@ -46,7 +52,16 @@ import { ContributeDataService } from 'src/contribute/contribute.service';
       name: CONTRIBUTE_QUEUE,
     }),
   ],
-  providers: [MailProcessor, MailService, QueueService, QueueProcessor, MintQueueProcessor, ContributeDataService, ContributeProcessor],
+  providers: [
+    MailProcessor,
+    MailService,
+    QueueService,
+    QueueProcessor,
+    MintQueueProcessor,
+    ContributeDataService,
+    ContributeProcessor,
+    SchoolService,
+  ],
   exports: [MailService, QueueService],
 })
 export class MailModule {}
