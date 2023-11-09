@@ -14,6 +14,7 @@ import { metaMask } from '../components/web3/connectors/metamask';
 import { useGetNonce, walletLogin } from '../hooks/walletLogin';
 import { useWeb3React } from '@web3-react/core';
 import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import {
   saveAccessToken,
   saveCurrentUser,
@@ -23,6 +24,7 @@ import { useAuthContext } from '../auth/useAuthContext';
 
 const SignIn = () => {
   const route = useRouter();
+  const pathname = usePathname();
   const { handleSubmit, control } = useForm();
   const { initialize } = useAuthContext();
   const [walletAddress, setWalletAddress] = useState('');
@@ -33,6 +35,7 @@ const SignIn = () => {
   const [email, setEmail] = useState('');
   const [openModal, setOpenModal] = useState(false);
   const [showEmailField, setShowEmailField] = useState(false);
+  const [previousUrl, setPreviousUrl] = useState(null);
   const [submitButtonText, setSubmitButtonText] =
     useState('Sign in with Email');
 
@@ -89,10 +92,19 @@ const SignIn = () => {
         saveConnectors('metaMask');
         console.log('wallet logged in successfully');
         initialize();
-        route.push('/dashboard');
+        if (previousUrl) {
+          route.push(previousUrl);
+        } else {
+          route.push('/dashboard');
+        }
       });
     } catch (error) {}
   };
+
+  useEffect(() => {
+    setPreviousUrl(sessionStorage.getItem('previousUrl') || null);
+    sessionStorage.removeItem('previousUrl');
+  }, []);
 
   const onClose = () => {
     setOpenModal(false);
