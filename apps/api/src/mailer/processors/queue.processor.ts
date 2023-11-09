@@ -17,6 +17,7 @@ import {
   SET_ONCHAIN_DATA,
   CONTRIBUTE_QUEUE,
   SET_APPROVE_QUEUE,
+  SET_CONTRIBUTE_QUEUE,
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
@@ -265,7 +266,7 @@ export class ContributeProcessor {
     }
   }
 
-  @Process('SET_CONTRIBUTE_QUEUE')
+  @Process(SET_CONTRIBUTE_QUEUE)
   public async contributeUpdate(job: Job<{ ids: any; userId: string }>) {
     const idsArray = job.data.ids.contributions;
     const userId = job.data.userId;

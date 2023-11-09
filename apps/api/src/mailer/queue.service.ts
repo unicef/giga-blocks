@@ -1,8 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import {
+  CONTRIBUTE_QUEUE,
   MINT_QUEUE,
   ONCHAIN_DATA_QUEUE,
   SET_APPROVE_QUEUE,
+  SET_CONTRIBUTE_QUEUE,
   SET_MINT_NFT,
   SET_MINT_SINGLE_NFT,
   SET_ONCHAIN_DATA,
@@ -27,7 +29,7 @@ export class QueueService {
   constructor(
     @InjectQueue(ONCHAIN_DATA_QUEUE) private readonly _onchainQueue: Queue,
     @InjectQueue(MINT_QUEUE) private readonly _mintQueue: Queue,
-    @InjectQueue('CONTRIBUTE_QUEUE') private readonly _contributeQueue: Queue,
+    @InjectQueue(CONTRIBUTE_QUEUE) private readonly _contributeQueue: Queue,
     private readonly _configService: ConfigService,
     private readonly _prismaService: PrismaAppService,
   ) {}
@@ -115,7 +117,7 @@ export class QueueService {
 
   public async contributeData(ids: UpdateContributeDatumDto, userId: string) {
     try {
-      await this._contributeQueue.add('SET_CONTRIBUTE_QUEUE', { ids, userId }, jobOptions);
+      await this._contributeQueue.add(SET_CONTRIBUTE_QUEUE, { ids, userId }, jobOptions);
       return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
       this._logger.error(`Error queueing `);
