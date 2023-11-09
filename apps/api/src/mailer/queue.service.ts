@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import {
   MINT_QUEUE,
   ONCHAIN_DATA_QUEUE,
+  SET_APPROVE_QUEUE,
   SET_MINT_NFT,
   SET_MINT_SINGLE_NFT,
   SET_ONCHAIN_DATA,
@@ -124,8 +125,11 @@ export class QueueService {
 
   public async approveBulkData(ids: ApproveContributeDatumDto, userId: string) {
     try {
-      await this._contributeQueue.add('SET_APPROVE_QUEUE', { ids, userId }, jobOptions);
-      return { message: 'queue added successfully', statusCode: 200 };
+      const { id } = ids;
+      for (let i = 0; i < id.length; i++) {
+        await this._contributeQueue.add(SET_APPROVE_QUEUE, { id, userId }, jobOptions);
+        return { message: 'queue added successfully', statusCode: 200 };
+      }
     } catch (error) {
       this._logger.error(`Error queueing `);
       throw error;
