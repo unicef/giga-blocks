@@ -21,6 +21,7 @@ import { Roles } from 'src/common/decorators/roles.decorator';
 import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
 import { MintStatus } from '@prisma/application';
 import fastify = require('fastify');
+import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-datum.dto';
 @Controller('schools')
 @ApiTags('School')
 export class SchoolController {
@@ -38,6 +39,13 @@ export class SchoolController {
   @Patch('/update/:id')
   update(@Param('id') id: string, @Req() req: any) {
     return this.schoolService.update(id, req.user.id);
+  }
+
+  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Patch('/bulkUpdate')
+  bulkUpdate(@Body() updateContributeDatumDto: ApproveContributeDatumDto, @Req() req: any) {
+    return this.schoolService.updateBulk(updateContributeDatumDto, req.user.id);
   }
 
   @Roles('ADMIN')

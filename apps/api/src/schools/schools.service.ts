@@ -19,6 +19,7 @@ import fastify = require('fastify');
 import { AppResponseDto } from './dto/app-response.dto';
 import { updateData } from 'src/utils/ethers/transactionFunctions';
 import { ConfigService } from '@nestjs/config';
+import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-datum.dto';
 
 @Injectable()
 export class SchoolService {
@@ -246,5 +247,9 @@ export class SchoolService {
 
   async removeAll() {
     return await this.prisma.school.deleteMany();
+  }
+
+  async updateBulk(ids: ApproveContributeDatumDto, userId: string) {
+    this.queueService.approveBulkData(ids, userId);
   }
 }

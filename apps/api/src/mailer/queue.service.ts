@@ -122,7 +122,7 @@ export class QueueService {
     }
   }
 
-  public async approveData(ids: ApproveContributeDatumDto, userId: string) {
+  public async approveBulkData(ids: ApproveContributeDatumDto, userId: string) {
     try {
       await this._contributeQueue.add('SET_APPROVE_QUEUE', { ids, userId }, jobOptions);
       return { message: 'queue added successfully', statusCode: 200 };
