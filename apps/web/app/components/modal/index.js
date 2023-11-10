@@ -4,10 +4,12 @@ import { useForm, Controller } from "react-hook-form";
 import { saveAccessToken, saveCurrentUser } from '../../utils/sessionManager';
 import { useRouter } from "next/navigation";
 import { useAuthContext } from "../../auth/useAuthContext";
+import { useState } from "react";
 
 const CarbonModal = ({open, onClose, email}) => {
 
   const { handleSubmit, control } = useForm();
+  const [error, setError] = useState()
   const{initialize} = useAuthContext()
   const login = useLogin();
   const {push} = useRouter()
@@ -26,6 +28,7 @@ const CarbonModal = ({open, onClose, email}) => {
         })
         .catch((err) => {
           console.log(err)
+          setError("OTP verification unsuccessful, please try again")
         })
       }
 
@@ -33,16 +36,17 @@ const CarbonModal = ({open, onClose, email}) => {
     <Modal 
     open = {open} 
     onSecondarySubmit={onClose}
-    modalHeading="Please check your email"
+    modalHeading={!error ?  `Please check your email` : error}
     onRequestClose={onClose}
     modalLabel={`OTP sent to ${email}`}
     secondaryButtonText="Cancel"
+    primaryButtonText="Submit"
+    onRequestSubmit = {handleSubmit(onAdd)}
     >
       <p style={{
       marginBottom: '1rem'
     }}>
-        Enter your OTP here
-        <Form onSubmit={handleSubmit(onAdd)}>
+        <Form>
         <Controller
         name="name"
         control={control}
@@ -51,18 +55,15 @@ const CarbonModal = ({open, onClose, email}) => {
             <TextInput
             {...field}
             id="name"
-            style={{ marginBottom: "25px", height: "48px" }}
-            labelText="Full Name"
-            placeholder="Enter your fullname here"
+            // style={{height: "48px" }}
+            labelText="Enter OTP here"
+            placeholder=""
             onChange={(e) => {
                 field.onChange(e);
             }}
             />
         )}
         />
-        <Button className="submit-btn" type="submit">
-                Submit
-              </Button>
         </Form>
       </p>
     </Modal>

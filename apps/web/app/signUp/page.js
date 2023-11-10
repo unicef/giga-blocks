@@ -31,7 +31,6 @@ const SignUp = () => {
     signUp
       .mutateAsync(data)
       .then(() => {
-        console.log(data.email);
         sendOtp
           .mutateAsync({ email: data.email })
           .then(() => {
