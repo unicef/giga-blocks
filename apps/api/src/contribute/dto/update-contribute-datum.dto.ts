@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Status } from '@prisma/application';
-import { IsArray, IsBoolean, IsJSON, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class UpdateContributeDatumDto {
   @ApiProperty({
@@ -13,11 +12,19 @@ export class UpdateContributeDatumDto {
 
   @ApiProperty({
     example: 'ID',
-    description: 'ID'
+    description: 'ID',
   })
   @IsOptional()
   @IsString()
   contributedUserId: string;
-
 }
 
+export class ApproveContributeDatumDto {
+  @ApiProperty({
+    example: 'ID',
+    description: 'ID',
+  })
+  @IsNotEmpty()
+  @IsArray()
+  id: string[];
+}

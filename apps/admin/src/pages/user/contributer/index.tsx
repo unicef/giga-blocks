@@ -24,7 +24,7 @@ const UserList = () => {
     // const { filteredUsers } = useAdministrationContext();
 
     const [tableData, setTableData] = useState<any>([]);
-    const {data, isFetching} = useUserGet(page, rowsPerPage)
+    const {data, isFetching} = useUserGet(page, rowsPerPage, 'CONTRIBUTER')
 
     let filteredData:any = []
     useEffect(() => {
@@ -44,7 +44,7 @@ const UserList = () => {
     return ( 
 
 <DashboardLayout>
-            <h2>Users List</h2>
+            <h2>Contributer List</h2>
           <Card>
           <Divider />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -94,7 +94,7 @@ const UserList = () => {
                     ))}
                   <TableNoData 
                   // isNotFound={!!error} 
-                  isNotFound={false}
+                  isNotFound={tableData.length === 0}
                   />
                 </TableBody>
               </Table>

@@ -39,3 +39,27 @@ const generateMultiCallData = (contractName, functionName, callData) => {
   }
   return encodedData;
 };
+
+export const updateData = async (
+  contractName: string,
+  contractAddress: string,
+  tokenId: string,
+  schoolDataArray: (string | boolean | number)[],
+) => {
+  const contract: any = getContractWithSigner(contractName, contractAddress);
+  const tx = await contract.updateNftContent(tokenId, schoolDataArray);
+  return tx;
+};
+
+export const updateBulkData = async (
+  contractName: string,
+  contractAddress: string,
+  tokenId: string[],
+  schoolDataArray: (string | boolean | number)[][],
+) => {
+  const contract: any = getContractWithSigner(contractName, contractAddress);
+  const schoolArgs = tokenId.map((el, i) => [el, schoolDataArray[i]]);
+  const multicalldata = generateMultiCallData(contractName, 'updateNftContent', schoolArgs);
+  const tx = await contract.multicall(multicalldata);
+  return tx;
+};

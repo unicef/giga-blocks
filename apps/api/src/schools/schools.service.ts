@@ -17,13 +17,20 @@ import { handler } from 'src/utils/csvToDB';
 import { hexStringToBuffer } from '../utils/string-format';
 import fastify = require('fastify');
 import { AppResponseDto } from './dto/app-response.dto';
+import { updateData } from 'src/utils/ethers/transactionFunctions';
+import { ConfigService } from '@nestjs/config';
+import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-datum.dto';
 
 @Injectable()
 export class SchoolService {
-  constructor(private prisma: PrismaAppService, private readonly queueService: QueueService) {}
+  constructor(
+    private prisma: PrismaAppService,
+    private readonly queueService: QueueService,
+    private readonly configService: ConfigService,
+  ) {}
 
   async findAll(query: ListSchoolDto) {
-    const { page, perPage, minted, uploadId } = query;
+    const { page, perPage, minted, uploadId, name } = query;
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
     };
@@ -33,6 +40,12 @@ export class SchoolService {
 
     if (uploadId) {
       where.uploadId = uploadId;
+    }
+    if (name) {
+      where.name = {
+        contains: name,
+        mode: "insensitive"
+      };
     }
 
     return paginate(
@@ -176,8 +189,8 @@ export class SchoolService {
       return await this.updateSchoolData(id, userId);
     }
     if (school.minted === MintStatus.MINTED) {
-      // const onChainData = await mintNFT();
-      return await this.updateSchoolData(id, userId);
+      const tx = await this.updateOnchainData(id, school);
+      if (tx.status === 1) await this.updateSchoolData(id, userId);
     }
   }
 
@@ -228,7 +241,21 @@ export class SchoolService {
     }
   }
 
+  async updateOnchainData(id: string, data: any) {
+    const tx = await updateData(
+      'NFTContent',
+      this.configService.get('GIGA_NFT_CONTENT_ADDRESS'),
+      id,
+      data,
+    );
+    return tx;
+  }
+
   async removeAll() {
     return await this.prisma.school.deleteMany();
+  }
+
+  async updateBulk(ids: ApproveContributeDatumDto, userId: string) {
+    this.queueService.approveBulkData(ids, userId);
   }
 }

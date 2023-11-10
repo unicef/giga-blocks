@@ -147,6 +147,7 @@
     "apexcharts": "3.37.0",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.4.0",
+    "bufferutil": "^4.0.8",
     "bull": "^4.10.4",
     "change-case": "^4.1.2",
     "class-transformer": "^0.5.1",
