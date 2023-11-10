@@ -46,3 +46,11 @@ export const useValidateGet = (page:number, perPage:number) => {
   export const useValidateUpdate = () => {
     return useMutation(validateData);
   };
+
+  const validateBulkData = async (ids: string[]) => {
+    return await api.patch(`${routes.VALIDATE.PATCHBULK}`, ids);
+  };
+
+  export const useValidateBulkUpdate = () => {
+    return useMutation(validateBulkData);
+  };

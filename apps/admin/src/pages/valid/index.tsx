@@ -30,7 +30,7 @@ import { useSchoolCount } from "@hooks/school/useSchool";
 import { useContributeGet, useContributionValidate } from '@hooks/contribute/useContribute';
 import ContributeTableRow from '@sections/user/list/ContributTableRow';
 import { useSnackbar } from '@components/snackbar';
-import { useValidateGet } from '@hooks/validate/useValidate';
+import { useValidateBulkUpdate, useValidateGet } from '@hooks/validate/useValidate';
 import ValidateTableRow from '@sections/user/list/ValidateTableRow';
 
 const ValidateData = () => {
@@ -64,7 +64,7 @@ const ValidateData = () => {
   const{data, fetching, error} = result;
   const {data:ValidatedData} = useValidateGet(page, rowsPerPage)
 
-  const {mutate, isSuccess:isValidationSuccess, isError:isValidationError} = useContributionValidate()
+  const {mutate, isSuccess:isValidationSuccess, isError:isValidationError} = useValidateBulkUpdate()
 
   const decodeSchooldata = (data:any) => {
     // const encodeddata = data.tokenUris;
@@ -105,14 +105,13 @@ const ValidateData = () => {
     }
   }
 
-  let tempArray:object[] = [];
+  let payload:string[] = [];
   const onValidate = () => {
-    // selectedValues.map((value:any) => {
-    //   tempArray.push({contributionId: value?.id, isValid: validity})
-    // })
-    // const payload = {contributions: tempArray}
-    // mutate(payload)
-    // tempArray = [];
+    selectedValues.map((value:any) => {
+      payload.push(value?.id)
+    })
+    mutate(payload)
+    payload = [];
   }
 
   useEffect(() => {

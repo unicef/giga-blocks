@@ -173,10 +173,10 @@ const ContributeData = () => {
     <DashboardLayout>
       <div style={{display: 'flex', justifyContent: 'space-between',marginBottom: '20px'}}>
           <span style={{fontSize: '1.5em', fontWeight: '600'}}>Contributed Data <span style={{fontSize: '0.75em', fontWeight: '400'}}> {selectedValues.length > 0 && `(${selectedValues.length})`} </span></span>
-          <div style={{display: 'flex', gap: '15px'}}>
+          {/* <div style={{display: 'flex', gap: '15px'}}>
           <Button variant="contained" style={{background: '#474747'}} disabled={selectedValues.length <= 0} onClick={() => onContribute(false)}>Invalidate</Button>
           <Button variant="contained" style={{background: '#474747'}} disabled={selectedValues.length <= 0} onClick={() => onContribute(true)}>Validate</Button>
-          </div>
+          </div> */}
           </div>
           <Box sx={{ minWidth: 120 }}>
       <FormControl sx={{width: 150}}>
@@ -209,7 +209,6 @@ const ContributeData = () => {
       />
       </FormControl> : 
       <FormControl sx={{width: 150, marginLeft: 2}}>
-      {/* <InputLabel id="demo-simple-select-label">{searchBy}</InputLabel> */}
       <Autocomplete
         id="demo-simple-select"
         options={contributerList && contributerList?.rows as Array<{ id: string, name: string }>}
