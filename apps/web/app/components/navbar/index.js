@@ -23,13 +23,25 @@ const Navbar = () => {
   const { isAuthenticated, logout } = useAppAuthContext();
 
   const options = [
-    { id: 'option1', text: 'Dashboard' },
+    { id: 'option1', text: 'Dashboard', link: '/dashboard' },
     { id: 'option2', text: 'Edit Profile' },
     { id: 'option3', text: 'Logout' },
   ];
 
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleOptionClick = (option) => {
+    if (option.text === 'Logout') {
+      logout();
+      window.location.href = '/signIn';
+    } else {
+      window.location.href = option.link;
+    }
+
+    // Close the dropdown
+    setIsDropdownOpen(false);
   };
 
   return (
