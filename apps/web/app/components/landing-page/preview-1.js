@@ -18,7 +18,10 @@ const LandingPage = () => {
           way in decentralized Public Infrastructure Technology.
         </p>
         <div className="landing-page__buttons">
-          <Button className="button-block preview-1-button" href="/school">
+          <Button
+            className="button-block preview-1-button"
+            href="/contributeSchool"
+          >
             <span>Explore School Data</span>
             <span>
               <DirectionStraightRight />

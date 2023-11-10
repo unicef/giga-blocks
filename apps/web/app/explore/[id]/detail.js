@@ -3,12 +3,12 @@ import Footer from '../../components/footer';
 import Navbar from '../../components/navbar';
 import Introduction from '../../components/school-detail/introduction';
 import Connectivity from '../../components/school-detail/connectivity';
-import Heading from '../../components/school-detail/heading';
 import { useQuery } from 'urql';
 import { Queries } from '../../libs/graph-query';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { Loading } from '@carbon/react';
+import PageHeader from '../../components/page-header';
 
 const SchoolDetail = ({ id }) => {
   const [result] = useQuery({
@@ -23,7 +23,6 @@ const SchoolDetail = ({ id }) => {
     const decodedData = atob(encodeddata.tokenUri.substring(29));
     setSchoolData(JSON.parse(decodedData));
   };
-
   useEffect(() => {
     if (result.data) decodeSchooldata(result.data);
   }, [result.data]);
@@ -33,7 +32,7 @@ const SchoolDetail = ({ id }) => {
       {fetching === false ? (
         <>
           <Navbar />
-          <Heading schoolData={schoolData} />
+          <PageHeader name={schoolData.schoolName} />
           <Introduction schooldata={schoolData} />
           <Connectivity schoolData={schoolData} />
           <Footer />

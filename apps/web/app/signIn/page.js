@@ -95,7 +95,7 @@ const SignIn = () => {
         if (previousUrl) {
           route.push(previousUrl);
         } else {
-          route.push('/dashboard');
+          route.push('/contributeSchool');
         }
       });
     } catch (error) {}

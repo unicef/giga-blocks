@@ -42,7 +42,7 @@ const SchoolCard = () => {
               <Column sm={4}>
                 <ClickableTile
                   className="card"
-                  href={`/school/${school?.id}/contribute`}
+                  href={`/contributeSchool/${school?.id}`}
                 >
                   <div className="row">
                     <div>
