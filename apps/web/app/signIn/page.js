@@ -73,7 +73,6 @@ const SignIn = () => {
       .then(() => {
         setOpenModal(true);
         setEmail(data.email);
-        route.push('/contributeSchool');
       })
       .catch((error) => {
         console.log(error);
