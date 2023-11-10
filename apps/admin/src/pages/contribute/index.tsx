@@ -256,7 +256,7 @@ const ContributeData = () => {
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   rowCount={tableData?.length}
-                  showCheckBox={true}
+                  showCheckBox={false}
                   onSort={onSort}
                   numSelected={selectedValues?.length}
                   onSelectAllRows={onSelectAllRows} 
@@ -270,7 +270,7 @@ const ContributeData = () => {
                       selectedValues={selectedValues}
                       setSelectedValues={setSelectedValues}
                       rowData={row}
-                      checkbox={true}
+                      checkbox={false}
                     />
                   ))}
                 {!isFetching ? <TableNoData
