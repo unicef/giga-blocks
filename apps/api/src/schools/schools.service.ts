@@ -242,11 +242,12 @@ export class SchoolService {
   }
 
   async updateOnchainData(id: string, data: any) {
+    const schooldata = await this.filterOnchainData(id);
     const tx = await updateData(
       'NFTContent',
       this.configService.get('GIGA_NFT_CONTENT_ADDRESS'),
       id,
-      data,
+      schooldata,
     );
     return tx;
   }
@@ -259,7 +260,7 @@ export class SchoolService {
     this.queueService.approveBulkData(ids, userId);
   }
 
-  private async filterOnchainData(data: any, id: string) {
+  private async filterOnchainData(id: string) {
     try {
       const validatedData = await this.prisma.validatedData.findFirst({
         where: {
@@ -276,13 +277,23 @@ export class SchoolService {
         },
       });
       const filteredData = Object.fromEntries(
-        Object.entries(data).filter(([key]) => key in dataToUpdate),
+        Object.entries(validatedData.data).filter(([key]) => key in dataToUpdate),
       );
       const newData = {
         ...schooldata,
         ...filteredData,
       };
-      return newData;
+      const onChainData = {
+        schoolName: newData.name,
+        schoolType: newData.school_type,
+        country: newData.country,
+        longitude: newData.longitude,
+        latitude: newData.latitude,
+        connectivity: newData.connectivity,
+        coverage_availability: newData.coverage_availability,
+        electricity_available: newData.electricity_available,
+}
+      return onChainData;
     } catch (err) {
       console.log(err);
     }
