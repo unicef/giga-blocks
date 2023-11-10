@@ -40,7 +40,7 @@ export class ContributeDataService {
   }
 
   async findAll(query) {
-    const { page, perPage, schoolId, contributorId } = query;
+    const { page, perPage, schoolId, contributorId, status } = query;
     const where: Prisma.ContributedDataWhereInput = {};
     if (schoolId) {
       where.school_Id = schoolId;
@@ -48,7 +48,9 @@ export class ContributeDataService {
     if (contributorId) {
       where.contributedUserId = contributorId;
     }
-
+    if (status) {
+      where.status = status;
+    }
     const args = {
       where: where,
       include: {
@@ -146,7 +148,7 @@ export class ContributeDataService {
       } else {
         transaction = await this.prisma.$transaction([
           this.prisma.contributedData.update({
-            data: { status: Status.Rejected, validatedBy: userId },
+            data: { status: Status.Rejected, validatedBy: userId, validatedAt: new Date() },
             where: { id: id },
           }),
         ]);
@@ -175,7 +177,7 @@ export class ContributeDataService {
       };
       transaction = await this.prisma.$transaction([
         this.prisma.contributedData.update({
-          data: { status: Status.Validated, validatedBy: userId },
+          data: { status: Status.Validated, validatedBy: userId, validatedAt: new Date() },
           where: { id: id },
         }),
         this.prisma.validatedData.create({
@@ -188,7 +190,7 @@ export class ContributeDataService {
       const mergedData = { ...existingData, ...newData };
       transaction = await this.prisma.$transaction([
         this.prisma.contributedData.update({
-          data: { status: Status.Validated, validatedBy: userId },
+          data: { status: Status.Validated, validatedBy: userId, validatedAt: new Date() },
           where: { id: id },
         }),
         this.prisma.validatedData.update({

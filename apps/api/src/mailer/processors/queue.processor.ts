@@ -15,7 +15,9 @@ import {
   SET_MINT_NFT,
   SET_MINT_SINGLE_NFT,
   SET_ONCHAIN_DATA,
-  CONTRIBUTE_QUEUE
+  CONTRIBUTE_QUEUE,
+  SET_APPROVE_QUEUE,
+  SET_CONTRIBUTE_QUEUE,
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
@@ -26,6 +28,7 @@ import { SchoolData } from '../types/mintdata.types';
 import { MintStatus } from '@prisma/application';
 import { jobOptions } from '../config/bullOptions';
 import { ContributeDataService } from 'src/contribute/contribute.service';
+import { SchoolService } from 'src/schools/schools.service';
 
 @Injectable()
 @Processor(ONCHAIN_DATA_QUEUE)
@@ -231,7 +234,8 @@ export class ContributeProcessor {
   constructor(
     private readonly _mailerService: MailerService,
     private readonly _configService: ConfigService,
-    private contributeDataService: ContributeDataService
+    private contributeDataService: ContributeDataService,
+    private schoolService: SchoolService,
   ) {}
 
   @OnQueueActive()
@@ -262,12 +266,22 @@ export class ContributeProcessor {
     }
   }
 
-  @Process('SET_CONTRIBUTE_QUEUE')
-  public async contributeUpdate(job: Job<{ ids: any, userId: string }>) {
-    const idsArray = job.data.ids.contributions
-    const userId = job.data.userId
-    for (var data of idsArray) {
-    const transactions = this.contributeDataService.validate(data.contributionId, Boolean(data.isValid), userId)
+  @Process(SET_CONTRIBUTE_QUEUE)
+  public async contributeUpdate(job: Job<{ ids: any; userId: string }>) {
+    const idsArray = job.data.ids.contributions;
+    const userId = job.data.userId;
+    for (const data of idsArray) {
+      const transactions = this.contributeDataService.validate(
+        data.contributionId,
+        Boolean(data.isValid),
+        userId,
+      );
     }
   }
+  @Process(SET_APPROVE_QUEUE)
+  public async approveUpdate(job: Job<{ id: string; userId: string }>) {
+    const id = job.data.id;
+    const userId = job.data.userId;
+    return this.schoolService.update(id, userId);
   }
+}

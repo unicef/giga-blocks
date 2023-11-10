@@ -16,6 +16,7 @@ const ContributeForm = () => {
   const { id } = useParams();
   const { data } = useSchoolDetails(id);
   const [selectedOptions, setSelectedOptions] = useState({});
+  const [error,setError] = useState(false);
   const user = getCurrentUser();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,17 +37,19 @@ const ContributeForm = () => {
   };
 
   const closeModal = () => {
+    router.push('/')
     setIsModalOpen(false);
   };
 
   const onSubmit = (data) => {
     try {
+      setError(false);
       const changedData = {};
 
       if (
-        selectedOptions?.dropdown1?.selectedItem?.value !== data.typeOfSchool
+        selectedOptions?.dropdown1?.selectedItem?.value !== data.school_type
       ) {
-        changedData.typeOfSchool =
+        changedData.school_type =
           selectedOptions?.dropdown1?.selectedItem?.value;
       }
 
@@ -84,6 +87,9 @@ const ContributeForm = () => {
         changedData.electricityAvailability =
           selectedOptions.dropdown5?.selectedItem?.value;
       }
+      if(!Object.keys(changedData).length) {
+        setError(true)
+        return;} 
 
       if (Object.keys(changedData).length > 0) {
         const formattedData = {
@@ -136,6 +142,7 @@ const ContributeForm = () => {
                   ...prevOptions,
                   dropdown1: selectedItem,
                 }));
+                setError(false);
               }}
             />
             <Controller
@@ -195,6 +202,7 @@ const ContributeForm = () => {
                   ...prevOptions,
                   dropdown3: selectedItem,
                 }));
+                setError(false);
               }}
             />
             <Dropdown
@@ -210,6 +218,7 @@ const ContributeForm = () => {
                   ...prevOptions,
                   dropdown4: selectedItem,
                 }));
+                setError(false);
               }}
             />
             <Dropdown
@@ -225,9 +234,10 @@ const ContributeForm = () => {
                   ...prevOptions,
                   dropdown5: selectedItem,
                 }));
+                setError(false);
               }}
             />
-
+            {error && <p style={{color:'red'}}>** Please make changes to school data before submitting</p>}
             <Button
               onClick={handleSubmit(onSubmit)}
               style={{ width: '100%', marginBottom: '24px' }}

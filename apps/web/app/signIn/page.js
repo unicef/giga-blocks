@@ -138,9 +138,9 @@ const SignIn = () => {
                   )}
                 />
               )}
-              {showEmailField && (
+              {/* {showEmailField && (
                 <Checkbox className="checkbox" labelText="Remember ID" />
-              )}
+              )} */}
               <br />
               <Button
                 className="submit-btn"
