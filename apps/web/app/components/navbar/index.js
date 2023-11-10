@@ -35,7 +35,7 @@ const Navbar = () => {
   const handleOptionClick = (option) => {
     if (option.text === 'Logout') {
       logout();
-      window.location.href = '/signIn';
+      window.location.href = '/';
     } else {
       window.location.href = option.link;
     }
