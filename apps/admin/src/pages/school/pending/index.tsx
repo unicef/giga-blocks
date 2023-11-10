@@ -68,7 +68,7 @@ const VerifiedSchool = () => {
   // const { filteredUsers } = useAdministrationContext();
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
-  const { data } = useSchoolGet(page, rowsPerPage, 'ISMINTING');
+  const { data } = useSchoolGet({page, perPage: rowsPerPage, minted: 'ISMINTING'});
 
   // const { error } = useFetchUsers();
 

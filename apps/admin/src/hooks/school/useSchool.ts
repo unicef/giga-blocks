@@ -12,7 +12,7 @@ const accessToken = getAccessToken();
 
 api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 
-export const useSchoolGet = ({page, perPage, minted, uploadId, name}:{page?: number, perPage: number, minted?: string, uploadId?: string, name?: string}) => {
+export const useSchoolGet = ({page, perPage, minted, uploadId, name}:{page?: number, perPage: number, minted?: string, uploadId?: any, name?: string}) => {
   return useQuery(
     ['get-api-data', page, perPage],
     async () => {
