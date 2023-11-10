@@ -202,17 +202,13 @@ export default function ContributeDetail({ id }: Props) {
       <Grid item xs={4}>
         <Container>
           <Box justifyContent={"center"}>
-            <Stack alignItems="center" sx={{ mt: 1 }}>
-            <Button variant="contained" color={"info"} style={{ width: "300px", background: '#474747' }} onClick={() => onContribute(false)}>
+            <Stack direction="row" alignItems="center">
+            <Button variant="contained" color={"info"} style={{ width: "150px", background: '#474747' }} onClick={() => onContribute(false)}>
                 Invalidate
               </Button>
-            </Stack>
-            <Stack sx={{ mt: 2 }}>
-            <Box display="flex" justifyContent="center">
-            <Button variant="contained" color={"info"} style={{ width: "300px", background: '#474747' }} onClick={() => onContribute(true)}>
+            <Button sx={{ml: 2}} variant="contained" color={"info"} style={{ width: "150px", background: '#474747' }} onClick={() => onContribute(true)}>
                 Validate
               </Button>
-            </Box>
             </Stack>
           </Box>
         </Container>

@@ -44,6 +44,7 @@ export class SchoolService {
     if (name) {
       where.name = {
         contains: name,
+        mode: "insensitive"
       };
     }
 

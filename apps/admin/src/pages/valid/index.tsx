@@ -78,7 +78,7 @@ const ValidateData = () => {
     //   decodedShooldata.push(schoolData);
     // }
     ValidatedData && ValidatedData?.map((row: any) => {
-      const date = new Date(row.createdAt).toLocaleDateString();
+      const date = new Date(row?.createdAt).toLocaleDateString();
       filteredData.push({
         id: row.id,
         school: row.school.name,
@@ -92,7 +92,7 @@ const ValidateData = () => {
 
   let filteredData: any = [];
   useEffect(() => {
-    if(ValidatedData.length > 0) decodeSchooldata(ValidatedData);
+    if(ValidatedData?.length > 0) decodeSchooldata(ValidatedData);
   }, [ValidatedData]);
 
   const onSelectAllRows = (e:any) => {
