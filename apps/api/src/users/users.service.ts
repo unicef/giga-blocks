@@ -145,7 +145,10 @@ export class UsersService {
 
   async findOneByEmail(email: string): Promise<any> {
     return await this.prisma.user.findUnique({
-      where: { email, isArchived: false },
+      where: {
+        email: email.toLowerCase(),
+        isArchived: false,
+      },
     });
   }
 

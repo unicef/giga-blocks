@@ -28,7 +28,7 @@ const UserList = () => {
 
     let filteredData:any = []
     useEffect(() => {
-      !isFetching &&  data?.map((row:any) => {
+      !isFetching && data && data?.rows?.map((row:any) => {
         const buffer = row.walletAddress && Buffer.from(row.walletAddress.data)
         const walletString = buffer &&` 0x${buffer.toString('hex')}`
         filteredData.push({
