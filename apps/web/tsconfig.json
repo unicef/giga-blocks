@@ -26,9 +26,10 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx",
-    "app/school/page.js",
+    "app/explore/page.js",
     "../../dist/apps/web/.next/types/**/*.ts",
-    "../../apps/web/.next/types/**/*.ts"
-, "app/components/toast/index.jsx"  ],
+    "../../apps/web/.next/types/**/*.ts",
+    "app/components/toast/index.jsx"
+  ],
   "exclude": ["node_modules"]
 }

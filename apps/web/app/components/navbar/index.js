@@ -61,10 +61,10 @@ const Navbar = () => {
             <HeaderMenuItem as={Link} href="/contributeSchool">
               School Data
             </HeaderMenuItem>
-            <HeaderMenuItem as={Link} href="/school">
+            <HeaderMenuItem as={Link} href="/explore">
               Explore NFT
             </HeaderMenuItem>
-            <HeaderMenuItem as={Link} href="/#involved">
+            <HeaderMenuItem as={Link} href="/#joinCommunityForm">
               Develop With Us
             </HeaderMenuItem>
             <HeaderMenuItem as={Link} href="/#faq">
