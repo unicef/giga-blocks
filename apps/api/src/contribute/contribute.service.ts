@@ -40,7 +40,7 @@ export class ContributeDataService {
   }
 
   async findAll(query) {
-    const { page, perPage, schoolId, contributorId, status, status } = query;
+    const { page, perPage, schoolId, contributorId, status } = query;
     const where: Prisma.ContributedDataWhereInput = {};
     if (schoolId) {
       where.school_Id = schoolId;

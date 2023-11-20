@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/application';
 import * as fs from 'fs';
 interface SchoolData {
   schoolName: string;
+  giga_school_id: string;
   schoolType: string;
   country: string;
   longitude: number;
@@ -49,6 +50,7 @@ export async function handler(
             for (const row of rows) {
               const [
                 schoolName,
+                giga_school_id,
                 longitudeStr,
                 latitudeStr,
                 schoolType,
@@ -68,6 +70,7 @@ export async function handler(
 
               const schoolData: SchoolData = {
                 schoolName,
+                giga_school_id,
                 schoolType,
                 country,
                 longitude,
@@ -80,6 +83,7 @@ export async function handler(
               await prisma.school.create({
                 data: {
                   name: schoolData.schoolName,
+                  giga_school_id: schoolData.giga_school_id,
                   school_type: schoolData.schoolType,
                   longitude: schoolData.longitude,
                   latitude: schoolData.latitude,
