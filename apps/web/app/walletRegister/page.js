@@ -11,8 +11,12 @@ import { metaMask } from '../components/web3/connectors/metamask';
 
 import { walletRegister, useGetNonce } from '../hooks/walletLogin';
 import { useWeb3React } from '@web3-react/core';
-import {saveAccessToken, saveCurrentUser,saveConnectors} from '../utils/sessionManager'
-import {useAuthContext} from '../auth/useAuthContext'
+import {
+  saveAccessToken,
+  saveCurrentUser,
+  saveConnectors,
+} from '../utils/sessionManager';
+import { useAuthContext } from '../auth/useAuthContext';
 
 const WalletRegisterForm = () => {
   const [name, setName] = useState('');
@@ -21,7 +25,7 @@ const WalletRegisterForm = () => {
   const registerMutation = walletRegister();
   const getNonceQuery = useGetNonce();
   const web3 = useWeb3React();
-  const {initialize} = useAuthContext()
+  const { initialize } = useAuthContext();
 
   useEffect(() => {
     if (web3) {
@@ -29,39 +33,38 @@ const WalletRegisterForm = () => {
     }
   }, [web3]);
 
-  useEffect(()=>{
-    if(!web3.isActive){
+  useEffect(() => {
+    if (!web3.isActive) {
       metaMask.connectEagerly();
     }
-  },[web3])
+  }, [web3]);
 
-  const getSignature = async(nonce)=>{
-    try{
+  const getSignature = async (nonce) => {
+    try {
       const signer = web3.provider.getSigner();
       let signature = await signer.signMessage(nonce);
-      signature = `${nonce}:${signature}`
+      signature = `${nonce}:${signature}`;
       return signature;
+    } catch (err) {
+      console.log({ err });
     }
-    catch(err){
-      console.log({err})
-    }
-  }
+  };
 
   const onSubmit = async (data) => {
     try {
-      const {nonce} = await getNonceQuery.mutateAsync();
-     const sign = await getSignature(nonce);
+      const { nonce } = await getNonceQuery.mutateAsync();
+      const sign = await getSignature(nonce);
       const payload = {
         name: data.name,
         walletAddress: walletAddress,
-        signature:sign
+        signature: sign,
       };
-      registerMutation.mutateAsync(payload).then((res)=>{
+      registerMutation.mutateAsync(payload).then((res) => {
         saveCurrentUser(res.data);
         saveAccessToken(res.data.access_token);
         saveConnectors('metaMask');
-        initialize();     
-      })
+        initialize();
+      });
 
       console.log('Wallet registered successfully!');
     } catch (error) {
@@ -113,14 +116,25 @@ const WalletRegisterForm = () => {
                   />
                 )}
               />
+              <Checkbox
+                className="checkbox"
+                labelText={
+                  <>
+                    By creating an account, you agree to the{' '}
+                    <Link href="/privacy-policy" target="_blank">
+                      Terms and Conditions
+                    </Link>{' '}
+                    and our{' '}
+                    <Link href="/privacy-policy" target="_blank">
+                      Privacy Policy
+                    </Link>
+                  </>
+                }
+              />
               <br />
               <Button className="submit-btn" type="submit">
                 Submit
               </Button>
-              <Checkbox
-                className="checkbox"
-                labelText="By creating an account, you agree to the Terms and conditions and our Privacy Policy"
-              />
             </Form>
           </Tile>
           <p style={{ marginLeft: '20px' }}>

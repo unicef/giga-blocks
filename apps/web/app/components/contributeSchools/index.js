@@ -8,7 +8,6 @@ import {
   Loading,
   ToggletipContent,
   ToggletipButton,
-  ToggletipActions,
 } from '@carbon/react';
 import './contributeSchools.scss';
 import { useEffect, useState } from 'react';
@@ -20,6 +19,7 @@ const SchoolCard = () => {
   const [allDataLoaded, setAllDataLoaded] = useState(false);
 
   const { data, isLoading, isFetching } = useSchoolGet(1, pageSize);
+
   useEffect(() => {
     isLoading === false && setSchoolData(data?.rows);
   }, [data]);
@@ -42,7 +42,7 @@ const SchoolCard = () => {
               <Column sm={4}>
                 <ClickableTile
                   className="card"
-                  href={`/school/${school?.id}/contribute`}
+                  href={`/contributeSchool/${school?.id}`}
                 >
                   <div className="row">
                     <div>

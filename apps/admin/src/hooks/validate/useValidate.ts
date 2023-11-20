@@ -11,12 +11,12 @@ const api = axios.create({
   
   api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 
-export const useContributeGet = ({page, perPage, schoolId, contributeId, status}:{page:number, perPage:number, schoolId?:string, contributeId?:string, status?:string}) => {
+export const useValidateGet = (page:number, perPage:number) => {
     return useQuery(
       ['get-api-data',page,perPage],
       async () => {
         const { data } = await api.get(
-          `${routes.CONTRIBUTE.GET}?page=${page}&perPage=${perPage}${schoolId ? `&schoolId=${schoolId}` : ``}${contributeId ? `&contributorId=${contributeId}` : ``}${`&status=${status}`}`
+          `${routes.VALIDATE.GET}?page=${page}&perPage=${perPage}`
         );
         return data;
       },
@@ -26,11 +26,11 @@ export const useContributeGet = ({page, perPage, schoolId, contributeId, status}
     );
   };
 
-  export const useContributionGetById = (id: string | undefined | string[]) => {
+  export const useValidDataGetById = (id: string | undefined | string[]) => {
     return useQuery(
       ['single-contribution'],
       async () => {
-        const { data } = await api.get(`${routes.CONTRIBUTE.GET}/${id}`);
+        const { data } = await api.get(`${routes.VALIDATE.GET}/${id}`);
         return data;
       },
       {
@@ -39,10 +39,18 @@ export const useContributeGet = ({page, perPage, schoolId, contributeId, status}
     );
   };
 
-  const validateData = async (data: any) => {
-    return await api.patch(routes.CONTRIBUTE.PATCH, data);
+  const validateData = async (id: string | undefined | string[]) => {
+    return await api.patch(`${routes.VALIDATE.PATCH}/${id}`);
   };
 
-  export const useContributionValidate = () => {
+  export const useValidateUpdate = () => {
     return useMutation(validateData);
+  };
+
+  const validateBulkData = async (ids: string[]) => {
+    return await api.patch(`${routes.VALIDATE.PATCHBULK}`, ids);
+  };
+
+  export const useValidateBulkUpdate = () => {
+    return useMutation(validateBulkData);
   };

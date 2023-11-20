@@ -30,6 +30,9 @@ const paginator = (defaultOptions: PaginateOptions): PaginateFunction => {
         ...args,
         take: perPage,
         skip,
+        orderBy: {
+          createdAt: 'desc',
+        },
       }),
     ]);
     const lastPage = Math.ceil(total / perPage);

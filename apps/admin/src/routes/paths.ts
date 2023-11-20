@@ -11,6 +11,7 @@ const ROOTS_ACTIVITY_LOGS = '/activity-logs';
 const ROOTS_USER = '/user';
 const ROOTS_SCHOOL = '/school';
 const ROOTS_CONTRIBUTE = '/contribute';
+const ROOTS_VALID = '/valid';
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +38,8 @@ export const PATH_DASHBOARD = {
 
 export const PATH_USER = {
   root: ROOTS_USER,
-  list: path(ROOTS_USER, '/users-list'),
+  admin: path(ROOTS_USER, '/admin'),
+  contributer: path(ROOTS_USER, '/contributer'),
   new: path(ROOTS_USER, '/new'),
   profile: path(ROOTS_USER, '/profile'),
   account:(id:string)=> path(ROOTS_USER, `/${id}`),
@@ -50,6 +52,10 @@ export const PATH_ACTIVITY_LOGS = {
 
 export const PATH_CONTRIBUTE = {
   root: ROOTS_CONTRIBUTE,
+};
+
+export const PATH_VALID = {
+  root: ROOTS_VALID,
 };
 
 export const PATH_SCHOOL = {

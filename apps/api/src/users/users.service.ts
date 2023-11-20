@@ -19,6 +19,7 @@ export class UsersService {
     if (!createUserDto.roles) {
       roles = [Role.CONTRIBUTOR];
     }
+    createUserDto.email = createUserDto.email.toLowerCase();
     return this.prisma.user.create({
       data: {
         ...createUserDto,
@@ -44,6 +45,7 @@ export class UsersService {
   async addAdmin(createUserDto: CreateUserDto) {
     this._logger.log(`Creating new user: ${createUserDto?.email}`);
     const walletAddress = hexStringToBuffer(createUserDto?.walletAddress);
+    createUserDto.email = createUserDto.email.toLowerCase();
     return this.prisma.user.create({
       data: {
         ...createUserDto,
@@ -145,7 +147,10 @@ export class UsersService {
 
   async findOneByEmail(email: string): Promise<any> {
     return await this.prisma.user.findUnique({
-      where: { email, isArchived: false },
+      where: {
+        email: email,
+        isArchived: false,
+      },
     });
   }
 

@@ -71,8 +71,8 @@ export default function TableHeadCustom({
             // sortDirection={orderBy === headCell.id ? order : false}
             sx={{ width: headCell.width, minWidth: headCell.minWidth, whiteSpace: 'nowrap' }}
           >
-            <p>{headCell.label}</p>
-            {/* {onSort ? (
+            {/* <p>{headCell.label}</p> */}
+            {onSort ? (
               <TableSortLabel
                 hideSortIcon
                 active={orderBy === headCell.id}
@@ -90,7 +90,7 @@ export default function TableHeadCustom({
               </TableSortLabel>
             ) : (
               headCell.label
-            )} */}
+            )}
           </TableCell>
         ))}
       </TableRow>

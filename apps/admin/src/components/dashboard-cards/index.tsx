@@ -8,7 +8,7 @@ import { useSchoolCount, useSchoolGet } from '@hooks/school/useSchool';
 
 export default function OutlinedCard() {
   const { data: schoolCount } = useSchoolCount();
-  const { data: mintedCount } = useSchoolGet(0, 0, 'MINTED');
+  const { data: mintedCount } = useSchoolGet({page: 0, perPage: 0, minted: 'MINTED'});
 
   return (
     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>

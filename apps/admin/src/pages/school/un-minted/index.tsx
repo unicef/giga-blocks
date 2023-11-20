@@ -75,7 +75,7 @@ const VerifiedSchool = () => {
   // const { filteredUsers } = useAdministrationContext();
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
-  const { data, isLoading, refetch } = useSchoolGet(page, rowsPerPage, 'NOTMINTED', uploadId);
+  const { data, isLoading, refetch } = useSchoolGet({page, perPage: rowsPerPage, minted: 'NOTMINTED', uploadId});
 
   // const { error } = useFetchUsers();
 
