@@ -2,6 +2,9 @@
 .mt-50px {
   margin-top: 80px;
 }
+.mb-50px {
+  margin-bottom: 80px;
+}
 
 // Heading
 .school-detail-head {
@@ -60,11 +63,21 @@
 
 .school-connectivity-card {
   display: flex;
-  gap: 50px;
-  line-height: 20px;
+  padding: 16px 0 16px 0;
   width: 100%;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .border-bottom {
+  margin: 32px 0 32px 0;
+  width: 100%;
   border-bottom: 1px solid #9e9e9e;
+}
+.submit-btn {
+  width: 240px;
+  height: 40px !important;
+  background: transparent;
+  border: 1px solid #000;
+  color: #000;
 }

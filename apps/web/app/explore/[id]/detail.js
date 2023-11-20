@@ -32,7 +32,7 @@ const SchoolDetail = ({ id }) => {
       {fetching === false ? (
         <>
           <Navbar />
-          <PageHeader name={schoolData.schoolName} />
+          <PageHeader />
           <Introduction schooldata={schoolData} />
           <Connectivity schoolData={schoolData} />
           <Footer />
