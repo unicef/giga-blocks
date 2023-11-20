@@ -89,6 +89,7 @@ const VerifiedSchool = () => {
     data?.rows &&  data?.rows.map((row: any) => {
         filteredData.push({
           id: row.id,
+          giga_school_id:row.giga_school_id,
           schoolName: row.name,
           longitude: row.longitude,
           latitude: row.latitude,
