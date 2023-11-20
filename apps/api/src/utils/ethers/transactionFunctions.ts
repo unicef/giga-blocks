@@ -5,6 +5,7 @@ export const mintNFT = async (
   contractName: string,
   contractAddress: string,
   schoolDataArray: (string | boolean | number)[][],
+  giga_ids: string[],
 ) => {
   const config = new ConfigService();
   const escrowAddress = config.get('ESCROW_ADDRESS');
@@ -19,6 +20,7 @@ export const mintSingleNFT = async (
   contractName: string,
   contractAddress: string,
   schoolDataArray: (string | boolean | number)[],
+  giga_id: string,
 ) => {
   const config = new ConfigService();
   const escrowAddress = config.get('ESCROW_ADDRESS');
