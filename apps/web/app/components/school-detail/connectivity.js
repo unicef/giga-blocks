@@ -1,6 +1,5 @@
 import { Grid, Column } from '@carbon/react';
 import '../../components/landing-page/styles/preview.scss';
-import { Tile } from '@carbon/react';
 import './school-detail.scss';
 
 const Connectivity = ({ schoolData }) => {
