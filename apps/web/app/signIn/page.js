@@ -95,7 +95,7 @@ const SignIn = () => {
         if (previousUrl) {
           route.push(previousUrl);
         } else {
-          route.push('/dashboard');
+          route.push('/contributeSchool');
         }
       });
     } catch (error) {}
@@ -138,9 +138,9 @@ const SignIn = () => {
                   )}
                 />
               )}
-              {showEmailField && (
+              {/* {showEmailField && (
                 <Checkbox className="checkbox" labelText="Remember ID" />
-              )}
+              )} */}
               <br />
               <Button
                 className="submit-btn"

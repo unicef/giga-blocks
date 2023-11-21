@@ -55,7 +55,7 @@ const RegisterForm = () => {
 
   return (
     <>
-      <Grid className="form-gap" fullWidth>
+      <Grid className="form-gap" id="joinCommunityForm" fullWidth>
         <Column className="heading-col" md={4} lg={7} sm={4}>
           <h1 className="heading10">
             Join the Developer Community Waiting List!

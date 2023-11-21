@@ -37,6 +37,7 @@ const ContributeForm = () => {
   };
 
   const closeModal = () => {
+    router.push('/')
     setIsModalOpen(false);
   };
 

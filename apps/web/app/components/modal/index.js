@@ -24,7 +24,7 @@ const CarbonModal = ({open, onClose, email}) => {
           saveCurrentUser(res.data)
           saveAccessToken(res.data.access_token)
           initialize()
-          push('/dashboard')
+          push('/contributeSchool');
         })
         .catch((err) => {
           console.log(err)

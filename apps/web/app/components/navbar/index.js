@@ -23,13 +23,25 @@ const Navbar = () => {
   const { isAuthenticated, logout } = useAppAuthContext();
 
   const options = [
-    { id: 'option1', text: 'Dashboard' },
+    { id: 'option1', text: 'Dashboard', link: '/dashboard' },
     { id: 'option2', text: 'Edit Profile' },
     { id: 'option3', text: 'Logout' },
   ];
 
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleOptionClick = (option) => {
+    if (option.text === 'Logout') {
+      logout();
+      window.location.href = '/';
+    } else {
+      window.location.href = option.link;
+    }
+
+    // Close the dropdown
+    setIsDropdownOpen(false);
   };
 
   return (
@@ -49,10 +61,10 @@ const Navbar = () => {
             <HeaderMenuItem as={Link} href="/contributeSchool">
               School Data
             </HeaderMenuItem>
-            <HeaderMenuItem as={Link} href="/school">
+            <HeaderMenuItem as={Link} href="/explore">
               Explore NFT
             </HeaderMenuItem>
-            <HeaderMenuItem as={Link} href="/#involved">
+            <HeaderMenuItem as={Link} href="/#joinCommunityForm">
               Develop With Us
             </HeaderMenuItem>
             <HeaderMenuItem as={Link} href="/#faq">

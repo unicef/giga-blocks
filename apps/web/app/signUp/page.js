@@ -18,6 +18,7 @@ const SignUp = () => {
   const account = hooks.useAccount();
   const { handleSubmit, control } = useForm();
   const [openModal, setOpenModal] = useState(false);
+  const[checkbox, setCheckbox] = useState(false);
   const signUp = useSignUp();
   const sendOtp = useOtp();
 
@@ -44,6 +45,11 @@ const SignUp = () => {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const handleCheck = () => {
+    setCheckbox(!checkbox);
+
   };
 
   const onClose = () => {
@@ -109,7 +115,11 @@ const SignUp = () => {
               />
               <Checkbox
                 className="checkbox"
+                id='checkbox'
                 labelText="By creating an account, you agree to the Terms and conditions and our Privacy Policy"
+                checked={checkbox}
+                onChange={handleCheck}
+                
               />
               <br />
               <Grid>
@@ -118,6 +128,8 @@ const SignUp = () => {
                     className="submit-btn"
                     type="submit"
                     style={{ marginRight: '14px', width: '100%' }}
+                    disabled={!checkbox}
+
                   >
                     Submit
                   </Button>
