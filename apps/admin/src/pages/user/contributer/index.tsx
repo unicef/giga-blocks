@@ -6,9 +6,9 @@ import { useUserGet } from "@hooks/user/useUser";
 // import { useAdministrationContext } from "@contexts/administration";
 // import useFetchUsers from "@hooks/users/useFetchUsers";
 import DashboardLayout from "@layouts/dashboard/DashboardLayout";
-import { Box, Button, Card, Tabs, Divider, TableContainer, Tooltip, IconButton, Table, TableBody } from "@mui/material";
+import { Box, Button, Card, Tabs, Divider, TableContainer, Tooltip, IconButton, Table, TableBody, TextField } from "@mui/material";
 import UserListRow from "@sections/user/list/UsersList";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 const UserList = () => {
 
@@ -18,13 +18,19 @@ const UserList = () => {
         { id: 'wallet', label: 'Wallet', align: 'left' }
       ];
 
+      const [name, setName] = useState<string>()
+
       const {dense, page, order, orderBy, rowsPerPage, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
       } = useTable();
 
     // const { filteredUsers } = useAdministrationContext();
 
     const [tableData, setTableData] = useState<any>([]);
-    const {data, isFetching} = useUserGet(page, rowsPerPage, 'CONTRIBUTER')
+    const {data, isFetching, refetch} = useUserGet(page, rowsPerPage, 'CONTRIBUTOR', name)
+
+    useEffect(() => {
+      refetch()
+    }, [name])
 
     let filteredData:any = []
     useEffect(() => {
@@ -41,11 +47,16 @@ const UserList = () => {
       setTableData(filteredData);
     }, [data]);
 
+    const handleSearchChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setName(e.target.value)
+    }
+
     return ( 
 
 <DashboardLayout>
-            <h2>Contributer List</h2>
-          <Card>
+          <h2>Contributer List</h2>
+          <TextField id="outlined-basic" type='string' placeholder='Search contributer' onChange={(e:any) => handleSearchChange(e)}/>
+          <Card sx={{marginTop: 2}}>
           <Divider />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
