@@ -20,6 +20,7 @@ import { AppResponseDto } from './dto/app-response.dto';
 import { updateData } from 'src/utils/ethers/transactionFunctions';
 import { ConfigService } from '@nestjs/config';
 import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-datum.dto';
+import { getTokenId } from 'src/utils/web3/subgraph';
 
 @Injectable()
 export class SchoolService {
@@ -44,7 +45,7 @@ export class SchoolService {
     if (name) {
       where.name = {
         contains: name,
-        mode: "insensitive"
+        mode: 'insensitive',
       };
     }
 
@@ -243,10 +244,14 @@ export class SchoolService {
 
   async updateOnchainData(id: string, data: any) {
     const schooldata = await this.filterOnchainData(id);
+    const tokenId = await getTokenId(
+      this.configService.get('NEXT_PUBLIC_GRAPH_URL'),
+      data.giga_school_id,
+    );
     const tx = await updateData(
       'NFTContent',
       this.configService.get('GIGA_NFT_CONTENT_ADDRESS'),
-      id,
+      tokenId,
       schooldata,
     );
     return tx;
@@ -292,7 +297,7 @@ export class SchoolService {
         connectivity: newData.connectivity,
         coverage_availability: newData.coverage_availability,
         electricity_available: newData.electricity_available,
-}
+      };
       return onChainData;
     } catch (err) {
       console.log(err);
