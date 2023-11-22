@@ -3,8 +3,24 @@ import '../../components/landing-page/styles/preview.scss';
 import { ArrowRight } from '@carbon/icons-react';
 import './school-detail.scss';
 import { toSvg } from 'jdenticon';
+import { useState } from 'react';
+import NftPurchaseModal from '../../components/nftPurchaseModal';
 
 const Introduction = ({ schooldata }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const onClick = () => {
+    openModal();
+  };
+
   const generateIdenticon = (image) => {
     const size = 50;
     const svgString = toSvg(image, size);
@@ -50,12 +66,21 @@ const Introduction = ({ schooldata }) => {
           <p style={{ marginTop: '32px', marginBottom: '32px' }}>@owner-Name</p>
         </div>
         <div>
-          <Button className="submit-btn" renderIcon={ArrowRight}>
+          <Button
+            className="submit-btn"
+            onClick={onClick}
+            renderIcon={ArrowRight}
+          >
             Buy Now
           </Button>
           <p>Know more about the Item History</p>
         </div>
       </Column>
+      <NftPurchaseModal
+        schooldata={schooldata}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+      />
     </Grid>
   );
 };
