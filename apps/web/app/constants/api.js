@@ -35,8 +35,6 @@ module.exports = {
   },
   CONTRIBUTE: {
     GET: '/contribute',
-  },
-  CONTRIBUTE: {
     POST: '/contribute',
   },
 };

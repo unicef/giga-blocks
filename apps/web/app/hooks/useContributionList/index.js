@@ -24,9 +24,10 @@ export const useContributeList = () => {
     }
   );
 };
-export const useContributeData = (id) => {
-  return useQuery(['get-contribute-data', id], async () => {
-    const { data } = await api.get(`${CONTRIBUTE.GET}?schoolId=${id} `);
+
+export const useContributeDetails = (id) => {
+  return useQuery(['get-contribute-details', id], async () => {
+    const { data } = await api.get(`${CONTRIBUTE.GET}?schoolId=${id}`);
     return data;
   });
 };

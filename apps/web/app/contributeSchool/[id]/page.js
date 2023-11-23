@@ -1,6 +1,7 @@
 'use client';
 import Footer from '../../components/footer';
 import Navbar from '../../components/navbar';
+import ChangeLog from '../../components/changeLog';
 import { useSchoolDetails } from '../../hooks/useSchool';
 import {
   Button,
@@ -11,12 +12,6 @@ import {
   TabList,
   TabPanel,
   TabPanels,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Tabs,
   Tile,
 } from '@carbon/react';
@@ -26,13 +21,13 @@ import { useParams } from 'next/navigation';
 const SchoolDetail = () => {
   const { id } = useParams();
   const { data, isLoading } = useSchoolDetails(id);
+  console.log(data);
 
   return (
     <>
       {isLoading === false ? (
         <>
           <Navbar />
-
           {/* HEADING */}
           <Grid fullWidth>
             <Column lg={16} md={8} sm={8} className="school-detail-head">
@@ -67,7 +62,7 @@ const SchoolDetail = () => {
               }}
             >
               <Tab style={{ marginRight: '32px' }}>Collector NFT</Tab>
-              <Tab>School NFT</Tab>
+              <Tab>Change Log</Tab>
             </TabList>
             <TabPanels>
               <TabPanel>
@@ -163,40 +158,7 @@ const SchoolDetail = () => {
                 </Grid>
               </TabPanel>
               <TabPanel>
-                <TableContainer sx={{ my: 4 }}>
-                  <Table>
-                    <TableHead>
-                      <TableRow style={{ background: '#2c2b33' }}>
-                        <TableCell
-                          sx={{ whiteSpace: 'nowrap', color: 'white' }}
-                        >
-                          {'School Name'}
-                        </TableCell>
-                        <TableCell
-                          sx={{ whiteSpace: 'nowrap', color: 'white' }}
-                        >
-                          {'Contributor'}
-                        </TableCell>
-                        <TableCell
-                          sx={{ whiteSpace: 'nowrap', color: 'white' }}
-                        >
-                          {'What has been contributed'}
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow
-                        sx={{
-                          backgroundColor: '#f5f5f5',
-                        }}
-                      >
-                        <TableCell>school name</TableCell>
-                        <TableCell>contributor name</TableCell>
-                        <TableCell>contributed data</TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+                <ChangeLog schoolid={id} />
               </TabPanel>
             </TabPanels>
           </Tabs>
