@@ -1,5 +1,5 @@
 'use client';
-import { BASE_URL, CONTRIBUTION } from '../../constants/api';
+import { BASE_URL, CONTRIBUTE } from '../../constants/api';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
@@ -12,7 +12,7 @@ export const useContributeList = () => {
     ['get-api-data'],
     async () => {
       try {
-        const res = await api.get(`${CONTRIBUTION.GET}`);
+        const res = await api.get(`${CONTRIBUTE.GET}`);
         return res.data;
       } catch (err) {
         console.log('Error fetching data:', err);
@@ -23,4 +23,10 @@ export const useContributeList = () => {
       keepPreviousData: true,
     }
   );
+};
+export const useContributeData = (id) => {
+  return useQuery(['get-contribute-data', id], async () => {
+    const { data } = await api.get(`${CONTRIBUTE.GET}?schoolId=${id} `);
+    return data;
+  });
 };

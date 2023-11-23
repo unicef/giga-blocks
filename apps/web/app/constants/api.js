@@ -33,7 +33,7 @@ module.exports = {
   CONTRIBUTOR: {
     GET: '/users/contributor',
   },
-  CONTRIBUTION: {
+  CONTRIBUTE: {
     GET: '/contribute',
   },
   CONTRIBUTE: {

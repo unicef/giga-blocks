@@ -4,6 +4,7 @@ import Navbar from '../../components/navbar';
 import Introduction from '../../components/school-detail/introduction';
 import Connectivity from '../../components/school-detail/connectivity';
 import TransactionHistory from '../../components/school-detail/transactionHistory';
+import NFTMetadata from '../../components/school-detail/nftMetadata';
 import { useQuery } from 'urql';
 import { Queries } from '../../libs/graph-query';
 import { useEffect } from 'react';
@@ -37,6 +38,7 @@ const SchoolDetail = ({ id }) => {
           <Introduction schooldata={schoolData} />
           <Connectivity schoolData={schoolData} />
           <TransactionHistory />
+          <NFTMetadata />
           <Footer />
         </>
       ) : (
