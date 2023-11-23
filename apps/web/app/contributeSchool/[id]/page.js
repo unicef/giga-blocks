@@ -21,7 +21,6 @@ import { useParams } from 'next/navigation';
 const SchoolDetail = () => {
   const { id } = useParams();
   const { data, isLoading } = useSchoolDetails(id);
-  console.log(data);
 
   return (
     <>

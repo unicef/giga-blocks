@@ -11,9 +11,7 @@ import { useContributeDetails } from '../../hooks/useContributionList';
 
 const ChangeLog = ({ schoolid }) => {
   const { data } = useContributeDetails(schoolid);
-  console.log(data);
-  const { contributeData, isLoading } = useContributeDetails(schoolid);
-  console.log('contributeData', contributeData);
+
   return (
     <TableContainer sx={{ my: 4 }}>
       <Table>
@@ -43,16 +41,19 @@ const ChangeLog = ({ schoolid }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {contributeData?.length === 0 || !contributeData ? (
+          {data?.rows?.length === 0 || !data ? (
             <TableRow>
               <TableCell colSpan={3}>No contribution made yet.</TableCell>
             </TableRow>
           ) : (
-            contributeData?.map((contribution) => (
-              <TableRow key={contribution?.contributeId}>
+            data?.rows?.map((contribution) => (
+              <TableRow key={contribution?.id}>
                 <TableCell>{contribution?.school?.name}</TableCell>
                 <TableCell>{contribution?.contributedUser?.name}</TableCell>
-                <TableCell>{contribution.contributed_data}</TableCell>
+                <TableCell>
+                  {/* Parse the JSON string into a JavaScript object */}
+                  {JSON.parse(contribution?.contributed_data)?.typeOfSchool}
+                </TableCell>
               </TableRow>
             ))
           )}
