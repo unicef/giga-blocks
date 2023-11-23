@@ -1,8 +1,11 @@
 // ModalComponent.js
 import React, { useState } from 'react';
-import { Modal, ModalBody, Column, Grid } from '@carbon/react';
+import { Modal, ModalBody, Column, Grid, Button } from '@carbon/react';
 import { toSvg } from 'jdenticon';
 import { useRouter } from 'next/navigation';
+import { ArrowRight } from '@carbon/icons-react';
+// import {usePurchaseNft} from '../../hooks/useNft/index';
+
 
 const ModalComponent = ({ isOpen, onClose, schoolData }) => {
   const generateIdenticon = (image) => {
@@ -13,6 +16,7 @@ const ModalComponent = ({ isOpen, onClose, schoolData }) => {
 
   const route = useRouter();
   const handleSubmit = () => {
+    // usePurchaseNft('1','0x123','0x123');
     route.push('/dashboard');
     onClose();
   };
@@ -86,6 +90,12 @@ const ModalComponent = ({ isOpen, onClose, schoolData }) => {
           <Column md={4} lg={16} sm={4}>
             <p style={{ fontWeight: '600' }}>Go to your wallet</p>
             <p>You will be asked to approve this purchase from your wallet.</p>
+            <Button
+              className="submit-btn"
+              onClick={handleSubmit}
+              renderIcon={ArrowRight}>
+                Submit
+              </Button>
           </Column>
         </Grid>
       </ModalBody>
