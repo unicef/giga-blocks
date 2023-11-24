@@ -213,11 +213,6 @@ const methods = useForm<FormValuesProps>({})
                       />
                     </Box>
                   </Box>
-                  <Stack alignItems="flex-start" sx={{ mt: 3 }}>
-                    <Button variant="contained" style={{ width: "300px", background: "#474747" }}>
-                      Back
-                    </Button>
-                  </Stack>
                 </Card>
               </Grid>
             </Grid>

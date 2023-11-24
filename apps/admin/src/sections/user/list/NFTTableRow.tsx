@@ -72,12 +72,8 @@ export default function NFTTableRow({
 //   };
 
   // @ts-ignore
-  const truncateString = (str, maxLength) => {
-    if (str?.length > maxLength) {
-      return str?.substring(0, maxLength - 3) + '...';
-    } else {
-      return str;
-    }
+  const truncateString = (str) => {
+      return str?.substring(0, 3) + '...' + str?.substring(str.length, str.length - 3);
   };
 
   return (
@@ -105,7 +101,7 @@ export default function NFTTableRow({
 
         <TableCell align="left">
           <Tooltip title={from}>
-            <span>{truncateString(from, 15)}</span>
+            <span>{truncateString(from)}</span>
             </Tooltip>
         </TableCell>
 
@@ -114,7 +110,7 @@ export default function NFTTableRow({
           sx={{ textTransform: 'capitalize' }}        
         >
           <Tooltip title={to}>
-            <span>{truncateString(to, 15)}</span>
+            <span>{truncateString(to)}</span>
             </Tooltip>
         </TableCell>
 
@@ -123,7 +119,7 @@ export default function NFTTableRow({
           sx={{ textTransform: 'capitalize' }}          
         >
             <Tooltip title={transactionHash}>
-            <span>{truncateString(transactionHash, 15)}</span>
+            <span><a href={`https://testnet.arbiscan.io/tx/${transactionHash}`} target='_blank'>{truncateString(transactionHash)}</a> </span>
             </Tooltip>
         </TableCell>
 
