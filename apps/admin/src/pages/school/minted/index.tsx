@@ -20,13 +20,18 @@ import {
   IconButton,
   Table,
   TableBody,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
-import {CircularProgress} from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { Queries } from 'src/libs/graph-query';
-import { useSchoolCount } from "@hooks/school/useSchool";
+import { useSchoolCount } from '@hooks/school/useSchool';
 
 const MintedSchools = () => {
   const TABLE_HEAD = [
@@ -35,7 +40,7 @@ const MintedSchools = () => {
     { id: 'latitide', label: 'Latitude', align: 'left' },
     { id: 'longitude', label: 'Longitude', align: 'left' },
     { id: 'status', label: 'Status', align: 'left' },
-    { id: 'tokenId', label:'TokenId', align:'left'}
+    { id: 'tokenId', label: 'TokenId', align: 'left' },
   ];
 
   const {
@@ -54,11 +59,16 @@ const MintedSchools = () => {
 
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
-  const{data:total} = useSchoolCount('MINTED');
-  const[result] = useQuery({query:Queries.nftListQuery,variables:{skip:page*rowsPerPage,first:rowsPerPage}});
-  const{data, fetching, error} = result;
+  const { data: total } = useSchoolCount('MINTED');
+  const [country, setCountry] = useState<string>()
+  const [connectivity, setConnectivity] = useState<string>()
+  const [result] = useQuery({
+    query: Queries.nftListQuery,
+    variables: { skip: page * rowsPerPage, first: rowsPerPage },
+  });
+  const { data, fetching, error } = result;
 
-  const decodeSchooldata = (data:any) => {
+  const decodeSchooldata = (data: any) => {
     const encodeddata = data.tokenUris;
     const decodedShooldata = [];
     for (let i = 0; i < encodeddata.length; i++) {
@@ -69,79 +79,87 @@ const MintedSchools = () => {
       };
       decodedShooldata.push(schoolData);
     }
-    decodedShooldata && decodedShooldata.map((row: any) => {
-      filteredData.push({
-        id: row.tokenId,
-        schoolName: row.schoolName,
-        longitude: row.longitude,
-        latitude: row.latitude,
-        schoolType: row.schoolType,
-        country: row.country,
-        connectivity: row.connectivity,
-        coverage_availabitlity: row.coverage_availabitlity,
-        electricity_availabilty: row.electricity_availabitlity,
-        mintedStatus: 'MINTED',
+    decodedShooldata &&
+      decodedShooldata.map((row: any) => {
+        filteredData.push({
+          id: row.tokenId,
+          schoolName: row.schoolName,
+          longitude: row.longitude,
+          latitude: row.latitude,
+          schoolType: row.schoolType,
+          country: row.country,
+          connectivity: row.connectivity,
+          coverage_availabitlity: row.coverage_availabitlity,
+          electricity_availabilty: row.electricity_availabitlity,
+          mintedStatus: 'MINTED',
+        });
       });
-    }
-    )
     setTableData(filteredData);
   };
 
   let filteredData: any = [];
   useEffect(() => {
-    if(data) decodeSchooldata(data);
+    if (data) decodeSchooldata(data);
   }, [data]);
+
+  const sortedData = tableData.slice().sort((a:any, b:any) => {
+    const isAsc = order === 'asc';
+    return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
+  });
 
   return (
     <DashboardLayout>
       <h2>Minted School</h2>
-      {fetching && <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      {fetching && (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <CircularProgress />
-        </div>}
-      {!fetching &&
-      <Card>
-        <Divider />
-        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <Scrollbar>
-            <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
-              <TableHeadUsers
-                  // order={order}
-                  // orderBy={orderBy}
+        </div>
+      )}
+      {!fetching && (
+        <>
+        <Card>
+          <Divider />
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+            <Scrollbar>
+              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+                <TableHeadUsers
+                  order={order}
+                  orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   rowCount={tableData?.length}
-                  // onSort={onSort}
+                  onSort={onSort}
                 />
-              <TableBody>
-                {tableData &&
-                  tableData.map((row: any) => (
-                    <SchoolTableRow
-                      key={row.id}
-                      row={row}
-                      selectedValues={selectedValues}
-                      setSelectedValues={setSelectedValues}
-                      rowData={row}
-                      checkbox={false}
-                    />
-                  ))}
-                <TableNoData
-                  isNotFound={tableData.length === 0}
-                />
-              </TableBody>
-            </Table>
-          </Scrollbar>
-        </TableContainer>
-        <TablePaginationCustom
-          count={total}
-          // count={tableData?.length}
-          setPage={setPage}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-          dense={dense}
-          onChangeDense={onChangeDense}
-        />
-      </Card>}
+                <TableBody>
+                  {sortedData &&
+                    sortedData.map((row: any) => (
+                      <SchoolTableRow
+                        key={row.id}
+                        row={row}
+                        selectedValues={selectedValues}
+                        setSelectedValues={setSelectedValues}
+                        rowData={row}
+                        checkbox={false}
+                      />
+                    ))}
+                  <TableNoData isNotFound={tableData.length === 0} />
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </TableContainer>
+          <TablePaginationCustom
+            count={total}
+            // count={tableData?.length}
+            setPage={setPage}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+            dense={dense}
+            onChangeDense={onChangeDense}
+          />
+        </Card>
+        </>
+      )}
     </DashboardLayout>
   );
 };

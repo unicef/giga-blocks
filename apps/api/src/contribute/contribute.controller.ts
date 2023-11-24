@@ -7,7 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
-  Request,
+  Req,
+  Query,
 } from '@nestjs/common';
 import { ContributeDataService } from './contribute.service';
 import { CreateContributeDatumDto, ValidateDto } from './dto/create-contribute-datum.dto';
@@ -15,27 +16,28 @@ import { UpdateContributeDatumDto } from './dto/update-contribute-datum.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
-import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
 import { RoleGuard } from '../auth/guards/role.guard';
 
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard, RoleGuard)
 @Controller('contribute')
 @ApiTags('Contribute') // Swagger Documentation
 export class ContributeDataController {
   constructor(private readonly contributeDataService: ContributeDataService) {}
 
+  @UseGuards(RoleGuard)
+  @Roles('CONTRIBUTOR')
   @Post()
-  create(@Body() createContributeDatumDto: CreateContributeDatumDto) {
-    return this.contributeDataService.create(createContributeDatumDto);
+  create(@Body() createContributeDatumDto: CreateContributeDatumDto, @Req() req: any) {
+    return this.contributeDataService.create(createContributeDatumDto, req.user.id);
   }
 
   @Public()
   @Get()
-  findAll() {
-    return this.contributeDataService.findAll();
+  findAll(@Query() query: any) {
+    return this.contributeDataService.findAll(query);
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.contributeDataService.findOne(id);
@@ -46,26 +48,36 @@ export class ContributeDataController {
     return this.contributeDataService.update(id, updateContributeDatumDto);
   }
 
+  @UseGuards(RoleGuard)
+  @Roles('ADMIN')
+  @Patch()
+  batchValidate(@Body() updateContributeDatumDto: UpdateContributeDatumDto, @Req() req: any) {
+    return this.contributeDataService.batchValidate(updateContributeDatumDto, req.user.id);
+  } 
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.contributeDataService.remove(id);
   }
 
-  @Roles('CONTRIBUTOR')
-  @Post('upvote/:id')
-  upvote(@Param('id') id: string, @Request() req: any) {
-    return this.contributeDataService.upvote(id, req.user);
+  @UseGuards(RoleGuard)
+  @Roles('ADMIN')
+  @Patch('/validate/:id')
+  validate(@Param('id') id: string, @Body() ValidateDto: ValidateDto, @Req() req: any) {
+    return this.contributeDataService.validate(id, ValidateDto.isValid, req.user.id);
   }
 
-  @Roles('CONTRIBUTOR')
-  @Post('downvote/:id')
-  downvote(@Param('id') id: string, @Request() req: any) {
-    return this.contributeDataService.downvote(id, req.user);
+  @UseGuards(RoleGuard)
+  @Roles('ADMIN')
+  @Get('/validated')
+  getValidated() {
+    return this.contributeDataService.getValidated();
   }
 
-  @Roles('VALIDATOR', 'ADMIN')
-  @Post('validate/:id')
-  validate(@Param('id') id: string, @Body() ValidateDto: ValidateDto) {
-    return this.contributeDataService.validate(id, ValidateDto.isValid);
+  @UseGuards(RoleGuard)
+  @Roles('ADMIN')
+  @Get('/validated/:id')
+  getValidatedById(@Param('id') id: string) {
+    return this.contributeDataService.getValidatedById(id);
   }
 }

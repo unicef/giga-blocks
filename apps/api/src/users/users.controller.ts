@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
@@ -27,8 +37,9 @@ export class UsersController {
     return this.usersService.addAdmin(createUserDto);
   }
 
-  @Roles('ADMIN')
-  @UseGuards(JwtAuthGuard, RoleGuard)
+  // @Roles('ADMIN')
+  // @UseGuards(JwtAuthGuard, RoleGuard)
+  @Public()
   @Get()
   @ApiOperation({ summary: 'List all user' })
   @ApiResponse({
@@ -37,8 +48,8 @@ export class UsersController {
     type: [CreateUserDto],
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query() query: any) {
+    return this.usersService.findAll(query);
   }
 
   @UseGuards(JwtAuthGuard, RoleGuard)
@@ -53,6 +64,32 @@ export class UsersController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
+  }
+
+  @Public()
+  @Get('/contributor')
+  @ApiOperation({ summary: 'Get an contributor' })
+  @ApiResponse({
+    status: 200,
+    description: 'The found record',
+    type: [CreateUserDto],
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  findContributor(@Query() query: any) {
+    return this.usersService.findContributor(query);
+  }
+
+  @Public()
+  @Get('/contributor/:id')
+  @ApiOperation({ summary: 'Get an contributor' })
+  @ApiResponse({
+    status: 200,
+    description: 'The found record',
+    type: [CreateUserDto],
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  findContributorDetails(@Param('id') id: string) {
+    return this.usersService.findContributorDetails(id);
   }
 
   @UseGuards(JwtAuthGuard, RoleGuard)

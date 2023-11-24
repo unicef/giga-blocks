@@ -24,7 +24,7 @@ const Footer = () => {
               <a href="/school">Data Repository</a>
             </li>
             <li>
-              <a href="/#involved">Develop with Us</a>
+              <a href="/#joinCommunityForm">Develop with Us</a>
             </li>
             <li>
               <a href="/#faq">FAQ's</a>

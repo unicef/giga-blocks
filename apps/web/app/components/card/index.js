@@ -68,7 +68,7 @@ const SchoolCard = () => {
               <Column sm={4}>
                 <ClickableTile
                   className="card"
-                  href={`/school/${school?.tokenId}`}
+                  href={`/explore/${school?.tokenId}`}
                 >
                   <div className="row">
                     <img
@@ -144,12 +144,6 @@ const SchoolCard = () => {
                         {school.covergeAvailability || 'N/A'}
                       </h4>
                     </div> */}
-                    <div>
-                      {/* <p className="text-purple">Internet</p> */}
-                      <h4 className="heading2">
-                        {school.connectivity || 'N/A'}
-                      </h4>
-                    </div>
                   </div>
                 </ClickableTile>
               </Column>

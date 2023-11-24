@@ -1,21 +1,16 @@
-import * as Yup from "yup";
+import * as Yup from 'yup';
 // form
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Stack, Alert } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
+import { Stack } from '@mui/material';
 // auth
 // components
-import { useRouter } from "next/router";
-import { useAuthContext } from "src/auth/useAuthContext";
-import { useSnackbar } from "@components/snackbar";
-import { APP_NAME } from "../../../config-global";
-import FormProvider, { RHFTextField } from "../../../components/hook-form";
-import { useLoginContext } from "../../../contexts/auth";
-import Card from "@components/web3/Card";
-import { useEffect, useState } from "react";
-import { hooks, metaMask } from "@hooks/web3/metamask";
+import { useAuthContext } from 'src/auth/useAuthContext';
+import FormProvider from '../../../components/hook-form';
+import Card from '@components/web3/Card';
+import { useEffect, useState } from 'react';
+import { hooks, metaMask } from '@hooks/web3/metamask';
 
 const { useChainId, useAccounts, useIsActivating, useIsActive, useProvider, useENSNames } = hooks;
 
@@ -32,11 +27,11 @@ export default function AuthLoginForm() {
   const LoginSchema = Yup.object().shape({
     email: isDebug
       ? Yup.string()
-      : Yup.string().email("Email must be a valid email address").required("Email is required"),
+      : Yup.string().email('Email must be a valid email address').required('Email is required'),
   });
 
   const defaultValues: LoginFormValues = {
-    email: "",
+    email: '',
   };
 
   const methods = useForm<LoginFormValues>({
@@ -90,7 +85,7 @@ export default function AuthLoginForm() {
   // attempt to connect eagerly on mount
   useEffect(() => {
     void metaMask.connectEagerly().catch(() => {
-      console.debug("Failed to connect eagerly to metamask");
+      console.debug('Failed to connect eagerly to metamask');
     });
   }, []);
 

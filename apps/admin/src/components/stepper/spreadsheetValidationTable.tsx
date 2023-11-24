@@ -29,7 +29,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     productType,
     fileName,
     setSelectedSheetName,
-    tableData: rows,
+    tableDatas: rows,
   } = useUploadContext();
   const [errors, setErrors] = useState<string[]>([]);
   const [allSheetErrors, setAllSheetErrors] = useState<{ sheetName: string; errors: string[] }[]>();
@@ -69,9 +69,9 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
       );
     }
 
-    if (hasInvalidNumber) {
-      validationErrors.push('One or more numerical values are negative');
-    }
+    // if (hasInvalidNumber) {
+    //   validationErrors.push('One or more numerical values are negative');
+    // }
 
     if (hasCommaInName) {
       validationErrors.push('Name should not contain a comma');
@@ -244,33 +244,29 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
                     const value = convertedObject[header][rowIndex];
                     let isInvalid = false;
 
-                    if (value < 0) {
-                      isInvalid = true;
-                    }
+                    // if (header === 'Name') {
+                    //   isInvalid = value.includes(',');
+                    // }
 
-                    if (header === 'Name') {
-                      isInvalid = value.includes(',');
-                    }
+                    // if (header === 'Capacity at end of life [p.u.]') {
+                    //   isInvalid = value < 0 || value > 1;
+                    // }
 
-                    if (header === 'Capacity at end of life [p.u.]') {
-                      isInvalid = value < 0 || value > 1;
-                    }
+                    // if (header === 'SOC Init. [p.u.]') {
+                    //   isInvalid = value < 0 || value > 1;
+                    // }
 
-                    if (header === 'SOC Init. [p.u.]') {
-                      isInvalid = value < 0 || value > 1;
-                    }
+                    // if (header === 'SOC min [p.u.]') {
+                    //   isInvalid = value < 0 || value > 1;
+                    // }
 
-                    if (header === 'SOC min [p.u.]') {
-                      isInvalid = value < 0 || value > 1;
-                    }
+                    // if (header === 'SOC max [p.u.]') {
+                    //   isInvalid = value < 0 || value > 1;
+                    // }
 
-                    if (header === 'SOC max [p.u.]') {
-                      isInvalid = value < 0 || value > 1;
-                    }
-
-                    if (header === 'Efficiency (charge and discharge) [p.u.]' || header === 'Efficiency (charge and discharge) [p.u]') {
-                      isInvalid = value < 0 || value > 1;
-                    }
+                    // if (header === 'Efficiency (charge and discharge) [p.u.]' || header === 'Efficiency (charge and discharge) [p.u]') {
+                    //   isInvalid = value < 0 || value > 1;
+                    // }
 
                     const cellStyles = {
                       border: isInvalid ? '1px solid red' : '',

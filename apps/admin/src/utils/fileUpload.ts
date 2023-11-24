@@ -12,7 +12,7 @@ const api = axios.create({
     'Content-Type': 'multipart/form-data',
     'X-Requested-With': 'XMLHttpRequest',
 
-    access_token: accessToken,
+   Authorization: `Bearer ${accessToken}`,
 
     // report_token: '6E4(WdnI5ukyHDaqy-AKEZvT$7JDnrQG',
   },
