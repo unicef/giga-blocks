@@ -4,10 +4,14 @@ import { Modal, ModalBody, Column, Grid, Button } from '@carbon/react';
 import { toSvg } from 'jdenticon';
 import { useRouter } from 'next/navigation';
 import { ArrowRight } from '@carbon/icons-react';
-// import {usePurchaseNft} from '../../hooks/useNft/index';
+import { useSellerContract } from '../../hooks/useContract';
+import { useWeb3React } from '@web3-react/core';
 
 
 const ModalComponent = ({ isOpen, onClose, schoolData }) => {
+  const sellerContract = useSellerContract();
+  const { account } = useWeb3React();
+  const [loading,setLoading] = useState(false);
   const generateIdenticon = (image) => {
     const size = 200; // Adjust the size as needed
     const svgString = toSvg(image, size);
@@ -15,11 +19,23 @@ const ModalComponent = ({ isOpen, onClose, schoolData }) => {
   };
 
   const route = useRouter();
-  const handleSubmit = () => {
-    // usePurchaseNft('1','0x123','0x123');
-    route.push('/dashboard');
+  const handleSubmit =  async() => {
+    if(!sellerContract) return;
+    if(!account) return;
+
+  try{
+    setLoading(true);
+    const tx =  await sellerContract.methods.purchaseNft('1',account).send({from:account});
+    tx.wait();
+    // route.push('/dashboard');
     onClose();
-  };
+    setLoading(false);
+  }
+    catch(err)
+{
+  console.log(err);
+  setLoading(false);
+}  };
 
   return (
     <Modal open={isOpen} onRequestClose={onClose} passiveModal={true}>
@@ -94,7 +110,7 @@ const ModalComponent = ({ isOpen, onClose, schoolData }) => {
               className="submit-btn"
               onClick={handleSubmit}
               renderIcon={ArrowRight}>
-                Submit
+                {loading ? 'Loading...' : 'Submit'}
               </Button>
           </Column>
         </Grid>

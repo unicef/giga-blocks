@@ -11,16 +11,17 @@ export const useLibrary = ()=>{
             return null;
         }
         else {
-            return new Web3(provider);
+            return provider
         }
     },[chainId,provider])
 
 }
 
 export const getContract  = (abi,address)=>{
-    const library = useLibrary();
-    if(!library  || !abi) return null;
-    const contract =  new library.eth.Contract(abi,address);
+    const provider = useLibrary();
+    const web3 = new Web3 (provider.provider);
+    if(!provider  || !abi) return null;
+    const contract = new web3.eth.Contract(abi,address);
     return contract;
 }
 
