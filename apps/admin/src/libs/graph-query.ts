@@ -26,6 +26,9 @@ query tokenUri($id: ID!) {
   tokenUri(id: $id, subgraphError: allow) {
     id
     tokenUri
+    owner {
+      id
+    }
   }
 }
 `
