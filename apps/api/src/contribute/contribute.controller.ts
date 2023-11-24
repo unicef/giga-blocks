@@ -53,7 +53,7 @@ export class ContributeDataController {
   @Patch()
   batchValidate(@Body() updateContributeDatumDto: UpdateContributeDatumDto, @Req() req: any) {
     return this.contributeDataService.batchValidate(updateContributeDatumDto, req.user.id);
-  } 
+  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
