@@ -30,6 +30,15 @@ query tokenUri($id: ID!) {
       id
     }
   }
+  transfers(subgraphError: allow, where: {tokenId: "1"}) {
+    blockNumber
+    blockTimestamp
+    from
+    id
+    to
+    tokenId
+    transactionHash
+  }
 }
 `
 
