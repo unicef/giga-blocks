@@ -47,7 +47,9 @@ const SchoolDetail = () => {
                 marginTop: '15px',
               }}
             >
-              <Button href={`/explore/${id}/contribute`}>Contribute</Button>
+              <Button href={`/contributeSchool/${id}/contribute`}>
+                Contribute
+              </Button>
             </Column>
           </Grid>
           <Tabs>
