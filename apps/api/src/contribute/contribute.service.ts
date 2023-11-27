@@ -51,6 +51,9 @@ export class ContributeDataService {
     if (status) {
       where.status = status;
     }
+    if (status) {
+      where.status = status;
+    }
     const args = {
       where: where,
       include: {
@@ -214,9 +217,9 @@ export class ContributeDataService {
 
   async getValidated() {
     const validatedData = await this.prisma.validatedData.findMany({
-      // where: {
-      //   isArchived: false,
-      // },
+      where: {
+        isArchived: false,
+      },
       include: {
         school: {
           select: {
