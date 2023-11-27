@@ -18,7 +18,7 @@ import {
   TableToolbarSearch,
 } from '@carbon/react';
 import { Filter } from '@carbon/icons-react';
-import { useContributorContributeList } from '../../../hooks/useContributionList';
+import { useContributionList } from '../../../hooks/useContributionList';
 import { getCurrentUser } from '../../../utils/sessionManager';
 
 const headerData = [
@@ -50,7 +50,7 @@ const ContributionTable = () => {
   const [totalData, setTotalData] = useState(0);
   const [pagination, setPagination] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const { data, isLoading, isFetching } = useContributorContributeList(
+  const { data, isLoading, isFetching } = useContributionList(
     pagination - 1,
     pageSize,
     user?.id

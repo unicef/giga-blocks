@@ -2,11 +2,11 @@ import { Grid, Column } from '@carbon/react';
 import '../dashboard.scss';
 
 import { getCurrentUser } from '../../../utils/sessionManager';
-import { useContributorContributeCount } from '../../../hooks/useContributionList';
+import { useContributionCount } from '../../../hooks/useContributionList';
 
 const Header = () => {
   const user = getCurrentUser();
-  const { data } = useContributorContributeCount(user?.id);
+  const { data } = useContributionCount(user?.id);
   return (
     <div className="dashboard-head-wrapper">
       <Grid fullWidth>
