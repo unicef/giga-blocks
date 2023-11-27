@@ -52,7 +52,7 @@ const SignIn = () => {
 
   useEffect(() => {
     if (!web3.isActive) {
-      metaMask.connectEagerly();
+     void metaMask.connectEagerly();
     }
   }, []);
 
@@ -80,6 +80,7 @@ const SignIn = () => {
   };
   const handleWalletLogin = async (data) => {
     try {
+      await metaMask.activate();
       const { nonce } = await getNonceQuery.mutateAsync();
       const sign = await getSignature(nonce);
       const payload = {
