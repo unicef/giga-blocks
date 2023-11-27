@@ -4,12 +4,9 @@ import { ArrowRight } from '@carbon/icons-react';
 import './school-detail.scss';
 import { toSvg } from 'jdenticon';
 import { useState } from 'react';
-import { useQuery } from 'urql';
-import { Queries } from '../../libs/graph-query';
 import NftPurchaseModal from '../../components/nftPurchaseModal';
 
 const Introduction = ({ schooldata }) => {
-  console.log(schooldata);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {

@@ -15,8 +15,27 @@ import {
 } from '@carbon/react';
 import '../../components/landing-page/styles/preview.scss';
 import './school-detail.scss';
+import { useQuery } from 'urql';
+import { Queries } from '../../libs/graph-query';
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
 
 const Connectivity = () => {
+  const { id } = useParams();
+  const [result] = useQuery({
+    query: Queries.transferQuery,
+    variables: { id },
+  });
+  const [transferData, setTransferData] = useState();
+
+  const decoedTransferData = (data) => {
+    const encodeddata = data.transfers;
+    setTransferData(encodeddata);
+  };
+  useEffect(() => {
+    if (result.data) decoedTransferData(result.data);
+  }, [result.data]);
+
   return (
     <>
       <Grid fullWidth className="mb-50px">
@@ -38,30 +57,93 @@ const Connectivity = () => {
                         <TableCell
                           sx={{ whiteSpace: 'nowrap', color: 'white' }}
                         >
-                          {'School Name'}
+                          {'Event'}
                         </TableCell>
                         <TableCell
                           sx={{ whiteSpace: 'nowrap', color: 'white' }}
                         >
-                          {'Contributor'}
+                          {'Price'}
                         </TableCell>
                         <TableCell
                           sx={{ whiteSpace: 'nowrap', color: 'white' }}
                         >
-                          {'What has been contributed'}
+                          {'From'}
+                        </TableCell>
+                        <TableCell
+                          sx={{ whiteSpace: 'nowrap', color: 'white' }}
+                        >
+                          {'To'}
+                        </TableCell>
+                        <TableCell
+                          sx={{ whiteSpace: 'nowrap', color: 'white' }}
+                        >
+                          {'Txn Hash'}
+                        </TableCell>
+                        <TableCell
+                          sx={{ whiteSpace: 'nowrap', color: 'white' }}
+                        >
+                          {'Date'}
                         </TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      <TableRow
-                        sx={{
-                          backgroundColor: '#f5f5f5',
-                        }}
-                      >
-                        <TableCell>school name</TableCell>
-                        <TableCell>contributor name</TableCell>
-                        <TableCell>contributed data</TableCell>
-                      </TableRow>
+                      {transferData &&
+                        transferData.map((transfer, index) => (
+                          <TableRow
+                            key={index}
+                            sx={{
+                              backgroundColor:
+                                index % 2 === 0 ? '#f5f5f5' : 'white',
+                            }}
+                          >
+                            <TableCell>
+                              {transfer?.from ===
+                              '0x0000000000000000000000000000000000000000'
+                                ? 'Mint'
+                                : 'Transfer'}
+                            </TableCell>
+                            <TableCell>{0.0}</TableCell>
+                            <TableCell>
+                              {transfer?.from
+                                ? `${transfer.from.substring(
+                                    0,
+                                    4
+                                  )}...${transfer.from.slice(-3)}`
+                                : ''}
+                            </TableCell>
+                            <TableCell>
+                              {transfer?.to
+                                ? `${transfer.to.substring(
+                                    0,
+                                    4
+                                  )}...${transfer.to.slice(-3)}`
+                                : ''}
+                            </TableCell>
+                            <TableCell>
+                              {transfer?.transactionHash ? (
+                                <a
+                                  href={`https://testnet.arbiscan.io/tx/${transfer?.transactionHash}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {`${transfer.transactionHash.substring(
+                                    0,
+                                    4
+                                  )}...${transfer.transactionHash.slice(-3)}`}
+                                </a>
+                              ) : (
+                                ''
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              {transfer?.blockTimestamp
+                                ? new Date(
+                                    transfer.blockTimestamp * 1000
+                                  ).toLocaleDateString('en-GB')
+                                : ''}
+                            </TableCell>
+                          </TableRow>
+                        ))}
                     </TableBody>
                   </Table>
                 </TableContainer>
