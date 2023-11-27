@@ -3,6 +3,7 @@ import Footer from '../../components/footer';
 import Navbar from '../../components/navbar';
 import Introduction from '../../components/school-detail/introduction';
 import Connectivity from '../../components/school-detail/connectivity';
+import TransactionHistory from '../../components/school-detail/transactionHistory';
 import { useQuery } from 'urql';
 import { Queries } from '../../libs/graph-query';
 import { useEffect } from 'react';
@@ -35,6 +36,7 @@ const SchoolDetail = ({ id }) => {
           <PageHeader name={schoolData?.schoolName} />
           <Introduction schooldata={schoolData} />
           <Connectivity schoolData={schoolData} />
+          <TransactionHistory />
           <Footer />
         </>
       ) : (
