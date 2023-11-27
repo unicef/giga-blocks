@@ -46,8 +46,6 @@
 
 // Connectivity
 .school-connectivity-cards {
-  display: flex;
-  flex-direction: column;
   gap: 30px;
 }
 
@@ -58,7 +56,7 @@
 }
 
 .school-connectivity-column {
-  width: 30%;
+  width: 100%;
 }
 
 .school-connectivity-card {

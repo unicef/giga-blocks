@@ -16,28 +16,48 @@ const Connectivity = ({ schoolData }) => {
           <Grid fullWidth className="school-connectivity-grid">
             <Column className="school-connectivity-column">
               <div className="school-connectivity-card">
-                <span className="heading2">Connectivity Status</span>
-                <span className="heading5" style={{ textAlign: 'left' }}>
-                  {schoolData?.connectivity ? schoolData?.connectivity : 'N/A'}
-                </span>
-              </div>
-              <div className="school-connectivity-card">
-                <span className="heading2">Coverage Availability</span>
-                <span className="heading5" style={{ textAlign: 'left' }}>
-                  {schoolData?.coverage_availabitlity}
-                </span>
-              </div>
-              <div className="school-connectivity-card">
-                <span className="heading2">Connectivity Status</span>
-                <span className="heading5" style={{ textAlign: 'left' }}>
-                  {schoolData?.connectivity ? schoolData?.connectivity : 'N/A'}
-                </span>
-              </div>
-              <div className="school-connectivity-card ">
-                <span className="heading2">Coverage Availability</span>
-                <span className="heading5" style={{ textAlign: 'left' }}>
-                  {schoolData?.coverage_availabitlity}
-                </span>
+                <Column md={4} lg={8} sm={4}>
+                  <div>
+                    <span className="heading2" style={{ marginBottom: '14px' }}>
+                      Connectivity Status
+                    </span>
+                    <span className="heading5">
+                      <br />
+                      {schoolData?.connectivity
+                        ? schoolData?.connectivity
+                        : 'N/A'}
+                    </span>
+                  </div>
+                </Column>
+                <Column md={4} lg={8} sm={4}>
+                  <span className="heading2" style={{ marginBottom: '14px' }}>
+                    Coverage Availability
+                  </span>
+                  <br />
+                  <span className="heading5">
+                    {schoolData?.coverage_availabitlity}
+                  </span>
+                </Column>
+                <Column md={4} lg={8} sm={4}>
+                  <span className="heading2" style={{ marginBottom: '14px' }}>
+                    Connectivity Status
+                  </span>
+                  <span className="heading5">
+                    <br />
+                    {schoolData?.connectivity
+                      ? schoolData?.connectivity
+                      : 'N/A'}
+                  </span>
+                </Column>
+                <Column md={4} lg={8} sm={4}>
+                  <span className="heading2" style={{ marginBottom: '14px' }}>
+                    Coverage Availability
+                  </span>
+                  <span className="heading5">
+                    <br />
+                    {schoolData?.coverage_availabitlity}
+                  </span>
+                </Column>
               </div>
             </Column>
           </Grid>

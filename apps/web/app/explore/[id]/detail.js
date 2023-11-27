@@ -37,8 +37,8 @@ const SchoolDetail = ({ id }) => {
           <PageHeader />
           <Introduction schooldata={schoolData} />
           <Connectivity schoolData={schoolData} />
-          <TransactionHistory />
-          <NFTMetadata />
+          <TransactionHistory schoolData={schoolData} />
+          <NFTMetadata schoolData={schoolData} />
           <Footer />
         </>
       ) : (
