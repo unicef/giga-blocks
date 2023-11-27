@@ -63,7 +63,9 @@ const Introduction = ({ schooldata }) => {
         <hr />
         <div>
           <h1 style={{ fontSize: '1.5em', marginTop: '64px' }}>Ownership</h1>
-          <p style={{ marginTop: '32px', marginBottom: '32px' }}>@owner-Name</p>
+          <p style={{ marginTop: '32px', marginBottom: '32px' }}>
+            {schooldata?.owner}
+          </p>
         </div>
         <div>
           <Button

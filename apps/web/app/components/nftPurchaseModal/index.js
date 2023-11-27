@@ -8,11 +8,10 @@ import { useSellerContract } from '../../hooks/useContract';
 import { useWeb3React } from '@web3-react/core';
 import { metaMask } from '../../components/web3/connectors/metamask';
 
-
-const ModalComponent = ({ isOpen, onClose, schoolData }) => {
+const ModalComponent = ({ isOpen, onClose, schooldata }) => {
   const sellerContract = useSellerContract();
   const { account } = useWeb3React();
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const generateIdenticon = (image) => {
     const size = 200; // Adjust the size as needed
     const svgString = toSvg(image, size);
@@ -20,35 +19,35 @@ const ModalComponent = ({ isOpen, onClose, schoolData }) => {
   };
 
   const route = useRouter();
-  const handleSubmit =  async() => {
-    if(!sellerContract) return;
-    if(!account) return;
+  const handleSubmit = async () => {
+    if (!sellerContract) return;
+    if (!account) return;
 
-  try{
-    setLoading(true);
-    const tx =  await sellerContract.methods.purchaseNft('1',account).send({from:account});
-    tx.wait();
-    // route.push('/dashboard');
-    onClose();
-    setLoading(false);
-  }
-    catch(err)
-{
-  console.log(err);
-  setLoading(false);
-}  };
+    try {
+      setLoading(true);
+      const tx = await sellerContract.methods
+        .purchaseNft('1', account)
+        .send({ from: account });
+      tx.wait();
+      // route.push('/dashboard');
+      onClose();
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
 
-    const connectMetaMask = async ()=>{
-      if(!account)
-    {
+  const connectMetaMask = async () => {
+    if (!account) {
       await metaMask.activate();
     }
-    }
+  };
 
   return (
     <Modal open={isOpen} onRequestClose={onClose} passiveModal={true}>
       <ModalBody>
-        <p>You are about to purchase NFT from tx23...sa212</p>
+        <p>You are about to purchase NFT from {schooldata?.owner}</p>
         <Grid style={{ marginTop: '18px' }}>
           <Column
             md={4}
@@ -65,7 +64,7 @@ const ModalComponent = ({ isOpen, onClose, schoolData }) => {
                 width: '80%',
               }}
               alt="School Map"
-              src={generateIdenticon(schoolData?.image)}
+              src={generateIdenticon(schooldata?.image)}
             />
           </Column>
           <Column
@@ -86,7 +85,7 @@ const ModalComponent = ({ isOpen, onClose, schoolData }) => {
               }}
             >
               <p style={{ fontWeight: '600' }}>NFT Name</p>
-              <p style={{ fontWeight: '600' }}>0.003ETH</p>
+              <p style={{ fontWeight: '600' }}>{schooldata?.schoolName}</p>
             </div>
             <div
               style={{
@@ -96,7 +95,7 @@ const ModalComponent = ({ isOpen, onClose, schoolData }) => {
               }}
             >
               <p>Price</p>
-              <p>0.003ETH</p>
+              <p>0.000ETH</p>
             </div>
             <div
               style={{
@@ -104,36 +103,41 @@ const ModalComponent = ({ isOpen, onClose, schoolData }) => {
                 justifyContent: 'space-between',
                 marginBottom: '12px',
               }}
-            >
-              <p>School Name</p>
-            </div>
+            ></div>
           </Column>
           <Column md={4} lg={16} sm={4} style={{ marginTop: '6px' }}>
             <div className="border-bottom"></div>
           </Column>
           <Column md={4} lg={16} sm={4}>
-          {account?
-          <>
-            <p style={{ fontWeight: '600' }}>You are connected to "{account}" address              </p>
-            <p>You will be asked to approve this purchase from your wallet.</p>
-            
-            <Button
-              className="submit-btn"
-              onClick={handleSubmit}
-              renderIcon={ArrowRight}>
-                {loading ? 'Loading...' : 'Submit'}
-              </Button>
-              </>:
-              (
+            {account ? (
               <>
-              <p> First you need to connect your MetaMask</p>
-              <Button
-              className='submit-btn'
-              onClick={connectMetaMask}
-              renderIcon={ArrowRight}>
-                Connect MetaMask
+                <p style={{ fontWeight: '600' }}>
+                  You are connected to "{account}" address{' '}
+                </p>
+                <p>
+                  You will be asked to approve this purchase from your wallet.
+                </p>
+
+                <Button
+                  className="submit-btn"
+                  onClick={handleSubmit}
+                  renderIcon={ArrowRight}
+                >
+                  {loading ? 'Loading...' : 'Submit'}
                 </Button>
-                </>)}
+              </>
+            ) : (
+              <>
+                <p> First you need to connect your MetaMask</p>
+                <Button
+                  className="submit-btn"
+                  onClick={connectMetaMask}
+                  renderIcon={ArrowRight}
+                >
+                  Connect MetaMask
+                </Button>
+              </>
+            )}
           </Column>
         </Grid>
       </ModalBody>

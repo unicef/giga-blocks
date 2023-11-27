@@ -4,6 +4,7 @@ import Navbar from '../../components/navbar';
 import Introduction from '../../components/school-detail/introduction';
 import Connectivity from '../../components/school-detail/connectivity';
 import TransactionHistory from '../../components/school-detail/transactionHistory';
+import NFTMetadata from '../../components/school-detail/nftMetadata';
 import { useQuery } from 'urql';
 import { Queries } from '../../libs/graph-query';
 import { useEffect } from 'react';
@@ -22,7 +23,11 @@ const SchoolDetail = ({ id }) => {
   const decodeSchooldata = (data) => {
     const encodeddata = data.tokenUri;
     const decodedData = atob(encodeddata.tokenUri.substring(29));
-    setSchoolData(JSON.parse(decodedData));
+    const nftDetails = {
+      owner: encodeddata.owner.id,
+      ...JSON.parse(decodedData),
+    };
+    setSchoolData(nftDetails);
   };
   useEffect(() => {
     if (result.data) decodeSchooldata(result.data);
@@ -36,7 +41,8 @@ const SchoolDetail = ({ id }) => {
           <PageHeader name={schoolData?.schoolName} />
           <Introduction schooldata={schoolData} />
           <Connectivity schoolData={schoolData} />
-          <TransactionHistory />
+          <TransactionHistory schoolData={schoolData} />
+          <NFTMetadata schoolData={schoolData} />
           <Footer />
         </>
       ) : (
