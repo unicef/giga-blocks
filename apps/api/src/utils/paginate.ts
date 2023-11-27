@@ -11,6 +11,7 @@ export interface PaginatedResult<T> {
 export type PaginateOptions = {
   page?: number | string;
   perPage?: number | string;
+  order?: string;
   transformRows?: (rows: any[]) => any[];
 };
 export type PaginateFunction = <T, K>(
@@ -23,6 +24,7 @@ const paginator = (defaultOptions: PaginateOptions): PaginateFunction => {
   return async (model, args: any = { where: undefined, include: undefined }, options) => {
     const page = Number(options?.page || defaultOptions?.page) || 0;
     const perPage = Number(options?.perPage || defaultOptions?.perPage) || 10;
+    const order = options?.order || defaultOptions?.order || 'asc';
     const skip = perPage * page;
     const [total, rows] = await Promise.all([
       model.count({ where: args.where }),
@@ -31,7 +33,7 @@ const paginator = (defaultOptions: PaginateOptions): PaginateFunction => {
         take: perPage,
         skip,
         orderBy: {
-          createdAt: 'desc',
+          createdAt: order,
         },
       }),
     ]);
