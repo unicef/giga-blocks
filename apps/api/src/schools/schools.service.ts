@@ -31,7 +31,7 @@ export class SchoolService {
   ) {}
 
   async findAll(query: ListSchoolDto) {
-    const { page, perPage, minted, uploadId, name } = query;
+    const { page, perPage, minted, uploadId, name, country, connectivityStatus } = query;
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
     };
@@ -43,10 +43,26 @@ export class SchoolService {
       where.uploadId = uploadId;
     }
     if (name) {
-      where.name = {
+      where.name = { 
         contains: name,
         mode: 'insensitive',
       };
+    }
+    if (country) {
+      where.country = {
+        contains: country,
+        mode: "insensitive"
+      }
+    }
+    if(connectivityStatus){
+      let status:boolean;
+      if(connectivityStatus === 'true'){
+        status = true
+      }
+      else{
+        status = false
+      }
+      where.connectivity = status;
     }
 
     return paginate(
