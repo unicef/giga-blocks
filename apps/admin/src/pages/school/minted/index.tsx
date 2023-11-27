@@ -20,10 +20,15 @@ import {
   IconButton,
   Table,
   TableBody,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { Queries } from 'src/libs/graph-query';
 import { useSchoolCount } from '@hooks/school/useSchool';
@@ -55,6 +60,8 @@ const MintedSchools = () => {
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
   const { data: total } = useSchoolCount('MINTED');
+  const [country, setCountry] = useState<string>()
+  const [connectivity, setConnectivity] = useState<string>()
   const [result] = useQuery({
     query: Queries.nftListQuery,
     variables: { skip: page * rowsPerPage, first: rowsPerPage },
@@ -95,6 +102,11 @@ const MintedSchools = () => {
     if (data) decodeSchooldata(data);
   }, [data]);
 
+  const sortedData = tableData.slice().sort((a:any, b:any) => {
+    const isAsc = order === 'asc';
+    return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
+  });
+
   return (
     <DashboardLayout>
       <h2>Minted School</h2>
@@ -104,21 +116,22 @@ const MintedSchools = () => {
         </div>
       )}
       {!fetching && (
+        <>
         <Card>
           <Divider />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
               <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
                 <TableHeadUsers
-                  // order={order}
-                  // orderBy={orderBy}
+                  order={order}
+                  orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   rowCount={tableData?.length}
-                  // onSort={onSort}
+                  onSort={onSort}
                 />
                 <TableBody>
-                  {tableData &&
-                    tableData.map((row: any) => (
+                  {sortedData &&
+                    sortedData.map((row: any) => (
                       <SchoolTableRow
                         key={row.id}
                         row={row}
@@ -145,6 +158,7 @@ const MintedSchools = () => {
             onChangeDense={onChangeDense}
           />
         </Card>
+        </>
       )}
     </DashboardLayout>
   );

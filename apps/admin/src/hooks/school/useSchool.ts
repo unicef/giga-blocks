@@ -12,12 +12,12 @@ const accessToken = getAccessToken();
 
 api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 
-export const useSchoolGet = ({page, perPage, minted, uploadId, name}:{page?: number, perPage: number, minted?: string, uploadId?: any, name?: string}) => {
+export const useSchoolGet = ({page, perPage, minted, uploadId, name, country, connectivity}:{page?: number, perPage: number, minted?: string, uploadId?: any, name?: string, country?:string, connectivity?:string}) => {
   return useQuery(
     ['get-api-data', page, perPage],
     async () => {
       const { data } = await api.get(
-        `${routes.SCHOOLS.GET}?perPage=${perPage}${page ? `&page=${page}` : ''}${name ? `&name=${name}` : ''}${minted ? `&minted=${minted}` : ''}${uploadId ? `&uploadId=${uploadId}` : ``}`
+        `${routes.SCHOOLS.GET}?perPage=${perPage}${page ? `&page=${page}` : ''}${name ? `&name=${name}` : ''}${minted ? `&minted=${minted}` : ''}${uploadId ? `&uploadId=${uploadId}` : ``}${country ? `&country=${country}` : ``}${connectivity ? `&connectivityStatus=${connectivity}` : ``}`
       );
       return data;
     },

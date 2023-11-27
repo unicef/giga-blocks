@@ -58,11 +58,11 @@ const ContributeForm = () => {
       }
 
       if (data.lat !== data.lat) {
-        changedData.lat = data.lat;
+        changedData.latitude = data.lat;
       }
 
       if (data.lon !== data.lon) {
-        changedData.lon = data.lon;
+        changedData.longitude = data.lon;
       }
 
       if (
@@ -76,7 +76,7 @@ const ContributeForm = () => {
         selectedOptions.dropdown4?.selectedItem?.value !==
         data.coverageAvailability
       ) {
-        changedData.coverageAvailability =
+        changedData.coverage_availability =
           selectedOptions.dropdown4?.selectedItem?.value;
       }
 
@@ -84,7 +84,7 @@ const ContributeForm = () => {
         selectedOptions.dropdown5?.selectedItem?.value !==
         data.electricityAvailability
       ) {
-        changedData.electricityAvailability =
+        changedData.electricity_available =
           selectedOptions.dropdown5?.selectedItem?.value;
       }
       if(!Object.keys(changedData).length) {

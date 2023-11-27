@@ -53,8 +53,8 @@ export default function SchoolTableRow({
   const schoolNft = process.env.NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS
 
   const handleEditRow = (row: string) => {
-    if (mintedStatus == 'MINTED') push(`/school/minted/${row}`)
-    else push(`/school/${row}`);
+    if (mintedStatus == 'MINTED') push(`/nft/${row}`)
+    else push(`/nft/${row}`);
   };
 
   const handleCheckboxChange = (event: any, row: any) => {
