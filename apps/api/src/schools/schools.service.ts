@@ -20,6 +20,7 @@ import { AppResponseDto } from './dto/app-response.dto';
 import { updateData } from 'src/utils/ethers/transactionFunctions';
 import { ConfigService } from '@nestjs/config';
 import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-datum.dto';
+import { getTokenId } from 'src/utils/web3/subgraph';
 
 @Injectable()
 export class SchoolService {
@@ -44,7 +45,7 @@ export class SchoolService {
     if (name) {
       where.name = { 
         contains: name,
-        mode: "insensitive"
+        mode: 'insensitive',
       };
     }
     if (country) {
@@ -258,13 +259,20 @@ export class SchoolService {
   }
 
   async updateOnchainData(id: string, data: any) {
+    const schooldata = await this.filterOnchainData(id);
+    const schoolTokenId = await getTokenId(
+      this.configService.get('NEXT_PUBLIC_GRAPH_URL'),
+      data.giga_school_id,
+    );
+    const tokenId = schoolTokenId.data.schoolTokenId.tokenId;
     const tx = await updateData(
       'NFTContent',
       this.configService.get('GIGA_NFT_CONTENT_ADDRESS'),
-      id,
-      data,
+      tokenId,
+      schooldata,
     );
-    return tx;
+    const txReceipt = tx.wait();
+    return txReceipt;
   }
 
   async removeAll() {
@@ -273,5 +281,44 @@ export class SchoolService {
 
   async updateBulk(ids: ApproveContributeDatumDto, userId: string) {
     this.queueService.approveBulkData(ids, userId);
+  }
+
+  private async filterOnchainData(id: string) {
+    try {
+      const validatedData = await this.prisma.validatedData.findFirst({
+        where: {
+          school_Id: id,
+          isArchived: false,
+          approvedStatus: false,
+        },
+      });
+      const keyValue = Object.entries(validatedData.data);
+      const dataToUpdate = Object.fromEntries(keyValue);
+      const schooldata = await this.prisma.school.findUnique({
+        where: {
+          id: id,
+        },
+      });
+      const filteredData = Object.fromEntries(
+        Object.entries(validatedData.data).filter(([key]) => key in dataToUpdate),
+      );
+      const newData = {
+        ...schooldata,
+        ...filteredData,
+      };
+      const onChainData = [
+        newData.name,
+        newData.school_type,
+        newData.country,
+        newData.longitude,
+        newData.latitude,
+        newData.connectivity,
+        newData.coverage_availability,
+        newData.electricity_available,
+      ];
+      return onChainData;
+    } catch (err) {
+      console.log(err);
+    }
   }
 }

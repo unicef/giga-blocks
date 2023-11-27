@@ -3,6 +3,7 @@ import { IsArray, IsObject, IsString } from 'class-validator';
 
 export interface SchoolData {
   id: string;
+  giga_school_id: string;
   schoolName: string;
   schoolType: string;
   country: string;

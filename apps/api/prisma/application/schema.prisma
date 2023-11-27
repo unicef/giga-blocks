@@ -175,6 +175,7 @@ model User {
 
 model School {
   id                        String            @id @default(uuid())
+  giga_school_id            String            @unique
   status                    SchoolStatus      @default(Open)
   connectivity_speed_status String?           @default("Data Unavailable")
   connectivity              Boolean           @default(false)

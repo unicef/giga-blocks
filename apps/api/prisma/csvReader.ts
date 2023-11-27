@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 
 interface SchoolData {
   schoolName: string;
+  giga_school_id: string;
   schoolType: string;
   country: string;
   longitude: number;
@@ -23,6 +24,7 @@ async function readAndSaveCSV(filePath: string): Promise<void> {
     for (const row of rows) {
       const [
         schoolName,
+        giga_school_id,
         longitudeStr,
         latitudeStr,
         schoolType,
@@ -42,6 +44,7 @@ async function readAndSaveCSV(filePath: string): Promise<void> {
 
       const schoolData: SchoolData = {
         schoolName,
+        giga_school_id,
         schoolType,
         country,
         longitude,
@@ -61,6 +64,7 @@ async function readAndSaveCSV(filePath: string): Promise<void> {
           electricity_available: schoolData.electricity_availabilty as boolean,
           coverage_availability: schoolData.coverage_availabitlity,
           country: country,
+          giga_school_id: schoolData.giga_school_id,
           // createdById: user.id
         },
       });
