@@ -51,7 +51,7 @@ export const updateData = async (
   contractName: string,
   contractAddress: string,
   tokenId: string,
-  schoolDataArray: any,
+  schoolDataArray: (string | boolean | number)[],
 ) => {
   const contract: any = getContractWithSigner(contractName, contractAddress);
   const tx = await contract.updateNftContent(tokenId, schoolDataArray);

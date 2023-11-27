@@ -244,17 +244,19 @@ export class SchoolService {
 
   async updateOnchainData(id: string, data: any) {
     const schooldata = await this.filterOnchainData(id);
-    const tokenId = await getTokenId(
+    const schoolTokenId = await getTokenId(
       this.configService.get('NEXT_PUBLIC_GRAPH_URL'),
       data.giga_school_id,
     );
+    const tokenId = schoolTokenId.data.schoolTokenId.tokenId;
     const tx = await updateData(
       'NFTContent',
       this.configService.get('GIGA_NFT_CONTENT_ADDRESS'),
       tokenId,
       schooldata,
     );
-    return tx;
+    const txReceipt = tx.wait();
+    return txReceipt;
   }
 
   async removeAll() {
@@ -288,16 +290,16 @@ export class SchoolService {
         ...schooldata,
         ...filteredData,
       };
-      const onChainData = {
-        schoolName: newData.name,
-        schoolType: newData.school_type,
-        country: newData.country,
-        longitude: newData.longitude,
-        latitude: newData.latitude,
-        connectivity: newData.connectivity,
-        coverage_availability: newData.coverage_availability,
-        electricity_available: newData.electricity_available,
-      };
+      const onChainData = [
+        newData.name,
+        newData.school_type,
+        newData.country,
+        newData.longitude,
+        newData.latitude,
+        newData.connectivity,
+        newData.coverage_availability,
+        newData.electricity_available,
+      ];
       return onChainData;
     } catch (err) {
       console.log(err);

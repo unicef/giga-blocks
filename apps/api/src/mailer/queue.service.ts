@@ -136,7 +136,8 @@ export class QueueService {
     try {
       const { id } = ids;
       for (let i = 0; i < id.length; i++) {
-        await this._contributeQueue.add(SET_APPROVE_QUEUE, { id, userId }, jobOptions);
+        const schoolid = id[i];
+        await this._contributeQueue.add(SET_APPROVE_QUEUE, { id: schoolid, userId }, jobOptions);
         return { message: 'queue added successfully', statusCode: 200 };
       }
     } catch (error) {

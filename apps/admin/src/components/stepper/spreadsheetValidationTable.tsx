@@ -31,7 +31,6 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     setSelectedSheetName,
     tableDatas: rows,
   } = useUploadContext();
-  console.log(allData)
   const [errors, setErrors] = useState<string[]>([]);
   const [allSheetErrors, setAllSheetErrors] = useState<{ sheetName: string; errors: string[] }[]>();
   const [convertedObject, setConvertedObject] = useState<Record<string, any> | null>(null);
