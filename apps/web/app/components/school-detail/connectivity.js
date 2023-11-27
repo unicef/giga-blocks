@@ -1,11 +1,18 @@
 import { Grid, Column } from '@carbon/react';
+import { useParams } from 'next/navigation';
 import '../../components/landing-page/styles/preview.scss';
 import './school-detail.scss';
 
 const Connectivity = ({ schoolData }) => {
+  const { id } = useParams();
+  const contractAddress =
+    process.env.NEXT_PUBLIC_GIGA_NFT_CONTENT_ADDRESS?.slice(0, 3) +
+    '...' +
+    process.env.NEXT_PUBLIC_GIGA_NFT_CONTENT_ADDRESS?.slice(-6);
+  const chain = process.env.NEXT_PUBLIC_CHAIN;
   return (
     <>
-      <Grid fullWidth className="mt-50px mb-50px">
+      <Grid fullWidth className="mt-50px ">
         <Column md={4} lg={16} sm={4}>
           <div className="border-bottom"></div>
         </Column>
@@ -19,43 +26,28 @@ const Connectivity = ({ schoolData }) => {
                 <Column md={4} lg={8} sm={4}>
                   <div>
                     <span className="heading2" style={{ marginBottom: '14px' }}>
-                      Connectivity Status
+                      Contract Address
                     </span>
                     <span className="heading5">
                       <br />
-                      {schoolData?.connectivity
-                        ? schoolData?.connectivity
-                        : 'N/A'}
+                      {contractAddress}
                     </span>
                   </div>
                 </Column>
                 <Column md={4} lg={8} sm={4}>
                   <span className="heading2" style={{ marginBottom: '14px' }}>
-                    Coverage Availability
+                    Token Id
                   </span>
                   <br />
-                  <span className="heading5">
-                    {schoolData?.coverage_availabitlity}
-                  </span>
+                  <span className="heading5">{id}</span>
                 </Column>
                 <Column md={4} lg={8} sm={4}>
                   <span className="heading2" style={{ marginBottom: '14px' }}>
-                    Connectivity Status
+                    Chain
                   </span>
                   <span className="heading5">
                     <br />
-                    {schoolData?.connectivity
-                      ? schoolData?.connectivity
-                      : 'N/A'}
-                  </span>
-                </Column>
-                <Column md={4} lg={8} sm={4}>
-                  <span className="heading2" style={{ marginBottom: '14px' }}>
-                    Coverage Availability
-                  </span>
-                  <span className="heading5">
-                    <br />
-                    {schoolData?.coverage_availabitlity}
+                    {chain}
                   </span>
                 </Column>
               </div>
@@ -64,7 +56,7 @@ const Connectivity = ({ schoolData }) => {
         </Column>
       </Grid>
       <Grid fullWidth>
-        <Column md={4} lg={16} sm={4} style={{ marginTop: '36px' }}>
+        <Column md={4} lg={16} sm={4}>
           <div className="border-bottom"></div>
         </Column>
       </Grid>

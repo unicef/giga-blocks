@@ -38,7 +38,7 @@ const Connectivity = () => {
 
   return (
     <>
-      <Grid fullWidth className="mb-50px">
+      <Grid fullWidth>
         <Column md={4} lg={5} sm={4}>
           <span style={{ fontSize: '1.5em' }}>Transaction History</span>
         </Column>
