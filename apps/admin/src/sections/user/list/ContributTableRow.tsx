@@ -42,6 +42,7 @@ export default function ContributeTableRow({
     school,
     contributedDataKey,
     contributedDataValue,
+    status,
     date
   } = row;
 
@@ -68,7 +69,7 @@ export default function ContributeTableRow({
       <TableRow
         hover
       >
-      {checkbox &&(
+      {checkbox &&  status =="Pending" && (
         <TableCell padding="checkbox">
           <Checkbox
             checked={selectedValues.some((obj: any) => obj.id === id)}
@@ -76,6 +77,9 @@ export default function ContributeTableRow({
           />
         </TableCell>
       )}
+      {/* {checkbox &&  status !="Pending" &&(
+        <TableCell padding='checkbox'> </TableCell>
+      )} */}
 
         <TableCell
           align="left"

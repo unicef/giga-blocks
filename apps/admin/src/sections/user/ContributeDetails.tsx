@@ -199,7 +199,8 @@ export default function ContributeDetail({ id }: Props) {
           </FormProvider>
         </Container>
       </Grid>
-      {/* <Grid item xs={4}>
+      {profile?.status === "Pending"&& 
+        <Grid item xs={4}>
         <Container>
           <Box justifyContent={"center"}>
             <Stack direction="row" alignItems="center">
@@ -212,7 +213,7 @@ export default function ContributeDetail({ id }: Props) {
             </Stack>
           </Box>
         </Container>
-      </Grid> */}
+      </Grid>}
     </>
   );
 }

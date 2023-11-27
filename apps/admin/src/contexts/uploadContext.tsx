@@ -44,7 +44,7 @@ type UploadContextProviderProps = {
 
 const UploadContextProvider: React.FC<UploadContextProviderProps> = ({ children }) => {
   const [sheetNames, setSheetNames] = useState<string[]>([]);
-  const [tableDatas, setTableDatas] = useState<string[][]>([]);
+  const [tableDatas, setTableDatas] = useState<any>([]);
   const [allData, setAllData] = useState<any>([]);
   const [showStepper, setShowStepper] = useState<boolean>(false);
   const [isFileValidated, setIsFileValidated] = useState<boolean>(false);

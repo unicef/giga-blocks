@@ -56,6 +56,7 @@ async function fetchDataAndStore() {
               connectivity: Boolean(true),
               school_type: 'public',
               coverage_availability: 'available',
+              giga_school_id: item.giga_id_school,
             },
           });
 

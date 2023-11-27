@@ -65,6 +65,7 @@ import { metaMask } from '../components/web3/connectors/metamask';
     addKey: () => {},
     logout: () => {},
     initialize: () => {},
+    checkAccessToken: () => {},
   };
   
   const AppAuthContext = createContext({
@@ -90,7 +91,18 @@ import { metaMask } from '../components/web3/connectors/metamask';
             token: localToken,
             user: localUser,
           }));
-        } else {
+        } else if(localToken && !isValidToken(localToken))
+         {
+          clearStorage();
+          push('/')
+          window.alert('Session expired, please login again')
+          setAuthState((prev) => ({
+            ...prev,
+            isAuthenticated: false,
+            isInitialized: true,
+          }));
+        }
+        else {
           setAuthState((prev) => ({
             ...prev,
             isAuthenticated: false,
@@ -101,6 +113,21 @@ import { metaMask } from '../components/web3/connectors/metamask';
         console.error(err);
       }
     }, []);
+
+  const checkAccessToken = useCallback(async () => {
+  const localToken = getAccessToken();
+  if(localToken && !isValidToken(localToken)){
+    clearStorage();
+    push('/')
+    window.alert('Session expired, please login again')
+    setAuthState((prev) => ({
+      ...prev,
+      isAuthenticated: false,
+      isInitialized: true,
+    }));
+   }},[push]);
+   
+
     useEffect(() => {
       initialize();
     }, [push]);
@@ -164,6 +191,7 @@ import { metaMask } from '../components/web3/connectors/metamask';
         roles,
         method: 'jwt',
         initialize,
+        checkAccessToken,
       }),
       [authState, roles, logout]
     );

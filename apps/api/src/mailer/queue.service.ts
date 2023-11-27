@@ -76,12 +76,14 @@ export class QueueService {
     try {
       const mintData = MintData.data.map(school => this.schoolToArrayMapper(school));
       let ids: string[];
+      let giga_ids: string[];
       let schools;
       const batchSize = this._configService.get<number>('BATCH_SIZE');
       if (mintData.length <= batchSize) {
         ids = MintData.data.map(school => school.id);
+        giga_ids = MintData.data.map(school => school.giga_school_id);
         schools = await this.updateSchools(ids);
-        await this._mintQueue.add(SET_MINT_NFT, { address, mintData, ids }, jobOptions);
+        await this._mintQueue.add(SET_MINT_NFT, { address, mintData, ids, giga_ids }, jobOptions);
       } else {
         let mintDatum;
         for (let i = 0; i < mintData.length; i += batchSize) {
@@ -90,7 +92,7 @@ export class QueueService {
           schools = await this.updateSchools(ids);
           await this._mintQueue.add(
             SET_MINT_NFT,
-            { address, mintData: mintDatum, ids },
+            { address, mintData: mintDatum, ids, giga_ids },
             jobOptions,
           );
         }
@@ -106,8 +108,13 @@ export class QueueService {
     try {
       const mintData = this.schoolToArrayMapper(MintData.data);
       const ids = [MintData.data.id];
+      const giga_id = MintData.data.giga_school_id;
       await this.updateSchools(ids);
-      await this._mintQueue.add(SET_MINT_SINGLE_NFT, { address, mintData, ids }, jobOptions);
+      await this._mintQueue.add(
+        SET_MINT_SINGLE_NFT,
+        { address, mintData, ids, giga_id },
+        jobOptions,
+      );
       return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
       this._logger.error(`Error queueing transaction to blockchain `);
@@ -129,7 +136,8 @@ export class QueueService {
     try {
       const { id } = ids;
       for (let i = 0; i < id.length; i++) {
-        await this._contributeQueue.add(SET_APPROVE_QUEUE, { id, userId }, jobOptions);
+        const schoolid = id[i];
+        await this._contributeQueue.add(SET_APPROVE_QUEUE, { id: schoolid, userId }, jobOptions);
         return { message: 'queue added successfully', statusCode: 200 };
       }
     } catch (error) {

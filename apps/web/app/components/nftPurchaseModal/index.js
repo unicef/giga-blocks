@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowRight } from '@carbon/icons-react';
 import { useSellerContract } from '../../hooks/useContract';
 import { useWeb3React } from '@web3-react/core';
+import { metaMask } from '../../components/web3/connectors/metamask';
 
 const ModalComponent = ({ isOpen, onClose, schooldata }) => {
   const sellerContract = useSellerContract();
@@ -34,6 +35,12 @@ const ModalComponent = ({ isOpen, onClose, schooldata }) => {
     } catch (err) {
       console.log(err);
       setLoading(false);
+    }
+  };
+
+  const connectMetaMask = async () => {
+    if (!account) {
+      await metaMask.activate();
     }
   };
 
@@ -102,15 +109,35 @@ const ModalComponent = ({ isOpen, onClose, schooldata }) => {
             <div className="border-bottom"></div>
           </Column>
           <Column md={4} lg={16} sm={4}>
-            <p style={{ fontWeight: '600' }}>Go to your wallet</p>
-            <p>You will be asked to approve this purchase from your wallet.</p>
-            <Button
-              className="submit-btn"
-              onClick={handleSubmit}
-              renderIcon={ArrowRight}
-            >
-              {loading ? 'Loading...' : 'Submit'}
-            </Button>
+            {account ? (
+              <>
+                <p style={{ fontWeight: '600' }}>
+                  You are connected to "{account}" address{' '}
+                </p>
+                <p>
+                  You will be asked to approve this purchase from your wallet.
+                </p>
+
+                <Button
+                  className="submit-btn"
+                  onClick={handleSubmit}
+                  renderIcon={ArrowRight}
+                >
+                  {loading ? 'Loading...' : 'Submit'}
+                </Button>
+              </>
+            ) : (
+              <>
+                <p> First you need to connect your MetaMask</p>
+                <Button
+                  className="submit-btn"
+                  onClick={connectMetaMask}
+                  renderIcon={ArrowRight}
+                >
+                  Connect MetaMask
+                </Button>
+              </>
+            )}
           </Column>
         </Grid>
       </ModalBody>

@@ -19,8 +19,8 @@ export const useLibrary = ()=>{
 
 export const getContract  = (abi,address)=>{
     const provider = useLibrary();
-    const web3 = new Web3 (provider.provider);
     if(!provider  || !abi) return null;
+    const web3 = new Web3 (provider.provider);
     const contract = new web3.eth.Contract(abi,address);
     return contract;
 }

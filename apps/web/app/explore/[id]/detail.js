@@ -38,7 +38,7 @@ const SchoolDetail = ({ id }) => {
       {fetching === false ? (
         <>
           <Navbar />
-          <PageHeader />
+          <PageHeader name={schoolData?.schoolName} />
           <Introduction schooldata={schoolData} />
           <Connectivity schoolData={schoolData} />
           <TransactionHistory schoolData={schoolData} />

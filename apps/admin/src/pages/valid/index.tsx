@@ -83,7 +83,8 @@ const ValidateData = () => {
         id: row.id,
         school: row.school.name,
         isApproved: String(row.approvedStatus),
-        date:date
+        date:date,
+        schoolId: row.school_Id
       });
     }
     )
@@ -108,8 +109,9 @@ const ValidateData = () => {
   let payload:string[] = [];
   const onValidate = () => {
     selectedValues.map((value:any) => {
-      payload.push(value?.id)
+      payload.push(value?.schoolId)
     })
+
     mutate(payload)
     payload = [];
   }
