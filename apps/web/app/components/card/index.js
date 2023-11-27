@@ -23,6 +23,7 @@ const SchoolCard = () => {
   });
   const { data: queryData, fetching, error } = result;
   const [schoolData, setSchoolData] = useState([]);
+
   const [allDataLoaded, setAllDataLoaded] = useState(false);
 
   const generateIdenticon = (image) => {

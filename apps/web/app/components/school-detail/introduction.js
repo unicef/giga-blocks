@@ -4,9 +4,12 @@ import { ArrowRight } from '@carbon/icons-react';
 import './school-detail.scss';
 import { toSvg } from 'jdenticon';
 import { useState } from 'react';
+import { useQuery } from 'urql';
+import { Queries } from '../../libs/graph-query';
 import NftPurchaseModal from '../../components/nftPurchaseModal';
 
 const Introduction = ({ schooldata }) => {
+  console.log(schooldata);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {
@@ -63,7 +66,9 @@ const Introduction = ({ schooldata }) => {
         <hr />
         <div>
           <h1 style={{ fontSize: '1.5em', marginTop: '64px' }}>Ownership</h1>
-          <p style={{ marginTop: '32px', marginBottom: '32px' }}>@owner-Name</p>
+          <p style={{ marginTop: '32px', marginBottom: '32px' }}>
+            {schooldata?.owner}
+          </p>
         </div>
         <div>
           <Button

@@ -23,7 +23,11 @@ const SchoolDetail = ({ id }) => {
   const decodeSchooldata = (data) => {
     const encodeddata = data.tokenUri;
     const decodedData = atob(encodeddata.tokenUri.substring(29));
-    setSchoolData(JSON.parse(decodedData));
+    const nftDetails = {
+      owner: encodeddata.owner.id,
+      ...JSON.parse(decodedData),
+    };
+    setSchoolData(nftDetails);
   };
   useEffect(() => {
     if (result.data) decodeSchooldata(result.data);
