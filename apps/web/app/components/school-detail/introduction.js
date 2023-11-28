@@ -8,7 +8,7 @@ import NftPurchaseModal from '../../components/nftPurchaseModal';
 
 const Introduction = ({ schooldata }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const[onSell, setOnSell] = useState(false);
+  const [onSell, setOnSell] = useState(false);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -29,8 +29,8 @@ const Introduction = ({ schooldata }) => {
   };
 
   useEffect(() => {
-    if(schooldata?.owner === process.env.ESCROW_ADDRESS) setOnSell(true);
-  })
+    if (schooldata?.owner === process.env.ESCROW_ADDRESS) setOnSell(true);
+  });
 
   return (
     <Grid fullWidth className="mt-50px">
@@ -62,7 +62,7 @@ const Introduction = ({ schooldata }) => {
         <div>
           <h1 style={{ fontSize: '1.5em', marginTop: '32px' }}>Sell Status</h1>
           <p style={{ marginTop: '32px', marginBottom: '32px' }}>
-            { onSell ? 'Currently Avaiable': 'Not Available'}
+            {onSell ? 'Currently Avaiable' : 'Not Available'}
           </p>
         </div>
         <hr />
@@ -73,16 +73,15 @@ const Introduction = ({ schooldata }) => {
           </p>
         </div>
         <div>
-         { 
-         onSell && 
-         <Button
-            className="submit-btn"
-            onClick={onClick}
-            renderIcon={ArrowRight}
-          >
-            Buy Now
-          </Button>}
-          <p>Know more about the Item History</p>
+          {onSell && (
+            <Button
+              className="submit-btn"
+              onClick={onClick}
+              renderIcon={ArrowRight}
+            >
+              Buy Now
+            </Button>
+          )}
         </div>
       </Column>
       <NftPurchaseModal
