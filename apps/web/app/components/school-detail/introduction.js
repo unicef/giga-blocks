@@ -3,11 +3,12 @@ import '../../components/landing-page/styles/preview.scss';
 import { ArrowRight } from '@carbon/icons-react';
 import './school-detail.scss';
 import { toSvg } from 'jdenticon';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import NftPurchaseModal from '../../components/nftPurchaseModal';
 
 const Introduction = ({ schooldata }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const[onSell, setOnSell] = useState(false);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -26,6 +27,10 @@ const Introduction = ({ schooldata }) => {
     const svgString = toSvg(image, size);
     return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
   };
+
+  useEffect(() => {
+    if(schooldata?.owner === process.env.ESCROW_ADDRESS) setOnSell(true);
+  })
 
   return (
     <Grid fullWidth className="mt-50px">
@@ -57,7 +62,7 @@ const Introduction = ({ schooldata }) => {
         <div>
           <h1 style={{ fontSize: '1.5em', marginTop: '32px' }}>Sell Status</h1>
           <p style={{ marginTop: '32px', marginBottom: '32px' }}>
-            Currently Unavailable
+            { onSell ? 'Currently Avaiable': 'Not Available'}
           </p>
         </div>
         <hr />
@@ -68,13 +73,15 @@ const Introduction = ({ schooldata }) => {
           </p>
         </div>
         <div>
-          <Button
+         { 
+         onSell && 
+         <Button
             className="submit-btn"
             onClick={onClick}
             renderIcon={ArrowRight}
           >
             Buy Now
-          </Button>
+          </Button>}
           <p>Know more about the Item History</p>
         </div>
       </Column>

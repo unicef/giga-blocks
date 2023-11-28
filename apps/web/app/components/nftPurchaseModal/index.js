@@ -27,8 +27,12 @@ const ModalComponent = ({ isOpen, onClose, schooldata }) => {
       setLoading(true);
       const tx = await sellerContract.methods
         .purchaseNft('1', account)
-        .send({ from: account });
-      tx.wait();
+        .send({ from: account }).on('transactionHash', (hash) => {
+          if(hash){
+            route.push('/dashboard');
+          }
+        })
+        
       // route.push('/dashboard');
       onClose();
       setLoading(false);
