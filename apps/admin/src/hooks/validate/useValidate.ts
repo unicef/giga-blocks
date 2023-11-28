@@ -48,7 +48,7 @@ export const useValidateGet = (page:number, perPage:number) => {
   };
 
   const validateBulkData = async (ids: string[]) => {
-    return await api.patch(`${routes.VALIDATE.PATCHBULK}`, ids);
+    return await api.patch(`${routes.VALIDATE.PATCHBULK}`, {id:ids});
   };
 
   export const useValidateBulkUpdate = () => {

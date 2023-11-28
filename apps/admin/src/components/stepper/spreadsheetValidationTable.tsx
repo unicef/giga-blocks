@@ -17,7 +17,7 @@ import TableFormatter from '@utils/arrayFormatter';
 
 interface SpreadsheetValidationTableProps {
   setHasErrors: (hasErrors: boolean) => void;
-}
+} 
 
 const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   setHasErrors,
@@ -45,44 +45,18 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     }
 
     const hasCommaInName = data?.Name?.some((name: string) => name.includes(','));
-    const numericFields = [
-      'Capacity at end of life [p.u.]',
-      'SOC Init. [p.u.]',
-      'SOC min [p.u.]',
-      'SOC max [p.u.]',
-      'Efficiency (charge and discharge) [p.u.]',
-    ];
-
-    const hasInvalidNumber = Object.keys(data).some((field) => {
-      const values = data[field];
-      if (Array.isArray(values)) {
-        return values.some((value) => value < 0);
-      }
-      return false;
-    });
 
     const validationErrors: string[] = [];
 
     if (hasIncorrectFileType) {
       validationErrors.push(
-        `Invalid Spreadsheet file uploaded for ${productType}. Please check correct file type and file name`
+        `Invalid Spreadsheet file uploaded. Please check correct file type and file name`
       );
     }
-
-    // if (hasInvalidNumber) {
-    //   validationErrors.push('One or more numerical values are negative');
-    // }
 
     if (hasCommaInName) {
       validationErrors.push('Name should not contain a comma');
     }
-
-    numericFields.forEach((field) => {
-      const values = data[field];
-      if (values && values.some((value: number) => value < 0 || value > 1)) {
-        validationErrors.push(`${field} should be between 0 and 1`);
-      }
-    });
 
     return validationErrors;
   };
@@ -192,6 +166,25 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   }, [allSheetErrors, selectedSheetName]);
 
   useEffect(() => {
+    const allowedElements = [
+      "schoolName",
+      "longitudeStr",
+      "latitudeStr",
+      "schoolType",
+      "country ",
+      "connectivity",
+      "coverage_availabitlity",
+      "electricity_availability"
+  ]
+    if(tableHeaders){
+      const isValidArray = tableHeaders.every(element => allowedElements.includes(element));
+      if(!isValidArray){
+      setAllSheetErrors([{sheetName: 'school.csv', errors: ['Please remove columns exceptschoolName,longitudeStr, latitudeStr, schoolType, country, connectivity, coverage_availabitlity, electricity_availability']}])
+      }
+    }
+  }, [tableHeaders, convertedObject])
+
+  useEffect(() => {
     const updateConvertedObject = () => {
       const newConvertedObject = TableFormatter(rows);
       setConvertedObject(newConvertedObject);
@@ -244,29 +237,37 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
                     const value = convertedObject[header][rowIndex];
                     let isInvalid = false;
 
-                    // if (header === 'Name') {
-                    //   isInvalid = value.includes(',');
-                    // }
+                    if (header === 'schoolName') {
+                      isInvalid = typeof(value) != 'string';
+                    }
 
-                    // if (header === 'Capacity at end of life [p.u.]') {
-                    //   isInvalid = value < 0 || value > 1;
-                    // }
+                    if (header === 'longitudeStr') {
+                      isInvalid = typeof(value) != 'string';
+                    }
 
-                    // if (header === 'SOC Init. [p.u.]') {
-                    //   isInvalid = value < 0 || value > 1;
-                    // }
+                    if (header === 'latitudeStr') {
+                      isInvalid = typeof(value) != 'string';
+                    }
 
-                    // if (header === 'SOC min [p.u.]') {
-                    //   isInvalid = value < 0 || value > 1;
-                    // }
+                    if (header === 'schoolType') {
+                      isInvalid = typeof(value) != 'string';
+                    }
 
-                    // if (header === 'SOC max [p.u.]') {
-                    //   isInvalid = value < 0 || value > 1;
-                    // }
+                    if (header === 'country') {
+                      isInvalid = typeof(value) != 'string';
+                    }
 
-                    // if (header === 'Efficiency (charge and discharge) [p.u.]' || header === 'Efficiency (charge and discharge) [p.u]') {
-                    //   isInvalid = value < 0 || value > 1;
-                    // }
+                    if (header === 'connectivity') {
+                      isInvalid = typeof(value) != 'string';
+                    }
+
+                    if (header === 'coverage_availabitlity') {
+                      isInvalid = typeof(value) != 'string';
+                    }
+
+                    if (header === 'electricity_availability') {
+                      isInvalid = typeof(value) != 'string';
+                    }
 
                     const cellStyles = {
                       border: isInvalid ? '1px solid red' : '',

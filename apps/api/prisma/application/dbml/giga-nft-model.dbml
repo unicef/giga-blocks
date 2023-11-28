@@ -71,6 +71,7 @@ Table giga_users {
 
 Table giga_school {
   id String [pk]
+  giga_school_id String [unique, not null]
   status SchoolStatus [not null, default: 'Open']
   connectivity_speed_status String [default: 'Data Unavailable']
   connectivity Boolean [not null, default: false]

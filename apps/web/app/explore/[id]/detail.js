@@ -19,7 +19,7 @@ const SchoolDetail = ({ id }) => {
   const [schoolData, setSchoolData] = useState();
 
   const decodeSchooldata = (data) => {
-    const encodeddata = data.tokenUri;
+    const encodeddata = data.tokenUri;  
     const decodedData = atob(encodeddata.tokenUri.substring(29));
     setSchoolData(JSON.parse(decodedData));
   };
@@ -27,12 +27,14 @@ const SchoolDetail = ({ id }) => {
     if (result.data) decodeSchooldata(result.data);
   }, [result.data]);
 
+  
+
   return (
     <>
-      {fetching === false ? (
+      {fetching == false ?  (
         <>
           <Navbar />
-          <PageHeader name={schoolData.schoolName} />
+          <PageHeader name={schoolData?.schoolName} />
           <Introduction schooldata={schoolData} />
           <Connectivity schoolData={schoolData} />
           <Footer />

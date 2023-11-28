@@ -52,7 +52,7 @@ const SignIn = () => {
 
   useEffect(() => {
     if (!web3.isActive) {
-      metaMask.connectEagerly();
+     void metaMask.connectEagerly();
     }
   }, []);
 
@@ -80,6 +80,7 @@ const SignIn = () => {
   };
   const handleWalletLogin = async (data) => {
     try {
+      await metaMask.activate();
       const { nonce } = await getNonceQuery.mutateAsync();
       const sign = await getSignature(nonce);
       const payload = {
@@ -118,7 +119,9 @@ const SignIn = () => {
         <Column className="form" md={4} lg={8} sm={4}>
           <Tile className="signUp-tile">
             <h1>Sign In To Your Account</h1>
-            <Form onSubmit={handleSubmit(onSubmit)}>
+            <Form 
+            onSubmit={handleSubmit(onSubmit)}
+            >
               {showEmailField && (
                 <Controller
                   name="email"
@@ -148,7 +151,7 @@ const SignIn = () => {
                 style={{ marginRight: '14px', width: '100%' }}
                 onClick={() => {
                   if (showEmailField) {
-                    handleSubmit(onSubmit)();
+                    // handleSubmit(onSubmit)();
                   } else {
                     showEmailInput();
                   }

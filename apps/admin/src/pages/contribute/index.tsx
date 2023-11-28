@@ -77,7 +77,7 @@ const ContributeData = () => {
   const {data:contributerList, refetch:userRefetch} = useUserGet(1, 10, 'CONTRIBUTOR')
   const [searchSchoolQuery, setSearchSchoolQuery] = useState('')
   const [searchContributeQuery, setSearchContributeQuery] = useState('')
-  const [selectedStatus, setSelectedStatus] = useState('')
+  const [selectedStatus, setSelectedStatus] = useState('Pending')
 
   const {data:ContributedData, isFetching, refetch} = useContributeGet({page,perPage: rowsPerPage, schoolId: selectedSchoolSearch, contributeId: selectedContributerSearch, status: selectedStatus})
   const {data:schoolList, refetch:refetchSchool} = useSchoolGet({perPage: 10, name: searchSchoolQuery})
@@ -103,7 +103,8 @@ const ContributeData = () => {
         school: row?.school?.name || '',
         contributedDataKey: Object.keys(jsonString) || '',
         contributedDataValue: Object.values(jsonString) || '',
-        date:date || ''
+        date:date || '',
+        status: row?.status || '',
       });
     }
     )
@@ -173,10 +174,10 @@ const ContributeData = () => {
     <DashboardLayout>
       <div style={{display: 'flex', justifyContent: 'space-between',marginBottom: '20px'}}>
           <span style={{fontSize: '1.5em', fontWeight: '600'}}>Contributed Data <span style={{fontSize: '0.75em', fontWeight: '400'}}> {selectedValues.length > 0 && `(${selectedValues.length})`} </span></span>
-          {/* <div style={{display: 'flex', gap: '15px'}}>
+          <div style={{display: 'flex', gap: '15px'}}>
           <Button variant="contained" style={{background: '#474747'}} disabled={selectedValues.length <= 0} onClick={() => onContribute(false)}>Invalidate</Button>
           <Button variant="contained" style={{background: '#474747'}} disabled={selectedValues.length <= 0} onClick={() => onContribute(true)}>Validate</Button>
-          </div> */}
+          </div>
           </div>
           <Box sx={{ minWidth: 120 }}>
       <FormControl sx={{width: 150}}>
@@ -233,6 +234,7 @@ const ContributeData = () => {
         value={searchBy}
         label={searchBy}
         onChange={(event) => handleValidChange(event)}
+        defaultValue={selectedStatus}
       >
         {statusArray && statusArray?.map((status:any) => {
           return(
@@ -251,7 +253,17 @@ const ContributeData = () => {
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
             <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
-              <TableHeadUsers
+             { selectedStatus == "Pending" &&<TableHeadUsers
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  rowCount={tableData?.length}
+                  showCheckBox={true}
+                  onSort={onSort}
+                  numSelected={selectedValues?.length}
+                  onSelectAllRows={onSelectAllRows} 
+                />}
+                { selectedStatus != "Pending" &&<TableHeadUsers
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
@@ -260,7 +272,7 @@ const ContributeData = () => {
                   onSort={onSort}
                   numSelected={selectedValues?.length}
                   onSelectAllRows={onSelectAllRows} 
-                />
+                />}
               <TableBody>
                 {sortedData &&
                   sortedData.map((row: any) => (
@@ -270,7 +282,7 @@ const ContributeData = () => {
                       selectedValues={selectedValues}
                       setSelectedValues={setSelectedValues}
                       rowData={row}
-                      checkbox={false}
+                      checkbox={true}
                     />
                   ))}
                 {!isFetching ? <TableNoData
