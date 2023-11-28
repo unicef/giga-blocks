@@ -44,41 +44,54 @@ const headerData = [
   },
 ];
 
-const ContributionTable = () => {
+const UserContributionTable = () => {
   const user = getCurrentUser();
-  const [schoolData, setSchoolData] = useState([]);
+  const [rowData, setRowData] = useState([]);
   const [totalData, setTotalData] = useState(0);
   const [pagination, setPagination] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [order, setOrder] = useState(null);
+  const [sortBy, setSortBy] = useState(null);
   const { data, isLoading, isFetching } = useContributionList(
     pagination - 1,
     pageSize,
-    user?.id
+    user?.id,
+    order
   );
-  useEffect(() => {
-    isLoading === false && setSchoolData(data?.rows);
-    setTotalData(data?.meta?.total);
-  }, [isLoading, isFetching]);
 
-  const rowData = schoolData.map((data) => {
-    const contributedData = JSON.parse(data.contributed_data);
-    let field_type, change;
-    for (const key in contributedData) {
-      if (contributedData.hasOwnProperty(key)) {
-        const value = contributedData[key];
-        field_type = key;
-        change = value;
+  useEffect(() => {
+    if (isLoading === false) {
+      const schoolData = data?.rows?.map((data) => {
+        const contributedData = JSON.parse(data.contributed_data);
+        let field_type, change;
+        for (const key in contributedData) {
+          if (contributedData.hasOwnProperty(key)) {
+            const value = contributedData[key];
+            field_type = key;
+            change = value;
+          }
+        }
+        return {
+          id: data.id,
+          school_name: data.school?.name,
+          field_type: field_type,
+          change: change,
+          date: new Date(data.createdAt).toLocaleDateString(),
+          status: data.status,
+        };
+      });
+
+      if (sortBy === 'school_name') {
+        const sortedData = schoolData?.sort((a, b) =>
+          a.school_name.localeCompare(b.school_name)
+        );
+        setRowData(sortedData);
       }
+      setRowData(schoolData);
     }
-    return {
-      id: data.id,
-      school_name: data.school?.name,
-      field_type: field_type,
-      change: change,
-      date: new Date(data.createdAt).toLocaleDateString(),
-      status: data.status,
-    };
-  });
+
+    setTotalData(data?.meta?.total);
+  }, [isLoading, isFetching, sortBy]);
 
   const handlePageChange = (page) => {
     setPagination(page.page);
@@ -93,9 +106,8 @@ const ContributionTable = () => {
             <TableToolbar style={{ background: '#fff' }}>
               <TableToolbarContent>
                 <TableToolbarSearch onChange={onInputChange} />
-                <TableToolbarMenu renderIcon={Filter} iconDescription="Sort">
+                <TableToolbarMenu renderIcon={Filter} iconDescription="Sort By">
                   <RadioButtonGroup
-                    defaultSelected="radio-2"
                     style={{
                       display: 'flex',
                       flexDirection: 'column',
@@ -108,11 +120,16 @@ const ContributionTable = () => {
                       labelText="School Name"
                       value="radio-1"
                       id="radio-1"
+                      onClick={() => setSortBy('school_name')}
                     />
                     <RadioButton
                       labelText="Date"
                       value="radio-2"
                       id="radio-2"
+                      onClick={() => {
+                        setSortBy('date');
+                        setOrder('asc');
+                      }}
                     />
                   </RadioButtonGroup>
                 </TableToolbarMenu>
@@ -180,4 +197,4 @@ const ContributionTable = () => {
   );
 };
 
-export default ContributionTable;
+export default UserContributionTable;

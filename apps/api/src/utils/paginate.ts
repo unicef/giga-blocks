@@ -24,7 +24,7 @@ const paginator = (defaultOptions: PaginateOptions): PaginateFunction => {
   return async (model, args: any = { where: undefined, include: undefined }, options) => {
     const page = Number(options?.page || defaultOptions?.page) || 0;
     const perPage = Number(options?.perPage || defaultOptions?.perPage) || 10;
-    const order = options?.order || defaultOptions?.order || 'asc';
+    const order = options?.order || defaultOptions?.order || 'desc';
     const skip = perPage * page;
     const [total, rows] = await Promise.all([
       model.count({ where: args.where }),

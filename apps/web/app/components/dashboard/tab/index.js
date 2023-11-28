@@ -4,7 +4,7 @@ import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
 import { Queries } from '../../../libs/graph-query';
 import { useWeb3React } from '@web3-react/core';
 
-import ContributionTable from '../table';
+import UserContributionTable from '../table';
 import OwnedNfts from '../../card';
 
 const ListTabs = () => {
@@ -33,7 +33,7 @@ const ListTabs = () => {
             />
           </TabPanel>
           <TabPanel>
-            <ContributionTable />
+            <UserContributionTable />
           </TabPanel>
         </TabPanels>
       </Tabs>

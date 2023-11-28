@@ -25,13 +25,17 @@ export const useContributeList = () => {
   );
 };
 
-export const useContributionList = (page, perPage, contributorId) => {
+export const useContributionList = (page, perPage, contributorId, order) => {
   return useQuery(
-    ['get-contribution-list', page, perPage, contributorId],
+    ['get-contribution-list', page, perPage, contributorId, order],
     async () => {
       try {
         const res = await api.get(
-          `${CONTRIBUTION.GET}?page=${page}&perPage=${perPage}&contributorId=${contributorId}`
+          `${
+            CONTRIBUTION.GET
+          }?page=${page}&perPage=${perPage}&contributorId=${contributorId}&order=${
+            order ?? ''
+          }`
         );
         return res.data;
       } catch (err) {
