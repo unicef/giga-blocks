@@ -1,5 +1,5 @@
 // ModalComponent.js
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Modal, ModalBody, Column, Grid, Button } from '@carbon/react';
 import { toSvg } from 'jdenticon';
 import { useRouter } from 'next/navigation';
@@ -8,12 +8,14 @@ import { useSellerContract } from '../../hooks/useContract';
 import { useWeb3React } from '@web3-react/core';
 import { metaMask } from '../../components/web3/connectors/metamask';
 import CongratulationModalComponent from '../../components/nftPurchaseSuccessModal';
+import  {Default_Chain_Id}  from '../../components/web3/connectors/network';
 
 const ModalComponent = ({ isOpen, onClose, schooldata }) => {
   const sellerContract = useSellerContract();
-  const { account } = useWeb3React();
+  const { account,chainId } = useWeb3React();
   const [loading, setLoading] = useState(false);
   const [showCongratulationModal, setShowCongratulationModal] = useState(false);
+  const[switchNetwork, setSwitchNetwork] = useState(false)
 
   const generateIdenticon = (image) => {
     const size = 200; // Adjust the size as needed
@@ -48,13 +50,25 @@ const ModalComponent = ({ isOpen, onClose, schooldata }) => {
 
   const connectMetaMask = async () => {
     if (!account) {
-      await metaMask.activate();
+      await metaMask.activate(Default_Chain_Id);
     }
   };
 
   const closeCongratulationModal = () => {
     setShowCongratulationModal(false);
   };
+
+  const handleSwitchNetwork = async () => {
+     await metaMask.activate(421613);
+     setSwitchNetwork(false)
+
+  }
+
+  useEffect(()=>{
+    if(account) {
+      if(chainId !== 421613) setSwitchNetwork(true)
+    }
+  },[account,chainId])
 
   return (
     <>
@@ -139,6 +153,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata }) => {
                     {loading ? 'Loading...' : 'Submit'}
                   </Button>
                 </>
+
               ) : (
                 <>
                   <p> First you need to connect your MetaMask</p>
@@ -151,6 +166,16 @@ const ModalComponent = ({ isOpen, onClose, schooldata }) => {
                   </Button>
                 </>
               )}
+              {
+            switchNetwork && (
+              <>
+              Need to switch network
+              <a onClick={handleSwitchNetwork}>
+                { } Switch Network
+              </a>
+              </>
+            )
+          }
             </Column>
           </Grid>
         </ModalBody>

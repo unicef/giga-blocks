@@ -21,6 +21,7 @@ import {
   saveConnectors,
 } from '../utils/sessionManager';
 import { useAuthContext } from '../auth/useAuthContext';
+import { Default_Chain_Id } from '../components/web3/connectors/network';
 
 const SignIn = () => {
   const route = useRouter();
@@ -80,7 +81,7 @@ const SignIn = () => {
   };
   const handleWalletLogin = async (data) => {
     try {
-      await metaMask.activate();
+      await metaMask.activate(Default_Chain_Id);
       const { nonce } = await getNonceQuery.mutateAsync();
       const sign = await getSignature(nonce);
       const payload = {
