@@ -2,7 +2,7 @@ import { useState, ChangeEvent, useEffect, use } from "react";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Card, Grid, Stack, MenuItem, Select, Button, Container } from "@mui/material";
+import { Box, Card, Grid, Stack, MenuItem, Select, Button, Container, Typography, TableContainer, Table, TableBody } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
 import { useSnackbar } from "@components/snackbar";
@@ -20,6 +20,9 @@ import { useMintSchools } from "@hooks/school/useSchool";
 import { useWeb3React } from "@web3-react/core";
 import { useContributionGetById, useContributionValidate } from "@hooks/contribute/useContribute";
 import { useValidDataGetById, useValidateUpdate } from "@hooks/validate/useValidate";
+import Scrollbar from "@components/scrollbar";
+import { TableHeadUsers, TableNoData, TablePaginationCustom, useTable } from "@components/table";
+import ContributionDetailTableRow from "./ContributionDetailTableRow";
 
 interface Props {
   isEdit?: boolean;
@@ -51,6 +54,26 @@ export default function ValidateDetail({ id }: Props) {
 
   const { data, isSuccess, isError, refetch } = useValidDataGetById(id);
   const { enqueueSnackbar } = useSnackbar();
+  const [tableData, setTableData] = useState<any>()
+
+  const {
+    dense,
+    page,
+    order,
+    orderBy,
+    setPage,
+    rowsPerPage,
+    onSelectRow,
+    onSort,
+    onChangeDense,
+    onChangePage,
+    onChangeRowsPerPage,
+  } = useTable();
+
+  const TABLE_HEAD = [
+    { id: 'key', label: 'Key', align: 'left' },
+    { id: 'value', label: 'Value', align: 'left' }
+  ];
 
   const {mutate, isSuccess:isValidationSuccess, isError:isValidationError, error:validationError} = useValidateUpdate()
 
@@ -78,6 +101,7 @@ export default function ValidateDetail({ id }: Props) {
       // const jsonString = keyValue.map(pair => pair[1]).join('');
       const jsonString = `${keyValue[0][0]}: ${keyValue[0][1]}`
       const outputArray = Object.keys(data?.data).map(key => ({ key, value: data?.data[key] }));
+      setTableData(outputArray)
       setProfile({
         fullname: data?.contributedUser?.name,
         schoolName: data?.school.name,
@@ -86,7 +110,6 @@ export default function ValidateDetail({ id }: Props) {
         contributed_data: jsonString,
         coverage: data?.coverage_availability,
         mintedStatus: data?.minted
-        ,
       });
     }
   }, [isSuccess, isError, data]);
@@ -135,6 +158,13 @@ export default function ValidateDetail({ id }: Props) {
   const onValidate = () => {
     mutate(id)
   }
+
+  console.log(tableData)
+
+  const sortedData = tableData?.slice().sort((a:any, b:any) => {
+    const isAsc = order === 'asc';
+    return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
+  });
 
   return (
     <>
@@ -201,6 +231,53 @@ export default function ValidateDetail({ id }: Props) {
             </Stack>
           </Box>
         </Container>
+      </Grid>
+      <Grid xs={11} sx={{margin: 'auto', marginTop: '50px'}}>
+      <Typography variant="h6" component="h6">
+        Contribution Detail
+        </Typography>
+        <Card sx={{marginTop: '20px'}}>
+      <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+            <Scrollbar>
+              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+                <TableHeadUsers
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  rowCount={tableData?.length}
+                  onSort={onSort}
+                  showCheckBox={true}
+                  // numSelected={selectedValues?.length}
+                  // onSelectAllRows={onSelectAllRows}
+                />
+
+                <TableBody>
+                  {sortedData &&
+                    sortedData.map((row:any) => (
+                      <ContributionDetailTableRow
+                        key={row.id}
+                        row={row}
+                        // rowData = {row}
+                      />
+                    ))}
+                  <TableNoData 
+                  isNotFound={tableData?.length === 0}
+                  />
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </TableContainer>
+          <TablePaginationCustom
+            count={tableData?.length}
+            page={page}
+            setPage={setPage}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+            dense={dense}
+            onChangeDense={onChangeDense}
+          />
+      </Card>
       </Grid>
     </>
   );

@@ -41,7 +41,7 @@ import { useUserGet } from '@hooks/user/useUser';
 
 const ContributeData = () => {
   const TABLE_HEAD = [
-    { id: 'name', label: 'Contributer name', align: 'left' },
+    { id: 'name', label: 'Contributor name', align: 'left' },
     { id: 'school', label: 'School', align: 'left' },
     {id:'contributedData',label:'Contributed Data',align:'left'},
     { id: 'date', label: 'Date', align: 'left' }
@@ -190,7 +190,7 @@ const ContributeData = () => {
           onChange={handleSearchByChange}
         >
           <MenuItem value={'School'}>School</MenuItem>
-          <MenuItem value={'Contributer'}>Contributer</MenuItem>
+          <MenuItem value={'Contributer'}>Contributor</MenuItem>
         </Select>
       </FormControl>
       {searchBy && searchBy === 'School' ? <FormControl sx={{width: 170, marginLeft: 2}}>
