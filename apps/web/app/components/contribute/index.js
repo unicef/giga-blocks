@@ -108,16 +108,16 @@ const ContributeForm = () => {
     { label: 'Public', value: 'public' },
   ];
   const connectivity = [
-    { label: 'True', value: 'true' },
-    { label: 'False', value: 'false' },
+    { label: 'True', value: true },
+    { label: 'False', value: false },
   ];
   const coverage_availability = [
-    { label: 'Yes', value: 'yes' },
-    { label: 'No', value: 'no' },
+    { label: 'Yes', value: true },
+    { label: 'No', value: false },
   ];
   const electricity_available = [
-    { label: 'Yes', value: 'yes' },
-    { label: 'No', value: 'no' },
+    { label: 'Yes', value: true },
+    { label: 'No', value: false },
   ];
 
   return (
