@@ -30,7 +30,7 @@ const Introduction = ({ schooldata }) => {
 
   useEffect(() => {
     if (schooldata?.owner === process.env.ESCROW_ADDRESS) setOnSell(true);
-  });
+  },[]);
 
   return (
     <Grid fullWidth className="mt-50px">
