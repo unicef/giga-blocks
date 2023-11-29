@@ -75,8 +75,9 @@ export default function ValidateDetail({ id }: Props) {
     
     if(isSuccess){
       const keyValue = Object.entries(data?.data);
-    //   const jsonString = keyValue.map(pair => pair[1]).join('');
+      // const jsonString = keyValue.map(pair => pair[1]).join('');
       const jsonString = `${keyValue[0][0]}: ${keyValue[0][1]}`
+      const outputArray = Object.keys(data?.data).map(key => ({ key, value: data?.data[key] }));
       setProfile({
         fullname: data?.contributedUser?.name,
         schoolName: data?.school.name,
@@ -176,15 +177,6 @@ export default function ValidateDetail({ id }: Props) {
                         value={profile?.status || ""}
                         label="Approved Status"
                       />
-                      <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
-                      <span>
-                      <ProfileTextField
-                        name="coverage"
-                        value={profile?.contributed_data || ""}
-                        label={"Contributed Data"}
-                      />
-                      </span>
-                      </div>
                     </Box>
                   </Box>
 
