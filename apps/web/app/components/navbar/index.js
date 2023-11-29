@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Header,
   HeaderContainer,
@@ -14,13 +14,17 @@ import {
   HeaderSideNavItems,
   Dropdown,
 } from '@carbon/react';
-
+import { Wallet } from '@carbon/react/icons';
+import { metaMask } from '../../components/web3/connectors/metamask';
+import { Default_Chain_Id } from '../../components/web3/connectors/network';
 import { Link } from 'next/link';
 import { useAppAuthContext } from '../../auth/JwtContext';
+import { useWeb3React } from '@web3-react/core';
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { isAuthenticated, logout } = useAppAuthContext();
+  const { account } = useWeb3React();
 
   const options = [
     { id: 'option1', text: 'Dashboard', link: '/dashboard' },
@@ -42,6 +46,14 @@ const Navbar = () => {
 
     // Close the dropdown
     setIsDropdownOpen(false);
+  };
+
+  useEffect(() => {
+    console.log('account', account);
+  }, [account]);
+
+  const handleWalletLogin = async () => {
+    await metaMask.activate(Default_Chain_Id);
   };
 
   return (
@@ -157,17 +169,23 @@ const Navbar = () => {
                   )}
                 </>
               ) : (
-                <a
-                  href="/signIn"
-                  style={{
-                    minWidth: '5rem',
-                    cursor: 'pointer',
-                    color: '#000',
-                    textDecoration: 'none',
-                  }}
-                >
-                  Sign In
-                </a>
+                <>
+                  <a
+                    href="/signIn"
+                    style={{
+                      minWidth: '5rem',
+                      cursor: 'pointer',
+                      color: '#000',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    Sign In
+                  </a>
+                  <Wallet
+                    onClick={handleWalletLogin}
+                    style={{ marginRight: '14px', cursor: 'pointer' }}
+                  />
+                </>
               )}
             </div>
           </HeaderGlobalBar>
