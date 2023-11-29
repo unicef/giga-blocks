@@ -23,7 +23,7 @@ const SchoolCard = () => {
   });
   const { data: queryData, fetching, error } = result;
   const [schoolData, setSchoolData] = useState([]);
-
+  console.log(schoolData);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
 
   const generateIdenticon = (image) => {
@@ -115,7 +115,6 @@ const SchoolCard = () => {
                       </ToggletipContent>
                     </Toggletip>
                     <div>
-                      {/* <p className="text-purple">Country</p> */}
                       <h4 className="heading2 text-left">
                         {school?.country
                           ? school?.country?.length > 15

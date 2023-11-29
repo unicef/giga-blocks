@@ -17,10 +17,17 @@ import {
 } from '@carbon/react';
 import './school-details.scss';
 import { useParams } from 'next/navigation';
+import { toSvg } from 'jdenticon';
 
 const SchoolDetail = () => {
   const { id } = useParams();
   const { data, isLoading } = useSchoolDetails(id);
+
+  const generateIdenticon = (image) => {
+    const size = 50;
+    const svgString = toSvg(image, size);
+    return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
+  };
 
   return (
     <>
@@ -99,13 +106,13 @@ const SchoolDetail = () => {
                     sm={4}
                     style={{ display: 'flex', justifyContent: 'center' }}
                   >
-                    {/* <img
-                style={{
-                  width: '60%',
-                }}
-                alt="School Map"
-                src={generateIdenticon(data?.image)}
-              /> */}
+                    <img
+                      style={{
+                        width: '60%',
+                      }}
+                      alt="School Map"
+                      src={generateIdenticon(data?.giga_school_id)}
+                    />
                   </Column>
                 </Grid>
 
