@@ -59,19 +59,19 @@ const Navbar = () => {
           </HeaderName>
           <HeaderNavigation>
             <HeaderMenuItem as={Link} href="/contributeSchool">
-              School Data
+              School Database
             </HeaderMenuItem>
             <HeaderMenuItem as={Link} href="/explore">
-              Explore NFT
+              NFT Marketplace
             </HeaderMenuItem>
             <HeaderMenuItem as={Link} href="/#joinCommunityForm">
               Develop With Us
             </HeaderMenuItem>
             <HeaderMenuItem as={Link} href="/#faq">
-              Developer FAQ's
+              Developer FAQ
             </HeaderMenuItem>
             <HeaderMenuItem as={Link} href="/#form">
-              Reach Out
+              Connect
             </HeaderMenuItem>
           </HeaderNavigation>
           <SideNav
@@ -85,19 +85,19 @@ const Navbar = () => {
                   Home
                 </HeaderMenuItem>
                 <HeaderMenuItem as={Link} href="/contributeSchool">
-                  School Data
+                  School Database
                 </HeaderMenuItem>
                 <HeaderMenuItem as={Link} href="/school">
-                  Explore NFT
+                  NFT Marketplace
                 </HeaderMenuItem>
                 <HeaderMenuItem as={Link} href="/#involved">
                   Develop With Us
                 </HeaderMenuItem>
                 <HeaderMenuItem as={Link} href="/#faq">
-                  Developer FAQ's
+                  Developer FAQ
                 </HeaderMenuItem>
                 <HeaderMenuItem as={Link} href="/#form">
-                  Reach Out
+                  Connect
                 </HeaderMenuItem>
               </HeaderSideNavItems>
             </SideNavItems>
