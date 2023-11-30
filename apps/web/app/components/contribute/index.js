@@ -138,7 +138,7 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
         </ModalHeader>
         <ModalBody>
           <Grid fullWidth style={{ marginTop: '20px' }}>
-            <Column md={4} lg={12} sm={4} className="school-detail-card">
+            <Column md={8} lg={16} sm={4} className="school-detail-card">
               <Form onSubmit={handleSubmit(onSubmit)}>
                 <Dropdown
                   id="dropdown1"
@@ -255,9 +255,9 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
                 )}
                 <Button
                   onClick={handleSubmit(onSubmit)}
-                  style={{ width: '100%', marginBottom: '24px' }}
+                  style={{ width: '100%' }}
                 >
-                  Submit
+                  Contribute Now
                 </Button>
               </Form>
             </Column>
