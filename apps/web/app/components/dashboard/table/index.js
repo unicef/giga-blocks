@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 
 import {
+  Column,
   DataTable,
   Pagination,
   RadioButton,
@@ -98,7 +99,7 @@ const UserContributionTable = () => {
     setPageSize(page.pageSize);
   };
 
-  return (
+  return rowData?.length ? (
     <>
       <DataTable rows={rowData} headers={headerData}>
         {({ rows, headers, getHeaderProps, getTableProps, onInputChange }) => (
@@ -194,6 +195,10 @@ const UserContributionTable = () => {
         style={{ background: '#2C2B33', color: 'white' }}
       />
     </>
+  ) : (
+    <Column sm={4} md={8} lg={16}>
+      <h1>No contribution has been made</h1>
+    </Column>
   );
 };
 
