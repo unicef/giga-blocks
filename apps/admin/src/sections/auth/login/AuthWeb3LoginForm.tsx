@@ -20,9 +20,6 @@ type LoginFormValues = {
 
 export default function AuthLoginForm() {
   const { isDebug } = useAuthContext();
-  // const { handleOtpRequest } = useLoginContext();
-  // const { push } = useRouter();
-  // const { enqueueSnackbar } = useSnackbar();
 
   const LoginSchema = Yup.object().shape({
     email: isDebug
@@ -38,37 +35,6 @@ export default function AuthLoginForm() {
     resolver: yupResolver(LoginSchema),
     defaultValues,
   });
-
-  // const {
-  //   reset,
-  //   setError,
-  //   handleSubmit,
-  //   formState: { isSubmitting, errors },
-  // } = methods;
-
-  // const onSubmit = async ({ email }: LoginFormValues) => {
-  //   try {
-  //     if (isDebug && email.indexOf('@') < 0) {
-  //       email = `${email}@mailinator.com`;
-  //     }
-  //     const otpSent = await handleOtpRequest(email);
-  //     if (otpSent) {
-  //       push('/auth/verify');
-  //     }
-  //     enqueueSnackbar(otpSent.msg);
-  //   } catch (error) {
-  //     console.error(error);
-  //     reset();
-  //     setError('email', {
-  //       type: 'manual',
-  //       message: error.message,
-  //     });
-  //   }
-  // };
-
-  const onEmailSubmitError = (error: any) => {
-    console.error(error);
-  };
 
   // Web-3 react
   const chainId = useChainId();
@@ -90,15 +56,7 @@ export default function AuthLoginForm() {
   }, []);
 
   return (
-    <FormProvider
-      methods={methods}
-      // onSubmit={handleSubmit(onSubmit, onEmailSubmitError)}
-    >
-      {/* <Stack spacing={3} sx={{ mb: 2 }}>
-        {!!errors.email?.message && <Alert severity="error">{errors.email.message}</Alert>}
-        <RHFTextField name="email" label="Enter registered email *" />
-      </Stack> */}
-
+    <FormProvider methods={methods}>
       <Stack direction="row" spacing={0.5}>
         <Card
           connector={metaMask}
@@ -112,17 +70,6 @@ export default function AuthLoginForm() {
           ENSNames={ENSNames}
         />
       </Stack>
-
-      {/* <LoadingButton
-        fullWidth
-        color="inherit"
-        size="large"
-        type="submit"
-        variant="contained"
-        loading={isSubmitting}
-      >
-        Login with metamask
-      </LoadingButton> */}
     </FormProvider>
   );
 }
