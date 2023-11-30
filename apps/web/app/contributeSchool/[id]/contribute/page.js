@@ -1,18 +1,18 @@
 'use client';
-import Footer from '../../../components/footer';
-import Navbar from '../../../components/navbar';
 import Contribution from '../../../components/contribute';
-import PageHeader from '../../../components/page-header';
+import { useSchoolDetails } from '../../../hooks/useSchool';
+import { useParams } from 'next/navigation';
+import { Modal, ModalBody, ModalFooter, Button } from '@carbon/react';
 
-const Contribute = () => {
+const Contribute = ({ isOpen, onClose }) => {
+  const { id } = useParams();
+  const { data } = useSchoolDetails(id);
+
   return (
     <>
-      <>
-        <Navbar />
-        <PageHeader name={'Contribute Data'} />
-        <Contribution />
-        <Footer />
-      </>
+      <Modal open={isOpen} onRequestClose={onClose} passiveModal={true}>
+        <Contribution data={data} />;
+      </Modal>
     </>
   );
 };
