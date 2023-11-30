@@ -43,7 +43,7 @@ export class SchoolService {
       where.uploadId = uploadId;
     }
     if (name) {
-      where.name = { 
+      where.name = {
         contains: name,
         mode: 'insensitive',
       };
@@ -51,16 +51,15 @@ export class SchoolService {
     if (country) {
       where.country = {
         contains: country,
-        mode: "insensitive"
-      }
+        mode: 'insensitive',
+      };
     }
-    if(connectivityStatus){
-      let status:boolean;
-      if(connectivityStatus === 'true'){
-        status = true
-      }
-      else{
-        status = false
+    if (connectivityStatus) {
+      let status: boolean;
+      if (connectivityStatus === 'true') {
+        status = true;
+      } else {
+        status = false;
       }
       where.connectivity = status;
     }
