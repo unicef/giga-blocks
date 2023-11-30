@@ -15,7 +15,8 @@ const ContributeForm = () => {
   const { handleSubmit, control, setValue } = useForm();
   const { id } = useParams();
   const { data } = useSchoolDetails(id);
-  const [selectedOptions, setSelectedOptions] = useState({});
+  const [selectedOptions, setSelectedOptions] = useState({
+  });
   const [error,setError] = useState(false);
   const user = getCurrentUser();
 
@@ -25,10 +26,16 @@ const ContributeForm = () => {
     if (!user) {
       router.push('/signIn');
     }
-    if (data) {
+    if (data && (!selectedOptions.dropdown3 || !selectedOptions.dropdown3.selectedItem.value)) {
       setValue('latitude', data.latitude);
       setValue('longitude', data.longitude);
       setValue('country', data.country);
+      setSelectedOptions({
+        dropdown1: { selectedItem: { value: data?.school_type } },
+        dropdown3: { selectedItem:{value: data?.connectivity} },
+        dropdown4: { selectedItem: {value:data?.coverage_availability }},
+        dropdown5: { selectedItem: {value:data?.electricity_available} },
+      })
     }
   }, [data, user, router]);
 
@@ -41,7 +48,7 @@ const ContributeForm = () => {
     setIsModalOpen(false);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = (formData) => {
     try {
       setError(false);
       const changedData = {};
@@ -53,18 +60,17 @@ const ContributeForm = () => {
           selectedOptions?.dropdown1?.selectedItem?.value;
       }
 
-      if (data.country !== data.country) {
-        changedData.country = data.country;
+      if (formData.country !== data.country) {
+        changedData.country = formData.country;
       }
 
-      if (data.lat !== data.lat) {
-        changedData.latitude = data.lat;
+      if (Number(formData.latitude) !== Number(data.latitude)) {
+        changedData.latitude = Number(formData.latitude);
       }
 
-      if (data.lon !== data.lon) {
-        changedData.longitude = data.lon;
+      if (Number(formData.longitude) !== Number(data.longitude)) {
+        changedData.longitude = Number(formData.longitude);
       }
-
       if (
         selectedOptions.dropdown3?.selectedItem?.value !== data.connectivity
       ) {
@@ -74,7 +80,7 @@ const ContributeForm = () => {
 
       if (
         selectedOptions.dropdown4?.selectedItem?.value !==
-        data.coverageAvailability
+        data.coverage_availability
       ) {
         changedData.coverage_availability =
           selectedOptions.dropdown4?.selectedItem?.value;
@@ -82,11 +88,12 @@ const ContributeForm = () => {
 
       if (
         selectedOptions.dropdown5?.selectedItem?.value !==
-        data.electricityAvailability
+        data.electricity_available
       ) {
         changedData.electricity_available =
           selectedOptions.dropdown5?.selectedItem?.value;
       }
+
       if(!Object.keys(changedData).length) {
         setError(true)
         return;} 
@@ -156,6 +163,11 @@ const ContributeForm = () => {
                     style={{ marginBottom: '25px', height: '48px' }}
                     labelText="School Country"
                     placeholder="Enter Country"
+                    value={field.value}
+                    onChange={(e)=>{
+                      setError(false)
+                      setValue('country',e.target.value)
+                    }}
                   />
                 </>
               )}
@@ -171,6 +183,11 @@ const ContributeForm = () => {
                     style={{ marginBottom: '25px', height: '48px' }}
                     labelText="Exact School's Location"
                     placeholder="Enter Latitude"
+                    value={field.value}
+                    onChange={(e)=>{
+                      setError(false)
+                      setValue('latitude',e.target.value)
+                    }}
                   />
                 </>
               )}
@@ -185,6 +202,11 @@ const ContributeForm = () => {
                     id="longitude"
                     style={{ marginBottom: '25px', height: '48px' }}
                     placeholder="Enter Longitude"
+                    value={field.value}
+                    onChange={(e)=>{
+                      setError(false)
+                      setValue('longitude',e.target.value)
+                    }}
                   />
                 </>
               )}
