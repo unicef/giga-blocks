@@ -32,6 +32,11 @@ export class AuthController {
   }
 
   @Public()
+  @Post('/admin/send-otp')
+  async sendAdminOtp(@Body() AuthDto: AuthSendOtp): Promise<ResponseMessage | null> {
+    return this.authService.sendAdminOtp(AuthDto);
+  }
+  @Public()
   @Post('register')
   register(@Body() createUserDto: CreateUserDto): Promise<ResponseMessage | null> {
     return this.authService.register(createUserDto);

@@ -1,39 +1,29 @@
-"use client";
-import { Stack, Typography } from "@mui/material";
-import Link from "next/link";
-// layouts
-import LoginLayout from "@layouts/login";
-//
-import AuthLoginForm from "./AuthLoginForm";
-import { metaMask } from "@hooks/web3/metamask";
-import { useEffect } from "react";
+'use client';
+import { useRouter } from 'next/router';
+import { Button, Stack, Typography } from '@mui/material';
+import LoginLayout from '@layouts/login';
 
 export default function Login() {
- 
+  const { push } = useRouter();
   return (
     <LoginLayout>
-      <Stack spacing={2} sx={{ mb: 4 }}>
+      <Stack spacing={5}>
         <Typography variant="h4" color="white">
-          Web3 Login
+          Sign in options
         </Typography>
-        <Typography fontSize={14} color="white">
-          Connect your metamask
-        </Typography>
-
-        {/* <Stack direction="row" spacing={0.5}> */}
-        {/* <Typography variant="body2" color="white">
-            New user?
-          </Typography>
-
-          <Link href="/auth/register" style={{ textDecoration: 'none' }}>
-            <Typography color="#f7931e" fontSize={14}>
-              Register here
-            </Typography>
-          </Link> */}
-        {/* </Stack>  */}
+        <Stack direction="row" justifyContent="space-between">
+          <Button variant="contained" color="secondary" onClick={() => push('/auth/email-login')}>
+            Sign in Using Email
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => push('/auth/metamask-login')}
+          >
+            Sign in Using Metamask
+          </Button>
+        </Stack>
       </Stack>
-
-      <AuthLoginForm />
     </LoginLayout>
   );
 }
