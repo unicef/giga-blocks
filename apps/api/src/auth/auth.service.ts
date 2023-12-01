@@ -43,6 +43,24 @@ export class AuthService {
     throw new BadRequestException('Bad Request');
   }
 
+  async sendAdminOtp(AuthDto: Omit<AuthDto, 'otp'>) {
+    this._logger.log(`Sending Login OTP to ${AuthDto?.email}`);
+    const { email } = AuthDto;
+    const user = await this.userService.findOneByEmail(email);
+    if (user && !user?.roles?.includes('ADMIN')) {
+      throw new BadRequestException('Only admin  can login');
+    }
+    if (user && user?.isActive) {
+      this._logger.log(`Generating Login OTP to ${AuthDto?.email}`);
+      const token = totp.generate(email);
+      if (token) {
+        this.mailService.sendOTP({ email: user?.email, otp: token });
+        return { success: true, msg: 'OTP sent successfully' };
+      }
+    }
+    throw new NotFoundException('User not found');
+  }
+
   async sendOtp(AuthDto: Omit<AuthDto, 'otp'>) {
     this._logger.log(`Sending Login OTP to ${AuthDto?.email}`);
     const { email } = AuthDto;
