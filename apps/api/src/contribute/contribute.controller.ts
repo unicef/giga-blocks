@@ -70,8 +70,8 @@ export class ContributeDataController {
   @UseGuards(RoleGuard)
   @Roles('ADMIN')
   @Get('/validated')
-  getValidated() {
-    return this.contributeDataService.getValidated();
+  getValidated(@Query() query: any) {
+    return this.contributeDataService.getValidated(query);
   }
 
   @UseGuards(RoleGuard)

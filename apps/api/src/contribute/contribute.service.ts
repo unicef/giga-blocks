@@ -215,10 +215,12 @@ export class ContributeDataService {
     return transaction;
   }
 
-  async getValidated() {
-    const validatedData = await this.prisma.validatedData.findMany({
+  async getValidated(query) {
+    const { page, perPage, status } = query;
+    const args = {
       where: {
         isArchived: false,
+        approvedStatus: status === "true"
       },
       include: {
         school: {
@@ -229,11 +231,20 @@ export class ContributeDataService {
         approved: {
           select: {
             name: true,
-          },
+          }, 
         },
       },
-    });
-    return validatedData;
+    };
+
+    const validatedDataRes = await paginate(
+      this.prisma.validatedData,
+      { ...args },
+      {
+        page,
+        perPage,
+      },
+    );
+    return validatedDataRes;
   }
 
   async getValidatedById(id: string) {
