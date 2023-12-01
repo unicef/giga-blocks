@@ -25,6 +25,13 @@ export const useContributeList = () => {
   );
 };
 
+export const useContributeDetails = (id) => {
+  return useQuery(['get-contribute-details', id], async () => {
+    const { data } = await api.get(`${CONTRIBUTE.GET}?schoolId=${id}`);
+    return data;
+  });
+};
+
 export const useContributionList = (page, perPage, contributorId, order) => {
   return useQuery(
     ['get-contribution-list', page, perPage, contributorId, order],
@@ -67,11 +74,4 @@ export const useContributionCount = (contributorId) => {
       keepPreviousData: true,
     }
   );
-};
-
-export const useContributeDetails = (id) => {
-  return useQuery(['get-contribute-details', id], async () => {
-    const { data } = await api.get(`${CONTRIBUTE.GET}?schoolId=${id}`);
-    return data;
-  });
 };

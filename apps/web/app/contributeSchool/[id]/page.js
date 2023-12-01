@@ -3,6 +3,7 @@ import Footer from '../../components/footer';
 import Navbar from '../../components/navbar';
 import ChangeLog from '../../components/changeLog';
 import { useSchoolDetails } from '../../hooks/useSchool';
+import ContributeForm from '../../components/contribute';
 import {
   Button,
   Column,
@@ -18,10 +19,20 @@ import {
 import './school-details.scss';
 import { useParams } from 'next/navigation';
 import { toSvg } from 'jdenticon';
+import { useState } from 'react';
 
 const SchoolDetail = () => {
   const { id } = useParams();
   const { data, isLoading } = useSchoolDetails(id);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const generateIdenticon = (image) => {
     const size = 50;
@@ -54,9 +65,7 @@ const SchoolDetail = () => {
                 marginTop: '15px',
               }}
             >
-              <Button href={`/contributeSchool/${id}/contribute`}>
-                Contribute
-              </Button>
+              <Button onClick={openModal}>Contribute</Button>
             </Column>
           </Grid>
           <Tabs>
@@ -170,6 +179,11 @@ const SchoolDetail = () => {
               </TabPanel>
             </TabPanels>
           </Tabs>
+          <ContributeForm
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            data={data}
+          />
           <Footer />
         </>
       ) : (

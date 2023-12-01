@@ -1,12 +1,6 @@
 // ModalComponent.js
-import React, { useState } from 'react';
-import {
-  Modal,
-  ModalBody,
-  ModalFooter,
-  TextInput,
-  Button,
-} from '@carbon/react';
+import React from 'react';
+import { Modal, ModalBody, ModalFooter, Button } from '@carbon/react';
 import { useRouter } from 'next/navigation';
 
 const ModalComponent = ({ isOpen, onClose }) => {
