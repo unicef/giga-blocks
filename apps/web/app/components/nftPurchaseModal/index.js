@@ -4,18 +4,21 @@ import { Modal, ModalBody, Column, Grid, Button } from '@carbon/react';
 import { toSvg } from 'jdenticon';
 import { useRouter } from 'next/navigation';
 import { ArrowRight } from '@carbon/icons-react';
-import { useSellerContract } from '../../hooks/useContract';
+import { useSellerContract,useSignerSellerContract } from '../../hooks/useContract';
 import { useWeb3React } from '@web3-react/core';
 import { metaMask } from '../../components/web3/connectors/metamask';
 import CongratulationModalComponent from '../../components/nftPurchaseSuccessModal';
 import  {Default_Chain_Id}  from '../../components/web3/connectors/network';
+import {ethers} from 'ethers';
 
-const ModalComponent = ({ isOpen, onClose, schooldata }) => {
+const ModalComponent = ({ isOpen, onClose, schooldata,tokenId }) => {
   const sellerContract = useSellerContract();
+  const signerSellerContract = useSignerSellerContract();
   const { account,chainId } = useWeb3React();
   const [loading, setLoading] = useState(false);
   const [showCongratulationModal, setShowCongratulationModal] = useState(false);
   const[switchNetwork, setSwitchNetwork] = useState(false)
+  const[price, setPrice] = useState(0)
 
   const generateIdenticon = (image) => {
     const size = 200; // Adjust the size as needed
@@ -23,25 +26,34 @@ const ModalComponent = ({ isOpen, onClose, schooldata }) => {
     return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
   };
 
+  const fetchPrice = async () => {
+    if (!sellerContract) return;
+    try {
+      const price = await sellerContract.methods.calculatePrice()
+        .call({ from: account });
+        const priceInEth = ethers.formatEther(price)
+        setPrice((priceInEth))
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   const route = useRouter();
   const handleSubmit = async () => {
-    if (!sellerContract) return;
+    if (!signerSellerContract) return;
     if (!account) return;
 
     try {
       setLoading(true);
-      const tx = await sellerContract.methods
-        .purchaseNft('1', account)
-        .send({ from: account })
-        .on('transactionHash', (hash) => {
-          if (hash) {
-            onClose();
-            setShowCongratulationModal(true);
-          }
-        });
-
-      onClose();
-      setLoading(false);
+      const tx = await signerSellerContract
+        .purchaseNft(tokenId, account, { value: price }).then((hash)=>{
+          if(hash)
+          {onClose();
+          setShowCongratulationModal(true);}
+        }) .catch((err)=>{
+          console.log(err)
+          setLoading(false);
+        })  
     } catch (err) {
       console.log(err);
       setLoading(false);
@@ -69,6 +81,10 @@ const ModalComponent = ({ isOpen, onClose, schooldata }) => {
       if(chainId !== 421613) setSwitchNetwork(true)
     }
   },[account,chainId])
+
+  useEffect(()=>{
+    fetchPrice()
+  })
 
   return (
     <>
@@ -122,7 +138,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata }) => {
                 }}
               >
                 <p>Price</p>
-                <p>0.000ETH</p>
+                <p>{price}ETH</p>
               </div>
               <div
                 style={{
