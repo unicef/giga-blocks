@@ -41,7 +41,7 @@ const SchoolDetail = ({ id }) => {
         <>
           <Navbar />
           <PageHeader name={schoolData?.schoolName} />
-          <Introduction schooldata={schoolData} />
+          <Introduction schooldata={schoolData} tokenId={id} />
           <Connectivity schoolData={schoolData} />
           <TransactionHistory schoolData={schoolData} />
           <NFTMetadata schoolData={schoolData} />
