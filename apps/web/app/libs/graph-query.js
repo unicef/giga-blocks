@@ -16,6 +16,9 @@ const nftListQuery = gql`
     tokenUris(subgraphError: allow, first: $first) {
       id
       tokenUri
+      owner {
+        id
+      }
     }
   }
 `;
@@ -25,12 +28,31 @@ const nftDetailsQuery = gql`
     tokenUri(id: $id, subgraphError: allow) {
       id
       tokenUri
+      owner {
+        id
+      }
+    }
+  }
+`;
+
+const transferQuery = gql`
+  query transfers($id: ID!) {
+    transfers(subgraphError: allow, where: { tokenId: $id }) {
+      blockNumber
+      blockTimestamp
+      from
+      id
+      to
+      tokenId
+      transactionHash
     }
   }
 `;
 
 export const Queries = {
+export const Queries = {
   ownedNftsQuery,
   nftListQuery,
   nftDetailsQuery,
+  transferQuery,
 };

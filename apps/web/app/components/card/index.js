@@ -21,12 +21,13 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
   });
   const { data: queryData, fetching, error } = result;
   const [schoolData, setSchoolData] = useState([]);
+  console.log(schoolData);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
 
   const generateIdenticon = (image) => {
-    const size = 50; // Set the desired size for your identicons
+    const size = 50;
     const svgString = toSvg(image.toString(), size);
-    return `data:image/svg+xml,${encodeURIComponent(svgString)}`; // Convert SVG to data URL
+    return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
   };
 
   useEffect(() => {
@@ -112,7 +113,6 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
                       </ToggletipContent>
                     </Toggletip>
                     <div>
-                      {/* <p className="text-purple">Country</p> */}
                       <h4 className="heading2 text-left">
                         {school?.country
                           ? school?.country?.length > 15
