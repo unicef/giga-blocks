@@ -309,11 +309,11 @@ export class SchoolService {
         newData.name,
         newData.school_type,
         newData.country,
-        newData.longitude,
-        newData.latitude,
-        newData.connectivity,
-        newData.coverage_availability,
-        newData.electricity_available,
+        newData.longitude.toString(),
+        newData.latitude.toString(),
+        newData.connectivity.toString(),
+        newData.coverage_availability.toString(),
+        newData.electricity_available.toString(),
       ];
       return onChainData;
     } catch (err) {

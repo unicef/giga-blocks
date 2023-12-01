@@ -18,6 +18,7 @@ const ROOTS_VALID = '/valid';
 export const PATH_AUTH = {
   root: ROOTS_AUTH,
   login: path(ROOTS_AUTH, '/login'),
+  email_login: path(ROOTS_AUTH, '/email-login'),
   register: path(ROOTS_AUTH, '/register'),
   verify: path(ROOTS_AUTH, '/verify'),
 };

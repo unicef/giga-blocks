@@ -114,6 +114,14 @@ export default function ContributeTableRow({
           sx={{ textTransform: 'capitalize' }}
           onClick={() => handleEditRow(id)}
         >
+          {status}
+        </TableCell>
+
+        <TableCell
+          align="left"
+          sx={{ textTransform: 'capitalize' }}
+          onClick={() => handleEditRow(id)}
+        >
           {date}
         </TableCell>
 

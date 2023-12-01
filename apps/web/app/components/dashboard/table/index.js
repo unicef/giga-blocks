@@ -158,7 +158,7 @@ const UserContributionTable = () => {
                           key={cell.id}
                           style={{ background: 'white' }}
                         >
-                          {cell?.value
+                          {cell?.value?.toString()
                             ?.toLowerCase()
                             .split(' ')
                             .map(

@@ -54,7 +54,7 @@ const UserList = () => {
     return ( 
 
 <DashboardLayout>
-          <h2>Contributer List</h2>
+          <h2>Contributor List</h2>
           <TextField id="outlined-basic" type='string' placeholder='Search contributer' onChange={(e:any) => handleSearchChange(e)}/>
           <Card sx={{marginTop: 2}}>
           <Divider />

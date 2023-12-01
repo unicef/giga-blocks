@@ -26,6 +26,18 @@ query tokenUri($id: ID!) {
   tokenUri(id: $id, subgraphError: allow) {
     id
     tokenUri
+    owner {
+      id
+    }
+  }
+  transfers(subgraphError: allow, where: {tokenId: "1"}) {
+    blockNumber
+    blockTimestamp
+    from
+    id
+    to
+    tokenId
+    transactionHash
   }
 }
 `
