@@ -20,6 +20,7 @@ import './school-details.scss';
 import { useParams } from 'next/navigation';
 import { toSvg } from 'jdenticon';
 import { useState } from 'react';
+import PageHeader from '../../components/page-header';
 
 const SchoolDetail = () => {
   const { id } = useParams();
@@ -40,17 +41,18 @@ const SchoolDetail = () => {
     return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
   };
 
+  const breadcrumbs = [
+    { text: 'Home', link: '/' },
+    { text: 'Explore NFT', link: '/explore' },
+  ];
+
   return (
     <>
       {isLoading === false ? (
         <>
           <Navbar />
           {/* HEADING */}
-          <Grid fullWidth>
-            <Column lg={16} md={8} sm={8} className="school-detail-head">
-              <h2>{data?.name}</h2>
-            </Column>
-          </Grid>
+          <PageHeader name={data.name} breadcrumbs={breadcrumbs} />
 
           {/* INTRODUCTION */}
           <Grid>

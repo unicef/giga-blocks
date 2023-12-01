@@ -33,12 +33,17 @@ const SchoolDetail = ({ id }) => {
     if (result.data) decodeSchooldata(result.data);
   }, [result.data]);
 
+  const breadcrumbs = [
+    { text: 'Home', link: '/' },
+    { text: 'Explore NFT', link: '/explore' },
+  ];
+
   return (
     <>
       {fetching === false ? (
         <>
           <Navbar />
-          <PageHeader name={schoolData?.schoolName} />
+          <PageHeader name={schoolData?.schoolName} breadcrumbs={breadcrumbs} />
           <Introduction schooldata={schoolData} />
           <Connectivity schoolData={schoolData} />
           <TransactionHistory schoolData={schoolData} />

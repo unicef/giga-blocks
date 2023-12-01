@@ -6,10 +6,11 @@ import Card from '../components/contributeSchools';
 import QueryProvider from '../libs/get-query-client';
 
 const SchoolCard = () => {
+  const breadcrumbs = [{ text: 'Home', link: '/' }];
   return (
     <QueryProvider>
       <Navbar />
-      <PageHeader name={'Schools'} />
+      <PageHeader name={'Schools'} breadcrumbs={breadcrumbs} />
       <Card />
       <Footer />
     </QueryProvider>
