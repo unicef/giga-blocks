@@ -9,7 +9,7 @@ interface SchoolData {
   latitude: number;
   connectivity: boolean;
   electricity_availabilty: boolean;
-  coverage_availabitlity: string;
+  coverage_availabitlity: boolean;
 }
 
 export async function handler(
@@ -76,7 +76,7 @@ export async function handler(
                 longitude,
                 latitude,
                 connectivity: Boolean(connectivity),
-                coverage_availabitlity,
+                coverage_availabitlity: Boolean(coverage_availabitlity),
                 electricity_availabilty: Boolean(electricity_availabilty),
               };
 

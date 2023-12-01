@@ -12,7 +12,7 @@ interface SchoolData {
   latitude: number;
   connectivity: boolean;
   electricity_availabilty: boolean;
-  coverage_availabitlity: string;
+  coverage_availabitlity: boolean;
 }
 
 async function readAndSaveCSV(filePath: string): Promise<void> {
@@ -50,7 +50,7 @@ async function readAndSaveCSV(filePath: string): Promise<void> {
         longitude,
         latitude,
         connectivity: Boolean(connectivity),
-        coverage_availabitlity,
+        coverage_availabitlity: Boolean(coverage_availabitlity),
         electricity_availabilty: Boolean(electricity_availabilty),
       };
 

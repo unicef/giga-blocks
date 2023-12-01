@@ -50,7 +50,6 @@ const transferQuery = gql`
 `;
 
 export const Queries = {
-export const Queries = {
   ownedNftsQuery,
   nftListQuery,
   nftDetailsQuery,

@@ -64,7 +64,7 @@ const navConfig = [
             path: PATH_USER.admin,
           },
           {
-            title: 'Contributers',
+            title: 'Contributors',
             path: PATH_USER.contributer,
           }
         ],
@@ -81,15 +81,15 @@ const navConfig = [
       },
     ],
   },
-  // {
-  //   items: [
-  //     {
-  //       title: 'Valid Data',
-  //       path: PATH_VALID.root,
-  //       icon: ICONS.user,
-  //     },
-  //   ],
-  // },
+  {
+    items: [
+      {
+        title: 'Valid Data',
+        path: PATH_VALID.root,
+        icon: ICONS.user,
+      },
+    ],
+  },
   {
     items: [
       {

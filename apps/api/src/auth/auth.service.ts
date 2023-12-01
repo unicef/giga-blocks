@@ -19,10 +19,11 @@ export class AuthService {
 
   async validateUser(email: string, otp: string): Promise<CreateUserDto> {
     const user = await this.userService.findOneByEmail(email);
+    if (!user || (user && !user?.isActive)) throw new NotFoundException('User not found');
     if (user && user?.isActive && totp.verify({ token: otp, secret: email })) {
       return user;
     }
-    throw new NotFoundException('User not found');
+    throw new NotFoundException('OTP not valid');
   }
 
   async validateWalletAddress(walletAddress: string): Promise<CreateUserDto> {
