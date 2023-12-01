@@ -33,10 +33,16 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
     if (!user) {
       router.push('/signIn');
     }
-    if (data) {
+    if (data && (!selectedOptions.dropdown3 || !selectedOptions.dropdown3.selectedItem.value)) {
       setValue('latitude', data.latitude);
       setValue('longitude', data.longitude);
       setValue('country', data.country);
+      setSelectedOptions({
+        dropdown1: { selectedItem: { value: data?.school_type } },
+        dropdown3: { selectedItem:{value: data?.connectivity} },
+        dropdown4: { selectedItem: {value:data?.coverage_availability }},
+        dropdown5: { selectedItem: {value:data?.electricity_available} },
+      })
     }
   }, [data, user, router]);
 
@@ -49,7 +55,7 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
     setIsModalOpen(false);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = (formData) => {
     try {
       setError(false);
       const changedData = {};
@@ -61,18 +67,17 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
           selectedOptions?.dropdown1?.selectedItem?.value;
       }
 
-      if (data.country !== data.country) {
-        changedData.country = data.country;
+      if (formData.country !== data.country) {
+        changedData.country = formData.country;
       }
 
-      if (data.lat !== data.lat) {
-        changedData.latitude = data.lat;
+      if (Number(formData.latitude) !== Number(data.latitude)) {
+        changedData.latitude = Number(formData.latitude);
       }
 
-      if (data.lon !== data.lon) {
-        changedData.longitude = data.lon;
+      if (Number(formData.longitude) !== Number(data.longitude)) {
+        changedData.longitude = Number(formData.longitude);
       }
-
       if (
         selectedOptions.dropdown3?.selectedItem?.value !== data.connectivity
       ) {
@@ -82,7 +87,7 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
 
       if (
         selectedOptions.dropdown4?.selectedItem?.value !==
-        data.coverageAvailability
+        data.coverage_availability
       ) {
         changedData.coverage_availability =
           selectedOptions.dropdown4?.selectedItem?.value;
@@ -90,7 +95,7 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
 
       if (
         selectedOptions.dropdown5?.selectedItem?.value !==
-        data.electricityAvailability
+        data.electricity_available
       ) {
         changedData.electricity_available =
           selectedOptions.dropdown5?.selectedItem?.value;
@@ -117,16 +122,16 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
     { label: 'Public', value: 'public' },
   ];
   const connectivity = [
-    { label: 'True', value: 'true' },
-    { label: 'False', value: 'false' },
+    { label: 'True', value: true },
+    { label: 'False', value: false },
   ];
   const coverage_availability = [
-    { label: 'Yes', value: 'yes' },
-    { label: 'No', value: 'no' },
+    { label: 'Yes', value: true },
+    { label: 'No', value: false },
   ];
   const electricity_available = [
-    { label: 'Yes', value: 'yes' },
-    { label: 'No', value: 'no' },
+    { label: 'Yes', value: true },
+    { label: 'No', value: false },
   ];
 
   return (

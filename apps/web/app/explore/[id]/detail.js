@@ -40,7 +40,7 @@ const SchoolDetail = ({ id }) => {
 
   return (
     <>
-      {fetching === false ? (
+      {fetching == false ? (
         <>
           <Navbar />
           <PageHeader name={schoolData?.schoolName} breadcrumbs={breadcrumbs} />

@@ -168,6 +168,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   useEffect(() => {
     const allowedElements = [
       "schoolName",
+      "giga_school_id",
       "longitudeStr",
       "latitudeStr",
       "schoolType",
@@ -179,7 +180,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     if(tableHeaders){
       const isValidArray = tableHeaders.every(element => allowedElements.includes(element));
       if(!isValidArray){
-      setAllSheetErrors([{sheetName: 'school.csv', errors: ['Please remove columns exceptschoolName,longitudeStr, latitudeStr, schoolType, country, connectivity, coverage_availabitlity, electricity_availability']}])
+      setAllSheetErrors([{sheetName: 'school.csv', errors: ['Please remove columns exceptschoolName,giga_school_id,longitudeStr, latitudeStr, schoolType, country, connectivity, coverage_availabitlity, electricity_availability']}])
       }
     }
   }, [tableHeaders, convertedObject])

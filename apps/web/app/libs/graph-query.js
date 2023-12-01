@@ -1,10 +1,10 @@
 import { gql } from 'urql';
 
 const ownedNftsQuery = gql`
-  query ownedNfts {
-    ownedNfts(subgraphError: allow) {
+  query ownedNft($id: ID!, $first: Int!) {
+    ownedNft(id: $id, subgraphError: allow) {
       id
-      nfts {
+      nfts(first: $first) {
         id
         tokenUri
       }
@@ -49,6 +49,7 @@ const transferQuery = gql`
   }
 `;
 
+export const Queries = {
 export const Queries = {
   ownedNftsQuery,
   nftListQuery,

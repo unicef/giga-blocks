@@ -12,14 +12,12 @@ import {
 import './card.scss';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
-import { Queries } from '../../libs/graph-query';
 import { toSvg } from 'jdenticon';
 
-const SchoolCard = () => {
-  const [pageSize, setPageSize] = useState(8);
+const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
   const [result] = useQuery({
-    query: Queries.nftListQuery,
-    variables: { first: pageSize },
+    query: query,
+    variables: variables,
   });
   const { data: queryData, fetching, error } = result;
   const [schoolData, setSchoolData] = useState([]);
@@ -37,9 +35,9 @@ const SchoolCard = () => {
   }, [queryData]);
 
   const decodeSchooldata = (data) => {
-    const encodeddata = data.tokenUris;
+    const encodeddata = variables?.id ? data?.ownedNft?.nfts : data?.tokenUris;
     const decodedShooldata = [];
-    for (let i = 0; i < encodeddata.length; i++) {
+    for (let i = 0; i < encodeddata?.length; i++) {
       const decodedData = atob(encodeddata[i].tokenUri.substring(29));
       const schoolData = {
         tokenId: encodeddata[i].id,

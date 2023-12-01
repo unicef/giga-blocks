@@ -68,6 +68,7 @@ export default function ValidateDetail({ id }: Props) {
       coverage_availabitlity: "",
       electricity_availabilty: "",
       mintedStatus: "",
+      schoolId:"",
     }
   )
 
@@ -92,7 +93,7 @@ export default function ValidateDetail({ id }: Props) {
 
   useEffect(() => {
     isValidationSuccess && enqueueSnackbar("Successfully validated", { variant: 'success' }); refetch();
-    isValidationError && enqueueSnackbar("Unsuccessful", { variant: 'error' }); console.log(validationError)
+    isValidationError && enqueueSnackbar("Unsuccessful", { variant: 'error' });
   }, [isValidationSuccess, isValidationError])
 
   useEffect(() => {
@@ -107,6 +108,7 @@ export default function ValidateDetail({ id }: Props) {
       coverage_availabitlity: data?.coverage_availability,
       electricity_availabilty: data?.electricity_available,
       mintedStatus: data?.minted,
+      schoolId: data?.schoolId
     })
   }, [data])
 
@@ -132,7 +134,7 @@ export default function ValidateDetail({ id }: Props) {
 
 
   const onValidate = () => {
-    mutate(id)
+    mutate(data?.school_Id)
   }
 
   return (
