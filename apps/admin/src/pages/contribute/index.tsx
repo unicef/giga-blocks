@@ -44,6 +44,7 @@ const ContributeData = () => {
     { id: 'name', label: 'Contributor name', align: 'left' },
     { id: 'school', label: 'School', align: 'left' },
     {id:'contributedData',label:'Contributed Data',align:'left'},
+    {id:'status',label:'Status',align:'left'},
     { id: 'date', label: 'Date', align: 'left' }
   ];
 
@@ -132,11 +133,13 @@ const ContributeData = () => {
 
   let tempArray:object[] = [];
   const onContribute = (validity:boolean) => {
+    refetch()
     selectedValues.map((value:any) => {
       tempArray.push({contributionId: value?.id, isValid: validity})
     })
     const payload = {contributions: tempArray}
     mutate(payload)
+    refetch()
     tempArray = [];
   }
 
@@ -175,8 +178,8 @@ const ContributeData = () => {
       <div style={{display: 'flex', justifyContent: 'space-between',marginBottom: '20px'}}>
           <span style={{fontSize: '1.5em', fontWeight: '600'}}>Contributed Data <span style={{fontSize: '0.75em', fontWeight: '400'}}> {selectedValues.length > 0 && `(${selectedValues.length})`} </span></span>
           <div style={{display: 'flex', gap: '15px'}}>
-          <Button variant="contained" style={{background: '#474747'}} disabled={selectedValues.length <= 0} onClick={() => onContribute(false)}>Invalidate</Button>
-          <Button variant="contained" style={{background: '#474747'}} disabled={selectedValues.length <= 0} onClick={() => onContribute(true)}>Validate</Button>
+          <Button variant="contained" style={{background: '#474747'}} disabled={selectedValues.length <= 0} onClick={() => {onContribute(false); refetch()}}>Invalidate</Button>
+          <Button variant="contained" style={{background: '#474747'}} disabled={selectedValues.length <= 0} onClick={() => {onContribute(true); refetch()}}>Validate</Button>
           </div>
           </div>
           <Box sx={{ minWidth: 120 }}>

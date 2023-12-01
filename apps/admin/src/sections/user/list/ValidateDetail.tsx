@@ -79,6 +79,8 @@ export default function ValidateDetail({ id }: Props) {
 
   const web3 = useWeb3React();
 
+  const router = useRouter();
+
   const [nftData, setNftData] = useState(
     {
       id: "",
@@ -166,6 +168,10 @@ export default function ValidateDetail({ id }: Props) {
     return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
   });
 
+  const back = () => {
+    router.push('/valid')
+  }
+
   return (
     <>
       <Grid item xs={8}>
@@ -211,7 +217,7 @@ export default function ValidateDetail({ id }: Props) {
                   </Box>
 
                   <Stack alignItems="flex-start" sx={{ mt: 3 }}>
-                    <Button variant="contained" style={{ width: "300px", background: "#474747" }}>
+                    <Button onClick={back} variant="contained" style={{ width: "300px", background: "#474747" }}>
                       Back
                     </Button>
                   </Stack>
