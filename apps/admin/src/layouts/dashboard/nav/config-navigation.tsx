@@ -64,7 +64,7 @@ const navConfig = [
             path: PATH_USER.admin,
           },
           {
-            title: 'Contributers',
+            title: 'Contributors',
             path: PATH_USER.contributer,
           }
         ],

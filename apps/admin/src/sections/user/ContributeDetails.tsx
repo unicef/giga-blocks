@@ -55,6 +55,8 @@ export default function ContributeDetail({ id }: Props) {
 
   const web3 = useWeb3React();
 
+  const router = useRouter()
+
   const [nftData, setNftData] = useState(
     {
       id: "",
@@ -74,7 +76,7 @@ export default function ContributeDetail({ id }: Props) {
     
     if(isSuccess){
       const keyValue = Object.entries(data?.contributed_data);
-      const jsonString = JSON.parse(keyValue.map(pair => pair[1]).join(''));
+      const jsonString = JSON?.parse(keyValue.map(pair => pair[1]).join(''));
       setProfile({
         fullname: data?.contributedUser?.name,
         schoolName: data?.school.name,
@@ -132,6 +134,11 @@ export default function ContributeDetail({ id }: Props) {
   const onContribute = (validity:boolean) => {
     const payload = {contributions: [{contributionId: id, isValid: validity}]}
     mutate(payload)
+    router.push('/contribute')
+  }
+
+  const back = () => {
+    router.push('/contribute')
   }
 
   return (
@@ -189,7 +196,7 @@ export default function ContributeDetail({ id }: Props) {
                   </Box>
 
                   <Stack alignItems="flex-start" sx={{ mt: 3 }}>
-                    <Button variant="contained" style={{ width: "300px", background: "#474747" }}>
+                    <Button onClick={back} variant="contained" style={{ width: "300px", background: "#474747" }}>
                       Back
                     </Button>
                   </Stack>
