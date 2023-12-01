@@ -37,10 +37,6 @@ const navConfig = [
         path: PATH_SCHOOL.verified,
         children: [
           {
-            title: 'Minted School',
-            path: PATH_SCHOOL.verified,
-          },
-          {
             title: 'Unminted School',
             path: PATH_SCHOOL.contributed,
           },
@@ -79,12 +75,21 @@ const navConfig = [
   {
     items: [
       {
-        title: 'Valid Data',
-        path: PATH_VALID.root,
+        title: 'Minted NFT',
+        path: PATH_SCHOOL.verified,
         icon: ICONS.user,
       },
     ],
   },
+  // {
+  //   items: [
+  //     {
+  //       title: 'Valid Data',
+  //       path: PATH_VALID.root,
+  //       icon: ICONS.user,
+  //     },
+  //   ],
+  // },
   {
     items: [
       {

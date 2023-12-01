@@ -84,7 +84,6 @@ const VerifiedSchool = () => {
   // const { error } = useFetchUsers();
 
   useEffect(() => {
-    console.log(connectivity)
     refetch()
   }, [uploadId, country, connectivity])
 

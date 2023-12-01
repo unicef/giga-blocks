@@ -1,5 +1,5 @@
-@use "@carbon/react/scss/spacing" as *;
-@use "@carbon/react/scss/breakpoint" as *;
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/breakpoint' as *;
 
 .form-gap {
   margin: 10vh 0;
@@ -28,9 +28,9 @@
 }
 .submit-btn {
   height: 40px !important;
-  background: transparent;
-  border: 1px solid #000;
-  color: #000;
+  background: #0050e6;
+  border: 1px solid #0050e6;
+  color: #ffff;
 }
 .form-label {
   margin-bottom: 45x;

@@ -12,6 +12,7 @@ import {
 import './contributeSchools.scss';
 import { useEffect, useState } from 'react';
 import { useSchoolGet } from '../../hooks/useSchool';
+import { toSvg } from 'jdenticon';
 
 const SchoolCard = () => {
   const [schoolData, setSchoolData] = useState([]);
@@ -19,6 +20,12 @@ const SchoolCard = () => {
   const [allDataLoaded, setAllDataLoaded] = useState(false);
 
   const { data, isLoading, isFetching } = useSchoolGet(1, pageSize);
+
+  const generateIdenticon = (image) => {
+    const size = 50;
+    const svgString = toSvg(image.toString(), size);
+    return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
+  };
 
   useEffect(() => {
     isLoading === false && setSchoolData(data?.rows);
@@ -45,54 +52,54 @@ const SchoolCard = () => {
                   href={`/contributeSchool/${school?.id}`}
                 >
                   <div className="row">
-                    <div>
-                      <p className="text-purple">School Name</p>
-                      <Toggletip align="right">
-                        <ToggletipButton label="Show information">
-                          <h4 style={{ minHeight: '56px' }}>
-                            {school.name.length > 40
-                              ? `${school.name
-                                  ?.toLowerCase()
-                                  .split(' ')
-                                  .map(
-                                    (word) =>
-                                      word.charAt(0).toUpperCase() +
-                                      word.slice(1)
-                                  )
-                                  .join(' ')
-                                  .slice(0, 40)}...`
-                              : school.name
-                                  ?.toLowerCase()
-                                  .split(' ')
-                                  .map(
-                                    (word) =>
-                                      word.charAt(0).toUpperCase() +
-                                      word.slice(1)
-                                  )
-                                  .join(' ')}
-                          </h4>
-                        </ToggletipButton>
-                        <ToggletipContent>
-                          <p>
-                            {school.name
-                              ?.toLowerCase()
-                              .split(' ')
-                              .map(
-                                (word) =>
-                                  word.charAt(0).toUpperCase() + word.slice(1)
-                              )
-                              .join(' ')}
-                          </p>
-                        </ToggletipContent>
-                      </Toggletip>
-                    </div>
+                    <img
+                      src={generateIdenticon(school?.giga_school_id)}
+                      alt="SVG Image"
+                      style={{ marginBottom: '16px' }}
+                    />
+                    <Toggletip align="right">
+                      <ToggletipButton label="Show information">
+                        <h4>
+                          {school.name.length > 40
+                            ? `${school.name
+                                ?.toLowerCase()
+                                .split(' ')
+                                .map(
+                                  (word) =>
+                                    word.charAt(0).toUpperCase() + word.slice(1)
+                                )
+                                .join(' ')
+                                .slice(0, 40)}...`
+                            : school.name
+                                ?.toLowerCase()
+                                .split(' ')
+                                .map(
+                                  (word) =>
+                                    word.charAt(0).toUpperCase() + word.slice(1)
+                                )
+                                .join(' ')}
+                        </h4>
+                      </ToggletipButton>
+                      <ToggletipContent>
+                        <p>
+                          {school.name
+                            ?.toLowerCase()
+                            .split(' ')
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() + word.slice(1)
+                            )
+                            .join(' ')}
+                        </p>
+                      </ToggletipContent>
+                    </Toggletip>
                   </div>
-                  <div className="row" style={{ marginTop: '15px' }}>
-                    <div style={{ textAlign: 'right' }}>
-                      <p className="text-purple">Country</p>
-                      <h4 className="heading2 text-left">{school.country}</h4>
-                    </div>
-                  </div>
+                  <h4 className="heading2 text-left">
+                    {' '}
+                    {school.country.length > 30
+                      ? `${school.country.substring(0, 30)}...`
+                      : school.country}
+                  </h4>
                 </ClickableTile>
               </Column>
             ))}
