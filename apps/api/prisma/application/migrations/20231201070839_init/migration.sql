@@ -113,7 +113,7 @@ CREATE TABLE "giga_school" (
     "longitude" DOUBLE PRECISION NOT NULL,
     "latitude" DOUBLE PRECISION NOT NULL,
     "minted" "MintStatus" NOT NULL DEFAULT 'NOTMINTED',
-    "coverage_availability" TEXT NOT NULL,
+    "coverage_availability" BOOLEAN NOT NULL DEFAULT false,
     "coverage_2G" BOOLEAN NOT NULL DEFAULT false,
     "coverage_3G" BOOLEAN NOT NULL DEFAULT false,
     "coverage_4G" BOOLEAN NOT NULL DEFAULT false,
