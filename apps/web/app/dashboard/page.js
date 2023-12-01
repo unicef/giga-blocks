@@ -1,11 +1,10 @@
 'use client';
-import AuthGuard from '../auth/AuthGuard';
 import Navbar from '../components/navbar';
+import Header from '../components/dashboard/header';
 import Footer from '../components/footer';
-import Heading from '../components/school-detail/heading';
-import Card from '../components/card';
 import QueryProvider from '../libs/get-query-client';
 import GarphQlProvider from '../libs/graphql-query-client';
+import Tabs from '../components/dashboard/tab';
 
 const Dashboard = () => {
   return (
@@ -13,8 +12,8 @@ const Dashboard = () => {
       <GarphQlProvider>
         <QueryProvider>
           <Navbar />
-          <Heading />
-          <Card />
+          <Header />
+          <Tabs/>
           <Footer />
         </QueryProvider>
       </GarphQlProvider>

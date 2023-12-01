@@ -21,7 +21,7 @@ const SchoolDetail = ({ id }) => {
   const [schoolData, setSchoolData] = useState();
 
   const decodeSchooldata = (data) => {
-    const encodeddata = data.tokenUri;
+    const encodeddata = data.tokenUri;  
     const decodedData = atob(encodeddata.tokenUri.substring(29));
     const nftDetails = {
       owner: encodeddata.owner.id,
@@ -33,9 +33,11 @@ const SchoolDetail = ({ id }) => {
     if (result.data) decodeSchooldata(result.data);
   }, [result.data]);
 
+  
+
   return (
     <>
-      {fetching === false ? (
+      {fetching == false ?  (
         <>
           <Navbar />
           <PageHeader name={schoolData?.schoolName} />
