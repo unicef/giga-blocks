@@ -11,12 +11,12 @@ const api = axios.create({
   
   api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 
-export const useValidateGet = (page:number, perPage:number) => {
+export const useValidateGet = (page:number, perPage:number, status?:string) => {
     return useQuery(
       ['get-api-data',page,perPage],
       async () => {
         const { data } = await api.get(
-          `${routes.VALIDATE.GET}?page=${page}&perPage=${perPage}`
+          `${routes.VALIDATE.GET}?page=${page}&perPage=${perPage}${status ? `&status=${status}`: ''}`
         );
         return data;
       },
