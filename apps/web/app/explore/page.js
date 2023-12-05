@@ -9,17 +9,15 @@ import GarphQlProvider from '../libs/graphql-query-client';
 import { Queries } from '../libs/graph-query';
 
 const SchoolCard = () => {
-  const breadcrumbs = [{ text: 'Home', link: '/' }];
-
   const [pageSize, setPageSize] = useState(8);
   const variables = { first: pageSize };
+  const breadcrumbs = [{ text: 'Home', link: '/' }];
+
   return (
     <GarphQlProvider>
       <QueryProvider>
         <Navbar />
-        <PageHeader name={'Explore NFT'} breadcrumbs={breadcrumbs} />
-        <Card />
-        <PageHeader name={'Schools'} />
+        <PageHeader name={'Schools'} breadcrumbs={breadcrumbs} />
         <Card
           query={Queries.nftListQuery}
           variables={variables}

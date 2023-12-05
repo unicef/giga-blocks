@@ -55,33 +55,25 @@ const SchoolDetail = () => {
           <PageHeader name={data.name} breadcrumbs={breadcrumbs} />
 
           {/* INTRODUCTION */}
-          <Grid>
-            <Column
-              lg={16}
-              md={8}
-              sm={8}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                marginTop: '15px',
-              }}
-            >
-              <Button onClick={openModal}>Contribute</Button>
-            </Column>
-          </Grid>
+          <Grid></Grid>
           <Tabs>
             <TabList
               style={{
                 display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '30%',
+                justifyContent: 'space-between',
+                alignItems: 'flex-end',
+                width: '100%',
                 margin: 'auto',
+                background: '#222222',
               }}
             >
-              <Tab style={{ marginRight: '32px' }}>Collector NFT</Tab>
-              <Tab>Change Log</Tab>
+              <Column lg={10} md={8} sm={8}>
+                <Tab style={{ marginRight: '32px', color: 'white' }}>
+                  Collector NFT
+                </Tab>
+                <Tab style={{ color: 'white' }}>Change Log</Tab>
+              </Column>
+              <Button onClick={openModal}>Contribute</Button>
             </TabList>
             <TabPanels>
               <TabPanel>
