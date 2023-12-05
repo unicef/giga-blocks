@@ -39,7 +39,7 @@ export const useContributionList = (page, perPage, contributorId, order) => {
       try {
         const res = await api.get(
           `${
-            CONTRIBUTION.GET
+            CONTRIBUTE.GET
           }?page=${page}&perPage=${perPage}&contributorId=${contributorId}&order=${
             order ?? ''
           }`
@@ -62,7 +62,7 @@ export const useContributionCount = (contributorId) => {
     async () => {
       try {
         const res = await api.get(
-          `${CONTRIBUTION.GET}?contributorId=${contributorId}`
+          `${CONTRIBUTE.GET}?contributorId=${contributorId}`
         );
         return res.data;
       } catch (err) {
