@@ -8,11 +8,13 @@ import { useContributionList } from '../hooks/useContributorList';
 
 const ContributorList = () => {
   const { data: contributors, isLoading } = useContributionList();
+  const breadcrumbs = [{ text: 'Home', link: '/' }];
+
   return (
     <>
       <QueryProvider>
         <Navbar />
-        <PageHeader name={'Contributor List'} />
+        <PageHeader name={'Contributor List'} breadcrumbs={breadcrumbs} />
         <ContributorCard contributors={contributors} isLoading={isLoading} />
         <Footer />
       </QueryProvider>
