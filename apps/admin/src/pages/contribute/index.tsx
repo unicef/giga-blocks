@@ -27,10 +27,11 @@ import {
   SelectChangeEvent,
   Autocomplete,
   TextField,
+  Tab,
 } from '@mui/material';
 import {CircularProgress} from '@mui/material';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
-import { useEffect, useState } from 'react';
+import { SyntheticEvent, useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { Queries } from 'src/libs/graph-query';
 import { useSchoolCount, useSchoolGet } from "@hooks/school/useSchool";
@@ -38,6 +39,7 @@ import { useContributeGet, useContributionValidate } from '@hooks/contribute/use
 import ContributeTableRow from '@sections/user/list/ContributTableRow';
 import { useSnackbar } from '@components/snackbar';
 import { useUserGet } from '@hooks/user/useUser';
+import CustomTabPanel from '@components/Tabs';
 
 const ContributeData = () => {
   const TABLE_HEAD = [
@@ -86,7 +88,7 @@ const ContributeData = () => {
   const decodeSchooldata = (data:any) => {
     const encodeddata = data.tokenUris;
     const decodedShooldata = [];
-    for (let i = 0; i < encodeddata.length; i++) {
+    for (let i = 0; i < encodeddata?.length; i++) {
       const decodedData = atob(encodeddata[i].tokenUri.substring(29));
       const schoolData = {
         tokenId: encodeddata[i].id,
@@ -149,6 +151,8 @@ const ContributeData = () => {
   }, [isValidationSuccess, isValidationError])
 
   const handleSearchByChange = (event: any) => {
+    setSelectedSchoolSearch('')
+    setSelectedContributerSearch('')
     setSearchBy(event.target.value as string);
   };
 
@@ -160,10 +164,11 @@ const ContributeData = () => {
     setSelectedContributerSearch(value?.id);
   }
 
-  const handleValidChange = (event: any) => {
+  const handleValidChange = (value:string) => {
+    setSearchBy('');
     setSelectedSchoolSearch('');
     setSelectedContributerSearch('');
-    setSelectedStatus(event.target.value);
+    setSelectedStatus(value);
   }
 
   const sortedData = tableData.slice().sort((a:any, b:any) => {
@@ -171,18 +176,23 @@ const ContributeData = () => {
     return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
   });
 
-  const statusArray = ['Validated', 'Pending']
-  
-  return (
-    <DashboardLayout>
-      <div style={{display: 'flex', justifyContent: 'space-between',marginBottom: '20px'}}>
-          <span style={{fontSize: '1.5em', fontWeight: '600'}}>Contributed Data <span style={{fontSize: '0.75em', fontWeight: '400'}}> {selectedValues.length > 0 && `(${selectedValues.length})`} </span></span>
-          <div style={{display: 'flex', gap: '15px'}}>
-          <Button variant="contained" style={{background: '#474747'}} disabled={selectedValues.length <= 0} onClick={() => {onContribute(false); refetch()}}>Invalidate</Button>
-          <Button variant="contained" style={{background: '#474747'}} disabled={selectedValues.length <= 0} onClick={() => {onContribute(true); refetch()}}>Validate</Button>
-          </div>
-          </div>
-          <Box sx={{ minWidth: 120 }}>
+  function a11yProps(index: number) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
+
+  const [value, setValue] = useState(0);
+
+  const handleChange = (event: SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+
+  const TabsDisplay = () => {
+    return (
+      <>
+      <Box sx={{ minWidth: 120 }}>
       <FormControl sx={{width: 150}}>
         <InputLabel id="demo-simple-select-label">Search by</InputLabel>
         <Select
@@ -213,7 +223,20 @@ const ContributeData = () => {
       />
       </FormControl> : 
       <FormControl sx={{width: 150, marginLeft: 2}}>
-      <Autocomplete
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={searchBy}
+          label="Search"
+          onChange={(e) => setSelectedContributerSearch(e.target.value)}
+        >
+          {contributerList?.rows.map((row:any) => {
+            return(
+              <MenuItem value={row.id}>{row.name}</MenuItem>
+            )
+          })}
+        </Select>
+      {/* <Autocomplete
         id="demo-simple-select"
         options={contributerList && contributerList?.rows as Array<{ id: string, name: string }>}
         getOptionLabel={(contributer:any) => contributer.name}
@@ -226,10 +249,10 @@ const ContributeData = () => {
           userRefetch()
         }}
         renderInput={(params) => <TextField {...params} label="Search" />}
-      />
+      /> */}
     </FormControl>
       }
-      <FormControl sx={{width: 150, marginLeft: 2}}>
+      {/* <FormControl sx={{width: 150, marginLeft: 2}}>
       <InputLabel id="demo-simple-select-label">Filter By</InputLabel>
       <Select
         labelId="filter-by"
@@ -245,7 +268,7 @@ const ContributeData = () => {
           )
         })}
       </Select>
-    </FormControl>
+    </FormControl> */}
     </Box>
       {fetching && <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <CircularProgress />
@@ -256,7 +279,7 @@ const ContributeData = () => {
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
             <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
-             { selectedStatus == "Pending" &&<TableHeadUsers
+             { selectedStatus === "Pending" &&<TableHeadUsers
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
@@ -289,7 +312,7 @@ const ContributeData = () => {
                     />
                   ))}
                 {!isFetching ? <TableNoData
-                  isNotFound={tableData.length === 0} /> : <CircularProgress color="inherit"/> }
+                  isNotFound={tableData?.length === 0} /> : <CircularProgress color="inherit"/> }
               </TableBody>
             </Table>
           </Scrollbar>
@@ -306,6 +329,40 @@ const ContributeData = () => {
           onChangeDense={onChangeDense}
         />
       </Card>}
+      </>
+    )
+  }
+  
+  return (
+    <DashboardLayout>
+      <div style={{display: 'flex', justifyContent: 'space-between',marginBottom: '20px'}}>
+          <span style={{fontSize: '1.5em', fontWeight: '600'}}>Contributed Data <span style={{fontSize: '0.75em', fontWeight: '400'}}> {selectedValues?.length > 0 && `(${selectedValues?.length})`} </span></span>
+          <div style={{display: 'flex', gap: '15px'}}>
+          <Button variant="contained" style={{background: '#474747'}} disabled={selectedValues?.length <= 0} onClick={() => {onContribute(false); refetch()}}>Invalidate</Button>
+          <Button variant="contained" style={{background: '#474747'}} disabled={selectedValues?.length <= 0} onClick={() => {onContribute(true); refetch()}}>Validate</Button>
+          </div>
+          </div>
+
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+          <Tab label="Pending" {...a11yProps(0)} onClick={() => handleValidChange('Pending')}/>
+          <Tab label="Validated" {...a11yProps(1)} onClick={() => handleValidChange('Validated')}/>
+          <Tab label="Invalidated" {...a11yProps(2)} onClick={() => handleValidChange('Rejected')}/>
+        </Tabs>
+        </Box>
+        <Box>
+        <CustomTabPanel value={value} index={0}>
+        <TabsDisplay/>
+        </CustomTabPanel>
+        </Box>
+        <Box>
+        <CustomTabPanel value={value} index={1}>
+        <TabsDisplay/>
+        </CustomTabPanel>
+        </Box>
+        <CustomTabPanel value={value} index={2}>
+        <TabsDisplay/>
+        </CustomTabPanel>      
     </DashboardLayout>
   );
 };

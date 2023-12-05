@@ -1,8 +1,8 @@
 import { gql } from 'urql';
 
 const ownedNftsQuery = gql`
-  query ownedNft($id: ID!, $first: Int!) {
-    ownedNft(id: $id, subgraphError: allow) {
+  query collectorOwnedNft($id: ID!, $first: Int!) {
+    collectorOwnedNft(id: $id, subgraphError: allow) {
       id
       nfts(first: $first) {
         id
@@ -12,8 +12,8 @@ const ownedNftsQuery = gql`
   }
 `;
 const nftListQuery = gql`
-  query tokenUris($first: Int!) {
-    tokenUris(subgraphError: allow, first: $first) {
+  query collectorTokenUris($first: Int!) {
+    collectorTokenUris(subgraphError: allow, first: $first) {
       id
       tokenUri
       owner {
@@ -24,8 +24,8 @@ const nftListQuery = gql`
 `;
 
 const nftDetailsQuery = gql`
-  query tokenUri($id: ID!) {
-    tokenUri(id: $id, subgraphError: allow) {
+  query collectorUri($id: ID!) {
+    collectorUri(id: $id, subgraphError: allow) {
       id
       tokenUri
       owner {
@@ -36,8 +36,22 @@ const nftDetailsQuery = gql`
 `;
 
 const transferQuery = gql`
-  query transfers($id: ID!) {
-    transfers(subgraphError: allow, where: { tokenId: $id }) {
+  query schoolTransfers($id: ID!) {
+    schoolTransfers(subgraphError: allow, where: { tokenId: $id }) {
+      blockNumber
+      blockTimestamp
+      from
+      id
+      to
+      tokenId
+      transactionHash
+    }
+  }
+`;
+
+const collectorTransferQuery = gql`
+  query collectorTransfers($id: ID!) {
+    collectorTransfers(subgraphError: allow, where: { tokenId: $id }) {
       blockNumber
       blockTimestamp
       from
@@ -54,4 +68,5 @@ export const Queries = {
   nftListQuery,
   nftDetailsQuery,
   transferQuery,
+  collectorTransferQuery
 };

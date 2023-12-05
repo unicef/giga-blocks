@@ -163,7 +163,6 @@ export default function ValidateDetail({ id }: Props) {
     mutate(data?.school_Id)
   }
 
-  console.log(tableData)
 
   const sortedData = tableData?.slice().sort((a:any, b:any) => {
     const isAsc = order === 'asc';

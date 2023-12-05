@@ -43,8 +43,8 @@ const SchoolDetail = ({ id }) => {
       {fetching == false ? (
         <>
           <Navbar />
-          <PageHeader name={schoolData?.schoolName} breadcrumbs={breadcrumbs} />
-          <Introduction schooldata={schoolData} />
+          <PageHeader name={schoolData?.schoolName} />
+          <Introduction schooldata={schoolData} tokenId={id} />
           <Connectivity schoolData={schoolData} />
           <TransactionHistory schoolData={schoolData} />
           <NFTMetadata schoolData={schoolData} />
