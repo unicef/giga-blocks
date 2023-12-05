@@ -15,7 +15,6 @@ import { useContributeData } from '../../hooks/useContributeData';
 import { useParams } from 'next/navigation';
 import { useSchoolDetails } from '../../hooks/useSchool';
 import { useRouter } from 'next/navigation';
-import { getCurrentUser } from '../../utils/sessionManager';
 import { Modal, ModalBody, ModalFooter } from '@carbon/react';
 
 const ContributeForm = ({ data, isOpen, onClose }) => {
@@ -25,26 +24,32 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
   const { id } = useParams();
   const [selectedOptions, setSelectedOptions] = useState({});
   const [error, setError] = useState(false);
-  const user = getCurrentUser();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    if (!user) {
-      router.push('/signIn');
-    }
-    if (data && (!selectedOptions.dropdown1 || !selectedOptions.dropdown1.selectedItem.value && !selectedOptions.dropdown3 ||!selectedOptions.dropdown3.selectedItem.value && !selectedOptions.dropdown4||!selectedOptions.dropdown4.selectedItem.value && !selectedOptions.dropdown5|| !selectedOptions.dropdown5.selectedItem.value)) {
+    if (
+      data &&
+      (!selectedOptions.dropdown1 ||
+        (!selectedOptions.dropdown1.selectedItem.value &&
+          !selectedOptions.dropdown3) ||
+        (!selectedOptions.dropdown3.selectedItem.value &&
+          !selectedOptions.dropdown4) ||
+        (!selectedOptions.dropdown4.selectedItem.value &&
+          !selectedOptions.dropdown5) ||
+        !selectedOptions.dropdown5.selectedItem.value)
+    ) {
       setValue('latitude', data.latitude);
       setValue('longitude', data.longitude);
       setValue('country', data.country);
       setSelectedOptions({
         dropdown1: { selectedItem: { value: data?.school_type } },
-        dropdown3: { selectedItem:{value: data?.connectivity} },
-        dropdown4: { selectedItem: {value:data?.coverage_availability }},
-        dropdown5: { selectedItem: {value:data?.electricity_available} },
-      })
+        dropdown3: { selectedItem: { value: data?.connectivity } },
+        dropdown4: { selectedItem: { value: data?.coverage_availability } },
+        dropdown5: { selectedItem: { value: data?.electricity_available } },
+      });
     }
-  }, [data, user, router]);
+  }, [data, router]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -224,7 +229,7 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
                   id="dropdown4"
                   style={{ marginTop: '24px', marginBottom: '24px' }}
                   titleText="Coverage Availability"
-                  label={data?.coverage_availability?'True':'False'}
+                  label={data?.coverage_availability ? 'True' : 'False'}
                   items={coverage_availability}
                   itemToString={(item) => (item ? item.label : '')}
                   selectedItem={selectedOptions.coverage_availability}
