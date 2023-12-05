@@ -49,7 +49,6 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    console.log('account', account);
   }, [account]);
 
   const handleWalletLogin = async () => {

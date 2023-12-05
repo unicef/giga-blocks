@@ -10,6 +10,5 @@ export const useSellerContract= ()=>{
 export const useSignerSellerContract = ()=>{
     const address = process.env.NEXT_PUBLIC_GIGA_SELLER_ADDRESS;
     const contract = getSignerContract(GigaSeller.abi,address);
-    console.log(contract)
     return contract;
 }

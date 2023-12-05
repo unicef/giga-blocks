@@ -21,7 +21,6 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
   });
   const { data: queryData, fetching, error } = result;
   const [schoolData, setSchoolData] = useState([]);
-  console.log(schoolData);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
 
   const generateIdenticon = (image) => {
@@ -35,7 +34,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
   }, [queryData]);
 
   const decodeSchooldata = (data) => {
-    const encodeddata = variables?.id ? data?.ownedNft?.nfts : data?.tokenUris;
+    const encodeddata = variables?.id ? data?.collectorOwnedNft?.nfts : data?.collectorTokenUris;
     const decodedShooldata = [];
     for (let i = 0; i < encodeddata?.length; i++) {
       const decodedData = atob(encodeddata[i].tokenUri.substring(29));
