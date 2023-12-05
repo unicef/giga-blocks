@@ -4,13 +4,13 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
-import { useSchoolCount, useSchoolGet } from '@hooks/school/useSchool';
+import { useSchoolCount, useSchoolGet,useMintedSchoolCount } from '@hooks/school/useSchool';
 import { useContributeGet } from '@hooks/contribute/useContribute';
 import { useUserGet } from '@hooks/user/useUser';
 
 export default function OutlinedCard() {
+  const { data: mintedCount } = useMintedSchoolCount('MINTED');
   const { data: schoolCount } = useSchoolCount();
-  const { data: mintedCount } = useSchoolCount('MINTED');
   const {data:contributionData} = useContributeGet({page: 0, perPage: 10, status: 'Validated'})
   const {data:userData} = useUserGet(1, 10, 'CONTRIBUTOR')
 
@@ -21,7 +21,7 @@ export default function OutlinedCard() {
           <CardContent>
             <Typography variant="body2">Total School</Typography>
             <Typography variant="h5" component="div">
-              {schoolCount ? schoolCount : 'N/A'}
+              {schoolCount ? schoolCount.toString() : 'N/A'}
             </Typography>
           </CardContent>
         </Card>
@@ -31,7 +31,7 @@ export default function OutlinedCard() {
           <CardContent>
             <Typography variant="body2">NFTs Minted</Typography>
             <Typography variant="h5" component="div">
-              {mintedCount || 'N/A'}
+              {mintedCount?.toString()|| 'N/A'}
             </Typography>
           </CardContent>
         </Card>

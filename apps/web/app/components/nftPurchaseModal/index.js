@@ -19,6 +19,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata,tokenId }) => {
   const [showCongratulationModal, setShowCongratulationModal] = useState(false);
   const[switchNetwork, setSwitchNetwork] = useState(false)
   const[price, setPrice] = useState(0)
+  const [priceInEth,setPriceEth] = useState(0)
 
   const generateIdenticon = (image) => {
     const size = 200; // Adjust the size as needed
@@ -32,7 +33,8 @@ const ModalComponent = ({ isOpen, onClose, schooldata,tokenId }) => {
       const price = await sellerContract.methods.calculatePrice()
         .call({ from: account });
         const priceInEth = ethers.formatEther(price)
-        setPrice((priceInEth))
+        setPrice((price))
+        setPriceEth(priceInEth)
     } catch (err) {
       console.log(err);
     }
@@ -138,7 +140,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata,tokenId }) => {
                 }}
               >
                 <p>Price</p>
-                <p>{price}ETH</p>
+                <p>{priceInEth}ETH</p>
               </div>
               <div
                 style={{

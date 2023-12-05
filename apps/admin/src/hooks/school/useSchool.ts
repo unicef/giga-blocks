@@ -44,13 +44,28 @@ export const useSchoolCount = (minted?:string) => {
   return useQuery(
     ['school-count'],
     async () => {
-      const { data } = await api.get(`${routes.SCHOOLS.SCHOOLCOUNT}?${minted && `minted=${minted}`}`);
+      const { data } = await api.get(`${routes.SCHOOLS.SCHOOLCOUNT}`);
       return data;
     },
     {
       keepPreviousData: true,
     }
   );
+};
+
+export const useMintedSchoolCount =  (minted?:string) => {
+  return useQuery(
+    ['mint-school-count'],
+    async () => {
+      const { data } = await api.get(`${routes.SCHOOLS.SCHOOLCOUNT}?${`minted=${minted}`}`);
+      return data;
+    },
+    {
+      keepPreviousData: true,
+    }
+  );
+
+
 };
 
 const mintSchool = async (data: any) => {
