@@ -157,7 +157,6 @@ const ContributeData = () => {
   };
 
   const handleSearchChange = (value: any) => {
-    console.log(value)
     setSelectedSchoolSearch(value?.id);
   }
 
@@ -190,7 +189,6 @@ const ContributeData = () => {
     setValue(newValue);
   };
 
-  console.log(contributerList)
   const TabsDisplay = () => {
     return (
       <>
