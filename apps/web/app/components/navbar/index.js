@@ -28,7 +28,6 @@ const Navbar = () => {
 
   const options = [
     { id: 'option1', text: 'Dashboard', link: '/dashboard' },
-    { id: 'option2', text: 'Edit Profile' },
     { id: 'option3', text: 'Logout' },
   ];
 
@@ -48,8 +47,7 @@ const Navbar = () => {
     setIsDropdownOpen(false);
   };
 
-  useEffect(() => {
-  }, [account]);
+  useEffect(() => {}, [account]);
 
   const handleWalletLogin = async () => {
     await metaMask.activate(Default_Chain_Id);
