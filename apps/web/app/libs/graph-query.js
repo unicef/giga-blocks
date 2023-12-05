@@ -24,8 +24,8 @@ const nftListQuery = gql`
 `;
 
 const nftDetailsQuery = gql`
-  query collectorUri($id: ID!) {
-    collectorUri(id: $id, subgraphError: allow) {
+  query collectoTokenrUri($id: ID!) {
+    collectorTokenUri(id: $id, subgraphError: allow) {
       id
       tokenUri
       owner {
