@@ -69,7 +69,7 @@ const MintedSchools = () => {
   const { data, fetching, error } = result;
 
   const decodeSchooldata = (data: any) => {
-    const encodeddata = data.tokenUris;
+    const encodeddata = data.schoolTokenUris;  
     const decodedShooldata = [];
     for (let i = 0; i < encodeddata.length; i++) {
       const decodedData = atob(encodeddata[i].tokenUri.substring(29));
