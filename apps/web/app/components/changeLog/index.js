@@ -48,7 +48,12 @@ const ChangeLog = ({ schoolid }) => {
           ) : (
             data?.rows?.map((contribution) => (
               <TableRow key={contribution?.id}>
-                <TableCell>{contribution?.school?.name}</TableCell>
+                <TableCell>
+                  {contribution?.school?.name &&
+                  contribution.school.name.length > 25
+                    ? `${contribution.school.name.substring(0, 25)}...`
+                    : contribution.school.name}
+                </TableCell>{' '}
                 <TableCell>{contribution?.contributedUser?.name}</TableCell>
                 <TableCell>
                   {/* Parse the JSON string into a JavaScript object */}

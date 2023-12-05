@@ -11,11 +11,13 @@ import { Queries } from '../libs/graph-query';
 const SchoolCard = () => {
   const [pageSize, setPageSize] = useState(8);
   const variables = { first: pageSize };
+  const breadcrumbs = [{ text: 'Home', link: '/' }];
+
   return (
     <GarphQlProvider>
       <QueryProvider>
         <Navbar />
-        <PageHeader name={'Schools'} />
+        <PageHeader name={'Schools'} breadcrumbs={breadcrumbs} />
         <Card
           query={Queries.nftListQuery}
           variables={variables}

@@ -7,13 +7,17 @@ import GarphQlProvider from '../libs/graphql-query-client';
 import Tabs from '../components/dashboard/tab';
 
 const Dashboard = () => {
+  const breadcrumbs = [
+    { text: 'Home', link: '/' },
+    { text: 'Dashboard', link: '/dashboard' },
+  ];
   return (
     <>
       <GarphQlProvider>
         <QueryProvider>
           <Navbar />
-          <Header />
-          <Tabs/>
+          <Header breadcrumbs={breadcrumbs} />
+          <Tabs />
           <Footer />
         </QueryProvider>
       </GarphQlProvider>
