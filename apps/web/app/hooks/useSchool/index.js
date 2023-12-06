@@ -7,12 +7,12 @@ const api = axios.create({
   baseURL: BASE_URL,
 });
 
-export const useSchoolGet = (page, perPage) => {
+export const useSchoolGet = (page, perPage, searchText) => {
   return useQuery(
-    ['get-api-data', page, perPage],
+    ['get-api-data', page, perPage, searchText],
     async () => {
       const { data } = await api.get(
-        `${SCHOOLS.GET}?page=${page}&perPage=${perPage}`
+        `${SCHOOLS.GET}?page=${page}&perPage=${perPage}&name=${searchText}`
       );
       return data;
     },
