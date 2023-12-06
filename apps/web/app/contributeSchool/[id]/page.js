@@ -51,7 +51,7 @@ const SchoolDetail = () => {
 
   const breadcrumbs = [
     { text: 'Home', link: '/' },
-    { text: 'Explore NFT', link: '/explore' },
+    { text: 'School', link: '/contributeSchool' },
   ];
 
   return (

@@ -9,7 +9,7 @@ const SchoolCard = () => {
   return (
     <>
       <Navbar />
-      <PageHeader name={'Schools'} breadcrumbs={breadcrumbs} />
+      <PageHeader name={'School Database'} breadcrumbs={breadcrumbs} />
       <Card />
       <Footer />
     </>
