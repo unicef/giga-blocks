@@ -221,7 +221,7 @@ export class ContributeDataService {
     const args = {
       where: {
         isArchived: false,
-        approvedStatus: status === "true"
+        approvedStatus: status === 'true',
       },
       include: {
         school: {
@@ -232,7 +232,7 @@ export class ContributeDataService {
         approved: {
           select: {
             name: true,
-          }, 
+          },
         },
       },
     };
