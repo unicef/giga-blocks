@@ -105,8 +105,8 @@ const methods = useForm<FormValuesProps>({})
       return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
     });
 
-    const chain = process.env.CHAIN;
-    const address = process.env.GIGA_NFT_CONTRACT_ADDRESS
+    const chain = process.env.NEXT_PUBLIC_DEFAULT_CHAIN;
+    const address = process.env.NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS
 
   return (
     <>

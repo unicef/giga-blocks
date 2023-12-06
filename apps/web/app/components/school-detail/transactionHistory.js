@@ -41,7 +41,7 @@ const Connectivity = () => {
   };
   useEffect(() => {
     if (result.data) decoedTransferData(result.data);
-  }, [result.data]);
+  }, [result.data,collectorResult.data]);
 
   return (
     <>
