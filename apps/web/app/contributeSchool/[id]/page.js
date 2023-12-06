@@ -20,14 +20,24 @@ import './school-details.scss';
 import { useParams } from 'next/navigation';
 import { toSvg } from 'jdenticon';
 import { useState } from 'react';
+import PageHeader from '../../components/page-header';
+import { getCurrentUser } from '../../utils/sessionManager';
+import { useRouter } from 'next/navigation';
 
 const SchoolDetail = () => {
   const { id } = useParams();
+  const router = useRouter();
   const { data, isLoading } = useSchoolDetails(id);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  console.log('data', data);
 
+  const user = getCurrentUser();
   const openModal = () => {
-    setIsModalOpen(true);
+    if (user) {
+      setIsModalOpen(true);
+    } else {
+      router.push('/signIn');
+    }
   };
 
   const closeModal = () => {
@@ -40,47 +50,47 @@ const SchoolDetail = () => {
     return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
   };
 
+  const breadcrumbs = [
+    { text: 'Home', link: '/' },
+    { text: 'School', link: '/contributeSchool' },
+  ];
+
   return (
     <>
       {isLoading === false ? (
         <>
           <Navbar />
           {/* HEADING */}
-          <Grid fullWidth>
-            <Column lg={16} md={8} sm={8} className="school-detail-head">
-              <h2>{data?.name}</h2>
-            </Column>
-          </Grid>
+          <PageHeader name={data.name} breadcrumbs={breadcrumbs} />
 
           {/* INTRODUCTION */}
-          <Grid>
-            <Column
-              lg={16}
-              md={8}
-              sm={8}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                marginTop: '15px',
-              }}
-            >
-              <Button onClick={openModal}>Contribute</Button>
-            </Column>
-          </Grid>
+
           <Tabs>
-            <TabList
+            <div
               style={{
                 display: 'flex',
-                justifyContent: 'center',
                 alignItems: 'center',
-                width: '30%',
-                margin: 'auto',
+                justifyContent: 'space-between',
+                background: '#222222',
               }}
             >
-              <Tab style={{ marginRight: '32px' }}>Collector NFT</Tab>
-              <Tab>Change Log</Tab>
-            </TabList>
+              <TabList
+                style={{
+                  display: 'flex',
+                }}
+              >
+                <Tab
+                  style={{
+                    marginRight: '32px',
+                    color: 'white',
+                  }}
+                >
+                  Collector NFT
+                </Tab>
+                <Tab style={{ color: 'white' }}>Change Log</Tab>
+              </TabList>
+              <Button onClick={openModal}>Contribute</Button>
+            </div>
             <TabPanels>
               <TabPanel>
                 <Grid fullWidth className="mt-50px">
@@ -113,8 +123,14 @@ const SchoolDetail = () => {
                     md={4}
                     lg={7}
                     sm={4}
-                    style={{ display: 'flex', justifyContent: 'center' }}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flexDirection: 'column',
+                    }}
                   >
+                    <p>Last Updated:{data?.updatedAt.substring(0, 10)}</p>
                     <img
                       style={{
                         width: '60%',
@@ -156,9 +172,7 @@ const SchoolDetail = () => {
                             Coverage <br /> Availability
                           </span>
                           <span className="heading5">
-                            {data?.coverage_availability
-                              ? data?.coverage_availability
-                              : 'N/A'}
+                            {data?.coverage_availability ? 'True' : 'N/A'}
                           </span>
                         </div>
                       </Column>
