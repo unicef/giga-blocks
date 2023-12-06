@@ -3,11 +3,12 @@ import React from 'react';
 import { Modal, ModalBody, ModalFooter, Button } from '@carbon/react';
 import { useRouter } from 'next/navigation';
 
-const ModalComponent = ({ isOpen, onClose }) => {
+const ModalComponent = ({ isOpen, onClose, id }) => {
   const route = useRouter();
+
   const handleSubmit = () => {
-    route.push('/dashboard');
     onClose();
+    route.push(`/contributeSchool`);
   };
 
   return (

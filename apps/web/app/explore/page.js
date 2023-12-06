@@ -17,7 +17,7 @@ const SchoolCard = () => {
     <GarphQlProvider>
       <QueryProvider>
         <Navbar />
-        <PageHeader name={'Schools'} breadcrumbs={breadcrumbs} />
+        <PageHeader name={'NFT Marketplace'} breadcrumbs={breadcrumbs} />
         <Card
           query={Queries.nftListQuery}
           variables={variables}
