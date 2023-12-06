@@ -11,7 +11,6 @@ import { useContributeDetails } from '../../hooks/useContributionList';
 
 const ChangeLog = ({ schoolid }) => {
   const { data } = useContributeDetails(schoolid);
-
   return (
     <TableContainer sx={{ my: 4 }}>
       <Table>
@@ -24,7 +23,13 @@ const ChangeLog = ({ schoolid }) => {
               }}
               style={{ background: '#2c2b33', color: '#ffff' }}
             >
-              {'School Name'}
+              {'Field Type'}
+            </TableCell>
+            <TableCell
+              style={{ background: '#2c2b33', color: '#ffff' }}
+              sx={{ whiteSpace: 'nowrap', color: 'white' }}
+            >
+              {'Change'}
             </TableCell>
             <TableCell
               style={{ background: '#2c2b33', color: '#ffff' }}
@@ -36,7 +41,13 @@ const ChangeLog = ({ schoolid }) => {
               style={{ background: '#2c2b33', color: '#ffff' }}
               sx={{ whiteSpace: 'nowrap', color: 'white' }}
             >
-              {'What has been contributed'}
+              {'Date of change'}
+            </TableCell>
+            <TableCell
+              style={{ background: '#2c2b33', color: '#ffff' }}
+              sx={{ whiteSpace: 'nowrap', color: 'white' }}
+            >
+              {'Data Status'}
             </TableCell>
           </TableRow>
         </TableHead>
@@ -46,21 +57,24 @@ const ChangeLog = ({ schoolid }) => {
               <TableCell colSpan={3}>No contribution made yet.</TableCell>
             </TableRow>
           ) : (
-            data?.rows?.map((contribution) => (
-              <TableRow key={contribution?.id}>
-                <TableCell>
-                  {contribution?.school?.name &&
-                  contribution.school.name.length > 25
-                    ? `${contribution.school.name.substring(0, 25)}...`
-                    : contribution.school.name}
-                </TableCell>{' '}
-                <TableCell>{contribution?.contributedUser?.name}</TableCell>
-                <TableCell>
-                  {/* Parse the JSON string into a JavaScript object */}
-                  {JSON.parse(contribution?.contributed_data)?.typeOfSchool}
-                </TableCell>
-              </TableRow>
-            ))
+            data?.rows?.map((contribution) => {
+              const contributedData = JSON.parse(
+                contribution?.contributed_data
+              );
+              return Object.entries(contributedData).map(
+                ([fieldType, change]) => (
+                  <TableRow key={contribution?.id + fieldType}>
+                    <TableCell>{fieldType}</TableCell>
+                    <TableCell>{change.toString()}</TableCell>
+                    <TableCell>{contribution?.contributedUser?.name}</TableCell>
+                    <TableCell>
+                      {contribution?.createdAt.substring(0, 10)}
+                    </TableCell>
+                    <TableCell>{contribution?.status}</TableCell>
+                  </TableRow>
+                )
+              );
+            })
           )}
         </TableBody>
       </Table>
