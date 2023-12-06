@@ -8,7 +8,7 @@ export const mintNFT = async (
   giga_ids: string[],
 ) => {
   const config = new ConfigService();
-  const escrowAddress = config.get('ESCROW_ADDRESS');
+  const escrowAddress = config.get('NEXT_PUBLIC_GIGA_ESCROW_ADDRESS');
   const contract: any = getContractWithSigner(contractName, contractAddress);
   const schoolArgs = schoolDataArray.map((el, i) => [
     giga_ids[i],
@@ -28,7 +28,7 @@ export const mintSingleNFT = async (
   giga_id: string,
 ) => {
   const config = new ConfigService();
-  const escrowAddress = config.get('ESCROW_ADDRESS');
+  const escrowAddress = config.get('NEXT_PUBLIC_GIGA_ESCROW_ADDRESS');
   const contract: any = getContractWithSigner(contractName, contractAddress);
   const schoolArgs = [giga_id, escrowAddress, escrowAddress, schoolDataArray];
   const tx = await contract.mintNft(...schoolArgs);

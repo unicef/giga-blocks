@@ -6,10 +6,10 @@ import './school-detail.scss';
 const Connectivity = ({ schoolData }) => {
   const { id } = useParams();
   const contractAddress =
-    process.env.NEXT_PUBLIC_GIGA_NFT_CONTENT_ADDRESS?.slice(0, 3) +
+    process.env.NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS?.slice(0, 3) +
     '...' +
-    process.env.NEXT_PUBLIC_GIGA_NFT_CONTENT_ADDRESS?.slice(-6);
-  const chain = process.env.NEXT_PUBLIC_CHAIN;
+    process.env.NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS?.slice(-6);
+  const chain = process.env.NEXT_PUBLIC_DEFAULT_CHAIN;
   return (
     <>
       <Grid fullWidth className="mt-50px ">
