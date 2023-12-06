@@ -29,6 +29,7 @@ const SchoolDetail = () => {
   const router = useRouter();
   const { data, isLoading } = useSchoolDetails(id);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  console.log('data', data);
 
   const user = getCurrentUser();
   const openModal = () => {
@@ -51,7 +52,7 @@ const SchoolDetail = () => {
 
   const breadcrumbs = [
     { text: 'Home', link: '/' },
-    { text: 'Explore NFT', link: '/explore' },
+    { text: 'School', link: '/contributeSchool' },
   ];
 
   return (
@@ -122,8 +123,14 @@ const SchoolDetail = () => {
                     md={4}
                     lg={7}
                     sm={4}
-                    style={{ display: 'flex', justifyContent: 'center' }}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flexDirection: 'column',
+                    }}
                   >
+                    <p>Last Updated:{data?.updatedAt.substring(0, 10)}</p>
                     <img
                       style={{
                         width: '60%',

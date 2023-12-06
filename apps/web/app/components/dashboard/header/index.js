@@ -23,7 +23,12 @@ const Header = ({ name, breadcrumbs }) => {
           </Breadcrumb>
         </Column>
         <Column lg={16} md={8} sm={4} className="column">
-          <h2>My Dashboard</h2>
+          <div>
+            <h2>My Dashboard</h2>
+            <p>{user?.name}</p>
+            <p>{user?.email}</p>
+            <p>{user?.walletAddress}</p>
+          </div>
           <div className="sub-column-1">
             <p className="head">My Contributions</p>
             <div className="sub-column-2">
