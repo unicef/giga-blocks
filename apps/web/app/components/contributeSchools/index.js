@@ -21,7 +21,7 @@ const SchoolCard = () => {
   const [allDataLoaded, setAllDataLoaded] = useState(false);
   const [searchText, setSearchText] = useState('');
 
-  const { data, isLoading, isFetching } = useSchoolGet(1, pageSize, searchText);
+  const { data, isLoading, isFetching } = useSchoolGet(0, pageSize, searchText);
 
   const generateIdenticon = (image) => {
     const size = 50;
