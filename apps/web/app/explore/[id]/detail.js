@@ -21,7 +21,7 @@ const SchoolDetail = ({ id }) => {
   const [schoolData, setSchoolData] = useState();
 
   const decodeSchooldata = (data) => {
-    const encodeddata = data.tokenUri;  
+    const encodeddata = data.collectorTokenUri;
     const decodedData = atob(encodeddata.tokenUri.substring(29));
     const nftDetails = {
       owner: encodeddata.owner.id,
@@ -33,15 +33,18 @@ const SchoolDetail = ({ id }) => {
     if (result.data) decodeSchooldata(result.data);
   }, [result.data]);
 
-  
+  const breadcrumbs = [
+    { text: 'Home', link: '/' },
+    { text: 'Explore NFT', link: '/explore' },
+  ];
 
   return (
     <>
-      {fetching == false ?  (
+      {fetching == false ? (
         <>
           <Navbar />
-          <PageHeader name={schoolData?.schoolName} />
-          <Introduction schooldata={schoolData} />
+          <PageHeader name={schoolData?.schoolName} breadcrumbs={breadcrumbs} />
+          <Introduction schooldata={schoolData} tokenId={id} />
           <Connectivity schoolData={schoolData} />
           <TransactionHistory schoolData={schoolData} />
           <NFTMetadata schoolData={schoolData} />

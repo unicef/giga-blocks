@@ -13,9 +13,7 @@ import { Controller, useForm } from 'react-hook-form';
 import Web3Modal from '../congratulation-modal';
 import { useContributeData } from '../../hooks/useContributeData';
 import { useParams } from 'next/navigation';
-import { useSchoolDetails } from '../../hooks/useSchool';
 import { useRouter } from 'next/navigation';
-import { getCurrentUser } from '../../utils/sessionManager';
 import { Modal, ModalBody, ModalFooter } from '@carbon/react';
 
 const ContributeForm = ({ data, isOpen, onClose }) => {
@@ -25,33 +23,38 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
   const { id } = useParams();
   const [selectedOptions, setSelectedOptions] = useState({});
   const [error, setError] = useState(false);
-  const user = getCurrentUser();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    if (!user) {
-      router.push('/signIn');
-    }
-    if (data && (!selectedOptions.dropdown3 || !selectedOptions.dropdown3.selectedItem.value)) {
+    if (
+      data &&
+      (!selectedOptions.dropdown1 ||
+        (!selectedOptions.dropdown1.selectedItem.value &&
+          !selectedOptions.dropdown3) ||
+        (!selectedOptions.dropdown3.selectedItem.value &&
+          !selectedOptions.dropdown4) ||
+        (!selectedOptions.dropdown4.selectedItem.value &&
+          !selectedOptions.dropdown5) ||
+        !selectedOptions.dropdown5.selectedItem.value)
+    ) {
       setValue('latitude', data.latitude);
       setValue('longitude', data.longitude);
       setValue('country', data.country);
       setSelectedOptions({
         dropdown1: { selectedItem: { value: data?.school_type } },
-        dropdown3: { selectedItem:{value: data?.connectivity} },
-        dropdown4: { selectedItem: {value:data?.coverage_availability }},
-        dropdown5: { selectedItem: {value:data?.electricity_available} },
-      })
+        dropdown3: { selectedItem: { value: data?.connectivity } },
+        dropdown4: { selectedItem: { value: data?.coverage_availability } },
+        dropdown5: { selectedItem: { value: data?.electricity_available } },
+      });
     }
-  }, [data, user, router]);
+  }, [data, router]);
 
   const openModal = () => {
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
-    router.push('/');
     setIsModalOpen(false);
   };
 
@@ -84,7 +87,6 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
         changedData.connectivity =
           selectedOptions.dropdown3?.selectedItem?.value;
       }
-
       if (
         selectedOptions.dropdown4?.selectedItem?.value !==
         data.coverage_availability
@@ -126,12 +128,12 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
     { label: 'False', value: false },
   ];
   const coverage_availability = [
-    { label: 'Yes', value: true },
-    { label: 'No', value: false },
+    { label: 'True', value: true },
+    { label: 'False', value: false },
   ];
   const electricity_available = [
-    { label: 'Yes', value: true },
-    { label: 'No', value: false },
+    { label: 'True', value: true },
+    { label: 'False', value: false },
   ];
 
   return (
@@ -225,7 +227,7 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
                   id="dropdown4"
                   style={{ marginTop: '24px', marginBottom: '24px' }}
                   titleText="Coverage Availability"
-                  label={data?.coverage_availability}
+                  label={data?.coverage_availability ? 'True' : 'False'}
                   items={coverage_availability}
                   itemToString={(item) => (item ? item.label : '')}
                   selectedItem={selectedOptions.coverage_availability}
@@ -241,7 +243,7 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
                   id="dropdown5"
                   style={{ marginTop: '24px', marginBottom: '24px' }}
                   titleText="Electricity Availability"
-                  label={data?.electricity_available ? 'Yes' : 'No'}
+                  label={data?.electricity_available ? 'True' : 'False'}
                   items={electricity_available}
                   itemToString={(item) => (item ? item.label : '')}
                   selectedItem={selectedOptions.electricity_available}
@@ -269,7 +271,7 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
           </Grid>
         </ModalBody>
       </Modal>
-      <Web3Modal isOpen={isModalOpen} onClose={closeModal} />
+      <Web3Modal id={id} isOpen={isModalOpen} onClose={closeModal} />
     </>
   );
 };

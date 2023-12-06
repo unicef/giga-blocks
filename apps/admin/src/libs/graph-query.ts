@@ -3,7 +3,7 @@ import {gql} from "urql";
 
  const ownedNftsQuery = gql`
 
-   query  ownedNfts{ownedNfts(subgraphError: allow) {
+   query  schoolOwnedNfts{schoolOwnedNfts(subgraphError: allow) {
       id
       nfts {
         id
@@ -14,7 +14,7 @@ import {gql} from "urql";
   `
  const nftListQuery = gql`
 
-  query tokenUris($skip:Int!, $first:Int!) {tokenUris(subgraphError: allow,skip: $skip,first: $first) {
+  query schoolTokenUris($skip:Int!, $first:Int!) {schoolTokenUris(subgraphError: allow,skip: $skip,first: $first) {
     id
     tokenUri
   }
@@ -22,15 +22,15 @@ import {gql} from "urql";
 
 const nftDetailsQuery = gql`
 
-query tokenUri($id: ID!) {
-  tokenUri(id: $id, subgraphError: allow) {
+query schoolTokenUri($id: ID!) {
+  schoolTokenUri(id: $id, subgraphError: allow) {
     id
     tokenUri
     owner {
       id
     }
   }
-  transfers(subgraphError: allow, where: {tokenId: "1"}) {
+  schoolTransfers(subgraphError: allow, where: {tokenId: "1"}) {
     blockNumber
     blockTimestamp
     from

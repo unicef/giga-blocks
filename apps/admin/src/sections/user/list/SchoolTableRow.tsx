@@ -54,7 +54,7 @@ export default function SchoolTableRow({
 
   const handleEditRow = (row: string) => {
     if (mintedStatus == 'MINTED') push(`/nft/${row}`)
-    else push(`/nft/${row}`);
+    else push(`/school/${row}`);
   };
 
   const handleCheckboxChange = (event: any, row: any) => {

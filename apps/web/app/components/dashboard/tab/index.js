@@ -19,10 +19,30 @@ const ListTabs = () => {
   return (
     <div className="tabs-wrapper">
       <Tabs>
-        <TabList className="tabs">
-          <Tab>Owned NFTs</Tab>
-          <Tab>Contributions</Tab>
-        </TabList>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            background: '#222222',
+          }}
+        >
+          <TabList
+            style={{
+              display: 'flex',
+            }}
+          >
+            <Tab
+              style={{
+                marginRight: '32px',
+                color: 'white',
+              }}
+            >
+              Owned NFT
+            </Tab>
+            <Tab style={{ color: 'white' }}>Contributions</Tab>
+          </TabList>
+        </div>
         <TabPanels>
           <TabPanel>
             <OwnedNfts

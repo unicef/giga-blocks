@@ -4,11 +4,28 @@ import { ArrowRight } from '@carbon/icons-react';
 import './school-detail.scss';
 import { toSvg } from 'jdenticon';
 import { useEffect, useState } from 'react';
+import { useSellerContract } from '../../hooks/useContract';
 import NftPurchaseModal from '../../components/nftPurchaseModal';
 
-const Introduction = ({ schooldata }) => {
+const Introduction = ({ schooldata ,tokenId}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [onSell, setOnSell] = useState(false);
+  const[price, setPrice] = useState(0)
+  const sellerContract = useSellerContract();
+
+
+
+  const fetchPrice = async () => {
+    if (!sellerContract) return;
+
+    try {
+      const price = await sellerContract.methods.calculatePrice()
+        .call();
+      setPrice(price)
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -29,8 +46,12 @@ const Introduction = ({ schooldata }) => {
   };
 
   useEffect(() => {
-    if (schooldata?.owner === process.env.ESCROW_ADDRESS) setOnSell(true);
+    if (schooldata?.owner === process.env.NEXT_PUBLIC_GIGA_ESCROW_ADDRESS) setOnSell(true);
   },[]);
+
+  useEffect(()=>{
+    fetchPrice()
+  })
 
   return (
     <Grid fullWidth className="mt-50px">
@@ -88,6 +109,7 @@ const Introduction = ({ schooldata }) => {
         schooldata={schooldata}
         isOpen={isModalOpen}
         onClose={closeModal}
+        tokenId={tokenId}
       />
     </Grid>
   );

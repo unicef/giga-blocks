@@ -67,11 +67,11 @@ export default function SchoolDetails({ id }: Props) {
   const [tableData, setTableData] = useState<any>([]);
 
   useEffect(() => {
-    setTableData(data?.transfers)
+    setTableData(data?.schoolTransfers)
   }, [fetching, result])
 
   const decodeData = (schooldata:any)=>{
-    const encodeddata = schooldata?.tokenUri;
+    const encodeddata = schooldata?.schoolTokenUri;
     const decodedData = atob(encodeddata.tokenUri.substring(29));
     const schoolData = {
       tokenId: encodeddata?.id,
@@ -105,8 +105,8 @@ const methods = useForm<FormValuesProps>({})
       return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
     });
 
-    const chain = process.env.CHAIN;
-    const address = process.env.GIGA_NFT_CONTRACT_ADDRESS
+    const chain = process.env.NEXT_PUBLIC_DEFAULT_CHAIN;
+    const address = process.env.NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS
 
   return (
     <>
@@ -185,7 +185,7 @@ const methods = useForm<FormValuesProps>({})
                       />
                       <ProfileTextField
                         name="ownerId"
-                        value={result?.data?.tokenUri?.owner?.id || ""}
+                        value={result?.data?.schoolTokenUri?.owner?.id || ""}
                         label="OwnerId"
                         disabled
                       />

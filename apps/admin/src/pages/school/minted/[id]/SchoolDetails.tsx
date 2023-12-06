@@ -52,7 +52,7 @@ export default function SchoolDetails({ id }: Props) {
   const {data, fetching,error} = result
 
   const decodeData = (schooldata:any)=>{
-    const encodeddata = schooldata?.tokenUri;
+    const encodeddata = schooldata?.schoolTokenUri;
     const decodedData = atob(encodeddata.tokenUri.substring(29));
     const schoolData = {
       tokenId: encodeddata?.id,
