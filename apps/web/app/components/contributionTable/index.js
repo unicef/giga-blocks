@@ -34,7 +34,7 @@ const SpreadSheetTable = () => {
           </TableHead>
           <TableBody>
             {contributions?.length > 0 ? (
-              contributions.map((contribution) => (
+              contributions?.map((contribution) => (
                 <TableRow
                   key={contribution.id}
                   sx={{

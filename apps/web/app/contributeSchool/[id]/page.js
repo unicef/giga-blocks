@@ -21,14 +21,22 @@ import { useParams } from 'next/navigation';
 import { toSvg } from 'jdenticon';
 import { useState } from 'react';
 import PageHeader from '../../components/page-header';
+import { getCurrentUser } from '../../utils/sessionManager';
+import { useRouter } from 'next/navigation';
 
 const SchoolDetail = () => {
   const { id } = useParams();
+  const router = useRouter();
   const { data, isLoading } = useSchoolDetails(id);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const user = getCurrentUser();
   const openModal = () => {
-    setIsModalOpen(true);
+    if (user) {
+      setIsModalOpen(true);
+    } else {
+      router.push('/signIn');
+    }
   };
 
   const closeModal = () => {
