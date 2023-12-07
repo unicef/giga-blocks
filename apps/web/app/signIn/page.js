@@ -33,7 +33,11 @@ import { Default_Chain_Id } from '../components/web3/connectors/network';
 const SignIn = () => {
   const route = useRouter();
   const pathname = usePathname();
-  const { handleSubmit, control } = useForm();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm();
   const { initialize } = useAuthContext();
   const [walletAddress, setWalletAddress] = useState('');
   const loginMutation = walletLogin();
@@ -77,6 +81,7 @@ const SignIn = () => {
   };
 
   const onSubmit = async (data) => {
+    console.log('first');
     sendOtp
       .mutateAsync({ email: data.email })
       .then(() => {
@@ -145,6 +150,7 @@ const SignIn = () => {
             position: 'fixed',
             top: '50px',
             right: '2px',
+            width: '400px',
             zIndex: 1000,
           }}
         />
@@ -160,7 +166,13 @@ const SignIn = () => {
                 <Controller
                   name="email"
                   control={control}
-                  rules={{ required: 'Email is required' }}
+                  rules={{
+                    required: 'Email is required',
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                      message: 'Invalid email address',
+                    },
+                  }}
                   render={({ field }) => (
                     <TextInput
                       {...field}
@@ -175,6 +187,9 @@ const SignIn = () => {
                   )}
                 />
               )}
+              {errors.email && (
+                <p style={{ color: 'red' }}>{errors.email.message}</p>
+              )}
               {/* {showEmailField && (
                 <Checkbox className="checkbox" labelText="Remember ID" />
               )} */}
@@ -185,7 +200,7 @@ const SignIn = () => {
                 style={{ marginRight: '14px', width: '100%' }}
                 onClick={() => {
                   if (showEmailField) {
-                    // handleSubmit(onSubmit)();
+                    handleSubmit(onSubmit)();
                   } else {
                     showEmailInput();
                   }
