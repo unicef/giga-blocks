@@ -91,17 +91,12 @@ export class SchoolService {
     throw new UnauthorizedException('You wallet is not an admin wallet');
   }
 
-  async checkAdminandMintQueue(MintData: MintQueueDto) {
-    const { address } = getBatchandAddressfromSignature(MintData.signatureWithData);
-
-    if (await this.checkAdmin(address)) {
-      return this.queueService.sendMintNFT(address, MintData);
-    }
+  async mintBulkNFT(MintData: MintQueueDto) {
+    return this.queueService.sendMintNFT(MintData);
   }
 
-  async checkAdminandSingleMintQueue(MintData: MintQueueSingleDto) {
-    const { address } = getBatchandAddressfromSignature(MintData.signatureWithData);
-    return this.queueService.sendSingleMintNFT(address, MintData);
+  async mintNft(MintData: MintQueueSingleDto) {
+    return this.queueService.sendSingleMintNFT(MintData);
   }
 
   async uploadFile(
