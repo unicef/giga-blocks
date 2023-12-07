@@ -8,6 +8,7 @@ import {
   TableRow,
   Pagination,
 } from '@carbon/react';
+import './changeLogTable.scss';
 import { useContributeDetails } from '../../hooks/useContributionList';
 
 const ChangeLog = ({ schoolid }) => {
@@ -15,15 +16,15 @@ const ChangeLog = ({ schoolid }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = data?.rows?.slice(indexOfFirstItem, indexOfLastItem);
-
   const totalPages = Math.ceil(data?.meta?.total / itemsPerPage);
 
   useEffect(() => {
     refetch({ page: currentPage - 1, perPage: itemsPerPage });
   }, [currentPage, itemsPerPage]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = data?.rows?.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
     <TableContainer sx={{ my: 4 }}>
@@ -66,12 +67,12 @@ const ChangeLog = ({ schoolid }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data?.rows?.length === 0 || !data ? (
+          {currentItems?.length === 0 || !currentItems ? (
             <TableRow>
               <TableCell colSpan={6}>No contribution made yet.</TableCell>
             </TableRow>
           ) : (
-            data?.rows?.map((contribution) => {
+            currentItems?.map((contribution) => {
               const contributedData = JSON.parse(
                 contribution?.contributed_data
               );
