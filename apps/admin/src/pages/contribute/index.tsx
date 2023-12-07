@@ -146,7 +146,7 @@ const ContributeData = () => {
   }
 
   useEffect(() => {
-    isValidationSuccess && enqueueSnackbar("Successfully updated contribution", { variant: 'success' })
+    isValidationSuccess && enqueueSnackbar("Successfully updated contribution", { variant: 'success' }); refetch();
     isValidationError && enqueueSnackbar("Unsuccessful", { variant: 'error' })
   }, [isValidationSuccess, isValidationError])
 
