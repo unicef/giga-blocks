@@ -243,6 +243,11 @@
   border-bottom: 1px solid black;
   width: 75%;
 }
+.border-right {
+  margin: 0;
+  padding: 0;
+  border-right: 1px solid black;
+}
 .width-90 {
   width: 90%;
   @include breakpoint-down(md) {
@@ -252,4 +257,7 @@
 
 .digital-revolution-img {
   position: relative;
+}
+.involved-bg {
+  background: grey;
 }
