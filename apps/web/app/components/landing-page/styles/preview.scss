@@ -3,6 +3,11 @@
 @use '@carbon/react/scss/breakpoint' as *;
 @use '@carbon/react/scss/theme' as *;
 .landing-page {
+  padding-right: 0;
+  padding-left: 12px;
+  margin-right: 0;
+  --cds-grid-gutter-end: 0;
+  --cds-grid-gutter-start: 0;
   // margin-top: rem(-40px);
   @include breakpoint-down(md) {
     margin-top: $spacing-05;
@@ -10,7 +15,10 @@
   }
 }
 .landing-page__banner {
+  color: white;
+  background: #222222;
   padding-left: $spacing-06;
+  padding-bottom: $spacing-10;
   display: flex;
   flex-direction: column;
   gap: 8.5vh;
@@ -135,7 +143,7 @@
   justify-content: center;
   height: 100%;
   gap: 3vh;
-  width: 90%;
+  width: 100%;
   margin: auto;
 }
 
@@ -148,8 +156,12 @@
   border: 1px solid #fff;
 }
 
-.landing-page__r2 {
-  // margin-top: rem(-40px);
+.heading02 {
+  color: #222222;
+  font-size: 28px;
+  font-weight: 300;
+  letter-spacing: 0;
+  line-height: 38px;
 }
 .tabs-group-content {
   padding: $spacing-10 $spacing-06;
@@ -185,10 +197,11 @@
 }
 .preview-2 {
   padding-right: 0;
-  padding-left: 0;
+  padding-left: 32px;
   margin-right: 0;
   --cds-grid-gutter-end: 0;
   --cds-grid-gutter-start: 0;
+  margin-top: 64px;
   .content {
     display: flex;
     flex-direction: column;
@@ -224,6 +237,17 @@
     padding-top: $spacing-08;
   }
 }
+.border-bottom {
+  position: absolute;
+  right: 0;
+  border-bottom: 1px solid black;
+  width: 75%;
+}
+.border-right {
+  margin: 0;
+  padding: 0;
+  border-right: 1px solid black;
+}
 .width-90 {
   width: 90%;
   @include breakpoint-down(md) {
@@ -233,4 +257,7 @@
 
 .digital-revolution-img {
   position: relative;
+}
+.involved-bg {
+  background: grey;
 }

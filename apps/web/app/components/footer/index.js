@@ -21,7 +21,7 @@ const Footer = () => {
           <p className="footer-heading">USEFUL LINKS</p>
           <ul>
             <li>
-              <a href="/school">Data Repository</a>
+              <a href="/comingSoon">Data Repository</a>
             </li>
             <li>
               <a href="/#joinCommunityForm">Develop with Us</a>
@@ -35,13 +35,13 @@ const Footer = () => {
           <p className="footer-heading">TERMS</p>
           <ul>
             <li>
-              <a>TOS</a>
+              <a href="/comingSoon">TOS</a>
             </li>
             <li>
-              <a>Privacy Policy</a>
+              <a href="/comingSoon">Privacy Policy</a>
             </li>
             <li>
-              <a>Refund Policy</a>
+              <a href="/comingSoon">Refund Policy</a>
             </li>
           </ul>
         </Column>

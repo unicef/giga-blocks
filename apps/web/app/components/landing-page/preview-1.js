@@ -4,7 +4,7 @@ import { DirectionStraightRight } from '@carbon/icons-react';
 
 const LandingPage = () => {
   return (
-    <Grid className="landing-page preview1Background" fullWidth>
+    <Grid className="landing-page" fullWidth>
       <Column lg={8} md={8} sm={4} className="landing-page__banner">
         <p className="landing-subheading" style={{ fontFamily: 'lora' }}>
           Welcome to NFT 2.0
@@ -34,6 +34,14 @@ const LandingPage = () => {
             </span>
           </Button>
         </div>
+      </Column>
+      <Column md={4} lg={8} sm={4} style={{ background: 'gray' }}>
+        <img
+          className="landing-page__illo"
+          src="/landingPage/preview-1.png"
+          alt="What is nft image"
+          style={{ height: '64vh', width: '100%', objectFit: 'cover' }}
+        />
       </Column>
     </Grid>
   );

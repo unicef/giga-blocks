@@ -84,7 +84,7 @@ const SchoolDetail = () => {
                     color: 'white',
                   }}
                 >
-                  Collector NFT
+                  School Data
                 </Tab>
                 <Tab style={{ color: 'white' }}>Change Log</Tab>
               </TabList>

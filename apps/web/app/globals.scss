@@ -9,7 +9,9 @@
 * {
   font-family: 'Lora', sans-serif;
 }
-
+.cds--breadcrumb-item::after {
+  color: white !important;
+}
 .layout {
   width: 100%;
   margin: auto;
