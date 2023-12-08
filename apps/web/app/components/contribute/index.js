@@ -13,7 +13,6 @@ import { Controller, useForm } from 'react-hook-form';
 import Web3Modal from '../congratulation-modal';
 import { useContributeData } from '../../hooks/useContributeData';
 import { useParams } from 'next/navigation';
-import { useSchoolDetails } from '../../hooks/useSchool';
 import { useRouter } from 'next/navigation';
 import { Modal, ModalBody, ModalFooter } from '@carbon/react';
 
@@ -56,7 +55,6 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
   };
 
   const closeModal = () => {
-    router.push('/');
     setIsModalOpen(false);
   };
 
@@ -273,7 +271,7 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
           </Grid>
         </ModalBody>
       </Modal>
-      <Web3Modal isOpen={isModalOpen} onClose={closeModal} />
+      <Web3Modal id={id} isOpen={isModalOpen} onClose={closeModal} />
     </>
   );
 };

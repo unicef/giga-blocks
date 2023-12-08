@@ -5,8 +5,8 @@ import '../table/datatable.scss';
 const PageHeader = ({ name, breadcrumbs }) => {
   return (
     <>
-      <Grid className="preview1Background">
-        <Column sm={16} md={10} lg={6} className="centerColumn">
+      <div className="preview1Background">
+        <Column sm={16} md={10} lg={16} className="centerColumn">
           <Grid>
             <Column sm={16} md={10} lg={6}>
               <Breadcrumb style={{ marginTop: '32px' }}>
@@ -28,7 +28,7 @@ const PageHeader = ({ name, breadcrumbs }) => {
             </Column>
           </Grid>
         </Column>
-      </Grid>
+      </div>
     </>
   );
 };

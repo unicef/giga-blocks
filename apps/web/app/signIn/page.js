@@ -1,7 +1,14 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Navbar from '../components/navbar';
-import { Button, Checkbox, Column, Form, Grid, TextInput } from '@carbon/react';
+import {
+  Button,
+  InlineNotification,
+  Column,
+  Form,
+  Grid,
+  TextInput,
+} from '@carbon/react';
 import { Tile } from '@carbon/react';
 import Link from 'next/link';
 import './signIn.scss';
@@ -27,7 +34,11 @@ import { metaMaskLogin } from '../utils/metaMaskUtils';
 const SignIn = () => {
   const route = useRouter();
   const pathname = usePathname();
-  const { handleSubmit, control } = useForm();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm();
   const { initialize } = useAuthContext();
   const [walletAddress, setWalletAddress] = useState('');
   const loginMutation = walletLogin();
@@ -40,6 +51,7 @@ const SignIn = () => {
   const [previousUrl, setPreviousUrl] = useState(null);
   const [submitButtonText, setSubmitButtonText] =
     useState('Sign in with Email');
+  const [notification, setNotification] = useState(null);
 
   const showEmailInput = () => {
     setShowEmailField(true);
@@ -54,7 +66,7 @@ const SignIn = () => {
 
   useEffect(() => {
     if (!web3.isActive) {
-     void metaMask.connectEagerly();
+      void metaMask.connectEagerly();
     }
   }, []);
 
@@ -70,6 +82,7 @@ const SignIn = () => {
   };
 
   const onSubmit = async (data) => {
+    console.log('first');
     sendOtp
       .mutateAsync({ email: data.email })
       .then(() => {
@@ -100,8 +113,17 @@ const SignIn = () => {
         } else {
           route.push('/contributeSchool');
         }
+        setNotification({
+          kind: 'success',
+          title: 'Wallet login successful',
+        });
       });
-    } catch (error) {}
+    } catch (error) {
+      setNotification({
+        kind: 'error',
+        title: 'Error during wallet login',
+      });
+    }
   };
 
   useEffect(() => {
@@ -113,22 +135,45 @@ const SignIn = () => {
     setOpenModal(false);
   };
 
+  const onCloseNotification = () => {
+    setNotification(null);
+  };
+
   return (
     <>
+      {notification && (
+        <InlineNotification
+          aria-label="closes notification"
+          kind={notification.kind}
+          onClose={onCloseNotification}
+          title={notification.title}
+          style={{
+            position: 'fixed',
+            top: '50px',
+            right: '2px',
+            width: '400px',
+            zIndex: 1000,
+          }}
+        />
+      )}
       <CarbonModal open={openModal} onClose={onClose} email={email} />
       <Navbar />
       <Grid className="landing-page preview1Background signUp-grid" fullWidth>
         <Column className="form" md={4} lg={8} sm={4}>
           <Tile className="signUp-tile">
             <h1>Sign In To Your Account</h1>
-            <Form 
-            onSubmit={handleSubmit(onSubmit)}
-            >
+            <Form onSubmit={handleSubmit(onSubmit)}>
               {showEmailField && (
                 <Controller
                   name="email"
                   control={control}
-                  rules={{ required: 'Email is required' }}
+                  rules={{
+                    required: 'Email is required',
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                      message: 'Invalid email address',
+                    },
+                  }}
                   render={({ field }) => (
                     <TextInput
                       {...field}
@@ -143,6 +188,9 @@ const SignIn = () => {
                   )}
                 />
               )}
+              {errors.email && (
+                <p style={{ color: 'red' }}>{errors.email.message}</p>
+              )}
               {/* {showEmailField && (
                 <Checkbox className="checkbox" labelText="Remember ID" />
               )} */}
@@ -153,7 +201,7 @@ const SignIn = () => {
                 style={{ marginRight: '14px', width: '100%' }}
                 onClick={() => {
                   if (showEmailField) {
-                    // handleSubmit(onSubmit)();
+                    handleSubmit(onSubmit)();
                   } else {
                     showEmailInput();
                   }
