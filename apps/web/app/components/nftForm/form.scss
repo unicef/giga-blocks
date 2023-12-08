@@ -2,7 +2,9 @@
 @use '@carbon/react/scss/breakpoint' as *;
 
 .form-gap {
-  margin: 10vh 0;
+  background: #222222;
+  color: white;
+  margin: 0 0 10vh 0;
   padding-top: $spacing-11;
   padding-bottom: $spacing-11;
   @include breakpoint-down(md) {
@@ -10,7 +12,8 @@
     padding-right: $spacing-01;
   }
 }
-.heading {
+.heading10 {
+  font-size: 48px;
   @include breakpoint-down(md) {
     padding-top: $spacing-08;
   }
@@ -24,6 +27,9 @@
   @include breakpoint-down(md) {
     padding-left: $spacing-05;
     padding-right: $spacing-05;
+  }
+  .cds--label {
+    color: white;
   }
 }
 .submit-btn {

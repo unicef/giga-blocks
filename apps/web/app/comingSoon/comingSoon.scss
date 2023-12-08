@@ -1,0 +1,31 @@
+@use '@carbon/react/scss/breakpoint' as *;
+@use '@carbon/react/scss/spacing' as *;
+
+.preview1Background {
+  width: 100vw;
+  height: 100vh;
+  background-image: url('/landingPage/signInBg.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+}
+.signUp-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .signUp-tile {
+    h1 {
+      padding-bottom: $spacing-08;
+    }
+    width: 60vw;
+    @include breakpoint-down(md) {
+      width: 100vw;
+    }
+    margin: 15px 15px;
+    .checkbox {
+      margin-top: $spacing-05;
+    }
+  }
+}

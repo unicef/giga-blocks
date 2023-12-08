@@ -5,12 +5,7 @@ import React from 'react';
 const Preview2 = () => {
   return (
     <Grid className="preview-2" fullWidth>
-      <Column
-        md={4}
-        lg={7}
-        sm={4}
-        className=" content landing-page__tab-content"
-      >
+      <Column md={4} lg={12} sm={4}>
         <div
           style={{
             width: '95%',
@@ -19,8 +14,7 @@ const Preview2 = () => {
             gap: '3vh',
           }}
         >
-          <h2 className="heading8"> What is NFT 2.0?</h2>
-          <p className="heading2">
+          <p className="heading02">
             Envision a global developer community accessing and building upon a
             distributed school data repository. Each data point captures a
             school's unique narrative. With this resource, you can drive
@@ -28,19 +22,6 @@ const Preview2 = () => {
             access to quality education resources.
           </p>
         </div>
-      </Column>
-      <Column
-        md={4}
-        lg={{ span: 16, offset: 7 }}
-        sm={4}
-        style={{ background: 'gray' }}
-      >
-        <img
-          className="landing-page__illo"
-          src="/landingPage/preview-2/preview-2-img.png"
-          alt="What is nft image"
-          style={{ height: '400px', width: '100%', objectFit: 'cover' }}
-        />
       </Column>
     </Grid>
   );
