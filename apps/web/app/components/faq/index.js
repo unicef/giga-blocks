@@ -4,7 +4,7 @@ import React from 'react';
 const faq = () => {
   return (
     <>
-      <Grid className="form-gap" id="faq" fullWidth>
+      <Grid id="faq" fullWidth style={{ marginBottom: '48px' }}>
         <Column md={4} lg={8} sm={4}>
           <h1 className="heading11">Developer FAQs</h1>
         </Column>
