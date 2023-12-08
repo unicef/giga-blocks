@@ -72,7 +72,7 @@ export class QueueService {
     ];
   }
 
-  public async sendMintNFT(address: string, MintData: MintQueueDto) {
+  public async sendMintNFT(MintData: MintQueueDto) {
     try {
       const mintData = MintData.data.map(school => this.schoolToArrayMapper(school));
       let ids: string[];
@@ -83,7 +83,7 @@ export class QueueService {
         ids = MintData.data.map(school => school.id);
         giga_ids = MintData.data.map(school => school.giga_school_id);
         schools = await this.updateSchools(ids);
-        await this._mintQueue.add(SET_MINT_NFT, { address, mintData, ids, giga_ids }, jobOptions);
+        await this._mintQueue.add(SET_MINT_NFT, { mintData, ids, giga_ids }, jobOptions);
       } else {
         let mintDatum;
         for (let i = 0; i < mintData.length; i += batchSize) {
@@ -92,7 +92,7 @@ export class QueueService {
           schools = await this.updateSchools(ids);
           await this._mintQueue.add(
             SET_MINT_NFT,
-            { address, mintData: mintDatum, ids, giga_ids },
+            { mintData: mintDatum, ids, giga_ids },
             jobOptions,
           );
         }
@@ -104,17 +104,13 @@ export class QueueService {
     }
   }
 
-  public async sendSingleMintNFT(address: string, MintData: MintQueueSingleDto) {
+  public async sendSingleMintNFT(MintData: MintQueueSingleDto) {
     try {
       const mintData = this.schoolToArrayMapper(MintData.data);
       const ids = [MintData.data.id];
       const giga_id = MintData.data.giga_school_id;
       await this.updateSchools(ids);
-      await this._mintQueue.add(
-        SET_MINT_SINGLE_NFT,
-        { address, mintData, ids, giga_id },
-        jobOptions,
-      );
+      await this._mintQueue.add(SET_MINT_SINGLE_NFT, { mintData, ids, giga_id }, jobOptions);
       return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
       this._logger.error(`Error queueing transaction to blockchain `);

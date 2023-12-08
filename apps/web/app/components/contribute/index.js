@@ -14,7 +14,7 @@ import Web3Modal from '../congratulation-modal';
 import { useContributeData } from '../../hooks/useContributeData';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import { Modal, ModalBody, ModalFooter } from '@carbon/react';
+import { Modal, ModalBody } from '@carbon/react';
 
 const ContributeForm = ({ data, isOpen, onClose }) => {
   const router = useRouter();
@@ -140,136 +140,129 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
     <>
       {/* INTRODUCTION */}
       <Modal open={isOpen} onRequestClose={onClose} passiveModal={true}>
-        <ModalHeader>
-          <h1>Contribute Data for {`${data.name}`}</h1>
-        </ModalHeader>
+        <h1 style={{ marginBottom: '24px' }}>
+          Contribute Data for {`${data.name}`}
+        </h1>
         <ModalBody>
-          <Grid fullWidth style={{ marginTop: '20px' }}>
-            <Column md={8} lg={16} sm={4} className="school-detail-card">
-              <Form onSubmit={handleSubmit(onSubmit)}>
-                <Dropdown
-                  id="dropdown1"
-                  titleText="Type of school"
-                  style={{ marginBottom: '25px' }}
-                  label={data?.school_type === 'private' ? 'Private' : 'Public'}
-                  items={school_type}
-                  itemToString={(item) => (item ? item.label : '')}
-                  selectedItem={selectedOptions.school_type}
-                  onChange={(selectedItem) => {
-                    setSelectedOptions((prevOptions) => ({
-                      ...prevOptions,
-                      dropdown1: selectedItem,
-                    }));
-                    setError(false);
-                  }}
-                />
-                <Controller
-                  name="country"
-                  control={control}
-                  render={({ field }) => (
-                    <>
-                      <TextInput
-                        {...field}
-                        id="country"
-                        style={{ marginBottom: '25px', height: '48px' }}
-                        labelText="School Country"
-                        placeholder="Enter Country"
-                      />
-                    </>
-                  )}
-                />
-                <Controller
-                  name="latitude"
-                  control={control}
-                  render={({ field }) => (
-                    <>
-                      <TextInput
-                        {...field}
-                        id="latitude"
-                        style={{ marginBottom: '25px', height: '48px' }}
-                        labelText="Exact School's Location"
-                        placeholder="Enter Latitude"
-                      />
-                    </>
-                  )}
-                />
-                <Controller
-                  name="longitude"
-                  control={control}
-                  render={({ field }) => (
-                    <>
-                      <TextInput
-                        {...field}
-                        id="longitude"
-                        style={{ marginBottom: '25px', height: '48px' }}
-                        placeholder="Enter Longitude"
-                      />
-                    </>
-                  )}
-                />
-                <Dropdown
-                  id="connectivity"
-                  style={{ marginBottom: '24px' }}
-                  titleText="Connectivity"
-                  label={data?.connectivity ? 'True' : 'False'}
-                  items={connectivity}
-                  itemToString={(item) => (item ? item.label : '')}
-                  selectedItem={selectedOptions.connectivity}
-                  onChange={(selectedItem) => {
-                    setSelectedOptions((prevOptions) => ({
-                      ...prevOptions,
-                      dropdown3: selectedItem,
-                    }));
-                    setError(false);
-                  }}
-                />
-                <Dropdown
-                  id="dropdown4"
-                  style={{ marginTop: '24px', marginBottom: '24px' }}
-                  titleText="Coverage Availability"
-                  label={data?.coverage_availability ? 'True' : 'False'}
-                  items={coverage_availability}
-                  itemToString={(item) => (item ? item.label : '')}
-                  selectedItem={selectedOptions.coverage_availability}
-                  onChange={(selectedItem) => {
-                    setSelectedOptions((prevOptions) => ({
-                      ...prevOptions,
-                      dropdown4: selectedItem,
-                    }));
-                    setError(false);
-                  }}
-                />
-                <Dropdown
-                  id="dropdown5"
-                  style={{ marginTop: '24px', marginBottom: '24px' }}
-                  titleText="Electricity Availability"
-                  label={data?.electricity_available ? 'True' : 'False'}
-                  items={electricity_available}
-                  itemToString={(item) => (item ? item.label : '')}
-                  selectedItem={selectedOptions.electricity_available}
-                  onChange={(selectedItem) => {
-                    setSelectedOptions((prevOptions) => ({
-                      ...prevOptions,
-                      dropdown5: selectedItem,
-                    }));
-                    setError(false);
-                  }}
-                />
-                {error && (
-                  <p style={{ color: 'red' }}>
-                    ** Please make changes to school data before submitting
-                  </p>
-                )}
-                <Button
-                  onClick={handleSubmit(onSubmit)}
-                  style={{ width: '100%' }}
-                >
-                  Contribute Now
-                </Button>
-              </Form>
-            </Column>
-          </Grid>
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <Dropdown
+              id="dropdown1"
+              titleText="Type of school"
+              style={{ marginBottom: '25px' }}
+              label={data?.school_type === 'private' ? 'Private' : 'Public'}
+              items={school_type}
+              itemToString={(item) => (item ? item.label : '')}
+              selectedItem={selectedOptions.school_type}
+              onChange={(selectedItem) => {
+                setSelectedOptions((prevOptions) => ({
+                  ...prevOptions,
+                  dropdown1: selectedItem,
+                }));
+                setError(false);
+              }}
+            />
+            <Controller
+              name="country"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <TextInput
+                    {...field}
+                    id="country"
+                    style={{ marginBottom: '25px', height: '48px' }}
+                    labelText="School Country"
+                    placeholder="Enter Country"
+                  />
+                </>
+              )}
+            />
+            <Controller
+              name="latitude"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <TextInput
+                    {...field}
+                    id="latitude"
+                    style={{ marginBottom: '25px', height: '48px' }}
+                    labelText="Exact School's Location"
+                    placeholder="Enter Latitude"
+                  />
+                </>
+              )}
+            />
+            <Controller
+              name="longitude"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <TextInput
+                    {...field}
+                    id="longitude"
+                    style={{ marginBottom: '25px', height: '48px' }}
+                    placeholder="Enter Longitude"
+                  />
+                </>
+              )}
+            />
+            <Dropdown
+              id="connectivity"
+              style={{ marginBottom: '24px' }}
+              titleText="Connectivity"
+              label={data?.connectivity ? 'True' : 'False'}
+              items={connectivity}
+              itemToString={(item) => (item ? item.label : '')}
+              selectedItem={selectedOptions.connectivity}
+              onChange={(selectedItem) => {
+                setSelectedOptions((prevOptions) => ({
+                  ...prevOptions,
+                  dropdown3: selectedItem,
+                }));
+                setError(false);
+              }}
+            />
+            <Dropdown
+              id="dropdown4"
+              style={{ marginTop: '24px', marginBottom: '24px' }}
+              titleText="Coverage Availability"
+              label={data?.coverage_availability ? 'True' : 'False'}
+              items={coverage_availability}
+              itemToString={(item) => (item ? item.label : '')}
+              selectedItem={selectedOptions.coverage_availability}
+              onChange={(selectedItem) => {
+                setSelectedOptions((prevOptions) => ({
+                  ...prevOptions,
+                  dropdown4: selectedItem,
+                }));
+                setError(false);
+              }}
+            />
+            <Dropdown
+              id="dropdown5"
+              style={{ marginTop: '24px', marginBottom: '24px' }}
+              titleText="Electricity Availability"
+              label={data?.electricity_available ? 'True' : 'False'}
+              items={electricity_available}
+              itemToString={(item) => (item ? item.label : '')}
+              selectedItem={selectedOptions.electricity_available}
+              onChange={(selectedItem) => {
+                setSelectedOptions((prevOptions) => ({
+                  ...prevOptions,
+                  dropdown5: selectedItem,
+                }));
+                setError(false);
+              }}
+            />
+            {error && (
+              <p style={{ color: 'red' }}>
+                * Please make changes to school data before submitting
+              </p>
+            )}
+          </Form>
         </ModalBody>
+        <Button onClick={handleSubmit(onSubmit)} style={{ width: '100%' }}>
+          Contribute Now
+        </Button>
       </Modal>
       <Web3Modal id={id} isOpen={isModalOpen} onClose={closeModal} />
     </>

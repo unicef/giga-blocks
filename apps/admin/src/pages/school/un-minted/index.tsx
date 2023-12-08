@@ -124,15 +124,9 @@ const VerifiedSchool = () => {
       if(selectedValues.length === 0){
         enqueueSnackbar("Please select atleast one school", { variant: 'error' })
         return Error("Please select atleast one school");
-      }
-      if(!provider.provider) return;
-      const signature = await signTransaction();
-      if(!signature){
-        enqueueSnackbar("Signature is null", { variant: 'error' })
-        return Error("Signature is null");
       } 
       setSelectedValues([])
-      mutate({data:selectedValues, signatureWithData:signature})
+      mutate({data:selectedValues})
     },[signTransaction,selectedValues])
 
     let test;

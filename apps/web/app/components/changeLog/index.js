@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Table,
   TableBody,
@@ -6,11 +6,26 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Pagination,
 } from '@carbon/react';
+import './changeLogTable.scss';
 import { useContributeDetails } from '../../hooks/useContributionList';
 
 const ChangeLog = ({ schoolid }) => {
-  const { data } = useContributeDetails(schoolid);
+  const { data, refetch } = useContributeDetails(schoolid);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  const totalPages = Math.ceil(data?.meta?.total / itemsPerPage);
+
+  useEffect(() => {
+    refetch({ page: currentPage - 1, perPage: itemsPerPage });
+  }, [currentPage, itemsPerPage]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = data?.rows?.slice(indexOfFirstItem, indexOfLastItem);
+
   return (
     <TableContainer sx={{ my: 4 }}>
       <Table>
@@ -52,12 +67,12 @@ const ChangeLog = ({ schoolid }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data?.rows?.length === 0 || !data ? (
+          {currentItems?.length === 0 || !currentItems ? (
             <TableRow>
-              <TableCell colSpan={3}>No contribution made yet.</TableCell>
+              <TableCell colSpan={6}>No contribution made yet.</TableCell>
             </TableRow>
           ) : (
-            data?.rows?.map((contribution) => {
+            currentItems?.map((contribution) => {
               const contributedData = JSON.parse(
                 contribution?.contributed_data
               );
@@ -78,6 +93,17 @@ const ChangeLog = ({ schoolid }) => {
           )}
         </TableBody>
       </Table>
+      <Pagination
+        totalItems={data?.meta?.total || 0}
+        page={currentPage}
+        pageSize={itemsPerPage}
+        pageSizes={[10, 20, 30, 40, 50]}
+        onChange={({ page, pageSize }) => {
+          setCurrentPage(page);
+          setItemsPerPage(pageSize);
+        }}
+        style={{ background: '#2C2B33', color: 'white' }}
+      />
     </TableContainer>
   );
 };
