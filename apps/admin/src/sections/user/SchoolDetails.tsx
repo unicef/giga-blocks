@@ -56,6 +56,7 @@ export default function SchoolDetails({ id }: Props) {
   const [nftData, setNftData] = useState(
     {
       id: "",
+      giga_school_id:"",
       schoolName: "",
       longitude: "",
       latitude: "",
@@ -85,6 +86,7 @@ export default function SchoolDetails({ id }: Props) {
   useEffect(() => {
     setNftData({
       id: data?.id,
+      giga_school_id: data?.giga_school_id,
       schoolName: data?.name,
       longitude: data?.longitude,
       latitude: data?.latitude,
@@ -125,16 +127,10 @@ export default function SchoolDetails({ id }: Props) {
     formState: { isSubmitting },
   } = methods;
 
-  const signTransaction = async () =>{
-    const signer = (web3.provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
-    const signature = await mintSignature(signer, '1');
-    return signature;
-  }
+  
 
   const mintSchool = async () => {
-    const signature = await signTransaction();
-    if(!signature) return Error("Signature is null");
-    mutate({data:nftData, signatureWithData:signature})
+    mutate({data:nftData})
   }
 
 

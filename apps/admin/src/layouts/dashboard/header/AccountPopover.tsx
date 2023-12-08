@@ -28,7 +28,7 @@ export default function AccountPopover() {
   const OPTIONS = [
     {
       label: 'My Profile',
-      linkTo: `${PATH_USER.account(user?.userId)}`,
+      linkTo: `${PATH_USER.account(user?.id)}`,
     },
   ];
 

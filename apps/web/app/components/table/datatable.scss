@@ -6,12 +6,11 @@
 /* FlexGrid styles are not emitted by default, the feature flag must be turned on */
 
 .preview1Background {
-  height: 192px;
+  margin-top: 48px;
+  height: 25vh;
+  width: 100vw;
   background: #222222;
-  background-size: cover;
-  background-repeat: no-repeat;
   color: white;
-  background-position: center;
 }
 
 .centerColumn {

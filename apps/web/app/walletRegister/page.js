@@ -2,7 +2,15 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../components/navbar';
 import { Controller, useForm } from 'react-hook-form';
-import { Button, Checkbox, Column, Form, Grid, TextInput } from '@carbon/react';
+import {
+  Button,
+  Checkbox,
+  Column,
+  Form,
+  Grid,
+  TextInput,
+  InlineNotification,
+} from '@carbon/react';
 import { Tile } from '@carbon/react';
 import './walletRegister.scss';
 import Link from 'next/link';
@@ -26,6 +34,8 @@ const WalletRegisterForm = () => {
   const getNonceQuery = useGetNonce();
   const web3 = useWeb3React();
   const { initialize } = useAuthContext();
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     if (web3) {
@@ -50,6 +60,14 @@ const WalletRegisterForm = () => {
     }
   };
 
+  const showSuccessMessage = () => {
+    setSuccessMessage('Account created successfully! ');
+  };
+
+  const showErrorMessage = (error) => {
+    setErrorMessage(`Error registering wallet: ${error.message}`);
+  };
+
   const onSubmit = async (data) => {
     try {
       const { nonce } = await getNonceQuery.mutateAsync();
@@ -65,9 +83,10 @@ const WalletRegisterForm = () => {
         saveConnectors('metaMask');
         initialize();
       });
-
+      showSuccessMessage();
       console.log('Wallet registered successfully!');
     } catch (error) {
+      showErrorMessage(error);
       console.error('Error registering wallet:', error);
     }
   };
@@ -136,6 +155,27 @@ const WalletRegisterForm = () => {
                 Submit
               </Button>
             </Form>
+            {successMessage && (
+              <InlineNotification
+                kind="success"
+                title={successMessage}
+                onCloseButtonClick={() => setSuccessMessage(null)}
+                style={{
+                  position: 'fixed',
+                  top: '50px',
+                  right: '2px',
+                  width: '400px',
+                  zIndex: 1000,
+                }}
+              />
+            )}
+            {errorMessage && (
+              <InlineNotification
+                kind="error"
+                title={errorMessage}
+                onCloseButtonClick={() => setErrorMessage(null)}
+              />
+            )}
           </Tile>
           <p style={{ marginLeft: '20px' }}>
             Already have an account? <Link href="/signIn">Sign In</Link>

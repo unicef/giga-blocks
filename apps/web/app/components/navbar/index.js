@@ -20,6 +20,7 @@ import { Default_Chain_Id } from '../../components/web3/connectors/network';
 import { Link } from 'next/link';
 import { useAppAuthContext } from '../../auth/JwtContext';
 import { useWeb3React } from '@web3-react/core';
+import {metaMaskLogin} from '../../utils/metaMaskUtils';
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -50,7 +51,7 @@ const Navbar = () => {
   useEffect(() => {}, [account]);
 
   const handleWalletLogin = async () => {
-    await metaMask.activate(Default_Chain_Id);
+   await metaMaskLogin();
   };
 
   return (

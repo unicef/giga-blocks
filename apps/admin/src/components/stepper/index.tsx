@@ -130,12 +130,16 @@ export default function HorizontalLinearStepper({propsTableData}:{propsTableData
             enqueueSnackbar('Successfully uploaded to database!');
             push(`/school/un-minted?uploadId=${response.data.data}`)
           }
+          if(response?.status === 500){
+            console.log("error uploading")
+            enqueueSnackbar('Error uploading to database! Please check your file',{variant: 'error'});
+          }
         })
         .catch((error: AxiosError) => {
           // Handle upload error
-          console.log(error);
-        //   setShowErrorMsg(error?.message);
           setProgress(0);
+          enqueueSnackbar('Error uploading to database! Please check your file',{variant: 'error'});
+          setLoading(false)
         });
     }
   };
