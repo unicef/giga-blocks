@@ -6,6 +6,11 @@ import { useRouter } from 'next/navigation';
 const ModalComponent = ({ isOpen, onClose, id }) => {
   const route = useRouter();
 
+  const handleClick = () => {
+    onClose();
+    route.push('/dashboard');
+  };
+
   const handleSubmit = () => {
     onClose();
     route.push(`/contributeSchool`);
@@ -23,7 +28,7 @@ const ModalComponent = ({ isOpen, onClose, id }) => {
         </h4>
       </ModalBody>
       <ModalFooter style={{ margin: '0' }}>
-        <Button kind="secondary" onClick={onClose}>
+        <Button kind="secondary" onClick={handleClick}>
           Close
         </Button>
         <Button onClick={handleSubmit}>View Contributed Data</Button>
