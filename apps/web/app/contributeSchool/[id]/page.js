@@ -29,7 +29,6 @@ const SchoolDetail = () => {
   const router = useRouter();
   const { data, isLoading } = useSchoolDetails(id);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log('data', data);
 
   const user = getCurrentUser();
   const openModal = () => {
@@ -109,14 +108,14 @@ const SchoolDetail = () => {
                       </p>
                     </Tile>
                     <Tile className={`tile-school tile-white`}>
+                      <p className="heading2">Country</p>
+                      <p className="heading5">{data?.country}</p>
+                    </Tile>
+                    <Tile className={`tile-school tile-white`}>
                       <p className="heading2">Exact Location</p>
                       <p className="heading5">
                         {data?.latitude}, {data?.longitude}
                       </p>
-                    </Tile>
-                    <Tile className={`tile-school tile-white`}>
-                      <p className="heading2">Country</p>
-                      <p className="heading5">{data?.country}</p>
                     </Tile>
                   </Column>
                   <Column
