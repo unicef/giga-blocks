@@ -4,7 +4,7 @@ import { DirectionStraightRight } from '@carbon/icons-react';
 
 const LandingPage = () => {
   return (
-    <Grid className="landing-page preview1Background" fullWidth>
+    <Grid className="landing-page" fullWidth>
       <Column lg={8} md={8} sm={4} className="landing-page__banner">
         <p className="landing-subheading" style={{ fontFamily: 'lora' }}>
           Welcome to NFT 2.0
@@ -35,6 +35,7 @@ const LandingPage = () => {
           </Button>
         </div>
       </Column>
+      <Column lg={8} md={8} sm={4} className=""></Column>
     </Grid>
   );
 };

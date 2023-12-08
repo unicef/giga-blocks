@@ -3,6 +3,11 @@
 @use '@carbon/react/scss/breakpoint' as *;
 @use '@carbon/react/scss/theme' as *;
 .landing-page {
+  padding-right: 0;
+  padding-left: 12px;
+  margin-right: 0;
+  --cds-grid-gutter-end: 0;
+  --cds-grid-gutter-start: 0;
   // margin-top: rem(-40px);
   @include breakpoint-down(md) {
     margin-top: $spacing-05;
@@ -10,7 +15,10 @@
   }
 }
 .landing-page__banner {
+  color: white;
+  background: #222222;
   padding-left: $spacing-06;
+  padding-bottom: $spacing-10;
   display: flex;
   flex-direction: column;
   gap: 8.5vh;
