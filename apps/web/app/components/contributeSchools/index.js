@@ -25,7 +25,7 @@ const SchoolCard = () => {
 
   const generateIdenticon = (image) => {
     const size = 50;
-    const svgString = toSvg(image.toString(), size);
+    const svgString = toSvg(image?.toString(), size);
     return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
   };
 
