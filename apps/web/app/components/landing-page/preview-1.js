@@ -35,7 +35,14 @@ const LandingPage = () => {
           </Button>
         </div>
       </Column>
-      <Column lg={8} md={8} sm={4} className=""></Column>
+      <Column md={4} lg={8} sm={4} style={{ background: 'gray' }}>
+        <img
+          className="landing-page__illo"
+          src="/landingPage/preview-1.png"
+          alt="What is nft image"
+          style={{ height: '64vh', width: '100%', objectFit: 'cover' }}
+        />
+      </Column>
     </Grid>
   );
 };
