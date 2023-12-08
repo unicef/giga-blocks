@@ -1,13 +1,6 @@
 'use client';
 import Scrollbar from '@components/scrollbar';
-import {
-  TableEmptyRows,
-  TableHeadUsers,
-  TableNoData,
-  TablePaginationCustom,
-  TableSelectedAction,
-  useTable,
-} from '@components/table';
+import { TableHeadUsers, TableNoData, TablePaginationCustom, useTable } from '@components/table';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
 import {
   Box,
@@ -16,20 +9,16 @@ import {
   Tabs,
   Divider,
   TableContainer,
-  Tooltip,
-  IconButton,
   Table,
   TableBody,
   Tab,
+  TableRow,
+  TableCell,
 } from '@mui/material';
 import { CircularProgress } from '@mui/material';
-import SchoolTableRow from '@sections/user/list/SchoolTableRow';
 import { SyntheticEvent, useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { Queries } from 'src/libs/graph-query';
-import { useSchoolCount } from '@hooks/school/useSchool';
-import { useContributeGet, useContributionValidate } from '@hooks/contribute/useContribute';
-import ContributeTableRow from '@sections/user/list/ContributTableRow';
 import { useSnackbar } from '@components/snackbar';
 import { useValidateBulkUpdate, useValidateGet } from '@hooks/validate/useValidate';
 import ValidateTableRow from '@sections/user/list/ValidateTableRow';
@@ -39,7 +28,6 @@ const ValidateData = () => {
   const TABLE_HEAD = [
     { id: 'school', label: 'School', align: 'left' },
     { id: 'isApproved', label: 'Approval Status', align: 'left' },
-    // {id:'contributedData',label:'Contributed Data',align:'left'},
     { id: 'date', label: 'Date', align: 'left' },
   ];
 
@@ -50,7 +38,6 @@ const ValidateData = () => {
     orderBy,
     setPage,
     rowsPerPage,
-    onSelectRow,
     onSort,
     onChangeDense,
     onChangePage,
@@ -59,17 +46,15 @@ const ValidateData = () => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const [status, setStatus] = useState<string>('true');
+  const [status, setStatus] = useState<string>('false');
 
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
-  const { data: total } = useSchoolCount('MINTED');
   const [result] = useQuery({
     query: Queries.nftListQuery,
     variables: { skip: page * rowsPerPage, first: rowsPerPage },
   });
-  const { data, fetching, error } = result;
-  const { data: ValidatedData, refetch } = useValidateGet(page, rowsPerPage, status);
+  const { fetching } = result;
 
   const {
     mutate,
@@ -77,9 +62,12 @@ const ValidateData = () => {
     isError: isValidationError,
   } = useValidateBulkUpdate();
 
-  useEffect(() => {
-    refetch();
-  }, [status]);
+  const { data: ValidatedData, isFetching } = useValidateGet(
+    page,
+    rowsPerPage,
+    status,
+    isValidationSuccess
+  );
 
   const decodeSchooldata = (data: any) => {
     // const encodeddata = data.tokenUris;
@@ -108,7 +96,7 @@ const ValidateData = () => {
 
   let filteredData: any = [];
   useEffect(() => {
-    if (ValidatedData?.rows.length > 0) decodeSchooldata(ValidatedData);
+    decodeSchooldata(ValidatedData);
   }, [ValidatedData]);
 
   const onSelectAllRows = (e: any) => {
@@ -155,13 +143,18 @@ const ValidateData = () => {
                     orderBy={orderBy}
                     headLabel={TABLE_HEAD}
                     rowCount={tableData?.length}
-                    showCheckBox={true}
+                    showCheckBox={status === 'true' ? false : true}
                     onSort={onSort}
                     numSelected={selectedValues?.length}
                     onSelectAllRows={onSelectAllRows}
                   />
                   <TableBody>
-                    {tableData &&
+                    {isFetching ? (
+                      <TableRow>
+                        <TableCell sx={{ minWidth: '300px' }}>Loading data....</TableCell>
+                      </TableRow>
+                    ) : (
+                      tableData &&
                       tableData.map((row: any) => (
                         <ValidateTableRow
                           key={row.id}
@@ -169,9 +162,10 @@ const ValidateData = () => {
                           selectedValues={selectedValues}
                           setSelectedValues={setSelectedValues}
                           rowData={row}
-                          checkbox={true}
+                          checkbox={status === 'true' ? false : true}
                         />
-                      ))}
+                      ))
+                    )}
                     <TableNoData isNotFound={tableData.length === 0} />
                   </TableBody>
                 </Table>
@@ -179,7 +173,6 @@ const ValidateData = () => {
             </TableContainer>
             <TablePaginationCustom
               count={ValidatedData?.meta?.total}
-              // count={tableData?.length}
               setPage={setPage}
               page={page}
               rowsPerPage={rowsPerPage}
@@ -228,12 +221,8 @@ const ValidateData = () => {
       </div>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+          <Tab label="Pending" {...a11yProps(1)} onClick={() => handleApproveChange('false')} />
           <Tab label="Approved" {...a11yProps(0)} onClick={() => handleApproveChange('true')} />
-          <Tab
-            label="Not Approved"
-            {...a11yProps(1)}
-            onClick={() => handleApproveChange('false')}
-          />
         </Tabs>
       </Box>
       <Box>
@@ -246,9 +235,6 @@ const ValidateData = () => {
           <TabsDisplay />
         </CustomTabPanel>
       </Box>
-      <CustomTabPanel value={value} index={2}>
-        <TabsDisplay />
-      </CustomTabPanel>
     </DashboardLayout>
   );
 };
