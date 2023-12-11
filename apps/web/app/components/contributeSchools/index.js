@@ -17,7 +17,7 @@ import { toSvg } from 'jdenticon';
 
 const SchoolCard = () => {
   const [schoolData, setSchoolData] = useState([]);
-  const [pageSize, setPageSize] = useState(12);
+  const [pageSize, setPageSize] = useState(10);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
   const [searchText, setSearchText] = useState('');
 
@@ -34,10 +34,12 @@ const SchoolCard = () => {
   }, [data]);
 
   const loadMore = () => {
-    if (pageSize < data?.meta.total - 12) {
-      setPageSize(pageSize + 12);
+    const remainingSchools = data?.meta?.total - pageSize;
+    const batchSize = remainingSchools >= 12 ? 12 : remainingSchools;
+
+    if (remainingSchools > 0) {
+      setPageSize((prevPageSize) => prevPageSize + batchSize);
     } else {
-      setPageSize(data.rows.length);
       setAllDataLoaded(true);
     }
   };
@@ -57,7 +59,7 @@ const SchoolCard = () => {
       </div>
       <Grid fullWidth style={{ margin: '30px auto' }}>
         {schoolData &&
-          schoolData.map((school) => (
+          schoolData?.map((school) => (
             <Column sm={4}>
               <ClickableTile
                 className="card"
