@@ -17,7 +17,7 @@ import { toSvg } from 'jdenticon';
 
 const SchoolCard = () => {
   const [schoolData, setSchoolData] = useState([]);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(12);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
   const [searchText, setSearchText] = useState('');
 
