@@ -76,14 +76,14 @@ const ChangeLog = ({ schoolid }) => {
               const contributedData = JSON.parse(
                 contribution?.contributed_data
               );
-              return Object.entries(contributedData).map(
+              return Object.entries(contributedData)?.map(
                 ([fieldType, change]) => (
                   <TableRow key={contribution?.id + fieldType}>
                     <TableCell>{fieldType}</TableCell>
                     <TableCell>{change?.toString()}</TableCell>
                     <TableCell>{contribution?.contributedUser?.name}</TableCell>
                     <TableCell>
-                      {contribution?.createdAt.substring(0, 10)}
+                      {contribution?.createdAt?.substring(0, 10)}
                     </TableCell>
                     <TableCell>{contribution?.status}</TableCell>
                   </TableRow>
