@@ -14,6 +14,7 @@ import './card.scss';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { toSvg } from 'jdenticon';
+import { Queries } from '../../libs/graph-query';
 
 const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
   const [searchText, setSearchText] = useState('');
@@ -22,9 +23,14 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
     query: query,
     variables: {...variables,name:searchText},
   });
+  const [imagedata] = useQuery({
+    query:Queries.nftImages ,
+    variables: {...variables},
+  });
   const { data: queryData, fetching, error } = result;
   const [schoolData, setSchoolData] = useState([]);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
+  const [imageData, setImageData] = useState([]);
 
   const generateIdenticon = (image) => {
     const size = 50;
@@ -34,7 +40,22 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
 
   useEffect(() => {
     if (queryData) decodeSchooldata(queryData);
+    if(imagedata) decodeImage(imagedata?.data?.nftImages)
   }, [queryData]);
+
+  const decodeImage = (data) => {
+    console.log("imageData",data)
+    const decodedImage = [];
+    for (let i = 0; i < data?.length; i++) {
+      const imageData = {
+        tokenId: data[i].id,
+        image: decodeURIComponent(escape(atob(data[i].imageScript.toString()))),
+      };
+      console.log(imageData)
+      decodedImage.push(imageData);
+    }
+    setImageData(decodedImage);
+  }
 
   const decodeSchooldata = (data) => {
     const encodeddata = variables?.id ? data?.collectorOwnedNft?.nfts : data?.nftDatas;
@@ -98,7 +119,8 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
               >
                 <div className="row">
                   <img
-                    src={generateIdenticon(school?.tokenId)}
+                    // src={generateIdenticon(school?.tokenId)}
+                    src = {imageData?.find((image)=>image.tokenId === school?.tokenId)?.image}
                     alt="SVG Image"
                     style={{ marginBottom: '16px' }}
                   />

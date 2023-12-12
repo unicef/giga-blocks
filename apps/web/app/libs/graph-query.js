@@ -73,11 +73,20 @@ const collectorTransferQuery = gql`
   }
 `;
 
+const nftImages  = gql`
+  query nftImages($first: Int!) {
+    nftImages(subgraphError: allow, first: $first) {
+      id
+      imageScript
+    }
+  }`
+
 export const Queries = {
   ownedNftsQuery,
   nftListQuery,
   nftDataQuery,
   nftDetailsQuery,
   transferQuery,
-  collectorTransferQuery
+  collectorTransferQuery,
+  nftImages
 };
