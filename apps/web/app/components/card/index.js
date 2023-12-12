@@ -73,7 +73,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
     // }
   };
 
-  return fetching === false ? (
+  return (
     <>
       <div style={{ padding: '80px 40px 10px 40px' }}>
         <Search
@@ -86,6 +86,8 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
           }}
         />
       </div>
+      {fetching === false ? (
+
       <Grid fullWidth style={{ margin: '30px auto' }}>
         {schoolData.length > 0 ? (
           schoolData?.map((school) => (
@@ -187,13 +189,15 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
           </Button>
         </Column>
       </Grid>
-    </>
+    
   ) : (
     <div className="loader-container">
       <Loading withOverlay={false} />{' '}
       <span>Loading school data, please wait...</span>{' '}
     </div>
-  );
+  )}
+  </>
+  )
 };
 
 export default SchoolCard;

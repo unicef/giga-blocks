@@ -25,7 +25,7 @@ const nftListQuery = gql`
 
 const nftDataQuery = gql`
   query nftDatas($first: Int!, $name: String) {
-    nftDatas(subgraphError: allow, first: $first,where:{name_contains:$name}) {
+    nftDatas(subgraphError: allow, first: $first,where:{name_contains_nocase:$name}) {
       id
       location
       name 
