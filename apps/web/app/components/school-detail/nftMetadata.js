@@ -60,7 +60,7 @@ const Connectivity = ({ schoolData }) => {
           </Grid>
           <Grid fullWidth className="school-connectivity-grid">
             <Column className="school-connectivity-column">
-              <div className="school-connectivity-card">
+              <div className="school-connectivity-card-2">
                 <Column md={4} lg={8} sm={4}>
                   <div>
                     <span className="heading2" style={{ marginBottom: '14px' }}>
@@ -83,24 +83,14 @@ const Connectivity = ({ schoolData }) => {
                     {schoolData?.coverage_availabitlity}
                   </span>
                 </Column>
+
                 <Column md={4} lg={8} sm={4}>
                   <span className="heading2" style={{ marginBottom: '14px' }}>
-                    Connectivity Status
+                    Electricity Availability
                   </span>
                   <span className="heading5">
                     <br />
-                    {schoolData?.connectivity
-                      ? schoolData?.connectivity
-                      : 'N/A'}
-                  </span>
-                </Column>
-                <Column md={4} lg={8} sm={4}>
-                  <span className="heading2" style={{ marginBottom: '14px' }}>
-                    Coverage Availability
-                  </span>
-                  <span className="heading5">
-                    <br />
-                    {schoolData?.coverage_availabitlity}
+                    {schoolData?.electricity_availabilty}
                   </span>
                 </Column>
               </div>
