@@ -19,7 +19,7 @@ const SchoolCard = () => {
         <Navbar />
         <PageHeader name={'NFT Marketplace'} breadcrumbs={breadcrumbs} />
         <Card
-          query={Queries.nftListQuery}
+          query={Queries.nftDataQuery}
           variables={variables}
           pageSize={pageSize}
           setPageSize={setPageSize}

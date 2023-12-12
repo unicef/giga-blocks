@@ -23,6 +23,16 @@ const nftListQuery = gql`
   }
 `;
 
+const nftDataQuery = gql`
+  query nftDatas($first: Int!) {
+    nftDatas(subgraphError: allow, first: $first) {
+      id
+      location
+      name 
+    }
+  }
+`;
+
 const nftDetailsQuery = gql`
   query collectoTokenrUri($id: ID!) {
     collectorTokenUri(id: $id, subgraphError: allow) {
@@ -66,6 +76,7 @@ const collectorTransferQuery = gql`
 export const Queries = {
   ownedNftsQuery,
   nftListQuery,
+  nftDataQuery,
   nftDetailsQuery,
   transferQuery,
   collectorTransferQuery

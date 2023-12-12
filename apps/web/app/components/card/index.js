@@ -25,7 +25,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
 
   const generateIdenticon = (image) => {
     const size = 50;
-    const svgString = toSvg(image.toString(), size);
+    const svgString = toSvg(image?.toString(), size);
     return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
   };
 
@@ -34,16 +34,29 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
   }, [queryData]);
 
   const decodeSchooldata = (data) => {
-    const encodeddata = variables?.id ? data?.collectorOwnedNft?.nfts : data?.collectorTokenUris;
+    const encodeddata = variables?.id ? data?.collectorOwnedNft?.nfts : data?.nftDatas;
     const decodedShooldata = [];
-    for (let i = 0; i < encodeddata?.length; i++) {
+
+    if(!variables?.id){
+      for (let i = 0; i < encodeddata?.length; i++) {
+        console.log(encodeddata)
+        const schoolData = {
+          tokenId: encodeddata[i].id,
+          schoolName: encodeddata[i].name,
+          country: encodeddata[i].location,
+        };
+        decodedShooldata.push(schoolData);
+      }
+
+    }
+   else  {for (let i = 0; i < encodeddata?.length; i++) {
       const decodedData = atob(encodeddata[i].tokenUri.substring(29));
       const schoolData = {
         tokenId: encodeddata[i].id,
         ...JSON.parse(decodedData),
       };
       decodedShooldata.push(schoolData);
-    }
+    }}
     setSchoolData(decodedShooldata);
   };
 
@@ -70,7 +83,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
                 >
                   <div className="row">
                     <img
-                      src={generateIdenticon(school?.image)}
+                      src={generateIdenticon(school?.tokenId)}
                       alt="SVG Image"
                       style={{ marginBottom: '16px' }}
                     />
