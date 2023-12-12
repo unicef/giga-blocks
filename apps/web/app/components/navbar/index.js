@@ -14,6 +14,7 @@ import {
   HeaderSideNavItems,
   Dropdown,
 } from '@carbon/react';
+import './navbar.scss';
 import { Wallet } from '@carbon/react/icons';
 import { metaMask } from '../../components/web3/connectors/metamask';
 import { Default_Chain_Id } from '../../components/web3/connectors/network';
@@ -56,30 +57,53 @@ const Navbar = () => {
   return (
     <HeaderContainer
       render={({ isSideNavExpanded, onClickSideNavExpand }) => (
-        <Header>
+        <Header
+          classname="navbar"
+          style={{ background: '#383838', color: 'white' }}
+        >
           <SkipToContent />
           <HeaderMenuButton
             aria-label="Open menu"
             onClick={onClickSideNavExpand}
             isActive={isSideNavExpanded}
           />
-          <HeaderName as={Link} href="/" prefix="">
+          <HeaderName as={Link} href="/" prefix="" style={{ color: 'white' }}>
             NFT 2.0
           </HeaderName>
-          <HeaderNavigation>
-            <HeaderMenuItem as={Link} href="/contributeSchool">
+          <HeaderNavigation style={{ background: '#383838', color: 'white' }}>
+            <HeaderMenuItem
+              as={Link}
+              href="/contributeSchool"
+              style={{ background: '#383838', color: 'white' }}
+            >
               School Database
             </HeaderMenuItem>
-            <HeaderMenuItem as={Link} href="/explore">
+            <HeaderMenuItem
+              as={Link}
+              href="/explore"
+              style={{ background: '#383838', color: 'white' }}
+            >
               NFT Marketplace
             </HeaderMenuItem>
-            <HeaderMenuItem as={Link} href="/#joinCommunityForm">
+            <HeaderMenuItem
+              as={Link}
+              href="/#joinCommunityForm"
+              style={{ background: '#383838', color: 'white' }}
+            >
               Develop With Us
             </HeaderMenuItem>
-            <HeaderMenuItem as={Link} href="/#faq">
+            <HeaderMenuItem
+              as={Link}
+              href="/#faq"
+              style={{ background: '#383838', color: 'white' }}
+            >
               Developer FAQ
             </HeaderMenuItem>
-            <HeaderMenuItem as={Link} href="/#form">
+            <HeaderMenuItem
+              as={Link}
+              href="/#form"
+              style={{ background: '#383838', color: 'white' }}
+            >
               Connect
             </HeaderMenuItem>
           </HeaderNavigation>
@@ -172,7 +196,7 @@ const Navbar = () => {
                     style={{
                       minWidth: '5rem',
                       cursor: 'pointer',
-                      color: '#000',
+                      color: '#fff',
                       textDecoration: 'none',
                     }}
                   >
