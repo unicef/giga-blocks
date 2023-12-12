@@ -1,11 +1,13 @@
 // @mui
-import { Box, Link, Stack, Typography } from '@mui/material';
+import { Box, Link, Stack, Typography, Breadcrumbs } from '@mui/material';
 //
 import { CustomBreadcrumbsProps } from './types';
+import BreadcrumbsLink from './LinkItem';
 
 // ----------------------------------------------------------------------
 
 export default function CustomBreadcrumbs({
+  links,
   heading,
   action,
   moreLink,
@@ -13,6 +15,7 @@ export default function CustomBreadcrumbs({
   sx,
   ...other
 }: CustomBreadcrumbsProps) {
+  const lastLink = links[links.length - 1].name;
   return (
     <Box sx={{ mb: 5, ...sx }}>
       <Stack direction="row" alignItems="center">
@@ -23,7 +26,21 @@ export default function CustomBreadcrumbs({
               {heading}
             </Typography>
           )}
+          {/* BREADCRUMBS */}
+          {!!links.length && (
+            <Breadcrumbs separator={<Separator />} {...other}>
+              {links.map((link) => (
+                <BreadcrumbsLink
+                  key={link.name || ''}
+                  link={link}
+                  activeLast={activeLast}
+                  disabled={link.name === lastLink}
+                />
+              ))}
+            </Breadcrumbs>
+          )}
         </Box>
+
         {action && <Box sx={{ flexShrink: 0 }}> {action} </Box>}
       </Stack>
 
@@ -50,3 +67,12 @@ export default function CustomBreadcrumbs({
 }
 
 // ----------------------------------------------------------------------
+
+function Separator() {
+  return (
+    <Box
+      component="span"
+      sx={{ width: 4, height: 4, borderRadius: '50%', bgcolor: 'text.disabled' }}
+    />
+  );
+}
