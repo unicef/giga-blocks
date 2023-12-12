@@ -24,8 +24,8 @@ const nftListQuery = gql`
 `;
 
 const nftDataQuery = gql`
-  query nftDatas($first: Int!) {
-    nftDatas(subgraphError: allow, first: $first) {
+  query nftDatas($first: Int!, $name: String) {
+    nftDatas(subgraphError: allow, first: $first,where:{name_contains:$name}) {
       id
       location
       name 
