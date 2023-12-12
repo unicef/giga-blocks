@@ -6,11 +6,13 @@ const LandingPage = () => {
   return (
     <Grid className="landing-page" fullWidth>
       <Column lg={8} md={8} sm={4} className="landing-page__banner">
-        <p className="landing-subheading" style={{ fontFamily: 'lora' }}>
-          Welcome to NFT 2.0
-        </p>
-        <h1 className="landing-page__heading">
-          The World’s Largest Decentralized Databases of Schools
+        <p className="landing-subheading">Welcome to NFT 2.0</p>
+        <h1 className="">
+          The World’s Largest
+          <br />{' '}
+          <span style={{ color: '#277aff' }}>Decentralized Databases </span>
+          <br />
+          of Schools
         </h1>
         <p className="landing-subheading">
           Tap into the world's first open-source on-chain school database. Build
@@ -35,12 +37,12 @@ const LandingPage = () => {
           </Button>
         </div>
       </Column>
-      <Column md={4} lg={8} sm={4} style={{ background: 'gray' }}>
+      <Column md={4} lg={8} sm={4}>
         <img
           className="landing-page__illo"
           src="/landingPage/preview-1.png"
           alt="What is nft image"
-          style={{ height: '64vh', width: '100%', objectFit: 'cover' }}
+          style={{ height: '100%', width: '100%', objectFit: 'cover' }}
         />
       </Column>
     </Grid>

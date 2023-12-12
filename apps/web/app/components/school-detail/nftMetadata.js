@@ -6,8 +6,14 @@ const Connectivity = ({ schoolData }) => {
   return (
     <>
       <Grid fullWidth>
-        <Column md={4} lg={5} sm={4}>
-          <span style={{ fontSize: '1.5em' }}>NFT Details</span>
+        <Column md={4} lg={5} sm={4} style={{ marginTop: '42px' }}>
+          <span
+            style={{
+              fontSize: '1.5em',
+            }}
+          >
+            Metadata
+          </span>
         </Column>
         <Column md={4} lg={11} sm={4} className="school-connectivity-cards">
           <Grid fullWidth className="school-connectivity-grid">
@@ -100,11 +106,6 @@ const Connectivity = ({ schoolData }) => {
               </div>
             </Column>
           </Grid>
-        </Column>
-      </Grid>
-      <Grid fullWidth>
-        <Column md={4} lg={16} sm={4}>
-          <div className="border-bottom"></div>
         </Column>
       </Grid>
     </>

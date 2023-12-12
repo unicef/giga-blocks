@@ -16,7 +16,7 @@ const Connectivity = ({ schoolData }) => {
         <Column md={4} lg={16} sm={4}>
           <div className="border-bottom"></div>
         </Column>
-        <Column md={4} lg={5} sm={4}>
+        <Column md={4} lg={5} sm={4} style={{ marginTop: '32px' }}>
           <span style={{ fontSize: '1.5em' }}>NFT Details</span>
         </Column>
         <Column md={4} lg={11} sm={4} className="school-connectivity-cards">
