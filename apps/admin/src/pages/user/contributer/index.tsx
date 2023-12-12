@@ -97,7 +97,7 @@ const UserList = () => {
 
                 <TableBody>
                   {tableData &&
-                    tableData.map((row:any) => (
+                    tableData?.map((row:any) => (
                       <UserListRow
                         key={row.id}
                         row={row}

@@ -119,7 +119,7 @@ export default function ValidateDetail({ id }: Props) {
       const keyValue = Object.entries(data?.data);
       // const jsonString = keyValue.map(pair => pair[1]).join('');
       const jsonString = `${keyValue[0][0]}: ${keyValue[0][1]}`;
-      const outputArray = Object.keys(data?.data).map((key) => ({ key, value: data?.data[key] }));
+      const outputArray = Object.keys(data?.data)?.map((key) => ({ key, value: data?.data[key] }));
       setTableData(outputArray);
       setProfile({
         fullname: data?.contributedUser?.name,
@@ -291,7 +291,7 @@ export default function ValidateDetail({ id }: Props) {
 
                 <TableBody>
                   {sortedData &&
-                    sortedData.map((row: any) => (
+                    sortedData?.map((row: any) => (
                       <ContributionDetailTableRow
                         key={row.id}
                         row={row}

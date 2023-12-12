@@ -282,7 +282,7 @@ export default function SchoolDetails({ id }: Props) {
 
                     <TableBody>
                       {sortedData &&
-                        sortedData.map((row: any) => (
+                        sortedData?.map((row: any) => (
                           <NFTTableRow
                             key={row.id}
                             row={row}

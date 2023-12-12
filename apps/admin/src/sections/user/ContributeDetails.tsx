@@ -78,7 +78,7 @@ export default function ContributeDetail({ id }: Props) {
   useEffect(() => {
     if (isSuccess) {
       const keyValue = Object.entries(data?.contributed_data);
-      const jsonString = JSON?.parse(keyValue.map((pair) => pair[1]).join(''));
+      const jsonString = JSON.parse(keyValue?.map((pair) => pair[1])?.join(''));
       setProfile({
         fullname: data?.contributedUser?.name,
         schoolName: data?.school.name,

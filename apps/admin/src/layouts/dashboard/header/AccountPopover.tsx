@@ -95,7 +95,7 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack sx={{ p: 1 }}>
-          {OPTIONS.map((option) => (
+          {OPTIONS?.map((option) => (
             <MenuItem key={option.label} onClick={() => handleClickItem(option.linkTo)}>
               {option.label}
             </MenuItem>

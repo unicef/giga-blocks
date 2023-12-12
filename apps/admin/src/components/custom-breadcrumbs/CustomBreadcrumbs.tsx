@@ -29,7 +29,7 @@ export default function CustomBreadcrumbs({
           {/* BREADCRUMBS */}
           {!!links.length && (
             <Breadcrumbs separator={<Separator />} {...other}>
-              {links.map((link) => (
+              {links?.map((link) => (
                 <BreadcrumbsLink
                   key={link.name || ''}
                   link={link}
@@ -47,7 +47,7 @@ export default function CustomBreadcrumbs({
       {/* MORE LINK */}
       {!!moreLink && (
         <Box sx={{ mt: 2 }}>
-          {moreLink.map((href) => (
+          {moreLink?.map((href) => (
             <Link
               noWrap
               key={href}

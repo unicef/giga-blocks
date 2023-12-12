@@ -81,7 +81,7 @@ const ValidateData = () => {
     //   decodedShooldata.push(schoolData);
     // }
     ValidatedData &&
-      ValidatedData?.rows.map((row: any) => {
+      ValidatedData?.rows?.map((row: any) => {
         const date = new Date(row?.createdAt).toLocaleDateString();
         filteredData.push({
           id: row.id,
@@ -110,7 +110,7 @@ const ValidateData = () => {
 
   let payload: string[] = [];
   const onValidate = () => {
-    selectedValues.map((value: any) => {
+    selectedValues?.map((value: any) => {
       payload.push(value?.schoolId);
     });
 
@@ -155,7 +155,7 @@ const ValidateData = () => {
                       </TableRow>
                     ) : (
                       tableData &&
-                      tableData.map((row: any) => (
+                      tableData?.map((row: any) => (
                         <ValidateTableRow
                           key={row.id}
                           row={row}

@@ -90,7 +90,7 @@ const VerifiedSchool = () => {
   let filteredData: any = [];
   useEffect(() => {
     !isLoading &&
-    data?.rows &&  data?.rows.map((row: any) => {
+    data?.rows &&  data?.rows?.map((row: any) => {
         filteredData.push({
           id: row.id,
           giga_school_id:row.giga_school_id,
@@ -205,7 +205,7 @@ const VerifiedSchool = () => {
 
                 <TableBody>
                   {sortedData &&
-                    sortedData.map((row:any) => (
+                    sortedData?.map((row:any) => (
                       <SchoolTableRow
                         key={row.id}
                         row={row}
