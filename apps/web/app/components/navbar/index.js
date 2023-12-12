@@ -164,6 +164,7 @@ const Navbar = () => {
                         left: '60%',
                         transform: 'translateX(-50%)',
                         backgroundColor: '#fff',
+                        color: 'black',
                         boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)',
                         borderRadius: '4px',
                         padding: '10px',

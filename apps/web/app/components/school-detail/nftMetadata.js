@@ -17,7 +17,12 @@ const Connectivity = ({ schoolData }) => {
         </Column>
         <Column md={4} lg={11} sm={4} className="school-connectivity-cards">
           <Grid fullWidth className="school-connectivity-grid">
-            <Column className="school-connectivity-column">
+            <Column
+              md={4}
+              lg={11}
+              sm={4}
+              className="school-connectivity-column"
+            >
               <div className="school-connectivity-card">
                 <Column md={4} lg={8} sm={4}>
                   <div>
