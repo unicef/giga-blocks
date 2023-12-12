@@ -82,7 +82,7 @@ const VerifiedSchool = () => {
   let filteredData: any = [];
   useEffect(() => {
     data?.rows &&
-      data?.rows.map((row: any) => {
+      data?.rows?.map((row: any) => {
         filteredData.push({
           id: row.id,
           schoolName: row.name,
@@ -157,7 +157,7 @@ const VerifiedSchool = () => {
 
               <TableBody>
                 {tableData &&
-                  tableData.map((row: any) => (
+                  tableData?.map((row: any) => (
                     <SchoolTableRow
                       key={row.id}
                       row={row}

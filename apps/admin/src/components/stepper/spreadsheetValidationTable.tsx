@@ -203,14 +203,14 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     <>
       {errors.length > 0 && (
         <Alert severity="error" sx={{ mb: 4, mx: 1 }}>
-          {errors.map((error, index) => (
+          {errors?.map((error, index) => (
             <div key={index}>- {error}</div>
           ))}
         </Alert>
       )}
 
       {sheetNames.length > 1 &&
-        sheetNames.map((sheetName, index) => (
+        sheetNames?.map((sheetName, index) => (
           <Button
             variant="outlined"
             sx={{ mx: 1.5, my: 0.5 }}
@@ -225,7 +225,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
         <Table sx={{ mx: 1 }}>
           <TableHead>
             <TableRow>
-              {tableHeaders.map((header, index) => (
+              {tableHeaders?.map((header, index) => (
                 <TableCell key={index} sx={{ whiteSpace: 'nowrap' }}>
                   {header}
                 </TableCell>
@@ -239,7 +239,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
                   key={rowIndex}
                   sx={{ backgroundColor: rowIndex % 2 === 1 ? '#f5f5f5' : '#fff' }}
                 >
-                  {tableHeaders.map((header) => {
+                  {tableHeaders?.map((header) => {
                     const value = convertedObject[header][rowIndex];
                     let isInvalid = false;
 

@@ -96,9 +96,9 @@ const ContributeData = () => {
       };
       decodedShooldata.push(schoolData);
     }
-    ContributedData?.rows  && ContributedData?.rows.map((row: any) => {
-      const contributedData = Object.entries(row.contributed_data || {});
-      const jsonString = JSON.parse(contributedData.map(pair => pair[1]).join('') || '{}');
+    ContributedData?.rows  && ContributedData?.rows?.map((row: any) => {
+      const contributedData = Object.entries(row?.contributed_data || {});
+      const jsonString = JSON.parse(contributedData?.map(pair => pair[1])?.join('') || '{}');
       const date = new Date(row.createdAt).toLocaleDateString();
       filteredData.push({
         id: row?.id,
@@ -136,7 +136,7 @@ const ContributeData = () => {
   let tempArray:object[] = [];
   const onContribute = (validity:boolean) => {
     refetch()
-    selectedValues.map((value:any) => {
+    selectedValues?.map((value:any) => {
       tempArray.push({contributionId: value?.id, isValid: validity})
     })
     const payload = {contributions: tempArray}
@@ -230,7 +230,7 @@ const ContributeData = () => {
           label="Search"
           onChange={(e) => setSelectedContributerSearch(e.target.value)}
         >
-          {contributerList?.rows.map((row:any) => {
+          {contributerList?.rows?.map((row:any) => {
             return(
               <MenuItem value={row.id}>{row.name}</MenuItem>
             )
@@ -301,7 +301,7 @@ const ContributeData = () => {
                 />}
               <TableBody>
                 {sortedData &&
-                  sortedData.map((row: any) => (
+                  sortedData?.map((row: any) => (
                     <ContributeTableRow
                       key={row.id}
                       row={row}
