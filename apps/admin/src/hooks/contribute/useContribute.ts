@@ -13,10 +13,10 @@ const api = axios.create({
 
 export const useContributeGet = ({page, perPage, schoolId, contributeId, status}:{page:number, perPage:number, schoolId?:string, contributeId?:string, status?:string}) => {
     return useQuery(
-      ['get-api-data',page,perPage],
+      ['get-contributor-data',page,perPage],
       async () => {
         const { data } = await api.get(
-          `${routes.CONTRIBUTE.GET}?page=${page}&perPage=${perPage}${schoolId ? `&schoolId=${schoolId}` : ``}${contributeId ? `&contributorId=${contributeId}` : ``}${`&status=${status}`}`
+          `${routes.CONTRIBUTE.GET}?page=${page}&perPage=${perPage}${schoolId ? `&schoolId=${schoolId}` : ``}${contributeId ? `&contributorId=${contributeId}` : ``}${status?`&status=${status}`:''}`
         );
         return data;
       },
