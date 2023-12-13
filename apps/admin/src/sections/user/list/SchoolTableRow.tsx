@@ -53,7 +53,7 @@ export default function SchoolTableRow({
   const schoolNft = process.env.NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS
 
   const handleEditRow = (row: string) => {
-    if (mintedStatus == 'MINTED') push(`/school/minted/${row}`)
+    if (mintedStatus == 'MINTED') push(`/nft/${row}`)
     else push(`/school/${row}`);
   };
 
@@ -72,8 +72,8 @@ export default function SchoolTableRow({
 
   // @ts-ignore
   const truncateString = (str, maxLength) => {
-    if (str.length > maxLength) {
-      return str.substring(0, maxLength - 3) + '...';
+    if (str?.length > maxLength) {
+      return str?.substring(0, maxLength - 3) + '...';
     } else {
       return str;
     }

@@ -4,11 +4,11 @@ Monorepo for GIGA made using pnpm workspaces and added nx for caching.
 
 ## Setup and Running
 
-Need pnpm for package management.
+Need pnpm for package management. 
 
 Installing packages in root of repo
 
-```
+``` 
 pnpm i
 ```
 

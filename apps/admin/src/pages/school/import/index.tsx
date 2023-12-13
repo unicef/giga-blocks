@@ -36,26 +36,27 @@ const Upload = () => {
             const isSingleSheet = data.SheetNames.length === 1;
             if (isSingleSheet) {
               const sheetNames = data.SheetNames;
-              const mappedData = mapWorkbook(data);
-              const sanitizedData = mappedData.map((row) => row.map((cell) => cell ?? ''));
+              const mappedData:any = mapWorkbook(data);
+              const sanitizedData = mappedData?.map((row:any) => row?.map((cell:any) => cell ?? ''));
               const { unique, duplicate } = separateUniqueAndDuplicates(sanitizedData);
               setDuplicates(duplicate);
-              setTableDatas(unique);
-              setAllData(unique);
+              //use unique for removing duplicate data inside setTableDatas and setDuplicates
+              setTableDatas(mappedData);
+              setAllData(mappedData);
               setSheetNames(sheetNames);
               setFileName(file?.name);
             } else {
               const sheetNames = data.SheetNames;
               const sheetData = mapWorkbook(data, selectedSheetName);
               const duplicateData: string[] = [];
-              const allSheetData = sheetNames.map((sheetName) => {
+              const allSheetData = sheetNames?.map((sheetName) => {
                 const res = mapWorkbook(data, sheetName);
                 const { unique, duplicate } = separateUniqueAndDuplicates(res);
-                const finalData = unique.map((row) => row.map((cell:any) => cell ?? ''));
+                const finalData = unique?.map((row) => row?.map((cell:any) => cell ?? ''));
                 duplicateData.push(...duplicate);
                 return finalData;
               });
-              const sanitizedData = sheetData.map((row) => row.map((cell) => cell ?? ''));
+              const sanitizedData = sheetData?.map((row) => row?.map((cell) => cell ?? ''));
               const { unique } = separateUniqueAndDuplicates(sanitizedData);
               setDuplicates(duplicateData);
               setTableDatas(unique);

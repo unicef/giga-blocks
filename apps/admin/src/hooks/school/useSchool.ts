@@ -12,12 +12,12 @@ const accessToken = getAccessToken();
 
 api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 
-export const useSchoolGet = (page: number, perPage: number, minted?: string, uploadId?: any) => {
+export const useSchoolGet = ({page, perPage, minted, uploadId, name, country, connectivity}:{page?: number, perPage: number, minted?: string, uploadId?: any, name?: string, country?:string, connectivity?:string}) => {
   return useQuery(
     ['get-api-data', page, perPage],
     async () => {
       const { data } = await api.get(
-        `${routes.SCHOOLS.GET}?page=${page}&perPage=${perPage}${minted && `&minted=${minted}`}${uploadId ? `&uploadId=${uploadId}` : ``}`
+        `${routes.SCHOOLS.GET}?perPage=${perPage}${page ? `&page=${page}` : ''}${name ? `&name=${name}` : ''}${minted ? `&minted=${minted}` : ''}${uploadId ? `&uploadId=${uploadId}` : ``}${country ? `&country=${country}` : ``}${connectivity ? `&connectivityStatus=${connectivity}` : ``}`
       );
       return data;
     },
@@ -44,13 +44,28 @@ export const useSchoolCount = (minted?:string) => {
   return useQuery(
     ['school-count'],
     async () => {
-      const { data } = await api.get(`${routes.SCHOOLS.SCHOOLCOUNT}?${minted && `minted=${minted}`}`);
+      const { data } = await api.get(`${routes.SCHOOLS.SCHOOLCOUNT}`);
       return data;
     },
     {
       keepPreviousData: true,
     }
   );
+};
+
+export const useMintedSchoolCount =  (minted?:string) => {
+  return useQuery(
+    ['mint-school-count'],
+    async () => {
+      const { data } = await api.get(`${routes.SCHOOLS.SCHOOLCOUNT}?${`minted=${minted}`}`);
+      return data;
+    },
+    {
+      keepPreviousData: true,
+    }
+  );
+
+
 };
 
 const mintSchool = async (data: any) => {

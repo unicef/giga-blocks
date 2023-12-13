@@ -15,6 +15,9 @@ import {
   SET_MINT_NFT,
   SET_MINT_SINGLE_NFT,
   SET_ONCHAIN_DATA,
+  CONTRIBUTE_QUEUE,
+  SET_APPROVE_QUEUE,
+  SET_CONTRIBUTE_QUEUE,
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
@@ -24,6 +27,8 @@ import { PrismaAppService } from 'src/prisma/prisma.service';
 import { SchoolData } from '../types/mintdata.types';
 import { MintStatus } from '@prisma/application';
 import { jobOptions } from '../config/bullOptions';
+import { ContributeDataService } from 'src/contribute/contribute.service';
+import { SchoolService } from 'src/schools/schools.service';
 
 @Injectable()
 @Processor(ONCHAIN_DATA_QUEUE)
@@ -169,7 +174,9 @@ export class MintQueueProcessor {
   }
 
   @Process(SET_MINT_NFT)
-  public async sendMintNFT(job: Job<{ address: string; mintData: SchoolData[]; ids: string[] }>) {
+  public async sendMintNFT(
+    job: Job<{ mintData: SchoolData[]; ids: string[]; giga_ids: string[] }>,
+  ) {
     this._logger.log(`Sending mint nft to blockchain`);
 
     let status = true;
@@ -177,6 +184,7 @@ export class MintQueueProcessor {
       'NFT',
       this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
       job.data.mintData,
+      job.data.giga_ids,
     );
     const txReceipt = await tx.wait();
     if (txReceipt.status !== 1) {
@@ -187,7 +195,7 @@ export class MintQueueProcessor {
 
   @Process(SET_MINT_SINGLE_NFT)
   public async sendSingleMintNFT(
-    job: Job<{ address: string; mintData: SchoolData; ids: string[] }>,
+    job: Job<{ mintData: SchoolData; ids: string[]; giga_id: string }>,
   ) {
     this._logger.log(`Sending single mint nft to blockchain`);
     let status = true;
@@ -195,6 +203,7 @@ export class MintQueueProcessor {
       'NFT',
       this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
       job.data.mintData,
+      job.data.giga_id,
     );
     const txReceipt = await tx.wait();
     if (txReceipt.status !== 1) {
@@ -220,5 +229,63 @@ export class MintQueueProcessor {
       this._logger.error(`NFTs minted transaction failed`);
       throw new Error('NFTs minted transaction failed');
     }
+  }
+}
+@Injectable()
+@Processor(CONTRIBUTE_QUEUE)
+export class ContributeProcessor {
+  private readonly _logger = new Logger(ContributeProcessor.name);
+  constructor(
+    private readonly _mailerService: MailerService,
+    private readonly _configService: ConfigService,
+    private contributeDataService: ContributeDataService,
+    private schoolService: SchoolService,
+  ) {}
+
+  @OnQueueActive()
+  public onActive(job: Job) {
+    this._logger.debug(`Processing job ${job.id} of type ${job.name}`);
+  }
+
+  @OnQueueCompleted()
+  public onComplete(job: Job) {
+    this._logger.debug(`Completed job ${job.id} of type ${job.name}`);
+  }
+
+  @OnQueueFailed()
+  public async onErrorDB(job: Job<any>, error: any) {
+    this._logger.error(`Failed job ${job.id} of type ${job.name}: ${error.message}`, error.stack);
+    if (job.attemptsMade === job.opts.attempts) {
+      try {
+        return this._mailerService.sendMail({
+          to: this._configService.get('EMAIL_ADDRESS'),
+          from: this._configService.get('EMAIL_ADDRESS'),
+          subject: 'Something went wrong while updating database!!',
+          template: './error',
+          context: {},
+        });
+      } catch {
+        this._logger.error('Failed to send confirmation email to admin');
+      }
+    }
+  }
+
+  @Process(SET_CONTRIBUTE_QUEUE)
+  public async contributeUpdate(job: Job<{ ids: any; userId: string }>) {
+    const idsArray = job.data.ids.contributions;
+    const userId = job.data.userId;
+    for (const data of idsArray) {
+      const transactions = await this.contributeDataService.validate(
+        data.contributionId,
+        Boolean(data.isValid),
+        userId,
+      );
+    }
+  }
+  @Process(SET_APPROVE_QUEUE)
+  public async approveUpdate(job: Job<{ id: string; userId: string }>) {
+    const id = job.data.id;
+    const userId = job.data.userId;
+    return this.schoolService.update(id, userId);
   }
 }

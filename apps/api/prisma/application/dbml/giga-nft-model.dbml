@@ -55,18 +55,23 @@ Table giga_users {
   updatedAt DateTime [not null]
   deletedAt DateTime
   ContributedData giga_contributed_data [not null]
+  ValidatedUser giga_contributed_data [not null]
+  ApprovedBy giga_contributed_data [not null]
   Points giga_points [not null]
   CreatedBy giga_points [not null]
   Auth Auth [not null]
   roles Role[] [not null]
   schools giga_school [not null]
+  schoolUpdatedBy giga_school [not null]
   isArchived Boolean [not null, default: false]
   vote giga_vote [not null]
   createdBy giga_vote [not null]
+  validatedBy giga_validated_data [not null]
 }
 
 Table giga_school {
   id String [pk]
+  giga_school_id String [unique, not null]
   status SchoolStatus [not null, default: 'Open']
   connectivity_speed_status String [default: 'Data Unavailable']
   connectivity Boolean [not null, default: false]
@@ -85,7 +90,7 @@ Table giga_school {
   longitude Float [not null]
   latitude Float [not null]
   minted MintStatus [not null, default: 'NOTMINTED']
-  coverage_availability String [not null]
+  coverage_availability Boolean [not null, default: false]
   coverage_2G Boolean [not null, default: false]
   coverage_3G Boolean [not null, default: false]
   coverage_4G Boolean [not null, default: false]
@@ -101,10 +106,12 @@ Table giga_school {
   createdById String
   contributedSeason giga_season
   isArchived Boolean [not null, default: false]
+  updatedBy String
+  updatedUser giga_users
   uploadId String
   uploadBatch giga_csv_uploads
+  validatedData giga_validated_data [not null]
   ContributedData giga_contributed_data [not null]
-  validatedData giga_validated_data
 }
 
 Table giga_contributed_data {
@@ -117,8 +124,14 @@ Table giga_contributed_data {
   contributedUser giga_users [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+  approvedBy String
+  approved giga_users
   deletedAt DateTime
+  approvedAt DateTime
   isArchived Boolean [not null, default: false]
+  validatedBy String
+  validatedAt DateTime
+  validatedUser giga_users
   points giga_points [not null]
   vote giga_vote [not null]
   Season giga_season
@@ -192,12 +205,17 @@ Table giga_vote {
 
 Table giga_validated_data {
   id String [pk]
-  school_Id String [unique, not null]
+  school_Id String [not null]
   school giga_school [not null]
   data Json [not null]
+  approvedStatus Boolean [not null, default: false]
   createdAt DateTime [default: `now()`]
   updatedAt DateTime
   deletedAt DateTime
+  approvedBy String
+  approved giga_users
+  approvedAt DateTime
+  contributed_data String[] [not null]
   isArchived Boolean [not null, default: false]
 }
 
@@ -289,11 +307,17 @@ Ref: giga_school.createdById > giga_users.id
 
 Ref: giga_school.season_Id > giga_season.id
 
+Ref: giga_school.updatedBy > giga_users.id
+
 Ref: giga_school.uploadId > giga_csv_uploads.id
 
 Ref: giga_contributed_data.school_Id > giga_school.id
 
 Ref: giga_contributed_data.contributedUserId > giga_users.id
+
+Ref: giga_contributed_data.approvedBy > giga_users.id
+
+Ref: giga_contributed_data.validatedBy > giga_users.id
 
 Ref: giga_contributed_data.seasonId > giga_season.id
 
@@ -311,4 +335,6 @@ Ref: giga_vote.contributed_Id > giga_contributed_data.id
 
 Ref: giga_vote.createdBy > giga_users.id
 
-Ref: giga_validated_data.school_Id - giga_school.id
+Ref: giga_validated_data.school_Id > giga_school.id
+
+Ref: giga_validated_data.approvedBy > giga_users.id

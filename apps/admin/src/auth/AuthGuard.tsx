@@ -14,7 +14,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 
   useEffect(() => {
     if (!isInitialized) {
-      return; // Wait for initialization to complete
+      return;
     }
 
     if (!isAuthenticated && pathname !== '/auth/login') {

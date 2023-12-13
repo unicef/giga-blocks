@@ -12,12 +12,12 @@ const accessToken = getAccessToken()
 
 api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
-export const useUserGet = (page:number, perPage:number) => {
+export const useUserGet = (page:number, perPage:number, role:string, name?:string) => {
   return useQuery(
-    ["get-api-data", page, perPage],
+    ["get-user-data", page, perPage],
     async () => {
       const { data } = await api.get(
-        `${routes.USER.GET}`
+        `${routes.USER.GET}?role=${role}${name ? `&name=${name}` : ''}`
       );
       return data;
     },

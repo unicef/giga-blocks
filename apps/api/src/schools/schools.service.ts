@@ -17,13 +17,21 @@ import { handler } from 'src/utils/csvToDB';
 import { hexStringToBuffer } from '../utils/string-format';
 import fastify = require('fastify');
 import { AppResponseDto } from './dto/app-response.dto';
+import { updateData } from 'src/utils/ethers/transactionFunctions';
+import { ConfigService } from '@nestjs/config';
+import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-datum.dto';
+import { getTokenId } from 'src/utils/web3/subgraph';
 
 @Injectable()
 export class SchoolService {
-  constructor(private prisma: PrismaAppService, private readonly queueService: QueueService) {}
+  constructor(
+    private prisma: PrismaAppService,
+    private readonly queueService: QueueService,
+    private readonly configService: ConfigService,
+  ) {}
 
   async findAll(query: ListSchoolDto) {
-    const { page, perPage, minted, uploadId } = query;
+    const { page, perPage, minted, uploadId, name, country, connectivityStatus } = query;
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
     };
@@ -33,6 +41,27 @@ export class SchoolService {
 
     if (uploadId) {
       where.uploadId = uploadId;
+    }
+    if (name) {
+      where.name = {
+        contains: name,
+        mode: 'insensitive',
+      };
+    }
+    if (country) {
+      where.country = {
+        contains: country,
+        mode: 'insensitive',
+      };
+    }
+    if (connectivityStatus) {
+      let status: boolean;
+      if (connectivityStatus === 'true') {
+        status = true;
+      } else {
+        status = false;
+      }
+      where.connectivity = status;
     }
 
     return paginate(
@@ -62,17 +91,12 @@ export class SchoolService {
     throw new UnauthorizedException('You wallet is not an admin wallet');
   }
 
-  async checkAdminandMintQueue(MintData: MintQueueDto) {
-    const { address } = getBatchandAddressfromSignature(MintData.signatureWithData);
-
-    if (await this.checkAdmin(address)) {
-      return this.queueService.sendMintNFT(address, MintData);
-    }
+  async mintBulkNFT(MintData: MintQueueDto) {
+    return this.queueService.sendMintNFT(MintData);
   }
 
-  async checkAdminandSingleMintQueue(MintData: MintQueueSingleDto) {
-    const { address } = getBatchandAddressfromSignature(MintData.signatureWithData);
-    return this.queueService.sendSingleMintNFT(address, MintData);
+  async mintNft(MintData: MintQueueSingleDto) {
+    return this.queueService.sendSingleMintNFT(MintData);
   }
 
   async uploadFile(
@@ -106,6 +130,7 @@ export class SchoolService {
             uploadBatch = result;
           } catch (err) {
             reject(err);
+            res.code(500).send({ err: 'Internal Server error', onmessage: err.messag });
           }
         },
         onEnd,
@@ -115,7 +140,7 @@ export class SchoolService {
     // Uploading finished
     async function onEnd(err: any) {
       if (err) {
-        res.send(new HttpException('Internal server error', 500));
+        res.send(new AppResponseDto(500, err, 'Internal Server error'));
         return;
       }
       // Ensure that the uploadBatch is available before proceeding
@@ -170,22 +195,24 @@ export class SchoolService {
     }
   }
 
-  async update(id: string) {
+  async update(id: string, userId: string) {
     const school = await this.prisma.school.findUnique({ where: { id: id } });
     if (school.minted === MintStatus.NOTMINTED) {
-      return await this.updateSchoolData(id);
+      return await this.updateSchoolData(id, userId);
     }
     if (school.minted === MintStatus.MINTED) {
-      // const onChainData = await mintNFT();
-      return await this.updateSchoolData(id);
+      const tx = await this.updateOnchainData(id, school);
+      if (tx.status === 1) await this.updateSchoolData(id, userId);
     }
   }
 
-  async updateSchoolData(id: string) {
+  async updateSchoolData(id: string, userId: string) {
     try {
-      const validatedData = await this.prisma.validatedData.findUnique({
+      const validatedData = await this.prisma.validatedData.findFirst({
         where: {
           school_Id: id,
+          isArchived: false,
+          approvedStatus: false,
         },
       });
       const keyValue = Object.entries(validatedData.data);
@@ -195,13 +222,28 @@ export class SchoolService {
           where: { id: id },
           data: {
             ...dataToUpdate,
+            updatedBy: userId,
           },
         }),
         // need to delete the validatedData for now just archived
         this.prisma.validatedData.update({
-          where: { school_Id: id },
+          where: { id: validatedData.id },
           data: {
             isArchived: true,
+            approvedBy: userId,
+            approvedAt: new Date(),
+            approvedStatus: true,
+          },
+        }),
+        this.prisma.contributedData.updateMany({
+          where: {
+            id: {
+              in: validatedData.contributed_data,
+            },
+          },
+          data: {
+            approvedBy: userId,
+            approvedAt: new Date(),
           },
         }),
       ]);
@@ -211,7 +253,67 @@ export class SchoolService {
     }
   }
 
+  async updateOnchainData(id: string, data: any) {
+    const schooldata = await this.filterOnchainData(id);
+    const schoolTokenId = await getTokenId(
+      this.configService.get('NEXT_PUBLIC_GRAPH_URL'),
+      data.giga_school_id,
+    );
+    const tokenId = schoolTokenId.data.schoolTokenId.tokenId;
+    const tx = await updateData(
+      'NFTContent',
+      this.configService.get('GIGA_NFT_CONTENT_ADDRESS'),
+      tokenId,
+      schooldata,
+    );
+    const txReceipt = tx.wait();
+    return txReceipt;
+  }
+
   async removeAll() {
     return await this.prisma.school.deleteMany();
+  }
+
+  async updateBulk(ids: ApproveContributeDatumDto, userId: string) {
+    this.queueService.approveBulkData(ids, userId);
+  }
+
+  private async filterOnchainData(id: string) {
+    try {
+      const validatedData = await this.prisma.validatedData.findFirst({
+        where: {
+          school_Id: id,
+          isArchived: false,
+          approvedStatus: false,
+        },
+      });
+      const keyValue = Object.entries(validatedData.data);
+      const dataToUpdate = Object.fromEntries(keyValue);
+      const schooldata = await this.prisma.school.findUnique({
+        where: {
+          id: id,
+        },
+      });
+      const filteredData = Object.fromEntries(
+        Object.entries(validatedData.data).filter(([key]) => key in dataToUpdate),
+      );
+      const newData = {
+        ...schooldata,
+        ...filteredData,
+      };
+      const onChainData = [
+        newData.name,
+        newData.school_type,
+        newData.country,
+        newData.longitude.toString(),
+        newData.latitude.toString(),
+        newData.connectivity.toString(),
+        newData.coverage_availability.toString(),
+        newData.electricity_available.toString(),
+      ];
+      return onChainData;
+    } catch (err) {
+      console.log(err);
+    }
   }
 }

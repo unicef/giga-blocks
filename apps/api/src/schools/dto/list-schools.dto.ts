@@ -32,4 +32,25 @@ export class ListSchoolDto {
   @IsString()
   @IsOptional()
   uploadId?: string;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  name?: string;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  country?: string;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  connectivityStatus?: string;
 }

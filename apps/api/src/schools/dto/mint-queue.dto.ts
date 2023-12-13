@@ -3,6 +3,7 @@ import { IsArray, IsObject, IsString } from 'class-validator';
 
 export interface SchoolData {
   id: string;
+  giga_school_id: string;
   schoolName: string;
   schoolType: string;
   country: string;
@@ -15,19 +16,11 @@ export interface SchoolData {
 
 export class MintQueueDto {
   @ApiProperty()
-  @IsString()
-  signatureWithData: string;
-
-  @ApiProperty()
   @IsArray()
   data: SchoolData[];
 }
 
 export class MintQueueSingleDto {
-  @ApiProperty()
-  @IsString()
-  signatureWithData: string;
-
   @ApiProperty()
   @IsObject()
   data: SchoolData;

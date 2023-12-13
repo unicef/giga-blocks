@@ -22,10 +22,15 @@ import {
   IconButton,
   Table,
   TableBody,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { hooks } from '@hooks/web3/metamask';
 import { JsonRpcProvider, Signer } from 'ethers';
 import { mintSignature } from '@components/web3/utils/wallet';
@@ -68,14 +73,16 @@ const VerifiedSchool = () => {
   // const { filteredUsers } = useAdministrationContext();
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
-  const { data } = useSchoolGet(page, rowsPerPage, 'ISMINTING');
+  const [country, setCountry] = useState<string>()
+  const [connectivity, setConnectivity] = useState<string>()
+  const { data } = useSchoolGet({page, perPage: rowsPerPage, minted: 'ISMINTING', country, connectivity});
 
   // const { error } = useFetchUsers();
 
   let filteredData: any = [];
   useEffect(() => {
     data?.rows &&
-      data?.rows.map((row: any) => {
+      data?.rows?.map((row: any) => {
         filteredData.push({
           id: row.id,
           schoolName: row.name,
@@ -108,10 +115,34 @@ const VerifiedSchool = () => {
     mutate({ data: selectedValues, signatureWithData: signature });
   };
 
+  const handleSearchChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setCountry(e.target.value)
+  }
+
+  const handleSearchConnectivity = (event:any) => {
+    setConnectivity(event.target.value as string);
+  }
+
   return (
     <DashboardLayout>
       <h2>Minting In Progress</h2>
-      <Card>
+      <div style={{display: 'flex', alignItems: 'flex-end', gap: '20px'}}>
+          <TextField id="outlined-basic" type='string' placeholder='Search country' onChange={(e) => handleSearchChange(e)}/>
+          <FormControl sx={{width: 150}}>
+            <InputLabel id="demo-simple-select-label">Connectivity</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={"Connectivity"}
+              label="Search"
+              onChange={handleSearchConnectivity}
+            >
+              <MenuItem value={'true'}>True</MenuItem>
+              <MenuItem value={'false'}>False</MenuItem>
+            </Select>
+          </FormControl>
+          </div>
+          <Card sx={{marginTop: 2}}>
         <Divider />
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
@@ -126,7 +157,7 @@ const VerifiedSchool = () => {
 
               <TableBody>
                 {tableData &&
-                  tableData.map((row: any) => (
+                  tableData?.map((row: any) => (
                     <SchoolTableRow
                       key={row.id}
                       row={row}

@@ -22,19 +22,21 @@ import {
   IconButton,
   Table,
   TableBody,
+  TextField,
 } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { JsonRpcProvider, Signer } from 'ethers';
 import { mintSignature } from '@components/web3/utils/wallet';
 import { useBulkMintSchools } from '@hooks/school/useSchool';
 import { useWeb3React } from '@web3-react/core';
 import { useSnackbar } from '@components/snackbar';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { Input } from '@mui/material';
 
 const VerifiedSchool = () => {
 
@@ -75,20 +77,23 @@ const VerifiedSchool = () => {
   // const { filteredUsers } = useAdministrationContext();
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
-  const { data, isLoading, refetch } = useSchoolGet(page, rowsPerPage, 'NOTMINTED', uploadId);
+  const [country, setCountry] = useState<string>()
+  const [connectivity, setConnectivity] = useState<string>()
+  const { data, isLoading, refetch } = useSchoolGet({page, perPage: rowsPerPage, minted: 'NOTMINTED', uploadId, country, connectivity});
 
   // const { error } = useFetchUsers();
 
   useEffect(() => {
     refetch()
-  }, [uploadId])
+  }, [uploadId, country, connectivity])
 
   let filteredData: any = [];
   useEffect(() => {
     !isLoading &&
-    data?.rows &&  data?.rows.map((row: any) => {
+    data?.rows &&  data?.rows?.map((row: any) => {
         filteredData.push({
           id: row.id,
+          giga_school_id:row.giga_school_id,
           schoolName: row.name,
           longitude: row.longitude,
           latitude: row.latitude,
@@ -119,15 +124,9 @@ const VerifiedSchool = () => {
       if(selectedValues.length === 0){
         enqueueSnackbar("Please select atleast one school", { variant: 'error' })
         return Error("Please select atleast one school");
-      }
-      if(!provider.provider) return;
-      const signature = await signTransaction();
-      if(!signature){
-        enqueueSnackbar("Signature is null", { variant: 'error' })
-        return Error("Signature is null");
       } 
       setSelectedValues([])
-      mutate({data:selectedValues, signatureWithData:signature})
+      mutate({data:selectedValues})
     },[signTransaction,selectedValues])
 
     let test;
@@ -146,6 +145,19 @@ const VerifiedSchool = () => {
       push('/school/import')
     }
 
+    const sortedData = tableData.slice().sort((a:any, b:any) => {
+      const isAsc = order === 'asc';
+      return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
+    });
+
+    const handleSearchChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setCountry(e.target.value)
+    }
+
+    const handleSearchConnectivity = (event:any) => {
+      setConnectivity(event.target.value as string);
+    }
+
     return ( 
         <DashboardLayout>
           <div style={{display: 'flex', justifyContent: 'space-between',marginBottom: '20px'}}>
@@ -155,26 +167,26 @@ const VerifiedSchool = () => {
           <Button variant="contained" style={{background: '#404040'}} onClick={uploadSchool}>Import School</Button>
           </div>
           </div>
-          {/* Select component */}
-          {/* <Box sx={{ width: 150, marginBottom: 2 }}>
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Imported File</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={age}
-          label="Imported file"
-          onChange={handleChange}
-        >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
-      </FormControl>
-    </Box> */}
+          
           {uploadId && <span style={{color: '#008000', fontSize: '0.85em'}}>Recently imported school, <span onClick={() => push(`/school/un-minted`)} style={{color: '#795CB2', cursor: 'pointer'}}>List all</span></span>}
 
-          <Card>
+          <div style={{display: 'flex', alignItems: 'flex-end', gap: '20px'}}>
+          <TextField id="outlined-basic" type='string' placeholder='Search country' onChange={(e) => handleSearchChange(e)}/>
+          <FormControl sx={{width: 150}}>
+            <InputLabel id="demo-simple-select-label">Connectivity</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={"Connectivity"}
+              label="Search"
+              onChange={handleSearchConnectivity}
+            >
+              <MenuItem value={'true'}>True</MenuItem>
+              <MenuItem value={'false'}>False</MenuItem>
+            </Select>
+          </FormControl>
+          </div>
+          <Card sx={{marginTop: 2}}>
          
           <Divider />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -192,8 +204,8 @@ const VerifiedSchool = () => {
                 />
 
                 <TableBody>
-                  {tableData &&
-                    tableData.map((row:any) => (
+                  {sortedData &&
+                    sortedData?.map((row:any) => (
                       <SchoolTableRow
                         key={row.id}
                         row={row}

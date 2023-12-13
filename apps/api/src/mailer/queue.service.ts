@@ -1,7 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import {
+  CONTRIBUTE_QUEUE,
   MINT_QUEUE,
   ONCHAIN_DATA_QUEUE,
+  SET_APPROVE_QUEUE,
+  SET_CONTRIBUTE_QUEUE,
   SET_MINT_NFT,
   SET_MINT_SINGLE_NFT,
   SET_ONCHAIN_DATA,
@@ -14,6 +17,10 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { MintStatus } from '@prisma/application';
 import { SchoolData } from '../schools/dto/mint-queue.dto';
+import {
+  ApproveContributeDatumDto,
+  UpdateContributeDatumDto,
+} from 'src/contribute/dto/update-contribute-datum.dto';
 
 @Injectable()
 export class QueueService {
@@ -22,6 +29,7 @@ export class QueueService {
   constructor(
     @InjectQueue(ONCHAIN_DATA_QUEUE) private readonly _onchainQueue: Queue,
     @InjectQueue(MINT_QUEUE) private readonly _mintQueue: Queue,
+    @InjectQueue(CONTRIBUTE_QUEUE) private readonly _contributeQueue: Queue,
     private readonly _configService: ConfigService,
     private readonly _prismaService: PrismaAppService,
   ) {}
@@ -64,16 +72,18 @@ export class QueueService {
     ];
   }
 
-  public async sendMintNFT(address: string, MintData: MintQueueDto) {
+  public async sendMintNFT(MintData: MintQueueDto) {
     try {
       const mintData = MintData.data.map(school => this.schoolToArrayMapper(school));
       let ids: string[];
+      let giga_ids: string[];
       let schools;
       const batchSize = this._configService.get<number>('BATCH_SIZE');
       if (mintData.length <= batchSize) {
         ids = MintData.data.map(school => school.id);
+        giga_ids = MintData.data.map(school => school.giga_school_id);
         schools = await this.updateSchools(ids);
-        await this._mintQueue.add(SET_MINT_NFT, { address, mintData, ids }, jobOptions);
+        await this._mintQueue.add(SET_MINT_NFT, { mintData, ids, giga_ids }, jobOptions);
       } else {
         let mintDatum;
         for (let i = 0; i < mintData.length; i += batchSize) {
@@ -82,7 +92,7 @@ export class QueueService {
           schools = await this.updateSchools(ids);
           await this._mintQueue.add(
             SET_MINT_NFT,
-            { address, mintData: mintDatum, ids },
+            { mintData: mintDatum, ids, giga_ids },
             jobOptions,
           );
         }
@@ -94,15 +104,40 @@ export class QueueService {
     }
   }
 
-  public async sendSingleMintNFT(address: string, MintData: MintQueueSingleDto) {
+  public async sendSingleMintNFT(MintData: MintQueueSingleDto) {
     try {
       const mintData = this.schoolToArrayMapper(MintData.data);
       const ids = [MintData.data.id];
+      const giga_id = MintData.data.giga_school_id;
       await this.updateSchools(ids);
-      await this._mintQueue.add(SET_MINT_SINGLE_NFT, { address, mintData, ids }, jobOptions);
+      await this._mintQueue.add(SET_MINT_SINGLE_NFT, { mintData, ids, giga_id }, jobOptions);
       return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
       this._logger.error(`Error queueing transaction to blockchain `);
+      throw error;
+    }
+  }
+
+  public async contributeData(ids: UpdateContributeDatumDto, userId: string) {
+    try {
+      await this._contributeQueue.add(SET_CONTRIBUTE_QUEUE, { ids, userId }, jobOptions);
+      return { message: 'queue added successfully', statusCode: 200 };
+    } catch (error) {
+      this._logger.error(`Error queueing `);
+      throw error;
+    }
+  }
+
+  public async approveBulkData(ids: ApproveContributeDatumDto, userId: string) {
+    try {
+      const { id } = ids;
+      for (let i = 0; i < id.length; i++) {
+        const schoolid = id[i];
+        await this._contributeQueue.add(SET_APPROVE_QUEUE, { id: schoolid, userId }, jobOptions);
+        return { message: 'queue added successfully', statusCode: 200 };
+      }
+    } catch (error) {
+      this._logger.error(`Error queueing `);
       throw error;
     }
   }
