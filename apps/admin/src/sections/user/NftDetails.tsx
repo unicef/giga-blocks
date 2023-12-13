@@ -298,7 +298,8 @@ export default function SchoolDetails({ id }: Props) {
                 </Scrollbar>
               </TableContainer>
               <TablePaginationCustom
-                count={data?.meta?.total}
+                // count={data?.meta?.total}
+                count={data?.schoolTransfers?.length}
                 page={page}
                 setPage={setPage}
                 rowsPerPage={rowsPerPage}
