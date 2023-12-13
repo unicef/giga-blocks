@@ -7,9 +7,8 @@ export const metaMaskLogin = async()=>{
      res =  await  metaMask.activate(Default_Chain_Id);
    }
     catch(err){
-        console.log("error metaMask", err)
         if(err.code === 4902){
-            res = await switchNetwork();
+            return await switchMetaMaskNetwork();
     
     }
     }
@@ -19,14 +18,14 @@ export const metaMaskLogin = async()=>{
 export const switchMetaMaskNetwork = async()=>{
   const network ={
     chainId: Default_Chain_Id,
-    chainName: 'Arbitrum Goerli',
+    chainName: 'Polygon-Mumbai',
     nativeCurrency: {
-      name: 'AGOR',
-      symbol: 'AGOR',
+      name: 'Matic',
+      symbol: 'Matic',
       decimals: 18,
     },
-    rpcUrls: ['https://goerli-rollup.arbitrum.io/rpc'],
-    blockExplorerUrls: ['https://etherscan.io/'],
+    rpcUrls: ['https://rpc-mumbai.maticvigil.com'],
+    blockExplorerUrls: ['https://mumbai.polygonscan.com'],
   }
   const res = await  metaMask.activate(network);
   return res;
