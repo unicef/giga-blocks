@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Table,
   TableBody,
@@ -6,11 +6,25 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Pagination,
 } from '@carbon/react';
+import './changeLogTable.scss';
 import { useContributeDetails } from '../../hooks/useContributionList';
 
 const ChangeLog = ({ schoolid }) => {
-  const { data } = useContributeDetails(schoolid);
+  const { data, refetch } = useContributeDetails(schoolid);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  const totalPages = Math.ceil(data?.meta?.total / itemsPerPage);
+
+  useEffect(() => {
+    refetch({ page: currentPage - 1, perPage: itemsPerPage });
+  }, [currentPage, itemsPerPage]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = data?.rows?.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
     <TableContainer sx={{ my: 4 }}>
@@ -24,7 +38,13 @@ const ChangeLog = ({ schoolid }) => {
               }}
               style={{ background: '#2c2b33', color: '#ffff' }}
             >
-              {'School Name'}
+              {'Field Type'}
+            </TableCell>
+            <TableCell
+              style={{ background: '#2c2b33', color: '#ffff' }}
+              sx={{ whiteSpace: 'nowrap', color: 'white' }}
+            >
+              {'Change'}
             </TableCell>
             <TableCell
               style={{ background: '#2c2b33', color: '#ffff' }}
@@ -36,34 +56,54 @@ const ChangeLog = ({ schoolid }) => {
               style={{ background: '#2c2b33', color: '#ffff' }}
               sx={{ whiteSpace: 'nowrap', color: 'white' }}
             >
-              {'What has been contributed'}
+              {'Date of change'}
+            </TableCell>
+            <TableCell
+              style={{ background: '#2c2b33', color: '#ffff' }}
+              sx={{ whiteSpace: 'nowrap', color: 'white' }}
+            >
+              {'Data Status'}
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data?.rows?.length === 0 || !data ? (
+          {currentItems?.length === 0 || !currentItems ? (
             <TableRow>
-              <TableCell colSpan={3}>No contribution made yet.</TableCell>
+              <TableCell colSpan={6}>No contribution made yet.</TableCell>
             </TableRow>
           ) : (
-            data?.rows?.map((contribution) => (
-              <TableRow key={contribution?.id}>
-                <TableCell>
-                  {contribution?.school?.name &&
-                  contribution.school.name.length > 25
-                    ? `${contribution.school.name.substring(0, 25)}...`
-                    : contribution.school.name}
-                </TableCell>{' '}
-                <TableCell>{contribution?.contributedUser?.name}</TableCell>
-                <TableCell>
-                  {/* Parse the JSON string into a JavaScript object */}
-                  {JSON.parse(contribution?.contributed_data)?.typeOfSchool}
-                </TableCell>
-              </TableRow>
-            ))
+            currentItems?.map((contribution) => {
+              const contributedData = JSON.parse(
+                contribution?.contributed_data
+              );
+              return Object.entries(contributedData)?.map(
+                ([fieldType, change]) => (
+                  <TableRow key={contribution?.id + fieldType}>
+                    <TableCell>{fieldType}</TableCell>
+                    <TableCell>{change?.toString()}</TableCell>
+                    <TableCell>{contribution?.contributedUser?.name}</TableCell>
+                    <TableCell>
+                      {contribution?.createdAt?.substring(0, 10)}
+                    </TableCell>
+                    <TableCell>{contribution?.status}</TableCell>
+                  </TableRow>
+                )
+              );
+            })
           )}
         </TableBody>
       </Table>
+      <Pagination
+        totalItems={data?.meta?.total || 0}
+        page={currentPage}
+        pageSize={itemsPerPage}
+        pageSizes={[10, 20, 30, 40, 50]}
+        onChange={({ page, pageSize }) => {
+          setCurrentPage(page);
+          setItemsPerPage(pageSize);
+        }}
+        style={{ background: '#2C2B33', color: 'white' }}
+      />
     </TableContainer>
   );
 };

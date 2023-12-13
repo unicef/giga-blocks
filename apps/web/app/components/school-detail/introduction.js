@@ -46,8 +46,9 @@ const Introduction = ({ schooldata ,tokenId}) => {
   };
 
   useEffect(() => {
-    if (schooldata?.owner === process.env.NEXT_PUBLIC_GIGA_ESCROW_ADDRESS) setOnSell(true);
-  },[]);
+    if (schooldata?.owner.toLowerCase() === process.env.NEXT_PUBLIC_GIGA_ESCROW_ADDRESS.toLowerCase()) setOnSell(true);
+    else setOnSell(false);
+  },[schooldata?.owner]);
 
   useEffect(()=>{
     fetchPrice()

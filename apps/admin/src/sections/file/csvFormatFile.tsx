@@ -69,7 +69,7 @@ export default function CsvFormatFile({
 
   useEffect(() => {
     if (isFileValidated) {
-      const newFiles = selectedFiles.map((file:any) =>
+      const newFiles = selectedFiles?.map((file:any) =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
         })
@@ -193,7 +193,7 @@ export default function CsvFormatFile({
       {errorMessageArray.length > 0 && (
         <Alert severity="error">
           <ul>
-            {errorMessageArray.map((errorMsg: string, index: number) => (
+            {errorMessageArray?.map((errorMsg: string, index: number) => (
               <li key={index}>- {errorMsg}</li>
             ))}
           </ul>

@@ -51,7 +51,7 @@ const SchoolDetail = () => {
 
   const breadcrumbs = [
     { text: 'Home', link: '/' },
-    { text: 'Explore NFT', link: '/explore' },
+    { text: 'School', link: '/contributeSchool' },
   ];
 
   return (
@@ -84,7 +84,7 @@ const SchoolDetail = () => {
                     color: 'white',
                   }}
                 >
-                  Collector NFT
+                  School Data
                 </Tab>
                 <Tab style={{ color: 'white' }}>Change Log</Tab>
               </TabList>
@@ -108,22 +108,28 @@ const SchoolDetail = () => {
                       </p>
                     </Tile>
                     <Tile className={`tile-school tile-white`}>
+                      <p className="heading2">Country</p>
+                      <p className="heading5">{data?.country}</p>
+                    </Tile>
+                    <Tile className={`tile-school tile-white`}>
                       <p className="heading2">Exact Location</p>
                       <p className="heading5">
                         {data?.latitude}, {data?.longitude}
                       </p>
-                    </Tile>
-                    <Tile className={`tile-school tile-white`}>
-                      <p className="heading2">Country</p>
-                      <p className="heading5">{data?.country}</p>
                     </Tile>
                   </Column>
                   <Column
                     md={4}
                     lg={7}
                     sm={4}
-                    style={{ display: 'flex', justifyContent: 'center' }}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flexDirection: 'column',
+                    }}
                   >
+                    <p>Last Updated:{data?.updatedAt.substring(0, 10)}</p>
                     <img
                       style={{
                         width: '60%',
@@ -165,9 +171,7 @@ const SchoolDetail = () => {
                             Coverage <br /> Availability
                           </span>
                           <span className="heading5">
-                            {data?.coverage_availability
-                              ? data?.coverage_availability
-                              : 'N/A'}
+                            {data?.coverage_availability ? 'True' : 'N/A'}
                           </span>
                         </div>
                       </Column>

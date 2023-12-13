@@ -21,7 +21,7 @@ export default function Home() {
       <WhyNFT2 />
       <GetInvolved />
       <RegistrationForm />
-      <DigitalRevolution />
+      {/* <DigitalRevolution /> */}
       <Faq />
       <Footer />
       {/* </Web3Provider> */}

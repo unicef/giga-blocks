@@ -29,7 +29,7 @@ export default function Dashboard() {
           <MapView
             mapData={
               latitudeArray && longitudeArray
-                ? latitudeArray.map((latitude: any, index: number) => ({
+                ? latitudeArray?.map((latitude: any, index: number) => ({
                     latitude,
                     longitude: longitudeArray[index],
                   }))

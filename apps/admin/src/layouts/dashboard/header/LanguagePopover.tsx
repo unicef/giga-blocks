@@ -45,7 +45,7 @@ export default function LanguagePopover() {
 
       <MenuPopover open={openPopover} onClose={handleClosePopover} sx={{ width: 180 }}>
         <Stack spacing={0.75}>
-          {allLangs.map((option) => (
+          {allLangs?.map((option) => (
             <MenuItem
               key={option.value}
               selected={option.value === currentLang.value}

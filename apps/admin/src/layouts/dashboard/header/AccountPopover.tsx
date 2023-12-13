@@ -28,7 +28,7 @@ export default function AccountPopover() {
   const OPTIONS = [
     {
       label: 'My Profile',
-      linkTo: `${PATH_USER.account(user?.userId)}`,
+      linkTo: `${PATH_USER.account(user?.id)}`,
     },
   ];
 
@@ -95,7 +95,7 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack sx={{ p: 1 }}>
-          {OPTIONS.map((option) => (
+          {OPTIONS?.map((option) => (
             <MenuItem key={option.label} onClick={() => handleClickItem(option.linkTo)}>
               {option.label}
             </MenuItem>

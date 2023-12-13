@@ -30,9 +30,9 @@ const Connectivity = () => {
   const [collectorResult] = useQuery({
     query: Queries.collectorTransferQuery,
     variables: { id },
-  })
+  });
   const [transferData, setTransferData] = useState();
-  const[collectorTransferData, setCollectorTransferData] = useState();
+  const [collectorTransferData, setCollectorTransferData] = useState();
 
   const decoedTransferData = (data) => {
     const encodeddata = data.schoolTransfers;
@@ -41,12 +41,12 @@ const Connectivity = () => {
   };
   useEffect(() => {
     if (result.data) decoedTransferData(result.data);
-  }, [result.data,collectorResult.data]);
+  }, [result.data, collectorResult.data]);
 
   return (
     <>
       <Grid fullWidth>
-        <Column md={4} lg={5} sm={4}>
+        <Column md={4} lg={5} sm={4} style={{ marginTop: '32px' }}>
           <span style={{ fontSize: '1.5em' }}>Transaction History</span>
         </Column>
         <Column md={4} lg={11} sm={4} className="school-connectivity-cards">
@@ -156,7 +156,7 @@ const Connectivity = () => {
                 </TableContainer>
               </TabPanel>
               <TabPanel>
-              <TableContainer sx={{ my: 4 }}>
+                <TableContainer sx={{ my: 4 }}>
                   <Table>
                     <TableHead>
                       <TableRow style={{ background: '#2c2b33' }}>

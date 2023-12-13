@@ -275,7 +275,7 @@ export class ContributeProcessor {
     const idsArray = job.data.ids.contributions;
     const userId = job.data.userId;
     for (const data of idsArray) {
-      const transactions = this.contributeDataService.validate(
+      const transactions = await this.contributeDataService.validate(
         data.contributionId,
         Boolean(data.isValid),
         userId,

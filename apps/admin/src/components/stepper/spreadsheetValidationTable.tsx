@@ -82,20 +82,20 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     return false;
   };
   const checkFileTypeCsv = (): boolean => {
-    if (productType === 'wires') {
-      return fileName !== 'Lines.csv' && fileName !== 'Substations.csv';
-    }
-    if (productType === 'generators') {
-      return (
-        fileName !== 'Solar.csv' &&
-        fileName !== 'BESS.csv' &&
-        fileName !== 'Genset.csv' &&
-        fileName !== 'ACDC_Converter.csv' &&
-        fileName !== 'Charge_Controller.csv' &&
-        fileName !== 'Other.csv'
-      );
-    }
-    return false;
+    // if (productType === 'wires') {
+      return fileName !== 'school.csv';
+    // }
+    // if (productType === 'generators') {
+    //   return (
+    //     fileName !== 'Solar.csv' &&
+    //     fileName !== 'BESS.csv' &&
+    //     fileName !== 'Genset.csv' &&
+    //     fileName !== 'ACDC_Converter.csv' &&
+    //     fileName !== 'Charge_Controller.csv' &&
+    //     fileName !== 'Other.csv'
+    //   );
+    // }
+    // return false;
   };
 
   const duplicateCheck = (data: any[]): any[] => {
@@ -195,7 +195,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   }, [rows]);
 
   useEffect(() => {
-    convertedObject && convertedObject.schoolName.length === 0 && setAllSheetErrors([{sheetName: 'school.csv', errors: ['Uplaoded csv is empty.']}])
+    convertedObject && convertedObject?.schoolName?.length === 0 && setAllSheetErrors([{sheetName: 'school.csv', errors: ['Uplaoded csv is empty.']}])
   }, [convertedObject])
 
 
@@ -203,14 +203,14 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     <>
       {errors.length > 0 && (
         <Alert severity="error" sx={{ mb: 4, mx: 1 }}>
-          {errors.map((error, index) => (
+          {errors?.map((error, index) => (
             <div key={index}>- {error}</div>
           ))}
         </Alert>
       )}
 
       {sheetNames.length > 1 &&
-        sheetNames.map((sheetName, index) => (
+        sheetNames?.map((sheetName, index) => (
           <Button
             variant="outlined"
             sx={{ mx: 1.5, my: 0.5 }}
@@ -225,7 +225,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
         <Table sx={{ mx: 1 }}>
           <TableHead>
             <TableRow>
-              {tableHeaders.map((header, index) => (
+              {tableHeaders?.map((header, index) => (
                 <TableCell key={index} sx={{ whiteSpace: 'nowrap' }}>
                   {header}
                 </TableCell>
@@ -239,7 +239,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
                   key={rowIndex}
                   sx={{ backgroundColor: rowIndex % 2 === 1 ? '#f5f5f5' : '#fff' }}
                 >
-                  {tableHeaders.map((header) => {
+                  {tableHeaders?.map((header) => {
                     const value = convertedObject[header][rowIndex];
                     let isInvalid = false;
 

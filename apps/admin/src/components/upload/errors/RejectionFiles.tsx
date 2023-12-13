@@ -44,7 +44,7 @@ export default function RejectionFiles({ fileRejections }: Props) {
         borderColor: (theme) => alpha(theme.palette.error.main, 0.24),
       }}
     >
-      {fileRejections.map(({ file, errors }) => {
+      {fileRejections?.map(({ file, errors }) => {
         const { path, size } = fileData(file);
 
         return (
@@ -53,7 +53,7 @@ export default function RejectionFiles({ fileRejections }: Props) {
               {path} - {size ? fData(size) : ''}
             </Typography>
 
-            {errors.map((error) => {
+            {errors?.map((error) => {
               let errorMessage = '';
               if (error.code === 'file-too-large') {
                 errorMessage =

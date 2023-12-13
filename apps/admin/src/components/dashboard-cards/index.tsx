@@ -11,7 +11,7 @@ import { useUserGet } from '@hooks/user/useUser';
 export default function OutlinedCard() {
   const { data: mintedCount } = useMintedSchoolCount('MINTED');
   const { data: schoolCount } = useSchoolCount();
-  const {data:contributionData} = useContributeGet({page: 0, perPage: 10, status: 'Validated'})
+  const {data:contributionData} = useContributeGet({page: 0, perPage: 10})
   const {data:userData} = useUserGet(1, 10, 'CONTRIBUTOR')
 
   return (

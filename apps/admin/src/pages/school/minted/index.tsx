@@ -80,7 +80,7 @@ const MintedSchools = () => {
       decodedShooldata.push(schoolData);
     }
     decodedShooldata &&
-      decodedShooldata.map((row: any) => {
+      decodedShooldata?.map((row: any) => {
         filteredData.push({
           id: row.tokenId,
           schoolName: row.schoolName,
@@ -131,7 +131,7 @@ const MintedSchools = () => {
                 />
                 <TableBody>
                   {sortedData &&
-                    sortedData.map((row: any) => (
+                    sortedData?.map((row: any) => (
                       <SchoolTableRow
                         key={row.id}
                         row={row}

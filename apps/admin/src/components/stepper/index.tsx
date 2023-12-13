@@ -42,7 +42,7 @@ export default function HorizontalLinearStepper({propsTableData}:{propsTableData
 
   useEffect(() => {
     if (isFileValidated) {
-      const newFiles = selectedFiles.map((file:any) =>
+      const newFiles = selectedFiles?.map((file:any) =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
         })
@@ -153,7 +153,7 @@ export default function HorizontalLinearStepper({propsTableData}:{propsTableData
   return (
     <Box sx={{ width: '100%' }}>
       <Stepper activeStep={activeStep} sx={{ py: 2 }} connector={<QontoConnector />}>
-        {steps.map((label, index) => {
+        {steps?.map((label, index) => {
           const stepProps: { completed?: boolean } = {};
           const labelProps: {
             optional?: React.ReactNode;
