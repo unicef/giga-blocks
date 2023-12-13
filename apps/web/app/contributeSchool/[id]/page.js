@@ -4,6 +4,7 @@ import Navbar from '../../components/navbar';
 import ChangeLog from '../../components/changeLog';
 import { useSchoolDetails } from '../../hooks/useSchool';
 import ContributeForm from '../../components/contribute';
+import { MapView } from '../../components/maps';
 import {
   Button,
   Column,
@@ -60,7 +61,7 @@ const SchoolDetail = () => {
         <>
           <Navbar />
           {/* HEADING */}
-          <PageHeader name={data.name} breadcrumbs={breadcrumbs} />
+          <PageHeader name={data?.name} breadcrumbs={breadcrumbs} />
 
           {/* INTRODUCTION */}
 
@@ -127,16 +128,22 @@ const SchoolDetail = () => {
                       justifyContent: 'center',
                       alignItems: 'center',
                       flexDirection: 'column',
+                      width: '100%',
                     }}
                   >
-                    <p>Last Updated:{data?.updatedAt.substring(0, 10)}</p>
-                    <img
-                      style={{
-                        width: '60%',
-                      }}
-                      alt="School Map"
-                      src={generateIdenticon(data?.giga_school_id)}
-                    />
+                    <p style={{ fontSize: '12px' }}>
+                      Last Updated:{data?.updatedAt.substring(0, 10)}
+                    </p>
+                    <div style={{ width: '450px' }}>
+                      <MapView
+                        mapData={[
+                          {
+                            latitude: data?.latitude,
+                            longitude: data?.longitude,
+                          },
+                        ]}
+                      />
+                    </div>
                   </Column>
                 </Grid>
 

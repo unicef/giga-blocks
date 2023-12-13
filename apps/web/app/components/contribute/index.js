@@ -141,7 +141,7 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
       {/* INTRODUCTION */}
       <Modal open={isOpen} onRequestClose={onClose} passiveModal={true}>
         <h1 style={{ marginBottom: '24px' }}>
-          Contribute Data for {`${data.name}`}
+          Contribute Data for {`${data?.name}`}
         </h1>
         <ModalBody>
           <Form onSubmit={handleSubmit(onSubmit)}>
