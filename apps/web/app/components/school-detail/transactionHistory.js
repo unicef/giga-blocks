@@ -146,7 +146,7 @@ const Connectivity = () => {
                               {transfer?.blockTimestamp
                                 ? new Date(
                                     transfer.blockTimestamp * 1000
-                                  ).toLocaleDateString('en-GB')
+                                  )?.toLocaleDateString('en-GB')
                                 : ''}
                             </TableCell>
                           </TableRow>
@@ -245,7 +245,7 @@ const Connectivity = () => {
                               {transfer?.blockTimestamp
                                 ? new Date(
                                     transfer.blockTimestamp * 1000
-                                  ).toLocaleDateString('en-GB')
+                                  )?.toLocaleDateString('en-GB')
                                 : ''}
                             </TableCell>
                           </TableRow>
