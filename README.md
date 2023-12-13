@@ -8,7 +8,7 @@ Need pnpm for package management.
 
 Installing packages in root of repo
 
-```
+``` 
 pnpm i
 ```
 
