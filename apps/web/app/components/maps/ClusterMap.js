@@ -12,7 +12,13 @@ import {
 function MapClusters({ mapData = [], ...other }) {
   const mapRef = useRef(null);
 
-  const features = Array.isArray(mapData)
+  const hasValidMapData = Array.isArray(mapData) && mapData.length > 0;
+
+  const defaultCoordinates = hasValidMapData
+    ? [+mapData[0]?.longitude, +mapData[0]?.latitude]
+    : [51.878743, 5.5906943];
+
+  const features = hasValidMapData
     ? mapData.map((item) => ({
         type: 'Feature',
         geometry: {
@@ -59,9 +65,9 @@ function MapClusters({ mapData = [], ...other }) {
     <>
       <Map
         initialViewState={{
-          longitude: 51.878743,
-          latitude: 5.5906943,
-          zoom: 0,
+          longitude: defaultCoordinates[0],
+          latitude: defaultCoordinates[1],
+          zoom: hasValidMapData ? 8 : 0,
         }}
         interactiveLayerIds={[clusterLayer.id || '']}
         onClick={onClick}
