@@ -82,20 +82,20 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     return false;
   };
   const checkFileTypeCsv = (): boolean => {
-    if (productType === 'wires') {
-      return fileName !== 'Lines.csv' && fileName !== 'Substations.csv';
-    }
-    if (productType === 'generators') {
-      return (
-        fileName !== 'Solar.csv' &&
-        fileName !== 'BESS.csv' &&
-        fileName !== 'Genset.csv' &&
-        fileName !== 'ACDC_Converter.csv' &&
-        fileName !== 'Charge_Controller.csv' &&
-        fileName !== 'Other.csv'
-      );
-    }
-    return false;
+    // if (productType === 'wires') {
+      return fileName !== 'school.csv';
+    // }
+    // if (productType === 'generators') {
+    //   return (
+    //     fileName !== 'Solar.csv' &&
+    //     fileName !== 'BESS.csv' &&
+    //     fileName !== 'Genset.csv' &&
+    //     fileName !== 'ACDC_Converter.csv' &&
+    //     fileName !== 'Charge_Controller.csv' &&
+    //     fileName !== 'Other.csv'
+    //   );
+    // }
+    // return false;
   };
 
   const duplicateCheck = (data: any[]): any[] => {
@@ -195,7 +195,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   }, [rows]);
 
   useEffect(() => {
-    convertedObject && convertedObject.schoolName.length === 0 && setAllSheetErrors([{sheetName: 'school.csv', errors: ['Uplaoded csv is empty.']}])
+    convertedObject && convertedObject?.schoolName?.length === 0 && setAllSheetErrors([{sheetName: 'school.csv', errors: ['Uplaoded csv is empty.']}])
   }, [convertedObject])
 
 
