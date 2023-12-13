@@ -214,6 +214,7 @@
     "sweetalert2-react-content": "^5.0.7",
     "tslib": "^2.3.0",
     "typeorm": "^0.3.17",
+    "underscore": "^1.13.6",
     "urql": "^4.0.5",
     "web3": "^4.1.2",
     "web3-eth-accounts": "^4.0.5",

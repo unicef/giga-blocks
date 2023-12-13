@@ -371,6 +371,9 @@ importers:
       typeorm:
         specifier: ^0.3.17
         version: 0.3.17(ts-node@10.9.1)
+      underscore:
+        specifier: ^1.13.6
+        version: 1.13.6
       urql:
         specifier: ^4.0.5
         version: 4.0.5(react@18.2.0)
@@ -18941,6 +18944,10 @@ packages:
       has-symbols: 1.0.3
       which-boxed-primitive: 1.0.2
     dev: true
+
+  /underscore@1.13.6:
+    resolution: {integrity: sha512-+A5Sja4HP1M08MaXya7p5LvjuM7K6q/2EaC0+iovj/wOcMsTzMvDFbasi/oSapiwOlt252IqsKqPjCl7huKS0A==}
+    dev: false
 
   /undici@5.11.0:
     resolution: {integrity: sha512-oWjWJHzFet0Ow4YZBkyiJwiK5vWqEYoH7BINzJAJOLedZ++JpAlCbUktW2GQ2DS2FpKmxD/JMtWUUWl1BtghGw==}

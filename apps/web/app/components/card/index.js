@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { toSvg } from 'jdenticon';
 import { Queries } from '../../libs/graph-query';
+import DynamicScript from './p5';
 
 const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
   const [searchText, setSearchText] = useState('');
@@ -48,7 +49,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
     for (let i = 0; i < data?.length; i++) {
       const imageData = {
         tokenId: data[i].id,
-        image: new Function (data[i].imageScript),
+        image:  data[i].imageScript,
       };
       decodedImage.push(imageData);
     }
@@ -109,13 +110,14 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
                 href={`/explore/${school?.tokenId}`}
               >
                 <div className="row">
+                  <DynamicScript scriptContent={imageData?.find((image)=>image.tokenId === school?.tokenId)?.image} />
                   
-                  <img
+                  {/* <img
                     src={generateIdenticon(school?.tokenId)}
                     // src = {imageData?.find((image)=>image.tokenId === school?.tokenId)?.image}
                     alt="SVG Image"
                     style={{ marginBottom: '16px' }}
-                  />
+                  /> */}
                   {/* <p className="text-purple">School Name</p> */}
                   <Toggletip align="right">
                     <ToggletipButton label="Show information">
