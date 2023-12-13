@@ -44,14 +44,12 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
   }, [queryData]);
 
   const decodeImage = (data) => {
-    console.log("imageData",data)
     const decodedImage = [];
     for (let i = 0; i < data?.length; i++) {
       const imageData = {
         tokenId: data[i].id,
-        image: decodeURIComponent(escape(atob(data[i].imageScript.toString()))),
+        image: new Function (data[i].imageScript),
       };
-      console.log(imageData)
       decodedImage.push(imageData);
     }
     setImageData(decodedImage);
@@ -63,7 +61,6 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
 
     if(!variables?.id){
       for (let i = 0; i < encodeddata?.length; i++) {
-        console.log(encodeddata)
         const schoolData = {
           tokenId: encodeddata[i].id,
           schoolName: encodeddata[i].name,
@@ -86,12 +83,6 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
 
   const loadMore = () => {
     setPageSize(pageSize + pageSize);
-    // if (pageSize < data?.meta.total - 12) {
-    //   setPageSize(pageSize + 12);
-    // } else {
-    //   setPageSize(data.rows.length);
-    //   setAllDataLoaded(true);
-    // }
   };
 
   return (
@@ -118,9 +109,10 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
                 href={`/explore/${school?.tokenId}`}
               >
                 <div className="row">
+                  
                   <img
-                    // src={generateIdenticon(school?.tokenId)}
-                    src = {imageData?.find((image)=>image.tokenId === school?.tokenId)?.image}
+                    src={generateIdenticon(school?.tokenId)}
+                    // src = {imageData?.find((image)=>image.tokenId === school?.tokenId)?.image}
                     alt="SVG Image"
                     style={{ marginBottom: '16px' }}
                   />
