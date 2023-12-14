@@ -43,8 +43,8 @@ const VerifiedSchool = () => {
     const TABLE_HEAD = [
         // { id: 'checkbox', label: '', align: 'left' },
         { id: 'name', label: 'Name', align: 'left' },
-        { id: 'location', label: 'Location', align: 'left' },
-        { id: 'latitide', label: 'Latitude', align: 'left' },
+        { id: 'country', label: 'Location', align: 'left' },
+        { id: 'latitude', label: 'Latitude', align: 'left' },
         { id: 'longitude', label: 'Longitude', align: 'left' },
         { id: 'status', label: 'Status', align: 'left' }
       ];
@@ -55,7 +55,7 @@ const VerifiedSchool = () => {
 
       const uploadId = query.uploadId;
 
-      const {dense, page, setPage, order, orderBy, rowsPerPage, onChangePage, onSelectRow, onSort, onChangeDense, onChangeRowsPerPage,
+      const {dense, page, setPage, order, setOrder, setOrderBy,  orderBy, rowsPerPage, onChangePage, onSelectRow, onSort, onChangeDense, onChangeRowsPerPage,
       } = useTable();
 
       const [age, setAge] = useState('');
@@ -85,7 +85,7 @@ const VerifiedSchool = () => {
 
   useEffect(() => {
     refetch()
-  }, [uploadId, country, connectivity])
+  }, [uploadId, country, connectivity, isMintSuccess, mintingError])
 
   let filteredData: any = [];
   useEffect(() => {
@@ -128,6 +128,11 @@ const VerifiedSchool = () => {
       setSelectedValues([])
       mutate({data:selectedValues})
     },[signTransaction,selectedValues])
+
+    useEffect(() => {
+      isMintSuccess && enqueueSnackbar("Minted Successfully", { variant: 'success' })
+      mintingError && enqueueSnackbar("Miniting error", { variant: 'error' })
+    }, [isMintSuccess, mintingError])
 
     let test;
     const onSelectAllRows = (e:any) => {

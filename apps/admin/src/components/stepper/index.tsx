@@ -19,7 +19,7 @@ import { useRouter } from 'next/router';
 
 const steps = ['Preview File', 'Validate File'];
 
-export default function HorizontalLinearStepper({propsTableData}:{propsTableData: any}) {
+export default function HorizontalLinearStepper({propsTableData, setFile}:{propsTableData: any, setFile:any}) {
   const [activeStep, setActiveStep] = useState(0);
   const [files, setFiles] = useState<(File | string)[]>([]);
   const [hideButton, setHideButton] = useState(false)
@@ -148,6 +148,7 @@ export default function HorizontalLinearStepper({propsTableData}:{propsTableData
     setShowStepper(false);
     setDisableDropZone(false);
     setSelectedSheetName('');
+    setFile([])
   };
 
   return (
