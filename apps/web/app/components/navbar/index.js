@@ -45,6 +45,8 @@ const Navbar = () => {
     setIsDropdownOpen(false);
   };
 
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
   useEffect(() => {}, [account]);
 
   return (
@@ -139,6 +141,7 @@ const Navbar = () => {
             >
               {isAuthenticated ? (
                 <>
+                  <p style={{ paddingRight: '12px' }}>{currentUser?.name}</p>
                   <img
                     src="/landingPage/gravatar.png"
                     alt="User Avatar"
