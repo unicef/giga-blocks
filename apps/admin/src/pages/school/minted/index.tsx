@@ -57,6 +57,7 @@ const MintedSchools = () => {
     onChangeRowsPerPage,
   } = useTable();
 
+  const [school, setSchool] = useState<any>()
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
   const { data: total } = useSchoolCount('MINTED');
@@ -67,8 +68,6 @@ const MintedSchools = () => {
     variables: { skip: page * rowsPerPage, first: rowsPerPage },
   });
   const { data, fetching, error } = result;
-
-  console.log(tableData)
 
   const decodeSchooldata = (data: any) => {
     const encodeddata = data.schoolTokenUris;  
@@ -112,6 +111,10 @@ const MintedSchools = () => {
     return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
   });
 
+  const handleSchoolChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setSchool(e.target.value)
+  }
+
   return (
     <DashboardLayout>
       <h2>Minted School</h2>
@@ -122,7 +125,10 @@ const MintedSchools = () => {
       )}
       {!fetching && (
         <>
-        <Card>
+        <div style={{display: 'flex', alignItems: 'flex-end', gap: '20px'}}>
+          <TextField id="outlined-basic" type='string' placeholder='Search country' onChange={(e) => handleSchoolChange(e)}/>
+        </div>
+        <Card style={{marginTop: '20px'}}>
           <Divider />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>

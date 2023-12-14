@@ -90,7 +90,7 @@ const navConfig = [
     items: [
       {
         title: 'Users',
-        path: PATH_USER.root,
+        path: PATH_USER.admin,
         children: [
           {
             title: 'Admins',

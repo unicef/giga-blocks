@@ -147,9 +147,9 @@ const ContributeData = () => {
 
   useEffect(() => {
     isValidationSuccess &&
-      enqueueSnackbar('Successfully updated contribution', { variant: 'success' });
+    enqueueSnackbar('Contributed Data are validated. Please check Valid Data Section', { variant: 'success' });
     refetch();
-    isValidationError && enqueueSnackbar('Unsuccessful', { variant: 'error' });
+    isValidationError && enqueueSnackbar('Contributed Data are invalidated', { variant: 'error' });
   }, [isValidationSuccess, isValidationError]);
 
   const handleValidChange = (value: string) => {
