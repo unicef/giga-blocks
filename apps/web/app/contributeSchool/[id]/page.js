@@ -19,7 +19,6 @@ import {
 } from '@carbon/react';
 import './school-details.scss';
 import { useParams } from 'next/navigation';
-import { toSvg } from 'jdenticon';
 import { useState } from 'react';
 import PageHeader from '../../components/page-header';
 import { getCurrentUser } from '../../utils/sessionManager';
@@ -42,12 +41,6 @@ const SchoolDetail = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
-  };
-
-  const generateIdenticon = (image) => {
-    const size = 50;
-    const svgString = toSvg(image, size);
-    return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
   };
 
   const breadcrumbs = [

@@ -1,14 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import {
-  Column,
-  Form,
-  Grid,
-  TextInput,
-  Button,
-  Dropdown,
-  ModalHeader,
-} from '@carbon/react';
+import { Form, TextInput, Button, Dropdown } from '@carbon/react';
 import { Controller, useForm } from 'react-hook-form';
 import Web3Modal from '../congratulation-modal';
 import { useContributeData } from '../../hooks/useContributeData';
@@ -114,6 +106,7 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
         };
         contributeDataMutation.mutate(formattedData);
       }
+      onClose();
       openModal();
     } catch (error) {
       console.error('Error submitting form:', error);
