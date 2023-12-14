@@ -8,7 +8,7 @@ import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { Modal, ModalBody } from '@carbon/react';
 
-const ContributeForm = ({ data, isOpen, onClose }) => {
+const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex }) => {
   const router = useRouter();
   const contributeDataMutation = useContributeData();
   const { handleSubmit, control, setValue } = useForm();
@@ -48,6 +48,11 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleModalClose = () => {
+    onClose();
+    updateSelectedTabIndex(1);
   };
 
   const onSubmit = (formData) => {
@@ -257,7 +262,12 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
           Contribute Now
         </Button>
       </Modal>
-      <Web3Modal id={id} isOpen={isModalOpen} onClose={closeModal} />
+      <Web3Modal
+        id={id}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onTabChange={handleModalClose}
+      />
     </>
   );
 };

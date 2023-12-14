@@ -29,6 +29,7 @@ const SchoolDetail = () => {
   const router = useRouter();
   const { data, isLoading } = useSchoolDetails(id);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
 
   const user = getCurrentUser();
   const openModal = () => {
@@ -37,6 +38,10 @@ const SchoolDetail = () => {
     } else {
       router.push('/signIn');
     }
+  };
+
+  const updateSelectedTabIndex = (index) => {
+    setSelectedTabIndex(index);
   };
 
   const closeModal = () => {
@@ -58,7 +63,7 @@ const SchoolDetail = () => {
 
           {/* INTRODUCTION */}
 
-          <Tabs>
+          <Tabs selectedIndex={selectedTabIndex}>
             <div
               style={{
                 display: 'flex',
@@ -196,6 +201,7 @@ const SchoolDetail = () => {
             isOpen={isModalOpen}
             onClose={closeModal}
             data={data}
+            updateSelectedTabIndex={updateSelectedTabIndex}
           />
           <Footer />
         </>
