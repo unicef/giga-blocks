@@ -133,6 +133,8 @@ export default function SchoolDetails({ id }: Props) {
   const chain = process.env.NEXT_PUBLIC_DEFAULT_CHAIN;
   const address = process.env.NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS;
 
+  const baseURL = process.env.NEXT_PUBLIC
+
   return (
     <>
       {fetching && <p>Loading...</p>}
@@ -256,6 +258,11 @@ export default function SchoolDetails({ id }: Props) {
                 <Stack sx={{ mt: 8 }}>
                   <Box display="flex" justifyContent="center">
                     <Identicon string={profile?.fullname} size={200} />
+                  </Box>
+                </Stack>
+                <Stack sx={{ mt: 8 }}>
+                  <Box display="flex" justifyContent="center">
+                    <a href={`${process.env.NEXT_PUBLIC_WEB_NAME}/explore/${id}`} target="_blank">View NFT</a>
                   </Box>
                 </Stack>
               </Box>
