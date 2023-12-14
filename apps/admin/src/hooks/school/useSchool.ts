@@ -27,6 +27,20 @@ export const useSchoolGet = ({page, perPage, minted, uploadId, name, country, co
   );
 };
 
+export const useAllSchool = () =>{
+  return useQuery(
+    ['get-all-school'],
+    async () =>{
+      const {data} = await api.get(
+        `${routes.SCHOOLS.GET}`
+      );
+      return data;
+    }
+  )
+  
+}
+
+
 export const useSchoolGetById = (id: string | undefined | string[]) => {
   return useQuery(
     ['single-school'],

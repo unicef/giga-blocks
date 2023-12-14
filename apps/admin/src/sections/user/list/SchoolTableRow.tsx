@@ -137,7 +137,7 @@ export default function SchoolTableRow({
           align="left"
           sx={{ textTransform: 'capitalize' }}
         >
-          <a href ={`https://testnet.arbiscan.io/token/${schoolNft}?a=${id}`} target="_blank" rel="noreferrer">
+          <a href ={`https://mumbai.polygonscan.com/token/${schoolNft}?a=${id}`} target="_blank" rel="noreferrer">
           {id}
           </a>
         </TableCell>

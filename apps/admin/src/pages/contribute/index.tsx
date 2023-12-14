@@ -20,7 +20,7 @@ import { CircularProgress } from '@mui/material';
 import { SyntheticEvent, useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { Queries } from 'src/libs/graph-query';
-import { useSchoolGet } from '@hooks/school/useSchool';
+import { useAllSchool } from '@hooks/school/useSchool';
 import { useContributeGet, useContributionValidate } from '@hooks/contribute/useContribute';
 import ContributeTableRow from '@sections/user/list/ContributTableRow';
 import { useSnackbar } from '@components/snackbar';
@@ -84,7 +84,7 @@ const ContributeData = () => {
     contributeId: selectedContributorSearch?.value,
     status: selectedStatus,
   });
-  const { data: schoolList } = useSchoolGet({});
+  const { data: schoolList } = useAllSchool();
 
   const decodeSchooldata = (data: any) => {
     const encodeddata = data.tokenUris;
