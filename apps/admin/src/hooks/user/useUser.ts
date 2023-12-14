@@ -17,7 +17,7 @@ export const useUserGet = (page:number, perPage:number, role?:string, name?:stri
     ["get-user-data", page, perPage],
     async () => {
       const { data } = await api.get(
-        `${routes.USER.GET}${role ?`role=${role}`:''}${name ? `&name=${name}` : ''}`
+        `${routes.USER.GET}${role ?`?role=${role}`:''}${name ? `&name=${name}` : ''}`
       );
       return data;
     },
