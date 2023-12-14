@@ -1,7 +1,5 @@
 import { useState, ChangeEvent, useEffect, use } from 'react';
-import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Box,
   Card,
@@ -24,8 +22,6 @@ import { useRouter } from 'next/router';
 import { useSnackbar } from '@components/snackbar';
 import FormProvider, { ProfileTextField } from '@components/hook-form';
 import { AdministrationService } from '@services/administration';
-import { useSchoolGetById } from '@hooks/school/useSchool';
-import Image from 'next/image';
 import CustomBreadcrumbs from '@components/custom-breadcrumbs';
 // @ts-ignore
 import Identicon from 'react-identicons';
@@ -33,10 +29,8 @@ import { useQuery } from 'urql';
 import { Queries } from 'src/libs/graph-query';
 import Scrollbar from '@components/scrollbar';
 import { TableHeadUsers, TableNoData, TablePaginationCustom, useTable } from '@components/table';
-import SchoolTableRow from './list/SchoolTableRow';
 import NFTTableRow from './list/NFTTableRow';
 import { PATH_DASHBOARD, PATH_SCHOOL } from '@routes/paths';
-import CustomTabPanel from '@components/Tabs';
 
 interface Props {
   isEdit?: boolean;
@@ -59,7 +53,6 @@ export default function SchoolDetails({ id }: Props) {
   const { enqueueSnackbar } = useSnackbar();
 
   const TABLE_HEAD = [
-    // { id: 'checkbox', label: '', align: 'left' },
     { id: 'blockNumber', label: 'Block number', align: 'left' },
     { id: 'from', label: 'From', align: 'left' },
     { id: 'to', label: 'To', align: 'left' },
@@ -87,10 +80,12 @@ export default function SchoolDetails({ id }: Props) {
 
   const [result] = useQuery({ query: Queries.nftDetailsQuery, variables: { id } });
   const { data, fetching, error } = result;
-  const [tableData, setTableData] = useState<any>([]);
+  const [schoolTableData, setTableData] = useState<any>([]);
+  const [collectorTableData, setCollectorTableData] = useState<any>([]);
 
   useEffect(() => {
     setTableData(data?.schoolTransfers);
+    setCollectorTableData(data?.collectorTransfers);
   }, [fetching, result]);
 
   const decodeData = (schooldata: any) => {
@@ -134,7 +129,12 @@ export default function SchoolDetails({ id }: Props) {
 
   const methods = useForm<FormValuesProps>({});
 
-  const sortedData = tableData?.slice().sort((a: any, b: any) => {
+  const schoolSortedData = schoolTableData?.slice().sort((a: any, b: any) => {
+    const isAsc = order === 'asc';
+    return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
+  });
+
+  const collectorSortedData = collectorTableData?.slice().sort((a: any, b: any) => {
     const isAsc = order === 'asc';
     return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
   });
@@ -150,9 +150,11 @@ export default function SchoolDetails({ id }: Props) {
   }
 
   function CustomTabPanel(props: TabPanelProps) {
+      //@ts-ignore
     const { children, value, index, ...other } = props;
   
     return (
+      //@ts-ignore
       <div
         role="tabpanel"
         hidden={value !== index}
@@ -288,7 +290,6 @@ export default function SchoolDetails({ id }: Props) {
           <Grid item xs={4}>
             <Container>
               <Box justifyContent={'center'}>
-                {/* <Image width={250} height={250} alt='USER' src={'/assets/Image-right.svg'}/> */}
                 <Stack sx={{ mt: 8 }}>
                   <Box display="flex" justifyContent="center">
                     <Identicon string={profile?.fullname} size={200} />
@@ -308,7 +309,12 @@ export default function SchoolDetails({ id }: Props) {
             <Tab label="School NFT" {...a11yProps(1)} />
           </Tabs>
         </Box>
-        <CustomTabPanel value={value} index={0} style={{width: '100%'}}>
+        
+        <CustomTabPanel 
+        //@ts-ignore
+        value={value} 
+        //@ts-ignore
+        index={0} style={{width: '100%'}}>
         <Grid sx={{ margin: 'auto', marginTop: '10px' }}>
             <Typography variant="h6" component="h6">
               Transaction History
@@ -321,7 +327,7 @@ export default function SchoolDetails({ id }: Props) {
                       order={order}
                       orderBy={orderBy}
                       headLabel={TABLE_HEAD}
-                      rowCount={tableData?.length}
+                      rowCount={schoolTableData?.length}
                       onSort={onSort}
                       showCheckBox={true}
                       // numSelected={selectedValues?.length}
@@ -329,8 +335,8 @@ export default function SchoolDetails({ id }: Props) {
                     />
 
                     <TableBody>
-                      {sortedData &&
-                        sortedData?.map((row: any) => (
+                      {collectorSortedData &&
+                        collectorSortedData?.map((row: any) => (
                           <NFTTableRow
                             key={row.id}
                             row={row}
@@ -340,14 +346,14 @@ export default function SchoolDetails({ id }: Props) {
                             // checkbox = {true}
                           />
                         ))}
-                      <TableNoData isNotFound={tableData?.length === 0} />
+                      <TableNoData isNotFound={schoolTableData?.length === 0} />
                     </TableBody>
                   </Table>
                 </Scrollbar>
               </TableContainer>
               <TablePaginationCustom
                 // count={data?.meta?.total}
-                count={data?.schoolTransfers?.length}
+                count={data?.collectorTransfers?.length}
                 page={page}
                 setPage={setPage}
                 rowsPerPage={rowsPerPage}
@@ -359,7 +365,11 @@ export default function SchoolDetails({ id }: Props) {
             </Card>
           </Grid>
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={1} style={{width: '100%'}}>
+        <CustomTabPanel
+        //@ts-ignore
+         value={value}
+        //@ts-ignore
+        index={1} style={{width: '100%'}}>
         <Grid sx={{ margin: 'auto', marginTop: '10px' }}>
             <Typography variant="h6" component="h6">
               Transaction History
@@ -372,32 +382,26 @@ export default function SchoolDetails({ id }: Props) {
                       order={order}
                       orderBy={orderBy}
                       headLabel={TABLE_HEAD}
-                      rowCount={tableData?.length}
+                      rowCount={schoolTableData?.length}
                       onSort={onSort}
                       showCheckBox={true}
-                      // numSelected={selectedValues?.length}
-                      // onSelectAllRows={onSelectAllRows}
                     />
 
                     <TableBody>
-                      {sortedData &&
-                        sortedData?.map((row: any) => (
+                      {schoolSortedData &&
+                        schoolSortedData?.map((row: any) => (
                           <NFTTableRow
                             key={row.id}
                             row={row}
-                            // selectedValues={selectedValues}
-                            // setSelectedValues={setSelectedValues}
                             rowData={row}
-                            // checkbox = {true}
                           />
                         ))}
-                      <TableNoData isNotFound={tableData?.length === 0} />
+                      <TableNoData isNotFound={schoolTableData?.length === 0} />
                     </TableBody>
                   </Table>
                 </Scrollbar>
               </TableContainer>
               <TablePaginationCustom
-                // count={data?.meta?.total}
                 count={data?.schoolTransfers?.length}
                 page={page}
                 setPage={setPage}
