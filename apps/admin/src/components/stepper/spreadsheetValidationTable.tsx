@@ -38,11 +38,11 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   const validateData = (data: Record<string, any>, fileType: string): string[] => {
     let hasIncorrectFileType = false;
 
-    if (fileType === 'xls') {
-      hasIncorrectFileType = checkFileTypeXls();
-    } else {
-      hasIncorrectFileType = checkFileTypeCsv();
-    }
+    // if (fileType === 'xls') {
+    //   hasIncorrectFileType = checkFileTypeXls();
+    // } else {
+    //   hasIncorrectFileType = checkFileTypeCsv();
+    // }
 
     const hasCommaInName = data?.Name?.some((name: string) => name.includes(','));
 
@@ -180,8 +180,9 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     if(tableHeaders){
       const isValidArray = tableHeaders.every(element => allowedElements.includes(element));
       if(!isValidArray){
-      setAllSheetErrors([{sheetName: 'school.csv', errors: ['Please remove columns exceptschoolName,giga_school_id,longitudeStr, latitudeStr, schoolType, country, connectivity, coverage_availabitlity, electricity_availability']}])
-      }
+      setAllSheetErrors([{sheetName: 'school.csv', errors: [`Header format did not match, please follow the sample file.`]}])
+      setHasErrors(true)
+    }
     }
   }, [tableHeaders, convertedObject])
 

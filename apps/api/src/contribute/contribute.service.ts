@@ -21,7 +21,7 @@ export class ContributeDataService {
     private prisma: PrismaAppService,
     private mailService: MailService,
     private queueService: QueueService,
-  ) { }
+  ) {}
 
   async create(createContributeDatumDto: CreateContributeDatumDto, userId: string) {
     const keyValue = Object.entries(JSON.parse(createContributeDatumDto.contributed_data));

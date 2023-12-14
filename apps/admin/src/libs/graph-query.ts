@@ -39,6 +39,15 @@ query schoolTokenUri($id: ID!) {
     tokenId
     transactionHash
   }
+  collectorTransfers(subgraphError: allow, where: {tokenId: "1"}) {
+    blockNumber
+    blockTimestamp
+    from
+    id
+    to
+    tokenId
+    transactionHash
+  }
 }
 `
 

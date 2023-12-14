@@ -111,7 +111,7 @@ export default function SchoolTableRow({
           sx={{ textTransform: 'capitalize' }}
           onClick={() => handleEditRow(id)}
         >
-          {longitude}
+          {latitude}
         </TableCell>
 
         <TableCell
@@ -119,7 +119,7 @@ export default function SchoolTableRow({
           sx={{ textTransform: 'capitalize' }}
           onClick={() => handleEditRow(id)}
         >
-          {latitude}
+          {longitude}
         </TableCell>
 
         <TableCell
