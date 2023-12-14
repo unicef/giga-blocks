@@ -70,7 +70,7 @@ const ContributeData = () => {
   } = useContributionValidate();
   const [selectedSchoolSearch, setSelectedSchoolSearch] = useState<SearchItem | null>();
   const [selectedContributorSearch, setSelectedContributorSearch] = useState<SearchItem | null>();
-  const { data: contributorList } = useUserGet(1, 10, 'CONTRIBUTOR');
+  const { data: contributorList } = useUserGet(1, 10);
   const [selectedStatus, setSelectedStatus] = useState('Pending');
 
   const {
