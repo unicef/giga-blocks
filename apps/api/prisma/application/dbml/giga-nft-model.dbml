@@ -71,6 +71,7 @@ Table giga_users {
 
 Table giga_school {
   id String [pk]
+  giga_school_id String [unique, not null]
   status SchoolStatus [not null, default: 'Open']
   connectivity_speed_status String [default: 'Data Unavailable']
   connectivity Boolean [not null, default: false]
@@ -89,7 +90,7 @@ Table giga_school {
   longitude Float [not null]
   latitude Float [not null]
   minted MintStatus [not null, default: 'NOTMINTED']
-  coverage_availability String [not null]
+  coverage_availability Boolean [not null, default: false]
   coverage_2G Boolean [not null, default: false]
   coverage_3G Boolean [not null, default: false]
   coverage_4G Boolean [not null, default: false]

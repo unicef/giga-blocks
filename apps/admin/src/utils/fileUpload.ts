@@ -25,7 +25,7 @@ api.interceptors.response.use(
     Promise.reject(
       (error.response && error.response.data) || {
         ...error,
-        message: 'Something went wrong. Please Contact SuperAdmin',
+        message: error.message,
       }
     )
 );

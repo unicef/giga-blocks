@@ -54,7 +54,7 @@ export default function VerifyCodePage() {
 
         <Link
           component={NextLink}
-          href={PATH_AUTH.login}
+          href={PATH_AUTH.email_login}
           color="inherit"
           variant="subtitle2"
           sx={{

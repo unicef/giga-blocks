@@ -12,7 +12,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { SchoolService } from './schools.service';
-import { ApiBody, ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ListSchoolDto } from './dto/list-schools.dto';
 import { Public } from '../common/decorators/public.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
@@ -52,14 +52,14 @@ export class SchoolController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('mintBulk')
   mintBatchSchool(@Body() MintData: MintQueueDto) {
-    return this.schoolService.checkAdminandMintQueue(MintData);
+    return this.schoolService.mintBulkNFT(MintData);
   }
 
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('mintSchool')
   mintSchool(@Body() MintData: MintQueueSingleDto) {
-    return this.schoolService.checkAdminandSingleMintQueue(MintData);
+    return this.schoolService.mintNft(MintData);
   }
 
   @Public()

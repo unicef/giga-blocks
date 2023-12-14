@@ -64,7 +64,7 @@ export default function TableHeadCustom({
           </TableCell>
         )}
 
-        {headLabel.map((headCell, index) => (
+        {headLabel?.map((headCell, index) => (
           <TableCell
             key={index}
             align={headCell.align || 'left'}

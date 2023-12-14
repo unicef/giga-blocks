@@ -43,8 +43,8 @@ const VerifiedSchool = () => {
     const TABLE_HEAD = [
         // { id: 'checkbox', label: '', align: 'left' },
         { id: 'name', label: 'Name', align: 'left' },
-        { id: 'location', label: 'Location', align: 'left' },
-        { id: 'latitide', label: 'Latitude', align: 'left' },
+        { id: 'country', label: 'Location', align: 'left' },
+        { id: 'latitude', label: 'Latitude', align: 'left' },
         { id: 'longitude', label: 'Longitude', align: 'left' },
         { id: 'status', label: 'Status', align: 'left' }
       ];
@@ -55,7 +55,7 @@ const VerifiedSchool = () => {
 
       const uploadId = query.uploadId;
 
-      const {dense, page, setPage, order, orderBy, rowsPerPage, onChangePage, onSelectRow, onSort, onChangeDense, onChangeRowsPerPage,
+      const {dense, page, setPage, order, setOrder, setOrderBy,  orderBy, rowsPerPage, onChangePage, onSelectRow, onSort, onChangeDense, onChangeRowsPerPage,
       } = useTable();
 
       const [age, setAge] = useState('');
@@ -84,16 +84,16 @@ const VerifiedSchool = () => {
   // const { error } = useFetchUsers();
 
   useEffect(() => {
-    console.log(connectivity)
     refetch()
-  }, [uploadId, country, connectivity])
+  }, [uploadId, country, connectivity, isMintSuccess, mintingError])
 
   let filteredData: any = [];
   useEffect(() => {
     !isLoading &&
-    data?.rows &&  data?.rows.map((row: any) => {
+    data?.rows &&  data?.rows?.map((row: any) => {
         filteredData.push({
           id: row.id,
+          giga_school_id:row.giga_school_id,
           schoolName: row.name,
           longitude: row.longitude,
           latitude: row.latitude,
@@ -124,16 +124,15 @@ const VerifiedSchool = () => {
       if(selectedValues.length === 0){
         enqueueSnackbar("Please select atleast one school", { variant: 'error' })
         return Error("Please select atleast one school");
-      }
-      if(!provider.provider) return;
-      const signature = await signTransaction();
-      if(!signature){
-        enqueueSnackbar("Signature is null", { variant: 'error' })
-        return Error("Signature is null");
       } 
       setSelectedValues([])
-      mutate({data:selectedValues, signatureWithData:signature})
+      mutate({data:selectedValues})
     },[signTransaction,selectedValues])
+
+    useEffect(() => {
+      isMintSuccess && enqueueSnackbar("Minted Successfully", { variant: 'success' })
+      mintingError && enqueueSnackbar("Miniting error", { variant: 'error' })
+    }, [isMintSuccess, mintingError])
 
     let test;
     const onSelectAllRows = (e:any) => {
@@ -211,7 +210,7 @@ const VerifiedSchool = () => {
 
                 <TableBody>
                   {sortedData &&
-                    sortedData.map((row:any) => (
+                    sortedData?.map((row:any) => (
                       <SchoolTableRow
                         key={row.id}
                         row={row}

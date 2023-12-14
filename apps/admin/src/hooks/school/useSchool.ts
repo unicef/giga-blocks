@@ -27,6 +27,20 @@ export const useSchoolGet = ({page, perPage, minted, uploadId, name, country, co
   );
 };
 
+export const useAllSchool = () =>{
+  return useQuery(
+    ['get-all-school'],
+    async () =>{
+      const {data} = await api.get(
+        `${routes.SCHOOLS.GET}`
+      );
+      return data;
+    }
+  )
+  
+}
+
+
 export const useSchoolGetById = (id: string | undefined | string[]) => {
   return useQuery(
     ['single-school'],
@@ -40,17 +54,32 @@ export const useSchoolGetById = (id: string | undefined | string[]) => {
   );
 };
 
-export const useSchoolCount = (minted?:string) => {
+export const useSchoolCount = (minted?: string) => {
   return useQuery(
     ['school-count'],
     async () => {
-      const { data } = await api.get(`${routes.SCHOOLS.SCHOOLCOUNT}?${minted && `minted=${minted}`}`);
+      const { data } = await api.get(`${routes.SCHOOLS.SCHOOLCOUNT}`);
       return data;
     },
     {
       keepPreviousData: true,
     }
   );
+};
+
+export const useMintedSchoolCount = (minted?: string) => {
+  return useQuery(
+    ['mint-school-count'],
+    async () => {
+      const { data } = await api.get(`${routes.SCHOOLS.SCHOOLCOUNT}?${`minted=${minted}`}`);
+      return data;
+    },
+    {
+      keepPreviousData: true,
+    }
+  );
+
+
 };
 
 const mintSchool = async (data: any) => {

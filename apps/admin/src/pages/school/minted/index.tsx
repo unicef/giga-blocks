@@ -35,11 +35,11 @@ import { useSchoolCount } from '@hooks/school/useSchool';
 
 const MintedSchools = () => {
   const TABLE_HEAD = [
-    { id: 'name', label: 'Name', align: 'left' },
-    { id: 'location', label: 'Location', align: 'left' },
-    { id: 'latitide', label: 'Latitude', align: 'left' },
+    { id: 'schoolName', label: 'Name', align: 'left' },
+    { id: 'country', label: 'Location', align: 'left' },
+    { id: 'latitude', label: 'Latitude', align: 'left' },
     { id: 'longitude', label: 'Longitude', align: 'left' },
-    { id: 'status', label: 'Status', align: 'left' },
+    { id: 'mintedStatus', label: 'Status', align: 'left' },
     { id: 'tokenId', label: 'TokenId', align: 'left' },
   ];
 
@@ -68,8 +68,10 @@ const MintedSchools = () => {
   });
   const { data, fetching, error } = result;
 
+  console.log(tableData)
+
   const decodeSchooldata = (data: any) => {
-    const encodeddata = data.tokenUris;
+    const encodeddata = data.schoolTokenUris;  
     const decodedShooldata = [];
     for (let i = 0; i < encodeddata.length; i++) {
       const decodedData = atob(encodeddata[i].tokenUri.substring(29));
@@ -80,7 +82,7 @@ const MintedSchools = () => {
       decodedShooldata.push(schoolData);
     }
     decodedShooldata &&
-      decodedShooldata.map((row: any) => {
+      decodedShooldata?.map((row: any) => {
         filteredData.push({
           id: row.tokenId,
           schoolName: row.schoolName,
@@ -104,6 +106,9 @@ const MintedSchools = () => {
 
   const sortedData = tableData.slice().sort((a:any, b:any) => {
     const isAsc = order === 'asc';
+    if(orderBy === 'longitude'){
+    return (parseFloat(a[orderBy]) < parseFloat(b[orderBy]) ? -1 : 1) * (isAsc ? 1 : -1);
+    }
     return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
   });
 
@@ -131,7 +136,7 @@ const MintedSchools = () => {
                 />
                 <TableBody>
                   {sortedData &&
-                    sortedData.map((row: any) => (
+                    sortedData?.map((row: any) => (
                       <SchoolTableRow
                         key={row.id}
                         row={row}

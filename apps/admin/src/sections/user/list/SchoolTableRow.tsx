@@ -53,7 +53,7 @@ export default function SchoolTableRow({
   const schoolNft = process.env.NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS
 
   const handleEditRow = (row: string) => {
-    if (mintedStatus == 'MINTED') push(`/school/minted/${row}`)
+    if (mintedStatus == 'MINTED') push(`/nft/${row}`)
     else push(`/school/${row}`);
   };
 
@@ -111,7 +111,7 @@ export default function SchoolTableRow({
           sx={{ textTransform: 'capitalize' }}
           onClick={() => handleEditRow(id)}
         >
-          {longitude}
+          {latitude}
         </TableCell>
 
         <TableCell
@@ -119,7 +119,7 @@ export default function SchoolTableRow({
           sx={{ textTransform: 'capitalize' }}
           onClick={() => handleEditRow(id)}
         >
-          {latitude}
+          {longitude}
         </TableCell>
 
         <TableCell
@@ -137,7 +137,7 @@ export default function SchoolTableRow({
           align="left"
           sx={{ textTransform: 'capitalize' }}
         >
-          <a href ={`https://testnet.arbiscan.io/token/${schoolNft}?a=${id}`} target="_blank" rel="noreferrer">
+          <a href ={`https://mumbai.polygonscan.com/token/${schoolNft}?a=${id}`} target="_blank" rel="noreferrer">
           {id}
           </a>
         </TableCell>

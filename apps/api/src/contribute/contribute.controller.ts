@@ -25,7 +25,7 @@ export class ContributeDataController {
   constructor(private readonly contributeDataService: ContributeDataService) {}
 
   @UseGuards(RoleGuard)
-  @Roles('CONTRIBUTOR')
+  @Roles('CONTRIBUTOR', 'ADMIN')
   @Post()
   create(@Body() createContributeDatumDto: CreateContributeDatumDto, @Req() req: any) {
     return this.contributeDataService.create(createContributeDatumDto, req.user.id);
@@ -53,7 +53,7 @@ export class ContributeDataController {
   @Patch()
   batchValidate(@Body() updateContributeDatumDto: UpdateContributeDatumDto, @Req() req: any) {
     return this.contributeDataService.batchValidate(updateContributeDatumDto, req.user.id);
-  } 
+  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
@@ -70,8 +70,8 @@ export class ContributeDataController {
   @UseGuards(RoleGuard)
   @Roles('ADMIN')
   @Get('/validated')
-  getValidated() {
-    return this.contributeDataService.getValidated();
+  getValidated(@Query() query: any) {
+    return this.contributeDataService.getValidated(query);
   }
 
   @UseGuards(RoleGuard)

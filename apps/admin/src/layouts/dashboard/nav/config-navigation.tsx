@@ -1,5 +1,11 @@
 // routes
-import { PATH_DASHBOARD, PATH_USER, PATH_SCHOOL, PATH_CONTRIBUTE, PATH_VALID } from '../../../routes/paths';
+import {
+  PATH_DASHBOARD,
+  PATH_USER,
+  PATH_SCHOOL,
+  PATH_CONTRIBUTE,
+  PATH_VALID,
+} from '../../../routes/paths';
 // components
 import SvgColor from '../../../components/svg-color';
 import { ROLES } from '../../../config-global';
@@ -37,10 +43,6 @@ const navConfig = [
         path: PATH_SCHOOL.verified,
         children: [
           {
-            title: 'Minted School',
-            path: PATH_SCHOOL.verified,
-          },
-          {
             title: 'Unminted School',
             path: PATH_SCHOOL.contributed,
           },
@@ -60,6 +62,33 @@ const navConfig = [
   {
     items: [
       {
+        title: 'Minted NFT',
+        path: PATH_SCHOOL.verified,
+        icon: ICONS.user,
+      },
+    ],
+  },
+  {
+    items: [
+      {
+        title: 'Contribute',
+        path: PATH_CONTRIBUTE.root,
+        icon: ICONS.user,
+      },
+    ],
+  },
+  {
+    items: [
+      {
+        title: 'Valid Data',
+        path: PATH_VALID.root,
+        icon: ICONS.user,
+      },
+    ],
+  },
+  {
+    items: [
+      {
         title: 'Users',
         path: PATH_USER.root,
         children: [
@@ -68,28 +97,10 @@ const navConfig = [
             path: PATH_USER.admin,
           },
           {
-            title: 'Contributers',
+            title: 'Contributors',
             path: PATH_USER.contributer,
-          }
+          },
         ],
-        icon: ICONS.user,
-      },
-    ],
-  },
-  // {
-  //   items: [
-  //     {
-  //       title: 'Valid Data',
-  //       path: PATH_VALID.root,
-  //       icon: ICONS.user,
-  //     },
-  //   ],
-  // },
-  {
-    items: [
-      {
-        title: 'Contribute',
-        path: PATH_CONTRIBUTE.root,
         icon: ICONS.user,
       },
     ],

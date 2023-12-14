@@ -2,13 +2,14 @@ import { PrismaClient } from '@prisma/application';
 import * as fs from 'fs';
 interface SchoolData {
   schoolName: string;
+  giga_school_id: string;
   schoolType: string;
   country: string;
   longitude: number;
   latitude: number;
   connectivity: boolean;
   electricity_availabilty: boolean;
-  coverage_availabitlity: string;
+  coverage_availabitlity: boolean;
 }
 
 export async function handler(
@@ -49,6 +50,7 @@ export async function handler(
             for (const row of rows) {
               const [
                 schoolName,
+                giga_school_id,
                 longitudeStr,
                 latitudeStr,
                 schoolType,
@@ -68,37 +70,43 @@ export async function handler(
 
               const schoolData: SchoolData = {
                 schoolName,
+                giga_school_id,
                 schoolType,
                 country,
                 longitude,
                 latitude,
                 connectivity: Boolean(connectivity),
-                coverage_availabitlity,
+                coverage_availabitlity: Boolean(coverage_availabitlity),
                 electricity_availabilty: Boolean(electricity_availabilty),
               };
+              try {
+                await prisma.school.create({
+                  data: {
+                    name: schoolData.schoolName,
+                    giga_school_id: schoolData.giga_school_id,
+                    school_type: schoolData.schoolType,
+                    longitude: schoolData.longitude,
+                    latitude: schoolData.latitude,
+                    connectivity: schoolData.connectivity as boolean,
+                    electricity_available: schoolData.electricity_availabilty as boolean,
+                    coverage_availability: schoolData.coverage_availabitlity,
+                    country: country,
+                    uploadId: res.id,
+                    createdById: userdata.id,
+                  },
+                });
 
-              await prisma.school.create({
-                data: {
-                  name: schoolData.schoolName,
-                  school_type: schoolData.schoolType,
-                  longitude: schoolData.longitude,
-                  latitude: schoolData.latitude,
-                  connectivity: schoolData.connectivity as boolean,
-                  electricity_available: schoolData.electricity_availabilty as boolean,
-                  coverage_availability: schoolData.coverage_availabitlity,
-                  country: country,
-                  uploadId: res.id,
-                  createdById: userdata.id,
-                },
-              });
-
-              console.log(`School "${schoolName}" saved to the database.`);
+                console.log(`School "${schoolName}" saved to the database.`);
+              } catch (err) {
+                throw err;
+              }
             }
             resolve(res);
             return res;
           })
           .catch(error => {
             console.log(error);
+            throw error;
           });
       });
     });

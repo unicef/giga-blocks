@@ -124,7 +124,7 @@ export default function ConnectWithSelect({
       const currentUser = {
         email: loginWalletData.data.email,
         username: loginWalletData.data.name,
-        userId: loginWalletData.data.id,
+        id: loginWalletData.data.id,
         role: loginWalletData.data.role,
       };
       setAuthState((prev: any) => ({

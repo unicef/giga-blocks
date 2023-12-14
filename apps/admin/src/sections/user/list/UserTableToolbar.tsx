@@ -54,7 +54,7 @@ export default function UserTableToolbar({
           textTransform: 'capitalize',
         }}
       >
-        {optionsRole.map((option) => (
+        {optionsRole?.map((option) => (
           <MenuItem
             key={option}
             value={option}

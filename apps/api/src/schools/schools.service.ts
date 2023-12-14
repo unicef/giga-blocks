@@ -1,6 +1,5 @@
 import {
   Injectable,
-  Logger,
   UnauthorizedException,
   HttpException,
   BadRequestException,
@@ -10,7 +9,6 @@ import { PrismaAppService } from 'src/prisma/prisma.service';
 import { ListSchoolDto } from './dto/list-schools.dto';
 import { paginate } from 'src/utils/paginate';
 import { QueueService } from 'src/mailer/queue.service';
-import { getBatchandAddressfromSignature } from 'src/utils/web3/wallet';
 import { Role } from '@prisma/application';
 import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
 import { handler } from 'src/utils/csvToDB';
@@ -20,6 +18,7 @@ import { AppResponseDto } from './dto/app-response.dto';
 import { updateData } from 'src/utils/ethers/transactionFunctions';
 import { ConfigService } from '@nestjs/config';
 import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-datum.dto';
+import { getTokenId } from 'src/utils/web3/subgraph';
 
 @Injectable()
 export class SchoolService {
@@ -42,26 +41,30 @@ export class SchoolService {
       where.uploadId = uploadId;
     }
     if (name) {
-      where.name = { 
+      where.name = {
         contains: name,
-        mode: "insensitive"
+        mode: 'insensitive',
       };
     }
     if (country) {
       where.country = {
         contains: country,
-        mode: "insensitive"
-      }
+        mode: 'insensitive',
+      };
     }
-    if(connectivityStatus){
-      let status:boolean;
-      if(connectivityStatus === 'true'){
-        status = true
-      }
-      else{
-        status = false
+    if (connectivityStatus) {
+      let status: boolean;
+      if (connectivityStatus === 'true') {
+        status = true;
+      } else {
+        status = false;
       }
       where.connectivity = status;
+    }
+
+    if (!perPage) {
+      const data = await this.prisma.school.findMany({ where });
+      return data;
     }
 
     return paginate(
@@ -91,17 +94,12 @@ export class SchoolService {
     throw new UnauthorizedException('You wallet is not an admin wallet');
   }
 
-  async checkAdminandMintQueue(MintData: MintQueueDto) {
-    const { address } = getBatchandAddressfromSignature(MintData.signatureWithData);
-
-    if (await this.checkAdmin(address)) {
-      return this.queueService.sendMintNFT(address, MintData);
-    }
+  async mintBulkNFT(MintData: MintQueueDto) {
+    return this.queueService.sendMintNFT(MintData);
   }
 
-  async checkAdminandSingleMintQueue(MintData: MintQueueSingleDto) {
-    const { address } = getBatchandAddressfromSignature(MintData.signatureWithData);
-    return this.queueService.sendSingleMintNFT(address, MintData);
+  async mintNft(MintData: MintQueueSingleDto) {
+    return this.queueService.sendSingleMintNFT(MintData);
   }
 
   async uploadFile(
@@ -135,6 +133,7 @@ export class SchoolService {
             uploadBatch = result;
           } catch (err) {
             reject(err);
+            res.code(500).send({ err: 'Internal Server error', onmessage: err.messag });
           }
         },
         onEnd,
@@ -144,7 +143,7 @@ export class SchoolService {
     // Uploading finished
     async function onEnd(err: any) {
       if (err) {
-        res.send(new HttpException('Internal server error', 500));
+        res.send(new AppResponseDto(500, err, 'Internal Server error'));
         return;
       }
       // Ensure that the uploadBatch is available before proceeding
@@ -258,13 +257,20 @@ export class SchoolService {
   }
 
   async updateOnchainData(id: string, data: any) {
+    const schooldata = await this.filterOnchainData(id);
+    const schoolTokenId = await getTokenId(
+      this.configService.get('NEXT_PUBLIC_GRAPH_URL'),
+      data.giga_school_id,
+    );
+    const tokenId = schoolTokenId.data.schoolTokenId.tokenId;
     const tx = await updateData(
       'NFTContent',
       this.configService.get('GIGA_NFT_CONTENT_ADDRESS'),
-      id,
-      data,
+      tokenId,
+      schooldata,
     );
-    return tx;
+    const txReceipt = tx.wait();
+    return txReceipt;
   }
 
   async removeAll() {
@@ -273,5 +279,44 @@ export class SchoolService {
 
   async updateBulk(ids: ApproveContributeDatumDto, userId: string) {
     this.queueService.approveBulkData(ids, userId);
+  }
+
+  private async filterOnchainData(id: string) {
+    try {
+      const validatedData = await this.prisma.validatedData.findFirst({
+        where: {
+          school_Id: id,
+          isArchived: false,
+          approvedStatus: false,
+        },
+      });
+      const keyValue = Object.entries(validatedData.data);
+      const dataToUpdate = Object.fromEntries(keyValue);
+      const schooldata = await this.prisma.school.findUnique({
+        where: {
+          id: id,
+        },
+      });
+      const filteredData = Object.fromEntries(
+        Object.entries(validatedData.data).filter(([key]) => key in dataToUpdate),
+      );
+      const newData = {
+        ...schooldata,
+        ...filteredData,
+      };
+      const onChainData = [
+        newData.name,
+        newData.school_type,
+        newData.country,
+        newData.longitude.toString(),
+        newData.latitude.toString(),
+        newData.connectivity.toString(),
+        newData.coverage_availability.toString(),
+        newData.electricity_available.toString(),
+      ];
+      return onChainData;
+    } catch (err) {
+      console.log(err);
+    }
   }
 }

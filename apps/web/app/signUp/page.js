@@ -11,6 +11,8 @@ import { useSignUp } from '../hooks/useSignUp';
 import { useRouter } from 'next/navigation';
 import { metaMask, hooks } from '../components/web3/connectors/metamask';
 import CarbonModal from '../components/modal/index';
+import { Default_Chain_Id } from '../components/web3/connectors/network';
+import { metaMaskLogin } from '../utils/metaMaskUtils';
 
 const SignUp = () => {
   const router = useRouter();
@@ -57,8 +59,8 @@ const SignUp = () => {
   };
 
   const handlePageChange = async () => {
-    try {
-      await metaMask.activate();
+    try {     
+      await metaMaskLogin();
       router.push('/walletRegister');
     } catch (error) {
       console.log(error);

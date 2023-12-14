@@ -101,11 +101,11 @@ function Searchbar() {
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  const reduceItems = NavConfig.map((list) =>
+  const reduceItems = NavConfig?.map((list) =>
     handleLoop(list.items, (list as any).subheader)
   ).flat();
 
-  const allItems = flattenArray(reduceItems).map((option) => {
+  const allItems = flattenArray(reduceItems)?.map((option) => {
     const group = splitPath(reduceItems, option.path);
 
     return {
@@ -195,7 +195,7 @@ function Searchbar() {
                 return (
                   <Box component="li" {...props} onClick={() => handleClick(path)}>
                     <div>
-                      {partsTitle.map((part, index) => (
+                      {partsTitle?.map((part, index) => (
                         <Box
                           key={index}
                           component="span"
@@ -211,7 +211,7 @@ function Searchbar() {
                     </div>
 
                     <div>
-                      {partsPath.map((part, index) => (
+                      {partsPath?.map((part, index) => (
                         <Box
                           key={index}
                           component="span"
@@ -245,7 +245,7 @@ type ItemProps = {
 };
 
 function splitPath(array: NavListProps[], key: string) {
-  let stack = array.map((item) => ({
+  let stack = array?.map((item) => ({
     path: [item.title],
     currItem: item,
   }));
@@ -259,7 +259,7 @@ function splitPath(array: NavListProps[], key: string) {
 
     if (currItem.children?.length) {
       stack = stack.concat(
-        currItem.children.map((item: NavListProps) => ({
+        currItem.children?.map((item: NavListProps) => ({
           path: path.concat(item.title),
           currItem: item,
         }))

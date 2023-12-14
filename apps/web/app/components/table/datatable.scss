@@ -1,35 +1,31 @@
-.table-container{
-    width: 95%;
-    margin: 50px auto;
+.table-container {
+  width: 95%;
+  margin: 50px auto;
 }
-
 
 /* FlexGrid styles are not emitted by default, the feature flag must be turned on */
 
-.preview1Background{
-    height: 45vh;
-    background-image: url("/landingPage/preview-1.png");
-    background-size: cover;
-    background-repeat: no-repeat;
-    color: white;
-    background-position: center;
+.preview1Background {
+  margin-top: 48px;
+  height: 25vh;
+  width: 100vw;
+  background: #222222;
+  color: white;
 }
 
-.centerColumn{
-    display: flex;
-    align-items: center;
+.centerColumn {
+  display: flex;
+  align-items: center;
 }
 
-.colorWhite{
-    color: white;
+.colorWhite {
+  color: white;
 }
 
-.get-involved-padding{
-    padding: 50px 0;
+.get-involved-padding {
+  padding: 50px 0;
 }
 
-.margin0{
-    margin: 0;
+.margin0 {
+  margin: 0;
 }
-
-

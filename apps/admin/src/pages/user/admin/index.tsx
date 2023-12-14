@@ -102,7 +102,7 @@ const UserList = () => {
 
                 <TableBody>
                   {sortedData &&
-                    sortedData.map((row:any) => (
+                    sortedData?.map((row:any) => (
                       <UserListRow
                         key={row.id}
                         row={row}

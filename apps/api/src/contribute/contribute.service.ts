@@ -40,13 +40,16 @@ export class ContributeDataService {
   }
 
   async findAll(query) {
-    const { page, perPage, schoolId, contributorId, status } = query;
+    const { page, perPage, schoolId, contributorId, status, order } = query;
     const where: Prisma.ContributedDataWhereInput = {};
     if (schoolId) {
       where.school_Id = schoolId;
     }
     if (contributorId) {
       where.contributedUserId = contributorId;
+    }
+    if (status) {
+      where.status = status;
     }
     if (status) {
       where.status = status;
@@ -73,6 +76,7 @@ export class ContributeDataService {
       {
         page,
         perPage,
+        order,
       },
     );
     return contributedata;
@@ -212,11 +216,13 @@ export class ContributeDataService {
     return transaction;
   }
 
-  async getValidated() {
-    const validatedData = await this.prisma.validatedData.findMany({
-      // where: {
-      //   isArchived: false,
-      // },
+  async getValidated(query) {
+    const { page, perPage, status } = query;
+    const args = {
+      where: {
+        isArchived: false,
+        approvedStatus: status === 'true',
+      },
       include: {
         school: {
           select: {
@@ -229,8 +235,22 @@ export class ContributeDataService {
           },
         },
       },
-    });
-    return validatedData;
+    };
+    if (status === 'true') {
+      args.where.isArchived = true;
+    } else {
+      args.where.isArchived = false;
+    }
+
+    const validatedDataRes = await paginate(
+      this.prisma.validatedData,
+      { ...args },
+      {
+        page,
+        perPage,
+      },
+    );
+    return validatedDataRes;
   }
 
   async getValidatedById(id: string) {
