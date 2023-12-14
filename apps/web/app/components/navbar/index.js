@@ -15,7 +15,6 @@ import {
   Dropdown,
 } from '@carbon/react';
 import './navbar.scss';
-import { Wallet } from '@carbon/react/icons';
 import { metaMask } from '../../components/web3/connectors/metamask';
 import { Default_Chain_Id } from '../../components/web3/connectors/network';
 import { Link } from 'next/link';
@@ -203,10 +202,6 @@ const Navbar = () => {
                   >
                     Sign In
                   </a>
-                  <Wallet
-                    onClick={handleWalletLogin}
-                    style={{ marginRight: '14px', cursor: 'pointer' }}
-                  />
                 </>
               )}
             </div>
