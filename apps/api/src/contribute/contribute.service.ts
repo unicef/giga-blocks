@@ -21,7 +21,7 @@ export class ContributeDataService {
     private prisma: PrismaAppService,
     private mailService: MailService,
     private queueService: QueueService,
-  ) {}
+  ) { }
 
   async create(createContributeDatumDto: CreateContributeDatumDto, userId: string) {
     const keyValue = Object.entries(JSON.parse(createContributeDatumDto.contributed_data));
@@ -221,7 +221,7 @@ export class ContributeDataService {
     const args = {
       where: {
         isArchived: false,
-        approvedStatus: status === "true"
+        approvedStatus: status === 'true',
       },
       include: {
         school: {
@@ -232,10 +232,15 @@ export class ContributeDataService {
         approved: {
           select: {
             name: true,
-          }, 
+          },
         },
       },
     };
+    if (status === 'true') {
+      args.where.isArchived = true;
+    } else {
+      args.where.isArchived = false;
+    }
 
     const validatedDataRes = await paginate(
       this.prisma.validatedData,

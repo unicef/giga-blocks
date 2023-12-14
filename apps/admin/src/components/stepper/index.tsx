@@ -42,7 +42,7 @@ export default function HorizontalLinearStepper({propsTableData}:{propsTableData
 
   useEffect(() => {
     if (isFileValidated) {
-      const newFiles = selectedFiles.map((file:any) =>
+      const newFiles = selectedFiles?.map((file:any) =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
         })
@@ -130,12 +130,16 @@ export default function HorizontalLinearStepper({propsTableData}:{propsTableData
             enqueueSnackbar('Successfully uploaded to database!');
             push(`/school/un-minted?uploadId=${response.data.data}`)
           }
+          if(response?.status === 500){
+            console.log("error uploading")
+            enqueueSnackbar('Error uploading to database! Please check your file',{variant: 'error'});
+          }
         })
         .catch((error: AxiosError) => {
           // Handle upload error
-          console.log(error);
-        //   setShowErrorMsg(error?.message);
           setProgress(0);
+          enqueueSnackbar('Error uploading to database! Please check your file',{variant: 'error'});
+          setLoading(false)
         });
     }
   };
@@ -149,7 +153,7 @@ export default function HorizontalLinearStepper({propsTableData}:{propsTableData
   return (
     <Box sx={{ width: '100%' }}>
       <Stepper activeStep={activeStep} sx={{ py: 2 }} connector={<QontoConnector />}>
-        {steps.map((label, index) => {
+        {steps?.map((label, index) => {
           const stepProps: { completed?: boolean } = {};
           const labelProps: {
             optional?: React.ReactNode;

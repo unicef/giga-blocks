@@ -175,7 +175,7 @@ export class MintQueueProcessor {
 
   @Process(SET_MINT_NFT)
   public async sendMintNFT(
-    job: Job<{ address: string; mintData: SchoolData[]; ids: string[]; giga_ids: string[] }>,
+    job: Job<{ mintData: SchoolData[]; ids: string[]; giga_ids: string[] }>,
   ) {
     this._logger.log(`Sending mint nft to blockchain`);
 
@@ -195,7 +195,7 @@ export class MintQueueProcessor {
 
   @Process(SET_MINT_SINGLE_NFT)
   public async sendSingleMintNFT(
-    job: Job<{ address: string; mintData: SchoolData; ids: string[]; giga_id: string }>,
+    job: Job<{ mintData: SchoolData; ids: string[]; giga_id: string }>,
   ) {
     this._logger.log(`Sending single mint nft to blockchain`);
     let status = true;
@@ -275,7 +275,7 @@ export class ContributeProcessor {
     const idsArray = job.data.ids.contributions;
     const userId = job.data.userId;
     for (const data of idsArray) {
-      const transactions = this.contributeDataService.validate(
+      const transactions = await this.contributeDataService.validate(
         data.contributionId,
         Boolean(data.isValid),
         userId,

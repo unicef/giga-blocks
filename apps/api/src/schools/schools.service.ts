@@ -91,17 +91,12 @@ export class SchoolService {
     throw new UnauthorizedException('You wallet is not an admin wallet');
   }
 
-  async checkAdminandMintQueue(MintData: MintQueueDto) {
-    const { address } = getBatchandAddressfromSignature(MintData.signatureWithData);
-
-    if (await this.checkAdmin(address)) {
-      return this.queueService.sendMintNFT(address, MintData);
-    }
+  async mintBulkNFT(MintData: MintQueueDto) {
+    return this.queueService.sendMintNFT(MintData);
   }
 
-  async checkAdminandSingleMintQueue(MintData: MintQueueSingleDto) {
-    const { address } = getBatchandAddressfromSignature(MintData.signatureWithData);
-    return this.queueService.sendSingleMintNFT(address, MintData);
+  async mintNft(MintData: MintQueueSingleDto) {
+    return this.queueService.sendSingleMintNFT(MintData);
   }
 
   async uploadFile(
@@ -135,6 +130,7 @@ export class SchoolService {
             uploadBatch = result;
           } catch (err) {
             reject(err);
+            res.code(500).send({ err: 'Internal Server error', onmessage: err.messag });
           }
         },
         onEnd,
@@ -144,7 +140,7 @@ export class SchoolService {
     // Uploading finished
     async function onEnd(err: any) {
       if (err) {
-        res.send(new HttpException('Internal server error', 500));
+        res.send(new AppResponseDto(500, err, 'Internal Server error'));
         return;
       }
       // Ensure that the uploadBatch is available before proceeding

@@ -90,7 +90,7 @@ const VerifiedSchool = () => {
   let filteredData: any = [];
   useEffect(() => {
     !isLoading &&
-    data?.rows &&  data?.rows.map((row: any) => {
+    data?.rows &&  data?.rows?.map((row: any) => {
         filteredData.push({
           id: row.id,
           giga_school_id:row.giga_school_id,
@@ -124,15 +124,9 @@ const VerifiedSchool = () => {
       if(selectedValues.length === 0){
         enqueueSnackbar("Please select atleast one school", { variant: 'error' })
         return Error("Please select atleast one school");
-      }
-      if(!provider.provider) return;
-      const signature = await signTransaction();
-      if(!signature){
-        enqueueSnackbar("Signature is null", { variant: 'error' })
-        return Error("Signature is null");
       } 
       setSelectedValues([])
-      mutate({data:selectedValues, signatureWithData:signature})
+      mutate({data:selectedValues})
     },[signTransaction,selectedValues])
 
     let test;
@@ -211,7 +205,7 @@ const VerifiedSchool = () => {
 
                 <TableBody>
                   {sortedData &&
-                    sortedData.map((row:any) => (
+                    sortedData?.map((row:any) => (
                       <SchoolTableRow
                         key={row.id}
                         row={row}

@@ -10,6 +10,7 @@ import { metaMask } from '../../components/web3/connectors/metamask';
 import CongratulationModalComponent from '../../components/nftPurchaseSuccessModal';
 import  {Default_Chain_Id}  from '../../components/web3/connectors/network';
 import {ethers} from 'ethers';
+import { metaMaskLogin, switchMetaMaskNetwork } from '../../utils/metaMaskUtils';
 
 const ModalComponent = ({ isOpen, onClose, schooldata,tokenId }) => {
   const sellerContract = useSellerContract();
@@ -64,7 +65,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata,tokenId }) => {
 
   const connectMetaMask = async () => {
     if (!account) {
-      await metaMask.activate(Default_Chain_Id);
+      await metaMaskLogin();
     }
   };
 
@@ -73,7 +74,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata,tokenId }) => {
   };
 
   const handleSwitchNetwork = async () => {
-     await metaMask.activate(421613);
+     await switchMetaMaskNetwork();
      setSwitchNetwork(false)
 
   }

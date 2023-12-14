@@ -21,7 +21,7 @@ export default function MultiFilePreview({ thumbnail, files, onRemove, sx }: Upl
 
   return (
     <AnimatePresence initial={false}>
-      {files.map((file) => {
+      {files?.map((file) => {
         const { key, name = '', size = 0 } = fileData(file);
 
         const isNotFormatFile = typeof file === 'string';

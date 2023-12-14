@@ -52,14 +52,14 @@ export class SchoolController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('mintBulk')
   mintBatchSchool(@Body() MintData: MintQueueDto) {
-    return this.schoolService.checkAdminandMintQueue(MintData);
+    return this.schoolService.mintBulkNFT(MintData);
   }
 
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('mintSchool')
   mintSchool(@Body() MintData: MintQueueSingleDto) {
-    return this.schoolService.checkAdminandSingleMintQueue(MintData);
+    return this.schoolService.mintNft(MintData);
   }
 
   @Public()

@@ -16,19 +16,11 @@ export interface SchoolData {
 
 export class MintQueueDto {
   @ApiProperty()
-  @IsString()
-  signatureWithData: string;
-
-  @ApiProperty()
   @IsArray()
   data: SchoolData[];
 }
 
 export class MintQueueSingleDto {
-  @ApiProperty()
-  @IsString()
-  signatureWithData: string;
-
   @ApiProperty()
   @IsObject()
   data: SchoolData;

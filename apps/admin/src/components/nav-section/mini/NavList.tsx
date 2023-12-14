@@ -101,7 +101,7 @@ type NavListSubProps = {
 function NavSubList({ data, depth }: NavListSubProps) {
   return (
     <>
-      {data.map((list) => (
+      {data?.map((list) => (
         <NavList
           key={list.title + list.path}
           data={list}
