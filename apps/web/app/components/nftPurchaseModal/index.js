@@ -1,26 +1,39 @@
 // ModalComponent.js
-import React, { useState,useEffect } from 'react';
-import { Modal, ModalBody, Column, Grid, Button } from '@carbon/react';
+import React, { useState, useEffect } from 'react';
+import {
+  Modal,
+  ModalBody,
+  Column,
+  Grid,
+  Button,
+  ModalFooter,
+} from '@carbon/react';
 import { toSvg } from 'jdenticon';
 import { useRouter } from 'next/navigation';
 import { ArrowRight } from '@carbon/icons-react';
-import { useSellerContract,useSignerSellerContract } from '../../hooks/useContract';
+import {
+  useSellerContract,
+  useSignerSellerContract,
+} from '../../hooks/useContract';
 import { useWeb3React } from '@web3-react/core';
 import { metaMask } from '../../components/web3/connectors/metamask';
 import CongratulationModalComponent from '../../components/nftPurchaseSuccessModal';
-import  {Default_Chain_Id}  from '../../components/web3/connectors/network';
-import {ethers} from 'ethers';
-import { metaMaskLogin, switchMetaMaskNetwork } from '../../utils/metaMaskUtils';
+import { Default_Chain_Id } from '../../components/web3/connectors/network';
+import { ethers } from 'ethers';
+import {
+  metaMaskLogin,
+  switchMetaMaskNetwork,
+} from '../../utils/metaMaskUtils';
 
-const ModalComponent = ({ isOpen, onClose, schooldata,tokenId }) => {
+const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
   const sellerContract = useSellerContract();
   const signerSellerContract = useSignerSellerContract();
-  const { account,chainId } = useWeb3React();
+  const { account, chainId } = useWeb3React();
   const [loading, setLoading] = useState(false);
   const [showCongratulationModal, setShowCongratulationModal] = useState(false);
-  const[switchNetwork, setSwitchNetwork] = useState(false)
-  const[price, setPrice] = useState(0)
-  const [priceInEth,setPriceEth] = useState(0)
+  const [switchNetwork, setSwitchNetwork] = useState(false);
+  const [price, setPrice] = useState(0);
+  const [priceInEth, setPriceEth] = useState(0);
 
   const generateIdenticon = (image) => {
     const size = 200; // Adjust the size as needed
@@ -31,15 +44,16 @@ const ModalComponent = ({ isOpen, onClose, schooldata,tokenId }) => {
   const fetchPrice = async () => {
     if (!sellerContract) return;
     try {
-      const price = await sellerContract.methods.calculatePrice()
+      const price = await sellerContract.methods
+        .calculatePrice()
         .call({ from: account });
-        const priceInEth = ethers.formatEther(price)
-        setPrice((price))
-        setPriceEth(priceInEth)
+      const priceInEth = ethers.formatEther(price);
+      setPrice(price);
+      setPriceEth(priceInEth);
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   const route = useRouter();
   const handleSubmit = async () => {
@@ -49,14 +63,17 @@ const ModalComponent = ({ isOpen, onClose, schooldata,tokenId }) => {
     try {
       setLoading(true);
       const tx = await signerSellerContract
-        .purchaseNft(tokenId, account, { value: price }).then((hash)=>{
-          if(hash)
-          {onClose();
-          setShowCongratulationModal(true);}
-        }) .catch((err)=>{
-          console.log(err)
+        .purchaseNft(tokenId, account, { value: price })
+        .then((hash) => {
+          if (hash) {
+            onClose();
+            setShowCongratulationModal(true);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
           setLoading(false);
-        })  
+        });
     } catch (err) {
       console.log(err);
       setLoading(false);
@@ -74,20 +91,19 @@ const ModalComponent = ({ isOpen, onClose, schooldata,tokenId }) => {
   };
 
   const handleSwitchNetwork = async () => {
-     await switchMetaMaskNetwork();
-     setSwitchNetwork(false)
+    await switchMetaMaskNetwork();
+    setSwitchNetwork(false);
+  };
 
-  }
-
-  useEffect(()=>{
-    if(account) {
-      if(chainId !== 421613) setSwitchNetwork(true)
+  useEffect(() => {
+    if (account) {
+      if (chainId !== 421613) setSwitchNetwork(true);
     }
-  },[account,chainId])
+  }, [account, chainId]);
 
-  useEffect(()=>{
-    fetchPrice()
-  })
+  useEffect(() => {
+    fetchPrice();
+  });
 
   return (
     <>
@@ -154,25 +170,22 @@ const ModalComponent = ({ isOpen, onClose, schooldata,tokenId }) => {
             <Column md={4} lg={16} sm={4} style={{ marginTop: '6px' }}>
               <div className="border-bottom"></div>
             </Column>
-            <Column md={4} lg={16} sm={4}>
+            <Column md={4} lg={16} sm={4} style={{ marginTop: '24px' }}>
               {account ? (
                 <>
                   <p style={{ fontWeight: '600' }}>
-                    You are connected to "{account}" address{' '}
-                  </p>
-                  <p>
-                    You will be asked to approve this purchase from your wallet.
+                    You are connected to "{account}" address.{' '}
                   </p>
 
                   <Button
                     className="submit-btn"
                     onClick={handleSubmit}
                     renderIcon={ArrowRight}
+                    style={{ marginTop: '12px', marginBottom: '12px' }}
                   >
                     {loading ? 'Loading...' : 'Submit'}
                   </Button>
                 </>
-
               ) : (
                 <>
                   <p> First you need to connect your MetaMask</p>
@@ -185,22 +198,23 @@ const ModalComponent = ({ isOpen, onClose, schooldata,tokenId }) => {
                   </Button>
                 </>
               )}
-              {
-            switchNetwork && (
-              <>
-              Need to switch network
-              <a onClick={handleSwitchNetwork}>
-                { } Switch Network
-              </a>
-              </>
-            )
-          }
+              {switchNetwork && (
+                <>
+                  <p>
+                    You will be asked to approve this purchase from your wallet.
+                  </p>
+                  {/* <br /> */}
+                  Need to switch network
+                  <a onClick={handleSwitchNetwork}>{} Switch Network</a>
+                </>
+              )}
             </Column>
           </Grid>
         </ModalBody>
       </Modal>
       {showCongratulationModal && (
         <CongratulationModalComponent
+          schooldata={schooldata}
           isOpen={showCongratulationModal}
           onClose={closeCongratulationModal}
         />
