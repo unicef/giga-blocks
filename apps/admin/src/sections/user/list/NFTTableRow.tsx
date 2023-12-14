@@ -134,7 +134,7 @@ export default function NFTTableRow({
           align="left"
           sx={{ textTransform: 'capitalize' }}          
         >
-          {__typename}
+          {from === "0x0000000000000000000000000000000000000000" ? "Mint" : "Transfer"}
         </TableCell>
         
       </TableRow>
