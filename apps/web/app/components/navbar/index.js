@@ -7,12 +7,10 @@ import {
   HeaderMenuButton,
   HeaderMenuItem,
   HeaderGlobalBar,
-  HeaderGlobalAction,
   SkipToContent,
   SideNav,
   SideNavItems,
   HeaderSideNavItems,
-  Dropdown,
 } from '@carbon/react';
 import './navbar.scss';
 import { metaMask } from '../../components/web3/connectors/metamask';
@@ -48,10 +46,6 @@ const Navbar = () => {
   };
 
   useEffect(() => {}, [account]);
-
-  const handleWalletLogin = async () => {
-    await metaMask.activate(Default_Chain_Id);
-  };
 
   return (
     <HeaderContainer
