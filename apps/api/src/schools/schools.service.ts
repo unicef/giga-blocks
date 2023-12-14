@@ -1,6 +1,5 @@
 import {
   Injectable,
-  Logger,
   UnauthorizedException,
   HttpException,
   BadRequestException,
@@ -10,7 +9,6 @@ import { PrismaAppService } from 'src/prisma/prisma.service';
 import { ListSchoolDto } from './dto/list-schools.dto';
 import { paginate } from 'src/utils/paginate';
 import { QueueService } from 'src/mailer/queue.service';
-import { getBatchandAddressfromSignature } from 'src/utils/web3/wallet';
 import { Role } from '@prisma/application';
 import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
 import { handler } from 'src/utils/csvToDB';
@@ -62,6 +60,11 @@ export class SchoolService {
         status = false;
       }
       where.connectivity = status;
+    }
+
+    if (!perPage) {
+      const data = await this.prisma.school.findMany({ where });
+      return data;
     }
 
     return paginate(
