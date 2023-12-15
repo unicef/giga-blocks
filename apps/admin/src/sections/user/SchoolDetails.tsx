@@ -184,12 +184,12 @@ export default function SchoolDetails({ id }: Props) {
                       />
                       <ProfileTextField
                         name="connectivity"
-                        value={profile?.connectivity || ''}
+                        value={profile?.connectivity === 'true' ? 'Yes' : 'No' || ''}
                         label="Connectivity"
                       />
                       <ProfileTextField
                         name="coverage"
-                        value={profile?.coverage || ''}
+                        value={profile?.coverage === 'true' ? 'Yes' : 'No' || ''}
                         label="Coverage"
                       />
                     </Box>

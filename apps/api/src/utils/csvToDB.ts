@@ -75,9 +75,9 @@ export async function handler(
                 country,
                 longitude,
                 latitude,
-                connectivity: Boolean(connectivity),
-                coverage_availabitlity: Boolean(coverage_availabitlity),
-                electricity_availabilty: Boolean(electricity_availabilty),
+                connectivity: connectivity === 'YES' && true,
+                coverage_availabitlity: coverage_availabitlity === 'YES' && true,
+                electricity_availabilty: electricity_availabilty === 'YES' && true,
               };
               try {
                 await prisma.school.create({

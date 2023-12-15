@@ -124,16 +124,16 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
     { label: 'Public', value: 'public' },
   ];
   const connectivity = [
-    { label: 'True', value: true },
-    { label: 'False', value: false },
+    { label: 'Yes', value: true },
+    { label: 'No', value: false },
   ];
   const coverage_availability = [
-    { label: 'True', value: true },
-    { label: 'False', value: false },
+    { label: 'Yes', value: true },
+    { label: 'No', value: false },
   ];
   const electricity_available = [
-    { label: 'True', value: true },
-    { label: 'False', value: false },
+    { label: 'Yes', value: true },
+    { label: 'No', value: false },
   ];
 
   return (
@@ -209,7 +209,7 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
               id="connectivity"
               style={{ marginBottom: '24px' }}
               titleText="Connectivity"
-              label={data?.connectivity ? 'True' : 'False'}
+              label={data?.connectivity ? 'Yes' : 'No'}
               items={connectivity}
               itemToString={(item) => (item ? item.label : '')}
               selectedItem={selectedOptions.connectivity}
@@ -225,7 +225,7 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
               id="dropdown4"
               style={{ marginTop: '24px', marginBottom: '24px' }}
               titleText="Coverage Availability"
-              label={data?.coverage_availability ? 'True' : 'False'}
+              label={data?.coverage_availability ? 'Yes' : 'No'}
               items={coverage_availability}
               itemToString={(item) => (item ? item.label : '')}
               selectedItem={selectedOptions.coverage_availability}
@@ -241,7 +241,7 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
               id="dropdown5"
               style={{ marginTop: '24px', marginBottom: '24px' }}
               titleText="Electricity Availability"
-              label={data?.electricity_available ? 'True' : 'False'}
+              label={data?.electricity_available ? 'Yes' : 'No'}
               items={electricity_available}
               itemToString={(item) => (item ? item.label : '')}
               selectedItem={selectedOptions.electricity_available}

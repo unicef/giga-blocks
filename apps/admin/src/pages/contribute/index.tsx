@@ -52,7 +52,7 @@ const ContributeData = () => {
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable();
+  } = useTable({defaultOrderBy: 'createdAt', defaultOrder: 'desc'});
 
   const { enqueueSnackbar } = useSnackbar();
 
