@@ -4,8 +4,6 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Stack } from '@mui/material';
-// auth
-// components
 import { useAuthContext } from 'src/auth/useAuthContext';
 import FormProvider from '../../../components/hook-form';
 import Card from '@components/web3/Card';

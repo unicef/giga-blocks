@@ -1,6 +1,5 @@
 import { Container } from '@mui/material';
 import DashboardLayout from '@layouts/dashboard';
-// import { AdministrationProvider } from "@contexts/administration";
 import { useAllSchool } from '@hooks/school/useSchool';
 import { MapView } from '../../components/maps';
 import CardData from '../../components/dashboard-cards';
@@ -8,11 +7,7 @@ import Card from '@mui/material/Card';
 
 Dashboard.getLayout = (page: React.ReactElement) => (
   <DashboardLayout>
-    {/* <RoleBasedGuard hasContent roles={[ROLES.SUPERADMIN]}> */}
-    {/* <AdministrationProvider> */}
     {page}
-    {/* </AdministrationProvider> */}
-    {/* </RoleBasedGuard> */}
   </DashboardLayout>
 );
 

@@ -11,9 +11,7 @@ import RoleBasedGuard from "src/auth/RoleBasedGuard";
 
 ActivityLogs.getLayout = (page: React.ReactElement) => (
   <DashboardLayout>
-    {/* <RoleBasedGuard hasContent roles={['superadmin']}> */}
     {page}
-    {/* </RoleBasedGuard> */}
   </DashboardLayout>
 );
 

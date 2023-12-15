@@ -14,7 +14,7 @@ import {gql} from "urql";
   `
  const nftListQuery = gql`
 
-  query schoolTokenUris($skip:Int!, $first:Int!) {schoolTokenUris(subgraphError: allow,skip: $skip,first: $first) {
+  query schoolTokenUris($skip:Int, $first:Int) {schoolTokenUris(subgraphError: allow,skip: $skip,first: $first) {
     id
     tokenUri
   }
