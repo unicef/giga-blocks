@@ -22,7 +22,7 @@ const SchoolDetail = ({ id }) => {
 
   const decodeSchooldata = (data) => {
     const encodeddata = data.collectorTokenUri;
-    const decodedData = atob(encodeddata.tokenUri.substring(29));
+    const decodedData = atob(encodeddata?.tokenUri.substring(29));
     const nftDetails = {
       owner: encodeddata.owner.id,
       ...JSON.parse(decodedData),
