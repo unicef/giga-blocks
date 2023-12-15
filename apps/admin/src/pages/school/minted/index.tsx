@@ -125,9 +125,9 @@ const MintedSchools = () => {
       )}
       {!fetching && (
         <>
-        <div style={{display: 'flex', alignItems: 'flex-end', gap: '20px'}}>
+        {/* <div style={{display: 'flex', alignItems: 'flex-end', gap: '20px'}}>
           <TextField id="outlined-basic" type='string' placeholder='Search country' onChange={(e) => handleSchoolChange(e)}/>
-        </div>
+        </div> */}
         <Card style={{marginTop: '20px'}}>
           <Divider />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
