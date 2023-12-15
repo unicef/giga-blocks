@@ -42,9 +42,9 @@ const VerifiedSchool = () => {
 
     const TABLE_HEAD = [
         // { id: 'checkbox', label: '', align: 'left' },
-        { id: 'name', label: 'Name', align: 'left' },
-        { id: 'location', label: 'Location', align: 'left' },
-        { id: 'latitide', label: 'Latitude', align: 'left' },
+        { id: 'name', label: 'School name', align: 'left' },
+        { id: 'country', label: 'Location', align: 'left' },
+        { id: 'latitude', label: 'Latitude', align: 'left' },
         { id: 'longitude', label: 'Longitude', align: 'left' },
         { id: 'status', label: 'Status', align: 'left' }
       ];
@@ -53,9 +53,11 @@ const VerifiedSchool = () => {
 
       const {push, query} = useRouter()
 
+      const [school, setSchool] = useState<any>()
+
       const uploadId = query.uploadId;
 
-      const {dense, page, setPage, order, orderBy, rowsPerPage, onChangePage, onSelectRow, onSort, onChangeDense, onChangeRowsPerPage,
+      const {dense, page, setPage, order, setOrder, setOrderBy,  orderBy, rowsPerPage, onChangePage, onSelectRow, onSort, onChangeDense, onChangeRowsPerPage,
       } = useTable();
 
       const [age, setAge] = useState('');
@@ -78,14 +80,13 @@ const VerifiedSchool = () => {
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
   const [country, setCountry] = useState<string>()
-  const [connectivity, setConnectivity] = useState<string>()
-  const { data, isLoading, refetch } = useSchoolGet({page, perPage: rowsPerPage, minted: 'NOTMINTED', uploadId, country, connectivity});
+  const { data, isLoading, refetch } = useSchoolGet({page, perPage: rowsPerPage, minted: 'NOTMINTED', uploadId, country, school});
 
   // const { error } = useFetchUsers();
 
   useEffect(() => {
     refetch()
-  }, [uploadId, country, connectivity])
+  }, [uploadId, country, isMintSuccess, mintingError, school])
 
   let filteredData: any = [];
   useEffect(() => {
@@ -129,6 +130,11 @@ const VerifiedSchool = () => {
       mutate({data:selectedValues})
     },[signTransaction,selectedValues])
 
+    useEffect(() => {
+      isMintSuccess && enqueueSnackbar("Minted Successfully", { variant: 'success' })
+      mintingError && enqueueSnackbar("Miniting error", { variant: 'error' })
+    }, [isMintSuccess, mintingError])
+
     let test;
     const onSelectAllRows = (e:any) => {
       const isChecked = e.target.checked;
@@ -154,8 +160,8 @@ const VerifiedSchool = () => {
       setCountry(e.target.value)
     }
 
-    const handleSearchConnectivity = (event:any) => {
-      setConnectivity(event.target.value as string);
+    const handleSchoolChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setSchool(e.target.value)
     }
 
     return ( 
@@ -172,19 +178,7 @@ const VerifiedSchool = () => {
 
           <div style={{display: 'flex', alignItems: 'flex-end', gap: '20px'}}>
           <TextField id="outlined-basic" type='string' placeholder='Search country' onChange={(e) => handleSearchChange(e)}/>
-          <FormControl sx={{width: 150}}>
-            <InputLabel id="demo-simple-select-label">Connectivity</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={"Connectivity"}
-              label="Search"
-              onChange={handleSearchConnectivity}
-            >
-              <MenuItem value={'true'}>True</MenuItem>
-              <MenuItem value={'false'}>False</MenuItem>
-            </Select>
-          </FormControl>
+          <TextField id="outlined-basic" type='string' placeholder='Search school' onChange={(e) => handleSchoolChange(e)}/>
           </div>
           <Card sx={{marginTop: 2}}>
          

@@ -11,12 +11,12 @@ const accessToken = getAccessToken();
 
 api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 
-export const useValidateGet = (page: number, perPage: number, status?: string, validation?: boolean) => {
+export const useValidateGet = (page: number, perPage: number, status?: string, validation?: boolean, school?:string) => {
   return useQuery(
     ['get-api-data', page, perPage, status, validation],
     async () => {
       const { data } = await api.get(
-        `${routes.VALIDATE.GET}?page=${page}&perPage=${perPage}&status=${status}`
+        `${routes.VALIDATE.GET}?page=${page}&perPage=${perPage}&status=${status}${school ? `&school=${school}` : ``}`
       );
       return data;
     },

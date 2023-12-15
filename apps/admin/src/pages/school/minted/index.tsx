@@ -35,11 +35,11 @@ import { useSchoolCount } from '@hooks/school/useSchool';
 
 const MintedSchools = () => {
   const TABLE_HEAD = [
-    { id: 'name', label: 'Name', align: 'left' },
-    { id: 'location', label: 'Location', align: 'left' },
-    { id: 'latitide', label: 'Latitude', align: 'left' },
+    { id: 'schoolName', label: 'Name', align: 'left' },
+    { id: 'country', label: 'Location', align: 'left' },
+    { id: 'latitude', label: 'Latitude', align: 'left' },
     { id: 'longitude', label: 'Longitude', align: 'left' },
-    { id: 'status', label: 'Status', align: 'left' },
+    { id: 'mintedStatus', label: 'Status', align: 'left' },
     { id: 'tokenId', label: 'TokenId', align: 'left' },
   ];
 
@@ -57,6 +57,7 @@ const MintedSchools = () => {
     onChangeRowsPerPage,
   } = useTable();
 
+  const [school, setSchool] = useState<any>()
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
   const { data: total } = useSchoolCount('MINTED');
@@ -104,8 +105,15 @@ const MintedSchools = () => {
 
   const sortedData = tableData.slice().sort((a:any, b:any) => {
     const isAsc = order === 'asc';
+    if(orderBy === 'longitude'){
+    return (parseFloat(a[orderBy]) < parseFloat(b[orderBy]) ? -1 : 1) * (isAsc ? 1 : -1);
+    }
     return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
   });
+
+  const handleSchoolChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setSchool(e.target.value)
+  }
 
   return (
     <DashboardLayout>
@@ -117,7 +125,10 @@ const MintedSchools = () => {
       )}
       {!fetching && (
         <>
-        <Card>
+        <div style={{display: 'flex', alignItems: 'flex-end', gap: '20px'}}>
+          <TextField id="outlined-basic" type='string' placeholder='Search country' onChange={(e) => handleSchoolChange(e)}/>
+        </div>
+        <Card style={{marginTop: '20px'}}>
           <Divider />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>

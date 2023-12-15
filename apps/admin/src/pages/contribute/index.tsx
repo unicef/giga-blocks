@@ -36,9 +36,9 @@ const ContributeData = () => {
   const TABLE_HEAD = [
     { id: 'name', label: 'Contributor name', align: 'left' },
     { id: 'school', label: 'School', align: 'left' },
-    { id: 'contributedData', label: 'Contributed Data', align: 'left' },
+    { id: 'contributed_data', label: 'Contributed Data', align: 'left' },
     { id: 'status', label: 'Status', align: 'left' },
-    { id: 'date', label: 'Date', align: 'left' },
+    { id: 'createdAt', label: 'Date', align: 'left' },
   ];
 
   const {
@@ -147,9 +147,9 @@ const ContributeData = () => {
 
   useEffect(() => {
     isValidationSuccess &&
-      enqueueSnackbar('Successfully updated contribution', { variant: 'success' });
+    enqueueSnackbar('Contributed Data are validated. Please check Valid Data Section', { variant: 'success' });
     refetch();
-    isValidationError && enqueueSnackbar('Unsuccessful', { variant: 'error' });
+    isValidationError && enqueueSnackbar('Contributed Data are invalidated', { variant: 'error' });
   }, [isValidationSuccess, isValidationError]);
 
   const handleValidChange = (value: string) => {
