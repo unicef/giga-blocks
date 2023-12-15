@@ -1,5 +1,11 @@
 // routes
-import { PATH_DASHBOARD, PATH_USER, PATH_SCHOOL, PATH_CONTRIBUTE, PATH_VALID } from '../../../routes/paths';
+import {
+  PATH_DASHBOARD,
+  PATH_USER,
+  PATH_SCHOOL,
+  PATH_CONTRIBUTE,
+  PATH_VALID,
+} from '../../../routes/paths';
 // components
 import SvgColor from '../../../components/svg-color';
 import { ROLES } from '../../../config-global';
@@ -34,39 +40,16 @@ const navConfig = [
     items: [
       {
         title: 'School',
-        path: PATH_SCHOOL.verified,
+        path: PATH_SCHOOL.contributed,
         children: [
           {
             title: 'Unminted School',
             path: PATH_SCHOOL.contributed,
           },
           {
-            title: 'Minting In Progress',
-            path: PATH_SCHOOL.minting,
-          },
-          {
             title: 'Import School',
             path: PATH_SCHOOL.import,
           },
-        ],
-        icon: ICONS.user,
-      },
-    ],
-  },
-  {
-    items: [
-      {
-        title: 'Users',
-        path: PATH_USER.root,
-        children: [
-          {
-            title: 'Admins',
-            path: PATH_USER.admin,
-          },
-          {
-            title: 'Contributors',
-            path: PATH_USER.contributer,
-          }
         ],
         icon: ICONS.user,
       },
@@ -84,6 +67,15 @@ const navConfig = [
   {
     items: [
       {
+        title: 'Contribute',
+        path: PATH_CONTRIBUTE.root,
+        icon: ICONS.user,
+      },
+    ],
+  },
+  {
+    items: [
+      {
         title: 'Valid Data',
         path: PATH_VALID.root,
         icon: ICONS.user,
@@ -93,8 +85,18 @@ const navConfig = [
   {
     items: [
       {
-        title: 'Contribute',
-        path: PATH_CONTRIBUTE.root,
+        title: 'Users',
+        path: PATH_USER.admin,
+        children: [
+          {
+            title: 'Admins',
+            path: PATH_USER.admin,
+          },
+          {
+            title: 'Contributors',
+            path: PATH_USER.contributer,
+          },
+        ],
         icon: ICONS.user,
       },
     ],

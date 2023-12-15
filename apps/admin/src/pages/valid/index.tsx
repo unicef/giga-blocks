@@ -14,15 +14,24 @@ import {
   Tab,
   TableRow,
   TableCell,
+  TextField,
+  FormControl,
+  Autocomplete,
 } from '@mui/material';
 import { CircularProgress } from '@mui/material';
-import { SyntheticEvent, useEffect, useState } from 'react';
+import { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { Queries } from 'src/libs/graph-query';
 import { useSnackbar } from '@components/snackbar';
 import { useValidateBulkUpdate, useValidateGet } from '@hooks/validate/useValidate';
 import ValidateTableRow from '@sections/user/list/ValidateTableRow';
 import CustomTabPanel from '@components/Tabs';
+import { useAllSchool } from '@hooks/school/useSchool';
+
+type SearchItem = {
+  label: string;
+  value: string;
+};
 
 const ValidateData = () => {
   const TABLE_HEAD = [
@@ -30,7 +39,7 @@ const ValidateData = () => {
     { id: 'isApproved', label: 'Approval Status', align: 'left' },
     { id: 'date', label: 'Date', align: 'left' },
   ];
-
+  const [selectedSchoolSearch, setSelectedSchoolSearch] = useState<SearchItem | null>();
   const {
     dense,
     page,
@@ -45,6 +54,8 @@ const ValidateData = () => {
   } = useTable();
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const { data: schoolList } = useAllSchool();
 
   const [status, setStatus] = useState<string>('false');
 
@@ -62,24 +73,19 @@ const ValidateData = () => {
     isError: isValidationError,
   } = useValidateBulkUpdate();
 
-  const { data: ValidatedData, isFetching } = useValidateGet(
+  const { data: ValidatedData, isFetching, refetch } = useValidateGet(
     page,
     rowsPerPage,
     status,
-    isValidationSuccess
+    isValidationSuccess,
+    selectedSchoolSearch?.value
   );
 
+  useEffect(() => {
+    selectedSchoolSearch &&  refetch()
+  }, [selectedSchoolSearch])
+
   const decodeSchooldata = (data: any) => {
-    // const encodeddata = data.tokenUris;
-    // const decodedShooldata = [];
-    // for (let i = 0; i < encodeddata?.length; i++) {
-    //   const decodedData = atob(encodeddata[i].tokenUri.substring(29));
-    //   const schoolData = {
-    //     tokenId: encodeddata[i].id,
-    //     ...JSON.parse(decodedData),
-    //   };
-    //   decodedShooldata.push(schoolData);
-    // }
     ValidatedData &&
       ValidatedData?.rows?.map((row: any) => {
         const date = new Date(row?.createdAt).toLocaleDateString();
@@ -120,9 +126,13 @@ const ValidateData = () => {
 
   useEffect(() => {
     isValidationSuccess &&
-      enqueueSnackbar('Successfully updated contribution', { variant: 'success' });
-    isValidationError && enqueueSnackbar('Unsuccessful', { variant: 'error' });
+      enqueueSnackbar('School Data are approved and updated in Database', { variant: 'success' });
+    isValidationError && enqueueSnackbar('Try again', { variant: 'error' });
   }, [isValidationSuccess, isValidationError]);
+
+  const handleSchoolSearchChange = (value: any) => {
+    setSelectedSchoolSearch(value);
+  };
 
   const TabsDisplay = () => {
     return (
@@ -133,7 +143,24 @@ const ValidateData = () => {
           </div>
         )}
         {!fetching && (
-          <Card>
+          <>
+          <div style={{display: 'flex', alignItems: 'flex-end', gap: '20px'}}>
+          <FormControl sx={{ width: 200 }}>
+            <Autocomplete
+              disablePortal
+              value={selectedSchoolSearch?.label}
+              options={schoolList?.map((school: any) => ({
+                value: school.id,
+                label: school.name,
+              }))}
+              renderInput={(params) => <TextField {...params} label="Search By School" />}
+              onChange={(e, value) => {
+                handleSchoolSearchChange(value);
+              }}
+            />
+          </FormControl>
+          </div>
+          <Card style={{marginTop: '20px'}}>
             <Divider />
             <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
               <Scrollbar>
@@ -182,6 +209,7 @@ const ValidateData = () => {
               onChangeDense={onChangeDense}
             />
           </Card>
+          </>
         )}
       </>
     );

@@ -129,7 +129,7 @@ const Connectivity = () => {
                             <TableCell>
                               {transfer?.transactionHash ? (
                                 <a
-                                  href={`https://testnet.arbiscan.io/tx/${transfer?.transactionHash}`}
+                                  href={`https://mumbai.polygonscan.com/tx/${transfer?.transactionHash}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                 >
@@ -228,7 +228,7 @@ const Connectivity = () => {
                             <TableCell>
                               {transfer?.transactionHash ? (
                                 <a
-                                  href={`https://testnet.arbiscan.io/tx/${transfer?.transactionHash}`}
+                                  href={`https://mumbai.polygonscan.com/tx/${transfer?.transactionHash}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                 >

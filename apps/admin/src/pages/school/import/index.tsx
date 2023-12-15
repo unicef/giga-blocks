@@ -28,6 +28,8 @@ const Upload = () => {
         tableDatas
       } = useUploadContext();
 
+  const [files, setFiles] = useState<(File | string)[]>([]);
+
     const handleFile = useCallback(
         async (data: XLSX.WorkBook, file: File) => {
           if (file) {
@@ -81,13 +83,13 @@ const Upload = () => {
         <Grid container spacing={6}>
           <Grid item xs={12} sm={6} md={6}>
             <Card sx={{ px: 3, py: 1 }}>
-              <CsvFormatFile handleFileData={handleFile} />
+              <CsvFormatFile handleFileData={handleFile} setFiles={setFiles} files={files}/>
             </Card>
           </Grid>
           <Grid item xs={12} sm={12} md={12}>
             {showStepper && (
               <Card sx={{ px: 3, py: 3 }}>
-                <HorizontalNonLinearStepper propsTableData = {tableDatas} />
+                <HorizontalNonLinearStepper propsTableData = {tableDatas} setFile={setFiles}/>
               </Card>
             )}
             {loading &&(

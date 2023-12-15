@@ -1,30 +1,19 @@
 'use client';
 import Scrollbar from '@components/scrollbar';
 import {
-  TableEmptyRows,
   TableHeadUsers,
   TableNoData,
   TablePaginationCustom,
-  TableSelectedAction,
   useTable,
 } from '@components/table';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
 import {
-  Box,
-  Button,
   Card,
-  Tabs,
   Divider,
   TableContainer,
-  Tooltip,
-  IconButton,
   Table,
   TableBody,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+  TextField
 } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
@@ -35,11 +24,11 @@ import { useSchoolCount } from '@hooks/school/useSchool';
 
 const MintedSchools = () => {
   const TABLE_HEAD = [
-    { id: 'name', label: 'Name', align: 'left' },
-    { id: 'location', label: 'Location', align: 'left' },
-    { id: 'latitide', label: 'Latitude', align: 'left' },
+    { id: 'schoolName', label: 'Name', align: 'left' },
+    { id: 'country', label: 'Location', align: 'left' },
+    { id: 'latitude', label: 'Latitude', align: 'left' },
     { id: 'longitude', label: 'Longitude', align: 'left' },
-    { id: 'status', label: 'Status', align: 'left' },
+    { id: 'mintedStatus', label: 'Status', align: 'left' },
     { id: 'tokenId', label: 'TokenId', align: 'left' },
   ];
 
@@ -50,26 +39,30 @@ const MintedSchools = () => {
     orderBy,
     setPage,
     rowsPerPage,
-    onSelectRow,
     onSort,
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable();
+  } = useTable({defaultOrderBy: 'tokenId', defaultOrder: 'desc'});
 
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
-  const { data: total } = useSchoolCount('MINTED');
-  const [country, setCountry] = useState<string>()
-  const [connectivity, setConnectivity] = useState<string>()
+  const [paginatedData, setPaginatedData] = useState<any>([])
   const [result] = useQuery({
     query: Queries.nftListQuery,
-    variables: { skip: page * rowsPerPage, first: rowsPerPage },
+    variables: {  },
   });
-  const { data, fetching, error } = result;
+  const { data, fetching } = result;
+  
+  useEffect(() => {
+    const startItem = (page+1)*rowsPerPage - rowsPerPage;
+    const endItem = page*rowsPerPage + rowsPerPage
+    const paginatedDatas = data?.schoolTokenUris.slice(startItem , endItem);
+    setPaginatedData(paginatedDatas)
+  }, [rowsPerPage, data, page])
 
   const decodeSchooldata = (data: any) => {
-    const encodeddata = data.schoolTokenUris;  
+    const encodeddata = data;  
     const decodedShooldata = [];
     for (let i = 0; i < encodeddata.length; i++) {
       const decodedData = atob(encodeddata[i].tokenUri.substring(29));
@@ -99,11 +92,14 @@ const MintedSchools = () => {
 
   let filteredData: any = [];
   useEffect(() => {
-    if (data) decodeSchooldata(data);
-  }, [data]);
+    if (paginatedData) decodeSchooldata(paginatedData);
+  }, [data, paginatedData]);
 
-  const sortedData = tableData.slice().sort((a:any, b:any) => {
+  const sortedData = tableData?.slice().sort((a:any, b:any) => {
     const isAsc = order === 'asc';
+    if(orderBy === 'longitude'){
+    return (parseFloat(a[orderBy]) < parseFloat(b[orderBy]) ? -1 : 1) * (isAsc ? 1 : -1);
+    }
     return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
   });
 
@@ -117,7 +113,7 @@ const MintedSchools = () => {
       )}
       {!fetching && (
         <>
-        <Card>
+        <Card style={{marginTop: '20px'}}>
           <Divider />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <Scrollbar>
@@ -147,8 +143,7 @@ const MintedSchools = () => {
             </Scrollbar>
           </TableContainer>
           <TablePaginationCustom
-            count={total}
-            // count={tableData?.length}
+            count={data?.schoolTokenUris.length - 1 || 0}
             setPage={setPage}
             page={page}
             rowsPerPage={rowsPerPage}
