@@ -95,7 +95,7 @@ export function RHFMultiCheckbox({
               },
             }}
           >
-            {options.map((option) => (
+            {options?.map((option) => (
               <FormControlLabel
                 key={option.value}
                 control={

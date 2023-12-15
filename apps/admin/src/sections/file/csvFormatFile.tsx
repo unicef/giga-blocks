@@ -19,6 +19,8 @@ interface Props {
   onUpdate?: VoidFunction;
   folderName?: string;
   handleFileData: (data: XLSX.WorkBook, file: File) => void;
+  files: any;
+  setFiles: Function;
   onChangeFolderName?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -29,8 +31,9 @@ export default function CsvFormatFile({
   folderName,
   handleFileData,
   onChangeFolderName,
+  files,
+  setFiles
 }: Props) {
-  const [files, setFiles] = useState<(File | string)[]>([]);
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
   const [showErrorMsg, setShowErrorMsg] = useState<string>('');
@@ -69,12 +72,12 @@ export default function CsvFormatFile({
 
   useEffect(() => {
     if (isFileValidated) {
-      const newFiles = selectedFiles.map((file:any) =>
+      const newFiles = selectedFiles?.map((file:any) =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
         })
       );
-      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+      setFiles((prevFiles:any) => [...prevFiles, ...newFiles]);
       setIsFileValidated(false);
     }
   }, [isFileValidated, selectedFiles, setIsFileValidated]);
@@ -83,7 +86,7 @@ export default function CsvFormatFile({
     if (files.length > 0) {
       const formData = new FormData();
 
-      files.forEach((file) => {
+      files.forEach((file:any) => {
         formData.append(`files`, file);
       });
 
@@ -113,7 +116,7 @@ export default function CsvFormatFile({
   };
 
   const handleRemoveFile = (inputFile: File | string) => {
-    setFiles((prevFiles) => prevFiles.filter((file) => file !== inputFile));
+    setFiles((prevFiles:any) => prevFiles.filter((file:any) => file !== inputFile));
     setDisableDropZone(false);
     setProgress(0);
     setShowErrorMsg('');
@@ -166,22 +169,6 @@ export default function CsvFormatFile({
         }
       />
       <Box sx={{ marginTop: 2, marginBottom: 2, textAlign: 'right' }}>
-        {/* {!!files.length && typeOfFile === 'csv' && (
-          <>
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="eva:cloud-upload-fill" />}
-              onClick={handleUpload}
-              sx={{ mx: 1 }}
-            >
-              Upload to database
-            </Button>{' '}
-            <Button variant="outlined" color="inherit" sx={{ mx: 1 }} onClick={handleOpenConfirm}>
-              Remove all
-            </Button>
-          </>
-        )} */}
-
         {(onCreate || onUpdate) && (
           <Stack direction="row" justifyContent="flex-end" flexGrow={1}>
             <Button variant="soft" onClick={onCreate || onUpdate}>
@@ -193,7 +180,7 @@ export default function CsvFormatFile({
       {errorMessageArray.length > 0 && (
         <Alert severity="error">
           <ul>
-            {errorMessageArray.map((errorMsg: string, index: number) => (
+            {errorMessageArray?.map((errorMsg: string, index: number) => (
               <li key={index}>- {errorMsg}</li>
             ))}
           </ul>

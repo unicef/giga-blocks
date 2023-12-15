@@ -20,7 +20,7 @@ const SpreadSheetTable = () => {
   return (
     <>
       {sheetNames.length > 1 &&
-        sheetNames.map((el, index) => (
+        sheetNames?.map((el, index) => (
           <Button
             variant="outlined"
             sx={{ mx: 1, my: 0.5 }}
@@ -42,7 +42,7 @@ const SpreadSheetTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows?.slice(1).map((row, rowIndex) => (
+            {rows?.slice(1)?.map((row, rowIndex) => (
               <TableRow
                 key={rowIndex}
                 sx={{ backgroundColor: rowIndex % 2 === 1 ? '#f5f5f5' : '#fff' }}

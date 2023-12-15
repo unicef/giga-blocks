@@ -8,7 +8,7 @@ const PageHeader = ({ name, breadcrumbs }) => {
       <div className="preview1Background">
         <Column sm={16} md={10} lg={16} className="centerColumn">
           <Grid>
-            <Column sm={16} md={10} lg={6}>
+            <Column sm={16} md={10} lg={16}>
               <Breadcrumb style={{ marginTop: '32px' }}>
                 {breadcrumbs.map((breadcrumb, index) => (
                   <BreadcrumbItem key={index} href={breadcrumb.link}>

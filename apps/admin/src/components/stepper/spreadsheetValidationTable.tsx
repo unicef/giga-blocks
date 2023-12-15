@@ -38,11 +38,11 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   const validateData = (data: Record<string, any>, fileType: string): string[] => {
     let hasIncorrectFileType = false;
 
-    if (fileType === 'xls') {
-      hasIncorrectFileType = checkFileTypeXls();
-    } else {
-      hasIncorrectFileType = checkFileTypeCsv();
-    }
+    // if (fileType === 'xls') {
+    //   hasIncorrectFileType = checkFileTypeXls();
+    // } else {
+    //   hasIncorrectFileType = checkFileTypeCsv();
+    // }
 
     const hasCommaInName = data?.Name?.some((name: string) => name.includes(','));
 
@@ -180,8 +180,9 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     if(tableHeaders){
       const isValidArray = tableHeaders.every(element => allowedElements.includes(element));
       if(!isValidArray){
-      setAllSheetErrors([{sheetName: 'school.csv', errors: ['Please remove columns exceptschoolName,giga_school_id,longitudeStr, latitudeStr, schoolType, country, connectivity, coverage_availabitlity, electricity_availability']}])
-      }
+      setAllSheetErrors([{sheetName: 'school.csv', errors: [`Header format did not match, please follow the sample file.`]}])
+      setHasErrors(true)
+    }
     }
   }, [tableHeaders, convertedObject])
 
@@ -203,14 +204,14 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     <>
       {errors.length > 0 && (
         <Alert severity="error" sx={{ mb: 4, mx: 1 }}>
-          {errors.map((error, index) => (
+          {errors?.map((error, index) => (
             <div key={index}>- {error}</div>
           ))}
         </Alert>
       )}
 
       {sheetNames.length > 1 &&
-        sheetNames.map((sheetName, index) => (
+        sheetNames?.map((sheetName, index) => (
           <Button
             variant="outlined"
             sx={{ mx: 1.5, my: 0.5 }}
@@ -225,7 +226,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
         <Table sx={{ mx: 1 }}>
           <TableHead>
             <TableRow>
-              {tableHeaders.map((header, index) => (
+              {tableHeaders?.map((header, index) => (
                 <TableCell key={index} sx={{ whiteSpace: 'nowrap' }}>
                   {header}
                 </TableCell>
@@ -239,7 +240,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
                   key={rowIndex}
                   sx={{ backgroundColor: rowIndex % 2 === 1 ? '#f5f5f5' : '#fff' }}
                 >
-                  {tableHeaders.map((header) => {
+                  {tableHeaders?.map((header) => {
                     const value = convertedObject[header][rowIndex];
                     let isInvalid = false;
 

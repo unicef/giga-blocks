@@ -21,7 +21,7 @@ function NavSectionHorizontal({ data, sx, ...other }: NavSectionProps) {
       }}
       {...other}
     >
-      {data.map((group:any) => (
+      {data?.map((group:any) => (
         <Items key={group.subheader} items={group.items} />
       ))}
     </Stack>
@@ -39,7 +39,7 @@ type ItemsProps = {
 function Items({ items }: ItemsProps) {
   return (
     <>
-      {items.map((list) => (
+      {items?.map((list) => (
         <NavList key={list.title + list.path} data={list} depth={1} hasChild={!!list.children} />
       ))}
     </>

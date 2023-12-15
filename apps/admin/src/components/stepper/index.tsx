@@ -19,7 +19,7 @@ import { useRouter } from 'next/router';
 
 const steps = ['Preview File', 'Validate File'];
 
-export default function HorizontalLinearStepper({propsTableData}:{propsTableData: any}) {
+export default function HorizontalLinearStepper({propsTableData, setFile}:{propsTableData: any, setFile:any}) {
   const [activeStep, setActiveStep] = useState(0);
   const [files, setFiles] = useState<(File | string)[]>([]);
   const [hideButton, setHideButton] = useState(false)
@@ -42,7 +42,7 @@ export default function HorizontalLinearStepper({propsTableData}:{propsTableData
 
   useEffect(() => {
     if (isFileValidated) {
-      const newFiles = selectedFiles.map((file:any) =>
+      const newFiles = selectedFiles?.map((file:any) =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
         })
@@ -148,12 +148,13 @@ export default function HorizontalLinearStepper({propsTableData}:{propsTableData
     setShowStepper(false);
     setDisableDropZone(false);
     setSelectedSheetName('');
+    setFile([])
   };
 
   return (
     <Box sx={{ width: '100%' }}>
       <Stepper activeStep={activeStep} sx={{ py: 2 }} connector={<QontoConnector />}>
-        {steps.map((label, index) => {
+        {steps?.map((label, index) => {
           const stepProps: { completed?: boolean } = {};
           const labelProps: {
             optional?: React.ReactNode;

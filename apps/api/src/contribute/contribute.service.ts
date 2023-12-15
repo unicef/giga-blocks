@@ -21,7 +21,7 @@ export class ContributeDataService {
     private prisma: PrismaAppService,
     private mailService: MailService,
     private queueService: QueueService,
-  ) { }
+  ) {}
 
   async create(createContributeDatumDto: CreateContributeDatumDto, userId: string) {
     const keyValue = Object.entries(JSON.parse(createContributeDatumDto.contributed_data));
@@ -217,9 +217,16 @@ export class ContributeDataService {
   }
 
   async getValidated(query) {
-    const { page, perPage, status } = query;
+    const { page, perPage, status, school } = query;
+    const where: Prisma.ContributedDataWhereInput = {}
+    
+    if (school) {
+      where.school_Id = school;
+    }
+
     const args = {
       where: {
+        ...where,
         isArchived: false,
         approvedStatus: status === 'true',
       },
@@ -236,6 +243,8 @@ export class ContributeDataService {
         },
       },
     };
+
+
     if (status === 'true') {
       args.where.isArchived = true;
     } else {
