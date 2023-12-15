@@ -347,7 +347,6 @@ export default function SchoolDetails({ id }: Props) {
                 </Scrollbar>
               </TableContainer>
               <TablePaginationCustom
-                // count={data?.meta?.total}
                 count={data?.collectorTransfers?.length}
                 page={page}
                 setPage={setPage}

@@ -30,7 +30,14 @@ export default function TablePaginationCustom({
   ...other
 }: Props & TablePaginationProps) {
   const handleOnChange = (e: any) => {
-    setPage(e.target.value)
+    const page = Number(e.target.value)
+    if(page >= 1){
+      setPage(page - 1)
+    }
+    else{
+      setPage(0)
+    }
+    
   };
 
   return (

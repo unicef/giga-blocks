@@ -140,6 +140,8 @@ export default function HorizontalLinearStepper({propsTableData, setFile}:{props
           setProgress(0);
           enqueueSnackbar('Error uploading to database! Please check your file',{variant: 'error'});
           setLoading(false)
+          setFile([])
+          setDisableDropZone(false)
         });
     }
   };

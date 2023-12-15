@@ -47,8 +47,6 @@ const VerifiedSchool = () => {
       const {dense, page, setPage, order,  orderBy, rowsPerPage, onChangePage, onSort, onChangeDense, onChangeRowsPerPage,
       } = useTable();
 
-      const [age, setAge] = useState('');
-
   const {
     mutate,
     isError: isMintError,

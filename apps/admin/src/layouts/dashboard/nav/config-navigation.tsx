@@ -40,16 +40,12 @@ const navConfig = [
     items: [
       {
         title: 'School',
-        path: PATH_SCHOOL.verified,
+        path: PATH_SCHOOL.contributed,
         children: [
           {
             title: 'Unminted School',
             path: PATH_SCHOOL.contributed,
           },
-          // {
-          //   title: 'Minting In Progress',
-          //   path: PATH_SCHOOL.minting,
-          // },
           {
             title: 'Import School',
             path: PATH_SCHOOL.import,

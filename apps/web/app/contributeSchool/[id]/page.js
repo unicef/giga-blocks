@@ -161,7 +161,7 @@ const SchoolDetail = () => {
                             Connectivity <br /> Status
                           </span>
                           <span className="heading5">
-                            {data?.connectivity ? 'True' : 'N/A'}
+                            {data?.connectivity ? 'Yes' : 'No'}
                           </span>
                         </div>
                       </Column>
@@ -171,7 +171,7 @@ const SchoolDetail = () => {
                             Coverage <br /> Availability
                           </span>
                           <span className="heading5">
-                            {data?.coverage_availability ? 'True' : 'N/A'}
+                            {data?.coverage_availability ? 'Yes' : 'No'}
                           </span>
                         </div>
                       </Column>
