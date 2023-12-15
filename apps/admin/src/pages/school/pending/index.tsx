@@ -1,25 +1,18 @@
 'use client';
-import Iconify from '@components/iconify';
 import Scrollbar from '@components/scrollbar';
 import {
-  TableEmptyRows,
   TableHeadUsers,
   TableNoData,
   TablePaginationCustom,
-  TableSelectedAction,
   useTable,
 } from '@components/table';
 import { useSchoolGet } from '@hooks/school/useSchool';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
 import {
-  Box,
-  Button,
   Card,
   Tabs,
   Divider,
   TableContainer,
-  Tooltip,
-  IconButton,
   Table,
   TableBody,
   TextField,
@@ -29,7 +22,6 @@ import {
   MenuItem,
 } from '@mui/material';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
-import { useRouter } from 'next/router';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { hooks } from '@hooks/web3/metamask';
 import { JsonRpcProvider, Signer } from 'ethers';
@@ -67,17 +59,12 @@ const VerifiedSchool = () => {
     isSuccess: isMintSuccess,
   } = useBulkMintSchools();
 
-  const { useProvider } = hooks;
   const provider = useWeb3React();
-
-  // const { filteredUsers } = useAdministrationContext();
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
   const [country, setCountry] = useState<string>()
   const [connectivity, setConnectivity] = useState<string>()
   const { data } = useSchoolGet({page, perPage: rowsPerPage, minted: 'ISMINTING', country, connectivity});
-
-  // const { error } = useFetchUsers();
 
   let filteredData: any = [];
   useEffect(() => {
@@ -106,13 +93,6 @@ const VerifiedSchool = () => {
     ).getSigner() as unknown as Signer;
     const signature = await mintSignature(signer, selectedValues.length);
     return signature;
-  };
-
-  const mintSchool = async () => {
-    const signature = await signTransaction();
-    if (!signature) return Error('Signature is null');
-    setSelectedValues([]);
-    mutate({ data: selectedValues, signatureWithData: signature });
   };
 
   const handleSearchChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

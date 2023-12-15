@@ -146,7 +146,6 @@ export default function ConnectWithSelect({
     if (activeChainId && (!desiredChainId || desiredChainId === -1)) {
       setDesiredChainId(activeChainId);
     }
-    // }
   }, [desiredChainId, activeChainId]);
 
   const connectWallet = useCallback(async () => {

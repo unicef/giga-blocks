@@ -1,47 +1,29 @@
-import { useEffect, useState } from 'react';
 // @mui
 import {
   Stack,
-  Button,
   TableRow,
-  MenuItem,
   TableCell,
-  IconButton,
-  Typography,
-  Switch,
-  Checkbox,
+  Typography
 } from '@mui/material';
 
 // components
-import Iconify from '@components/iconify';
-import MenuPopover from '@components/menu-popover';
-import ConfirmDialog from '@components/confirm-dialog';
-import { CustomAvatar } from '@components/custom-avatar';
 import { useRouter } from 'next/router';
 import Tooltip from '@mui/material/Tooltip';
 
 type Props = {
   row: any;
-  rowData: any;
 };
 
 export default function NFTTableRow({
-  row,
-  rowData,
+  row
 }: Props) {
   const {
-    id,
     blockNumber,
     from,
     to,
     transactionHash,
     blockTimestamp,
-    __typename,
   } = row;
-
-  const { push } = useRouter();
-  const schoolNft = process.env.NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS
-
 
   // @ts-ignore
   const truncateString = (str) => {

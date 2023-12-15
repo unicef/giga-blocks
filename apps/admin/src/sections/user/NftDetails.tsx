@@ -149,8 +149,7 @@ export default function SchoolDetails({ id }: Props) {
     };
   }
 
-  function CustomTabPanel(props: TabPanelProps) {
-      //@ts-ignore
+  function CustomTabPanel(props: any) {
     const { children, value, index, ...other } = props;
   
     return (
@@ -340,10 +339,6 @@ export default function SchoolDetails({ id }: Props) {
                           <NFTTableRow
                             key={row.id}
                             row={row}
-                            // selectedValues={selectedValues}
-                            // setSelectedValues={setSelectedValues}
-                            rowData={row}
-                            // checkbox = {true}
                           />
                         ))}
                       <TableNoData isNotFound={schoolTableData?.length === 0} />
@@ -393,7 +388,6 @@ export default function SchoolDetails({ id }: Props) {
                           <NFTTableRow
                             key={row.id}
                             row={row}
-                            rowData={row}
                           />
                         ))}
                       <TableNoData isNotFound={schoolTableData?.length === 0} />
@@ -410,7 +404,7 @@ export default function SchoolDetails({ id }: Props) {
                 onRowsPerPageChange={onChangeRowsPerPage}
                 dense={dense}
                 onChangeDense={onChangeDense}
-              />
+                />
             </Card>
           </Grid>
         </CustomTabPanel>

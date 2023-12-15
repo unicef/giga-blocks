@@ -3,21 +3,11 @@ import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Card, Grid, Stack, MenuItem, Select, Button, Container } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
 import { useRouter } from 'next/router';
 import { useSnackbar } from '@components/snackbar';
 import FormProvider, { ProfileTextField } from '@components/hook-form';
-import { AdministrationService } from '@services/administration';
-import { useSchoolGetById } from '@hooks/school/useSchool';
-import Image from 'next/image';
 import CustomBreadcrumbs from '@components/custom-breadcrumbs';
 import { PATH_DASHBOARD, PATH_CONTRIBUTE } from '@routes/paths';
-// @ts-ignore
-import Identicon from 'react-identicons';
-import { hooks } from '@hooks/web3/metamask';
-import { JsonRpcProvider, Signer } from 'ethers';
-import { mintSignature } from '@components/web3/utils/wallet';
-import { useMintSchools } from '@hooks/school/useSchool';
 import { useWeb3React } from '@web3-react/core';
 import { useContributionGetById, useContributionValidate } from '@hooks/contribute/useContribute';
 

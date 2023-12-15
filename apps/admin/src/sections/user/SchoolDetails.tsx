@@ -3,22 +3,16 @@ import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Card, Grid, Stack, MenuItem, Select, Button, Container } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
-import { useRouter } from 'next/router';
-import { useSnackbar } from '@components/snackbar';
 import FormProvider, { ProfileTextField } from '@components/hook-form';
-import { AdministrationService } from '@services/administration';
 import { useSchoolGetById } from '@hooks/school/useSchool';
-import Image from 'next/image';
 import CustomBreadcrumbs from '@components/custom-breadcrumbs';
 // @ts-ignore
 import Identicon from 'react-identicons';
-import { hooks } from '@hooks/web3/metamask';
-import { JsonRpcProvider, Signer } from 'ethers';
-import { mintSignature } from '@components/web3/utils/wallet';
 import { useMintSchools } from '@hooks/school/useSchool';
 import { useWeb3React } from '@web3-react/core';
 import { PATH_DASHBOARD, PATH_SCHOOL } from '@routes/paths';
+import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/router';
 
 interface Props {
   isEdit?: boolean;
@@ -48,7 +42,9 @@ export default function SchoolDetails({ id }: Props) {
     mintedStatus: '',
   });
 
-  const { data, isSuccess, isError } = useSchoolGetById(id);
+  const { data, isSuccess, isError, refetch } = useSchoolGetById(id);
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const {
     mutate,
@@ -59,6 +55,7 @@ export default function SchoolDetails({ id }: Props) {
   } = useMintSchools();
 
   const web3 = useWeb3React();
+  const router = useRouter()
 
   const [nftData, setNftData] = useState({
     id: '',
@@ -114,14 +111,6 @@ export default function SchoolDetails({ id }: Props) {
     roles: Yup.string(),
   });
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setProfile((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
-
   const methods = useForm<FormValuesProps>({
     resolver: yupResolver(UpdateUserSchema),
   });
@@ -135,31 +124,15 @@ export default function SchoolDetails({ id }: Props) {
     mutate({ data: nftData });
   };
 
-  // const onSubmit = async (data: FormValuesProps) => {
-  //   const { id, name, roles } = profile;
-  //   const updatedProfile = { name, roles: [roles] };
+  useEffect(() => {
+    isMintSuccess && enqueueSnackbar('Minted successfully'); refetch();
+    isMintSuccess &&  back();
+    isMintError && enqueueSnackbar('Minting unsuccessful'); refetch();
+  }, [isMintSuccess, isMintError])
 
-  //   try {
-  //     const response = await AdministrationService.updateUser(id, updatedProfile);
-  //     if (response.statusText !== 'OK')
-  //       enqueueSnackbar('Error while updating user', { variant: 'error' });
-  //     enqueueSnackbar('User details updated successfully');
-  //     if (isEdit) push('/user/list');
-  //   } catch (error) {
-  //     enqueueSnackbar('Something went wrong', { variant: 'error' });
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (currentUser) {
-  //     currentUser.roles = currentUser?.roles?.[0];
-  //     setProfile(currentUser);
-  //   }
-  // }, [currentUser]);
-
-  // useEffect(() => {
-  //   methods.reset(profile);
-  // }, [methods, profile]);
+  const back = () => {
+    router.push('/school/minted');
+  };
 
   return (
     <>
@@ -223,7 +196,7 @@ export default function SchoolDetails({ id }: Props) {
                   </Box>
 
                   <Stack alignItems="flex-start" sx={{ mt: 3 }}>
-                    <Button variant="contained" style={{ width: '300px', background: '#474747' }}>
+                    <Button variant="contained" style={{ width: '300px', background: '#474747' }} onClick={back}>
                       Back
                     </Button>
                   </Stack>

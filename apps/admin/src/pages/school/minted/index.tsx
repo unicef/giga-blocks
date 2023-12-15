@@ -1,30 +1,19 @@
 'use client';
 import Scrollbar from '@components/scrollbar';
 import {
-  TableEmptyRows,
   TableHeadUsers,
   TableNoData,
   TablePaginationCustom,
-  TableSelectedAction,
   useTable,
 } from '@components/table';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
 import {
-  Box,
-  Button,
   Card,
-  Tabs,
   Divider,
   TableContainer,
-  Tooltip,
-  IconButton,
   Table,
   TableBody,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+  TextField
 } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
@@ -60,17 +49,23 @@ const MintedSchools = () => {
   const [school, setSchool] = useState<any>()
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
+  const [paginatedData, setPaginatedData] = useState<any>([])
   const { data: total } = useSchoolCount('MINTED');
-  const [country, setCountry] = useState<string>()
-  const [connectivity, setConnectivity] = useState<string>()
   const [result] = useQuery({
     query: Queries.nftListQuery,
-    variables: { skip: page * rowsPerPage, first: rowsPerPage },
+    variables: {  },
   });
-  const { data, fetching, error } = result;
+  const { data, fetching } = result;
+
+  useEffect(() => {
+    const startItem = (page+1)*rowsPerPage - rowsPerPage;
+    const endItem = page*rowsPerPage + rowsPerPage
+    const paginatedDatas = data?.schoolTokenUris.slice(startItem , endItem);
+    setPaginatedData(paginatedDatas)
+  }, [rowsPerPage, data, page])
 
   const decodeSchooldata = (data: any) => {
-    const encodeddata = data.schoolTokenUris;  
+    const encodeddata = data;  
     const decodedShooldata = [];
     for (let i = 0; i < encodeddata.length; i++) {
       const decodedData = atob(encodeddata[i].tokenUri.substring(29));
@@ -100,10 +95,10 @@ const MintedSchools = () => {
 
   let filteredData: any = [];
   useEffect(() => {
-    if (data) decodeSchooldata(data);
-  }, [data]);
+    if (paginatedData) decodeSchooldata(paginatedData);
+  }, [data, paginatedData]);
 
-  const sortedData = tableData.slice().sort((a:any, b:any) => {
+  const sortedData = tableData?.slice().sort((a:any, b:any) => {
     const isAsc = order === 'asc';
     if(orderBy === 'longitude'){
     return (parseFloat(a[orderBy]) < parseFloat(b[orderBy]) ? -1 : 1) * (isAsc ? 1 : -1);
@@ -158,8 +153,7 @@ const MintedSchools = () => {
             </Scrollbar>
           </TableContainer>
           <TablePaginationCustom
-            count={total}
-            // count={tableData?.length}
+            count={data?.schoolTokenUris.length - 1 || 0}
             setPage={setPage}
             page={page}
             rowsPerPage={rowsPerPage}

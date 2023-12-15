@@ -1,28 +1,17 @@
-import { useEffect, useState } from 'react';
 // @mui
 import {
   Stack,
-  Button,
   TableRow,
-  MenuItem,
   TableCell,
-  IconButton,
   Typography,
-  Switch,
   Checkbox,
 } from '@mui/material';
 
 // components
-import Iconify from '@components/iconify';
-import MenuPopover from '@components/menu-popover';
-import ConfirmDialog from '@components/confirm-dialog';
-import { CustomAvatar } from '@components/custom-avatar';
 import { useRouter } from 'next/router';
 
 type Props = {
   row: any;
-  // selected: boolean;
-  // onSelectRow: any;
   setSelectedValues: any;
   selectedValues: any;
   rowData: any;
@@ -31,8 +20,6 @@ type Props = {
 
 export default function SchoolTableRow({
   row,
-  // selected,
-  // onSelectRow,
   setSelectedValues,
   selectedValues,
   rowData,
@@ -44,9 +31,7 @@ export default function SchoolTableRow({
     country,
     longitude,
     latitude,
-    mintedStatus,
-    coverage_availabitlity,
-    connectivity,
+    mintedStatus
   } = row;
 
   const { push } = useRouter();
@@ -130,7 +115,6 @@ export default function SchoolTableRow({
           {mintedStatus =='NOTMINTED'&& 'Pending'}
           {mintedStatus =='ISMINTING'&& 'In Progress'}
           {mintedStatus =='MINTED'&& mintedStatus}
-          {/* {mintedStatus} */}
         </TableCell>
         {mintedStatus =='MINTED' && 
         <TableCell

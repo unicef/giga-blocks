@@ -1,11 +1,8 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { Box, Container, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 
 import DashboardLayout from '@layouts/dashboard';
-import CustomBreadcrumbs from '@components/custom-breadcrumbs';
-import { useSchoolGetById } from '@hooks/school/useSchool';
-import Image from 'next/image';
 import ContributeDetail from '@sections/user/ContributeDetails';
 
 
@@ -17,8 +14,6 @@ export default function ContributePage() {
   const {
     query: { id },
   } = useRouter();
-
-  const singleUser = "Admin"
   
   return (
     <>
