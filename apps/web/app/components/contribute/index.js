@@ -1,14 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import {
-  Column,
-  Form,
-  Grid,
-  TextInput,
-  Button,
-  Dropdown,
-  ModalHeader,
-} from '@carbon/react';
+import { Form, TextInput, Button, Dropdown } from '@carbon/react';
 import { Controller, useForm } from 'react-hook-form';
 import Web3Modal from '../congratulation-modal';
 import { useContributeData } from '../../hooks/useContributeData';
@@ -16,7 +8,7 @@ import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { Modal, ModalBody } from '@carbon/react';
 
-const ContributeForm = ({ data, isOpen, onClose }) => {
+const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex }) => {
   const router = useRouter();
   const contributeDataMutation = useContributeData();
   const { handleSubmit, control, setValue } = useForm();
@@ -56,6 +48,11 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleModalClose = () => {
+    onClose();
+    updateSelectedTabIndex(1);
   };
 
   const onSubmit = (formData) => {
@@ -114,6 +111,7 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
         };
         contributeDataMutation.mutate(formattedData);
       }
+      onClose();
       openModal();
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -141,7 +139,7 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
       {/* INTRODUCTION */}
       <Modal open={isOpen} onRequestClose={onClose} passiveModal={true}>
         <h1 style={{ marginBottom: '24px' }}>
-          Contribute Data for {`${data.name}`}
+          Contribute Data for {`${data?.name}`}
         </h1>
         <ModalBody>
           <Form onSubmit={handleSubmit(onSubmit)}>
@@ -264,7 +262,12 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
           Contribute Now
         </Button>
       </Modal>
-      <Web3Modal id={id} isOpen={isModalOpen} onClose={closeModal} />
+      <Web3Modal
+        id={id}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onTabChange={handleModalClose}
+      />
     </>
   );
 };

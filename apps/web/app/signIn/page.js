@@ -82,7 +82,6 @@ const SignIn = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log('first');
     sendOtp
       .mutateAsync({ email: data.email })
       .then(() => {
@@ -90,7 +89,10 @@ const SignIn = () => {
         setEmail(data.email);
       })
       .catch((error) => {
-        console.log(error);
+        setNotification({
+          kind: 'error',
+          title: 'User not found.',
+        });
       });
   };
   const handleWalletLogin = async (data) => {
@@ -103,6 +105,21 @@ const SignIn = () => {
         signature: sign,
       };
       loginMutation.mutateAsync(payload).then((res) => {
+        console.log(res);
+        if (res.message === 'Request failed with status code 404') {
+          setNotification({
+            kind: 'error',
+            title: 'User not found.',
+          });
+          return;
+        }
+        if (res.message === 'Request failed with status code 500') {
+          setNotification({
+            kind: 'error',
+            title: 'Nonce expired. Please login again.',
+          });
+          return;
+        }
         saveCurrentUser(res.data);
         saveAccessToken(res.data.access_token);
         saveConnectors('metaMask');
@@ -119,6 +136,7 @@ const SignIn = () => {
         });
       });
     } catch (error) {
+      console.log('error', error);
       setNotification({
         kind: 'error',
         title: 'Error during wallet login',

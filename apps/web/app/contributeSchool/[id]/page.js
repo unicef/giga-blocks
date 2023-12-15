@@ -4,6 +4,7 @@ import Navbar from '../../components/navbar';
 import ChangeLog from '../../components/changeLog';
 import { useSchoolDetails } from '../../hooks/useSchool';
 import ContributeForm from '../../components/contribute';
+import { MapView } from '../../components/maps';
 import {
   Button,
   Column,
@@ -18,7 +19,6 @@ import {
 } from '@carbon/react';
 import './school-details.scss';
 import { useParams } from 'next/navigation';
-import { toSvg } from 'jdenticon';
 import { useState } from 'react';
 import PageHeader from '../../components/page-header';
 import { getCurrentUser } from '../../utils/sessionManager';
@@ -29,6 +29,7 @@ const SchoolDetail = () => {
   const router = useRouter();
   const { data, isLoading } = useSchoolDetails(id);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
 
   const user = getCurrentUser();
   const openModal = () => {
@@ -39,14 +40,12 @@ const SchoolDetail = () => {
     }
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const updateSelectedTabIndex = (index) => {
+    setSelectedTabIndex(index);
   };
 
-  const generateIdenticon = (image) => {
-    const size = 50;
-    const svgString = toSvg(image, size);
-    return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   const breadcrumbs = [
@@ -60,11 +59,11 @@ const SchoolDetail = () => {
         <>
           <Navbar />
           {/* HEADING */}
-          <PageHeader name={data.name} breadcrumbs={breadcrumbs} />
+          <PageHeader name={data?.name} breadcrumbs={breadcrumbs} />
 
           {/* INTRODUCTION */}
 
-          <Tabs>
+          <Tabs selectedIndex={selectedTabIndex}>
             <div
               style={{
                 display: 'flex',
@@ -127,16 +126,22 @@ const SchoolDetail = () => {
                       justifyContent: 'center',
                       alignItems: 'center',
                       flexDirection: 'column',
+                      width: '100%',
                     }}
                   >
-                    <p>Last Updated:{data?.updatedAt.substring(0, 10)}</p>
-                    <img
-                      style={{
-                        width: '60%',
-                      }}
-                      alt="School Map"
-                      src={generateIdenticon(data?.giga_school_id)}
-                    />
+                    <p style={{ fontSize: '12px' }}>
+                      Last Updated:{data?.updatedAt.substring(0, 10)}
+                    </p>
+                    <div style={{ width: '450px' }}>
+                      <MapView
+                        mapData={[
+                          {
+                            latitude: data?.latitude,
+                            longitude: data?.longitude,
+                          },
+                        ]}
+                      />
+                    </div>
                   </Column>
                 </Grid>
 
@@ -196,6 +201,7 @@ const SchoolDetail = () => {
             isOpen={isModalOpen}
             onClose={closeModal}
             data={data}
+            updateSelectedTabIndex={updateSelectedTabIndex}
           />
           <Footer />
         </>
