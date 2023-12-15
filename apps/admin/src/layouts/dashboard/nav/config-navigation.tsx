@@ -46,10 +46,10 @@ const navConfig = [
             title: 'Unminted School',
             path: PATH_SCHOOL.contributed,
           },
-          {
-            title: 'Minting In Progress',
-            path: PATH_SCHOOL.minting,
-          },
+          // {
+          //   title: 'Minting In Progress',
+          //   path: PATH_SCHOOL.minting,
+          // },
           {
             title: 'Import School',
             path: PATH_SCHOOL.import,

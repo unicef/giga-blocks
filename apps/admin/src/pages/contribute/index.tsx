@@ -194,7 +194,7 @@ const ContributeData = () => {
             <Autocomplete
               disablePortal
               value={selectedSchoolSearch?.label}
-              options={schoolList?.rows?.map((school: any) => ({
+              options={schoolList?.map((school: any) => ({
                 value: school.id,
                 label: school.name,
               }))}

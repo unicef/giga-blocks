@@ -12,9 +12,9 @@ Dashboard.getLayout = (page: React.ReactElement) => (
 );
 
 export default function Dashboard() {
-  const { data } = useAllSchool();
-  const latitudeArray = data?.rows?.map((item: { latitude: any }) => item.latitude);
-  const longitudeArray = data?.rows?.map((item: { longitude: any }) => item.longitude);
+  const {data} = useAllSchool();
+  const latitudeArray = data?.map((item: { latitude: any }) => item.latitude);
+  const longitudeArray = data?.map((item: { longitude: any }) => item.longitude);
   return (
     <>
       <Container>
