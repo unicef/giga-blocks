@@ -19,6 +19,7 @@ import { Link } from 'next/link';
 import { useAppAuthContext } from '../../auth/JwtContext';
 import { useWeb3React } from '@web3-react/core';
 import { metaMaskLogin } from '../../utils/metaMaskUtils';
+import { getCurrentUser } from '../../utils/sessionManager';
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -46,7 +47,7 @@ const Navbar = () => {
     setIsDropdownOpen(false);
   };
 
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  const currentUser = getCurrentUser();
 
   return (
     <HeaderContainer
