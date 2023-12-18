@@ -20,7 +20,7 @@ const SignUp = () => {
   const account = hooks.useAccount();
   const { handleSubmit, control } = useForm();
   const [openModal, setOpenModal] = useState(false);
-  const[checkbox, setCheckbox] = useState(false);
+  const [checkbox, setCheckbox] = useState(false);
   const signUp = useSignUp();
   const sendOtp = useOtp();
 
@@ -51,7 +51,6 @@ const SignUp = () => {
 
   const handleCheck = () => {
     setCheckbox(!checkbox);
-
   };
 
   const onClose = () => {
@@ -59,7 +58,7 @@ const SignUp = () => {
   };
 
   const handlePageChange = async () => {
-    try {     
+    try {
       await metaMaskLogin();
       router.push('/walletRegister');
     } catch (error) {
@@ -117,11 +116,10 @@ const SignUp = () => {
               />
               <Checkbox
                 className="checkbox"
-                id='checkbox'
+                id="checkbox"
                 labelText="By creating an account, you agree to the Terms and conditions and our Privacy Policy"
                 checked={checkbox}
                 onChange={handleCheck}
-                
               />
               <br />
               <Grid>
@@ -129,21 +127,12 @@ const SignUp = () => {
                   <Button
                     className="submit-btn"
                     type="submit"
-                    style={{ marginRight: '14px', width: '100%' }}
                     disabled={!checkbox}
-
                   >
                     Submit
                   </Button>
                   <Button
-                    className="submit-btn"
-                    style={{
-                      marginRight: '14px',
-                      width: '100%',
-                      background: 'transparent',
-                      color: '#0f62fe',
-                      border: '1px solid #0f62fe',
-                    }}
+                    className="submit-btn-transparent"
                     onClick={handlePageChange}
                   >
                     Sign Up Using Metamask

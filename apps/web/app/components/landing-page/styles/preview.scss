@@ -4,15 +4,9 @@
 @use '@carbon/react/scss/theme' as *;
 .landing-page {
   padding-right: 0;
-  padding-left: 12px;
   margin-right: 0;
   --cds-grid-gutter-end: 0;
   --cds-grid-gutter-start: 0;
-  // margin-top: rem(-40px);
-  @include breakpoint-down(md) {
-    margin-top: $spacing-05;
-    padding-top: $spacing-10;
-  }
 }
 .landing-page__banner {
   color: white;
@@ -108,6 +102,7 @@
   align-items: center;
   @include breakpoint-down(md) {
     flex-direction: column;
+    align-items: flex-start;
   }
 }
 
@@ -209,6 +204,10 @@
     flex-direction: column;
     justify-content: center;
   }
+  @include breakpoint-down(md) {
+    height: 650px;
+    margin-bottom: 100px;
+  }
 }
 .landing-page__banner,
 .landing-page__r2,
@@ -226,9 +225,10 @@
   flex-direction: column;
   gap: 35px;
   @include breakpoint-down(md) {
-    padding-top: $spacing-06;
+    padding-top: $spacing-08;
     width: 90%;
     margin: auto;
+    gap: 30px;
   }
 }
 .why-nft {

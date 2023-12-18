@@ -100,12 +100,18 @@ const SignIn = () => {
       await metaMaskLogin();
       const { nonce } = await getNonceQuery.mutateAsync();
       const sign = await getSignature(nonce);
+      if (!sign) {
+        setNotification({
+          kind: 'error',
+          title: 'User rejected signature.',
+        });
+        return;
+      }
       const payload = {
         walletAddress: walletAddress,
         signature: sign,
       };
       loginMutation.mutateAsync(payload).then((res) => {
-        console.log(res);
         if (res.message === 'Request failed with status code 404') {
           setNotification({
             kind: 'error',

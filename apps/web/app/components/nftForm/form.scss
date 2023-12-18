@@ -16,6 +16,7 @@
   font-size: 48px;
   @include breakpoint-down(md) {
     padding-top: $spacing-08;
+    padding-bottom: $spacing-08;
   }
 }
 .heading-col {
@@ -25,7 +26,7 @@
 
 .form {
   @include breakpoint-down(md) {
-    padding-left: $spacing-05;
+    // padding-left: $spacing-05;
     padding-right: $spacing-05;
   }
   .cds--label {
