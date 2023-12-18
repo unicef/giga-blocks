@@ -1,5 +1,6 @@
 import { Accordion, AccordionItem, Column, Grid } from '@carbon/react';
 import React from 'react';
+import './faq.scss';
 
 const faq = () => {
   return (

@@ -29,3 +29,8 @@
     }
   }
 }
+.submit-btn {
+  @include breakpoint-down(md) {
+    margin-bottom: 16px;
+  }
+}
