@@ -6,26 +6,29 @@ import { toSvg } from 'jdenticon';
 import { useEffect, useState } from 'react';
 import { useSellerContract } from '../../hooks/useContract';
 import NftPurchaseModal from '../../components/nftPurchaseModal';
+import dynamic from 'next/dynamic';
+import DynamicSketch from './dynamicSketch';
 
-const Introduction = ({ schooldata ,tokenId}) => {
+dynamic(() => import('../../components/card/p5'), {
+  ssr: false,
+});
+
+const Introduction = ({ schooldata, tokenId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [onSell, setOnSell] = useState(false);
-  const[price, setPrice] = useState(0)
+  const [price, setPrice] = useState(0);
   const sellerContract = useSellerContract();
-
-
 
   const fetchPrice = async () => {
     if (!sellerContract) return;
 
     try {
-      const price = await sellerContract.methods.calculatePrice()
-        .call();
-      setPrice(price)
+      const price = await sellerContract.methods.calculatePrice().call();
+      setPrice(price);
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -46,29 +49,28 @@ const Introduction = ({ schooldata ,tokenId}) => {
   };
 
   useEffect(() => {
-    if (schooldata?.owner.toLowerCase() === process.env.NEXT_PUBLIC_GIGA_ESCROW_ADDRESS.toLowerCase()) setOnSell(true);
+    if (
+      schooldata?.owner.toLowerCase() ===
+      process.env.NEXT_PUBLIC_GIGA_ESCROW_ADDRESS.toLowerCase()
+    )
+      setOnSell(true);
     else setOnSell(false);
-  },[schooldata?.owner]);
+  }, [schooldata?.owner]);
 
-  useEffect(()=>{
-    fetchPrice()
-  })
+  useEffect(() => {
+    fetchPrice();
+  });
 
   return (
-    <Grid fullWidth className="mt-50px">
-      <Column
-        md={4}
-        lg={7}
-        sm={4}
-        style={{ display: 'flex', justifyContent: 'flex-start' }}
-      >
-        <img
-          style={{
-            width: '80%',
-          }}
-          alt="School Map"
-          src={generateIdenticon(schooldata?.image)}
-        />
+    <Grid
+      fullWidth
+      className="mt-50px"
+      style={{ position: 'relative', left: '600px' }}
+    >
+      <Column md={4} lg={8} sm={4} className="p5Canvas" id="defaultCanvas0">
+        {schooldata?.image && (
+          <DynamicSketch scriptContent={schooldata?.image} />
+        )}
       </Column>
       <Column md={4} lg={8} sm={4}>
         <div>

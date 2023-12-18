@@ -21,7 +21,7 @@ import { Default_Chain_Id } from '../../components/web3/connectors/network';
 import { Link } from 'next/link';
 import { useAppAuthContext } from '../../auth/JwtContext';
 import { useWeb3React } from '@web3-react/core';
-import {metaMaskLogin} from '../../utils/metaMaskUtils';
+import { metaMaskLogin } from '../../utils/metaMaskUtils';
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -52,14 +52,15 @@ const Navbar = () => {
   useEffect(() => {}, [account]);
 
   const handleWalletLogin = async () => {
-   await metaMaskLogin();
+    await metaMaskLogin();
   };
 
   return (
     <HeaderContainer
       render={({ isSideNavExpanded, onClickSideNavExpand }) => (
         <Header
-          classname="navbar"
+          aria-label="header"
+          className="navbar"
           style={{ background: '#383838', color: 'white' }}
         >
           <SkipToContent />
@@ -71,7 +72,10 @@ const Navbar = () => {
           <HeaderName as={Link} href="/" prefix="" style={{ color: 'white' }}>
             NFT 2.0
           </HeaderName>
-          <HeaderNavigation style={{ background: '#383838', color: 'white' }}>
+          <HeaderNavigation
+            aria-label="header"
+            style={{ background: '#383838', color: 'white' }}
+          >
             <HeaderMenuItem
               as={Link}
               href="/contributeSchool"

@@ -1,9 +1,8 @@
 import { Helmet } from 'react-helmet';
 
 const DynamicSketch = ({ scriptContent }) => {
-  console.log('scriptContent', scriptContent);
   return (
-    <>
+    <div>
       {scriptContent ? (
         <Helmet>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js" />
@@ -11,7 +10,7 @@ const DynamicSketch = ({ scriptContent }) => {
           <script type="text/javascript">{scriptContent}</script>
         </Helmet>
       ) : null}
-    </>
+    </div>
   );
 };
 export default DynamicSketch;
