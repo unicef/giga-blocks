@@ -67,6 +67,7 @@ export default function ValidateTableRow({
     <>
       <TableRow
         hover
+        sx={{cursor: 'pointer'}}
       >
       {checkbox &&(
         <TableCell padding="checkbox">

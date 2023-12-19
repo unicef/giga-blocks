@@ -30,6 +30,7 @@ const MintedSchools = () => {
     { id: 'longitude', label: 'Longitude', align: 'left' },
     { id: 'mintedStatus', label: 'Status', align: 'left' },
     { id: 'tokenId', label: 'TokenId', align: 'left' },
+    { id: 'mintedAt', label: 'Minted At', align: 'left' },
   ];
 
   const {
@@ -68,6 +69,7 @@ const MintedSchools = () => {
       const decodedData = atob(encodeddata[i].tokenUri.substring(29));
       const schoolData = {
         tokenId: encodeddata[i].id,
+        mintedAt: encodeddata[i].mintedAt,
         ...JSON.parse(decodedData),
       };
       decodedShooldata.push(schoolData);
@@ -85,6 +87,7 @@ const MintedSchools = () => {
           coverage_availabitlity: row.coverage_availabitlity,
           electricity_availabilty: row.electricity_availabitlity,
           mintedStatus: 'MINTED',
+          mintedAt: row.mintedAt
         });
       });
     setTableData(filteredData);

@@ -17,6 +17,7 @@ import {gql} from "urql";
   query schoolTokenUris($skip:Int, $first:Int) {schoolTokenUris(subgraphError: allow,skip: $skip,first: $first) {
     id
     tokenUri
+    mintedAt
   }
 }`
 

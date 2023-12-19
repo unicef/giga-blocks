@@ -155,6 +155,7 @@ export default function SchoolDetails({ id }: Props) {
                       name="name"
                       value={profile?.fullname || ''}
                       label="Full Name"
+                      disabled
                     />
 
                     <ProfileTextField
@@ -176,21 +177,25 @@ export default function SchoolDetails({ id }: Props) {
                         name="latitude"
                         value={profile?.latitude || ''}
                         label="Latitude"
+                        disabled
                       />
                       <ProfileTextField
                         name="longitude"
                         value={profile?.longitude || ''}
                         label="Longitude"
+                        disabled
                       />
                       <ProfileTextField
                         name="connectivity"
                         value={profile?.connectivity === 'true' ? 'Yes' : 'No' || ''}
                         label="Connectivity"
+                        disabled
                       />
                       <ProfileTextField
                         name="coverage"
                         value={profile?.coverage === 'true' ? 'Yes' : 'No' || ''}
                         label="Coverage"
+                        disabled
                       />
                     </Box>
                   </Box>
@@ -211,7 +216,7 @@ export default function SchoolDetails({ id }: Props) {
           <Box justifyContent={'center'}>
             {/* <Image width={250} height={250} alt='USER' src={'/assets/Image-right.svg'}/> */}
             <Stack alignItems="center" sx={{ mt: 1 }}>
-              {profile.mintedStatus === 'NOTMINTED' && (
+              {profile.mintedStatus === 'NOTMINTED' ? (
                 <Button
                   variant="contained"
                   color={'info'}
@@ -220,7 +225,21 @@ export default function SchoolDetails({ id }: Props) {
                 >
                   Mint
                 </Button>
-              )}
+              ) : profile.mintedStatus === 'ISMINTING' ? <Button
+              variant="contained"
+              color={'info'}
+              style={{ width: '300px', background: '#474747' }}
+              onClick={mintSchool}
+            >
+              Minting
+            </Button> : <Button
+              variant="contained"
+              color={'success'}
+              style={{ width: '300px', background: '#474747' }}
+              onClick={mintSchool}
+            >
+              Minted
+            </Button>}
             </Stack>
             <Stack sx={{ mt: 8 }}>
               <Box display="flex" justifyContent="center">
