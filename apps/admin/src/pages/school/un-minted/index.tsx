@@ -53,6 +53,7 @@ const VerifiedSchool = () => {
     data: mintData,
     isSuccess: isMintSuccess,
     error: mintingError,
+    isLoading: isMinting
   } = useBulkMintSchools();
 
   const provider = useWeb3React();
@@ -146,7 +147,9 @@ const VerifiedSchool = () => {
           <div style={{display: 'flex', justifyContent: 'space-between',marginBottom: '20px'}}>
           <span style={{fontSize: '1.5em', fontWeight: '600'}}>Unminted School</span>
           <div style={{display: 'flex', gap: '15px'}}>
-          <Button variant="contained" style={{background: '#474747'}} onClick={mintSchool}>Mint ({selectedValues.length})</Button>
+            {isMinting ? <Button variant="contained" style={{background: '#474747'}} onClick={mintSchool}>Minting ({selectedValues.length}) NFT's</Button> :
+            <Button variant="contained" style={{background: '#474747'}} onClick={mintSchool}>Mint {selectedValues.length > 0 && `(${selectedValues.length})`} </Button>
+            }
           <Button variant="contained" style={{background: '#404040'}} onClick={uploadSchool}>Import School</Button>
           </div>
           </div>

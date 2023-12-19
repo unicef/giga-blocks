@@ -33,7 +33,9 @@ export default function NFTTableRow({
   return (
     <>
       <TableRow
-         hover> 
+         hover
+         sx={{cursor: 'pointer'}}
+         > 
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>

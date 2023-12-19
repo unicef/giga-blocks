@@ -43,6 +43,7 @@ export default function UserListRow({
   return (
     <>
       <TableRow hover 
+      sx={{cursor: 'pointer'}}
       >
 
         <TableCell onClick={() => handleEditRow(id)}>
