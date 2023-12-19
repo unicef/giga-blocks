@@ -218,8 +218,7 @@ export class ContributeDataService {
 
   async getValidated(query) {
     const { page, perPage, status, school } = query;
-    const where: Prisma.ContributedDataWhereInput = {}
-    
+    const where: Prisma.ContributedDataWhereInput = {};
     if (school) {
       where.school_Id = school;
     }
@@ -243,7 +242,6 @@ export class ContributeDataService {
         },
       },
     };
-
 
     if (status === 'true') {
       args.where.isArchived = true;

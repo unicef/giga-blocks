@@ -119,31 +119,4 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
-
-  // @Public()
-  // @Post('requestValidator')
-  // @ApiOperation({ summary: 'Request for an admin for validator' })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'The found record',
-  //   type: [CreateUserDto],
-  // })
-  // @ApiResponse({ status: 403, description: 'Forbidden.' })
-  // requestValidator(@Body() createUserDto: CreateUserDto) {
-  //   return this.usersService.requestValidator(createUserDto);
-  // }
-
-  // @UseGuards(JwtAuthGuard, RoleGuard)
-  // @Roles('ADMIN')
-  // @Patch('approveValidator/:id')
-  // @ApiOperation({ summary: 'Approve a user for validator' })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'The found record',
-  //   type: [CreateUserDto],
-  // })
-  // @ApiResponse({ status: 403, description: 'Forbidden.' })
-  // approveValidator(@Param('id') id: string) {
-  //   return this.usersService.approveValidator(id);
-  // }
 }
