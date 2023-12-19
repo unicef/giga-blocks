@@ -20,7 +20,6 @@ import SchoolTableRow from '@sections/user/list/SchoolTableRow';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { Queries } from 'src/libs/graph-query';
-import { useSchoolCount } from '@hooks/school/useSchool';
 
 const MintedSchools = () => {
   const TABLE_HEAD = [

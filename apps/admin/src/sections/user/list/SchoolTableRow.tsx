@@ -140,6 +140,7 @@ export default function SchoolTableRow({
           </a>
         </TableCell>
         }
+        {mintedStatus =='MINTED' && 
         <TableCell
         align="left"
         sx={{ textTransform: 'capitalize' }}
@@ -147,6 +148,7 @@ export default function SchoolTableRow({
         >
         {formattedDate}
         </TableCell>
+        }
       </TableRow>
     </>
   );
