@@ -4,6 +4,15 @@ Monorepo for GIGA made using pnpm workspaces and added nx for caching.
 
 ## Setup and Running
 
+We are using `pnpm` as a package manager so we must install it	 as a global dependencies:
+	```npm install -g pnpm```
+Since this is monorepo, there is only one package.json in the root directory of the Repository. So we can directly manage all the dependencies in a single `node_modules` folder.
+Command to install dependencies:
+	```
+    pnpm install
+    ```
+
+
 Need pnpm for package management. 
 
 Installing packages in root of repo
@@ -55,11 +64,12 @@ For running nx for specific apps or library you can write following syntax:
 npx nx <command(build,lint,test,serve)> <apps/libs name>
 ```
 
-Contract Addresses deployed for testing in stage server:
+Contract Addresses deployed for testing in stage server(Polygon Mumbai):
 ```
-NFT_Content_Address:0x33F9559f66d94642D935c3F8db8c693eD8EEb95
-School_NFT_Contract_Address:0x8Fc62f472D6D02C2DC483914d1C34E0Ece69c80D
-Collector_NFT_Contract_Address:0x0f6ef7B33AcA2210E2E955915c987Ce80B968FE4
-Giga_Minter_Contract_Address:0x5685CA5be8d48B12d5Fd19537fe724b8E7111a63
-Escrow_Contract_Address:0xf599a47dB901E4f361BFBa078F1888F8cbE7851A
+NFT_Content_Address:0xC5Ae8E08e82714759E9E8a2eE37553f450Ae559C
+School_NFT_Contract_Address:0xB11AA79500372DaEe87b08763B43A3c135a1C10d
+Collector_NFT_Contract_Address:0x0cB95F58414c9c694282a3627986a8A8Ce79103B
+Giga_Minter_Contract_Address:0x470312485207d9a58820A8A41554f42458d41D77
+Escrow_Contract_Address:0x2973bfE0850e5b751625fCd1680374ddEEcc3B54
+Giga_Seller_Contract_Address:0x490996174D6a1e63bf2E48E812b3ECCF11d39325
 ```

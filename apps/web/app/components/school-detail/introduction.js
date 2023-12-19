@@ -7,25 +7,22 @@ import { useEffect, useState } from 'react';
 import { useSellerContract } from '../../hooks/useContract';
 import NftPurchaseModal from '../../components/nftPurchaseModal';
 
-const Introduction = ({ schooldata ,tokenId}) => {
+const Introduction = ({ schooldata, tokenId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [onSell, setOnSell] = useState(false);
-  const[price, setPrice] = useState(0)
+  const [price, setPrice] = useState(0);
   const sellerContract = useSellerContract();
-
-
 
   const fetchPrice = async () => {
     if (!sellerContract) return;
 
     try {
-      const price = await sellerContract.methods.calculatePrice()
-        .call();
-      setPrice(price)
+      const price = await sellerContract.methods.calculatePrice().call();
+      setPrice(price);
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -46,13 +43,13 @@ const Introduction = ({ schooldata ,tokenId}) => {
   };
 
   useEffect(() => {
-    if (schooldata?.owner.toLowerCase() === process.env.NEXT_PUBLIC_GIGA_ESCROW_ADDRESS.toLowerCase()) setOnSell(true);
+    if (schooldata?.owner?.toLowerCase() === process.env.NEXT_PUBLIC_GIGA_ESCROW_ADDRESS?.toLowerCase()) setOnSell(true);
     else setOnSell(false);
-  },[schooldata?.owner]);
+  }, [schooldata?.owner]);
 
-  useEffect(()=>{
-    fetchPrice()
-  })
+  useEffect(() => {
+    fetchPrice();
+  });
 
   return (
     <Grid fullWidth className="mt-50px">
@@ -72,18 +69,8 @@ const Introduction = ({ schooldata ,tokenId}) => {
       </Column>
       <Column md={4} lg={8} sm={4}>
         <div>
-          <h1 style={{ fontSize: '1.5em' }}>{schooldata?.schoolName}</h1>
-          <p style={{ marginTop: '32px', marginBottom: '32px' }}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book.
-          </p>
-        </div>
-        <hr />
-        <div>
           <h1 style={{ fontSize: '1.5em', marginTop: '32px' }}>Sell Status</h1>
-          <p style={{ marginTop: '32px', marginBottom: '32px' }}>
+          <p style={{ marginTop: '32px', marginBottom: '64px' }}>
             {onSell ? 'Currently Avaiable' : 'Not Available'}
           </p>
         </div>

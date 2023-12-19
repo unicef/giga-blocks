@@ -12,14 +12,11 @@ const Header = ({ name, breadcrumbs }) => {
       <Grid fullWidth>
         <Column lg={16} md={8} sm={4} className="column">
           <Breadcrumb style={{ marginBottom: '16px', display: 'flex' }}>
-            {breadcrumbs.map((breadcrumb, index) => (
+            {breadcrumbs?.map((breadcrumb, index) => (
               <BreadcrumbItem key={index} href={breadcrumb.link}>
                 {breadcrumb.text}
               </BreadcrumbItem>
             ))}
-            <BreadcrumbItem isCurrentPage>
-              <p style={{ color: 'white' }}>{name}</p>
-            </BreadcrumbItem>
           </Breadcrumb>
         </Column>
         <Column lg={16} md={8} sm={4} className="column">

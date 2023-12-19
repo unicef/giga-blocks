@@ -7,21 +7,19 @@ import {
   HeaderMenuButton,
   HeaderMenuItem,
   HeaderGlobalBar,
-  HeaderGlobalAction,
   SkipToContent,
   SideNav,
   SideNavItems,
   HeaderSideNavItems,
-  Dropdown,
 } from '@carbon/react';
 import './navbar.scss';
-import { Wallet } from '@carbon/react/icons';
 import { metaMask } from '../../components/web3/connectors/metamask';
 import { Default_Chain_Id } from '../../components/web3/connectors/network';
 import { Link } from 'next/link';
 import { useAppAuthContext } from '../../auth/JwtContext';
 import { useWeb3React } from '@web3-react/core';
-import {metaMaskLogin} from '../../utils/metaMaskUtils';
+import { metaMaskLogin } from '../../utils/metaMaskUtils';
+import { getCurrentUser } from '../../utils/sessionManager';
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -49,11 +47,7 @@ const Navbar = () => {
     setIsDropdownOpen(false);
   };
 
-  useEffect(() => {}, [account]);
-
-  const handleWalletLogin = async () => {
-   await metaMaskLogin();
-  };
+  const currentUser = getCurrentUser();
 
   return (
     <HeaderContainer
@@ -147,6 +141,7 @@ const Navbar = () => {
             >
               {isAuthenticated ? (
                 <>
+                  <p style={{ paddingRight: '12px' }}>{currentUser?.name}</p>
                   <img
                     src="/landingPage/gravatar.png"
                     alt="User Avatar"
@@ -165,6 +160,7 @@ const Navbar = () => {
                         left: '60%',
                         transform: 'translateX(-50%)',
                         backgroundColor: '#fff',
+                        color: 'black',
                         boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)',
                         borderRadius: '4px',
                         padding: '10px',
@@ -203,10 +199,6 @@ const Navbar = () => {
                   >
                     Sign In
                   </a>
-                  <Wallet
-                    onClick={handleWalletLogin}
-                    style={{ marginRight: '14px', cursor: 'pointer' }}
-                  />
                 </>
               )}
             </div>

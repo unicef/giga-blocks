@@ -59,7 +59,11 @@ const RegisterForm = () => {
         <Column className="heading-col" md={4} lg={7} sm={4}>
           <h1 className="heading10">
             Join the <br />
-            <span style={{ color: '#277aff' }}>Developer Community</span> <br />
+            <span style={{ color: '#277aff' }}>
+              Developer
+              <br /> Community
+            </span>{' '}
+            <br />
             Waiting List!
           </h1>
         </Column>
