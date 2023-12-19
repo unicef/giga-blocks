@@ -43,7 +43,6 @@ export const permissions = [
 
 enum ROLE {
   ADMIN = 'ADMIN',
-  USER = 'USER',
   CONTRIBUTOR = 'CONTRIBUTOR',
 }
 

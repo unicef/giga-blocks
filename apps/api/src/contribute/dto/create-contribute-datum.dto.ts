@@ -24,13 +24,6 @@ export class CreateContributeDatumDto {
   })
   @IsString()
   school_Id: string;
-
-  @ApiProperty({
-    example: 'season-id',
-  })
-  @IsOptional()
-  @IsString()
-  season_ID?: string;
 }
 
 export class ValidateDto {
