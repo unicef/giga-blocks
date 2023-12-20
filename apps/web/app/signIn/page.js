@@ -81,7 +81,8 @@ const SignIn = () => {
     }
   };
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data,e) => {
+    e.preventDefault();
     sendOtp
       .mutateAsync({ email: data.email })
       .then(() => {
@@ -187,7 +188,7 @@ const SignIn = () => {
         <Column className="form" md={4} lg={8} sm={4}>
           <Tile className="signUp-tile">
             <h1>Sign In To Your Account</h1>
-            <Form onSubmit={handleSubmit(onSubmit)}>
+            <Form onSubmit={handleSubmit()}>
               {showEmailField && (
                 <Controller
                   name="email"
@@ -224,9 +225,9 @@ const SignIn = () => {
                 className="submit-btn"
                 type="submit"
                 style={{ marginRight: '14px', width: '100%' }}
-                onClick={() => {
+                onClick={(e) => {
                   if (showEmailField) {
-                    handleSubmit(onSubmit)();
+                    handleSubmit(onSubmit)(e);
                   } else {
                     showEmailInput();
                   }
