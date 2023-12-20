@@ -137,6 +137,7 @@ model User {
   schoolUpdatedBy School[]          @relation("UpdatedBy")
   isArchived      Boolean           @default(false)
   validatedBy     validatedData[]   @relation("ApprovedBy")
+  OTP             OTP[]
 
   @@map("giga_users")
 }
@@ -236,4 +237,16 @@ model validatedData {
   isArchived       Boolean   @default(false)
 
   @@map("giga_validated_data")
+}
+
+model OTP {
+  id             String    @id @default(uuid())
+  otp            String    @unique
+  userId         String
+  user           User      @relation(fields: [userId], references: [id])
+  validated      Boolean   @default(false)
+  expirationTime DateTime
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
 }
