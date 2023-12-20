@@ -63,7 +63,7 @@ const SchoolDetail = () => {
 
           {/* INTRODUCTION */}
 
-          <Tabs selectedIndex={selectedTabIndex}>
+          <Tabs>
             <div
               style={{
                 display: 'flex',
