@@ -66,7 +66,7 @@ export default function UserTableRow({
 
   return (
     <>
-      <TableRow hover selected={selected}>
+      <TableRow hover selected={selected} sx={{cursor: 'pointer'}}>
         <TableCell padding="normal" >
           <CustomAvatar alt={name} name={name} />
         </TableCell>

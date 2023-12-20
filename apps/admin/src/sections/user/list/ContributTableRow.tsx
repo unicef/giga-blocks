@@ -68,6 +68,7 @@ export default function ContributeTableRow({
     <>
       <TableRow
         hover
+        sx={{cursor: 'pointer'}}
       >
       {checkbox &&  status =="Pending" && (
         <TableCell padding="checkbox">

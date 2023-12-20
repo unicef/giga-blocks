@@ -38,6 +38,7 @@ export default function ContributionDetailTableRow({
       <TableRow
         hover
         // selected={selected}
+        sx={{cursor: 'pointer'}}
       >
 
         <TableCell>

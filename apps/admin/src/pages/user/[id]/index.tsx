@@ -35,16 +35,6 @@ export default function UserEditPage() {
         </Grid>
         <Grid item xs={4}>
           <Container>
-            {/* <Box 
-    justifyContent={'center'}
-    rowGap={2}
-    columnGap={2}
-    display="grid"
-    >
-    <Image width={250} height={250} alt='USER' src={'/assets/Image-right.svg'}/>
-    <Button variant='outlined' color='inherit'>Update Profile</Button>
-    <Button variant='outlined' color='inherit' style={{opacity: '0.7'}}>Remove Picture</Button>
-    </Box> */}
           </Container>
         </Grid>
       </Grid>
