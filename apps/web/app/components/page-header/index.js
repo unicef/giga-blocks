@@ -1,5 +1,6 @@
 'use client';
 import { Grid, Column, Breadcrumb, BreadcrumbItem } from '@carbon/react';
+import './header.scss';
 import '../table/datatable.scss';
 
 const PageHeader = ({ name, breadcrumbs }) => {
