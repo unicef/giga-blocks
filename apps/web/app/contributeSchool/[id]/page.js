@@ -16,6 +16,7 @@ import {
   TabPanels,
   Tabs,
   Tile,
+  InlineLoading,
 } from '@carbon/react';
 import './school-details.scss';
 import { useParams } from 'next/navigation';
@@ -133,14 +134,27 @@ const SchoolDetail = () => {
                       Last Updated:{data?.updatedAt.substring(0, 10)}
                     </p>
                     <div style={{ width: '450px' }}>
-                      <MapView
-                        mapData={[
-                          {
-                            latitude: data?.latitude,
-                            longitude: data?.longitude,
-                          },
-                        ]}
-                      />
+                      {isLoading ? (
+                        <InlineLoading
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                          status="active"
+                          iconDescription="Loading"
+                          description="Loading map..."
+                        />
+                      ) : (
+                        <MapView
+                          mapData={[
+                            {
+                              latitude: data?.latitude,
+                              longitude: data?.longitude,
+                            },
+                          ]}
+                        />
+                      )}
                     </div>
                   </Column>
                 </Grid>
