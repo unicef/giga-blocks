@@ -63,7 +63,7 @@ Table giga_users {
   schoolUpdatedBy giga_school [not null]
   isArchived Boolean [not null, default: false]
   validatedBy giga_validated_data [not null]
-  OTP OTP [not null]
+  OTP otp [not null]
 }
 
 Table giga_school {
@@ -155,10 +155,10 @@ Table giga_validated_data {
   isArchived Boolean [not null, default: false]
 }
 
-Table OTP {
+Table otp {
   id String [pk]
   otp String [unique, not null]
-  userId String [not null]
+  userId String [unique, not null]
   user giga_users [not null]
   validated Boolean [not null, default: false]
   expirationTime DateTime [not null]
@@ -241,4 +241,4 @@ Ref: giga_validated_data.school_Id > giga_school.id
 
 Ref: giga_validated_data.approvedBy > giga_users.id
 
-Ref: OTP.userId > giga_users.id
+Ref: otp.userId > giga_users.id

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { PrismaAppService } from '../prisma/prisma.service';
 import { bufferToHexString, hexStringToBuffer } from '../utils/string-format';
@@ -6,7 +6,9 @@ import { WalletRegister } from 'src/auth/dto';
 import { Prisma } from '@prisma/application';
 import { paginate } from 'src/utils/paginate';
 import { Role } from '@prisma/application';
+import { addMinutesToDate, compare } from 'src/utils/otp/expirationTime';
 
+const OTP_DURATION:number = Number(process.env.OTP_DURATION_IN_MINS)
 @Injectable()
 export class UsersService {
   private readonly _logger = new Logger('User Services');
@@ -27,6 +29,51 @@ export class UsersService {
         roles,
       },
     });
+  }
+
+  
+  async saveOtp (AuthDto: any, otp: string) {
+    const now = new Date();
+    const email = AuthDto.email
+    const user = await this.prisma.user.findUnique({where: {email}})
+    const expirationTime = addMinutesToDate(now, OTP_DURATION)
+    if(user){
+    const otpUser = await this.prisma.oTP.findUnique({where: {userId: user.id}})
+    if(otpUser){
+      return await this.prisma.oTP.update({where: {userId: user.id}, data: {otp, validated: false, expirationTime}})
+    }
+    return await this.prisma.oTP.create({
+      data: {
+        otp,
+        userId: user.id, 
+        validated: false,
+        expirationTime,
+      }
+    })
+    }
+  }
+
+  async validateOtp (email: any, otp: string){
+    const now = new Date();
+    const user = await this.findOneByEmail(email)
+
+    const {id: userId} = user
+    const otpUser = await this.prisma.oTP.findUnique({where: {userId}})
+
+    if(!otpUser) return new NotFoundException('No user with this id')
+
+    const {id: otpUserId, validated, expirationTime, otp:dbOTP} = otpUser;
+
+    if(!otpUserId) return new NotFoundException('Invalid OTP');
+
+    if(validated) return new NotFoundException('OTP already used')
+
+    if(otp != dbOTP) return new NotFoundException('OTP didnot match')
+
+    if(!compare(now, expirationTime)) return new ForbiddenException('OTP expired')
+
+    await this.prisma.oTP.update({where: {id: otpUserId}, data: {validated: true}})
+    return user
   }
 
   async walletRegister(createUserDto: Pick<WalletRegister, 'name' | 'walletAddress'>) {

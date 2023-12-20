@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { totp } from 'otplib';
+import { totp, hotp, authenticator } from 'otplib';
+import {generate} from 'otp-generator'
 
 import { MailService } from '../mailer/mailer.service';
 import { UsersService } from '../users/users.service';
@@ -8,22 +9,22 @@ import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/dto/user.dto';
 import { AuthDto, WalletRegister } from './dto';
 import { bufferToHexString } from 'src/utils/string-format';
+
+const otpLength:number = Number(process.env.OTP_LENGTH)
 @Injectable()
 export class AuthService {
   private readonly _logger = new Logger('Auth Service');
   constructor(
     private jwtService: JwtService,
     private userService: UsersService,
-    private mailService: MailService,
+    private mailService: MailService
   ) {}
-
-  async validateUser(email: string, otp: string): Promise<CreateUserDto> {
+  
+  async validateUser(email: string, otp: string) {
     const user = await this.userService.findOneByEmail(email);
     if (!user || (user && !user?.isActive)) throw new NotFoundException('User not found');
-    if (user && user?.isActive && totp.verify({ token: otp, secret: email })) {
-      return user;
-    }
-    throw new NotFoundException('OTP not valid');
+
+    return await this.userService.validateOtp(email, otp)
   }
 
   async validateWalletAddress(walletAddress: string): Promise<CreateUserDto> {
@@ -67,9 +68,14 @@ export class AuthService {
     const user = await this.userService.findOneByEmail(email);
     if (user && user?.isActive) {
       this._logger.log(`Generating Login OTP to ${AuthDto?.email}`);
-      const token = totp.generate(email);
-      if (token) {
-        this.mailService.sendOTP({ email: user?.email, otp: token });
+      const otp = generate(otpLength, {
+        lowerCaseAlphabets: false,
+        upperCaseAlphabets: false,
+        specialChars: false,
+      });
+      if (otp) {
+        this.mailService.sendOTP({ email: user?.email, otp: otp });
+        this.userService.saveOtp(AuthDto, otp)
         return { success: true, msg: 'OTP sent successfully' };
       }
     }
