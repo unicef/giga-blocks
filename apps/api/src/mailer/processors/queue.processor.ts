@@ -22,7 +22,6 @@ import {
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 import { mintNFT, mintSingleNFT } from 'src/utils/ethers/transactionFunctions';
-import { MintQueueSingleDto } from 'src/schools/dto/mint-queue.dto';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { SchoolData } from '../types/mintdata.types';
 import { MintStatus } from '@prisma/application';
@@ -55,7 +54,6 @@ export class QueueProcessor {
     this._logger.error(`Failed job ${job.id} of type ${job.name}: ${error.message}`, error.stack);
     if (job.attemptsMade === job.opts.attempts) {
       try {
-        //this.sendOnchainData(job);
         return this._mailerService.sendMail({
           to: this._configService.get('EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),

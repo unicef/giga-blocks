@@ -84,7 +84,6 @@ export class AuthService {
         email: user.email,
         name: user.name,
         walletAddress: user.walletAddress,
-        // role_id: user.role_id,
         roles: user.roles,
       },
     };
@@ -107,7 +106,6 @@ export class AuthService {
         email: user.email,
         name: user.name,
         walletAddress: user.walletAddress,
-        // role_id: user.role_id,
         roles: user.roles,
       },
     };

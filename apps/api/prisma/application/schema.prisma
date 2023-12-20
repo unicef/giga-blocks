@@ -27,10 +27,7 @@ generator docs {
 
 enum Role {
   ADMIN
-  USER
-  VALIDATOR
   CONTRIBUTOR
-  PENDING
 }
 
 enum Permissions {
@@ -39,24 +36,11 @@ enum Permissions {
   UPDATE
   DELETE
   MANAGE
-  SEASON_WRITE
-  SEASON_READ
-  SEASON_UPDATE
-  SEASON_DELETE
   SCHOOL_UPDATE
   SCHOOL_READ
-  VALIDATOR_ADD
-  VALIDATOR_UPDATE
-  VALIDATOR_DELETE
   DATA_VALID
   USER_UPDATE
   DATA_CONTRIBUTE
-  DATA_VOTE
-}
-
-enum VOTE_TYPE {
-  UPVOTE
-  DOWNVOTE
 }
 
 enum SchoolStatus {
@@ -80,18 +64,6 @@ enum Status {
   Validated
   Rejected
   Pending
-}
-
-enum LeaderBoardType {
-  SEASONAL
-  GLOBAL
-  GENERAL
-}
-
-enum Season_Status {
-  Start
-  Completed
-  Suspended
 }
 
 enum ContributionType {
@@ -159,15 +131,11 @@ model User {
   ContributedData ContributedData[]
   ValidatedUser   ContributedData[] @relation("ValidatedBy")
   ApprovedBy      ContributedData[] @relation("ApprovedBy")
-  Points          Points[]          @relation("UserID")
-  CreatedBy       Points[]          @relation("Creator")
   Auth            Auth[]
   roles           Role[]
   schools         School[]
   schoolUpdatedBy School[]          @relation("UpdatedBy")
   isArchived      Boolean           @default(false)
-  vote            Vote[]            @relation("UserId")
-  createdBy       Vote[]            @relation("Creator")
   validatedBy     validatedData[]   @relation("ApprovedBy")
 
   @@map("giga_users")
@@ -205,10 +173,8 @@ model School {
   createdAt                 DateTime          @default(now())
   updatedAt                 DateTime          @updatedAt
   deletedAt                 DateTime?
-  season_Id                 String?
   createdBy                 User?             @relation(fields: [createdById], references: [id])
   createdById               String?
-  contributedSeason         Season?           @relation(fields: [season_Id], references: [id])
   isArchived                Boolean           @default(false)
   updatedBy                 String?
   updatedUser               User?             @relation("UpdatedBy", fields: [updatedBy], references: [id])
@@ -232,35 +198,14 @@ model ContributedData {
   updatedAt         DateTime  @updatedAt
   approvedBy        String?
   approved          User?     @relation("ApprovedBy", fields: [approvedBy], references: [id])
-  deletedAt         DateTime? 
+  deletedAt         DateTime?
   approvedAt        DateTime?
   isArchived        Boolean   @default(false)
   validatedBy       String?
   validatedAt       DateTime?
   validatedUser     User?     @relation("ValidatedBy", fields: [validatedBy], references: [id])
-  points            Points[]
-  vote              Vote[]
-  Season            Season?   @relation(fields: [seasonId], references: [id])
-  seasonId          String?
 
   @@map("giga_contributed_data")
-}
-
-model Season {
-  id                String            @id @default(uuid())
-  season_name       String
-  season_start_date DateTime?
-  season_end_date   DateTime?
-  season_status     Season_Status     @default(Start)
-  ContributedData   ContributedData[]
-  Points            Points[]
-  School            School[]
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-  deletedAt         DateTime?
-  isArchived        Boolean           @default(false)
-
-  @@map("giga_season")
 }
 
 model CSVUpload {
@@ -273,47 +218,6 @@ model CSVUpload {
   updatedAt  DateTime @updatedAt
 
   @@map("giga_csv_uploads")
-}
-
-model Points {
-  id                Int              @id @default(autoincrement())
-  points            Int
-  leaderBoardType   LeaderBoardType
-  contributionType  ContributionType
-  isConfirmed       Boolean?
-  isValid           Boolean?
-  createdAt         DateTime?        @default(now())
-  updatedAt         DateTime?        @updatedAt
-  deletedAt         DateTime?
-  season_id         String?
-  season            Season?          @relation(fields: [season_id], references: [id])
-  createdBy         String?
-  creator           User?            @relation("Creator", fields: [createdBy], references: [id])
-  user_id           String
-  user              User             @relation("UserID", fields: [user_id], references: [id])
-  isArchived        Boolean          @default(false)
-  contributedDataId String?
-  contributedData   ContributedData? @relation(fields: [contributedDataId], references: [id])
-
-  @@map("giga_points")
-}
-
-model Vote {
-  vote_id         String          @id @default(uuid())
-  vote_type       VOTE_TYPE
-  user_id         String
-  user            User            @relation("UserId", fields: [user_id], references: [id])
-  contributed_Id  String
-  contributedData ContributedData @relation(fields: [contributed_Id], references: [id])
-  createdAt       DateTime?       @default(now())
-  updatedAt       DateTime?       @updatedAt
-  deletedAt       DateTime?
-  isArchived      Boolean         @default(false)
-  createdBy       String
-  creator         User            @relation("Creator", fields: [createdBy], references: [id])
-
-  @@unique([user_id, contributed_Id], name: "giga_vote_contributed_Id")
-  @@map("giga_vote")
 }
 
 model validatedData {

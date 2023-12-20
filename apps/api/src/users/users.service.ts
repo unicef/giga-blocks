@@ -160,25 +160,4 @@ export class UsersService {
       where: { walletAddress: walletBuffer, isArchived: false },
     });
   }
-
-  // async requestValidator(createUserDto: CreateUserDto) {
-  //   return await this.prisma.user.create({
-  //     data: {
-  //       email: createUserDto?.email,
-  //       roles: ['PENDING'],
-  //       name: createUserDto?.name,
-  //     },
-  //   });
-  // }
-
-  // async approveValidator(id: string) {
-  //   return await this.prisma.user.update({
-  //     where: {
-  //       id,
-  //     },
-  //     data: {
-  //       roles: ['VALIDATOR'],
-  //     },
-  //   });
-  // }
 }

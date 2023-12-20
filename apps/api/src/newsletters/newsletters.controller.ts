@@ -1,20 +1,9 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { EmailService } from './newsletters.service';
 import { CreateEmailDto } from './dto/create-newsletters.dto';
 import { UpdateEmailDto } from './dto/update-newsletters.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator';
-import { CaptchaGuard } from 'src/utils/captcha';
 
 @ApiTags('NewsLetter') // Swagger Documentation
 @Controller('newsletters')
@@ -23,7 +12,6 @@ export class EmailController {
 
   @Public()
   @Post()
-  // @UseGuards(CaptchaGuard)
   create(@Body() createEmailDto: CreateEmailDto) {
     return this.emailService.create(createEmailDto);
   }
