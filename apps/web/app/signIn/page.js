@@ -100,6 +100,7 @@ const SignIn = () => {
       await metaMaskLogin();
       const { nonce } = await getNonceQuery.mutateAsync();
       const sign = await getSignature(nonce);
+      const address = await web3.provider.getSigner().getAddress();
       if (!sign) {
         setNotification({
           kind: 'error',
@@ -108,7 +109,7 @@ const SignIn = () => {
         return;
       }
       const payload = {
-        walletAddress: walletAddress,
+        walletAddress: address,
         signature: sign,
       };
       loginMutation.mutateAsync(payload).then((res) => {
