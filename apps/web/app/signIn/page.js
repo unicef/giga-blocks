@@ -249,7 +249,7 @@ const SignIn = () => {
               </Button>
             </Form>
           </Tile>
-          <p style={{ marginLeft: '20px' }}>
+          <p style={{ marginLeft: '20px', color: '#000' }}>
             Dont have an account ?{' '}
             <Link className="link" href={'/signUp'}>
               {' '}

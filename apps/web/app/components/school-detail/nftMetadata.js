@@ -24,7 +24,12 @@ const Connectivity = ({ schoolData }) => {
               className="school-connectivity-column"
             >
               <div className="school-connectivity-card">
-                <Column md={4} lg={8} sm={4}>
+                <Column
+                  className="school-connectivity-data"
+                  md={4}
+                  lg={8}
+                  sm={4}
+                >
                   <div>
                     <span className="heading2" style={{ marginBottom: '14px' }}>
                       School Name
@@ -35,14 +40,24 @@ const Connectivity = ({ schoolData }) => {
                     </span>
                   </div>
                 </Column>
-                <Column md={4} lg={8} sm={4}>
+                <Column
+                  className="school-connectivity-data"
+                  md={4}
+                  lg={8}
+                  sm={4}
+                >
                   <span className="heading2" style={{ marginBottom: '14px' }}>
                     School Type
                   </span>
                   <br />
                   <span className="heading5">{schoolData?.schoolType}</span>
                 </Column>
-                <Column md={4} lg={8} sm={4}>
+                <Column
+                  className="school-connectivity-data"
+                  md={4}
+                  lg={8}
+                  sm={4}
+                >
                   <span className="heading2" style={{ marginBottom: '14px' }}>
                     Country
                   </span>
@@ -51,7 +66,12 @@ const Connectivity = ({ schoolData }) => {
                     {schoolData?.country ? schoolData?.country : 'N/A'}
                   </span>
                 </Column>
-                <Column md={4} lg={8} sm={4}>
+                <Column
+                  className="school-connectivity-data"
+                  md={4}
+                  lg={8}
+                  sm={4}
+                >
                   <span className="heading2" style={{ marginBottom: '14px' }}>
                     Exact Location
                   </span>
@@ -66,7 +86,12 @@ const Connectivity = ({ schoolData }) => {
           <Grid fullWidth className="school-connectivity-grid">
             <Column className="school-connectivity-column">
               <div className="school-connectivity-card-2">
-                <Column md={4} lg={8} sm={4}>
+                <Column
+                  className="school-connectivity-data"
+                  md={4}
+                  lg={8}
+                  sm={4}
+                >
                   <div>
                     <span className="heading2" style={{ marginBottom: '14px' }}>
                       Connectivity Status
@@ -79,7 +104,12 @@ const Connectivity = ({ schoolData }) => {
                     </span>
                   </div>
                 </Column>
-                <Column md={4} lg={8} sm={4}>
+                <Column
+                  className="school-connectivity-data"
+                  md={4}
+                  lg={8}
+                  sm={4}
+                >
                   <span className="heading2" style={{ marginBottom: '14px' }}>
                     Coverage Availability
                   </span>
@@ -89,7 +119,12 @@ const Connectivity = ({ schoolData }) => {
                   </span>
                 </Column>
 
-                <Column md={4} lg={8} sm={4}>
+                <Column
+                  className="school-connectivity-data"
+                  md={4}
+                  lg={8}
+                  sm={4}
+                >
                   <span className="heading2" style={{ marginBottom: '14px' }}>
                     Electricity Availability
                   </span>
