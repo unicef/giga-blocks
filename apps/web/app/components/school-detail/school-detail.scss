@@ -69,11 +69,17 @@
   width: 100%;
   align-items: center;
   justify-content: space-between;
+  @include breakpoint-down(md) {
+    flex-wrap: wrap;
+  }
+}
+.school-connectivity-data {
+  margin-bottom: 16px;
 }
 
 .school-connectivity-card-2 {
   display: flex;
-  padding: 16px 0 16px 0;
+  padding: 46px 0 16px 0;
   width: 66%;
   align-items: center;
   justify-content: space-between;
