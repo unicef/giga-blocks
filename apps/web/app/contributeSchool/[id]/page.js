@@ -162,9 +162,7 @@ const SchoolDetail = () => {
                     >
                       <Column className="school-connectivity-column">
                         <div className="school-connectivity-card">
-                          <span className="heading2">
-                            Connectivity <br /> Status
-                          </span>
+                          <span className="heading2">Connectivity Status</span>
                           <span className="heading5">
                             {data?.connectivity ? 'Yes' : 'No'}
                           </span>
@@ -173,7 +171,7 @@ const SchoolDetail = () => {
                       <Column className="school-connectivity-column">
                         <div className="school-connectivity-card">
                           <span className="heading2">
-                            Coverage <br /> Availability
+                            Coverage Availability
                           </span>
                           <span className="heading5">
                             {data?.coverage_availability ? 'Yes' : 'No'}
