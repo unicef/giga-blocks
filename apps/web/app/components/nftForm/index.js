@@ -49,17 +49,16 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { isSuccess } = await registerApi.mutateAsync(formData);
-      if (isSuccess) {
+      const { success } = await registerApi.mutateAsync(formData);
+      if (success) {
         setFormData({
           fullname: '',
           email: '',
         });
         setSelectedCountry({ value: '', label: 'Select country' });
-        console.log('success');
         setNotification({
           kind: 'success',
-          title: 'Form submitted successfully.',
+          title: 'Email has been recorded successfully',
         });
       }
     } catch (error) {

@@ -45,7 +45,7 @@ export class EmailService {
       this._logger.error(`Couldn't create email: ${error}`);
     }
 
-    return emailResult;
+    return { emailResult, success: true, msg: 'Email created successfully' };
   }
 
   async findAll(query: { country?: string }) {
