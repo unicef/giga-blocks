@@ -1,3 +1,6 @@
+@use '@carbon/react/scss/breakpoint' as *;
+@use '@carbon/react/scss/spacing' as *;
+
 // Global
 .mt-50px {
   margin-top: 80px;
@@ -55,10 +58,15 @@
   display: flex;
   width: 100%;
   height: 80px;
+  @include breakpoint-down(md) {
+    margin-top: 12px;
+    flex-direction: column;
+    gap: 12px;
+  }
 }
 
 .school-connectivity-column {
-  width: 30%;
+  width: 100%;
 }
 
 .school-connectivity-card {

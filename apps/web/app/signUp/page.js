@@ -2,7 +2,15 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../components/navbar';
 import { useForm, Controller } from 'react-hook-form';
-import { Button, Checkbox, Column, Form, Grid, TextInput } from '@carbon/react';
+import {
+  Button,
+  Checkbox,
+  Column,
+  Form,
+  Grid,
+  TextInput,
+  InlineNotification,
+} from '@carbon/react';
 import { Tile } from '@carbon/react';
 import './signup.scss';
 import Link from 'next/link';
@@ -21,6 +29,7 @@ const SignUp = () => {
   const { handleSubmit, control } = useForm();
   const [openModal, setOpenModal] = useState(false);
   const [checkbox, setCheckbox] = useState(false);
+  const [notification, setNotification] = useState(null);
   const signUp = useSignUp();
   const sendOtp = useOtp();
 
@@ -34,6 +43,10 @@ const SignUp = () => {
     signUp
       .mutateAsync(data)
       .then(() => {
+        setNotification({
+          kind: 'success',
+          title: 'Registered successfully. OTP sent to email.',
+        });
         sendOtp
           .mutateAsync({ email: data.email })
           .then(() => {
@@ -65,9 +78,27 @@ const SignUp = () => {
       console.log(error);
     }
   };
+  const onCloseNotification = () => {
+    setNotification(null);
+  };
 
   return (
     <>
+      {notification && (
+        <InlineNotification
+          aria-label="closes notification"
+          kind={notification.kind}
+          onClose={onCloseNotification}
+          title={notification.title}
+          style={{
+            position: 'fixed',
+            top: '50px',
+            right: '2px',
+            width: '400px',
+            zIndex: 1000,
+          }}
+        />
+      )}
       <CarbonModal open={openModal} onClose={onClose} email={email} />
       <Navbar />
       <Grid className="landing-page preview1Background signUp-grid" fullWidth>
