@@ -250,5 +250,5 @@ model OTP {
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime?
 
-  @@map("otp")
+  @@map("giga_otp")
 }
