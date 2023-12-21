@@ -21,10 +21,15 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, otp: string) {
-    const user = await this.userService.findOneByEmail(email);
-    if (!user || (user && !user?.isActive)) throw new NotFoundException('User not found');
+    try {
+      const user = await this.userService.findOneByEmail(email);
+      const otpres = await this.userService.validateOtp(email, otp);
 
-    return await this.userService.validateOtp(email, otp);
+      if (!user || (user && !user?.isActive)) throw new NotFoundException('User not found');
+      return user;
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 
   async validateWalletAddress(walletAddress: string): Promise<CreateUserDto> {

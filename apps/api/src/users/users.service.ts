@@ -61,20 +61,20 @@ export class UsersService {
     const { id: userId } = user;
     const otpUser = await this.prisma.oTP.findUnique({ where: { userId } });
 
-    if (!otpUser) return new NotFoundException('No user with this id');
+    if (!otpUser) throw  new NotFoundException('No user with this id');
 
     const { id: otpUserId, validated, expirationTime, otp: dbOTP } = otpUser;
 
-    if (!otpUserId) return new NotFoundException('Invalid OTP');
+    if (!otpUserId) throw new NotFoundException('Invalid OTP');
 
-    if (validated) return new NotFoundException('OTP already used');
+    if (validated) throw new NotFoundException('OTP already used');
 
-    if (otp != dbOTP) return new NotFoundException('OTP didnot match');
+    if (otp != dbOTP) throw new NotFoundException('OTP didnot match');
 
-    if (!compare(now, expirationTime)) return new ForbiddenException('OTP expired');
+    if (!compare(now, expirationTime)) throw new ForbiddenException('OTP expired');
 
     await this.prisma.oTP.update({ where: { id: otpUserId }, data: { validated: true } });
-    return user;
+    return true;
   }
 
   async walletRegister(createUserDto: Pick<WalletRegister, 'name' | 'walletAddress'>) {
