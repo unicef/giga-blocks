@@ -37,8 +37,8 @@ export class UsersController {
     return this.usersService.addAdmin(createUserDto);
   }
 
-  // @Roles('ADMIN')
   // @UseGuards(JwtAuthGuard, RoleGuard)
+  // @Roles('ADMIN')
   @Public()
   @Get()
   @ApiOperation({ summary: 'List all user' })

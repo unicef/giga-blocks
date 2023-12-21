@@ -14,9 +14,7 @@ export class RolesController {
   @Post()
   @ApiCreatedResponse({ type: RoleEntity })
   async create(@Body() createRoleDto: CreateRoleDto): Promise<RoleEntity> {
-    const role = await this.rolesService.create(createRoleDto);
-
-    return role;
+    return await this.rolesService.create(createRoleDto);
   }
 
   @Get()
@@ -28,22 +26,17 @@ export class RolesController {
   @Get(':role')
   @ApiOkResponse({ type: RoleEntity })
   async findOne(@Param('role') role: Role) {
-    const roles = await this.rolesService.findOne(role);
-    return roles;
+    return await this.rolesService.findOne(role);
   }
 
   @Patch(':role')
   @ApiOkResponse({ type: RoleEntity })
   async update(@Param('role') role: Role, @Body() updateRoleDto: UpdateRoleDto) {
-    const roles = await this.rolesService.update(role, updateRoleDto);
-
-    return roles;
+    return await this.rolesService.update(role, updateRoleDto);
   }
 
   @Delete(':role')
   async remove(@Param('role') role: Role) {
-    const roles = await this.rolesService.remove(role);
-
-    return roles;
+    return await this.rolesService.remove(role);
   }
 }

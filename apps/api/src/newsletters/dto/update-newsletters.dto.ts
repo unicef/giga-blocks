@@ -13,7 +13,7 @@ export class UpdateEmailDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
-    example: 'Sushant Tripathee',
+    example: 'John Doe',
   })
   fullname: string;
 
