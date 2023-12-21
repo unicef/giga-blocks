@@ -1,5 +1,13 @@
 import React, { useState, useMemo } from 'react';
-import { Form, TextInput, Button, Grid, Column, Dropdown } from '@carbon/react';
+import {
+  Form,
+  TextInput,
+  Button,
+  Grid,
+  Column,
+  Dropdown,
+  InlineNotification,
+} from '@carbon/react';
 import './form.scss';
 // import { useSchoolRegistration } from "../../app/api/school-register";
 import { useRegistration } from '../../hooks/useRegistration';
@@ -14,6 +22,7 @@ const RegisterForm = () => {
     label: 'Select Country',
   });
   const [error, setError] = useState(undefined);
+  const [notification, setNotification] = useState(null);
 
   const [formData, setFormData] = useState({
     fullname: '',
@@ -47,14 +56,41 @@ const RegisterForm = () => {
           email: '',
         });
         setSelectedCountry({ value: '', label: 'Select country' });
+        console.log('success');
+        setNotification({
+          kind: 'success',
+          title: 'Form submitted successfully.',
+        });
       }
     } catch (error) {
+      setNotification({
+        kind: 'error',
+        title: error?.response?.data?.message,
+      });
       setError(error && error?.response?.data?.message);
     }
+  };
+  const onCloseNotification = () => {
+    setNotification(null);
   };
 
   return (
     <>
+      {notification && (
+        <InlineNotification
+          aria-label="closes notification"
+          kind={notification.kind}
+          onClose={onCloseNotification}
+          title={notification.title}
+          style={{
+            position: 'fixed',
+            top: '50px',
+            right: '2px',
+            width: '400px',
+            zIndex: 1000,
+          }}
+        />
+      )}
       <Grid className="form-gap" id="joinCommunityForm" fullWidth>
         <Column className="heading-col" md={4} lg={7} sm={4}>
           <h1 className="heading10">
