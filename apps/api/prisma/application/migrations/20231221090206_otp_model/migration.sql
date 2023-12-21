@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "OTP" (
+CREATE TABLE "otp" (
     "id" TEXT NOT NULL,
     "otp" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
@@ -9,11 +9,14 @@ CREATE TABLE "OTP" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
 
-    CONSTRAINT "OTP_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "otp_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "OTP_otp_key" ON "OTP"("otp");
+CREATE UNIQUE INDEX "otp_otp_key" ON "otp"("otp");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "otp_userId_key" ON "otp"("userId");
 
 -- AddForeignKey
-ALTER TABLE "OTP" ADD CONSTRAINT "OTP_userId_fkey" FOREIGN KEY ("userId") REFERENCES "giga_users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "otp" ADD CONSTRAINT "otp_userId_fkey" FOREIGN KEY ("userId") REFERENCES "giga_users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
