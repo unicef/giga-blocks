@@ -3,8 +3,7 @@ import { ContributeDataController } from './contribute.controller';
 import { ContributeDataService } from './contribute.service';
 import { PrismaAppService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
-
-import { PrismaClient, Status as PrismaStatus, Status, User } from '@prisma/application';
+import { PrismaClient, Status, User } from '@prisma/application';
 
 describe('AuthController', () => {
   let controller: ContributeDataController;

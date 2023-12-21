@@ -16,6 +16,7 @@ import {
   TabPanels,
   Tabs,
   Tile,
+  InlineLoading,
 } from '@carbon/react';
 import './school-details.scss';
 import { useParams } from 'next/navigation';
@@ -63,7 +64,7 @@ const SchoolDetail = () => {
 
           {/* INTRODUCTION */}
 
-          <Tabs selectedIndex={selectedTabIndex}>
+          <Tabs>
             <div
               style={{
                 display: 'flex',
@@ -133,14 +134,27 @@ const SchoolDetail = () => {
                       Last Updated:{data?.updatedAt.substring(0, 10)}
                     </p>
                     <div style={{ width: '450px' }}>
-                      <MapView
-                        mapData={[
-                          {
-                            latitude: data?.latitude,
-                            longitude: data?.longitude,
-                          },
-                        ]}
-                      />
+                      {isLoading ? (
+                        <InlineLoading
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                          status="active"
+                          iconDescription="Loading"
+                          description="Loading map..."
+                        />
+                      ) : (
+                        <MapView
+                          mapData={[
+                            {
+                              latitude: data?.latitude,
+                              longitude: data?.longitude,
+                            },
+                          ]}
+                        />
+                      )}
                     </div>
                   </Column>
                 </Grid>
@@ -162,9 +176,7 @@ const SchoolDetail = () => {
                     >
                       <Column className="school-connectivity-column">
                         <div className="school-connectivity-card">
-                          <span className="heading2">
-                            Connectivity <br /> Status
-                          </span>
+                          <span className="heading2">Connectivity Status</span>
                           <span className="heading5">
                             {data?.connectivity ? 'Yes' : 'No'}
                           </span>
@@ -173,7 +185,7 @@ const SchoolDetail = () => {
                       <Column className="school-connectivity-column">
                         <div className="school-connectivity-card">
                           <span className="heading2">
-                            Coverage <br /> Availability
+                            Coverage Availability
                           </span>
                           <span className="heading5">
                             {data?.coverage_availability ? 'Yes' : 'No'}

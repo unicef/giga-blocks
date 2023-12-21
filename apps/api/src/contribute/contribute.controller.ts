@@ -11,7 +11,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ContributeDataService } from './contribute.service';
-import { CreateContributeDatumDto, ValidateDto } from './dto/create-contribute-datum.dto';
+import { CreateContributeDatumDto } from './dto/create-contribute-datum.dto';
 import { UpdateContributeDatumDto } from './dto/update-contribute-datum.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator';

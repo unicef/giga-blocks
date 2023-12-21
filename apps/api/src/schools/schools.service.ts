@@ -4,12 +4,11 @@ import {
   HttpException,
   BadRequestException,
 } from '@nestjs/common';
-import { Prisma, MintStatus } from '@prisma/application';
+import { MintStatus, Prisma, Role } from '@prisma/application';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { ListSchoolDto } from './dto/list-schools.dto';
 import { paginate } from 'src/utils/paginate';
 import { QueueService } from 'src/mailer/queue.service';
-import { Role } from '@prisma/application';
 import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
 import { handler } from 'src/utils/csvToDB';
 import { hexStringToBuffer } from '../utils/string-format';
@@ -304,7 +303,7 @@ export class SchoolService {
         ...schooldata,
         ...filteredData,
       };
-      const onChainData = [
+      return [
         newData.name,
         newData.school_type,
         newData.country,
@@ -314,7 +313,6 @@ export class SchoolService {
         newData.coverage_availability.toString(),
         newData.electricity_available.toString(),
       ];
-      return onChainData;
     } catch (err) {
       console.log(err);
     }
