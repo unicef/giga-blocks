@@ -54,8 +54,15 @@ export class AuthService {
     if (user && user?.isActive) {
       this._logger.log(`Generating Login OTP to ${AuthDto?.email}`);
       const token = totp.generate(email);
-      if (token) {
-        this.mailService.sendOTP({ email: user?.email, otp: token });
+      const otp = generate(otpLength, {
+        lowerCaseAlphabets: false,
+        upperCaseAlphabets: false,
+        specialChars: false,
+      });
+      console.log(otp)
+      if (otp) {
+        this.mailService.sendOTP({ email: user?.email, otp: otp });
+        this.userService.saveOtp(AuthDto, otp)
         return { success: true, msg: 'OTP sent successfully' };
       }
     }
