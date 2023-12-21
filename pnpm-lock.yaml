@@ -122,9 +122,6 @@ importers:
       '@types/axios':
         specifier: ^0.14.0
         version: 0.14.0
-      '@types/fastify-multipart':
-        specifier: ^0.7.0
-        version: 0.7.0
       '@types/multer':
         specifier: ^1.4.8
         version: 1.4.8
@@ -438,6 +435,9 @@ importers:
       '@types/d3':
         specifier: ^7.4.0
         version: 7.4.0
+      '@types/fastify-multipart':
+        specifier: ^0.7.0
+        version: 0.7.0
       '@types/jest':
         specifier: ^29.5.2
         version: 29.5.5
@@ -2658,7 +2658,6 @@ packages:
     engines: {node: '>=14'}
     dependencies:
       text-decoding: 1.0.0
-    dev: false
 
   /@fastify/cors@8.3.0:
     resolution: {integrity: sha512-oj9xkka2Tg0MrwuKhsSUumcAkfp2YCnKxmFEusi01pjk1YrdDsuSYTHXEelWNW+ilSy/ApZq0c2SvhKrLX0H1g==}
@@ -6020,7 +6019,7 @@ packages:
     deprecated: This is a stub types definition. fastify-multipart provides its own type definitions, so you do not need this installed.
     dependencies:
       fastify-multipart: 5.4.0
-    dev: false
+    dev: true
 
   /@types/geojson@7946.0.10:
     resolution: {integrity: sha512-Nmh0K3iWQJzniTuPRcJn5hxXkfB1T1pgB89SBig5PlJQU5yocazeu4jATJlaA0GYFKWMqDdvYemoSnF2pXgLVA==}
@@ -11042,7 +11041,6 @@ packages:
 
   /fastify-error@0.3.1:
     resolution: {integrity: sha512-oCfpcsDndgnDVgiI7bwFKAun2dO+4h84vBlkWsWnz/OUK9Reff5UFoFl241xTiLeHWX/vU9zkDVXqYUxjOwHcQ==}
-    dev: false
 
   /fastify-multipart@5.3.1:
     resolution: {integrity: sha512-c2pnGfkJmiNpYqzFYT2QfBg/06AxG531O+n1elqc8YUbWPRzufdqn3yfGAIV3RA7J4Vnf7Pfvgx0iaWqaRTOVA==}
@@ -11055,7 +11053,6 @@ packages:
       hexoid: 1.0.0
       secure-json-parse: 2.7.0
       stream-wormhole: 1.1.0
-    dev: false
 
   /fastify-multipart@5.4.0:
     resolution: {integrity: sha512-Pafy4mtcuFUnFM/t0kgCdL854KIEoDymNVdv4nD7uBfV7lBCQq/NVEuNnaNXAbuCTpeXzYRzi50lSDa9ZM838A==}
@@ -11063,11 +11060,9 @@ packages:
     dependencies:
       fastify-multipart-deprecated: /fastify-multipart@5.3.1
       process-warning: 1.0.0
-    dev: false
 
   /fastify-plugin@3.0.1:
     resolution: {integrity: sha512-qKcDXmuZadJqdTm6vlCqioEbyewF60b/0LOFCcYN1B6BIZGlYJumWWOYs70SFYLDAH4YqdE1cxH/RKMG7rFxgA==}
-    dev: false
 
   /fastify-plugin@4.5.1:
     resolution: {integrity: sha512-stRHYGeuqpEZTL1Ef0Ovr2ltazUT9g844X5z/zEBFLG8RYlpDiOCIG+ATvYEp+/zmc7sN29mcIMp8gvYplYPIQ==}
@@ -17299,7 +17294,6 @@ packages:
 
   /secure-json-parse@2.7.0:
     resolution: {integrity: sha512-6aU+Rwsezw7VR8/nyvKTx8QpWH9FrcYiXXlqC4z5d5XQBDRqtbfsRjnwGyqbi3gddNtWHuEk9OANUotL26qKUw==}
-    dev: false
 
   /selderee@0.11.0:
     resolution: {integrity: sha512-5TF+l7p4+OsnP8BCCvSyZiSPc4x4//p5uPwK8TCnVPJYRmU2aYKMpOXvw8zM5a5JvuuCGN1jmsMwuU2W02ukfA==}
@@ -17810,7 +17804,6 @@ packages:
   /stream-wormhole@1.1.0:
     resolution: {integrity: sha512-gHFfL3px0Kctd6Po0M8TzEvt3De/xu6cnRrjlfYNhwbhLPLwigI2t1nc6jrzNuaYg5C4YF78PPFuQPzRiqn9ew==}
     engines: {node: '>=4.0.0'}
-    dev: false
 
   /streamsearch@1.1.0:
     resolution: {integrity: sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==}
@@ -18360,7 +18353,6 @@ packages:
 
   /text-decoding@1.0.0:
     resolution: {integrity: sha512-/0TJD42KDnVwKmDK6jj3xP7E2MG7SHAOG4tyTgyUCRPdHwvkquYNLEQltmdMa3owq3TkddCVcTsoctJI8VQNKA==}
-    dev: false
 
   /text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}

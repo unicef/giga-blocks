@@ -19,10 +19,7 @@ export class EmailController {
   @Public()
   @Get()
   findAll(@Query('country') country: string) {
-    let query;
-    if (country) {
-      query = { country };
-    }
+    const query = country ? { country } : null;
     return this.emailService.findAll(query);
   }
 
