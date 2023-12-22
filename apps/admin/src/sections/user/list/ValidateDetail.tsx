@@ -230,11 +230,13 @@ export default function ValidateDetail({ id }: Props) {
                         name="latitude"
                         value={profile?.createdAt || ''}
                         label="Created At"
+                        disabled
                       />
                       <ProfileTextField
                         name="longitude"
                         value={profile?.status || ''}
                         label="Approved Status"
+                        disabled
                       />
                     </Box>
                   </Box>

@@ -154,6 +154,7 @@ export default function ContributeDetail({ id }: Props) {
                       name="name"
                       value={profile?.fullname || ''}
                       label="Contributed by"
+                      disabled
                     />
 
                     <ProfileTextField
@@ -175,11 +176,13 @@ export default function ContributeDetail({ id }: Props) {
                         name="latitude"
                         value={profile?.createdAt || ''}
                         label="Created At"
+                        disabled
                       />
                       <ProfileTextField
                         name="longitude"
                         value={profile?.status || ''}
                         label="Status"
+                        disabled
                       />
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <span>Contributed Data</span>
@@ -188,6 +191,7 @@ export default function ContributeDetail({ id }: Props) {
                             name="coverage"
                             value={Object.values(profile?.contributed_data)[0] || ''}
                             label={Object.keys(profile?.contributed_data)[0] || ''}
+                            disabled
                           />
                         </span>
                       </div>

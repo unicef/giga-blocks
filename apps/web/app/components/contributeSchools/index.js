@@ -46,7 +46,7 @@ const SchoolCard = () => {
 
   return isLoading === false ? (
     <>
-      <div style={{ padding: '80px 40px 10px 40px' }}>
+      <div style={{ padding: '80px 30px 10px 30px' }}>
         <Search
           size="lg"
           placeholder="Search School Name"

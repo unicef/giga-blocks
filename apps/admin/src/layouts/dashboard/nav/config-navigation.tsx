@@ -50,16 +50,15 @@ const navConfig = [
             title: 'Import School',
             path: PATH_SCHOOL.import,
           },
+          {
+            title: 'Minting School',
+            path: PATH_SCHOOL.minting,
+          },
+          {
+            title: 'Minted NFT',
+            path: PATH_SCHOOL.verified,
+          },
         ],
-        icon: ICONS.user,
-      },
-    ],
-  },
-  {
-    items: [
-      {
-        title: 'Minted NFT',
-        path: PATH_SCHOOL.verified,
         icon: ICONS.user,
       },
     ],

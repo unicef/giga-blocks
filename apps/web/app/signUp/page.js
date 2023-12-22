@@ -2,7 +2,15 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../components/navbar';
 import { useForm, Controller } from 'react-hook-form';
-import { Button, Checkbox, Column, Form, Grid, TextInput } from '@carbon/react';
+import {
+  Button,
+  Checkbox,
+  Column,
+  Form,
+  Grid,
+  TextInput,
+  InlineNotification,
+} from '@carbon/react';
 import { Tile } from '@carbon/react';
 import './signup.scss';
 import Link from 'next/link';
@@ -20,7 +28,8 @@ const SignUp = () => {
   const account = hooks.useAccount();
   const { handleSubmit, control } = useForm();
   const [openModal, setOpenModal] = useState(false);
-  const[checkbox, setCheckbox] = useState(false);
+  const [checkbox, setCheckbox] = useState(false);
+  const [notification, setNotification] = useState(null);
   const signUp = useSignUp();
   const sendOtp = useOtp();
 
@@ -34,6 +43,10 @@ const SignUp = () => {
     signUp
       .mutateAsync(data)
       .then(() => {
+        setNotification({
+          kind: 'success',
+          title: 'Registered successfully. OTP sent to email.',
+        });
         sendOtp
           .mutateAsync({ email: data.email })
           .then(() => {
@@ -51,7 +64,6 @@ const SignUp = () => {
 
   const handleCheck = () => {
     setCheckbox(!checkbox);
-
   };
 
   const onClose = () => {
@@ -59,16 +71,34 @@ const SignUp = () => {
   };
 
   const handlePageChange = async () => {
-    try {     
+    try {
       await metaMaskLogin();
       router.push('/walletRegister');
     } catch (error) {
       console.log(error);
     }
   };
+  const onCloseNotification = () => {
+    setNotification(null);
+  };
 
   return (
     <>
+      {notification && (
+        <InlineNotification
+          aria-label="closes notification"
+          kind={notification.kind}
+          onClose={onCloseNotification}
+          title={notification.title}
+          style={{
+            position: 'fixed',
+            top: '50px',
+            right: '2px',
+            width: '400px',
+            zIndex: 1000,
+          }}
+        />
+      )}
       <CarbonModal open={openModal} onClose={onClose} email={email} />
       <Navbar />
       <Grid className="landing-page preview1Background signUp-grid" fullWidth>
@@ -117,11 +147,10 @@ const SignUp = () => {
               />
               <Checkbox
                 className="checkbox"
-                id='checkbox'
+                id="checkbox"
                 labelText="By creating an account, you agree to the Terms and conditions and our Privacy Policy"
                 checked={checkbox}
                 onChange={handleCheck}
-                
               />
               <br />
               <Grid>
@@ -129,21 +158,12 @@ const SignUp = () => {
                   <Button
                     className="submit-btn"
                     type="submit"
-                    style={{ marginRight: '14px', width: '100%' }}
                     disabled={!checkbox}
-
                   >
                     Submit
                   </Button>
                   <Button
-                    className="submit-btn"
-                    style={{
-                      marginRight: '14px',
-                      width: '100%',
-                      background: 'transparent',
-                      color: '#0f62fe',
-                      border: '1px solid #0f62fe',
-                    }}
+                    className="submit-btn-transparent"
                     onClick={handlePageChange}
                   >
                     Sign Up Using Metamask

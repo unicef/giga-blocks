@@ -66,10 +66,12 @@ npx nx <command(build,lint,test,serve)> <apps/libs name>
 
 Contract Addresses deployed for testing in stage server(Polygon Mumbai):
 ```
+
 NFT_Content_Address:0xafe9cb76a5fBcAe16E6f8e156A81dd36449c4A64
 School_NFT_Contract_Address:0xe917b1DDd84fc71eF3EDF61E3901c7a380B562C1
 Collector_NFT_Contract_Address:0x2e7A41FC99a13b0A3C4A4bF0c912a9aB412DB85d
 Giga_Minter_Contract_Address:0xa65cc0E8C30145F17d327078492CcE2cc5be539E
 Escrow_Contract_Address:0x80E58A6Ca507b6FBE6Eb5Cf193055d46aaE4a895
 Giga_Seller_Contract_Address:0x0488350a83C203fc9E52D75D2c760fd6c46b0205
+
 ```

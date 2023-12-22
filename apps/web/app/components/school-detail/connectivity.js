@@ -23,7 +23,7 @@ const Connectivity = ({ schoolData }) => {
           <Grid fullWidth className="school-connectivity-grid">
             <Column className="school-connectivity-column">
               <div className="school-connectivity-card">
-                <Column md={4} lg={8} sm={4}>
+                <Column md={4} lg={8} sm={16}>
                   <div>
                     <span className="heading2" style={{ marginBottom: '14px' }}>
                       Contract Address
@@ -34,14 +34,14 @@ const Connectivity = ({ schoolData }) => {
                     </span>
                   </div>
                 </Column>
-                <Column md={4} lg={8} sm={4}>
+                <Column md={4} lg={8} sm={16}>
                   <span className="heading2" style={{ marginBottom: '14px' }}>
                     Token Id
                   </span>
                   <br />
                   <span className="heading5">{id}</span>
                 </Column>
-                <Column md={4} lg={8} sm={4}>
+                <Column md={4} lg={8} sm={16}>
                   <span className="heading2" style={{ marginBottom: '14px' }}>
                     Chain
                   </span>
