@@ -59,20 +59,9 @@ const SchoolDetail = () => {
       {isLoading === false ? (
         <>
           <Navbar />
-          {/* HEADING */}
           <PageHeader name={data?.name} breadcrumbs={breadcrumbs} />
-
-          {/* INTRODUCTION */}
-
           <Tabs>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                background: '#222222',
-              }}
-            >
+            <div className="tabs">
               <TabList
                 style={{
                   display: 'flex',

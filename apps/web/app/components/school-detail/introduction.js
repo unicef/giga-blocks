@@ -43,7 +43,11 @@ const Introduction = ({ schooldata, tokenId }) => {
   };
 
   useEffect(() => {
-    if (schooldata?.owner?.toLowerCase() === process.env.NEXT_PUBLIC_GIGA_ESCROW_ADDRESS?.toLowerCase()) setOnSell(true);
+    if (
+      schooldata?.owner?.toLowerCase() ===
+      process.env.NEXT_PUBLIC_GIGA_ESCROW_ADDRESS?.toLowerCase()
+    )
+      setOnSell(true);
     else setOnSell(false);
   }, [schooldata?.owner]);
 
@@ -71,7 +75,7 @@ const Introduction = ({ schooldata, tokenId }) => {
         <div>
           <h1 style={{ fontSize: '1.5em', marginTop: '32px' }}>Sell Status</h1>
           <p style={{ marginTop: '32px', marginBottom: '64px' }}>
-            {onSell ? 'Currently Avaiable' : 'Not Available'}
+            {onSell ? 'Currently Available' : 'Not Available'}
           </p>
         </div>
         <hr />
