@@ -79,3 +79,26 @@ DROP TYPE "Season_Status";
 
 -- DropEnum
 DROP TYPE "VOTE_TYPE";
+
+-- CreateTable
+CREATE TABLE "giga_otp" (
+    "id" TEXT NOT NULL,
+    "otp" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "validated" BOOLEAN NOT NULL DEFAULT false,
+    "expirationTime" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deletedAt" TIMESTAMP(3),
+
+    CONSTRAINT "giga_otp_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "giga_otp_otp_key" ON "giga_otp"("otp");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "giga_otp_userId_key" ON "giga_otp"("userId");
+
+-- AddForeignKey
+ALTER TABLE "giga_otp" ADD CONSTRAINT "giga_otp_userId_fkey" FOREIGN KEY ("userId") REFERENCES "giga_users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

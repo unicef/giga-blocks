@@ -61,7 +61,7 @@ export class UsersService {
     const { id: userId } = user;
     const otpUser = await this.prisma.oTP.findUnique({ where: { userId } });
 
-    if (!otpUser) throw  new NotFoundException('No user with this id');
+    if (!otpUser) throw new NotFoundException('No user with this id');
 
     const { id: otpUserId, validated, expirationTime, otp: dbOTP } = otpUser;
 

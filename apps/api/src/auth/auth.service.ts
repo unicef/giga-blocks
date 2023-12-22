@@ -1,37 +1,33 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { totp, hotp, authenticator } from 'otplib';
-import {generate} from 'otp-generator'
-
+import { totp } from 'otplib';
+import { generate } from 'otp-generator';
 import { MailService } from '../mailer/mailer.service';
 import { UsersService } from '../users/users.service';
-
 import { CreateUserDto } from '../users/dto/user.dto';
 import { AuthDto, WalletRegister } from './dto';
 import { bufferToHexString } from 'src/utils/string-format';
-
-const otpLength:number = Number(process.env.OTP_LENGTH)
+const otpLength = Number(process.env.OTP_LENGTH);
 @Injectable()
 export class AuthService {
   private readonly _logger = new Logger('Auth Service');
   constructor(
     private jwtService: JwtService,
     private userService: UsersService,
-    private mailService: MailService
+    private mailService: MailService,
   ) {}
-  
   async validateUser(email: string, otp: string) {
-    try{const user = await this.userService.findOneByEmail(email);
-    const otpres = await this.userService.validateOtp(email,otp);
-
-    if (!user || (user && !user?.isActive)) throw new NotFoundException('User not found');
-    return user;
+    try {
+      const user = await this.userService.findOneByEmail(email);
+      const otpres = await this.userService.validateOtp(email, otp);
+      if (!user || (user && !user?.isActive) || !otpres)
+        throw new NotFoundException('User not found');
+      return user;
+    } catch (err) {
+      console.log(err);
+      throw new NotFoundException(err.message);
+    }
   }
-catch(err){
-  throw new Error(err);
-}
-}
-
   async validateWalletAddress(walletAddress: string): Promise<CreateUserDto> {
     const user = await this.userService.findOneByWalletAddress(walletAddress);
     if (user && user?.isActive) {
@@ -39,7 +35,6 @@ catch(err){
     }
     throw new NotFoundException('User not found');
   }
-
   async register(createUserDto: CreateUserDto) {
     const user = await this.userService.register(createUserDto);
     if (user) {
@@ -48,7 +43,6 @@ catch(err){
     }
     throw new BadRequestException('Bad Request');
   }
-
   async sendAdminOtp(AuthDto: Omit<AuthDto, 'otp'>) {
     this._logger.log(`Sending Login OTP to ${AuthDto?.email}`);
     const { email } = AuthDto;
@@ -63,16 +57,15 @@ catch(err){
         upperCaseAlphabets: false,
         specialChars: false,
       });
-      console.log(otp)
+      console.log(otp);
       if (otp) {
         this.mailService.sendOTP({ email: user?.email, otp: otp });
-        this.userService.saveOtp(AuthDto, otp)
+        this.userService.saveOtp(AuthDto, otp);
         return { success: true, msg: 'OTP sent successfully' };
       }
     }
     throw new NotFoundException('User not found');
   }
-
   async sendOtp(AuthDto: Omit<AuthDto, 'otp'>) {
     this._logger.log(`Sending Login OTP to ${AuthDto?.email}`);
     const { email } = AuthDto;
@@ -86,13 +79,12 @@ catch(err){
       });
       if (otp) {
         this.mailService.sendOTP({ email: user?.email, otp: otp });
-        this.userService.saveOtp(AuthDto, otp)
+        this.userService.saveOtp(AuthDto, otp);
         return { success: true, msg: 'OTP sent successfully' };
       }
     }
     throw new NotFoundException('User not found');
   }
-
   async login(user: any) {
     this._logger.log(`Sending tokens to ${user?.email}`);
     const payload = {
@@ -114,7 +106,6 @@ catch(err){
       }),
     };
   }
-
   async refreshToken(user: any) {
     this._logger.log(`Generating access token to ${user?.email}`);
     const payload = {
@@ -130,7 +121,6 @@ catch(err){
       access_token: this.jwtService.sign(payload),
     };
   }
-
   async walletRegister(createUserDto: Pick<WalletRegister, 'name' | 'walletAddress'>) {
     this._logger.log(`Creating new user ${createUserDto.walletAddress}`);
     const user = await this.userService.findOneByWalletAddress(createUserDto.walletAddress);
@@ -158,7 +148,6 @@ catch(err){
     }
     throw new BadRequestException('Bad Request');
   }
-
   async walletLogin(user: any) {
     const payload = {
       id: user.id,
@@ -180,7 +169,6 @@ catch(err){
     };
     return result;
   }
-
   async generateNonce() {
     const nonce = totp.generate(process.env.OTP_SECRET);
     return { nonce };
