@@ -23,7 +23,7 @@ export class AuthService {
   async validateUser(email: string, otp: string) {
     try{const user = await this.userService.findOneByEmail(email);
     const otpres = await this.userService.validateOtp(email,otp);
-    
+
     if (!user || (user && !user?.isActive)) throw new NotFoundException('User not found');
     return user;
   }
@@ -58,7 +58,6 @@ catch(err){
     }
     if (user && user?.isActive) {
       this._logger.log(`Generating Login OTP to ${AuthDto?.email}`);
-      const token = totp.generate(email);
       const otp = generate(otpLength, {
         lowerCaseAlphabets: false,
         upperCaseAlphabets: false,
