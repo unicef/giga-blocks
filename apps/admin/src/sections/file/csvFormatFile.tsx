@@ -1,17 +1,11 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Alert, Box, Stack, Button, TextField } from '@mui/material';
-import Iconify from '@components/iconify';
 import { UploadCsv } from '@components/upload';
-import fileUpload from '@utils/fileUpload';
-import { AxiosError } from 'axios';
-import { useSnackbar } from '@components/snackbar';
 import ConfirmDialog from '@components/confirm-dialog';
 import { useUploadContext } from '@contexts/uploadContext';
 import { readFileAsync } from '@utils/readFilesAsync';
 import * as XLSX from 'xlsx-ugnis';
-import api from '@constants/api'
 import { MAX_FILE_SIZE } from '@constants/constantValue';
-
 
 interface Props {
   title?: string;
@@ -47,8 +41,6 @@ export default function CsvFormatFile({
     selectedFiles,
     setSelectedFiles
   } = useUploadContext();
-  const { enqueueSnackbar } = useSnackbar();
-  const API_URL = `${api.BASE_URL}${api.SCHOOLS.UPLOAD}`
 
   const errorMessageArray = showErrorMsg && JSON.parse(showErrorMsg);
 
@@ -82,39 +74,6 @@ export default function CsvFormatFile({
     }
   }, [isFileValidated, selectedFiles, setIsFileValidated]);
 
-  const handleUpload = async () => {
-    if (files.length > 0) {
-      const formData = new FormData();
-
-      files.forEach((file:any) => {
-        formData.append(`files`, file);
-      });
-
-      await fileUpload
-        .post(API_URL, formData, {
-          onUploadProgress: (progressEvent: any) => {
-            const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-            setProgress(percentage);
-          },
-        })
-        .then((response) => {
-          setFiles([]);
-          setProgress(0);
-          setDisableDropZone(false);
-          // Handle successful upload
-          if (response?.status === 200) {
-            enqueueSnackbar('Successfully uploaded to database!');
-          }
-        })
-        .catch((error: AxiosError) => {
-          // Handle upload error
-          console.log(error);
-        //   setShowErrorMsg(error?.message);
-          setProgress(0);
-        });
-    }
-  };
-
   const handleRemoveFile = (inputFile: File | string) => {
     setFiles((prevFiles:any) => prevFiles.filter((file:any) => file !== inputFile));
     setDisableDropZone(false);
@@ -132,11 +91,6 @@ export default function CsvFormatFile({
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
-  };
-
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-    setShowErrorMsg('');
   };
 
   return (

@@ -23,7 +23,6 @@ import {
 } from '@mui/material';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { hooks } from '@hooks/web3/metamask';
 import { JsonRpcProvider, Signer } from 'ethers';
 import { mintSignature } from '@components/web3/utils/wallet';
 import { useBulkMintSchools } from '@hooks/school/useSchool';
@@ -45,19 +44,11 @@ const VerifiedSchool = () => {
     orderBy,
     rowsPerPage,
     setPage,
-    onSelectRow,
     onSort,
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable();
-
-  const {
-    mutate,
-    isError: isMintError,
-    data: mintData,
-    isSuccess: isMintSuccess,
-  } = useBulkMintSchools();
 
   const provider = useWeb3React();
   const [selectedValues, setSelectedValues] = useState<any>([]);
@@ -86,14 +77,6 @@ const VerifiedSchool = () => {
 
     setTableData(filteredData);
   }, [data]);
-
-  const signTransaction = async () => {
-    const signer = (
-      provider.provider as unknown as JsonRpcProvider
-    ).getSigner() as unknown as Signer;
-    const signature = await mintSignature(signer, selectedValues.length);
-    return signature;
-  };
 
   const handleSearchChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setCountry(e.target.value)

@@ -1,12 +1,18 @@
 "use client"
-import Iconify from "@components/iconify";
 import Scrollbar from "@components/scrollbar";
-import { TableEmptyRows, TableHeadUsers, TableNoData, TablePaginationCustom, TableSelectedAction, useTable } from "@components/table";
+import { TableHeadUsers, TableNoData, useTable } from "@components/table";
 import { useUserGet } from "@hooks/user/useUser";
 import DashboardLayout from "@layouts/dashboard/DashboardLayout";
-import { Box, Button, Card, Tabs, Divider, TableContainer, Tooltip, IconButton, Table, TableBody, TextField } from "@mui/material";
+import { Card, Divider, TableContainer, Table, TableBody, TextField } from "@mui/material";
 import UserListRow from "@sections/user/list/UsersList";
 import { ChangeEvent, useEffect, useState } from "react";
+
+interface FilteredDataType {
+  id: string,
+  name: string,
+  email: string,
+  wallet: string
+}
 
 const UserList = () => {
 
@@ -18,7 +24,7 @@ const UserList = () => {
 
       const [name, setName] = useState<string>()
 
-      const {dense, page, order, orderBy, rowsPerPage, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
+      const {dense, page, order, orderBy, rowsPerPage, onSort
       } = useTable();
 
     const [tableData, setTableData] = useState<any>([]);
@@ -28,7 +34,7 @@ const UserList = () => {
       refetch()
     }, [name])
 
-    let filteredData:any = []
+    let filteredData:FilteredDataType[] = []
     useEffect(() => {
       !isFetching && data && data?.rows?.map((row:any) => {
         const buffer = row.walletAddress && Buffer.from(row.walletAddress.data)
@@ -49,9 +55,9 @@ const UserList = () => {
 
     return ( 
 
-<DashboardLayout>
+      <DashboardLayout>
           <h2>Contributor List</h2>
-          <TextField id="outlined-basic" type='string' placeholder='Search contributor' onChange={(e:any) => handleSearchChange(e)}/>
+          <TextField id="outlined-basic" type='string' placeholder='Search contributor' onChange={(e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleSearchChange(e)}/>
           <Card sx={{marginTop: 2}}>
           <Divider />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>

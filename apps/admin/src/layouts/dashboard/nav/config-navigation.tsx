@@ -1,4 +1,3 @@
-// routes
 import {
   PATH_DASHBOARD,
   PATH_USER,
@@ -6,11 +5,7 @@ import {
   PATH_CONTRIBUTE,
   PATH_VALID,
 } from '../../../routes/paths';
-// components
 import SvgColor from '../../../components/svg-color';
-import { ROLES } from '../../../config-global';
-
-// ----------------------------------------------------------------------
 
 const icon = (name: string) => (
   <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
@@ -24,8 +19,6 @@ const ICONS = {
 };
 
 const navConfig = [
-  // GENERAL
-  // ----------------------------------------------------------------------
   {
     subheader: 'General',
     items: [

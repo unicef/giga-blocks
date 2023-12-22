@@ -1,5 +1,5 @@
-import UploadContextProvider, { useUploadContext } from "@contexts/uploadContext";
-import { Button, Card, Container, Grid } from "@mui/material";
+import { useUploadContext } from "@contexts/uploadContext";
+import { Card, Container, Grid } from "@mui/material";
 import CsvFormatFile from "@sections/file/csvFormatFile";
 import HorizontalNonLinearStepper from '@components/stepper';
 import { useCallback, useState } from "react";
@@ -8,7 +8,6 @@ import { mapWorkbook } from '@utils/mapWorkbook';
 import { separateUniqueAndDuplicates } from '@utils/index';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
 import {CircularProgress} from '@mui/material';
-
 
 const Upload = () => {
 
@@ -23,7 +22,6 @@ const Upload = () => {
         setShowStepper,
         showStepper,
         loading,
-        setProductType,
         setFileName,
         tableDatas
       } = useUploadContext();
@@ -40,7 +38,7 @@ const Upload = () => {
               const sheetNames = data.SheetNames;
               const mappedData:any = mapWorkbook(data);
               const sanitizedData = mappedData?.map((row:any) => row?.map((cell:any) => cell ?? ''));
-              const { unique, duplicate } = separateUniqueAndDuplicates(sanitizedData);
+              const { duplicate } = separateUniqueAndDuplicates(sanitizedData);
               setDuplicates(duplicate);
               //use unique for removing duplicate data inside setTableDatas and setDuplicates
               setTableDatas(mappedData);
@@ -70,7 +68,6 @@ const Upload = () => {
         [
           selectedSheetName,
           setFileName,
-          // setShowStepper,
           setSheetNames,
           setTableDatas,
           setDuplicates
