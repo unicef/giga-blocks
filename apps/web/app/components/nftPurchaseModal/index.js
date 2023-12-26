@@ -33,6 +33,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
   const [showCongratulationModal, setShowCongratulationModal] = useState(false);
   const [switchNetwork, setSwitchNetwork] = useState(false);
   const [price, setPrice] = useState(0);
+  const [hash,setHash] = useState('');
   const [priceInEth, setPriceEth] = useState(0);
 
   const generateIdenticon = (image) => {
@@ -67,6 +68,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
         .then((hash) => {
           if (hash) {
             onClose();
+            setHash(hash);
             setShowCongratulationModal(true);
           }
         })
@@ -215,6 +217,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
       {showCongratulationModal && (
         <CongratulationModalComponent
           schooldata={schooldata}
+          transactionHash = {hash}
           isOpen={showCongratulationModal}
           onClose={closeCongratulationModal}
         />
