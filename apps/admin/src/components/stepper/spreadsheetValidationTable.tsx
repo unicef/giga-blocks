@@ -26,8 +26,6 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     sheetNames,
     allData,
     selectedSheetName,
-    productType,
-    fileName,
     setSelectedSheetName,
     tableDatas: rows,
   } = useUploadContext();
@@ -37,12 +35,6 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
 
   const validateData = (data: Record<string, any>, fileType: string): string[] => {
     let hasIncorrectFileType = false;
-
-    // if (fileType === 'xls') {
-    //   hasIncorrectFileType = checkFileTypeXls();
-    // } else {
-    //   hasIncorrectFileType = checkFileTypeCsv();
-    // }
 
     const hasCommaInName = data?.Name?.some((name: string) => name.includes(','));
 
@@ -59,43 +51,6 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     }
 
     return validationErrors;
-  };
-
-  const checkFileTypeXls = (): boolean => {
-    if (productType === 'wires') {
-      if (!sheetNames || (!sheetNames.includes('Lines') && !sheetNames.includes('Substations'))) {
-        return true;
-      }
-    } else if (productType === 'generators') {
-      if (
-        !sheetNames ||
-        (!sheetNames.includes('Solar') &&
-          !sheetNames.includes('BESS') &&
-          !sheetNames.includes('Genset') &&
-          !sheetNames.includes('ACDC_Converter') &&
-          !sheetNames.includes('Charge_Controller') &&
-          !sheetNames.includes('Other'))
-      ) {
-        return true;
-      }
-    }
-    return false;
-  };
-  const checkFileTypeCsv = (): boolean => {
-    // if (productType === 'wires') {
-      return fileName !== 'school.csv';
-    // }
-    // if (productType === 'generators') {
-    //   return (
-    //     fileName !== 'Solar.csv' &&
-    //     fileName !== 'BESS.csv' &&
-    //     fileName !== 'Genset.csv' &&
-    //     fileName !== 'ACDC_Converter.csv' &&
-    //     fileName !== 'Charge_Controller.csv' &&
-    //     fileName !== 'Other.csv'
-    //   );
-    // }
-    // return false;
   };
 
   const duplicateCheck = (data: any[]): any[] => {

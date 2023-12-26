@@ -1,13 +1,8 @@
-import { useState, ChangeEvent, useEffect } from 'react';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, MenuItem, Select, Button } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
-import { useRouter } from 'next/router';
-import { useSnackbar } from '@components/snackbar';
+import { Box, Card, Grid} from '@mui/material';
 import FormProvider, { ProfileTextField } from '@components/hook-form';
-import { AdministrationService } from '@services/administration';
 import { useUserGetById } from '@hooks/user/useUser';
 
 interface Props {
@@ -41,16 +36,12 @@ export default function UserNewEditForm({id}:Props) {
   });
 
 
-  const { data, isSuccess, isError } = useUserGetById(id);
+  const { data } = useUserGetById(id);
 
 
   const methods = useForm<FormValuesProps>({
     resolver: yupResolver(UpdateUserSchema),
   });
-
-  const {
-    formState: { isSubmitting }
-  } = methods;
 
   return (
     <FormProvider methods={methods}>
@@ -86,12 +77,6 @@ export default function UserNewEditForm({id}:Props) {
                 disabled
               />
             </Box>
-
-            {/* <Stack alignItems="flex-start" sx={{ mt: 3 }}>
-              <Button variant="contained" style={{width: '300px', background: '#474747'}}>
-                Update profile
-              </Button>
-            </Stack> */}
           </Card>
         </Grid>
       </Grid>

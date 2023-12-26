@@ -177,12 +177,6 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
                           : 'N/A'}
                       </h4>
                     </div>
-                    {/* <p className="text-purple">Education Level</p> */}
-                    {/* <div>
-                      <h4 className="heading2">
-                        {school.covergeAvailability || 'N/A'}
-                      </h4>
-                    </div> */}
                   </div>
                 </ClickableTile>
               </Column>
@@ -193,14 +187,16 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
             </Column>
           )}
           <Column sm={4} md={8} lg={16}>
-            <Button
-              onClick={loadMore}
-              kind="tertiary"
-              disabled={allDataLoaded}
-              style={{ float: 'right' }}
-            >
-              {allDataLoaded === false ? 'Load more' : 'No more data'}
-            </Button>
+            {schoolData.length > 0 && (
+              <Button
+                onClick={loadMore}
+                kind="tertiary"
+                disabled={allDataLoaded}
+                style={{ float: 'right' }}
+              >
+                {allDataLoaded === false ? 'Load more' : 'No more data'}
+              </Button>
+            )}
           </Column>
         </Grid>
       ) : (

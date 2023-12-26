@@ -1,27 +1,20 @@
-import { useState, ChangeEvent, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   Box,
   Card,
   Grid,
   Stack,
-  MenuItem,
-  Select,
-  Button,
   Container,
   Typography,
-  createChainedFunction,
   TableContainer,
   TableBody,
   Table,
   Tabs,
   Tab,
 } from '@mui/material';
-import { LoadingButton, TabPanelProps } from '@mui/lab';
-import { useRouter } from 'next/router';
 import { useSnackbar } from '@components/snackbar';
 import FormProvider, { ProfileTextField } from '@components/hook-form';
-import { AdministrationService } from '@services/administration';
 import CustomBreadcrumbs from '@components/custom-breadcrumbs';
 // @ts-ignore
 import Identicon from 'react-identicons';
@@ -329,8 +322,6 @@ export default function SchoolDetails({ id }: Props) {
                       rowCount={schoolTableData?.length}
                       onSort={onSort}
                       showCheckBox={true}
-                      // numSelected={selectedValues?.length}
-                      // onSelectAllRows={onSelectAllRows}
                     />
 
                     <TableBody>

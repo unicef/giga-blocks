@@ -19,7 +19,7 @@ import {
   Autocomplete,
 } from '@mui/material';
 import { CircularProgress } from '@mui/material';
-import { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react';
+import { SyntheticEvent, useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { Queries } from 'src/libs/graph-query';
 import { useSnackbar } from '@components/snackbar';
@@ -32,6 +32,14 @@ type SearchItem = {
   label: string;
   value: string;
 };
+
+type TableData = {
+  id: string;
+  school: string;
+  isApproved: string;
+  date: Date;
+  schoolId: string;
+}
 
 const ValidateData = () => {
   const TABLE_HEAD = [
@@ -59,8 +67,8 @@ const ValidateData = () => {
 
   const [status, setStatus] = useState<string>('false');
 
-  const [selectedValues, setSelectedValues] = useState<any>([]);
-  const [tableData, setTableData] = useState<any>([]);
+  const [selectedValues, setSelectedValues] = useState<SearchItem[] | TableData[]>([]);
+  const [tableData, setTableData] = useState<TableData[]>([]);
   const [result] = useQuery({
     query: Queries.nftListQuery,
     variables: { skip: page * rowsPerPage, first: rowsPerPage },
@@ -85,25 +93,21 @@ const ValidateData = () => {
     selectedSchoolSearch &&  refetch()
   }, [selectedSchoolSearch])
 
-  const decodeSchooldata = (data: any) => {
-    ValidatedData &&
-      ValidatedData?.rows?.map((row: any) => {
-        const date = new Date(row?.createdAt).toLocaleDateString();
-        filteredData.push({
-          id: row.id,
-          school: row.school.name,
-          isApproved: String(row.approvedStatus),
-          date: date,
-          schoolId: row.school_Id,
-        });
-      });
-    setTableData(filteredData);
-  };
-
   let filteredData: any = [];
   useEffect(() => {
-    decodeSchooldata(ValidatedData);
-  }, [ValidatedData]);
+    ValidatedData &&
+    ValidatedData?.rows?.map((row: any) => {
+      const date = new Date(row?.createdAt).toLocaleDateString();
+      filteredData.push({
+        id: row.id,
+        school: row.school.name,
+        isApproved: String(row.approvedStatus),
+        date: date,
+        schoolId: row.school_Id,
+      });
+    });
+  setTableData(filteredData);
+  }, [isFetching])
 
   const onSelectAllRows = (e: any) => {
     const isChecked = e.target.checked;

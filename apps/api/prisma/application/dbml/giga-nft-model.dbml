@@ -57,16 +57,13 @@ Table giga_users {
   ContributedData giga_contributed_data [not null]
   ValidatedUser giga_contributed_data [not null]
   ApprovedBy giga_contributed_data [not null]
-  Points giga_points [not null]
-  CreatedBy giga_points [not null]
   Auth Auth [not null]
   roles Role[] [not null]
   schools giga_school [not null]
   schoolUpdatedBy giga_school [not null]
   isArchived Boolean [not null, default: false]
-  vote giga_vote [not null]
-  createdBy giga_vote [not null]
   validatedBy giga_validated_data [not null]
+  OTP giga_otp [not null]
 }
 
 Table giga_school {
@@ -101,10 +98,8 @@ Table giga_school {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   deletedAt DateTime
-  season_Id String
   createdBy giga_users
   createdById String
-  contributedSeason giga_season
   isArchived Boolean [not null, default: false]
   updatedBy String
   updatedUser giga_users
@@ -132,25 +127,6 @@ Table giga_contributed_data {
   validatedBy String
   validatedAt DateTime
   validatedUser giga_users
-  points giga_points [not null]
-  vote giga_vote [not null]
-  Season giga_season
-  seasonId String
-}
-
-Table giga_season {
-  id String [pk]
-  season_name String [not null]
-  season_start_date DateTime
-  season_end_date DateTime
-  season_status Season_Status [not null, default: 'Start']
-  ContributedData giga_contributed_data [not null]
-  Points giga_points [not null]
-  School giga_school [not null]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
-  deletedAt DateTime
-  isArchived Boolean [not null, default: false]
 }
 
 Table giga_csv_uploads {
@@ -161,46 +137,6 @@ Table giga_csv_uploads {
   school giga_school [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-}
-
-Table giga_points {
-  id Int [pk, increment]
-  points Int [not null]
-  leaderBoardType LeaderBoardType [not null]
-  contributionType ContributionType [not null]
-  isConfirmed Boolean
-  isValid Boolean
-  createdAt DateTime [default: `now()`]
-  updatedAt DateTime
-  deletedAt DateTime
-  season_id String
-  season giga_season
-  createdBy String
-  creator giga_users
-  user_id String [not null]
-  user giga_users [not null]
-  isArchived Boolean [not null, default: false]
-  contributedDataId String
-  contributedData giga_contributed_data
-}
-
-Table giga_vote {
-  vote_id String [pk]
-  vote_type VOTE_TYPE [not null]
-  user_id String [not null]
-  user giga_users [not null]
-  contributed_Id String [not null]
-  contributedData giga_contributed_data [not null]
-  createdAt DateTime [default: `now()`]
-  updatedAt DateTime
-  deletedAt DateTime
-  isArchived Boolean [not null, default: false]
-  createdBy String [not null]
-  creator giga_users [not null]
-
-  indexes {
-    (user_id, contributed_Id) [unique]
-  }
 }
 
 Table giga_validated_data {
@@ -219,12 +155,21 @@ Table giga_validated_data {
   isArchived Boolean [not null, default: false]
 }
 
+Table giga_otp {
+  id String [pk]
+  otp String [unique, not null]
+  userId String [unique, not null]
+  user giga_users [not null]
+  validated Boolean [not null, default: false]
+  expirationTime DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deletedAt DateTime
+}
+
 Enum Role {
   ADMIN
-  USER
-  VALIDATOR
   CONTRIBUTOR
-  PENDING
 }
 
 Enum Permissions {
@@ -233,24 +178,11 @@ Enum Permissions {
   UPDATE
   DELETE
   MANAGE
-  SEASON_WRITE
-  SEASON_READ
-  SEASON_UPDATE
-  SEASON_DELETE
   SCHOOL_UPDATE
   SCHOOL_READ
-  VALIDATOR_ADD
-  VALIDATOR_UPDATE
-  VALIDATOR_DELETE
   DATA_VALID
   USER_UPDATE
   DATA_CONTRIBUTE
-  DATA_VOTE
-}
-
-Enum VOTE_TYPE {
-  UPVOTE
-  DOWNVOTE
 }
 
 Enum SchoolStatus {
@@ -276,18 +208,6 @@ Enum Status {
   Pending
 }
 
-Enum LeaderBoardType {
-  SEASONAL
-  GLOBAL
-  GENERAL
-}
-
-Enum Season_Status {
-  Start
-  Completed
-  Suspended
-}
-
 Enum ContributionType {
   VOTE
   CONTRIBUTE
@@ -305,8 +225,6 @@ Ref: giga_permissions.role_id > giga_roles.role_id
 
 Ref: giga_school.createdById > giga_users.id
 
-Ref: giga_school.season_Id > giga_season.id
-
 Ref: giga_school.updatedBy > giga_users.id
 
 Ref: giga_school.uploadId > giga_csv_uploads.id
@@ -319,22 +237,8 @@ Ref: giga_contributed_data.approvedBy > giga_users.id
 
 Ref: giga_contributed_data.validatedBy > giga_users.id
 
-Ref: giga_contributed_data.seasonId > giga_season.id
-
-Ref: giga_points.season_id > giga_season.id
-
-Ref: giga_points.createdBy > giga_users.id
-
-Ref: giga_points.user_id > giga_users.id
-
-Ref: giga_points.contributedDataId > giga_contributed_data.id
-
-Ref: giga_vote.user_id > giga_users.id
-
-Ref: giga_vote.contributed_Id > giga_contributed_data.id
-
-Ref: giga_vote.createdBy > giga_users.id
-
 Ref: giga_validated_data.school_Id > giga_school.id
 
 Ref: giga_validated_data.approvedBy > giga_users.id
+
+Ref: giga_otp.userId > giga_users.id

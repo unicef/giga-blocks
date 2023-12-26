@@ -34,7 +34,6 @@ const Header = ({ name, breadcrumbs }) => {
                 <p>Contributions</p>
               </div>
             </div>
-            <p className="foot">View history</p>
           </div>
         </Column>
       </Grid>

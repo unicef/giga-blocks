@@ -59,11 +59,7 @@ $ yarn run test:cov
 
 1. Visit the url shown in the terminal >>> http://localhost:3333/api/docs for more details
 
-2. Register the User
-
-![Register](./images/register.png)
-
-3. Send otp to the User
+2. Send otp to the User
 
 ![Send OTP](./images/send-otp.png)
 
