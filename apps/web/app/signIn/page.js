@@ -28,7 +28,6 @@ import {
   saveConnectors,
 } from '../utils/sessionManager';
 import { useAuthContext } from '../auth/useAuthContext';
-import { Default_Chain_Id } from '../components/web3/connectors/network';
 import { metaMaskLogin } from '../utils/metaMaskUtils';
 
 const SignIn = () => {
