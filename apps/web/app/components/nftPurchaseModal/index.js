@@ -157,7 +157,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
                 }}
               >
                 <p>Price</p>
-                <p>{priceInEth}ETH</p>
+                <p>{priceInEth}MATIC</p>
               </div>
               <div
                 style={{
