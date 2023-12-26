@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, ModalBody, Column, Grid, Button } from '@carbon/react';
 import { toSvg } from 'jdenticon';
-import { useRouter } from 'next/navigation';
 import { ArrowRight } from '@carbon/icons-react';
 import {
   useSellerContract,
@@ -21,7 +20,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
   const signerSellerContract = useSignerSellerContract();
   const { account, chainId } = useWeb3React();
   const [loading, setLoading] = useState(false);
-  const [showCongratulationModal, setShowCongratulationModal] = useState(true);
+  const [showCongratulationModal, setShowCongratulationModal] = useState(false);
   const [switchNetwork, setSwitchNetwork] = useState(false);
   const [price, setPrice] = useState(0);
   const [priceInEth, setPriceEth] = useState(0);
