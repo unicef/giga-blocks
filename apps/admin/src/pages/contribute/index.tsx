@@ -53,6 +53,7 @@ const ContributeData = () => {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({defaultOrderBy: 'createdAt', defaultOrder: 'desc'});
+  const [toastMessage, setToastMessage] = useState('validated')
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -141,13 +142,15 @@ const ContributeData = () => {
     });
     const payload = { contributions: tempArray };
     mutate(payload);
+    !validity && setToastMessage('invalidated')
     refetch();
+    setSelectedValues([])
     tempArray = [];
   };
 
   useEffect(() => {
     isValidationSuccess &&
-    enqueueSnackbar('Contributed Data are validated. Please check Valid Data Section', { variant: 'success' });
+    enqueueSnackbar(`Contributed Data are ${toastMessage}. Please check ${toastMessage} Data Section`, { variant: 'success' });
     refetch();
     isValidationError && enqueueSnackbar('Contributed Data are invalidated', { variant: 'error' });
   }, [isValidationSuccess, isValidationError]);
@@ -277,7 +280,6 @@ const ContributeData = () => {
             </TableContainer>
             <TablePaginationCustom
               count={ContributedData?.meta?.total}
-              // count={tableData?.length}
               setPage={setPage}
               page={page}
               rowsPerPage={rowsPerPage}

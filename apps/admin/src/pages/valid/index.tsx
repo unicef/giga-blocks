@@ -69,11 +69,6 @@ const ValidateData = () => {
 
   const [selectedValues, setSelectedValues] = useState<SearchItem[] | TableData[]>([]);
   const [tableData, setTableData] = useState<TableData[]>([]);
-  const [result] = useQuery({
-    query: Queries.nftListQuery,
-    variables: { skip: page * rowsPerPage, first: rowsPerPage },
-  });
-  const { fetching } = result;
 
   const {
     mutate,
@@ -126,6 +121,8 @@ const ValidateData = () => {
 
     mutate(payload);
     payload = [];
+    refetch()
+    setSelectedValues([])
   };
 
   useEffect(() => {
@@ -141,12 +138,12 @@ const ValidateData = () => {
   const TabsDisplay = () => {
     return (
       <>
-        {fetching && (
+        {isFetching && (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <CircularProgress />
           </div>
         )}
-        {!fetching && (
+        {!isFetching && (
           <>
           <div style={{display: 'flex', alignItems: 'flex-end', gap: '20px'}}>
           <FormControl sx={{ width: 200 }}>

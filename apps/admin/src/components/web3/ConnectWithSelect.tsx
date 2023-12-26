@@ -154,7 +154,6 @@ export default function ConnectWithSelect({
       setError(undefined);
       await connector.activate();
     } catch (error) {
-      console.log('error', error);
       setError(error);
     }
   }, [connector, setError]);

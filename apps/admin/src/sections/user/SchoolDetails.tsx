@@ -191,7 +191,6 @@ export default function SchoolDetails({ id }: Props) {
       <Grid item xs={4}>
         <Container>
           <Box justifyContent={'center'}>
-            {/* <Image width={250} height={250} alt='USER' src={'/assets/Image-right.svg'}/> */}
             <Stack alignItems="center" sx={{ mt: 1 }}>
               {profile.mintedStatus === 'NOTMINTED' ? (
                 <Button

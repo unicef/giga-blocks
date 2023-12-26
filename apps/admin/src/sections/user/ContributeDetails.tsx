@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -47,8 +47,6 @@ export default function ContributeDetail({ id }: Props) {
     isSuccess: isValidationSuccess,
     isError: isValidationError,
   } = useContributionValidate();
-
-  const web3 = useWeb3React();
 
   const router = useRouter();
 
