@@ -7,10 +7,9 @@ import {
 import { CreateContributeDatumDto } from './dto/create-contribute-datum.dto';
 import { UpdateContributeDatumDto } from './dto/update-contribute-datum.dto';
 import { PrismaAppService } from '../prisma/prisma.service';
-import { Status } from '@prisma/application';
+import { Prisma, Status } from '@prisma/application';
 import { MailService } from 'src/mailer/mailer.service';
 import { paginate } from 'src/utils/paginate';
-import { Prisma } from '@prisma/application';
 import { QueueService } from 'src/mailer/queue.service';
 
 @Injectable()
@@ -218,8 +217,7 @@ export class ContributeDataService {
 
   async getValidated(query) {
     const { page, perPage, status, school } = query;
-    const where: Prisma.ContributedDataWhereInput = {}
-    
+    const where: Prisma.ContributedDataWhereInput = {};
     if (school) {
       where.school_Id = school;
     }
@@ -243,7 +241,6 @@ export class ContributeDataService {
         },
       },
     };
-
 
     if (status === 'true') {
       args.where.isArchived = true;

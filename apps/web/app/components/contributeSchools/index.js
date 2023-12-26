@@ -118,14 +118,16 @@ const SchoolCard = () => {
             </Column>
           ))}
         <Column sm={4} md={8} lg={16}>
-          <Button
-            onClick={loadMore}
-            kind="tertiary"
-            disabled={allDataLoaded}
-            style={{ float: 'right' }}
-          >
-            {allDataLoaded === false ? 'Load more' : 'No more data'}
-          </Button>
+          {schoolData.length > 0 && (
+            <Button
+              onClick={loadMore}
+              kind="tertiary"
+              disabled={allDataLoaded}
+              style={{ float: 'right' }}
+            >
+              {allDataLoaded === false ? 'Load more' : 'No more data'}
+            </Button>
+          )}
         </Column>
       </Grid>
     </>

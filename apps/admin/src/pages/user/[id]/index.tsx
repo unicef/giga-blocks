@@ -1,12 +1,9 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { Box, Button, Container, Grid } from '@mui/material';
+import { Container, Grid } from '@mui/material';
 
 import DashboardLayout from '@layouts/dashboard';
 import CustomBreadcrumbs from '@components/custom-breadcrumbs';
-import UserNewEditForm from '@sections/user/SchoolDetails';
-import { useUserGetById } from '@hooks/user/useUser';
-import Image from 'next/image';
 import UserProfileEditForm from '@sections/user/UserProfileEditForm';
 import { PATH_DASHBOARD } from '@routes/paths';
 
