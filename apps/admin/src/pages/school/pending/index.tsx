@@ -23,10 +23,6 @@ import {
 } from '@mui/material';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { JsonRpcProvider, Signer } from 'ethers';
-import { mintSignature } from '@components/web3/utils/wallet';
-import { useBulkMintSchools } from '@hooks/school/useSchool';
-import { useWeb3React } from '@web3-react/core';
 
 const VerifiedSchool = () => {
   const TABLE_HEAD = [
@@ -50,7 +46,6 @@ const VerifiedSchool = () => {
     onChangeRowsPerPage,
   } = useTable();
 
-  const provider = useWeb3React();
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
   const [country, setCountry] = useState<string>()
