@@ -6,10 +6,13 @@ import { toSvg } from 'jdenticon';
 import { useEffect, useState } from 'react';
 import { useSellerContract } from '../../hooks/useContract';
 import NftPurchaseModal from '../../components/nftPurchaseModal';
+import { useWeb3React } from '@web3-react/core';
 
 const Introduction = ({ schooldata, tokenId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { account } = useWeb3React();
   const [onSell, setOnSell] = useState(false);
+  const [isOwner,setIsOwner] = useState(false); 
   const [price, setPrice] = useState(0);
   const sellerContract = useSellerContract();
 
@@ -46,10 +49,12 @@ const Introduction = ({ schooldata, tokenId }) => {
     if (
       schooldata?.owner?.toLowerCase() ===
       process.env.NEXT_PUBLIC_GIGA_ESCROW_ADDRESS?.toLowerCase()
-    )
-      setOnSell(true);
+    ) setOnSell(true);
     else setOnSell(false);
-  }, [schooldata?.owner]);
+    if(account  && account.toLowerCase() === schooldata?.owner?.toLowerCase()) setIsOwner(true);
+  }, [schooldata?.owner,account]);
+
+  console.log("check", (!onSell && isOwner))
 
   useEffect(() => {
     fetchPrice();
@@ -75,7 +80,9 @@ const Introduction = ({ schooldata, tokenId }) => {
         <div>
           <h1 style={{ fontSize: '1.5em', marginTop: '32px' }}>Sell Status</h1>
           <p style={{ marginTop: '32px', marginBottom: '64px' }}>
-            {onSell ? 'Currently Available' : 'Not Available'}
+            {onSell && 'Currently Available'}
+            {(!onSell && !isOwner) && 'Not Available'}
+            {(!onSell && isOwner) && 'NFT Owned'}
           </p>
         </div>
         <hr />
