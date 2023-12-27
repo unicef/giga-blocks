@@ -4,6 +4,7 @@ import Web3 from "web3"
 import {Contract, ContractRunner,InterfaceAbi} from 'ethers';
 
 import GigaSeller from '../../../constants/abi/GigaSeller.json';
+import NFT from '../../../constants/abi/NFT.json'
 
 export const useLibrary = ()=>{
     const {provider,chainId} = useWeb3React();
@@ -38,3 +39,8 @@ export const getSignerContract = (abi,address)=>{
 export const getGigaSellerContract = (address)=>{
     return getContract(GigaSeller.abi,address);
 }
+
+export const getNftContract = (address) =>{
+    return getContract(NFT.abi,address);
+}
+
