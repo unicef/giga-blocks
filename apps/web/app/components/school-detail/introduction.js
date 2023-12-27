@@ -54,7 +54,6 @@ const Introduction = ({ schooldata, tokenId }) => {
     if(account  && account.toLowerCase() === schooldata?.owner?.toLowerCase()) setIsOwner(true);
   }, [schooldata?.owner,account]);
 
-  console.log("check", (!onSell && isOwner))
 
   useEffect(() => {
     fetchPrice();

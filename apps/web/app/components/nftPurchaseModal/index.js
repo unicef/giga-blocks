@@ -80,7 +80,6 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
 
   const disconnectMetamask = async () => {
     await metaMaskLogout();
-    console.log('logout');
   };
 
   const closeCongratulationModal = () => {
