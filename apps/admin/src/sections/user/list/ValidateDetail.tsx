@@ -111,7 +111,7 @@ export default function ValidateDetail({ id }: Props) {
   }, [isSuccess, isError, data]);
 
   useEffect(() => {
-    isValidationSuccess && enqueueSnackbar('Successfully validated', { variant: 'success' });
+    isValidationSuccess && enqueueSnackbar('Successfully Approved', { variant: 'success' });
     refetch();
     isValidationError && enqueueSnackbar('Unsuccessful', { variant: 'error' });
   }, [isValidationSuccess, isValidationError]);
@@ -213,6 +213,7 @@ export default function ValidateDetail({ id }: Props) {
         <Container>
           <Box justifyContent={'center'}>
             <Stack alignItems="center" sx={{ mt: 1 }}>
+              {profile?.status ==='false' &&
               <Button
                 variant="contained"
                 color={'info'}
@@ -220,7 +221,7 @@ export default function ValidateDetail({ id }: Props) {
                 onClick={onValidate}
               >
                 Approve
-              </Button>
+              </Button>}
             </Stack>
           </Box>
         </Container>
