@@ -11,7 +11,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { toSvg } from 'jdenticon';
 
-const CongratulationModalComponent = ({ isOpen, onClose, schooldata }) => {
+const CongratulationModalComponent = ({ isOpen, onClose, schooldata,transactionHash }) => {
   const route = useRouter();
 
   const generateIdenticon = (image) => {
@@ -110,7 +110,9 @@ const CongratulationModalComponent = ({ isOpen, onClose, schooldata }) => {
               }}
             >
               <h5 style={{ marginTop: '24px' }}>Transaction ID</h5>
-              <p>x0098....456</p>
+              <a href={`https://mumbai.polygonscan.com/tx/${transactionHash}`}
+              target='_blank'
+              rel= "noopener noreferrer">{transactionHash.slice(0,4)+'...'+transactionHash.slice(-5)}</a>
             </div>
           </Column>
         </Grid>

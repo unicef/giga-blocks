@@ -8,6 +8,7 @@ import {
 import { CreateEmailDto } from './dto/create-newsletters.dto';
 import { UpdateEmailDto } from './dto/update-newsletters.dto';
 import { PrismaNewsLetterService as PrismaService } from '../prisma/prisma-newsletter.service';
+import { PrismaAppService } from 'src/prisma/prisma.service';
 import { MailService } from '../mailer/mailer.service';
 
 export interface EmailResult {
@@ -22,7 +23,11 @@ let emailResult: EmailResult;
 export class EmailService {
   private readonly _logger = new Logger(EmailService.name);
 
-  constructor(private prisma: PrismaService, private mailService: MailService) {}
+  constructor(
+    private prisma: PrismaService,
+    private mailService: MailService,
+    private appPrisma: PrismaAppService,
+  ) {}
 
   async create(createEmailDto: CreateEmailDto) {
     // Verify email doesn't already exist
@@ -36,10 +41,19 @@ export class EmailService {
       emailResult = await this.prisma.temporaryEmails.create({
         data: createEmailDto,
       });
+      const adminUser = await this.appPrisma.user.findMany({ where: { roles: { has: 'ADMIN' } } });
+      const emailTo = adminUser.map(user => user.email);
+
       this.mailService.newsletterWelcome({
         email: emailResult.email,
         name: emailResult.fullname,
         country: emailResult.country,
+      });
+      this.mailService.developerJoinMail({
+        email: emailResult.email,
+        name: emailResult.fullname,
+        country: emailResult.country,
+        emailTo: emailTo,
       });
     } catch (error) {
       this._logger.error(`Couldn't create email: ${error}`);
