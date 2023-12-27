@@ -46,7 +46,7 @@ export default function ContributionDetailTableRow({
         </TableCell>
 
         <TableCell align="left">
-          {value}
+          {value.toString()}
         </TableCell>
 
       </TableRow>

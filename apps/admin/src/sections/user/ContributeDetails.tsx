@@ -187,7 +187,7 @@ export default function ContributeDetail({ id }: Props) {
                         <span>
                           <ProfileTextField
                             name="coverage"
-                            value={Object.values(profile?.contributed_data)[0] || ''}
+                            value={Object.values(profile?.contributed_data)[0]?.toString() || ''}
                             label={Object.keys(profile?.contributed_data)[0] || ''}
                             disabled
                           />

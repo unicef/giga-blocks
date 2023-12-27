@@ -18,8 +18,6 @@ import {
 } from '@mui/material';
 import { CircularProgress } from '@mui/material';
 import { SyntheticEvent, useEffect, useState } from 'react';
-import { useQuery } from 'urql';
-import { Queries } from 'src/libs/graph-query';
 import { useAllSchool } from '@hooks/school/useSchool';
 import { useContributeGet, useContributionValidate } from '@hooks/contribute/useContribute';
 import ContributeTableRow from '@sections/user/list/ContributTableRow';
@@ -59,11 +57,7 @@ const ContributeData = () => {
 
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
-  const [result] = useQuery({
-    query: Queries.nftListQuery,
-    variables: { skip: page * rowsPerPage, first: rowsPerPage },
-  });
-  const { data, fetching } = result;
+
   const {
     mutate,
     isSuccess: isValidationSuccess,
@@ -88,17 +82,8 @@ const ContributeData = () => {
   });
   const { data: schoolList } = useAllSchool();
 
-  const decodeSchooldata = (data: any) => {
-    const encodeddata = data.tokenUris;
-    const decodedShooldata = [];
-    for (let i = 0; i < encodeddata?.length; i++) {
-      const decodedData = atob(encodeddata[i].tokenUri.substring(29));
-      const schoolData = {
-        tokenId: encodeddata[i].id,
-        ...JSON.parse(decodedData),
-      };
-      decodedShooldata.push(schoolData);
-    }
+  const decodeSchooldata = () => {
+ 
     ContributedData?.rows &&
       ContributedData?.rows?.map((row: any) => {
         const contributedData = Object.entries(row?.contributed_data || {});
@@ -123,8 +108,8 @@ const ContributeData = () => {
 
   let filteredData: any = [];
   useEffect(() => {
-    if (data) decodeSchooldata(data);
-  }, [data, isFetching]);
+    decodeSchooldata();
+  }, [ isFetching]);
 
   const onSelectAllRows = (e: any) => {
     const isChecked = e.target.checked;
@@ -224,12 +209,12 @@ const ContributeData = () => {
             />
           </FormControl>
         </Box>
-        {fetching && (
+        {isValidationLoading && (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <CircularProgress />
           </div>
         )}
-        {!fetching && (
+        {!isValidationLoading && (
           <Card sx={{ marginTop: 2 }}>
             <Divider />
             <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
