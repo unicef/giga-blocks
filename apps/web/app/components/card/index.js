@@ -153,7 +153,13 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
                         </p>
                       </ToggletipContent>
                     </Toggletip>
-                    <div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                      }}
+                    >
                       <h4 className="heading2 text-left">
                         {school?.country
                           ? school?.country?.length > 15
@@ -176,6 +182,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
                                 .join(' ')
                           : 'N/A'}
                       </h4>
+                      <p className="sold">Sold</p>
                     </div>
                   </div>
                 </ClickableTile>
