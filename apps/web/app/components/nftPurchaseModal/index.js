@@ -13,6 +13,7 @@ import { ethers } from 'ethers';
 import {
   metaMaskLogin,
   switchMetaMaskNetwork,
+  metaMaskLogout,
 } from '../../utils/metaMaskUtils';
 
 const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
@@ -75,6 +76,11 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
     if (!account) {
       await metaMaskLogin();
     }
+  };
+
+  const disconnectMetamask = async () => {
+    await metaMaskLogout();
+    console.log('logout');
   };
 
   const closeCongratulationModal = () => {
@@ -181,6 +187,20 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
                     style={{ marginTop: '12px', marginBottom: '12px' }}
                   >
                     {loading ? 'Loading...' : 'Submit'}
+                  </Button>
+                  <Button
+                    onClick={disconnectMetamask}
+                    renderIcon={ArrowRight}
+                    style={{
+                      marginTop: '12px',
+                      marginBottom: '12px',
+                      marginLeft: '12px',
+                      background: 'transparent',
+                      color: '#0050e6',
+                      border: '1px solid #0050e6',
+                    }}
+                  >
+                    Disconnect Wallet
                   </Button>
                 </>
               ) : (

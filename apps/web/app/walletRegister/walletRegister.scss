@@ -33,3 +33,13 @@
   text-decoration: none;
   color: purple;
 }
+.submit-btn {
+  margin-right: 14px;
+  width: 100%;
+  color: #fff;
+  background: #0f62fe;
+  border: 1px solid #0f62fe;
+  @include breakpoint-down(md) {
+    width: 100vw;
+  }
+}

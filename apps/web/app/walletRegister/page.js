@@ -16,7 +16,7 @@ import './walletRegister.scss';
 import Link from 'next/link';
 import Web3Provider from '../components/web3/Provider';
 import { metaMask } from '../components/web3/connectors/metamask';
-
+import { useRouter } from 'next/navigation';
 import { walletRegister, useGetNonce } from '../hooks/walletLogin';
 import { useWeb3React } from '@web3-react/core';
 import {
@@ -37,6 +37,7 @@ const WalletRegisterForm = () => {
   const [successMessage, setSuccessMessage] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [checkbox, setCheckbox] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (web3) {
@@ -71,6 +72,10 @@ const WalletRegisterForm = () => {
 
   const handleCheck = () => {
     setCheckbox(!checkbox);
+  };
+
+  const handlePageChange = () => {
+    router.push('/signUp');
   };
 
   const onSubmit = async (data) => {
@@ -146,9 +151,21 @@ const WalletRegisterForm = () => {
                 onChange={handleCheck}
               />
               <br />
-              <Button className="submit-btn" type="submit" disabled={!checkbox}>
-                Submit
-              </Button>
+              <Column className="form" md={4} lg={16} sm={16}>
+                <Button
+                  className="submit-btn"
+                  type="submit"
+                  disabled={!checkbox}
+                >
+                  Submit
+                </Button>
+                <Button
+                  className="submit-btn-transparent"
+                  onClick={handlePageChange}
+                >
+                  Sign Up Using Metamask
+                </Button>
+              </Column>
             </Form>
             {successMessage && (
               <InlineNotification
