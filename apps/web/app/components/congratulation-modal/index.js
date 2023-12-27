@@ -6,7 +6,6 @@ const ModalComponent = ({ isOpen, onClose, onTabChange }) => {
   const handleClick = () => {
     onClose();
     onTabChange();
-    console.log('closeModal');
   };
 
   return (

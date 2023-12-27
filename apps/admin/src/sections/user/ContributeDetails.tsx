@@ -124,11 +124,11 @@ export default function ContributeDetail({ id }: Props) {
   const onContribute = (validity: boolean) => {
     const payload = { contributions: [{ contributionId: id, isValid: validity }] };
     mutate(payload);
-    router.push('/contribute');
+    router.push('/valid');
   };
 
   const back = () => {
-    router.push('/contribute');
+    router.push('/valid');
   };
 
   return (

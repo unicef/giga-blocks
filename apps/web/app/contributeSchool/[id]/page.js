@@ -61,8 +61,8 @@ const SchoolDetail = () => {
           <Navbar />
           <PageHeader name={data?.name} breadcrumbs={breadcrumbs} />
           <Tabs
-            selectedIndex={selectedTabIndex}
-            onSelect={updateSelectedTabIndex}
+            selectedIndex={selectedTabIndex.selectedIndex}
+            onChange={updateSelectedTabIndex}
           >
             <div className="tabs">
               <TabList

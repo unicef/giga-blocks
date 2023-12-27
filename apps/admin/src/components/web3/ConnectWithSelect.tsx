@@ -171,7 +171,7 @@ export default function ConnectWithSelect({
             <Button
               sx={{ marginRight: '15px' }}
               variant="contained"
-              color="secondary"
+              style={{background: '#0050e6'}}
               onClick={() => {
                 getSignature();
               }}
