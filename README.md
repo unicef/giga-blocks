@@ -1,23 +1,21 @@
-# Description   
-   
+# Description
+
 Monorepo for GIGA made using pnpm workspaces and added nx for caching.
 
 ## Setup and Running
 
-We are using `pnpm` as a package manager so we must install it	 as a global dependencies:
-	```npm install -g pnpm```
+We are using `pnpm` as a package manager so we must install it as a global dependencies:
+`npm install -g pnpm`
 Since this is monorepo, there is only one package.json in the root directory of the Repository. So we can directly manage all the dependencies in a single `node_modules` folder.
 Command to install dependencies:
-	```
-    pnpm install
-    ```
+`    pnpm install
+   `
 
-
-Need pnpm for package management. 
+Need pnpm for package management.
 
 Installing packages in root of repo
 
-``` 
+```
 pnpm i
 ```
 
@@ -65,6 +63,7 @@ npx nx <command(build,lint,test,serve)> <apps/libs name>
 ```
 
 Contract Addresses deployed for testing in stage server(Polygon Mumbai):
+
 ```
 
 NFT_Content_Address:0xafe9cb76a5fBcAe16E6f8e156A81dd36449c4A64
