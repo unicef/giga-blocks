@@ -8,7 +8,7 @@ import { useSellerContract } from '../../hooks/useContract';
 import NftPurchaseModal from '../../components/nftPurchaseModal';
 
 const Introduction = ({ schooldata, tokenId }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true);
   const [onSell, setOnSell] = useState(false);
   const [price, setPrice] = useState(0);
   const sellerContract = useSellerContract();
