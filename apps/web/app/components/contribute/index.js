@@ -53,6 +53,7 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex }) => {
   const handleModalClose = () => {
     onClose();
     updateSelectedTabIndex(1);
+    console.log('handleClose');
   };
 
   const onSubmit = (formData) => {
