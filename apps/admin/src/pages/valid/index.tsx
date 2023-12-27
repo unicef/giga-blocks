@@ -74,6 +74,7 @@ const ValidateData = () => {
     mutate,
     isSuccess: isValidationSuccess,
     isError: isValidationError,
+    isLoading: isValidationLoading
   } = useValidateBulkUpdate();
 
   const { data: ValidatedData, isFetching, refetch } = useValidateGet(
@@ -129,7 +130,8 @@ const ValidateData = () => {
     isValidationSuccess &&
       enqueueSnackbar('School Data are approved and updated in Database', { variant: 'success' });
     isValidationError && enqueueSnackbar('Try again', { variant: 'error' });
-  }, [isValidationSuccess, isValidationError]);
+    isValidationLoading && enqueueSnackbar(' Data approval in progress. Please wait. ', { variant: 'warning' });
+  }, [isValidationSuccess, isValidationError, isValidationLoading]);
 
   const handleSchoolSearchChange = (value: any) => {
     setSelectedSchoolSearch(value);

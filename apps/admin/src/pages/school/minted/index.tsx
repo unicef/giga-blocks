@@ -42,7 +42,7 @@ const MintedSchools = () => {
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable({defaultOrderBy: 'tokenId', defaultOrder: 'desc'});
+  } = useTable();
 
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
@@ -56,9 +56,12 @@ const MintedSchools = () => {
   useEffect(() => {
     const startItem = (page+1)*rowsPerPage - rowsPerPage;
     const endItem = page*rowsPerPage + rowsPerPage
-    const paginatedDatas = data?.schoolTokenUris.slice(startItem , endItem);
+    const newData = data?.schoolTokenUris.sort((a:any, b:any) => b.id - a.id);
+    const paginatedDatas = newData?.slice(startItem , endItem);
     setPaginatedData(paginatedDatas)
   }, [rowsPerPage, data, page])
+
+  console.log(paginatedData)
 
   const decodeSchooldata = (data: any) => {
     const encodeddata = data;  
@@ -144,7 +147,7 @@ const MintedSchools = () => {
             </Scrollbar>
           </TableContainer>
           <TablePaginationCustom
-            count={data?.schoolTokenUris.length - 1 || 0}
+            count={data?.schoolTokenUris.length || 0}
             setPage={setPage}
             page={page}
             rowsPerPage={rowsPerPage}

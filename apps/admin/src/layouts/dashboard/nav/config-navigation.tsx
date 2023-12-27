@@ -59,7 +59,7 @@ const navConfig = [
   {
     items: [
       {
-        title: 'Contribute',
+        title: 'Contributions',
         path: PATH_CONTRIBUTE.root,
         icon: ICONS.user,
       },

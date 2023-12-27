@@ -68,6 +68,7 @@ const ContributeData = () => {
     mutate,
     isSuccess: isValidationSuccess,
     isError: isValidationError,
+    isLoading: isValidationLoading
   } = useContributionValidate();
   const [selectedSchoolSearch, setSelectedSchoolSearch] = useState<SearchItem | null>();
   const [selectedContributorSearch, setSelectedContributorSearch] = useState<SearchItem | null>();
@@ -153,7 +154,8 @@ const ContributeData = () => {
     enqueueSnackbar(`Contributed Data are ${toastMessage}. Please check ${toastMessage} Data Section`, { variant: 'success' });
     refetch();
     isValidationError && enqueueSnackbar('Contributed Data are invalidated', { variant: 'error' });
-  }, [isValidationSuccess, isValidationError]);
+    isValidationLoading && enqueueSnackbar('Data validation in progress. Please wait. ', { variant: 'warning' });
+  }, [isValidationSuccess, isValidationError, isValidationLoading]);
 
   const handleValidChange = (value: string) => {
     setSelectedSchoolSearch(null);
@@ -298,7 +300,7 @@ const ContributeData = () => {
     <DashboardLayout>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
         <span style={{ fontSize: '1.5em', fontWeight: '600' }}>
-          Contributed Data{' '}
+          Contributions{' '}
           <span style={{ fontSize: '0.75em', fontWeight: '400' }}>
             {' '}
             {selectedValues?.length > 0 && `(${selectedValues?.length})`}{' '}
