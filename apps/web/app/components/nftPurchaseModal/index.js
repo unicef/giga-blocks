@@ -14,6 +14,7 @@ import {
   metaMaskLogin,
   switchMetaMaskNetwork,
 } from '../../utils/metaMaskUtils';
+import { Default_Chain_Id } from '../web3/connectors/network';
 
 const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
   const sellerContract = useSellerContract();
@@ -88,7 +89,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
 
   useEffect(() => {
     if (account) {
-      if (chainId !== 421613) setSwitchNetwork(true);
+      if (chainId !== Default_Chain_Id) setSwitchNetwork(true);
     }
   }, [account, chainId]);
 
