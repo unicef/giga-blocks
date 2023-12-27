@@ -182,7 +182,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
                                 .join(' ')
                           : 'N/A'}
                       </h4>
-                      <p className="sold">Sold</p>
+                      {/* <p className="sold">Sold</p> */}
                     </div>
                   </div>
                 </ClickableTile>
