@@ -67,9 +67,9 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
       for (let i = 0; i < encodeddata?.length; i++) {
         var owner;
        owner = await  contract.methods.ownerOf(encodeddata[i].id).call()
-        console.log({owner})
         var sold = false;
-        if(owner?.toLowerCase()=== process.env.NEXT_PUBLIC_GIGA_ESCROW_ADDRESS.toLowerCase()) sold = true;
+        if(owner?.toLowerCase() === process.env.NEXT_PUBLIC_GIGA_ESCROW_ADDRESS.toLowerCase()) sold = false;
+        else sold = true;
 
         const schoolData = {
           tokenId: encodeddata[i].id,
