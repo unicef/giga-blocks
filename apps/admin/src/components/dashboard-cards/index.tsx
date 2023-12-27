@@ -6,12 +6,22 @@ import { Grid } from '@mui/material';
 import { useSchoolCount, useSchoolGet,useMintedSchoolCount } from '@hooks/school/useSchool';
 import { useContributeGet } from '@hooks/contribute/useContribute';
 import { useUserGet } from '@hooks/user/useUser';
+import { useQuery } from 'urql';
+import { Queries } from 'src/libs/graph-query';
 
 export default function OutlinedCard() {
   const { data: mintedCount } = useMintedSchoolCount('MINTED');
   const { data: schoolCount } = useSchoolCount();
   const {data:contributionData} = useContributeGet({page: 0, perPage: 10})
   const {data:userData} = useUserGet(1, 10, 'CONTRIBUTOR')
+
+  const [result] = useQuery({
+    query: Queries.nftListQuery,
+    variables: {  },
+  });
+  const { data } = result;
+
+  const dataLength = data?.schoolTokenUris.length
 
   return (
     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
@@ -30,7 +40,7 @@ export default function OutlinedCard() {
           <CardContent>
             <Typography variant="body2">NFTs Minted</Typography>
             <Typography variant="h5" component="div">
-              {mintedCount?.toString()|| 'N/A'}
+              {dataLength|| 'N/A'}
             </Typography>
           </CardContent>
         </Card>

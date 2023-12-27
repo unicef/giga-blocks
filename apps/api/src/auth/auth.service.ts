@@ -57,7 +57,6 @@ export class AuthService {
         upperCaseAlphabets: false,
         specialChars: false,
       });
-      console.log(otp);
       if (otp) {
         this.mailService.sendOTP({ email: user?.email, otp: otp });
         this.userService.saveOtp(AuthDto, otp);

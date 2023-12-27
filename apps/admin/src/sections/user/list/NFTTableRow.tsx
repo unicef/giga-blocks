@@ -25,6 +25,18 @@ export default function NFTTableRow({
     blockTimestamp,
   } = row;
 
+  const date = new Date(blockTimestamp*1000)
+
+  var year = date.getFullYear();
+  var month = date.getMonth() + 1;
+  var day = date.getDate();
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var seconds = date.getSeconds();
+
+  // Format the date as a string
+  var formattedDate = `${year}/${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day} ${hours}:${minutes}:${seconds}`;
+
   // @ts-ignore
   const truncateString = (str) => {
       return str?.substring(0, 3) + '...' + str?.substring(str.length, str.length - 3);
@@ -73,7 +85,7 @@ export default function NFTTableRow({
           align="left"
           sx={{ textTransform: 'capitalize' }}          
         >
-          {blockTimestamp}
+          {formattedDate}
         </TableCell>
 
         <TableCell

@@ -69,16 +69,12 @@ const ValidateData = () => {
 
   const [selectedValues, setSelectedValues] = useState<SearchItem[] | TableData[]>([]);
   const [tableData, setTableData] = useState<TableData[]>([]);
-  const [result] = useQuery({
-    query: Queries.nftListQuery,
-    variables: { skip: page * rowsPerPage, first: rowsPerPage },
-  });
-  const { fetching } = result;
 
   const {
     mutate,
     isSuccess: isValidationSuccess,
     isError: isValidationError,
+    isLoading: isValidationLoading
   } = useValidateBulkUpdate();
 
   const { data: ValidatedData, isFetching, refetch } = useValidateGet(
@@ -126,13 +122,16 @@ const ValidateData = () => {
 
     mutate(payload);
     payload = [];
+    refetch()
+    setSelectedValues([])
   };
 
   useEffect(() => {
     isValidationSuccess &&
       enqueueSnackbar('School Data are approved and updated in Database', { variant: 'success' });
     isValidationError && enqueueSnackbar('Try again', { variant: 'error' });
-  }, [isValidationSuccess, isValidationError]);
+    isValidationLoading && enqueueSnackbar(' Data approval in progress. Please wait. ', { variant: 'warning' });
+  }, [isValidationSuccess, isValidationError, isValidationLoading]);
 
   const handleSchoolSearchChange = (value: any) => {
     setSelectedSchoolSearch(value);
@@ -141,12 +140,12 @@ const ValidateData = () => {
   const TabsDisplay = () => {
     return (
       <>
-        {fetching && (
+        {isFetching && (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <CircularProgress />
           </div>
         )}
-        {!fetching && (
+        {!isFetching && (
           <>
           <div style={{display: 'flex', alignItems: 'flex-end', gap: '20px'}}>
           <FormControl sx={{ width: 200 }}>

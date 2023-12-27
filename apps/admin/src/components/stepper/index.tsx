@@ -131,7 +131,6 @@ export default function HorizontalLinearStepper({propsTableData, setFile}:{props
             push(`/school/un-minted?uploadId=${response.data.data}`)
           }
           if(response?.status === 500){
-            console.log("error uploading")
             enqueueSnackbar('Error uploading to database! Please check your file',{variant: 'error'});
           }
         })

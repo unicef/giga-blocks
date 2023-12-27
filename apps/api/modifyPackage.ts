@@ -25,7 +25,9 @@ try {
     ...packageData.dependencies,
     'prisma-dbml-generator': '^0.10.0',
     'prisma-docs-generator': '^0.8.0',
+    prisma: '^5.1.0',
     'ts-node': '^10.9.1',
+    '@prisma/client': '^5.1.0',
   };
 
   packageData.prisma = {

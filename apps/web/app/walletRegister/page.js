@@ -36,6 +36,7 @@ const WalletRegisterForm = () => {
   const { initialize } = useAuthContext();
   const [successMessage, setSuccessMessage] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [checkbox, setCheckbox] = useState(null);
 
   useEffect(() => {
     if (web3) {
@@ -66,6 +67,10 @@ const WalletRegisterForm = () => {
 
   const showErrorMessage = (error) => {
     setErrorMessage(`Error registering wallet: ${error.message}`);
+  };
+
+  const handleCheck = () => {
+    setCheckbox(!checkbox);
   };
 
   const onSubmit = async (data) => {
@@ -106,9 +111,7 @@ const WalletRegisterForm = () => {
                 render={({ field }) => (
                   <TextInput
                     {...field}
-                    // id="name"
                     style={{ marginBottom: '25px', height: '48px' }}
-                    // invalid={!!errors.fullname}
                     labelText="Full Name"
                     placeholder="Enter your fullname here"
                     onChange={(e) => {
@@ -137,21 +140,13 @@ const WalletRegisterForm = () => {
               />
               <Checkbox
                 className="checkbox"
-                labelText={
-                  <>
-                    By creating an account, you agree to the{' '}
-                    <Link href="/privacy-policy" target="_blank">
-                      Terms and Conditions
-                    </Link>{' '}
-                    and our{' '}
-                    <Link href="/privacy-policy" target="_blank">
-                      Privacy Policy
-                    </Link>
-                  </>
-                }
+                id="checkbox"
+                labelText="By creating an account, you agree to the Terms and conditions and our Privacy Policy"
+                checked={checkbox}
+                onChange={handleCheck}
               />
               <br />
-              <Button className="submit-btn" type="submit">
+              <Button className="submit-btn" type="submit" disabled={!checkbox}>
                 Submit
               </Button>
             </Form>
