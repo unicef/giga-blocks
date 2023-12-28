@@ -162,7 +162,7 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex,refetch 
               id="dropdown1"
               titleText="Type of school"
               style={{ marginBottom: '25px' }}
-              label={data?.school_type === 'private' || 'Private' ? 'Private' : 'Public'}
+              label={(data?.school_type === 'private' || data?.school_type === 'Private' ) ? 'Private' : 'Public'}
               items={school_type}
               itemToString={(item) => (item ? item.label : '')}
               selectedItem={selectedOptions.school_type}
