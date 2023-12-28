@@ -128,7 +128,7 @@ export default function ContributeDetail({ id }: Props) {
   };
 
   const back = () => {
-    router.push('/valid');
+    router.push('/contribute');
   };
 
   return (

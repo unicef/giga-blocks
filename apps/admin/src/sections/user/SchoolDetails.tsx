@@ -108,7 +108,7 @@ export default function SchoolDetails({ id }: Props) {
   }, [isMintSuccess, isMintError])
 
   const back = () => {
-    router.push('/school/minted');
+    router.push('/school/un-minted');
   };
 
   return (
