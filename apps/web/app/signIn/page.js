@@ -32,14 +32,12 @@ import { metaMaskLogin } from '../utils/metaMaskUtils';
 
 const SignIn = () => {
   const route = useRouter();
-  const pathname = usePathname();
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm();
   const { initialize } = useAuthContext();
-  const [walletAddress, setWalletAddress] = useState('');
   const loginMutation = walletLogin();
   const getNonceQuery = useGetNonce();
   const web3 = useWeb3React();
@@ -56,12 +54,6 @@ const SignIn = () => {
     setShowEmailField(true);
     setSubmitButtonText('Submit');
   };
-
-  useEffect(() => {
-    if (web3) {
-      setWalletAddress(web3.account);
-    }
-  }, [web3]);
 
   useEffect(() => {
     if (!web3.isActive) {
@@ -250,7 +242,7 @@ const SignIn = () => {
             </Form>
           </Tile>
           <p style={{ marginLeft: '20px', color: '#000' }}>
-            Dont have an account ?{' '}
+            Don't have an account ?{' '}
             <Link className="link" href={'/signUp'}>
               {' '}
               Sign Up

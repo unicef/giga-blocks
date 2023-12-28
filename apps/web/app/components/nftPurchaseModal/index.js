@@ -95,6 +95,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
   useEffect(() => {
     if (account) {
       if (chainId !== Default_Chain_Id) setSwitchNetwork(true);
+      else setSwitchNetwork(false);
     }
   }, [account, chainId]);
 
@@ -218,7 +219,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
               {switchNetwork && (
                 <>
                   <br />
-                  <a onClick={handleSwitchNetwork}>{} Switch Network</a>
+                  <a style={{cursor:'pointer'}} onClick={handleSwitchNetwork}>{} Switch Network</a>
                 </>
               )}
             </Column>
