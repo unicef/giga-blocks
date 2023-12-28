@@ -30,14 +30,17 @@ const SchoolDetail = () => {
   const router = useRouter();
   const { data, isLoading } = useSchoolDetails(id);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTabIndex, setSelectedTabIndex] = useState({selectedIndex: 0});
+  const [selectedTabIndex, setSelectedTabIndex] = useState({
+    selectedIndex: 0,
+  });
 
   const user = getCurrentUser();
+
   const openModal = () => {
     if (user) {
       setIsModalOpen(true);
     } else {
-      router.push('/signIn');
+      router.push(`/signIn?returnTo=${window.location.pathname}`);
     }
   };
 
