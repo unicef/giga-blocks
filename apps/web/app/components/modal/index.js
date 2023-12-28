@@ -37,7 +37,6 @@ const CarbonModal = ({ open, onClose, email, minute, setSeconds, seconds }) => {
         push('/contributeSchool');
       })
       .catch((err) => {
-        console.log(err);
         setNotification({
           kind: 'error',
           title: `${err.response.data.message}`,
