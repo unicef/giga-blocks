@@ -205,7 +205,7 @@ export default function SchoolDetails({ id }: Props) {
               variant="contained"
               color={'info'}
               style={{ width: '300px', background: '#474747' }}
-              onClick={mintSchool}
+              disabled
             >
               Minting
             </Button> : <Button
