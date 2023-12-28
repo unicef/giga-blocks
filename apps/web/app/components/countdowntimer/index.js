@@ -5,7 +5,7 @@ const CountdownTimer = ({ minute, setSeconds, seconds }) => {
   const [expired, setExpired] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem('countdownSeconds', seconds.toString());
+    localStorage.setItem('countdownSeconds', seconds?.toString());
   }, [seconds]);
 
   useEffect(() => {
