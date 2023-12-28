@@ -8,7 +8,7 @@ import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { Modal, ModalBody } from '@carbon/react';
 
-const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex }) => {
+const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex,refetch }) => {
   const router = useRouter();
   const contributeDataMutation = useContributeData();
   const { handleSubmit, control, setValue } = useForm();
@@ -17,6 +17,18 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex }) => {
   const [error, setError] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const setDefaultValues = () => {
+      setValue('latitude', data.latitude);
+      setValue('longitude', data.longitude);
+      setValue('country', data.country);
+      setSelectedOptions({
+        dropdown1: { selectedItem: { value: data?.school_type } },
+        dropdown3: { selectedItem: { value: data?.connectivity } },
+        dropdown4: { selectedItem: { value: data?.coverage_availability } },
+        dropdown5: { selectedItem: { value: data?.electricity_available } },
+      });    
+  }
 
   useEffect(() => {
     if (
@@ -51,6 +63,7 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex }) => {
   };
 
   const handleModalClose = () => {
+    refetch();
     onClose();
     updateSelectedTabIndex({selectedIndex: 1});
   };
@@ -110,9 +123,11 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex }) => {
           school_Id: id,
         };
         contributeDataMutation.mutate(formattedData);
+        setDefaultValues();
       }
       onClose();
       openModal();
+
     } catch (error) {
       console.error('Error submitting form:', error);
     }
@@ -147,7 +162,7 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex }) => {
               id="dropdown1"
               titleText="Type of school"
               style={{ marginBottom: '25px' }}
-              label={data?.school_type === 'private' ? 'Private' : 'Public'}
+              label={data?.school_type === 'private' || 'Private' ? 'Private' : 'Public'}
               items={school_type}
               itemToString={(item) => (item ? item.label : '')}
               selectedItem={selectedOptions.school_type}
