@@ -150,6 +150,7 @@ const SignUp = () => {
                 labelText="By creating an account, you agree to the Terms and conditions and our Privacy Policy"
                 checked={checkbox}
                 onChange={handleCheck}
+                style={{ color: '#161616' }}
               />
               <br />
               <Grid>
@@ -171,7 +172,7 @@ const SignUp = () => {
               </Grid>
             </Form>
           </Tile>
-          <p style={{ marginLeft: '20px' }}>
+          <p style={{ marginLeft: '20px', color: '#161616' }}>
             Already have an account? <Link href="/signIn">Sign In</Link>
           </p>
         </Column>
