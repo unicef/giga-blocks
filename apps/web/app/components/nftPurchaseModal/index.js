@@ -13,7 +13,9 @@ import { ethers } from 'ethers';
 import {
   metaMaskLogin,
   switchMetaMaskNetwork,
+  metaMaskLogout,
 } from '../../utils/metaMaskUtils';
+import { Default_Chain_Id } from '../web3/connectors/network';
 
 const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
   const sellerContract = useSellerContract();
@@ -23,6 +25,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
   const [showCongratulationModal, setShowCongratulationModal] = useState(false);
   const [switchNetwork, setSwitchNetwork] = useState(false);
   const [price, setPrice] = useState(0);
+  const [hash,setHash] = useState('');
   const [priceInEth, setPriceEth] = useState(0);
 
   const generateIdenticon = (image) => {
@@ -56,6 +59,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
         .then((hash) => {
           if (hash) {
             onClose();
+            setHash(hash);
             setShowCongratulationModal(true);
           }
         })
@@ -75,6 +79,10 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
     }
   };
 
+  const disconnectMetamask = async () => {
+    await metaMaskLogout();
+  };
+
   const closeCongratulationModal = () => {
     setShowCongratulationModal(false);
   };
@@ -86,7 +94,8 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
 
   useEffect(() => {
     if (account) {
-      if (chainId !== 421613) setSwitchNetwork(true);
+      if (chainId !== Default_Chain_Id) setSwitchNetwork(true);
+      else setSwitchNetwork(false);
     }
   }, [account, chainId]);
 
@@ -180,6 +189,20 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
                   >
                     {loading ? 'Loading...' : 'Submit'}
                   </Button>
+                  <Button
+                    onClick={disconnectMetamask}
+                    renderIcon={ArrowRight}
+                    style={{
+                      marginTop: '12px',
+                      marginBottom: '12px',
+                      marginLeft: '12px',
+                      background: 'transparent',
+                      color: '#0050e6',
+                      border: '1px solid #0050e6',
+                    }}
+                  >
+                    Disconnect Wallet
+                  </Button>
                 </>
               ) : (
                 <>
@@ -196,7 +219,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
               {switchNetwork && (
                 <>
                   <br />
-                  <a onClick={handleSwitchNetwork}>{} Switch Network</a>
+                  <a style={{cursor:'pointer'}} onClick={handleSwitchNetwork}>{} Switch Network</a>
                 </>
               )}
             </Column>
@@ -206,6 +229,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
       {showCongratulationModal && (
         <CongratulationModalComponent
           schooldata={schooldata}
+          transactionHash = {hash}
           isOpen={showCongratulationModal}
           onClose={closeCongratulationModal}
         />

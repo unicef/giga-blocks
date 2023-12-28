@@ -11,6 +11,7 @@ import {
   TableContainer,
   Table,
   TableBody,
+  CircularProgress,
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useSnackbar } from '@components/snackbar';
@@ -48,7 +49,8 @@ export default function ValidateDetail({ id }: Props) {
     mintedStatus: '',
   });
 
-  const { data, isSuccess, isError, refetch } = useValidDataGetById(id);
+  const { data, isSuccess, isError, refetch, isFetching } = useValidDataGetById(id);
+
   const { enqueueSnackbar } = useSnackbar();
   const [tableData, setTableData] = useState<any>();
 
@@ -94,9 +96,9 @@ export default function ValidateDetail({ id }: Props) {
 
   useEffect(() => {
     if (isSuccess) {
-      const keyValue = Object.entries(data?.data);
+      const keyValue = Object?.entries(data?.data);
       const jsonString = `${keyValue[0][0]}: ${keyValue[0][1]}`;
-      const outputArray = Object.keys(data?.data)?.map((key) => ({ key, value: data?.data[key] }));
+      const outputArray = Object?.keys(data?.data)?.map((key) => ({ key, value: data?.data[key] }));
       setTableData(outputArray);
       setProfile({
         fullname: data?.contributedUser?.name,
@@ -111,7 +113,7 @@ export default function ValidateDetail({ id }: Props) {
   }, [isSuccess, isError, data]);
 
   useEffect(() => {
-    isValidationSuccess && enqueueSnackbar('Successfully validated', { variant: 'success' });
+    isValidationSuccess && enqueueSnackbar('Successfully Approved', { variant: 'success' });
     refetch();
     isValidationError && enqueueSnackbar('Unsuccessful', { variant: 'error' });
   }, [isValidationSuccess, isValidationError]);
@@ -213,6 +215,7 @@ export default function ValidateDetail({ id }: Props) {
         <Container>
           <Box justifyContent={'center'}>
             <Stack alignItems="center" sx={{ mt: 1 }}>
+              {profile && profile?.status === 'false' &&
               <Button
                 variant="contained"
                 color={'info'}
@@ -220,7 +223,7 @@ export default function ValidateDetail({ id }: Props) {
                 onClick={onValidate}
               >
                 Approve
-              </Button>
+              </Button>}
             </Stack>
           </Box>
         </Container>
@@ -244,13 +247,17 @@ export default function ValidateDetail({ id }: Props) {
 
                 <TableBody>
                   {sortedData &&
-                    sortedData?.map((row: any) => (
+                    sortedData.length > page*rowsPerPage && sortedData?.map((row: any) => (
                       <ContributionDetailTableRow
                         key={row.id}
                         row={row}
                       />
                     ))}
-                  <TableNoData isNotFound={tableData?.length === 0} />
+                  {!isFetching ? (
+                      <TableNoData isNotFound={sortedData?.length < page*rowsPerPage} />
+                    ) : (
+                      <CircularProgress color="inherit" />
+                    )}
                 </TableBody>
               </Table>
             </Scrollbar>

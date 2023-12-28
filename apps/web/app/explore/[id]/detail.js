@@ -35,7 +35,7 @@ const SchoolDetail = ({ id }) => {
 
   const breadcrumbs = [
     { text: 'Home', link: '/' },
-    { text: 'Explore NFT', link: '/explore' },
+    { text: 'NFTMarketPlace', link: '/explore' },
   ];
 
   return (
