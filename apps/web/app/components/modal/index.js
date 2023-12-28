@@ -4,12 +4,14 @@ import { useForm, Controller } from 'react-hook-form';
 import { saveAccessToken, saveCurrentUser } from '../../utils/sessionManager';
 import { useRouter } from 'next/navigation';
 import { useAuthContext } from '../../auth/useAuthContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import CountdownTimer from '../countdowntimer'
 import { useOtp } from '../../hooks/useOtp';
 
-const CarbonModal = ({ open, onClose, email }) => {
+const CarbonModal = ({ open, onClose, email, minute, setSeconds, seconds }) => {
   const { handleSubmit, control, reset } = useForm();
   const [error, setError] = useState();
+  const [otpError, setOtpError] = useState(true)
   const { initialize } = useAuthContext();
   const login = useLogin();
   const { push } = useRouter();
@@ -17,6 +19,7 @@ const CarbonModal = ({ open, onClose, email }) => {
   const [notification, setNotification] = useState(null);
 
   const onAdd = async (data) => {
+
     const payload = {
       email,
       otp: data.name,
@@ -37,9 +40,9 @@ const CarbonModal = ({ open, onClose, email }) => {
         console.log(err);
         setNotification({
           kind: 'error',
-          title: 'Error in OTP login. Please try again.',
+          title: `${err.response.data.message}`,
         });
-        setError('OTP verification unsuccessful. Please try again.');
+        setError(`${err.response.data.message}, please re-send OTP and try again.`);
       });
   };
 
@@ -48,12 +51,23 @@ const CarbonModal = ({ open, onClose, email }) => {
   };
 
   const onSubmit = async () => {
+
+    if(email === ''){
+      setNotification({
+        kind: 'error',
+        title: 'Please enter email',
+      })
+      return null
+    }
+
     otpMutateAsync({ email })
       .then(() => {
         setNotification({
           kind: 'success',
           title: 'Sent successfully',
         })
+        setError('Please enter the new OTP.');
+        setSeconds(180)
       })
       .catch((error) => {
         setNotification({
@@ -61,6 +75,26 @@ const CarbonModal = ({ open, onClose, email }) => {
           title: 'User not found.',
         });
       });
+  };
+
+  const checkEmpty = (e) => {
+    const value = e.target.value;
+    if (value.length === 6){
+      setOtpError(false)
+    }
+    else{
+      setOtpError(true)
+    }
+  }
+
+  const handleKeyDown = (e) => {
+    const value = e.target.value
+    if(value.length === 6){
+      if (e.key === 'Enter') {
+    e.preventDefault();
+        onAdd({name: value});
+      }
+    }
   };
 
   return (
@@ -88,13 +122,18 @@ const CarbonModal = ({ open, onClose, email }) => {
         modalLabel={`OTP sent to ${email}.`}
         secondaryButtonText="Cancel"
         primaryButtonText="Submit"
+        primaryButtonDisabled={otpError}
         onRequestSubmit={handleSubmit(onAdd)}
       >
         <Form>
           <Controller
             name="name"
             control={control}
-            rules={{ required: 'Email is required' }}
+            rules={{ required: 'OTP is required', 
+            pattern: {
+              message: 'OTP',
+            }, }}
+            
             render={({ field }) => (
               <TextInput
                 {...field}
@@ -102,26 +141,27 @@ const CarbonModal = ({ open, onClose, email }) => {
                 // style={{height: "48px" }}
                 labelText="Enter OTP here"
                 placeholder=""
+                onKeyDown={handleKeyDown}
                 onChange={(e) => {
+                  checkEmpty(e);
                   field.onChange(e);
                 }}
+                type='number'
+                maxLength={6}
               />
             )}
           />
         </Form>
-        <Button
-                className="submit-btn"
+        <CountdownTimer minute={minute} setSeconds={setSeconds} seconds={seconds}/>
+        <a
                 style={{
-                  marginTop: '20px',
-                  width: '100%',
-                  background: 'transparent',
-                  color: '#0f62fe',
-                  border: '1px solid #0f62fe',
+                  marginTop: '10px',
+                  cursor: 'pointer'
                 }}
                 onClick={onSubmit}
               >
                 Resend OTP
-              </Button>
+        </a>
       </Modal>
     </>
   );
