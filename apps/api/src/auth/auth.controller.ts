@@ -3,7 +3,7 @@ import { totp } from 'otplib';
 
 import { AuthService } from './auth.service';
 
-import { AuthDto, AuthSendOtp, AuthWallet, RefreshToken, WalletRegister } from './dto';
+import { AuthSendOtp, AuthWallet, RefreshToken, WalletRegister } from './dto';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from '../users/dto/user.dto';
 

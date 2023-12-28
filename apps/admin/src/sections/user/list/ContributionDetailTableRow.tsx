@@ -38,6 +38,7 @@ export default function ContributionDetailTableRow({
       <TableRow
         hover
         // selected={selected}
+        sx={{cursor: 'pointer'}}
       >
 
         <TableCell>
@@ -45,7 +46,7 @@ export default function ContributionDetailTableRow({
         </TableCell>
 
         <TableCell align="left">
-          {value}
+          {value.toString()}
         </TableCell>
 
       </TableRow>

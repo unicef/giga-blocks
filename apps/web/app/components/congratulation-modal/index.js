@@ -4,8 +4,8 @@ import { Modal, ModalBody, ModalFooter, Button } from '@carbon/react';
 
 const ModalComponent = ({ isOpen, onClose, onTabChange }) => {
   const handleClick = () => {
-    onTabChange();
     onClose();
+    onTabChange();
   };
 
   return (

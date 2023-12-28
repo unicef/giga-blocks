@@ -12,12 +12,12 @@ export default function Login() {
           Sign in options
         </Typography>
         <Stack direction="row" justifyContent="space-between">
-          <Button variant="contained" color="secondary" onClick={() => push('/auth/email-login')}>
+          <Button variant="contained" style={{background: '#0050e6'}} onClick={() => push('/auth/email-login')}>
             Sign in Using Email
           </Button>
           <Button
             variant="contained"
-            color="secondary"
+            style={{background: '#0050e6'}}
             onClick={() => push('/auth/metamask-login')}
           >
             Sign in Using Metamask

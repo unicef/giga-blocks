@@ -15,7 +15,7 @@ export const metaMaskLogin = async () => {
 
 export const metaMaskLogout = async () => {
   try {
-    await metaMask.deactivate();
+    await metaMask.resetState()
   } catch (err) {
     console.log(err);
   }

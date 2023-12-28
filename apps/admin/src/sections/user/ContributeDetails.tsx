@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -47,8 +47,6 @@ export default function ContributeDetail({ id }: Props) {
     isSuccess: isValidationSuccess,
     isError: isValidationError,
   } = useContributionValidate();
-
-  const web3 = useWeb3React();
 
   const router = useRouter();
 
@@ -126,11 +124,11 @@ export default function ContributeDetail({ id }: Props) {
   const onContribute = (validity: boolean) => {
     const payload = { contributions: [{ contributionId: id, isValid: validity }] };
     mutate(payload);
-    router.push('/contribute');
+    router.push('/valid');
   };
 
   const back = () => {
-    router.push('/contribute');
+    router.push('/valid');
   };
 
   return (
@@ -154,6 +152,7 @@ export default function ContributeDetail({ id }: Props) {
                       name="name"
                       value={profile?.fullname || ''}
                       label="Contributed by"
+                      disabled
                     />
 
                     <ProfileTextField
@@ -175,19 +174,22 @@ export default function ContributeDetail({ id }: Props) {
                         name="latitude"
                         value={profile?.createdAt || ''}
                         label="Created At"
+                        disabled
                       />
                       <ProfileTextField
                         name="longitude"
                         value={profile?.status || ''}
                         label="Status"
+                        disabled
                       />
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <span>Contributed Data</span>
                         <span>
                           <ProfileTextField
                             name="coverage"
-                            value={Object.values(profile?.contributed_data)[0] || ''}
+                            value={Object.values(profile?.contributed_data)[0]?.toString() || ''}
                             label={Object.keys(profile?.contributed_data)[0] || ''}
+                            disabled
                           />
                         </span>
                       </div>

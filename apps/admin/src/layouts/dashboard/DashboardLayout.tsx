@@ -1,20 +1,13 @@
 import { useState } from 'react';
-// @mui
 import { Box } from '@mui/material';
-// hooks
 import useResponsive from '../../hooks/useResponsive';
-// auth
 import AuthGuard from '../../auth/AuthGuard';
-// components
 import { useSettingsContext } from '../../components/settings';
-//
 import Main from './Main';
 import Header from './header';
 import NavMini from './nav/NavMini';
 import NavVertical from './nav/NavVertical';
 import NavHorizontal from './nav/NavHorizontal';
-
-// ----------------------------------------------------------------------
 
 type Props = {
   children?: React.ReactNode;

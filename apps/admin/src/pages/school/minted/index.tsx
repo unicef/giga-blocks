@@ -12,15 +12,13 @@ import {
   Divider,
   TableContainer,
   Table,
-  TableBody,
-  TextField
+  TableBody
 } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { Queries } from 'src/libs/graph-query';
-import { useSchoolCount } from '@hooks/school/useSchool';
 
 const MintedSchools = () => {
   const TABLE_HEAD = [
@@ -30,6 +28,7 @@ const MintedSchools = () => {
     { id: 'longitude', label: 'Longitude', align: 'left' },
     { id: 'mintedStatus', label: 'Status', align: 'left' },
     { id: 'tokenId', label: 'TokenId', align: 'left' },
+    { id: 'mintedAt', label: 'Minted At', align: 'left' },
   ];
 
   const {
@@ -43,7 +42,7 @@ const MintedSchools = () => {
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable({defaultOrderBy: 'tokenId', defaultOrder: 'desc'});
+  } = useTable();
 
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
@@ -57,9 +56,12 @@ const MintedSchools = () => {
   useEffect(() => {
     const startItem = (page+1)*rowsPerPage - rowsPerPage;
     const endItem = page*rowsPerPage + rowsPerPage
-    const paginatedDatas = data?.schoolTokenUris.slice(startItem , endItem);
+    const newData = data?.schoolTokenUris.sort((a:any, b:any) => b.id - a.id);
+    const paginatedDatas = newData?.slice(startItem , endItem);
     setPaginatedData(paginatedDatas)
   }, [rowsPerPage, data, page])
+
+  console.log(paginatedData)
 
   const decodeSchooldata = (data: any) => {
     const encodeddata = data;  
@@ -68,6 +70,7 @@ const MintedSchools = () => {
       const decodedData = atob(encodeddata[i].tokenUri.substring(29));
       const schoolData = {
         tokenId: encodeddata[i].id,
+        mintedAt: encodeddata[i].mintedAt,
         ...JSON.parse(decodedData),
       };
       decodedShooldata.push(schoolData);
@@ -85,6 +88,7 @@ const MintedSchools = () => {
           coverage_availabitlity: row.coverage_availabitlity,
           electricity_availabilty: row.electricity_availabitlity,
           mintedStatus: 'MINTED',
+          mintedAt: row.mintedAt
         });
       });
     setTableData(filteredData);
@@ -143,7 +147,7 @@ const MintedSchools = () => {
             </Scrollbar>
           </TableContainer>
           <TablePaginationCustom
-            count={data?.schoolTokenUris.length - 1 || 0}
+            count={data?.schoolTokenUris.length || 0}
             setPage={setPage}
             page={page}
             rowsPerPage={rowsPerPage}

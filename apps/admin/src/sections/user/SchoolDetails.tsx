@@ -1,15 +1,13 @@
-import { useState, ChangeEvent, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, MenuItem, Select, Button, Container } from '@mui/material';
+import { Box, Card, Grid, Stack, Button, Container } from '@mui/material';
 import FormProvider, { ProfileTextField } from '@components/hook-form';
 import { useSchoolGetById } from '@hooks/school/useSchool';
 import CustomBreadcrumbs from '@components/custom-breadcrumbs';
 // @ts-ignore
 import Identicon from 'react-identicons';
 import { useMintSchools } from '@hooks/school/useSchool';
-import { useWeb3React } from '@web3-react/core';
 import { PATH_DASHBOARD, PATH_SCHOOL } from '@routes/paths';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
@@ -18,17 +16,6 @@ interface Props {
   isEdit?: boolean;
   currentUser?: any;
   id?: string | string[] | undefined;
-}
-
-interface FormValuesProps {
-  id: string;
-  name: string;
-  email: string;
-  position: string | null;
-  phone: string;
-  affiliation: string | null;
-  roles: string;
-  is_active: boolean;
 }
 
 export default function SchoolDetails({ id }: Props) {
@@ -49,12 +36,9 @@ export default function SchoolDetails({ id }: Props) {
   const {
     mutate,
     isError: isMintError,
-    data: mintData,
     isSuccess: isMintSuccess,
-    error: mintError,
   } = useMintSchools();
 
-  const web3 = useWeb3React();
   const router = useRouter()
 
   const [nftData, setNftData] = useState({
@@ -111,14 +95,7 @@ export default function SchoolDetails({ id }: Props) {
     roles: Yup.string(),
   });
 
-  const methods = useForm<FormValuesProps>({
-    resolver: yupResolver(UpdateUserSchema),
-  });
-
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
+  const methods = useForm();
 
   const mintSchool = async () => {
     mutate({ data: nftData });
@@ -155,6 +132,7 @@ export default function SchoolDetails({ id }: Props) {
                       name="name"
                       value={profile?.fullname || ''}
                       label="Full Name"
+                      disabled
                     />
 
                     <ProfileTextField
@@ -176,21 +154,25 @@ export default function SchoolDetails({ id }: Props) {
                         name="latitude"
                         value={profile?.latitude || ''}
                         label="Latitude"
+                        disabled
                       />
                       <ProfileTextField
                         name="longitude"
                         value={profile?.longitude || ''}
                         label="Longitude"
+                        disabled
                       />
                       <ProfileTextField
                         name="connectivity"
                         value={profile?.connectivity === 'true' ? 'Yes' : 'No' || ''}
                         label="Connectivity"
+                        disabled
                       />
                       <ProfileTextField
                         name="coverage"
                         value={profile?.coverage === 'true' ? 'Yes' : 'No' || ''}
                         label="Coverage"
+                        disabled
                       />
                     </Box>
                   </Box>
@@ -209,9 +191,8 @@ export default function SchoolDetails({ id }: Props) {
       <Grid item xs={4}>
         <Container>
           <Box justifyContent={'center'}>
-            {/* <Image width={250} height={250} alt='USER' src={'/assets/Image-right.svg'}/> */}
             <Stack alignItems="center" sx={{ mt: 1 }}>
-              {profile.mintedStatus === 'NOTMINTED' && (
+              {profile.mintedStatus === 'NOTMINTED' ? (
                 <Button
                   variant="contained"
                   color={'info'}
@@ -220,7 +201,21 @@ export default function SchoolDetails({ id }: Props) {
                 >
                   Mint
                 </Button>
-              )}
+              ) : profile.mintedStatus === 'ISMINTING' ? <Button
+              variant="contained"
+              color={'info'}
+              style={{ width: '300px', background: '#474747' }}
+              onClick={mintSchool}
+            >
+              Minting
+            </Button> : <Button
+              variant="contained"
+              color={'success'}
+              style={{ width: '300px', background: '#474747' }}
+              onClick={mintSchool}
+            >
+              Minted
+            </Button>}
             </Stack>
             <Stack sx={{ mt: 8 }}>
               <Box display="flex" justifyContent="center">

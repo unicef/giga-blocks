@@ -31,7 +31,8 @@ export default function SchoolTableRow({
     country,
     longitude,
     latitude,
-    mintedStatus
+    mintedStatus,
+    mintedAt
   } = row;
 
   const { push } = useRouter();
@@ -64,11 +65,24 @@ export default function SchoolTableRow({
     }
   };
 
+  const date = new Date(mintedAt*1000)
+
+  var year = date.getFullYear();
+  var month = date.getMonth() + 1;
+  var day = date.getDate();
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var seconds = date.getSeconds();
+
+  // Format the date as a string
+  var formattedDate = `${year}/${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day} ${hours}:${minutes}:${seconds}`;
+
   return (
     <>
       <TableRow
         hover
         // selected={selected}
+        sx={{cursor: 'pointer'}}
       >
         {checkbox && (
           <TableCell padding="checkbox">
@@ -125,7 +139,16 @@ export default function SchoolTableRow({
           {id}
           </a>
         </TableCell>
-}
+        }
+        {mintedStatus =='MINTED' && 
+        <TableCell
+        align="left"
+        sx={{ textTransform: 'capitalize' }}
+        onClick={() => handleEditRow(id)}
+        >
+        {formattedDate}
+        </TableCell>
+        }
       </TableRow>
     </>
   );

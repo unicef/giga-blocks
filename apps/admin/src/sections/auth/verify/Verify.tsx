@@ -24,7 +24,6 @@ export default function VerifyCodePage() {
         if (res?.success) enqueueSnackbar('Otp has been sent again, Please check your email!!');
       } catch (error) {
         console.error('Error occurred while resending code:', error);
-        // Handle the error (e.g., display an error message)
       }
     }
   }, [currentEmail, handleOtpRequest, enqueueSnackbar]);

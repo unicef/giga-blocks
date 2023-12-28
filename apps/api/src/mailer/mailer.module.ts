@@ -31,7 +31,7 @@ import { SchoolService } from 'src/schools/schools.service';
             pass: configService.get('EMAIL_PASSWORD'),
           },
         },
-        defaults: { from: '"No Reply" <no-reply@rumsan.com>' },
+        defaults: { from: '"No Reply" <no-reply@mailer.com>' },
         template: {
           dir: __dirname + '/templates',
           adapter: new HandlebarsAdapter(),

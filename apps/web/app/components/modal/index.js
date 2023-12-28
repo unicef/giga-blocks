@@ -1,10 +1,11 @@
-import { Modal, TextInput, Form, InlineNotification } from '@carbon/react';
+import { Modal, TextInput, Form, InlineNotification, Button } from '@carbon/react';
 import { useLogin } from '../../hooks/useSignUp';
 import { useForm, Controller } from 'react-hook-form';
 import { saveAccessToken, saveCurrentUser } from '../../utils/sessionManager';
 import { useRouter } from 'next/navigation';
 import { useAuthContext } from '../../auth/useAuthContext';
 import { useState } from 'react';
+import { useOtp } from '../../hooks/useOtp';
 
 const CarbonModal = ({ open, onClose, email }) => {
   const { handleSubmit, control, reset } = useForm();
@@ -12,6 +13,7 @@ const CarbonModal = ({ open, onClose, email }) => {
   const { initialize } = useAuthContext();
   const login = useLogin();
   const { push } = useRouter();
+  const {mutateAsync:otpMutateAsync} = useOtp()
   const [notification, setNotification] = useState(null);
 
   const onAdd = async (data) => {
@@ -43,6 +45,22 @@ const CarbonModal = ({ open, onClose, email }) => {
 
   const onCloseNotification = () => {
     setNotification(null);
+  };
+
+  const onSubmit = async () => {
+    otpMutateAsync({ email })
+      .then(() => {
+        setNotification({
+          kind: 'success',
+          title: 'Sent successfully',
+        })
+      })
+      .catch((error) => {
+        setNotification({
+          kind: 'error',
+          title: 'User not found.',
+        });
+      });
   };
 
   return (
@@ -91,6 +109,19 @@ const CarbonModal = ({ open, onClose, email }) => {
             )}
           />
         </Form>
+        <Button
+                className="submit-btn"
+                style={{
+                  marginTop: '20px',
+                  width: '100%',
+                  background: 'transparent',
+                  color: '#0f62fe',
+                  border: '1px solid #0f62fe',
+                }}
+                onClick={onSubmit}
+              >
+                Resend OTP
+              </Button>
       </Modal>
     </>
   );
