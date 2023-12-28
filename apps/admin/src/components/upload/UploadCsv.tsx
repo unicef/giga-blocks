@@ -222,7 +222,7 @@ function Placeholder({ fileType, ...other }: PlaceholderProps) {
           >
             browse
           </Typography>
-          thorough your machine
+          through your machine
         </Typography>
       </div>
     </Stack>

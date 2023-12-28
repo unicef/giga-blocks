@@ -17,7 +17,7 @@ const CountdownTimer = ({ minute, setSeconds, seconds }) => {
 
   useEffect(() => {
     if (seconds <= 0) {
-      setExpired(false);
+      setExpired(true);
     }
   }, [seconds]);
 
@@ -33,7 +33,7 @@ const CountdownTimer = ({ minute, setSeconds, seconds }) => {
     <>
       {expired ? (
         <Typography variant="body2" sx={{ color: '#f7931e', mb: 5 }}>
-          Your OTP has expired.{' '}
+          Your OTP has expired, please resend OTP to login.
         </Typography>
       ) : (
         <Typography variant="body2" sx={{ my: 3, color: 'black' }}>
