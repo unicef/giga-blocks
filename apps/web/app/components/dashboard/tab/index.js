@@ -28,6 +28,7 @@ const ListTabs = () => {
           }}
         >
           <TabList
+            aria-label="List of tabs"
             style={{
               display: 'flex',
             }}
