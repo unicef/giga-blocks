@@ -48,9 +48,11 @@ const SignIn = () => {
   const [openModal, setOpenModal] = useState(false);
   const [showEmailField, setShowEmailField] = useState(false);
   const [previousUrl, setPreviousUrl] = useState(null);
+  const [minute, setMinute] = useState(3)
   const [submitButtonText, setSubmitButtonText] =
     useState('Sign in with Email');
   const [notification, setNotification] = useState(null);
+  const [seconds, setSeconds] = useState(minute);
 
   const showEmailInput = () => {
     setShowEmailField(true);
@@ -82,6 +84,7 @@ const SignIn = () => {
 
   const onSubmit = async (data,e) => {
     e.preventDefault();
+    setSeconds(180)
     sendOtp
       .mutateAsync({ email: data.email })
       .then(() => {
@@ -181,7 +184,7 @@ const SignIn = () => {
           }}
         />
       )}
-      <CarbonModal open={openModal} onClose={onClose} email={email} />
+      <CarbonModal open={openModal} onClose={onClose} email={email} minute={minute} seconds={seconds} setSeconds={setSeconds}/>
       <Navbar />
       <Grid className="landing-page preview1Background signUp-grid" fullWidth>
         <Column className="form" md={4} lg={8} sm={4}>
@@ -216,9 +219,6 @@ const SignIn = () => {
               {errors.email && (
                 <p style={{ color: 'red' }}>{errors.email.message}</p>
               )}
-              {/* {showEmailField && (
-                <Checkbox className="checkbox" labelText="Remember ID" />
-              )} */}
               <br />
               <Button
                 className="submit-btn"
