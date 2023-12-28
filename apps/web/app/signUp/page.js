@@ -24,7 +24,6 @@ import { metaMaskLogin } from '../utils/metaMaskUtils';
 const SignUp = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
-  const account = hooks.useAccount();
   const { handleSubmit, control } = useForm();
   const [openModal, setOpenModal] = useState(false);
   const [checkbox, setCheckbox] = useState(false);
