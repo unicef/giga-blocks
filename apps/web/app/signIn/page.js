@@ -185,7 +185,6 @@ const SignIn = () => {
                   name="email"
                   control={control}
                   rules={{
-                    required: 'Email is required',
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
                       message: 'Invalid email address',
@@ -195,7 +194,11 @@ const SignIn = () => {
                     <TextInput
                       {...field}
                       id="email"
-                      style={{ marginBottom: '25px', height: '48px' }}
+                      style={{
+                        marginBottom: '25px',
+                        height: '48px',
+                        color: '#525252',
+                      }}
                       labelText="Email"
                       placeholder="Enter your email here"
                       onChange={(e) => {
@@ -208,9 +211,6 @@ const SignIn = () => {
               {errors.email && (
                 <p style={{ color: 'red' }}>{errors.email.message}</p>
               )}
-              {/* {showEmailField && (
-                <Checkbox className="checkbox" labelText="Remember ID" />
-              )} */}
               <br />
               <Button
                 className="submit-btn"
