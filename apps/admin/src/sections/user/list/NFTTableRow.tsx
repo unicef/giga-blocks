@@ -7,7 +7,6 @@ import {
 } from '@mui/material';
 
 // components
-import { useRouter } from 'next/router';
 import Tooltip from '@mui/material/Tooltip';
 
 type Props = {

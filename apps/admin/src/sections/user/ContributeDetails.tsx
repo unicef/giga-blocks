@@ -1,14 +1,11 @@
 import { useState, useEffect } from 'react';
-import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, MenuItem, Select, Button, Container } from '@mui/material';
+import { Box, Card, Grid, Stack, Button, Container } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useSnackbar } from '@components/snackbar';
 import FormProvider, { ProfileTextField } from '@components/hook-form';
 import CustomBreadcrumbs from '@components/custom-breadcrumbs';
 import { PATH_DASHBOARD, PATH_CONTRIBUTE } from '@routes/paths';
-import { useWeb3React } from '@web3-react/core';
 import { useContributionGetById, useContributionValidate } from '@hooks/contribute/useContribute';
 
 interface Props {
@@ -17,19 +14,8 @@ interface Props {
   id?: string | string[] | undefined;
 }
 
-interface FormValuesProps {
-  id: string;
-  name: string;
-  email: string;
-  position: string | null;
-  phone: string;
-  affiliation: string | null;
-  roles: string;
-  is_active: boolean;
-}
-
 export default function ContributeDetail({ id }: Props) {
-  const [profile, setProfile] = useState({
+  const [profile, setProfile] = useState<any>({
     fullname: '',
     schoolName: '',
     createdAt: '',
@@ -101,25 +87,7 @@ export default function ContributeDetail({ id }: Props) {
     });
   }, [data]);
 
-  const UpdateUserSchema = Yup.object().shape({
-    name: Yup.string()
-      .required()
-      .matches(/^[a-zA-Z\s]+$/, 'Name must contain only alphabets and spaces'),
-    email: Yup.string().email('Email must be a valid email address'),
-    phone: Yup.number().typeError('Phone must be a valid number'),
-    position: Yup.string(),
-    affiliation: Yup.string(),
-    roles: Yup.string(),
-  });
-
-  const methods = useForm<FormValuesProps>({
-    resolver: yupResolver(UpdateUserSchema),
-  });
-
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
+  const methods = useForm();
 
   const onContribute = (validity: boolean) => {
     const payload = { contributions: [{ contributionId: id, isValid: validity }] };
@@ -187,7 +155,7 @@ export default function ContributeDetail({ id }: Props) {
                         <span>
                           <ProfileTextField
                             name="coverage"
-                            value={Object.values(profile?.contributed_data)[0] || ''}
+                            value={Object.values(profile?.contributed_data)[0]  === true ? 'Yes' : Object.values(profile?.contributed_data)[0] === false ? 'No' : Object.values(profile?.contributed_data)[0]  || ''}
                             label={Object.keys(profile?.contributed_data)[0] || ''}
                             disabled
                           />
