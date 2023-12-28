@@ -32,7 +32,9 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
   const [schoolData, setSchoolData] = useState([]);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
   const [imageData, setImageData] = useState([]);
-  const contract = getNftContract(process.env.NEXT_PUBLIC_GIGA_COLLECTOR_NFT_ADDRESS);
+  const contract = getNftContract(
+    process.env.NEXT_PUBLIC_GIGA_COLLECTOR_NFT_ADDRESS
+  );
 
   const generateIdenticon = (image) => {
     const size = 50;
@@ -43,7 +45,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
   useEffect(() => {
     if (queryData) decodeSchooldata(queryData);
     if (imagedata) decodeImage(imagedata?.data?.nftImages);
-  }, [queryData]);
+  }, [queryData, imagedata]);
 
   const decodeImage = (data) => {
     const decodedImage = [];
@@ -66,16 +68,20 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
     if (!variables?.id) {
       for (let i = 0; i < encodeddata?.length; i++) {
         var owner;
-       owner = await  contract.methods.ownerOf(encodeddata[i].id).call()
+        owner = await contract.methods.ownerOf(encodeddata[i].id).call();
         var sold = false;
-        if(owner?.toLowerCase() === process.env.NEXT_PUBLIC_GIGA_ESCROW_ADDRESS.toLowerCase()) sold = false;
+        if (
+          owner?.toLowerCase() ===
+          process.env.NEXT_PUBLIC_GIGA_ESCROW_ADDRESS.toLowerCase()
+        )
+          sold = false;
         else sold = true;
 
         const schoolData = {
           tokenId: encodeddata[i].id,
           schoolName: encodeddata[i].name,
           country: encodeddata[i].location,
-          sold: sold
+          sold: sold,
         };
         decodedShooldata.push(schoolData);
       }
@@ -112,20 +118,19 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
       {fetching === false ? (
         <Grid fullWidth style={{ margin: '30px auto' }}>
           {schoolData.length > 0 ? (
-            schoolData?.map((school) => (
+            schoolData?.map((school, index) => (
               <Column sm={4}>
                 <ClickableTile
+                  key={index}
                   className="card"
                   href={`/explore/${school?.tokenId}`}
                 >
                   <div className="row">
                     <img
                       src={generateIdenticon(school?.tokenId)}
-                      // src = {imageData?.find((image)=>image.tokenId === school?.tokenId)?.image}
                       alt="SVG Image"
                       style={{ marginBottom: '16px' }}
                     />
-                    {/* <p className="text-purple">School Name</p> */}
                     <Toggletip align="right">
                       <ToggletipButton label="Show information">
                         <h4>
@@ -191,8 +196,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
                                 .join(' ')
                           : 'N/A'}
                       </h4>
-                      {school?.sold &&
-                      <p className="sold">Sold</p>}
+                      {school?.sold && <p className="sold">Sold</p>}
                     </div>
                   </div>
                 </ClickableTile>
