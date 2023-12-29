@@ -8,9 +8,9 @@ import { useEffect, useState } from 'react';
 import CountdownTimer from '../countdowntimer'
 import { useOtp } from '../../hooks/useOtp';
 
-const CarbonModal = ({ open, onClose, email, minute, setSeconds, seconds }) => {
+const CarbonModal = ({ open, onClose, email, setSeconds, seconds, error, setError }) => {
   const { handleSubmit, control, reset } = useForm();
-  const [error, setError] = useState();
+  
   const [otpError, setOtpError] = useState(true)
   const { initialize } = useAuthContext();
   const login = useLogin();
@@ -137,9 +137,7 @@ const CarbonModal = ({ open, onClose, email, minute, setSeconds, seconds }) => {
               <TextInput
                 {...field}
                 id="name"
-                // style={{height: "48px" }}
                 labelText="Enter OTP here"
-                placeholder=""
                 onKeyDown={handleKeyDown}
                 onChange={(e) => {
                   checkEmpty(e);
@@ -151,7 +149,7 @@ const CarbonModal = ({ open, onClose, email, minute, setSeconds, seconds }) => {
             )}
           />
         </Form>
-        <CountdownTimer minute={minute} setSeconds={setSeconds} seconds={seconds}/>
+        <CountdownTimer setSeconds={setSeconds} seconds={seconds}/>
         <a
                 style={{
                   marginTop: '10px',

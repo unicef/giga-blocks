@@ -86,19 +86,6 @@ const VerifiedSchool = () => {
       <h2>Minting In Progress</h2>
       <div style={{display: 'flex', alignItems: 'flex-end', gap: '20px'}}>
           <TextField id="outlined-basic" type='string' placeholder='Search country' onChange={(e) => handleSearchChange(e)}/>
-          <FormControl sx={{width: 150}}>
-            <InputLabel id="demo-simple-select-label">Connectivity</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={"Connectivity"}
-              label="Search"
-              onChange={handleSearchConnectivity}
-            >
-              <MenuItem value={'true'}>True</MenuItem>
-              <MenuItem value={'false'}>False</MenuItem>
-            </Select>
-          </FormControl>
           </div>
           <Card sx={{marginTop: 2}}>
         <Divider />

@@ -18,7 +18,7 @@ type Props = {
   dense?: boolean;
   onChangeDense?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   sx?: SxProps<Theme>;
-  setPage: Function
+  setPage: Function;
 };
 
 export default function TablePaginationCustom({
@@ -30,9 +30,9 @@ export default function TablePaginationCustom({
   ...other
 }: Props & TablePaginationProps) {
   const handleOnChange = (e: any) => {
-    const page = Number(e.target.value)
-    if(page >= 1){
-      setPage(page - 1)
+    const pages = Number(e.target.value)
+    if(pages >= 1){
+      setPage(pages - 1)
     }
     else{
       setPage(0)
