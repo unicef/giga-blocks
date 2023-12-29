@@ -1,8 +1,14 @@
-import { Modal, TextInput, Form, InlineNotification, Button } from '@carbon/react';
+import {
+  Modal,
+  TextInput,
+  Form,
+  InlineNotification,
+  Button,
+} from '@carbon/react';
 import { useLogin } from '../../hooks/useSignUp';
 import { useForm, Controller } from 'react-hook-form';
 import { saveAccessToken, saveCurrentUser } from '../../utils/sessionManager';
-import { useRouter } from 'next/navigation';
+import { useRouter,useSearchParams } from 'next/navigation';
 import { useAuthContext } from '../../auth/useAuthContext';
 import { useEffect, useState } from 'react';
 import CountdownTimer from '../countdowntimer'
@@ -14,9 +20,14 @@ const CarbonModal = ({ open, onClose, email, setSeconds, seconds, error, setErro
   const [otpError, setOtpError] = useState(true)
   const { initialize } = useAuthContext();
   const login = useLogin();
-  const { push } = useRouter();
-  const {mutateAsync:otpMutateAsync} = useOtp()
+  const route = useRouter();
+  const { mutateAsync: otpMutateAsync } = useOtp();
   const [notification, setNotification] = useState(null);
+
+  const searchParams = useSearchParams();
+
+  const searchKey = searchParams.get('returnTo');
+
 
   const onAdd = async (data) => {
 
@@ -34,8 +45,11 @@ const CarbonModal = ({ open, onClose, email, setSeconds, seconds, error, setErro
           kind: 'success',
           title: 'OTP login successful.',
         });
-        push('/contributeSchool');
-      })
+        if (searchKey) {
+          route.push(searchKey);
+        } else {
+          route.push('/contributeSchool');
+        }      })
       .catch((err) => {
         console.log({err});
         setValue('name','')
@@ -47,11 +61,22 @@ const CarbonModal = ({ open, onClose, email, setSeconds, seconds, error, setErro
       });
   };
 
+  useEffect(() => {
+    if (notification) {
+      const timeoutId = setTimeout(() => {
+        onCloseNotification();
+      }, 4000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [notification]);
+
   const onCloseNotification = () => {
     setNotification(null);
   };
 
   const onSubmit = async () => {
+    setValue('name','')
 
     if(email === ''){
       setNotification({
@@ -103,6 +128,7 @@ const CarbonModal = ({ open, onClose, email, setSeconds, seconds, error, setErro
       {notification && (
         <InlineNotification
           aria-label="closes notification"
+          timeout={1}
           kind={notification.kind}
           onClose={onCloseNotification}
           title={notification.title}

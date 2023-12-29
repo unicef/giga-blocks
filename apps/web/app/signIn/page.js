@@ -15,13 +15,11 @@ import './signIn.scss';
 import { useForm, Controller } from 'react-hook-form';
 import { useOtp } from '../hooks/useOtp';
 import CarbonModal from '../components/modal/index';
-
 import Web3Provider from '../components/web3/Provider';
 import { metaMask } from '../components/web3/connectors/metamask';
 import { useGetNonce, walletLogin } from '../hooks/walletLogin';
 import { useWeb3React } from '@web3-react/core';
-import { useRouter } from 'next/navigation';
-import { usePathname } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   saveAccessToken,
   saveCurrentUser,
@@ -41,13 +39,13 @@ const SignIn = () => {
   const [error, setError] = useState();
   const loginMutation = walletLogin();
   const getNonceQuery = useGetNonce();
+  const searchParams = useSearchParams();
+  const searchKey = searchParams.get('returnTo');
   const web3 = useWeb3React();
   const sendOtp = useOtp();
   const [email, setEmail] = useState('');
   const [openModal, setOpenModal] = useState(false);
-  const [showEmailField, setShowEmailField] = useState(false);
-  const [previousUrl, setPreviousUrl] = useState(null);
-  
+  const [showEmailField, setShowEmailField] = useState(false);  
   const [submitButtonText, setSubmitButtonText] =
     useState('Sign in with Email');
   const [notification, setNotification] = useState(null);
@@ -65,6 +63,16 @@ const SignIn = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (notification) {
+      const timeoutId = setTimeout(() => {
+        onCloseNotification();
+      }, 4000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [notification]);
+
   const getSignature = async (nonce) => {
     try {
       const signer = web3.provider.getSigner();
@@ -76,7 +84,7 @@ const SignIn = () => {
     }
   };
 
-  const onSubmit = async (data,e) => {
+  const onSubmit = async (data, e) => {
     e.preventDefault();
     setSeconds(180)
     setError()
@@ -130,8 +138,8 @@ const SignIn = () => {
         saveConnectors('metaMask');
         console.log('wallet logged in successfully');
         initialize();
-        if (previousUrl) {
-          route.push(previousUrl);
+        if (searchKey) {
+          route.push(searchKey);
         } else {
           route.push('/contributeSchool');
         }
@@ -148,11 +156,6 @@ const SignIn = () => {
       });
     }
   };
-
-  useEffect(() => {
-    setPreviousUrl(sessionStorage.getItem('previousUrl') || null);
-    sessionStorage.removeItem('previousUrl');
-  }, []);
 
   const onClose = () => {
     setOpenModal(false);
