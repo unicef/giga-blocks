@@ -76,6 +76,7 @@ export default function ValidateDetail({ id }: Props) {
     mutate,
     isSuccess: isValidationSuccess,
     isError: isValidationError,
+    isLoading: isValidationLoading
   } = useValidateUpdate();
 
   const router = useRouter();
@@ -116,8 +117,8 @@ export default function ValidateDetail({ id }: Props) {
 
   useEffect(() => {
     isValidationSuccess && enqueueSnackbar('Successfully Approved', { variant: 'success' });
-    refetch();
     isValidationError && enqueueSnackbar('Unsuccessful', { variant: 'error' });
+    refetch();
   }, [isValidationSuccess, isValidationError]);
 
   useEffect(() => {
@@ -223,8 +224,9 @@ export default function ValidateDetail({ id }: Props) {
                 color={'info'}
                 style={{ width: '300px', background: '#474747' }}
                 onClick={onValidate}
+                disabled={isValidationLoading}
               >
-                Approve
+              {isValidationLoading ? 'Approving..' : 'Approve'} 
               </Button>}
             </Stack>
           </Box>
@@ -264,16 +266,6 @@ export default function ValidateDetail({ id }: Props) {
               </Table>
             </Scrollbar>
           </TableContainer>
-          <TablePaginationCustom
-            count={tableData?.length}
-            page={page}
-            setPage={setPage}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-            dense={dense}
-            onChangeDense={onChangeDense}
-          />
         </Card>
       </Grid>
     </>
