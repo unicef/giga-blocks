@@ -149,7 +149,7 @@ const CarbonModal = ({ open, onClose, email, setSeconds, seconds, error, setErro
             )}
           />
         </Form>
-        <CountdownTimer setSeconds={setSeconds} seconds={seconds}/>
+        {seconds && <CountdownTimer setSeconds={setSeconds} seconds={seconds}/>}
         <a
                 style={{
                   marginTop: '10px',
