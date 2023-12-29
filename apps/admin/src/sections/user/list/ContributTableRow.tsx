@@ -57,8 +57,6 @@ export default function ContributeTableRow({
     }
   }
 
-  console.log(contributedDataValue)
-
   return (
     <>
       <TableRow
