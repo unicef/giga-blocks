@@ -19,6 +19,7 @@ type Props = {
   onChangeDense?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   sx?: SxProps<Theme>;
   setPage: Function;
+  disablePageNumber?:boolean
 };
 
 export default function TablePaginationCustom({
@@ -27,6 +28,7 @@ export default function TablePaginationCustom({
   rowsPerPageOptions = [5, 10, 25],
   sx,
   setPage,
+  disablePageNumber,
   ...other
 }: Props & TablePaginationProps) {
   const handleOnChange = (e: any) => {
@@ -44,7 +46,7 @@ export default function TablePaginationCustom({
     <Box sx={{ position: 'relative', ...sx }}>
       <TablePagination rowsPerPageOptions={rowsPerPageOptions} component="div" {...other} />
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4, mt: 0.5 }}>
+      {!disablePageNumber && <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4, mt: 0.5 }}>
         <TextField
           label="Enter Page Number"
           variant="outlined"
@@ -61,7 +63,7 @@ export default function TablePaginationCustom({
           }}
           size="small"
         />
-      </Box>
+      </Box>}
 
       {onChangeDense && (
         <FormControlLabel

@@ -31,7 +31,7 @@ query schoolTokenUri($id: ID!) {
       id
     }
   }
-  schoolTransfers(subgraphError: allow, where: {tokenId: 8}) {
+  schoolTransfers(subgraphError: allow, where: {tokenId: $id}) {
     blockNumber
     blockTimestamp
     from
@@ -40,7 +40,7 @@ query schoolTokenUri($id: ID!) {
     tokenId
     transactionHash
   }
-  collectorTransfers(subgraphError: allow, where: {tokenId: "1"}) {
+  collectorTransfers(subgraphError: allow, where: {tokenId: $id}) {
     blockNumber
     blockTimestamp
     from

@@ -50,7 +50,7 @@ const ContributeData = () => {
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable({defaultOrderBy: 'createdAt', defaultOrder: 'asc'});
+  } = useTable({defaultOrderBy: 'createdAt', defaultOrder: 'desc'});
   const [toastMessage, setToastMessage] = useState('validated')
 
   const { enqueueSnackbar } = useSnackbar();
@@ -274,6 +274,7 @@ const ContributeData = () => {
               onRowsPerPageChange={onChangeRowsPerPage}
               dense={dense}
               onChangeDense={onChangeDense}
+              disablePageNumber
             />
           </Card>
         )}

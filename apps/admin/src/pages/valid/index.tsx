@@ -210,6 +210,7 @@ const ValidateData = () => {
               onRowsPerPageChange={onChangeRowsPerPage}
               dense={dense}
               onChangeDense={onChangeDense}
+              disablePageNumber
             />
           </Card>
           </>

@@ -11,8 +11,8 @@ import {
 import './changeLogTable.scss';
 import { useContributeDetails } from '../../hooks/useContributionList';
 
-const ChangeLog = ({ schoolid }) => {
-  const { data, refetch } = useContributeDetails(schoolid);
+const ChangeLog = ({ schoolid ,contributedData:data}) => {
+  const {  refetch,isFetching } = useContributeDetails(schoolid);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
