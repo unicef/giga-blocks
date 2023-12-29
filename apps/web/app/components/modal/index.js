@@ -9,7 +9,7 @@ import CountdownTimer from '../countdowntimer'
 import { useOtp } from '../../hooks/useOtp';
 
 const CarbonModal = ({ open, onClose, email, minute, setSeconds, seconds }) => {
-  const { handleSubmit, control, reset } = useForm();
+  const { handleSubmit, control, setValue } = useForm();
   const [error, setError] = useState();
   const [otpError, setOtpError] = useState(true)
   const { initialize } = useAuthContext();
@@ -38,6 +38,7 @@ const CarbonModal = ({ open, onClose, email, minute, setSeconds, seconds }) => {
       })
       .catch((err) => {
         console.log(err);
+        setValue('name','')
         setNotification({
           kind: 'error',
           title: `${err.response.data.message}`,
