@@ -10,7 +10,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { saveAccessToken, saveCurrentUser } from '../../utils/sessionManager';
 import { useRouter } from 'next/navigation';
 import { useAuthContext } from '../../auth/useAuthContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useOtp } from '../../hooks/useOtp';
 
 const CarbonModal = ({ open, onClose, email }) => {
@@ -48,6 +48,16 @@ const CarbonModal = ({ open, onClose, email }) => {
         setError('OTP verification unsuccessful. Please try again.');
       });
   };
+
+  useEffect(() => {
+    if (notification) {
+      const timeoutId = setTimeout(() => {
+        onCloseNotification();
+      }, 4000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [notification]);
 
   const onCloseNotification = () => {
     setNotification(null);

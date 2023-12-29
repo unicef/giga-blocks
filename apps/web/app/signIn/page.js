@@ -59,6 +59,16 @@ const SignIn = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (notification) {
+      const timeoutId = setTimeout(() => {
+        onCloseNotification();
+      }, 4000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [notification]);
+
   const getSignature = async (nonce) => {
     try {
       const signer = web3.provider.getSigner();

@@ -38,6 +38,16 @@ const SignUp = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (notification) {
+      const timeoutId = setTimeout(() => {
+        onCloseNotification();
+      }, 4000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [notification]);
+
   const onSubmit = async (data) => {
     signUp
       .mutateAsync(data)

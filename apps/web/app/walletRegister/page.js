@@ -38,12 +38,23 @@ const WalletRegisterForm = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [checkbox, setCheckbox] = useState(null);
   const router = useRouter();
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     if (web3) {
       setWalletAddress(web3.account);
     }
   }, [web3]);
+
+  useEffect(() => {
+    if (notification) {
+      const timeoutId = setTimeout(() => {
+        onCloseNotification();
+      }, 4000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [notification]);
 
   useEffect(() => {
     if (!web3.isActive) {
@@ -99,6 +110,9 @@ const WalletRegisterForm = () => {
       showErrorMessage(error);
       console.error('Error registering wallet:', error);
     }
+  };
+  const onCloseNotification = () => {
+    setNotification(null);
   };
 
   return (
@@ -186,6 +200,13 @@ const WalletRegisterForm = () => {
                 kind="error"
                 title={errorMessage}
                 onCloseButtonClick={() => setErrorMessage(null)}
+                style={{
+                  position: 'fixed',
+                  top: '50px',
+                  right: '2px',
+                  width: '400px',
+                  zIndex: 1000,
+                }}
               />
             )}
           </Tile>
