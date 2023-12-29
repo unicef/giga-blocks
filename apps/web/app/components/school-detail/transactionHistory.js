@@ -19,6 +19,7 @@ import './school-detail.scss';
 import { useQuery } from 'urql';
 import { Queries } from '../../libs/graph-query';
 import { useParams } from 'next/navigation';
+import { Default_Chain_Explorer } from '../../components/web3/connectors/network';
 
 const EventTable = ({ data, linkPrefix }) => (
   <TableContainer sx={{ my: 4 }}>
@@ -141,13 +142,13 @@ const Connectivity = () => {
               <TabPanel>
                 <EventTable
                   data={collectorTransferData}
-                  linkPrefix="https://mumbai.polygonscan.com/tx/"
+                  linkPrefix={`${Default_Chain_Explorer}/tx/`}
                 />
               </TabPanel>
               <TabPanel>
                 <EventTable
                   data={transferData}
-                  linkPrefix="https://mumbai.polygonscan.com/tx/"
+                  linkPrefix={`${Default_Chain_Explorer}/tx/`}
                 />
               </TabPanel>
             </TabPanels>

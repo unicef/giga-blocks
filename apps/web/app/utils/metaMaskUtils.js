@@ -1,5 +1,5 @@
 import { metaMask } from '../components/web3/connectors/metamask';
-import { Default_Chain_Id } from '../components/web3/connectors/network';
+import { Default_Chain_Explorer, Default_Chain_Id, Default_Chain_URL } from '../components/web3/connectors/network';
 
 export const metaMaskLogin = async () => {
   let res;
@@ -30,8 +30,8 @@ export const switchMetaMaskNetwork = async () => {
       symbol: 'Matic',
       decimals: 18,
     },
-    rpcUrls: ['https://rpc-mumbai.maticvigil.com'],
-    blockExplorerUrls: ['https://mumbai.polygonscan.com'],
+    rpcUrls: [Default_Chain_URL],
+    blockExplorerUrls: [Default_Chain_Explorer],
   };
   const res = await metaMask.activate(network);
   return res;

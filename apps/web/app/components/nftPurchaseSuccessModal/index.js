@@ -10,6 +10,7 @@ import {
 } from '@carbon/react';
 import { useRouter } from 'next/navigation';
 import { toSvg } from 'jdenticon';
+import { Default_Chain_Explorer } from '../../components/web3/connectors/network';
 
 const CongratulationModalComponent = ({ isOpen, onClose, schooldata,transactionHash }) => {
   const route = useRouter();
@@ -110,7 +111,7 @@ const CongratulationModalComponent = ({ isOpen, onClose, schooldata,transactionH
               }}
             >
               <h5 style={{ marginTop: '24px' }}>Transaction ID</h5>
-              <a href={`https://mumbai.polygonscan.com/tx/${transactionHash}`}
+              <a href={`${Default_Chain_Explorer}tx/${transactionHash}`}
               target='_blank'
               rel= "noopener noreferrer">{transactionHash?.slice(0,4)+'...'+transactionHash?.slice(-5)}</a>
             </div>
