@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Link } from '@mui/material';
 
-const CountdownTimer = ({ minute, setSeconds, seconds }) => {
+const CountdownTimer = ({ setSeconds, seconds }) => {
   const [expired, setExpired] = useState(false);
 
   useEffect(() => {
@@ -13,11 +13,14 @@ const CountdownTimer = ({ minute, setSeconds, seconds }) => {
       setSeconds((prevSeconds) => prevSeconds - 1);
     }, 1000);
     return () => clearInterval(countdown);
-  }, [minute]);
+  }, [seconds]);
 
   useEffect(() => {
     if (seconds <= 0) {
       setExpired(true);
+    }
+    else{
+      setExpired(false)
     }
   }, [seconds]);
 

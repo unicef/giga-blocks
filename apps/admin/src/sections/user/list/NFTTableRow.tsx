@@ -8,6 +8,7 @@ import {
 
 // components
 import Tooltip from '@mui/material/Tooltip';
+import { TESTNET_CHAINS,DEFAULT_CHAIN_ID } from '@components/web3/chains';
 
 type Props = {
   row: any;
@@ -25,6 +26,7 @@ export default function NFTTableRow({
   } = row;
 
   const date = new Date(blockTimestamp*1000)
+  const explorer = TESTNET_CHAINS[DEFAULT_CHAIN_ID].blockExplorerUrls[0]
 
   var year = date.getFullYear();
   var month = date.getMonth() + 1;
@@ -76,7 +78,7 @@ export default function NFTTableRow({
           sx={{ textTransform: 'capitalize' }}          
         >
             <Tooltip title={transactionHash}>
-            <span><a href={`https://mumbai.polygonscan.com/tx/${transactionHash}`} target='_blank'>{truncateString(transactionHash)}</a> </span>
+            <span><a href={`${explorer}/tx/${transactionHash}`} target='_blank'>{truncateString(transactionHash)}</a> </span>
             </Tooltip>
         </TableCell>
 

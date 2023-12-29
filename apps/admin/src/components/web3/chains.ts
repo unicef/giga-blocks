@@ -123,6 +123,8 @@ export const CHAINS: ChainConfig = {
   ...TESTNET_CHAINS,
 }
 
+export const DEFAULT_CHAIN_ID = process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID || 80001;
+
 export const URLS: { [chainId: number]: string[] } = Object.keys(CHAINS).reduce<{ [chainId: number]: string[] }>(
   (accumulator, chainId) => {
     const validURLs: string[] = CHAINS[Number(chainId)].urls

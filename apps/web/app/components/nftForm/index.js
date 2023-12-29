@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Form,
   TextInput,
@@ -37,6 +37,16 @@ const RegisterForm = () => {
       [name]: value,
     }));
   };
+
+  useEffect(() => {
+    if (notification) {
+      const timeoutId = setTimeout(() => {
+        onCloseNotification();
+      }, 4000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [notification]);
 
   const handleSelectChange = (value) => {
     setFormData((prev) => ({

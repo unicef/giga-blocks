@@ -65,7 +65,7 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex,refetch 
   const handleModalClose = () => {
     refetch();
     onClose();
-    updateSelectedTabIndex({selectedIndex: 1});
+    updateSelectedTabIndex({ selectedIndex: 1 });
   };
 
   const onSubmit = (formData) => {

@@ -1,22 +1,33 @@
-import { Modal, TextInput, Form, InlineNotification, Button } from '@carbon/react';
+import {
+  Modal,
+  TextInput,
+  Form,
+  InlineNotification,
+  Button,
+} from '@carbon/react';
 import { useLogin } from '../../hooks/useSignUp';
 import { useForm, Controller } from 'react-hook-form';
 import { saveAccessToken, saveCurrentUser } from '../../utils/sessionManager';
-import { useRouter } from 'next/navigation';
+import { useRouter,useSearchParams } from 'next/navigation';
 import { useAuthContext } from '../../auth/useAuthContext';
 import { useEffect, useState } from 'react';
 import CountdownTimer from '../countdowntimer'
 import { useOtp } from '../../hooks/useOtp';
 
-const CarbonModal = ({ open, onClose, email, minute, setSeconds, seconds }) => {
-  const { handleSubmit, control, reset } = useForm();
-  const [error, setError] = useState();
+const CarbonModal = ({ open, onClose, email, setSeconds, seconds, error, setError }) => {
+  const { handleSubmit, control, setValue } = useForm();
+  
   const [otpError, setOtpError] = useState(true)
   const { initialize } = useAuthContext();
   const login = useLogin();
-  const { push } = useRouter();
-  const {mutateAsync:otpMutateAsync} = useOtp()
+  const route = useRouter();
+  const { mutateAsync: otpMutateAsync } = useOtp();
   const [notification, setNotification] = useState(null);
+
+  const searchParams = useSearchParams();
+
+  const searchKey = searchParams.get('returnTo');
+
 
   const onAdd = async (data) => {
 
@@ -34,9 +45,14 @@ const CarbonModal = ({ open, onClose, email, minute, setSeconds, seconds }) => {
           kind: 'success',
           title: 'OTP login successful.',
         });
-        push('/contributeSchool');
-      })
+        if (searchKey) {
+          route.push(searchKey);
+        } else {
+          route.push('/contributeSchool');
+        }      })
       .catch((err) => {
+        console.log({err});
+        setValue('name','')
         setNotification({
           kind: 'error',
           title: `${err.response.data.message}`,
@@ -45,11 +61,22 @@ const CarbonModal = ({ open, onClose, email, minute, setSeconds, seconds }) => {
       });
   };
 
+  useEffect(() => {
+    if (notification) {
+      const timeoutId = setTimeout(() => {
+        onCloseNotification();
+      }, 4000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [notification]);
+
   const onCloseNotification = () => {
     setNotification(null);
   };
 
   const onSubmit = async () => {
+    setValue('name','')
 
     if(email === ''){
       setNotification({
@@ -101,6 +128,7 @@ const CarbonModal = ({ open, onClose, email, minute, setSeconds, seconds }) => {
       {notification && (
         <InlineNotification
           aria-label="closes notification"
+          timeout={1}
           kind={notification.kind}
           onClose={onCloseNotification}
           title={notification.title}
@@ -137,9 +165,7 @@ const CarbonModal = ({ open, onClose, email, minute, setSeconds, seconds }) => {
               <TextInput
                 {...field}
                 id="name"
-                // style={{height: "48px" }}
                 labelText="Enter OTP here"
-                placeholder=""
                 onKeyDown={handleKeyDown}
                 onChange={(e) => {
                   checkEmpty(e);
@@ -151,7 +177,7 @@ const CarbonModal = ({ open, onClose, email, minute, setSeconds, seconds }) => {
             )}
           />
         </Form>
-        <CountdownTimer minute={minute} setSeconds={setSeconds} seconds={seconds}/>
+        <CountdownTimer setSeconds={setSeconds} seconds={seconds}/>
         <a
                 style={{
                   marginTop: '10px',

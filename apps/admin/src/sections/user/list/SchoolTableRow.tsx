@@ -6,6 +6,7 @@ import {
   Typography,
   Checkbox,
 } from '@mui/material';
+import { TESTNET_CHAINS,DEFAULT_CHAIN_ID } from '@components/web3/chains';
 
 // components
 import { useRouter } from 'next/router';
@@ -36,7 +37,8 @@ export default function SchoolTableRow({
   } = row;
 
   const { push } = useRouter();
-  const schoolNft = process.env.NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS
+  const schoolNft = process.env.NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS;
+  const explorer = TESTNET_CHAINS[DEFAULT_CHAIN_ID].blockExplorerUrls[0]
 
   const handleEditRow = (row: string) => {
     if (mintedStatus == 'MINTED') push(`/nft/${row}`)
@@ -135,7 +137,7 @@ export default function SchoolTableRow({
           align="left"
           sx={{ textTransform: 'capitalize' }}
         >
-          <a href ={`https://mumbai.polygonscan.com/token/${schoolNft}?a=${id}`} target="_blank" rel="noreferrer">
+          <a href ={`${explorer}/token/${schoolNft}?a=${id}`} target="_blank" rel="noreferrer">
           {id}
           </a>
         </TableCell>

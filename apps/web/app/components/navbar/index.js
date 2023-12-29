@@ -48,7 +48,8 @@ const Navbar = () => {
     <HeaderContainer
       render={({ isSideNavExpanded, onClickSideNavExpand }) => (
         <Header
-          classname="navbar"
+          className="navbar"
+          aria-label="Header"
           style={{ background: '#383838', color: 'white' }}
         >
           <SkipToContent />
@@ -60,7 +61,10 @@ const Navbar = () => {
           <HeaderName as={Link} href="/" prefix="" style={{ color: 'white' }}>
             NFT 2.0
           </HeaderName>
-          <HeaderNavigation style={{ background: '#383838', color: 'white' }}>
+          <HeaderNavigation
+            aria-label="Header"
+            style={{ background: '#383838', color: 'white' }}
+          >
             <HeaderMenuItem
               as={Link}
               href="/contributeSchool"

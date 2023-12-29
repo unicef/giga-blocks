@@ -76,6 +76,7 @@ export default function ValidateDetail({ id }: Props) {
     mutate,
     isSuccess: isValidationSuccess,
     isError: isValidationError,
+    isLoading: isValidationLoading
   } = useValidateUpdate();
 
   const router = useRouter();
@@ -97,25 +98,27 @@ export default function ValidateDetail({ id }: Props) {
   useEffect(() => {
     if (isSuccess) {
       const keyValue = Object?.entries(data?.data);
-      const jsonString = `${keyValue[0][0]}: ${keyValue[0][1]}`;
+      var jsonString ;
+      if(keyValue) 
+      {jsonString = `${keyValue[0][0]}: ${keyValue[0][1]}`;
       const outputArray = Object?.keys(data?.data)?.map((key) => ({ key, value: data?.data[key] }));
       setTableData(outputArray);
       setProfile({
         fullname: data?.contributedUser?.name,
         schoolName: data?.school.name,
-        createdAt: new Date(data?.createdAt).toLocaleDateString(),
+        createdAt: new Date(data?.createdAt)?.toLocaleDateString(),
         status: String(data?.approvedStatus),
         contributed_data: jsonString,
         coverage: data?.coverage_availability,
         mintedStatus: data?.minted,
-      });
+      });}
     }
   }, [isSuccess, isError, data]);
 
   useEffect(() => {
     isValidationSuccess && enqueueSnackbar('Successfully Approved', { variant: 'success' });
-    refetch();
     isValidationError && enqueueSnackbar('Unsuccessful', { variant: 'error' });
+    refetch();
   }, [isValidationSuccess, isValidationError]);
 
   useEffect(() => {
@@ -140,7 +143,7 @@ export default function ValidateDetail({ id }: Props) {
     mutate(data?.school_Id);
   };
 
-  const sortedData = tableData?.slice().sort((a: any, b: any) => {
+  const sortedData = tableData?.slice()?.sort((a: any, b: any) => {
     const isAsc = order === 'asc';
     return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
   });
@@ -221,8 +224,9 @@ export default function ValidateDetail({ id }: Props) {
                 color={'info'}
                 style={{ width: '300px', background: '#474747' }}
                 onClick={onValidate}
+                disabled={isValidationLoading}
               >
-                Approve
+              {isValidationLoading ? 'Approving..' : 'Approve'} 
               </Button>}
             </Stack>
           </Box>
@@ -249,7 +253,7 @@ export default function ValidateDetail({ id }: Props) {
                   {sortedData &&
                     sortedData.length > page*rowsPerPage && sortedData?.map((row: any) => (
                       <ContributionDetailTableRow
-                        key={row.id}
+                        key={row?.id}
                         row={row}
                       />
                     ))}
@@ -262,16 +266,6 @@ export default function ValidateDetail({ id }: Props) {
               </Table>
             </Scrollbar>
           </TableContainer>
-          <TablePaginationCustom
-            count={tableData?.length}
-            page={page}
-            setPage={setPage}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-            dense={dense}
-            onChangeDense={onChangeDense}
-          />
         </Card>
       </Grid>
     </>

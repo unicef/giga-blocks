@@ -35,11 +35,12 @@ const SchoolDetail = () => {
   const {data:contributedData,refetch} = useContributeDetails(id);
 
   const user = getCurrentUser();
+
   const openModal = () => {
     if (user) {
       setIsModalOpen(true);
     } else {
-      router.push('/signIn');
+      router.push(`/signIn?returnTo=${window.location.pathname}`);
     }
   };
 
@@ -68,6 +69,7 @@ const SchoolDetail = () => {
           >
             <div className="tabs">
               <TabList
+                aria-label="List of tabs"
                 style={{
                   display: 'flex',
                 }}

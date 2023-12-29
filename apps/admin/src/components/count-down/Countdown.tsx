@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Typography, Link } from '@mui/material';
 
 type PropsType = {
-  minute: number;
+  minute: any;
   handleResendLink: () => void;
 };
 
