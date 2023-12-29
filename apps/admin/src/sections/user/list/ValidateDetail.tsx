@@ -11,6 +11,7 @@ import {
   TableContainer,
   Table,
   TableBody,
+  CircularProgress,
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useSnackbar } from '@components/snackbar';
@@ -48,7 +49,8 @@ export default function ValidateDetail({ id }: Props) {
     mintedStatus: '',
   });
 
-  const { data, isSuccess, isError, refetch } = useValidDataGetById(id);
+  const { data, isSuccess, isError, refetch, isFetching } = useValidDataGetById(id);
+
   const { enqueueSnackbar } = useSnackbar();
   const [tableData, setTableData] = useState<any>();
 
@@ -215,7 +217,7 @@ export default function ValidateDetail({ id }: Props) {
         <Container>
           <Box justifyContent={'center'}>
             <Stack alignItems="center" sx={{ mt: 1 }}>
-              {profile?.status ==='false' &&
+              {profile && profile?.status === 'false' &&
               <Button
                 variant="contained"
                 color={'info'}
@@ -247,13 +249,17 @@ export default function ValidateDetail({ id }: Props) {
 
                 <TableBody>
                   {sortedData &&
-                    sortedData?.map((row: any) => (
+                    sortedData.length > page*rowsPerPage && sortedData?.map((row: any) => (
                       <ContributionDetailTableRow
                         key={row?.id}
                         row={row}
                       />
                     ))}
-                  <TableNoData isNotFound={tableData?.length === 0} />
+                  {!isFetching ? (
+                      <TableNoData isNotFound={sortedData?.length < page*rowsPerPage} />
+                    ) : (
+                      <CircularProgress color="inherit" />
+                    )}
                 </TableBody>
               </Table>
             </Scrollbar>

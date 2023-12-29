@@ -4,6 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Card, Grid} from '@mui/material';
 import FormProvider, { ProfileTextField } from '@components/hook-form';
 import { useUserGetById } from '@hooks/user/useUser';
+import { useEffect } from 'react';
 
 interface Props {
   isEdit?: boolean;
@@ -36,8 +37,11 @@ export default function UserNewEditForm({id}:Props) {
   });
 
 
-  const { data } = useUserGetById(id);
+  const { data, refetch } = useUserGetById(id);
 
+  useEffect(() => {
+    refetch()
+  }, [id])
 
   const methods = useForm<FormValuesProps>({
     resolver: yupResolver(UpdateUserSchema),
