@@ -112,7 +112,7 @@ const CongratulationModalComponent = ({ isOpen, onClose, schooldata,transactionH
               <h5 style={{ marginTop: '24px' }}>Transaction ID</h5>
               <a href={`https://mumbai.polygonscan.com/tx/${transactionHash}`}
               target='_blank'
-              rel= "noopener noreferrer">{transactionHash.slice(0,4)+'...'+transactionHash.slice(-5)}</a>
+              rel= "noopener noreferrer">{transactionHash?.slice(0,4)+'...'+transactionHash?.slice(-5)}</a>
             </div>
           </Column>
         </Grid>

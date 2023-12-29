@@ -109,9 +109,9 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
         <ModalBody>
           <p>
             You are about to purchase {schooldata?.schoolName} from{' '}
-            {schooldata?.owner.slice(0, 8) +
+            {schooldata?.owner?.slice(0, 8) +
               '...' +
-              schooldata?.owner.slice(-6)}
+              schooldata?.owner?.slice(-6)}
           </p>
           <Grid style={{ marginTop: '18px' }}>
             <Column
