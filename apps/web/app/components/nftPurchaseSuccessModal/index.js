@@ -26,7 +26,7 @@ const CongratulationModalComponent = ({ isOpen, onClose, schooldata,transactionH
   };
   const handleClickRoute = () => {
     onClose();
-    route.push('/dashboard');
+    route.push('/viewMyNFT');
   };
 
   return (

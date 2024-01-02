@@ -1,5 +1,6 @@
 import { metaMask } from '../components/web3/connectors/metamask';
 import { Default_Chain_Explorer, Default_Chain_Id, Default_Chain_URL } from '../components/web3/connectors/network';
+import { ethers } from 'ethers';
 
 export const metaMaskLogin = async () => {
   let res;
@@ -36,3 +37,8 @@ export const switchMetaMaskNetwork = async () => {
   const res = await metaMask.activate(network);
   return res;
 };
+
+export const checkWalletAddress = async(address)=>{
+  const isAddress =  ethers.isAddress(address);
+  return isAddress;
+}

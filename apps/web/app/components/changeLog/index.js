@@ -80,7 +80,7 @@ const ChangeLog = ({ schoolid ,contributedData:data}) => {
                 ([fieldType, change]) => (
                   <TableRow key={contribution?.id + fieldType}>
                     <TableCell>{fieldType}</TableCell>
-                    <TableCell>{change === true ? "yes" : change}</TableCell>
+                    <TableCell>{change === true ? "yes" : change === false ? 'No' : change}</TableCell>
                     <TableCell>{contribution?.contributedUser?.name}</TableCell>
                     <TableCell>
                       {contribution?.createdAt?.substring(0, 10)}

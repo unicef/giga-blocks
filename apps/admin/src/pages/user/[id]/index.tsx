@@ -21,13 +21,13 @@ export default function UserEditPage() {
       </Head>
 
       <Grid container spacing={2}>
-        <Grid item xs={8}>
+        <Grid item xs={12} lg={6} md={10}>
           <Container>
             <CustomBreadcrumbs
               heading="Profile"
               links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Profile' }]}
             />
-            {id && <UserProfileEditForm id={id} />}
+            {id && <UserProfileEditForm id={id}/>}
           </Container>
         </Grid>
         <Grid item xs={4}>

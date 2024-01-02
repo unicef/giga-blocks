@@ -16,9 +16,11 @@ import { useQuery } from 'urql';
 import { toSvg } from 'jdenticon';
 import { Queries } from '../../libs/graph-query';
 import { getNftContract } from '../web3/contracts/getContract';
+import { useWeb3React } from '@web3-react/core';
 
 const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
   const [searchText, setSearchText] = useState('');
+  const {account} = useWeb3React();
 
   const [result] = useQuery({
     query: query,
@@ -45,7 +47,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
   useEffect(() => {
     if (queryData) decodeSchooldata(queryData);
     if (imagedata) decodeImage(imagedata?.data?.nftImages);
-  }, [queryData, imagedata]);
+  }, [queryData, imagedata,account]);
 
   const decodeImage = (data) => {
     const decodedImage = [];
@@ -102,132 +104,133 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
     setPageSize(pageSize + pageSize);
   };
 
-  return (
-    <>
-      <div style={{ padding: '80px 40px 10px 40px' }}>
-        <Search
-          size="lg"
-          placeholder="Search NFT"
-          labelText="Search"
-          closeButtonLabelText="Clear search input"
-          onChange={(e) => {
-            setSearchText(e.target.value);
-          }}
-        />
-      </div>
-      {fetching === false ? (
-        <Grid fullWidth style={{ margin: '30px auto' }}>
-          {schoolData.length > 0 ? (
-            schoolData?.map((school, index) => (
-              <Column sm={4}>
-                <ClickableTile
-                  key={index}
-                  className="card"
-                  href={`/explore/${school?.tokenId}`}
-                >
-                  <div className="row">
-                    <img
-                      src={generateIdenticon(school?.tokenId)}
-                      alt="SVG Image"
-                      style={{ marginBottom: '16px' }}
-                    />
-                    <Toggletip align="right">
-                      <ToggletipButton label="Show information">
-                        <h4>
-                          {school?.schoolName?.length > 30
-                            ? `${school.schoolName
-                                ?.toLowerCase()
-                                .split(' ')
-                                .map(
-                                  (word) =>
-                                    word.charAt(0).toUpperCase() + word.slice(1)
-                                )
-                                .join(' ')
-                                .slice(0, 30)}...`
-                            : school.schoolName
-                                ?.toLowerCase()
-                                .split(' ')
-                                .map(
-                                  (word) =>
-                                    word.charAt(0).toUpperCase() + word.slice(1)
-                                )
-                                .join(' ')}
-                        </h4>
-                      </ToggletipButton>
-                      <ToggletipContent>
-                        <p>
-                          {school.schoolName
-                            ?.toLowerCase()
-                            .split(' ')
-                            .map(
-                              (word) =>
-                                word.charAt(0).toUpperCase() + word.slice(1)
-                            )
-                            .join(' ')}
-                        </p>
-                      </ToggletipContent>
-                    </Toggletip>
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                      }}
-                    >
-                      <h4 className="heading2 text-left">
-                        {school?.country
-                          ? school?.country?.length > 15
-                            ? `${school.country
-                                ?.toLowerCase()
-                                .split(' ')
-                                .map(
-                                  (word) =>
-                                    word.charAt(0).toUpperCase() + word.slice(1)
-                                )
-                                .join(' ')
-                                .slice(0, 15)}...`
-                            : school.country
-                                ?.toLowerCase()
-                                .split(' ')
-                                .map(
-                                  (word) =>
-                                    word.charAt(0).toUpperCase() + word.slice(1)
-                                )
-                                .join(' ')
-                          : 'N/A'}
-                      </h4>
-                      {school?.sold && <p className="sold">Sold</p>}
-                    </div>
-                  </div>
-                </ClickableTile>
-              </Column>
-            ))
-          ) : (
-            <Column sm={4} md={8} lg={16}>
-              <h1>No school has been minted</h1>
-            </Column>
-          )}
-          <Column sm={4} md={8} lg={16}>
-            {schoolData.length > 0 && (
-              <Button
-                onClick={loadMore}
-                kind="tertiary"
-                disabled={allDataLoaded}
-                style={{ float: 'right' }}
-              >
-                {allDataLoaded === false ? 'Load more' : 'No more data'}
-              </Button>
-            )}
-          </Column>
-        </Grid>
-      ) : (
-        <div className="loader-container">
-          <Loading withOverlay={false} />{' '}
-          <span>Loading school data, please wait...</span>{' '}
-        </div>
-      )}
+  return(
+    <>  
+       {fetching === false ? (
+        <>
+         <div style={{ padding: '80px 40px 10px 40px' }}>
+         <Search
+           size="lg"
+           placeholder="Search NFT"
+           labelText="Search"
+           closeButtonLabelText="Clear search input"
+           onChange={(e) => {
+             setSearchText(e.target.value);
+           }}
+         />
+       </div>
+         <Grid fullWidth style={{ margin: '30px auto' }}>
+           {schoolData.length > 0 ? (
+             schoolData?.map((school, index) => (
+               <Column sm={4}>
+                 <ClickableTile
+                   key={index}
+                   className="card"
+                   href={`/explore/${school?.tokenId}`}
+                 >
+                   <div className="row">
+                     <img
+                       src={generateIdenticon(school?.tokenId)}
+                       alt="SVG Image"
+                       style={{ marginBottom: '16px' }}
+                     />
+                     <Toggletip align="right">
+                       <ToggletipButton label="Show information">
+                         <h4>
+                           {school?.schoolName?.length > 30
+                             ? `${school.schoolName
+                                 ?.toLowerCase()
+                                 .split(' ')
+                                 .map(
+                                   (word) =>
+                                     word.charAt(0).toUpperCase() + word.slice(1)
+                                 )
+                                 .join(' ')
+                                 .slice(0, 30)}...`
+                             : school.schoolName
+                                 ?.toLowerCase()
+                                 .split(' ')
+                                 .map(
+                                   (word) =>
+                                     word.charAt(0).toUpperCase() + word.slice(1)
+                                 )
+                                 .join(' ')}
+                         </h4>
+                       </ToggletipButton>
+                       <ToggletipContent>
+                         <p>
+                           {school.schoolName
+                             ?.toLowerCase()
+                             .split(' ')
+                             .map(
+                               (word) =>
+                                 word.charAt(0).toUpperCase() + word.slice(1)
+                             )
+                             .join(' ')}
+                         </p>
+                       </ToggletipContent>
+                     </Toggletip>
+                     <div
+                       style={{
+                         display: 'flex',
+                         alignItems: 'center',
+                         justifyContent: 'space-between',
+                       }}
+                     >
+                       <h4 className="heading2 text-left">
+                         {school?.country
+                           ? school?.country?.length > 15
+                             ? `${school.country
+                                 ?.toLowerCase()
+                                 .split(' ')
+                                 .map(
+                                   (word) =>
+                                     word.charAt(0).toUpperCase() + word.slice(1)
+                                 )
+                                 .join(' ')
+                                 .slice(0, 15)}...`
+                             : school.country
+                                 ?.toLowerCase()
+                                 .split(' ')
+                                 .map(
+                                   (word) =>
+                                     word.charAt(0).toUpperCase() + word.slice(1)
+                                 )
+                                 .join(' ')
+                           : 'N/A'}
+                       </h4>
+                       {school?.sold && <p className="sold">Sold</p>}
+                     </div>
+                   </div>
+                 </ClickableTile>
+               </Column>
+             ))
+           ) : (
+             <Column sm={4} md={8} lg={16}>
+               <h1>No school has been minted</h1>
+             </Column>
+           )}    
+           <Column sm={4} md={8} lg={16}>
+             {schoolData.length > 0 && (
+               <Button
+                 onClick={loadMore}
+                 kind="tertiary"
+                 disabled={allDataLoaded}
+                 style={{ float: 'right' }}
+               >
+                 {allDataLoaded === false ? 'Load more' : 'No more data'}
+               </Button>
+             )}
+           </Column>
+         </Grid></>
+       ) : (
+         <div className="loader-container">
+           <Loading withOverlay={false} />{' '}
+           <span>Loading school data, please wait...</span>{' '}
+         </div>
+       )}
     </>
-  );
+  )
 };
 
 export default SchoolCard;

@@ -4,9 +4,9 @@ import { Typography, Link } from '@mui/material';
 const CountdownTimer = ({ setSeconds, seconds }) => {
   const [expired, setExpired] = useState(false);
 
-  useEffect(() => {
-    localStorage.setItem('countdownSeconds', seconds?.toString());
-  }, [seconds]);
+  // useEffect(() => {
+  //   localStorage.setItem('countdownSeconds', seconds?.toString());
+  // }, [seconds]);
 
   useEffect(() => {
     const countdown = setInterval(() => {
@@ -19,7 +19,7 @@ const CountdownTimer = ({ setSeconds, seconds }) => {
     if (seconds <= 0) {
       setExpired(true);
     }
-    else{
+    else {
       setExpired(false)
     }
   }, [seconds]);
