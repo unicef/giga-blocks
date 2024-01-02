@@ -86,7 +86,7 @@ const ValidateData = () => {
   );
 
   useEffect(() => {
-    selectedSchoolSearch &&  refetch()
+    refetch()
   }, [selectedSchoolSearch])
 
   let filteredData: any = [];
