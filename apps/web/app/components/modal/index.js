@@ -8,19 +8,22 @@ import {
 import { useLogin } from '../../hooks/useSignUp';
 import { useForm, Controller } from 'react-hook-form';
 import { saveAccessToken, saveCurrentUser } from '../../utils/sessionManager';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuthContext } from '../../auth/useAuthContext';
 import { useEffect, useState } from 'react';
 import { useOtp } from '../../hooks/useOtp';
 
 const CarbonModal = ({ open, onClose, email }) => {
-  const { handleSubmit, control, reset } = useForm();
+  const { handleSubmit, control } = useForm();
   const [error, setError] = useState();
   const { initialize } = useAuthContext();
   const login = useLogin();
-  const { push } = useRouter();
   const { mutateAsync: otpMutateAsync } = useOtp();
   const [notification, setNotification] = useState(null);
+  const searchParams = useSearchParams();
+  const route = useRouter();
+
+  const searchKey = searchParams.get('returnTo');
 
   const onAdd = async (data) => {
     const payload = {
@@ -37,7 +40,12 @@ const CarbonModal = ({ open, onClose, email }) => {
           kind: 'success',
           title: 'OTP login successful.',
         });
-        push('/contributeSchool');
+        if (searchKey) {
+          console.log('first');
+          route.push(searchKey);
+        } else {
+          route.push('/contributeSchool');
+        }
       })
       .catch((err) => {
         console.log(err);
