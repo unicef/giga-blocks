@@ -23,8 +23,8 @@ const CarbonModal = ({ open, onClose, email, setSeconds, seconds, error, setErro
   const route = useRouter();
   const { mutateAsync: otpMutateAsync } = useOtp();
   const [notification, setNotification] = useState(null);
-
   const searchParams = useSearchParams();
+
 
   const searchKey = searchParams.get('returnTo');
 

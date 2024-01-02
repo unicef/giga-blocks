@@ -23,7 +23,7 @@ const PageHeader = ({ name, breadcrumbs }) => {
 
   return (
     <>
-      <div className="preview1Background">
+      <div className="headerBackground">
         <Grid>
           <Column sm={8} md={10} lg={16} style={{ marginTop: '32px' }}>
             <Breadcrumb>
