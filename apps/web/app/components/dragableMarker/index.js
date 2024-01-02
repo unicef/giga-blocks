@@ -5,7 +5,6 @@ import styled from '@emotion/styled';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 const DragableMap = ({ lat, long }) => {
-  console.log('longitude', long);
   useEffect(() => {
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
