@@ -16,7 +16,6 @@ import { useQuery } from 'urql';
 import { toSvg } from 'jdenticon';
 import { Queries } from '../../libs/graph-query';
 import { getNftContract } from '../web3/contracts/getContract';
-import { metaMaskLogin } from '../../utils/metaMaskUtils';
 import { useWeb3React } from '@web3-react/core';
 
 const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
@@ -62,10 +61,6 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
     setImageData(decodedImage);
   };
 
-  const connectMetaMask = async ()=>{
-    await metaMaskLogin();
-  }
-
   const decodeSchooldata = async (data) => {
     const encodeddata = variables?.id
       ? data?.collectorOwnedNft?.nfts
@@ -110,10 +105,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
   };
 
   return(
-    <>
-    {account ?(
-       <>
-      
+    <>  
        {fetching === false ? (
         <>
          <div style={{ padding: '80px 40px 10px 40px' }}>
@@ -237,22 +229,6 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
            <span>Loading school data, please wait...</span>{' '}
          </div>
        )}
-     </>
-    ):
-    (
-      <Column sm={4} md={8} lg={16} align='center'>
-        <h1>Please connect your wallet</h1>
-        <br/>
-          <Button 
-          className='submit-btn'
-          type='submit'
-          style={{marginRight:'13px'}}
-          onClick={connectMetaMask}>
-            Connect
-          </Button>
-      </Column>
-    )
-    }
     </>
   )
 };
