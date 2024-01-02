@@ -17,6 +17,19 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex }) => {
   const [selectedOptions, setSelectedOptions] = useState({});
   const [error, setError] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [markerCoords, setMarkerCoords] = useState({
+    lat: data.latitude,
+    long: data.longitude,
+  });
+
+  const handleMarkerDragEnd = (lngLat) => {
+    setMarkerCoords({ lat: lngLat.lat, long: lngLat.lng });
+  };
+
+  useEffect(() => {
+    setValue('latitude', markerCoords.lat);
+    setValue('longitude', markerCoords.long);
+  }, [markerCoords, setValue]);
 
   useEffect(() => {
     if (
@@ -174,7 +187,11 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex }) => {
                 </>
               )}
             />
-            <Map lat={data.latitude} long={data.longitude} />
+            <Map
+              lat={markerCoords.lat}
+              long={markerCoords.long}
+              onMarkerDragEnd={handleMarkerDragEnd}
+            />
 
             <Controller
               name="latitude"

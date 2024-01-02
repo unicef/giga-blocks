@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-const DragableMap = ({ lat, long }) => {
+const DragableMap = ({ lat, long, onMarkerDragEnd }) => {
   useEffect(() => {
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -27,6 +27,7 @@ const DragableMap = ({ lat, long }) => {
       const lngLat = marker.getLngLat();
       coordinates.style.display = 'block';
       coordinates.innerHTML = `Longitude: ${lngLat.lng}<br />Latitude: ${lngLat.lat}`;
+      onMarkerDragEnd(lngLat);
     }
 
     marker.on('dragend', onDragEnd);
