@@ -160,7 +160,6 @@ const SignUp = () => {
                 labelText="By creating an account, you agree to the Terms and conditions and our Privacy Policy"
                 checked={checkbox}
                 onChange={handleCheck}
-                style={{ color: '#161616' }}
               />
               <br />
               <Grid>
