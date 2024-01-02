@@ -58,8 +58,8 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
         .purchaseNft(tokenId, account, { value: price })
         .then((hash) => {
           if (hash) {
+            setHash(hash.hash);
             onClose();
-            setHash(hash);
             setShowCongratulationModal(true);
           }
         })
