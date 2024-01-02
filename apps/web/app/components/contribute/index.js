@@ -7,6 +7,7 @@ import { useContributeData } from '../../hooks/useContributeData';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { Modal, ModalBody } from '@carbon/react';
+import Map from '../../components/dragableMarker';
 
 const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex }) => {
   const router = useRouter();
@@ -15,7 +16,6 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex }) => {
   const { id } = useParams();
   const [selectedOptions, setSelectedOptions] = useState({});
   const [error, setError] = useState(false);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -174,6 +174,8 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex }) => {
                 </>
               )}
             />
+            <Map lat={data.latitude} long={data.longitude} />
+
             <Controller
               name="latitude"
               control={control}
