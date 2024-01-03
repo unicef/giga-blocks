@@ -1,29 +1,21 @@
 // ModalComponent.js
 import React, { useState, useEffect } from 'react';
-import {
-  Modal,
-  ModalBody,
-  Column,
-  Grid,
-  Button,
-  ModalFooter,
-} from '@carbon/react';
+import { Modal, ModalBody, Column, Grid, Button } from '@carbon/react';
 import { toSvg } from 'jdenticon';
-import { useRouter } from 'next/navigation';
 import { ArrowRight } from '@carbon/icons-react';
 import {
   useSellerContract,
   useSignerSellerContract,
 } from '../../hooks/useContract';
 import { useWeb3React } from '@web3-react/core';
-import { metaMask } from '../../components/web3/connectors/metamask';
 import CongratulationModalComponent from '../../components/nftPurchaseSuccessModal';
-import { Default_Chain_Id } from '../../components/web3/connectors/network';
 import { ethers } from 'ethers';
 import {
   metaMaskLogin,
   switchMetaMaskNetwork,
+  metaMaskLogout,
 } from '../../utils/metaMaskUtils';
+import { Default_Chain_Id } from '../web3/connectors/network';
 
 const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
   const sellerContract = useSellerContract();
@@ -33,10 +25,11 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
   const [showCongratulationModal, setShowCongratulationModal] = useState(false);
   const [switchNetwork, setSwitchNetwork] = useState(false);
   const [price, setPrice] = useState(0);
+  const [hash,setHash] = useState('');
   const [priceInEth, setPriceEth] = useState(0);
 
   const generateIdenticon = (image) => {
-    const size = 200; // Adjust the size as needed
+    const size = 200;
     const svgString = toSvg(image, size);
     return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
   };
@@ -55,7 +48,6 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
     }
   };
 
-  const route = useRouter();
   const handleSubmit = async () => {
     if (!signerSellerContract) return;
     if (!account) return;
@@ -66,6 +58,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
         .purchaseNft(tokenId, account, { value: price })
         .then((hash) => {
           if (hash) {
+            setHash(hash.hash);
             onClose();
             setShowCongratulationModal(true);
           }
@@ -86,6 +79,10 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
     }
   };
 
+  const disconnectMetamask = async () => {
+    await metaMaskLogout();
+  };
+
   const closeCongratulationModal = () => {
     setShowCongratulationModal(false);
   };
@@ -97,7 +94,8 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
 
   useEffect(() => {
     if (account) {
-      if (chainId !== 421613) setSwitchNetwork(true);
+      if (chainId !== Default_Chain_Id) setSwitchNetwork(true);
+      else setSwitchNetwork(false);
     }
   }, [account, chainId]);
 
@@ -109,7 +107,12 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
     <>
       <Modal open={isOpen} onRequestClose={onClose} passiveModal={true}>
         <ModalBody>
-          <p>You are about to purchase NFT from {schooldata?.owner}</p>
+          <p>
+            You are about to purchase {schooldata?.schoolName} from{' '}
+            {schooldata?.owner?.slice(0, 8) +
+              '...' +
+              schooldata?.owner?.slice(-6)}
+          </p>
           <Grid style={{ marginTop: '18px' }}>
             <Column
               md={4}
@@ -157,7 +160,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
                 }}
               >
                 <p>Price</p>
-                <p>{priceInEth}ETH</p>
+                <p>{priceInEth}MATIC</p>
               </div>
               <div
                 style={{
@@ -173,8 +176,9 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
             <Column md={4} lg={16} sm={4} style={{ marginTop: '24px' }}>
               {account ? (
                 <>
-                  <p style={{ fontWeight: '600' }}>
-                    You are connected to "{account}" address.{' '}
+                  <p style={{ fontWeight: '600' }}>Go to you wallet.</p>
+                  <p>
+                    You will be asked to approve this purchase from your wallet.
                   </p>
 
                   <Button
@@ -184,6 +188,20 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
                     style={{ marginTop: '12px', marginBottom: '12px' }}
                   >
                     {loading ? 'Loading...' : 'Submit'}
+                  </Button>
+                  <Button
+                    onClick={disconnectMetamask}
+                    renderIcon={ArrowRight}
+                    style={{
+                      marginTop: '12px',
+                      marginBottom: '12px',
+                      marginLeft: '12px',
+                      background: 'transparent',
+                      color: '#0050e6',
+                      border: '1px solid #0050e6',
+                    }}
+                  >
+                    Disconnect Wallet
                   </Button>
                 </>
               ) : (
@@ -200,12 +218,8 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
               )}
               {switchNetwork && (
                 <>
-                  <p>
-                    You will be asked to approve this purchase from your wallet.
-                  </p>
-                  {/* <br /> */}
-                  Need to switch network
-                  <a onClick={handleSwitchNetwork}>{} Switch Network</a>
+                  <br />
+                  <a style={{cursor:'pointer'}} onClick={handleSwitchNetwork}>{} Switch Network</a>
                 </>
               )}
             </Column>
@@ -215,6 +229,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
       {showCongratulationModal && (
         <CongratulationModalComponent
           schooldata={schooldata}
+          transactionHash = {hash}
           isOpen={showCongratulationModal}
           onClose={closeCongratulationModal}
         />

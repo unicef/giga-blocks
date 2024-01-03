@@ -6,6 +6,7 @@ import { useWeb3React } from '@web3-react/core';
 
 import UserContributionTable from '../table';
 import OwnedNfts from '../../card';
+import ConnectWallet from '../../connectWallet';
 
 const ListTabs = () => {
   const web3 = useWeb3React();
@@ -28,6 +29,7 @@ const ListTabs = () => {
           }}
         >
           <TabList
+            aria-label="List of tabs"
             style={{
               display: 'flex',
             }}
@@ -45,12 +47,14 @@ const ListTabs = () => {
         </div>
         <TabPanels>
           <TabPanel>
-            <OwnedNfts
+            {account? 
+            (<OwnedNfts
               query={Queries.ownedNftsQuery}
               variables={variables}
               pageSize={pageSize}
               setPageSize={setPageSize}
-            />
+            />):
+            <ConnectWallet />}
           </TabPanel>
           <TabPanel>
             <UserContributionTable />

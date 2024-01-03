@@ -16,7 +16,7 @@ import './walletRegister.scss';
 import Link from 'next/link';
 import Web3Provider from '../components/web3/Provider';
 import { metaMask } from '../components/web3/connectors/metamask';
-
+import { useRouter } from 'next/navigation';
 import { walletRegister, useGetNonce } from '../hooks/walletLogin';
 import { useWeb3React } from '@web3-react/core';
 import {
@@ -36,12 +36,25 @@ const WalletRegisterForm = () => {
   const { initialize } = useAuthContext();
   const [successMessage, setSuccessMessage] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [checkbox, setCheckbox] = useState(null);
+  const router = useRouter();
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     if (web3) {
       setWalletAddress(web3.account);
     }
   }, [web3]);
+
+  useEffect(() => {
+    if (notification) {
+      const timeoutId = setTimeout(() => {
+        onCloseNotification();
+      }, 4000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [notification]);
 
   useEffect(() => {
     if (!web3.isActive) {
@@ -68,6 +81,14 @@ const WalletRegisterForm = () => {
     setErrorMessage(`Error registering wallet: ${error.message}`);
   };
 
+  const handleCheck = () => {
+    setCheckbox(!checkbox);
+  };
+
+  const handlePageChange = () => {
+    router.push('/signUp');
+  };
+
   const onSubmit = async (data) => {
     try {
       const { nonce } = await getNonceQuery.mutateAsync();
@@ -90,6 +111,9 @@ const WalletRegisterForm = () => {
       console.error('Error registering wallet:', error);
     }
   };
+  const onCloseNotification = () => {
+    setNotification(null);
+  };
 
   return (
     <>
@@ -106,9 +130,7 @@ const WalletRegisterForm = () => {
                 render={({ field }) => (
                   <TextInput
                     {...field}
-                    // id="name"
                     style={{ marginBottom: '25px', height: '48px' }}
-                    // invalid={!!errors.fullname}
                     labelText="Full Name"
                     placeholder="Enter your fullname here"
                     onChange={(e) => {
@@ -137,23 +159,27 @@ const WalletRegisterForm = () => {
               />
               <Checkbox
                 className="checkbox"
-                labelText={
-                  <>
-                    By creating an account, you agree to the{' '}
-                    <Link href="/privacy-policy" target="_blank">
-                      Terms and Conditions
-                    </Link>{' '}
-                    and our{' '}
-                    <Link href="/privacy-policy" target="_blank">
-                      Privacy Policy
-                    </Link>
-                  </>
-                }
+                id="checkbox"
+                labelText="By creating an account, you agree to the Terms and conditions and our Privacy Policy"
+                checked={checkbox}
+                onChange={handleCheck}
               />
               <br />
-              <Button className="submit-btn" type="submit">
-                Submit
-              </Button>
+              <Column className="form" md={4} lg={16} sm={16}>
+                <Button
+                  className="submit-btn"
+                  type="submit"
+                  disabled={!checkbox}
+                >
+                  Submit
+                </Button>
+                <Button
+                  className="submit-btn-transparent"
+                  onClick={handlePageChange}
+                >
+                  Sign Up Using Metamask
+                </Button>
+              </Column>
             </Form>
             {successMessage && (
               <InlineNotification
@@ -174,6 +200,13 @@ const WalletRegisterForm = () => {
                 kind="error"
                 title={errorMessage}
                 onCloseButtonClick={() => setErrorMessage(null)}
+                style={{
+                  position: 'fixed',
+                  top: '50px',
+                  right: '2px',
+                  width: '400px',
+                  zIndex: 1000,
+                }}
               />
             )}
           </Tile>

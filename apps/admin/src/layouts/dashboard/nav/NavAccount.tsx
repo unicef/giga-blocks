@@ -1,15 +1,9 @@
-// @mui
 import { styled, alpha } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
 import NextLink from 'next/link';
-
-// components
 import { CustomAvatar } from '@components/custom-avatar';
-// auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 import { getCurrentUser } from '@utils/sessionManager';
-
-// ----------------------------------------------------------------------
 
 const StyledRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -21,8 +15,6 @@ const StyledRoot = styled('div')(({ theme }) => ({
     duration: theme.transitions.duration.shorter,
   }),
 }));
-
-// ----------------------------------------------------------------------
 
 export default function NavAccount() {
   const { user } = useAuthContext();

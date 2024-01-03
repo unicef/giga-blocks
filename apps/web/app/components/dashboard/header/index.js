@@ -4,9 +4,18 @@ import '../dashboard.scss';
 import { getCurrentUser } from '../../../utils/sessionManager';
 import { useContributionCount } from '../../../hooks/useContributionList';
 
+import { useWeb3React } from '@web3-react/core';
+import { metaMaskLogout } from '../../../utils/metaMaskUtils';
+
 const Header = ({ name, breadcrumbs }) => {
   const user = getCurrentUser();
+  const {account} = useWeb3React();
   const { data } = useContributionCount(user?.id);
+
+  const disconnect = ()=>{
+    metaMaskLogout();
+
+  }
   return (
     <div className="dashboard-head-wrapper">
       <Grid fullWidth>
@@ -24,7 +33,20 @@ const Header = ({ name, breadcrumbs }) => {
             <h2>My Dashboard</h2>
             <p>{user?.name}</p>
             <p>{user?.email}</p>
-            <p>{user?.walletAddress}</p>
+             {account && 
+             (<>
+             <p>{account}
+             {" "}
+             <a 
+             style={{cursor:'pointer', color:'blue', textDecoration: 'underline'}}
+             onClick={disconnect}>
+              Disconnect
+             </a>
+             </p>
+
+             </>
+              )
+              }
           </div>
           <div className="sub-column-1">
             <p className="head">My Contributions</p>
@@ -34,7 +56,6 @@ const Header = ({ name, breadcrumbs }) => {
                 <p>Contributions</p>
               </div>
             </div>
-            <p className="foot">View history</p>
           </div>
         </Column>
       </Grid>

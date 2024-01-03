@@ -154,7 +154,6 @@ export default function ConnectWithSelect({
       setError(undefined);
       await connector.activate();
     } catch (error) {
-      console.log('error', error);
       setError(error);
     }
   }, [connector, setError]);
@@ -172,7 +171,7 @@ export default function ConnectWithSelect({
             <Button
               sx={{ marginRight: '15px' }}
               variant="contained"
-              color="secondary"
+              style={{background: '#0050e6'}}
               onClick={() => {
                 getSignature();
               }}

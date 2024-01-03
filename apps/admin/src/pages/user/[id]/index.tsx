@@ -1,12 +1,9 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { Box, Button, Container, Grid } from '@mui/material';
+import { Container, Grid } from '@mui/material';
 
 import DashboardLayout from '@layouts/dashboard';
 import CustomBreadcrumbs from '@components/custom-breadcrumbs';
-import UserNewEditForm from '@sections/user/SchoolDetails';
-import { useUserGetById } from '@hooks/user/useUser';
-import Image from 'next/image';
 import UserProfileEditForm from '@sections/user/UserProfileEditForm';
 import { PATH_DASHBOARD } from '@routes/paths';
 
@@ -24,13 +21,13 @@ export default function UserEditPage() {
       </Head>
 
       <Grid container spacing={2}>
-        <Grid item xs={8}>
+        <Grid item xs={12} lg={6} md={10}>
           <Container>
             <CustomBreadcrumbs
               heading="Profile"
               links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Profile' }]}
             />
-            {id && <UserProfileEditForm id={id} />}
+            {id && <UserProfileEditForm id={id}/>}
           </Container>
         </Grid>
         <Grid item xs={4}>

@@ -20,7 +20,7 @@ export default function Dashboard() {
       <Container>
         <h1>Dashboard</h1>
         <CardData />
-        <Card style={{ marginTop: '45px' }}>
+        <Card sx={{mt: 10}}>
           <MapView
             mapData={
               latitudeArray && longitudeArray

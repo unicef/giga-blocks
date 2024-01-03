@@ -10,8 +10,9 @@ import {
 } from '@carbon/react';
 import { useRouter } from 'next/navigation';
 import { toSvg } from 'jdenticon';
+import { Default_Chain_Explorer } from '../../components/web3/connectors/network';
 
-const CongratulationModalComponent = ({ isOpen, onClose, schooldata }) => {
+const CongratulationModalComponent = ({ isOpen, onClose, schooldata,transactionHash }) => {
   const route = useRouter();
 
   const generateIdenticon = (image) => {
@@ -25,7 +26,7 @@ const CongratulationModalComponent = ({ isOpen, onClose, schooldata }) => {
   };
   const handleClickRoute = () => {
     onClose();
-    route.push('/dashboard');
+    route.push('/viewMyNFT');
   };
 
   return (
@@ -110,7 +111,9 @@ const CongratulationModalComponent = ({ isOpen, onClose, schooldata }) => {
               }}
             >
               <h5 style={{ marginTop: '24px' }}>Transaction ID</h5>
-              <p>x0098....456</p>
+              <a href={`${Default_Chain_Explorer}tx/${transactionHash}`}
+              target='_blank'
+              rel= "noopener noreferrer">{transactionHash?.slice(0,4)+'...'+transactionHash?.slice(-5)}</a>
             </div>
           </Column>
         </Grid>

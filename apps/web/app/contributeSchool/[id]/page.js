@@ -24,20 +24,23 @@ import { useState } from 'react';
 import PageHeader from '../../components/page-header';
 import { getCurrentUser } from '../../utils/sessionManager';
 import { useRouter } from 'next/navigation';
+import { useContributeDetails } from '../../hooks/useContributionList';
 
 const SchoolDetail = () => {
   const { id } = useParams();
   const router = useRouter();
   const { data, isLoading } = useSchoolDetails(id);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
+  const [selectedTabIndex, setSelectedTabIndex] = useState({selectedIndex: 0});
+  const {data:contributedData,refetch} = useContributeDetails(id);
 
   const user = getCurrentUser();
+
   const openModal = () => {
     if (user) {
       setIsModalOpen(true);
     } else {
-      router.push('/signIn');
+      router.push(`/signIn?returnTo=${window.location.pathname}`);
     }
   };
 
@@ -59,21 +62,14 @@ const SchoolDetail = () => {
       {isLoading === false ? (
         <>
           <Navbar />
-          {/* HEADING */}
           <PageHeader name={data?.name} breadcrumbs={breadcrumbs} />
-
-          {/* INTRODUCTION */}
-
-          <Tabs>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                background: '#222222',
-              }}
-            >
+          <Tabs
+            selectedIndex={selectedTabIndex.selectedIndex}
+            onChange={updateSelectedTabIndex}
+          >
+            <div className="tabs">
               <TabList
+                aria-label="List of tabs"
                 style={{
                   display: 'flex',
                 }}
@@ -146,14 +142,16 @@ const SchoolDetail = () => {
                           description="Loading map..."
                         />
                       ) : (
-                        <MapView
-                          mapData={[
-                            {
-                              latitude: data?.latitude,
-                              longitude: data?.longitude,
-                            },
-                          ]}
-                        />
+                        <>
+                          <MapView
+                            mapData={[
+                              {
+                                latitude: data?.latitude,
+                                longitude: data?.longitude,
+                              },
+                            ]}
+                          />
+                        </>
                       )}
                     </div>
                   </Column>
@@ -205,7 +203,10 @@ const SchoolDetail = () => {
                 </Grid>
               </TabPanel>
               <TabPanel>
-                <ChangeLog schoolid={id} />
+                <ChangeLog schoolid={id}
+                contributedData={contributedData}
+                refetch={refetch}
+                />
               </TabPanel>
             </TabPanels>
           </Tabs>
@@ -214,6 +215,7 @@ const SchoolDetail = () => {
             onClose={closeModal}
             data={data}
             updateSelectedTabIndex={updateSelectedTabIndex}
+            refetch={refetch}
           />
           <Footer />
         </>

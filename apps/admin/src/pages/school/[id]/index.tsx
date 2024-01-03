@@ -1,13 +1,9 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { Box, Container, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 
 import DashboardLayout from '@layouts/dashboard';
-import CustomBreadcrumbs from '@components/custom-breadcrumbs';
 import SchoolDetails from '@sections/user/SchoolDetails';
-import { useSchoolGetById } from '@hooks/school/useSchool';
-import Image from 'next/image';
-
 
 UserEditPage.getLayout = (page: React.ReactElement) => (
     <DashboardLayout>{page}</DashboardLayout>
@@ -17,8 +13,6 @@ export default function UserEditPage() {
   const {
     query: { id },
   } = useRouter();
-
-  const singleUser = "Admin"
   
   return (
     <>

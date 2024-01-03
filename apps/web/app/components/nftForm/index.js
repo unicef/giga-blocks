@@ -1,5 +1,13 @@
-import React, { useState, useMemo } from 'react';
-import { Form, TextInput, Button, Grid, Column, Dropdown } from '@carbon/react';
+import React, { useState, useMemo, useEffect } from 'react';
+import {
+  Form,
+  TextInput,
+  Button,
+  Grid,
+  Column,
+  Dropdown,
+  InlineNotification,
+} from '@carbon/react';
 import './form.scss';
 // import { useSchoolRegistration } from "../../app/api/school-register";
 import { useRegistration } from '../../hooks/useRegistration';
@@ -14,6 +22,7 @@ const RegisterForm = () => {
     label: 'Select Country',
   });
   const [error, setError] = useState(undefined);
+  const [notification, setNotification] = useState(null);
 
   const [formData, setFormData] = useState({
     fullname: '',
@@ -29,6 +38,16 @@ const RegisterForm = () => {
     }));
   };
 
+  useEffect(() => {
+    if (notification) {
+      const timeoutId = setTimeout(() => {
+        onCloseNotification();
+      }, 4000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [notification]);
+
   const handleSelectChange = (value) => {
     setFormData((prev) => ({
       ...prev,
@@ -40,21 +59,49 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { isSuccess } = await registerApi.mutateAsync(formData);
-      if (isSuccess) {
+      const { success } = await registerApi.mutateAsync(formData);
+      if (success) {
         setFormData({
           fullname: '',
           email: '',
         });
         setSelectedCountry({ value: '', label: 'Select country' });
+        setNotification({
+          kind: 'success',
+          title: 'Email has been recorded successfully',
+        });
       }
     } catch (error) {
-      setError(error && error?.response?.data?.message);
+      setNotification({
+        kind: 'error',
+        title:
+          error?.response?.data?.message == 'Bad Request Exception'
+            ? 'Enter required informations.'
+            : error?.response?.data?.message,
+      });
     }
+  };
+  const onCloseNotification = () => {
+    setNotification(null);
   };
 
   return (
     <>
+      {notification && (
+        <InlineNotification
+          aria-label="closes notification"
+          kind={notification.kind}
+          onClose={onCloseNotification}
+          title={notification.title}
+          style={{
+            position: 'fixed',
+            top: '50px',
+            right: '2px',
+            width: '400px',
+            zIndex: 1000,
+          }}
+        />
+      )}
       <Grid className="form-gap" id="joinCommunityForm" fullWidth>
         <Column className="heading-col" md={4} lg={7} sm={4}>
           <h1 className="heading10">

@@ -10,6 +10,7 @@ import {
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
+import { DEVELOPER_JOIN_MAIL } from '../constants/mail.constant';
 
 @Injectable()
 @Processor(MAIL_QUEUE)
@@ -97,6 +98,21 @@ export class MailProcessor {
       subject: 'Data Validation',
       template: './data-validation',
       context: { name: job.data.name, school: job.data.school },
+    });
+  }
+
+  @Process(DEVELOPER_JOIN_MAIL)
+  public async developerJoinMail(
+    job: Job<{ email: string; name: string; country: string; emailTo: string[] }>,
+  ) {
+    this._logger.log(`Sending developer join alert email to '${job.data.emailTo}'`);
+
+    return this._mailerService.sendMail({
+      to: job.data.emailTo,
+      from: this._configService.get('EMAIL_ADDRESS'),
+      subject: 'New User Register Alert',
+      template: './developer-join',
+      context: { name: job.data.name, country: job.data.country, email: job.data.email },
     });
   }
 }

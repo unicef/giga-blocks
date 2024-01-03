@@ -7,8 +7,8 @@ import {
 } from '@mui/material';
 
 // components
-import { useRouter } from 'next/router';
 import Tooltip from '@mui/material/Tooltip';
+import { TESTNET_CHAINS,DEFAULT_CHAIN_ID } from '@components/web3/chains';
 
 type Props = {
   row: any;
@@ -24,6 +24,19 @@ export default function NFTTableRow({
     transactionHash,
     blockTimestamp,
   } = row;
+
+  const date = new Date(blockTimestamp*1000)
+  const explorer = TESTNET_CHAINS[DEFAULT_CHAIN_ID].blockExplorerUrls[0]
+
+  var year = date.getFullYear();
+  var month = date.getMonth() + 1;
+  var day = date.getDate();
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var seconds = date.getSeconds();
+
+  // Format the date as a string
+  var formattedDate = `${year}/${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day} ${hours}:${minutes}:${seconds}`;
 
   // @ts-ignore
   const truncateString = (str) => {
@@ -65,7 +78,7 @@ export default function NFTTableRow({
           sx={{ textTransform: 'capitalize' }}          
         >
             <Tooltip title={transactionHash}>
-            <span><a href={`https://mumbai.polygonscan.com/tx/${transactionHash}`} target='_blank'>{truncateString(transactionHash)}</a> </span>
+            <span><a href={`${explorer}/tx/${transactionHash}`} target='_blank'>{truncateString(transactionHash)}</a> </span>
             </Tooltip>
         </TableCell>
 
@@ -73,7 +86,7 @@ export default function NFTTableRow({
           align="left"
           sx={{ textTransform: 'capitalize' }}          
         >
-          {blockTimestamp}
+          {formattedDate}
         </TableCell>
 
         <TableCell

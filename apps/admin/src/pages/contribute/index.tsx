@@ -18,8 +18,6 @@ import {
 } from '@mui/material';
 import { CircularProgress } from '@mui/material';
 import { SyntheticEvent, useEffect, useState } from 'react';
-import { useQuery } from 'urql';
-import { Queries } from 'src/libs/graph-query';
 import { useAllSchool } from '@hooks/school/useSchool';
 import { useContributeGet, useContributionValidate } from '@hooks/contribute/useContribute';
 import ContributeTableRow from '@sections/user/list/ContributTableRow';
@@ -53,20 +51,18 @@ const ContributeData = () => {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({defaultOrderBy: 'createdAt', defaultOrder: 'desc'});
+  const [toastMessage, setToastMessage] = useState('validated')
 
   const { enqueueSnackbar } = useSnackbar();
 
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
-  const [result] = useQuery({
-    query: Queries.nftListQuery,
-    variables: { skip: page * rowsPerPage, first: rowsPerPage },
-  });
-  const { data, fetching } = result;
+
   const {
     mutate,
     isSuccess: isValidationSuccess,
     isError: isValidationError,
+    isLoading: isValidationLoading
   } = useContributionValidate();
   const [selectedSchoolSearch, setSelectedSchoolSearch] = useState<SearchItem | null>();
   const [selectedContributorSearch, setSelectedContributorSearch] = useState<SearchItem | null>();
@@ -86,17 +82,8 @@ const ContributeData = () => {
   });
   const { data: schoolList } = useAllSchool();
 
-  const decodeSchooldata = (data: any) => {
-    const encodeddata = data.tokenUris;
-    const decodedShooldata = [];
-    for (let i = 0; i < encodeddata?.length; i++) {
-      const decodedData = atob(encodeddata[i].tokenUri.substring(29));
-      const schoolData = {
-        tokenId: encodeddata[i].id,
-        ...JSON.parse(decodedData),
-      };
-      decodedShooldata.push(schoolData);
-    }
+  const decodeSchooldata = () => {
+ 
     ContributedData?.rows &&
       ContributedData?.rows?.map((row: any) => {
         const contributedData = Object.entries(row?.contributed_data || {});
@@ -121,8 +108,8 @@ const ContributeData = () => {
 
   let filteredData: any = [];
   useEffect(() => {
-    if (data) decodeSchooldata(data);
-  }, [data, isFetching]);
+    decodeSchooldata();
+  }, [ isFetching]);
 
   const onSelectAllRows = (e: any) => {
     const isChecked = e.target.checked;
@@ -141,16 +128,19 @@ const ContributeData = () => {
     });
     const payload = { contributions: tempArray };
     mutate(payload);
+    !validity && setToastMessage('invalidated')
     refetch();
+    setSelectedValues([])
     tempArray = [];
   };
 
   useEffect(() => {
     isValidationSuccess &&
-    enqueueSnackbar('Contributed Data are validated. Please check Valid Data Section', { variant: 'success' });
+    enqueueSnackbar(`Contributed Data are ${toastMessage}. Please check ${toastMessage} Data Section`, { variant: 'success' });
     refetch();
     isValidationError && enqueueSnackbar('Contributed Data are invalidated', { variant: 'error' });
-  }, [isValidationSuccess, isValidationError]);
+    isValidationLoading && enqueueSnackbar('Data validation in progress. Please wait. ', { variant: 'warning' });
+  }, [isValidationSuccess, isValidationError, isValidationLoading]);
 
   const handleValidChange = (value: string) => {
     setSelectedSchoolSearch(null);
@@ -219,12 +209,12 @@ const ContributeData = () => {
             />
           </FormControl>
         </Box>
-        {fetching && (
+        {isValidationLoading && (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <CircularProgress />
           </div>
         )}
-        {!fetching && (
+        {!isValidationLoading && (
           <Card sx={{ marginTop: 2 }}>
             <Divider />
             <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -277,7 +267,6 @@ const ContributeData = () => {
             </TableContainer>
             <TablePaginationCustom
               count={ContributedData?.meta?.total}
-              // count={tableData?.length}
               setPage={setPage}
               page={page}
               rowsPerPage={rowsPerPage}
@@ -285,6 +274,7 @@ const ContributeData = () => {
               onRowsPerPageChange={onChangeRowsPerPage}
               dense={dense}
               onChangeDense={onChangeDense}
+              disablePageNumber
             />
           </Card>
         )}
@@ -296,7 +286,7 @@ const ContributeData = () => {
     <DashboardLayout>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
         <span style={{ fontSize: '1.5em', fontWeight: '600' }}>
-          Contributed Data{' '}
+          Contributions{' '}
           <span style={{ fontSize: '0.75em', fontWeight: '400' }}>
             {' '}
             {selectedValues?.length > 0 && `(${selectedValues?.length})`}{' '}

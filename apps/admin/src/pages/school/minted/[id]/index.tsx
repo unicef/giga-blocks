@@ -14,8 +14,6 @@ export default function UserEditPage() {
   const {
     query: { id },
   } = useRouter();
-
-  const singleUser = "Admin"
   
   return (
     <>

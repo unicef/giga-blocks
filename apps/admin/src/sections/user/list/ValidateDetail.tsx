@@ -1,38 +1,23 @@
-import { useState, ChangeEvent, useEffect, use } from 'react';
-import * as Yup from 'yup';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Box,
   Card,
   Grid,
   Stack,
-  MenuItem,
-  Select,
   Button,
   Container,
   Typography,
   TableContainer,
   Table,
   TableBody,
+  CircularProgress,
 } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
 import { useRouter } from 'next/router';
 import { useSnackbar } from '@components/snackbar';
 import FormProvider, { ProfileTextField } from '@components/hook-form';
-import { AdministrationService } from '@services/administration';
-import { useSchoolGetById } from '@hooks/school/useSchool';
-import Image from 'next/image';
 import CustomBreadcrumbs from '@components/custom-breadcrumbs';
 import { PATH_DASHBOARD, PATH_VALID } from '@routes/paths';
-// @ts-ignore
-import Identicon from 'react-identicons';
-import { hooks } from '@hooks/web3/metamask';
-import { JsonRpcProvider, Signer } from 'ethers';
-import { mintSignature } from '@components/web3/utils/wallet';
-import { useMintSchools } from '@hooks/school/useSchool';
-import { useWeb3React } from '@web3-react/core';
-import { useContributionGetById, useContributionValidate } from '@hooks/contribute/useContribute';
 import { useValidDataGetById, useValidateUpdate } from '@hooks/validate/useValidate';
 import Scrollbar from '@components/scrollbar';
 import { TableHeadUsers, TableNoData, TablePaginationCustom, useTable } from '@components/table';
@@ -43,20 +28,18 @@ interface Props {
   currentUser?: any;
   id?: string | string[] | undefined;
 }
-
-interface FormValuesProps {
-  id: string;
-  name: string;
-  email: string;
-  position: string | null;
-  phone: string;
-  affiliation: string | null;
-  roles: string;
-  is_active: boolean;
+interface Profile {
+  fullname: string,
+  schoolName: string,
+  createdAt: string,
+  status: string,
+  contributed_data: string,
+  coverage: string,
+  mintedStatus: string,
 }
 
 export default function ValidateDetail({ id }: Props) {
-  const [profile, setProfile] = useState({
+  const [profile, setProfile] = useState<Profile>({
     fullname: '',
     schoolName: '',
     createdAt: '',
@@ -66,7 +49,8 @@ export default function ValidateDetail({ id }: Props) {
     mintedStatus: '',
   });
 
-  const { data, isSuccess, isError, refetch } = useValidDataGetById(id);
+  const { data, isSuccess, isError, refetch, isFetching } = useValidDataGetById(id);
+
   const { enqueueSnackbar } = useSnackbar();
   const [tableData, setTableData] = useState<any>();
 
@@ -77,7 +61,6 @@ export default function ValidateDetail({ id }: Props) {
     orderBy,
     setPage,
     rowsPerPage,
-    onSelectRow,
     onSort,
     onChangeDense,
     onChangePage,
@@ -93,10 +76,8 @@ export default function ValidateDetail({ id }: Props) {
     mutate,
     isSuccess: isValidationSuccess,
     isError: isValidationError,
-    error: validationError,
+    isLoading: isValidationLoading
   } = useValidateUpdate();
-
-  const web3 = useWeb3React();
 
   const router = useRouter();
 
@@ -116,27 +97,28 @@ export default function ValidateDetail({ id }: Props) {
 
   useEffect(() => {
     if (isSuccess) {
-      const keyValue = Object.entries(data?.data);
-      // const jsonString = keyValue.map(pair => pair[1]).join('');
-      const jsonString = `${keyValue[0][0]}: ${keyValue[0][1]}`;
-      const outputArray = Object.keys(data?.data)?.map((key) => ({ key, value: data?.data[key] }));
+      const keyValue = Object?.entries(data?.data);
+      var jsonString ;
+      if(keyValue) 
+      {jsonString = `${keyValue[0][0]}: ${keyValue[0][1]}`;
+      const outputArray = Object?.keys(data?.data)?.map((key) => ({ key, value: data?.data[key] }));
       setTableData(outputArray);
       setProfile({
         fullname: data?.contributedUser?.name,
         schoolName: data?.school.name,
-        createdAt: new Date(data?.createdAt).toLocaleDateString(),
+        createdAt: new Date(data?.createdAt)?.toLocaleDateString(),
         status: String(data?.approvedStatus),
         contributed_data: jsonString,
         coverage: data?.coverage_availability,
         mintedStatus: data?.minted,
-      });
+      });}
     }
   }, [isSuccess, isError, data]);
 
   useEffect(() => {
-    isValidationSuccess && enqueueSnackbar('Successfully validated', { variant: 'success' });
-    refetch();
+    isValidationSuccess && enqueueSnackbar('Successfully Approved', { variant: 'success' });
     isValidationError && enqueueSnackbar('Unsuccessful', { variant: 'error' });
+    refetch();
   }, [isValidationSuccess, isValidationError]);
 
   useEffect(() => {
@@ -155,31 +137,13 @@ export default function ValidateDetail({ id }: Props) {
     });
   }, [data]);
 
-  const UpdateUserSchema = Yup.object().shape({
-    name: Yup.string()
-      .required()
-      .matches(/^[a-zA-Z\s]+$/, 'Name must contain only alphabets and spaces'),
-    email: Yup.string().email('Email must be a valid email address'),
-    phone: Yup.number().typeError('Phone must be a valid number'),
-    position: Yup.string(),
-    affiliation: Yup.string(),
-    roles: Yup.string(),
-  });
-
-  const methods = useForm<FormValuesProps>({
-    resolver: yupResolver(UpdateUserSchema),
-  });
-
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
+  const methods = useForm();
 
   const onValidate = () => {
     mutate(data?.school_Id);
   };
 
-  const sortedData = tableData?.slice().sort((a: any, b: any) => {
+  const sortedData = tableData?.slice()?.sort((a: any, b: any) => {
     const isAsc = order === 'asc';
     return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
   });
@@ -205,12 +169,6 @@ export default function ValidateDetail({ id }: Props) {
               <Grid item xs={12} md={12}>
                 <Card sx={{ p: 3 }}>
                   <Box rowGap={3} columnGap={2} display="grid">
-                    {/* <ProfileTextField
-                      name="name"
-                      value={profile?.fullname || ""}
-                      label="Contributed by"
-                    /> */}
-
                     <ProfileTextField
                       name="location"
                       value={profile?.schoolName || ''}
@@ -260,14 +218,16 @@ export default function ValidateDetail({ id }: Props) {
         <Container>
           <Box justifyContent={'center'}>
             <Stack alignItems="center" sx={{ mt: 1 }}>
+              {profile && profile?.status === 'false' &&
               <Button
                 variant="contained"
                 color={'info'}
                 style={{ width: '300px', background: '#474747' }}
                 onClick={onValidate}
+                disabled={isValidationLoading}
               >
-                Approve
-              </Button>
+              {isValidationLoading ? 'Approving..' : 'Approve'} 
+              </Button>}
             </Stack>
           </Box>
         </Container>
@@ -287,34 +247,25 @@ export default function ValidateDetail({ id }: Props) {
                   rowCount={tableData?.length}
                   onSort={onSort}
                   showCheckBox={true}
-                  // numSelected={selectedValues?.length}
-                  // onSelectAllRows={onSelectAllRows}
                 />
 
                 <TableBody>
                   {sortedData &&
-                    sortedData?.map((row: any) => (
+                    sortedData.length > page*rowsPerPage && sortedData?.map((row: any) => (
                       <ContributionDetailTableRow
-                        key={row.id}
+                        key={row?.id}
                         row={row}
-                        // rowData = {row}
                       />
                     ))}
-                  <TableNoData isNotFound={tableData?.length === 0} />
+                  {!isFetching ? (
+                      <TableNoData isNotFound={sortedData?.length < page*rowsPerPage} />
+                    ) : (
+                      <CircularProgress color="inherit" />
+                    )}
                 </TableBody>
               </Table>
             </Scrollbar>
           </TableContainer>
-          <TablePaginationCustom
-            count={tableData?.length}
-            page={page}
-            setPage={setPage}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-            dense={dense}
-            onChangeDense={onChangeDense}
-          />
         </Card>
       </Grid>
     </>

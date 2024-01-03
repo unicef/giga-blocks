@@ -19,19 +19,21 @@ import { useSignUp } from '../hooks/useSignUp';
 import { useRouter } from 'next/navigation';
 import { metaMask, hooks } from '../components/web3/connectors/metamask';
 import CarbonModal from '../components/modal/index';
-import { Default_Chain_Id } from '../components/web3/connectors/network';
 import { metaMaskLogin } from '../utils/metaMaskUtils';
 
 const SignUp = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
-  const account = hooks.useAccount();
   const { handleSubmit, control } = useForm();
   const [openModal, setOpenModal] = useState(false);
   const [checkbox, setCheckbox] = useState(false);
+  const [error, setError] = useState();
   const [notification, setNotification] = useState(null);
   const signUp = useSignUp();
   const sendOtp = useOtp();
+
+  const minute = process.env.NEXT_PUBLIC_OTP_DURATION_IN_MINS
+  const [seconds, setSeconds] = useState(minute*60);
 
   useEffect(() => {
     void metaMask.connectEagerly().catch(() => {
@@ -39,7 +41,19 @@ const SignUp = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (notification) {
+      const timeoutId = setTimeout(() => {
+        onCloseNotification();
+      }, 4000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [notification]);
+
   const onSubmit = async (data) => {
+    setSeconds(minute * 60)
+    setError()
     signUp
       .mutateAsync(data)
       .then(() => {
@@ -54,11 +68,17 @@ const SignUp = () => {
             setEmail(data.email);
           })
           .catch((err) => {
-            console.log(err);
+            setNotification({
+              kind: 'error',
+              title: `${err.response.data.message}`,
+            });
           });
       })
       .catch((err) => {
-        console.log(err);
+        setNotification({
+          kind: 'error',
+          title: `${err.response.data.message}`,
+        });
       });
   };
 
@@ -99,7 +119,7 @@ const SignUp = () => {
           }}
         />
       )}
-      <CarbonModal open={openModal} onClose={onClose} email={email} />
+      <CarbonModal error={error} setError={setError} open={openModal} onClose={onClose} email={email} seconds={seconds} setSeconds={setSeconds}/>
       <Navbar />
       <Grid className="landing-page preview1Background signUp-grid" fullWidth>
         <Column className="form" md={4} lg={16} sm={4}>
@@ -172,7 +192,7 @@ const SignUp = () => {
               </Grid>
             </Form>
           </Tile>
-          <p style={{ marginLeft: '20px' }}>
+          <p style={{ marginLeft: '20px', color: '#161616' }}>
             Already have an account? <Link href="/signIn">Sign In</Link>
           </p>
         </Column>

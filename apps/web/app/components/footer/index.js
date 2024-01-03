@@ -68,29 +68,3 @@ const Footer = () => {
 };
 
 export default Footer;
-
-{
-  /* <Grid className="footer grid" fullWidth>
-  
-  <Column sm={16} md={8} lg={4}>
-    <p className="footer-heading">TERMS</p>
-    <ul>
-      <li>
-        <a>TOS</a>
-      </li>
-      <li>
-        <a>Privacy Policy</a>
-      </li>
-      <li>
-        <a>Refund Policy</a>
-      </li>
-    </ul>
-  </Column>
-  <Column sm={16} md={8} lg={4}>
-    
-  </Column>
-  <Column sm={16} md={16} lg={16}>
-    <p className="copyright">© Giga NFT 2023. All rights reserved.</p>
-  </Column>
-</Grid>; */
-}

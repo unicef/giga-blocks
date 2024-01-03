@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Header,
   HeaderContainer,
@@ -13,18 +13,13 @@ import {
   HeaderSideNavItems,
 } from '@carbon/react';
 import './navbar.scss';
-import { metaMask } from '../../components/web3/connectors/metamask';
-import { Default_Chain_Id } from '../../components/web3/connectors/network';
 import { Link } from 'next/link';
 import { useAppAuthContext } from '../../auth/JwtContext';
-import { useWeb3React } from '@web3-react/core';
-import { metaMaskLogin } from '../../utils/metaMaskUtils';
 import { getCurrentUser } from '../../utils/sessionManager';
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { isAuthenticated, logout } = useAppAuthContext();
-  const { account } = useWeb3React();
 
   const options = [
     { id: 'option1', text: 'Dashboard', link: '/dashboard' },
@@ -53,7 +48,8 @@ const Navbar = () => {
     <HeaderContainer
       render={({ isSideNavExpanded, onClickSideNavExpand }) => (
         <Header
-          classname="navbar"
+          className="navbar"
+          aria-label="Header"
           style={{ background: '#383838', color: 'white' }}
         >
           <SkipToContent />
@@ -65,7 +61,10 @@ const Navbar = () => {
           <HeaderName as={Link} href="/" prefix="" style={{ color: 'white' }}>
             NFT 2.0
           </HeaderName>
-          <HeaderNavigation style={{ background: '#383838', color: 'white' }}>
+          <HeaderNavigation
+            aria-label="Header"
+            style={{ background: '#383838', color: 'white' }}
+          >
             <HeaderMenuItem
               as={Link}
               href="/contributeSchool"
