@@ -177,7 +177,7 @@ const WalletRegisterForm = () => {
                   className="submit-btn-transparent"
                   onClick={handlePageChange}
                 >
-                  Sign Up Using Metamask
+                  Sign Up Using Email
                 </Button>
               </Column>
             </Form>
@@ -210,7 +210,7 @@ const WalletRegisterForm = () => {
               />
             )}
           </Tile>
-          <p style={{ marginLeft: '20px' }}>
+          <p style={{ marginLeft: '20px', color: '#161616' }}>
             Already have an account? <Link href="/signIn">Sign In</Link>
           </p>
         </Column>
