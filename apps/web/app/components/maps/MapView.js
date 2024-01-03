@@ -17,8 +17,7 @@ const THEMES = {
 };
 
 const baseSettings = {
-  mapboxAccessToken:
-    'pk.eyJ1IjoicnVtc2FuIiwiYSI6ImNsN3pwc2ltajAzcjY0NHBtNzAycnI4dDMifQ.HhHwz1w0X4dleTgN4D-Kxw',
+  mapboxAccessToken: process.env.NEXT_PUBLIC_MAPBOX_TOKEN,
   minZoom: 1,
   scrollZoom: true,
 };

@@ -7,6 +7,7 @@ import { useContributeData } from '../../hooks/useContributeData';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { Modal, ModalBody } from '@carbon/react';
+import Map from '../../components/dragableMarker';
 
 const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex,refetch }) => {
   const router = useRouter();
@@ -15,8 +16,20 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex,refetch 
   const { id } = useParams();
   const [selectedOptions, setSelectedOptions] = useState({});
   const [error, setError] = useState(false);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [markerCoords, setMarkerCoords] = useState({
+    lat: data.latitude,
+    long: data.longitude,
+  });
+
+  const handleMarkerDragEnd = (lngLat) => {
+    setMarkerCoords({ lat: lngLat.lat, long: lngLat.lng });
+  };
+
+  useEffect(() => {
+    setValue('latitude', markerCoords.lat);
+    setValue('longitude', markerCoords.long);
+  }, [markerCoords, setValue]);
 
   const setDefaultValues = () => {
       setValue('latitude', data.latitude);
@@ -189,6 +202,12 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex,refetch 
                 </>
               )}
             />
+            <Map
+              lat={markerCoords.lat}
+              long={markerCoords.long}
+              onMarkerDragEnd={handleMarkerDragEnd}
+            />
+
             <Controller
               name="latitude"
               control={control}

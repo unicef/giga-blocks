@@ -142,14 +142,16 @@ const SchoolDetail = () => {
                           description="Loading map..."
                         />
                       ) : (
-                        <MapView
-                          mapData={[
-                            {
-                              latitude: data?.latitude,
-                              longitude: data?.longitude,
-                            },
-                          ]}
-                        />
+                        <>
+                          <MapView
+                            mapData={[
+                              {
+                                latitude: data?.latitude,
+                                longitude: data?.longitude,
+                              },
+                            ]}
+                          />
+                        </>
                       )}
                     </div>
                   </Column>
