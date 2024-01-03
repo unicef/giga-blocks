@@ -235,6 +235,7 @@ export class SchoolService {
             approvedBy: userId,
             approvedAt: new Date(),
             approvedStatus: true,
+            inProgressStatus: false
           },
         }),
         this.prisma.contributedData.updateMany({
@@ -277,6 +278,16 @@ export class SchoolService {
   }
 
   async updateBulk(ids: ApproveContributeDatumDto, userId: string) {
+    this.prisma.validatedData.updateMany({
+      where: {
+        id: {
+          in: ids.id,
+        },
+      },
+      data: {
+        inProgressStatus: true
+      },
+    })
     this.queueService.approveBulkData(ids, userId);
   }
 

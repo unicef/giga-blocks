@@ -50,7 +50,7 @@ const ContributeData = () => {
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable({defaultOrderBy: 'createdAt', defaultOrder: 'desc'});
+  } = useTable({defaultOrderBy: 'createdAt', defaultOrder: 'asc'});
   const [toastMessage, setToastMessage] = useState('validated')
 
   const { enqueueSnackbar } = useSnackbar();
