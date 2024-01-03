@@ -21,7 +21,6 @@
     "api:prisma:migrate": "prisma migrate dev",
     "api:prisma:generate": "prisma generate",
     "clean": "rm -rf dist libs/shared-ui/node_modules node_modules tmp",
-    "school": "ts-node apps/api/prisma/schoolSeed.ts",
     "csvRead": "ts-node apps/api/prisma/csvReader.ts",
     "seed": "ts-node apps/api/prisma/seed.ts"
   },
