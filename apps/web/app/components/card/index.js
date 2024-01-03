@@ -33,6 +33,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
   const { data: queryData, fetching, error } = result;
   const [schoolData, setSchoolData] = useState([]);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
+  const [datafetching,setDataFetching] = useState(fetching);
   const [imageData, setImageData] = useState([]);
   const contract = getNftContract(
     process.env.NEXT_PUBLIC_GIGA_COLLECTOR_NFT_ADDRESS
@@ -69,6 +70,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
 
     if (!variables?.id) {
       for (let i = 0; i < encodeddata?.length; i++) {
+        setDataFetching(true)
         var owner;
         owner = await contract.methods.ownerOf(encodeddata[i].id).call();
         var sold = false;
@@ -98,7 +100,10 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
       }
     }
     setSchoolData(decodedShooldata);
+    setDataFetching(false);
   };
+
+  console.log(fetching)
 
   const loadMore = () => {
     setPageSize(pageSize + pageSize);
@@ -106,7 +111,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
 
   return(
     <>  
-       {fetching === false ? (
+       {datafetching === false ? (
         <>
          <div style={{ padding: '80px 40px 10px 40px' }}>
          <Search
