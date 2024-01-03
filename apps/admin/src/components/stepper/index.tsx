@@ -25,7 +25,7 @@ export default function HorizontalLinearStepper({propsTableData, setFile}:{props
   const [hideButton, setHideButton] = useState(false)
   const [progress, setProgress] = useState<number>(0);
   // const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const { setShowStepper, setSelectedSheetName, setIsFileValidated, setTypeOfFile, typeOfFile, setDisableDropZone, setTableDatas, disableDropZone, isFileValidated, selectedFiles,setLoading} =
+  const { setShowStepper, setSelectedSheetName, setIsFileValidated, typeOfFile, setDisableDropZone, setTableDatas, disableDropZone, isFileValidated, selectedFiles,setLoading} =
     useUploadContext();
   const [hasErrors, setHasErrors] = useState(false);
 
@@ -88,20 +88,12 @@ export default function HorizontalLinearStepper({propsTableData, setFile}:{props
     setDisableDropZone(true);
     setIsFileValidated(true);
     setSelectedSheetName('');
-    setSelectedSheetName('');
-  };
-
-  const handleFinish = () => {
-    setShowStepper(false);
-    setHideButton(true)
-    setIsFileValidated(true);
-    setDisableDropZone(true);
-    setSelectedSheetName('');
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    setDisableDropZone(false);
+    setDisableDropZone(true);
+    setFile([])
   };
 
   const handleUpload = async () => {

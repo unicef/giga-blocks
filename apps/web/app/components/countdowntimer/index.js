@@ -35,7 +35,7 @@ const CountdownTimer = ({ setSeconds, seconds }) => {
   return (
     <>
       {expired ? (
-        <Typography variant="body2" sx={{ color: '#f7931e', mb: 5 }}>
+        <Typography variant="body2" sx={{ color: '#f7931e', my: 3 }}>
           Your OTP has expired, please resend OTP to login.
         </Typography>
       ) : (

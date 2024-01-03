@@ -216,7 +216,8 @@ export class ContributeDataService {
   }
 
   async getValidated(query) {
-    const { page, perPage, status, school } = query;
+    try {
+      const { page, perPage, status, school } = query;
     const where: Prisma.ContributedDataWhereInput = {};
     if (school) {
       where.school_Id = school;
@@ -227,6 +228,7 @@ export class ContributeDataService {
         ...where,
         isArchived: false,
         approvedStatus: status === 'true',
+        inProgressStatus: false
       },
       include: {
         school: {
@@ -241,7 +243,6 @@ export class ContributeDataService {
         },
       },
     };
-
     if (status === 'true') {
       args.where.isArchived = true;
     } else {
@@ -257,6 +258,11 @@ export class ContributeDataService {
       },
     );
     return validatedDataRes;
+    } catch (error) {
+      this._logger.error(error) 
+      throw new InternalServerErrorException(error)
+    }
+    
   }
 
   async getValidatedById(id: string) {
