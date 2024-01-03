@@ -110,10 +110,8 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
   };
 
   return(
-    <>  
-       {datafetching === false ? (
-        <>
-         <div style={{ padding: '80px 40px 10px 40px' }}>
+    <> 
+    <div style={{ padding: '80px 40px 10px 40px' }}>
          <Search
            size="lg"
            placeholder="Search NFT"
@@ -123,7 +121,8 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
              setSearchText(e.target.value);
            }}
          />
-       </div>
+       </div> 
+       {datafetching === false ? (
          <Grid fullWidth style={{ margin: '30px auto' }}>
            {schoolData.length > 0 ? (
              schoolData?.map((school, index) => (
@@ -227,7 +226,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
                </Button>
              )}
            </Column>
-         </Grid></>
+         </Grid>
        ) : (
          <div className="loader-container">
            <Loading withOverlay={false} />{' '}
