@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
   Injectable,
@@ -34,7 +35,7 @@ export class EmailService {
     emailResult = await this.prisma.temporaryEmails.findUnique({
       where: { email: createEmailDto.email },
     });
-    if (emailResult) throw new ConflictException('Email already registered');
+    if (emailResult) throw new BadRequestException('Email already registered');
 
     // Create data if email doesn't exist
     try {
