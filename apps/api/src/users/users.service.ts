@@ -7,7 +7,7 @@ import { Prisma, Role } from '@prisma/application';
 import { paginate } from 'src/utils/paginate';
 import { addMinutesToDate, compare } from 'src/utils/otp/expirationTime';
 
-const OTP_DURATION = Number(process.env.OTP_DURATION_IN_MINS);
+const OTP_DURATION = Number(process.env.NEXT_PUBLIC_OTP_DURATION_IN_MINS);
 @Injectable()
 export class UsersService {
   private readonly _logger = new Logger('User Services');

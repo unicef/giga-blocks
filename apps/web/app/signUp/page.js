@@ -32,8 +32,8 @@ const SignUp = () => {
   const signUp = useSignUp();
   const sendOtp = useOtp();
 
-  const minute = process.env.OTP_DURATION_IN_MINS
-  const [seconds, setSeconds] = useState(minute);
+  const minute = process.env.NEXT_PUBLIC_OTP_DURATION_IN_MINS
+  const [seconds, setSeconds] = useState(minute*60);
 
   useEffect(() => {
     void metaMask.connectEagerly().catch(() => {
@@ -52,7 +52,7 @@ const SignUp = () => {
   }, [notification]);
 
   const onSubmit = async (data) => {
-    setSeconds(180)
+    setSeconds(minute * 60)
     setError()
     signUp
       .mutateAsync(data)
