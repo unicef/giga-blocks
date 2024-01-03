@@ -47,7 +47,7 @@ const CountdownTimer: React.FC<PropsType> = ({ minute, handleResendLink }: Props
   return (
     <>
       {expired ? (
-        <Typography variant="body2" sx={{ color: '#f7931e', mb: 5 }}>
+        <Typography variant="body2" sx={{ color: '#f7931e', my: 3 }}>
           Your OTP has expired.{' '}
           <Link
             variant="subtitle2"
