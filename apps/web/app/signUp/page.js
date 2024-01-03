@@ -24,13 +24,16 @@ import { metaMaskLogin } from '../utils/metaMaskUtils';
 const SignUp = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
-  const account = hooks.useAccount();
   const { handleSubmit, control } = useForm();
   const [openModal, setOpenModal] = useState(false);
   const [checkbox, setCheckbox] = useState(false);
+  const [error, setError] = useState();
   const [notification, setNotification] = useState(null);
   const signUp = useSignUp();
   const sendOtp = useOtp();
+
+  const minute = process.env.OTP_DURATION_IN_MINS
+  const [seconds, setSeconds] = useState(minute);
 
   useEffect(() => {
     void metaMask.connectEagerly().catch(() => {
@@ -49,6 +52,8 @@ const SignUp = () => {
   }, [notification]);
 
   const onSubmit = async (data) => {
+    setSeconds(180)
+    setError()
     signUp
       .mutateAsync(data)
       .then(() => {
@@ -63,11 +68,17 @@ const SignUp = () => {
             setEmail(data.email);
           })
           .catch((err) => {
-            console.log(err);
+            setNotification({
+              kind: 'error',
+              title: `${err.response.data.message}`,
+            });
           });
       })
       .catch((err) => {
-        console.log(err);
+        setNotification({
+          kind: 'error',
+          title: `${err.response.data.message}`,
+        });
       });
   };
 
@@ -108,7 +119,7 @@ const SignUp = () => {
           }}
         />
       )}
-      <CarbonModal open={openModal} onClose={onClose} email={email} />
+      <CarbonModal error={error} setError={setError} open={openModal} onClose={onClose} email={email} seconds={seconds} setSeconds={setSeconds}/>
       <Navbar />
       <Grid className="landing-page preview1Background signUp-grid" fullWidth>
         <Column className="form" md={4} lg={16} sm={4}>
@@ -160,7 +171,6 @@ const SignUp = () => {
                 labelText="By creating an account, you agree to the Terms and conditions and our Privacy Policy"
                 checked={checkbox}
                 onChange={handleCheck}
-                style={{ color: '#161616' }}
               />
               <br />
               <Grid>

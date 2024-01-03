@@ -11,6 +11,7 @@ import {
   TableContainer,
   Table,
   TableBody,
+  CircularProgress,
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useSnackbar } from '@components/snackbar';
@@ -48,7 +49,8 @@ export default function ValidateDetail({ id }: Props) {
     mintedStatus: '',
   });
 
-  const { data, isSuccess, isError, refetch } = useValidDataGetById(id);
+  const { data, isSuccess, isError, refetch, isFetching } = useValidDataGetById(id);
+
   const { enqueueSnackbar } = useSnackbar();
   const [tableData, setTableData] = useState<any>();
 
@@ -74,6 +76,7 @@ export default function ValidateDetail({ id }: Props) {
     mutate,
     isSuccess: isValidationSuccess,
     isError: isValidationError,
+    isLoading: isValidationLoading
   } = useValidateUpdate();
 
   const router = useRouter();
@@ -95,25 +98,27 @@ export default function ValidateDetail({ id }: Props) {
   useEffect(() => {
     if (isSuccess) {
       const keyValue = Object?.entries(data?.data);
-      const jsonString = `${keyValue[0][0]}: ${keyValue[0][1]}`;
+      var jsonString ;
+      if(keyValue) 
+      {jsonString = `${keyValue[0][0]}: ${keyValue[0][1]}`;
       const outputArray = Object?.keys(data?.data)?.map((key) => ({ key, value: data?.data[key] }));
       setTableData(outputArray);
       setProfile({
         fullname: data?.contributedUser?.name,
         schoolName: data?.school.name,
-        createdAt: new Date(data?.createdAt).toLocaleDateString(),
+        createdAt: new Date(data?.createdAt)?.toLocaleDateString(),
         status: String(data?.approvedStatus),
         contributed_data: jsonString,
         coverage: data?.coverage_availability,
         mintedStatus: data?.minted,
-      });
+      });}
     }
   }, [isSuccess, isError, data]);
 
   useEffect(() => {
     isValidationSuccess && enqueueSnackbar('Successfully Approved', { variant: 'success' });
-    refetch();
     isValidationError && enqueueSnackbar('Unsuccessful', { variant: 'error' });
+    refetch();
   }, [isValidationSuccess, isValidationError]);
 
   useEffect(() => {
@@ -138,7 +143,7 @@ export default function ValidateDetail({ id }: Props) {
     mutate(data?.school_Id);
   };
 
-  const sortedData = tableData?.slice().sort((a: any, b: any) => {
+  const sortedData = tableData?.slice()?.sort((a: any, b: any) => {
     const isAsc = order === 'asc';
     return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
   });
@@ -213,14 +218,15 @@ export default function ValidateDetail({ id }: Props) {
         <Container>
           <Box justifyContent={'center'}>
             <Stack alignItems="center" sx={{ mt: 1 }}>
-              {profile?.status ==='false' &&
+              {profile && profile?.status === 'false' &&
               <Button
                 variant="contained"
                 color={'info'}
                 style={{ width: '300px', background: '#474747' }}
                 onClick={onValidate}
+                disabled={isValidationLoading}
               >
-                Approve
+              {isValidationLoading ? 'Approving..' : 'Approve'} 
               </Button>}
             </Stack>
           </Box>
@@ -245,27 +251,21 @@ export default function ValidateDetail({ id }: Props) {
 
                 <TableBody>
                   {sortedData &&
-                    sortedData?.map((row: any) => (
+                    sortedData.length > page*rowsPerPage && sortedData?.map((row: any) => (
                       <ContributionDetailTableRow
-                        key={row.id}
+                        key={row?.id}
                         row={row}
                       />
                     ))}
-                  <TableNoData isNotFound={tableData?.length === 0} />
+                  {!isFetching ? (
+                      <TableNoData isNotFound={sortedData?.length < page*rowsPerPage} />
+                    ) : (
+                      <CircularProgress color="inherit" />
+                    )}
                 </TableBody>
               </Table>
             </Scrollbar>
           </TableContainer>
-          <TablePaginationCustom
-            count={tableData?.length}
-            page={page}
-            setPage={setPage}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-            dense={dense}
-            onChangeDense={onChangeDense}
-          />
         </Card>
       </Grid>
     </>

@@ -11,8 +11,8 @@ import {
 import './changeLogTable.scss';
 import { useContributeDetails } from '../../hooks/useContributionList';
 
-const ChangeLog = ({ schoolid }) => {
-  const { data, refetch } = useContributeDetails(schoolid);
+const ChangeLog = ({ schoolid ,contributedData:data}) => {
+  const {  refetch,isFetching } = useContributeDetails(schoolid);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
@@ -76,11 +76,11 @@ const ChangeLog = ({ schoolid }) => {
               const contributedData = JSON.parse(
                 contribution?.contributed_data
               );
-              return Object.entries(contributedData)?.map(
+              return Object?.entries(contributedData)?.map(
                 ([fieldType, change]) => (
                   <TableRow key={contribution?.id + fieldType}>
                     <TableCell>{fieldType}</TableCell>
-                    <TableCell>{change?.toString()}</TableCell>
+                    <TableCell>{change === true ? "yes" : change === false ? 'No' : change}</TableCell>
                     <TableCell>{contribution?.contributedUser?.name}</TableCell>
                     <TableCell>
                       {contribution?.createdAt?.substring(0, 10)}

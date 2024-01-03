@@ -86,7 +86,7 @@ const ValidateData = () => {
   );
 
   useEffect(() => {
-    selectedSchoolSearch &&  refetch()
+    refetch()
   }, [selectedSchoolSearch])
 
   let filteredData: any = [];
@@ -210,6 +210,7 @@ const ValidateData = () => {
               onRowsPerPageChange={onChangeRowsPerPage}
               dense={dense}
               onChangeDense={onChangeDense}
+              disablePageNumber
             />
           </Card>
           </>

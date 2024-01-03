@@ -1,9 +1,26 @@
 'use client';
+import { useEffect, useState } from 'react';
 import { Grid, Column, Breadcrumb, BreadcrumbItem } from '@carbon/react';
 import './header.scss';
 import '../table/datatable.scss';
+import { metaMaskLogout,checkWalletAddress } from '../../utils/metaMaskUtils';
 
 const PageHeader = ({ name, breadcrumbs }) => {
+  const [isAddress, setIsAddress] = useState(false);
+ 
+  useEffect(()=>{
+    if(!name) return;
+    const checkAddress = async()=>{
+      const address = await checkWalletAddress(name);
+      setIsAddress(address);
+    }
+    checkAddress();
+  },[name])
+
+   const disconnect = ()=>{
+    metaMaskLogout();
+  }
+
   return (
     <>
       <div className="headerBackground">
@@ -27,6 +44,11 @@ const PageHeader = ({ name, breadcrumbs }) => {
             >
               {name}
             </h1>
+            {isAddress && <a 
+             style={{cursor:'pointer', color:'blue', textDecoration: 'underline'}}
+             onClick={disconnect}>
+              Disconnect
+             </a>}
           </Column>
         </Grid>
       </div>

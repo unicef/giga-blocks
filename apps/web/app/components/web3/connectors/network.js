@@ -10,6 +10,8 @@ import { URLS } from '../chains';
 };
 
 export const Default_Chain_Id = 80001;
+export const Default_Chain_URL = DataUrl[Default_Chain_Id];
+export const Default_Chain_Explorer = 'https://mumbai.polygonscan.com/';
 
 
 export const [network, hooks] = initializeConnector(

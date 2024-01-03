@@ -188,7 +188,7 @@
                   <div class="mt-1 ml-2">
                     <div class="mb-1 font-medium text-gray-600"><a href="#model-validatedData-fields">Fields</a></div>
                       <ul class="pl-3 ml-1 border-l-2 border-gray-400">
-                      <li><a href="#model-validatedData-id">id</a></li><li><a href="#model-validatedData-school_Id">school_Id</a></li><li><a href="#model-validatedData-school">school</a></li><li><a href="#model-validatedData-data">data</a></li><li><a href="#model-validatedData-approvedStatus">approvedStatus</a></li><li><a href="#model-validatedData-createdAt">createdAt</a></li><li><a href="#model-validatedData-updatedAt">updatedAt</a></li><li><a href="#model-validatedData-deletedAt">deletedAt</a></li><li><a href="#model-validatedData-approvedBy">approvedBy</a></li><li><a href="#model-validatedData-approved">approved</a></li><li><a href="#model-validatedData-approvedAt">approvedAt</a></li><li><a href="#model-validatedData-contributed_data">contributed_data</a></li><li><a href="#model-validatedData-isArchived">isArchived</a></li>
+                      <li><a href="#model-validatedData-id">id</a></li><li><a href="#model-validatedData-school_Id">school_Id</a></li><li><a href="#model-validatedData-school">school</a></li><li><a href="#model-validatedData-data">data</a></li><li><a href="#model-validatedData-approvedStatus">approvedStatus</a></li><li><a href="#model-validatedData-inProgressStatus">inProgressStatus</a></li><li><a href="#model-validatedData-createdAt">createdAt</a></li><li><a href="#model-validatedData-updatedAt">updatedAt</a></li><li><a href="#model-validatedData-deletedAt">deletedAt</a></li><li><a href="#model-validatedData-approvedBy">approvedBy</a></li><li><a href="#model-validatedData-approved">approved</a></li><li><a href="#model-validatedData-approvedAt">approvedAt</a></li><li><a href="#model-validatedData-contributed_data">contributed_data</a></li><li><a href="#model-validatedData-isArchived">isArchived</a></li>
                       </ul>
                   </div>
                   <div class="mt-2 ml-2">
@@ -6972,6 +6972,26 @@
     <tr id="model-validatedData-approvedStatus">
       <td class="px-4 py-2 border">
        approvedStatus 
+      </td>
+      <td class="px-4 py-2 border">
+       Boolean
+      </td>
+      <td class="px-4 py-2 border">
+        <ul>
+          <li><strong>@default(false)</strong></li>
+        </ul>
+      </td>
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+      <td class="px-4 py-2 border">
+        -
+      </td>
+    </tr>
+    
+    <tr id="model-validatedData-inProgressStatus">
+      <td class="px-4 py-2 border">
+       inProgressStatus 
       </td>
       <td class="px-4 py-2 border">
        Boolean
@@ -16423,6 +16443,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-BoolFilter">BoolFilter</a> | Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-DateTimeNullableFilter">DateTimeNullableFilter</a> | DateTime | Null
@@ -16584,6 +16616,18 @@
     <tr>
       <td class="px-4 py-2 border">
         approvedStatus </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        inProgressStatus </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -16803,6 +16847,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-BoolFilter">BoolFilter</a> | Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-DateTimeNullableFilter">DateTimeNullableFilter</a> | DateTime | Null
@@ -16964,6 +17020,18 @@
     <tr>
       <td class="px-4 py-2 border">
         approvedStatus </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        inProgressStatus </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -17184,6 +17252,18 @@
     <tr>
       <td class="px-4 py-2 border">
         approvedStatus </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-BoolWithAggregatesFilter">BoolWithAggregatesFilter</a> | Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        inProgressStatus </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-BoolWithAggregatesFilter">BoolWithAggregatesFilter</a> | Boolean
       </td>
@@ -26883,6 +26963,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         DateTime | Null
@@ -27043,6 +27135,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         DateTime | Null
@@ -27168,6 +27272,18 @@
     <tr>
       <td class="px-4 py-2 border">
         approvedStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        inProgressStatus </td>
       <td class="px-4 py-2 border">
         Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
       </td>
@@ -27339,6 +27455,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         DateTime | <a href="#type-inputType-NullableDateTimeFieldUpdateOperationsInput">NullableDateTimeFieldUpdateOperationsInput</a> | Null
@@ -27487,6 +27615,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         DateTime | Null
@@ -27623,6 +27763,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         DateTime | <a href="#type-inputType-NullableDateTimeFieldUpdateOperationsInput">NullableDateTimeFieldUpdateOperationsInput</a> | Null
@@ -27748,6 +27900,18 @@
     <tr>
       <td class="px-4 py-2 border">
         approvedStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        inProgressStatus </td>
       <td class="px-4 py-2 border">
         Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
       </td>
@@ -36487,6 +36651,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
@@ -36623,6 +36799,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
@@ -36736,6 +36924,18 @@
     <tr>
       <td class="px-4 py-2 border">
         approvedStatus </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        inProgressStatus </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -53499,6 +53699,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         DateTime | Null
@@ -53636,6 +53848,18 @@
     <tr>
       <td class="px-4 py-2 border">
         approvedStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        inProgressStatus </td>
       <td class="px-4 py-2 border">
         Boolean
       </td>
@@ -55919,6 +56143,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-BoolFilter">BoolFilter</a> | Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-DateTimeNullableFilter">DateTimeNullableFilter</a> | DateTime | Null
@@ -57655,6 +57891,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         DateTime | Null
@@ -57780,6 +58028,18 @@
     <tr>
       <td class="px-4 py-2 border">
         approvedStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        inProgressStatus </td>
       <td class="px-4 py-2 border">
         Boolean
       </td>
@@ -72807,6 +73067,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         DateTime | Null
@@ -77375,6 +77647,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         DateTime | <a href="#type-inputType-NullableDateTimeFieldUpdateOperationsInput">NullableDateTimeFieldUpdateOperationsInput</a> | Null
@@ -77523,6 +77807,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         DateTime | <a href="#type-inputType-NullableDateTimeFieldUpdateOperationsInput">NullableDateTimeFieldUpdateOperationsInput</a> | Null
@@ -77648,6 +77944,18 @@
     <tr>
       <td class="px-4 py-2 border">
         approvedStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        inProgressStatus </td>
       <td class="px-4 py-2 border">
         Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
       </td>
@@ -78083,6 +78391,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         DateTime | Null
@@ -78379,6 +78699,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         DateTime | <a href="#type-inputType-NullableDateTimeFieldUpdateOperationsInput">NullableDateTimeFieldUpdateOperationsInput</a> | Null
@@ -78515,6 +78847,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         DateTime | <a href="#type-inputType-NullableDateTimeFieldUpdateOperationsInput">NullableDateTimeFieldUpdateOperationsInput</a> | Null
@@ -78640,6 +78984,18 @@
     <tr>
       <td class="px-4 py-2 border">
         approvedStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        inProgressStatus </td>
       <td class="px-4 py-2 border">
         Boolean | <a href="#type-inputType-BoolFieldUpdateOperationsInput">BoolFieldUpdateOperationsInput</a>
       </td>
@@ -82521,6 +82877,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         DateTime
@@ -84714,6 +85082,18 @@
     <tr>
       <td class="px-4 py-2 border">
         approvedStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        inProgressStatus </td>
       <td class="px-4 py-2 border">
         Boolean
       </td>
@@ -89085,6 +89465,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        Int
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         Int
@@ -89233,6 +89625,18 @@
     
     <tr>
       <td class="px-4 py-2 border">
+        inProgressStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         createdAt </td>
       <td class="px-4 py-2 border">
         DateTime
@@ -89346,6 +89750,18 @@
     <tr>
       <td class="px-4 py-2 border">
         approvedStatus </td>
+      <td class="px-4 py-2 border">
+        Boolean
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        inProgressStatus </td>
       <td class="px-4 py-2 border">
         Boolean
       </td>

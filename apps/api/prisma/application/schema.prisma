@@ -227,6 +227,7 @@ model validatedData {
   school           School    @relation(fields: [school_Id], references: [id])
   data             Json
   approvedStatus   Boolean   @default(false)
+  inProgressStatus Boolean   @default(false)
   createdAt        DateTime? @default(now())
   updatedAt        DateTime? @updatedAt
   deletedAt        DateTime?

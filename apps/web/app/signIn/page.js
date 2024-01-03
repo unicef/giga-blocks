@@ -36,6 +36,7 @@ const SignIn = () => {
     formState: { errors },
   } = useForm();
   const { initialize } = useAuthContext();
+  const [error, setError] = useState();
   const loginMutation = walletLogin();
   const getNonceQuery = useGetNonce();
   const searchParams = useSearchParams();
@@ -44,10 +45,13 @@ const SignIn = () => {
   const sendOtp = useOtp();
   const [email, setEmail] = useState('');
   const [openModal, setOpenModal] = useState(false);
-  const [showEmailField, setShowEmailField] = useState(false);
+  const [showEmailField, setShowEmailField] = useState(false);  
   const [submitButtonText, setSubmitButtonText] =
     useState('Sign in with Email');
   const [notification, setNotification] = useState(null);
+  const minute = process.env.OTP_DURATION_IN_MINS
+  const [seconds, setSeconds] = useState(minute);
+
   const showEmailInput = () => {
     setShowEmailField(true);
     setSubmitButtonText('Submit');
@@ -82,6 +86,8 @@ const SignIn = () => {
 
   const onSubmit = async (data, e) => {
     e.preventDefault();
+    setSeconds(180)
+    setError()
     sendOtp
       .mutateAsync({ email: data.email })
       .then(() => {
@@ -176,7 +182,7 @@ const SignIn = () => {
           }}
         />
       )}
-      <CarbonModal open={openModal} onClose={onClose} email={email} />
+      <CarbonModal error={error} setError={setError} open={openModal} onClose={onClose} email={email} seconds={seconds} setSeconds={setSeconds}/>
       <Navbar />
       <Grid className="landing-page preview1Background signUp-grid" fullWidth>
         <Column className="form" md={4} lg={8} sm={4}>
