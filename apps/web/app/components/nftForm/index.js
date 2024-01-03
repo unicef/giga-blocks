@@ -74,9 +74,11 @@ const RegisterForm = () => {
     } catch (error) {
       setNotification({
         kind: 'error',
-        title: error?.response?.data?.message,
+        title:
+          error?.response?.data?.message == 'Bad Request Exception'
+            ? 'Enter required informations.'
+            : error?.response?.data?.message,
       });
-      setError(error && error?.response?.data?.message);
     }
   };
   const onCloseNotification = () => {
