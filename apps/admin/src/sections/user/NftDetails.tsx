@@ -65,10 +65,11 @@ export default function SchoolDetails({ id }: Props) {
     location: '',
     latitude: '',
     longitude: '',
-    connectivity: '',
-    coverage: '',
+    connectivity: false,
+    coverage: false,
     mintedStatus: '',
     tokenId: '',
+    electricity_availabilty: false
   });
 
   const [result] = useQuery({ query: Queries.nftDetailsQuery, variables: { id } });
@@ -89,6 +90,8 @@ export default function SchoolDetails({ id }: Props) {
       ...JSON.parse(decodedData),
     };
 
+    console.log(schoolData)
+
     setProfile({
       fullname: schoolData.schoolName,
       location: schoolData.country,
@@ -98,6 +101,7 @@ export default function SchoolDetails({ id }: Props) {
       coverage: schoolData.coverage_availabitlity,
       mintedStatus: schoolData.minted,
       tokenId: schoolData.tokenId,
+      electricity_availabilty: schoolData.electricity_availabilty
     });
   };
 
@@ -109,7 +113,6 @@ export default function SchoolDetails({ id }: Props) {
     orderBy,
     rowsPerPage,
     onChangePage,
-    onSelectRow,
     onSort,
     onChangeDense,
     onChangeRowsPerPage,
@@ -222,14 +225,20 @@ export default function SchoolDetails({ id }: Props) {
                           />
                           <ProfileTextField
                             name="connectivity"
-                            value={profile?.connectivity || ''}
+                            value={profile?.connectivity === true ? 'Yes' : 'No' || ''}
                             label="Connectivity"
                             disabled
                           />
                           <ProfileTextField
                             name="coverage"
-                            value={profile?.coverage || ''}
+                            value={profile?.coverage === true ? 'Yes' : 'No' || ''}
                             label="Coverage"
+                            disabled
+                          />
+                          <ProfileTextField
+                            name="coverage"
+                            value={profile?.electricity_availabilty === true ? 'Yes' : 'No' || ''}
+                            label="Electricity Availabilty"
                             disabled
                           />
                         </Box>
@@ -337,16 +346,6 @@ export default function SchoolDetails({ id }: Props) {
                   </Table>
                 </Scrollbar>
               </TableContainer>
-              <TablePaginationCustom
-                count={data?.collectorTransfers?.length}
-                page={page}
-                setPage={setPage}
-                rowsPerPage={rowsPerPage}
-                onPageChange={onChangePage}
-                onRowsPerPageChange={onChangeRowsPerPage}
-                dense={dense}
-                onChangeDense={onChangeDense}
-              />
             </Card>
           </Grid>
         </CustomTabPanel>

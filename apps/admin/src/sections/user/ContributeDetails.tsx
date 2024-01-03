@@ -33,7 +33,7 @@ export default function ContributeDetail({ id }: Props) {
     isSuccess: isValidationSuccess,
     isError: isValidationError,
   } = useContributionValidate();
-
+  const [toastMessage, setToastMessage] = useState('validated')
   const router = useRouter();
 
   const [nftData, setNftData] = useState({
@@ -66,8 +66,7 @@ export default function ContributeDetail({ id }: Props) {
   }, [isSuccess, isError, data]);
 
   useEffect(() => {
-    isValidationSuccess &&
-      enqueueSnackbar('Successfully updated contribution', { variant: 'success' });
+    isValidationSuccess && enqueueSnackbar(`Contributed Data are ${toastMessage}. Please check ${toastMessage} Data Section`, { variant: 'success' });
     refetch();
     isValidationError && enqueueSnackbar('Unsuccessful', { variant: 'error' });
   }, [isValidationSuccess, isValidationError]);
@@ -92,6 +91,7 @@ export default function ContributeDetail({ id }: Props) {
   const onContribute = (validity: boolean) => {
     const payload = { contributions: [{ contributionId: id, isValid: validity }] };
     mutate(payload);
+    !validity && setToastMessage('invalidated')
     router.push('/contribute');
   };
 
