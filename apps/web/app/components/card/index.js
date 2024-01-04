@@ -18,7 +18,7 @@ import { Queries } from '../../libs/graph-query';
 import { getNftContract } from '../web3/contracts/getContract';
 import { useWeb3React } from '@web3-react/core';
 
-const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
+const SchoolCard = ({ query, variables, pageSize, setPageSize ,setSearch}) => {
   const [searchText, setSearchText] = useState('');
   const {account} = useWeb3React();
 
@@ -33,6 +33,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
   const { data: queryData, fetching, error } = result;
   const [schoolData, setSchoolData] = useState([]);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
+  const [datafetching,setDataFetching] = useState(fetching);
   const [imageData, setImageData] = useState([]);
   const contract = getNftContract(
     process.env.NEXT_PUBLIC_GIGA_COLLECTOR_NFT_ADDRESS
@@ -69,6 +70,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
 
     if (!variables?.id) {
       for (let i = 0; i < encodeddata?.length; i++) {
+        setDataFetching(true)
         var owner;
         owner = await contract.methods.ownerOf(encodeddata[i].id).call();
         var sold = false;
@@ -98,6 +100,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
       }
     }
     setSchoolData(decodedShooldata);
+    setDataFetching(false);
   };
 
   const loadMore = () => {
@@ -105,10 +108,9 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
   };
 
   return(
-    <>  
-       {fetching === false ? (
-        <>
-         <div style={{ padding: '80px 40px 10px 40px' }}>
+    <> 
+    {setSearch && 
+      <div style={{ padding: '80px 40px 10px 40px' }}>
          <Search
            size="lg"
            placeholder="Search NFT"
@@ -118,7 +120,8 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
              setSearchText(e.target.value);
            }}
          />
-       </div>
+       </div> }
+       {datafetching === false ? (
          <Grid fullWidth style={{ margin: '30px auto' }}>
            {schoolData.length > 0 ? (
              schoolData?.map((school, index) => (
@@ -222,7 +225,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
                </Button>
              )}
            </Column>
-         </Grid></>
+         </Grid>
        ) : (
          <div className="loader-container">
            <Loading withOverlay={false} />{' '}

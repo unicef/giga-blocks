@@ -52,8 +52,8 @@ export class EmailService {
       });
       this.mailService.developerJoinMail({
         email: emailResult.email,
-        name: emailResult.fullname,
-        country: emailResult.country,
+        name: emailResult?.fullname || '',
+        country: emailResult?.country || '',
         emailTo: emailTo,
       });
     } catch (error) {

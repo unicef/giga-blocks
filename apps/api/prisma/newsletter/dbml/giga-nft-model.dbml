@@ -10,8 +10,8 @@ Project "GIGA NFT 2.0" {
 Table giga_newsletter {
   id String [pk]
   email String [unique, not null]
-  fullname String [not null]
-  country String [not null]
+  fullname String
+  country String
 
   indexes {
     (id, email) [unique]

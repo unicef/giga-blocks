@@ -39,7 +39,11 @@ export async function handler(
         const rows = fileContent.trim().split('\n').slice(1);
         const cleanedRows = rows.map(row => {
           // Remove trailing '\r' if present
-          return row.replace(/\r$/, '');
+          const cleanedRow = row
+            .split(',')
+            .map(value => value.trim())
+            .join(',');
+          return cleanedRow.replace(/\r$/, '');
         });
         await prisma.cSVUpload
           .create({
@@ -115,8 +119,6 @@ export async function handler(
     });
 
     return uploadBatch;
-
-    // console.log('CSV data import completed.');
   } catch (error) {
     console.error('Error reading or saving CSV data:', error);
   }
