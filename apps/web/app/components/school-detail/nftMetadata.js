@@ -98,9 +98,8 @@ const Connectivity = ({ schoolData }) => {
                     </span>
                     <span className="heading5">
                       <br />
-                      {schoolData?.connectivity
-                        ? schoolData?.connectivity
-                        : 'N/A'}
+                      {schoolData?.connectivity === "true" 
+                        ? "Yes" : "No"}
                     </span>
                   </div>
                 </Column>
@@ -115,7 +114,8 @@ const Connectivity = ({ schoolData }) => {
                   </span>
                   <br />
                   <span className="heading5">
-                    {schoolData?.coverage_availabitlity}
+                  {schoolData?.coverage_availabitlity === "true" 
+                        ? "Yes" : "No"}
                   </span>
                 </Column>
 
@@ -130,7 +130,8 @@ const Connectivity = ({ schoolData }) => {
                   </span>
                   <span className="heading5">
                     <br />
-                    {schoolData?.electricity_availabilty}
+                    {schoolData?.electricity_availabilty === "true" 
+                        ? "Yes" : "No"}
                   </span>
                 </Column>
               </div>
