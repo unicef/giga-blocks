@@ -85,3 +85,13 @@
   justify-content: 'space-between';
   background: #222222;
 }
+.map {
+  @include breakpoint-down(md) {
+    width: 380px;
+  }
+}
+.contribute-btn {
+  @include breakpoint-down(md) {
+    width: 95px !important;
+  }
+}
