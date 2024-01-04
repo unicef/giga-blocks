@@ -6,12 +6,13 @@ export const metaMaskLogin = async () => {
   let res;
   try {
     res = await metaMask.activate(Default_Chain_Id);
+    return res;
   } catch (err) {
     if (err.code === 4902) {
       return await switchMetaMaskNetwork();
     }
+    return err.message;
   }
-  return res;
 };
 
 export const metaMaskLogout = async () => {

@@ -13,7 +13,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import { useEffect, useState } from 'react';
 import CountdownTimer from '../countdowntimer'
 import { useOtp } from '../../hooks/useOtp';
-import { Typography, Link } from '@mui/material';
+import { Typography } from '@mui/material';
 
 const CarbonModal = ({ open, onClose, email, setSeconds, seconds, error, setError }) => {
   const { handleSubmit, control, setValue } = useForm();

@@ -20,7 +20,7 @@ export default function UserEditPage() {
     <title> School Details Page </title>
     </Head>
 
-    <Grid container spacing={2}>
+    <Grid container spacing={2} sm={12}>
     {id && <SchoolDetails id={id}/>}    
     </Grid>
     </>
