@@ -99,13 +99,15 @@ const WalletRegisterForm = () => {
         signature: sign,
       };
       registerMutation.mutateAsync(payload).then((res) => {
-        saveCurrentUser(res.data);
+        saveCurrentUser(res.data.result);
         saveAccessToken(res.data.access_token);
         saveConnectors('metaMask');
         initialize();
-      });
-      showSuccessMessage();
-      console.log('Wallet registered successfully!');
+        router.push('/dashboard');
+        showSuccessMessage();
+      }).catch((err) => {
+        showErrorMessage(err.response.data);
+      })
     } catch (error) {
       showErrorMessage(error);
       console.error('Error registering wallet:', error);
@@ -177,7 +179,7 @@ const WalletRegisterForm = () => {
                   className="submit-btn-transparent"
                   onClick={handlePageChange}
                 >
-                  Sign Up Using Metamask
+                  Sign Up Using Email
                 </Button>
               </Column>
             </Form>
@@ -210,7 +212,7 @@ const WalletRegisterForm = () => {
               />
             )}
           </Tile>
-          <p style={{ marginLeft: '20px' }}>
+          <p style={{ marginLeft: '20px', color: '#161616' }}>
             Already have an account? <Link href="/signIn">Sign In</Link>
           </p>
         </Column>

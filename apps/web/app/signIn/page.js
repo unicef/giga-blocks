@@ -49,8 +49,8 @@ const SignIn = () => {
   const [submitButtonText, setSubmitButtonText] =
     useState('Sign in with Email');
   const [notification, setNotification] = useState(null);
-  const minute = process.env.OTP_DURATION_IN_MINS
-  const [seconds, setSeconds] = useState(minute);
+  const minute = process.env.NEXT_PUBLIC_OTP_DURATION_IN_MINS
+  const [seconds, setSeconds] = useState(minute * 60);
 
   const showEmailInput = () => {
     setShowEmailField(true);
@@ -86,7 +86,7 @@ const SignIn = () => {
 
   const onSubmit = async (data, e) => {
     e.preventDefault();
-    setSeconds(180)
+    setSeconds(minute * 60)
     setError()
     sendOtp
       .mutateAsync({ email: data.email })

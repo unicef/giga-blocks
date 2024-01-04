@@ -32,8 +32,8 @@ const SignUp = () => {
   const signUp = useSignUp();
   const sendOtp = useOtp();
 
-  const minute = process.env.OTP_DURATION_IN_MINS
-  const [seconds, setSeconds] = useState(minute);
+  const minute = process.env.NEXT_PUBLIC_OTP_DURATION_IN_MINS;
+  const [seconds, setSeconds] = useState(minute * 60);
 
   useEffect(() => {
     void metaMask.connectEagerly().catch(() => {
@@ -52,8 +52,8 @@ const SignUp = () => {
   }, [notification]);
 
   const onSubmit = async (data) => {
-    setSeconds(180)
-    setError()
+    setSeconds(minute * 60);
+    setError();
     signUp
       .mutateAsync(data)
       .then(() => {
@@ -119,7 +119,16 @@ const SignUp = () => {
           }}
         />
       )}
-      <CarbonModal error={error} setError={setError} open={openModal} onClose={onClose} email={email} seconds={seconds} setSeconds={setSeconds}/>
+      <CarbonModal
+        error={error}
+        setError={setError}
+        open={openModal}
+        xs
+        onClose={onClose}
+        email={email}
+        seconds={seconds}
+        setSeconds={setSeconds}
+      />
       <Navbar />
       <Grid className="landing-page preview1Background signUp-grid" fullWidth>
         <Column className="form" md={4} lg={16} sm={4}>

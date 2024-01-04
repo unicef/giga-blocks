@@ -72,5 +72,5 @@ Collector_NFT_Contract_Address:0x2e7A41FC99a13b0A3C4A4bF0c912a9aB412DB85d
 Giga_Minter_Contract_Address:0xa65cc0E8C30145F17d327078492CcE2cc5be539E
 Escrow_Contract_Address:0x80E58A6Ca507b6FBE6Eb5Cf193055d46aaE4a895
 Giga_Seller_Contract_Address:0x0488350a83C203fc9E52D75D2c760fd6c46b0205
-
+ART SCRIPT Contract are auto deployed during nft content deployment
 ```

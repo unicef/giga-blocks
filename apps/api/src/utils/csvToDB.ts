@@ -8,7 +8,7 @@ interface SchoolData {
   longitude: number;
   latitude: number;
   connectivity: boolean;
-  electricity_availabilty: boolean;
+  electricity_availability: boolean;
   coverage_availabitlity: boolean;
 }
 
@@ -37,6 +37,14 @@ export async function handler(
         // Process the fileContent here
 
         const rows = fileContent.trim().split('\n').slice(1);
+        const cleanedRows = rows.map(row => {
+          // Remove trailing '\r' if present
+          const cleanedRow = row
+            .split(',')
+            .map(value => value.trim())
+            .join(',');
+          return cleanedRow.replace(/\r$/, '');
+        });
         await prisma.cSVUpload
           .create({
             data: {
@@ -47,7 +55,8 @@ export async function handler(
           })
           .then(async res => {
             uploadBatch = res;
-            for (const row of rows) {
+            // for (const row of rows) {
+            cleanedRows.forEach(async row => {
               const [
                 schoolName,
                 giga_school_id,
@@ -57,7 +66,7 @@ export async function handler(
                 country,
                 connectivity,
                 coverage_availabitlity,
-                electricity_availabilty,
+                electricity_availability,
               ] = row.split(',');
 
               const longitude = parseFloat(longitudeStr);
@@ -67,7 +76,6 @@ export async function handler(
                 console.error(`Invalid longitude or latitude for school "${schoolName}"`);
                 throw new Error('Invalid longitude or latitude');
               }
-
               const schoolData: SchoolData = {
                 schoolName,
                 giga_school_id,
@@ -75,9 +83,9 @@ export async function handler(
                 country,
                 longitude,
                 latitude,
-                connectivity: connectivity === 'YES' && true,
-                coverage_availabitlity: coverage_availabitlity === 'YES' && true,
-                electricity_availabilty: electricity_availabilty === 'YES' && true,
+                connectivity: connectivity.toLowerCase() === 'yes' && true,
+                coverage_availabitlity: coverage_availabitlity.toLowerCase() === 'yes' && true,
+                electricity_availability: electricity_availability.toLowerCase() === 'yes' && true,
               };
               try {
                 await prisma.school.create({
@@ -88,19 +96,18 @@ export async function handler(
                     longitude: schoolData.longitude,
                     latitude: schoolData.latitude,
                     connectivity: schoolData.connectivity as boolean,
-                    electricity_available: schoolData.electricity_availabilty as boolean,
+                    electricity_available: schoolData.electricity_availability as boolean,
                     coverage_availability: schoolData.coverage_availabitlity,
                     country: country,
                     uploadId: res.id,
                     createdById: userdata.id,
                   },
                 });
-
                 console.log(`School "${schoolName}" saved to the database.`);
               } catch (err) {
                 throw err;
               }
-            }
+            });
             resolve(res);
             return res;
           })
@@ -112,8 +119,6 @@ export async function handler(
     });
 
     return uploadBatch;
-
-    // console.log('CSV data import completed.');
   } catch (error) {
     console.error('Error reading or saving CSV data:', error);
   }
