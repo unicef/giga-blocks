@@ -117,7 +117,7 @@ const Navbar = () => {
                 <HeaderMenuItem as={Link} href="/explore">
                   NFT Marketplace
                 </HeaderMenuItem>
-                <HeaderMenuItem as={Link} href="/#involved">
+                <HeaderMenuItem as={Link} href="/#joinCommunityForm">
                   Develop With Us
                 </HeaderMenuItem>
                 <HeaderMenuItem as={Link} href="/#faq">
