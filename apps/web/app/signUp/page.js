@@ -32,7 +32,7 @@ const SignUp = () => {
   const signUp = useSignUp();
   const sendOtp = useOtp();
 
-  const minute = process.env.OTP_DURATION_IN_MINS
+  const minute = process.env.OTP_DURATION_IN_MINS;
   const [seconds, setSeconds] = useState(minute);
 
   useEffect(() => {
@@ -52,8 +52,8 @@ const SignUp = () => {
   }, [notification]);
 
   const onSubmit = async (data) => {
-    setSeconds(180)
-    setError()
+    setSeconds(180);
+    setError();
     signUp
       .mutateAsync(data)
       .then(() => {
@@ -119,7 +119,15 @@ const SignUp = () => {
           }}
         />
       )}
-      <CarbonModal error={error} setError={setError} open={openModal} onClose={onClose} email={email} seconds={seconds} setSeconds={setSeconds}/>
+      <CarbonModal
+        error={error}
+        setError={setError}
+        open={openModal}
+        onClose={onClose}
+        email={email}
+        seconds={seconds}
+        setSeconds={setSeconds}
+      />
       <Navbar />
       <Grid className="landing-page preview1Background signUp-grid" fullWidth>
         <Column className="form" md={4} lg={16} sm={4}>
