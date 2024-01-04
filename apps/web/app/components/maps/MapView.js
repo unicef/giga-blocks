@@ -26,7 +26,7 @@ const StyledMapContainer = styled('div')(({ theme, sx }) => {
   return {
     zIndex: 0,
     height: 400,
-    width: 500,
+    width: 380,
     overflow: 'hidden',
     position: 'relative',
     ...sx,
