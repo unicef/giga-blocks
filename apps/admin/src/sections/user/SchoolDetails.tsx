@@ -24,9 +24,10 @@ export default function SchoolDetails({ id }: Props) {
     location: '',
     latitude: '',
     longitude: '',
-    connectivity: '',
-    coverage: '',
+    connectivity: false,
+    coverage: false,
     mintedStatus: '',
+    electricity_availabilty: false
   });
 
   const { data, isSuccess, isError, refetch } = useSchoolGetById(id);
@@ -65,6 +66,7 @@ export default function SchoolDetails({ id }: Props) {
         connectivity: data?.connectivity,
         coverage: data?.coverage_availability,
         mintedStatus: data?.minted,
+        electricity_availabilty: data?.electricity_available
       });
   }, [isSuccess, isError, data]);
 
@@ -108,12 +110,12 @@ export default function SchoolDetails({ id }: Props) {
   }, [isMintSuccess, isMintError])
 
   const back = () => {
-    router.push('/school/un-minted');
+    {profile.mintedStatus === 'NOTMINTED' ? router.push('/school/un-minted?') : router.push('/school/pending')}
   };
 
   return (
     <>
-      <Grid item xs={8}>
+      <Grid item lg={8} sm={12}>
         <Container>
           <CustomBreadcrumbs
             heading="School Detail Page"
@@ -164,14 +166,20 @@ export default function SchoolDetails({ id }: Props) {
                       />
                       <ProfileTextField
                         name="connectivity"
-                        value={profile?.connectivity === 'true' ? 'Yes' : 'No' || ''}
+                        value={profile?.connectivity === true ? 'Yes' : 'No' || ''}
                         label="Connectivity"
                         disabled
                       />
                       <ProfileTextField
                         name="coverage"
-                        value={profile?.coverage === 'true' ? 'Yes' : 'No' || ''}
-                        label="Coverage"
+                        value={profile?.coverage === true ? 'Yes' : 'No' || ''}
+                        label="Coverage Availability"
+                        disabled
+                      />
+                      <ProfileTextField
+                        name="electricity_availabilty"
+                        value={profile?.electricity_availabilty === true ? 'Yes' : 'No' || ''}
+                        label="Electricity Availability"
                         disabled
                       />
                     </Box>
@@ -188,7 +196,7 @@ export default function SchoolDetails({ id }: Props) {
           </FormProvider>
         </Container>
       </Grid>
-      <Grid item xs={4}>
+      <Grid item lg={4} sm={12}>
         <Container>
           <Box justifyContent={'center'}>
             <Stack alignItems="center" sx={{ mt: 1 }}>

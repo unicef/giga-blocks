@@ -154,7 +154,7 @@ export default function ValidateDetail({ id }: Props) {
 
   return (
     <>
-      <Grid item xs={8}>
+      <Grid item xs={12} lg={8} >
         <Container>
           <CustomBreadcrumbs
             heading="Validation Detail"
@@ -165,8 +165,8 @@ export default function ValidateDetail({ id }: Props) {
             ]}
           />
           <FormProvider methods={methods}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={12}>
+            <Grid container spacing={3} >
+              <Grid item xs={12} md={12} lg={12}>
                 <Card sx={{ p: 3 }}>
                   <Box rowGap={3} columnGap={2} display="grid">
                     <ProfileTextField
@@ -214,7 +214,7 @@ export default function ValidateDetail({ id }: Props) {
           </FormProvider>
         </Container>
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={4} sm={12} style={{margin: 'auto'}}>
         <Container>
           <Box justifyContent={'center'}>
             <Stack alignItems="center" sx={{ mt: 1 }}>
