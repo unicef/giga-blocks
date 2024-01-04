@@ -42,6 +42,7 @@ const Dashboard = () => {
             variables={variables}
             pageSize={pageSize}
             setPageSize={setPageSize}
+            setSearch={false}
           />
           </div>)
 }

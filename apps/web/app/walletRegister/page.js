@@ -99,13 +99,15 @@ const WalletRegisterForm = () => {
         signature: sign,
       };
       registerMutation.mutateAsync(payload).then((res) => {
-        saveCurrentUser(res.data);
+        saveCurrentUser(res.data.result);
         saveAccessToken(res.data.access_token);
         saveConnectors('metaMask');
         initialize();
-      });
-      showSuccessMessage();
-      console.log('Wallet registered successfully!');
+        router.push('/dashboard');
+        showSuccessMessage();
+      }).catch((err) => {
+        showErrorMessage(err.response.data);
+      })
     } catch (error) {
       showErrorMessage(error);
       console.error('Error registering wallet:', error);

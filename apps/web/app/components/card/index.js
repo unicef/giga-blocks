@@ -18,7 +18,7 @@ import { Queries } from '../../libs/graph-query';
 import { getNftContract } from '../web3/contracts/getContract';
 import { useWeb3React } from '@web3-react/core';
 
-const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
+const SchoolCard = ({ query, variables, pageSize, setPageSize ,setSearch}) => {
   const [searchText, setSearchText] = useState('');
   const {account} = useWeb3React();
 
@@ -109,7 +109,8 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
 
   return(
     <> 
-    <div style={{ padding: '80px 40px 10px 40px' }}>
+    {setSearch && 
+      <div style={{ padding: '80px 40px 10px 40px' }}>
          <Search
            size="lg"
            placeholder="Search NFT"
@@ -119,7 +120,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
              setSearchText(e.target.value);
            }}
          />
-       </div> 
+       </div> }
        {datafetching === false ? (
          <Grid fullWidth style={{ margin: '30px auto' }}>
            {schoolData.length > 0 ? (
