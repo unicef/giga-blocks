@@ -119,8 +119,6 @@ export async function handler(
     });
 
     return uploadBatch;
-
-    // console.log('CSV data import completed.');
   } catch (error) {
     console.error('Error reading or saving CSV data:', error);
   }
