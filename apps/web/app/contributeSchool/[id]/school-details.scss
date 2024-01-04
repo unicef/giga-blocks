@@ -86,7 +86,6 @@
   background: #222222;
 }
 .map {
-  width: 550px;
   @include breakpoint-down(md) {
     width: 380px;
   }
