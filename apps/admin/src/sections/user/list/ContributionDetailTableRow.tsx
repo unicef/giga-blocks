@@ -18,7 +18,6 @@ export default function ContributionDetailTableRow({
     value
   } = row;
 
-  console.log(value)
 
   return (
     <>

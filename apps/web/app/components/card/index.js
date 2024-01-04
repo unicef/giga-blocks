@@ -103,8 +103,6 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
     setDataFetching(false);
   };
 
-  console.log(fetching)
-
   const loadMore = () => {
     setPageSize(pageSize + pageSize);
   };
