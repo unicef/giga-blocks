@@ -34,8 +34,8 @@ const ContributeData = () => {
   const TABLE_HEAD = [
     { id: 'name', label: 'Contributor name', align: 'left' },
     { id: 'school', label: 'School', align: 'left' },
-    { id: 'contributed_data', label: 'Type', align: 'left' },
-    { id: 'contributed_data', label: 'Change', align: 'left' },
+    { id: 'contributedDataKey', label: 'Type', align: 'left' },
+    { id: 'contributedDataValue', label: 'Change', align: 'left' },
     { id: 'status', label: 'Status', align: 'left' },
     { id: 'createdAt', label: 'Date', align: 'left' },
   ];
@@ -151,7 +151,15 @@ const ContributeData = () => {
 
   const sortedData = tableData.slice().sort((a: any, b: any) => {
     const isAsc = order === 'asc';
+    if(orderBy === 'contributedDataKey'){
+    return (a[orderBy][0] < b[orderBy][0] ? -1 : 1) * (isAsc ? 1 : -1);
+    }
+    else if(orderBy === 'contributedDataValue'){
+      return
+    }
+    else{
     return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
+    }
   });
 
   function a11yProps(index: number) {
