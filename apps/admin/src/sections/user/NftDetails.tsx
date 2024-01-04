@@ -90,8 +90,6 @@ export default function SchoolDetails({ id }: Props) {
       ...JSON.parse(decodedData),
     };
 
-    console.log(schoolData)
-
     setProfile({
       fullname: schoolData.schoolName,
       location: schoolData.country,
@@ -166,7 +164,6 @@ export default function SchoolDetails({ id }: Props) {
     );
   }
 
-  console.log(profile)
   return (
     <>
       {fetching && <p>Loading...</p>}

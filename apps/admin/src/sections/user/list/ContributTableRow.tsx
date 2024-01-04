@@ -104,7 +104,7 @@ export default function ContributeTableRow({
           sx={{ textTransform: 'capitalize' }}
           onClick={() => handleEditRow(id)}
         >
-        {contributedDataValue.toString() === 'true' ? "Yes" : contributedDataValue.toString() === 'false' ? "No" : contributedDataValue.toString()}
+        {contributedDataValue.toString().toLowerCase() === 'true' ? "Yes" : contributedDataValue.toString() === 'false' ? "No" : contributedDataValue.toString()}
         </TableCell>
 
         <TableCell

@@ -61,8 +61,6 @@ const MintedSchools = () => {
     setPaginatedData(paginatedDatas)
   }, [rowsPerPage, data, page])
 
-  console.log(paginatedData)
-
   const decodeSchooldata = (data: any) => {
     const encodeddata = data;  
     const decodedShooldata = [];

@@ -57,7 +57,6 @@ export default function SchoolDetails({ id }: Props) {
   });
 
   useEffect(() => {
-    console.log(data)
     isSuccess &&
       setProfile({
         fullname: data?.name,
