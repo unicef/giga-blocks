@@ -34,7 +34,8 @@ const ContributeData = () => {
   const TABLE_HEAD = [
     { id: 'name', label: 'Contributor name', align: 'left' },
     { id: 'school', label: 'School', align: 'left' },
-    { id: 'contributed_data', label: 'Contributed Data', align: 'left' },
+    { id: 'contributed_data', label: 'Type', align: 'left' },
+    { id: 'contributed_data', label: 'Change', align: 'left' },
     { id: 'status', label: 'Status', align: 'left' },
     { id: 'createdAt', label: 'Date', align: 'left' },
   ];
@@ -180,7 +181,7 @@ const ContributeData = () => {
     return (
       <>
         <Box sx={{ minWidth: 120 }}>
-          <FormControl sx={{ width: 200 }}>
+          <FormControl sx={{ width: 200, marginRight: 2 }}>
             <Autocomplete
               disablePortal
               value={selectedSchoolSearch?.label}
@@ -194,7 +195,7 @@ const ContributeData = () => {
               }}
             />
           </FormControl>
-          <FormControl sx={{ width: 220, marginLeft: 2 }}>
+          <FormControl sx={{ width: 220 }}>
             <Autocomplete
               disablePortal
               value={selectedContributorSearch?.label}

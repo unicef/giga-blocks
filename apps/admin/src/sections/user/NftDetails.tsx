@@ -65,11 +65,11 @@ export default function SchoolDetails({ id }: Props) {
     location: '',
     latitude: '',
     longitude: '',
-    connectivity: false,
-    coverage: false,
+    connectivity: '',
+    coverage: '',
     mintedStatus: '',
     tokenId: '',
-    electricity_availabilty: false
+    electricity_availabilty: ''
   });
 
   const [result] = useQuery({ query: Queries.nftDetailsQuery, variables: { id } });
@@ -166,6 +166,7 @@ export default function SchoolDetails({ id }: Props) {
     );
   }
 
+  console.log(profile)
   return (
     <>
       {fetching && <p>Loading...</p>}
@@ -225,19 +226,19 @@ export default function SchoolDetails({ id }: Props) {
                           />
                           <ProfileTextField
                             name="connectivity"
-                            value={profile?.connectivity === true ? 'Yes' : 'No' || ''}
+                            value={profile?.connectivity === "true" ? 'Yes' : 'No' || ''}
                             label="Connectivity"
                             disabled
                           />
                           <ProfileTextField
                             name="coverage"
-                            value={profile?.coverage === true ? 'Yes' : 'No' || ''}
+                            value={profile?.coverage === "true" ? 'Yes' : 'No' || ''}
                             label="Coverage"
                             disabled
                           />
                           <ProfileTextField
                             name="coverage"
-                            value={profile?.electricity_availabilty === true ? 'Yes' : 'No' || ''}
+                            value={profile?.electricity_availabilty === "true" ? 'Yes' : 'No' || ''}
                             label="Electricity Availabilty"
                             disabled
                           />

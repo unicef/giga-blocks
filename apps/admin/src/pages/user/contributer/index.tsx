@@ -53,6 +53,11 @@ const UserList = () => {
       setName(e.target.value)
     }
 
+    const sortedData = tableData.slice().sort((a:any, b:any) => {
+      const isAsc = order === 'asc';
+      return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
+    });
+
     return ( 
 
       <DashboardLayout>
@@ -72,8 +77,8 @@ const UserList = () => {
                 />
 
                 <TableBody>
-                  {tableData &&
-                    tableData?.map((row:any) => (
+                  {sortedData &&
+                    sortedData?.map((row:any) => (
                       <UserListRow
                         key={row.id}
                         row={row}
