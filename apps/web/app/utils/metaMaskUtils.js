@@ -17,7 +17,8 @@ export const metaMaskLogin = async () => {
 
 export const metaMaskLogout = async () => {
   try {
-    await metaMask.resetState()
+    await metaMask.resetState();
+    localStorage.clear();
   } catch (err) {
     console.log(err);
   }

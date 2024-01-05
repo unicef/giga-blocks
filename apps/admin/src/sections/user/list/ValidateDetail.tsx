@@ -154,6 +154,8 @@ export default function ValidateDetail({ id }: Props) {
 
   return (
     <>
+    {!isFetching ?
+      (<>
       <Grid item xs={12} lg={8} >
         <Container>
           <CustomBreadcrumbs
@@ -260,7 +262,7 @@ export default function ValidateDetail({ id }: Props) {
                   {!isFetching ? (
                       <TableNoData isNotFound={sortedData?.length < page*rowsPerPage} />
                     ) : (
-                      <CircularProgress color="inherit" />
+                      <CircularProgress color="inherit"  />
                     )}
                 </TableBody>
               </Table>
@@ -268,6 +270,11 @@ export default function ValidateDetail({ id }: Props) {
           </TableContainer>
         </Card>
       </Grid>
+    </>):(
+
+      <CircularProgress color="inherit" />
+    )
+    }
     </>
   );
 }
