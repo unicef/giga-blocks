@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Header,
   HeaderContainer,
@@ -20,6 +20,7 @@ import { getCurrentUser } from '../../utils/sessionManager';
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { isAuthenticated, logout } = useAppAuthContext();
+  const [isAuthenticationChecked, setIsAuthenticationChecked] = useState(false);
 
   const options = [
     { id: 'option1', text: 'Dashboard', link: '/dashboard' },
@@ -37,10 +38,12 @@ const Navbar = () => {
     } else {
       window.location.href = option.link;
     }
-
-    // Close the dropdown
     setIsDropdownOpen(false);
   };
+
+  useEffect(() => {
+    setIsAuthenticationChecked(true);
+  }, []);
 
   const currentUser = getCurrentUser();
 
@@ -117,7 +120,7 @@ const Navbar = () => {
                 <HeaderMenuItem as={Link} href="/explore">
                   NFT Marketplace
                 </HeaderMenuItem>
-                <HeaderMenuItem as={Link} href="/#involved">
+                <HeaderMenuItem as={Link} href="/#joinCommunityForm">
                   Develop With Us
                 </HeaderMenuItem>
                 <HeaderMenuItem as={Link} href="/#faq">
@@ -129,79 +132,81 @@ const Navbar = () => {
               </HeaderSideNavItems>
             </SideNavItems>
           </SideNav>
-          <HeaderGlobalBar>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                position: 'relative',
-              }}
-            >
-              {isAuthenticated ? (
-                <>
-                  <p style={{ paddingRight: '12px' }}>{currentUser?.name}</p>
-                  <img
-                    src="/landingPage/gravatar.png"
-                    alt="User Avatar"
-                    onClick={handleDropdownToggle}
-                    style={{
-                      cursor: 'pointer',
-                      width: '15%',
-                      marginRight: '12px',
-                    }}
-                  />
-                  {isDropdownOpen && (
-                    <div
+          {isAuthenticationChecked && (
+            <HeaderGlobalBar>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  position: 'relative',
+                }}
+              >
+                {isAuthenticated ? (
+                  <>
+                    <p style={{ paddingRight: '12px' }}>{currentUser?.name}</p>
+                    <img
+                      src="/landingPage/gravatar.png"
+                      alt="User Avatar"
+                      onClick={handleDropdownToggle}
                       style={{
-                        position: 'absolute',
-                        top: '100%',
-                        left: '60%',
-                        transform: 'translateX(-50%)',
-                        backgroundColor: '#fff',
-                        color: 'black',
-                        boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)',
-                        borderRadius: '4px',
-                        padding: '10px',
-                        width: '60%',
+                        cursor: 'pointer',
+                        width: '15%',
+                        marginRight: '12px',
+                      }}
+                    />
+                    {isDropdownOpen && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: '100%',
+                          left: '60%',
+                          transform: 'translateX(-50%)',
+                          backgroundColor: '#fff',
+                          color: 'black',
+                          boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)',
+                          borderRadius: '4px',
+                          padding: '10px',
+                          width: '60%',
+                        }}
+                      >
+                        {options.map((option, index) => (
+                          <div
+                            key={option.id}
+                            onClick={() => handleOptionClick(option)}
+                            style={{
+                              padding: '10px',
+                              cursor: 'pointer',
+                              borderBottom:
+                                index < options.length - 1
+                                  ? '1px solid #ccc'
+                                  : 'none',
+                            }}
+                          >
+                            {option.text}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <a
+                      href="/signIn"
+                      style={{
+                        minWidth: '5rem',
+                        cursor: 'pointer',
+                        color: '#fff',
+                        textDecoration: 'none',
                       }}
                     >
-                      {options.map((option, index) => (
-                        <div
-                          key={option.id}
-                          onClick={() => handleOptionClick(option)}
-                          style={{
-                            padding: '10px',
-                            cursor: 'pointer',
-                            borderBottom:
-                              index < options.length - 1
-                                ? '1px solid #ccc'
-                                : 'none',
-                          }}
-                        >
-                          {option.text}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <>
-                  <a
-                    href="/signIn"
-                    style={{
-                      minWidth: '5rem',
-                      cursor: 'pointer',
-                      color: '#fff',
-                      textDecoration: 'none',
-                    }}
-                  >
-                    Sign In
-                  </a>
-                </>
-              )}
-            </div>
-          </HeaderGlobalBar>
+                      Sign In
+                    </a>
+                  </>
+                )}
+              </div>
+            </HeaderGlobalBar>
+          )}
         </Header>
       )}
     />

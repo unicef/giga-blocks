@@ -96,7 +96,15 @@ export default function ContributeTableRow({
           sx={{ textTransform: 'capitalize' }}
           onClick={() => handleEditRow(id)}
         >
-        {contributedDataKey} : {contributedDataValue.toString() === 'true' ? "Yes" : contributedDataValue.toString() === 'false' ? "No" : contributedDataValue.toString()}
+        {contributedDataKey}
+        </TableCell>
+
+        <TableCell
+          align="left"
+          sx={{ textTransform: 'capitalize' }}
+          onClick={() => handleEditRow(id)}
+        >
+        {contributedDataValue.toString().toLowerCase() === 'true' ? "Yes" : contributedDataValue.toString() === 'false' ? "No" : contributedDataValue.toString()}
         </TableCell>
 
         <TableCell

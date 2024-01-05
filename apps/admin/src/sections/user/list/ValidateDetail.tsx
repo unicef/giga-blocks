@@ -59,12 +59,8 @@ export default function ValidateDetail({ id }: Props) {
     page,
     order,
     orderBy,
-    setPage,
     rowsPerPage,
     onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
   } = useTable();
 
   const TABLE_HEAD = [
@@ -81,22 +77,8 @@ export default function ValidateDetail({ id }: Props) {
 
   const router = useRouter();
 
-  const [nftData, setNftData] = useState({
-    id: '',
-    schoolName: '',
-    longitude: '',
-    latitude: '',
-    schoolType: '',
-    country: '',
-    connectivity: '',
-    coverage_availabitlity: '',
-    electricity_availabilty: '',
-    mintedStatus: '',
-    schoolId: '',
-  });
-
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && data?.data) {
       const keyValue = Object?.entries(data?.data);
       var jsonString ;
       if(keyValue) 
@@ -121,22 +103,6 @@ export default function ValidateDetail({ id }: Props) {
     refetch();
   }, [isValidationSuccess, isValidationError]);
 
-  useEffect(() => {
-    setNftData({
-      id: data?.id,
-      schoolName: data?.name,
-      longitude: data?.longitude,
-      latitude: data?.latitude,
-      schoolType: data?.school_type,
-      country: data?.country,
-      connectivity: data?.connectivity,
-      coverage_availabitlity: data?.coverage_availability,
-      electricity_availabilty: data?.electricity_available,
-      mintedStatus: data?.minted,
-      schoolId: data?.schoolId,
-    });
-  }, [data]);
-
   const methods = useForm();
 
   const onValidate = () => {
@@ -154,7 +120,9 @@ export default function ValidateDetail({ id }: Props) {
 
   return (
     <>
-      <Grid item xs={8}>
+    {!isFetching ?
+      (<>
+      <Grid item xs={12} lg={8} >
         <Container>
           <CustomBreadcrumbs
             heading="Validation Detail"
@@ -165,8 +133,8 @@ export default function ValidateDetail({ id }: Props) {
             ]}
           />
           <FormProvider methods={methods}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={12}>
+            <Grid container spacing={3} >
+              <Grid item xs={12} md={12} lg={12}>
                 <Card sx={{ p: 3 }}>
                   <Box rowGap={3} columnGap={2} display="grid">
                     <ProfileTextField
@@ -214,7 +182,7 @@ export default function ValidateDetail({ id }: Props) {
           </FormProvider>
         </Container>
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={4} sm={12} lg={4} style={{margin: 'auto', marginTop: 0}}>
         <Container>
           <Box justifyContent={'center'}>
             <Stack alignItems="center" sx={{ mt: 1 }}>
@@ -260,7 +228,7 @@ export default function ValidateDetail({ id }: Props) {
                   {!isFetching ? (
                       <TableNoData isNotFound={sortedData?.length < page*rowsPerPage} />
                     ) : (
-                      <CircularProgress color="inherit" />
+                      <CircularProgress color="inherit"  />
                     )}
                 </TableBody>
               </Table>
@@ -268,6 +236,11 @@ export default function ValidateDetail({ id }: Props) {
           </TableContainer>
         </Card>
       </Grid>
+    </>):(
+
+      <CircularProgress color="inherit" />
+    )
+    }
     </>
   );
 }

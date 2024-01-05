@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { Box, Card, Grid, Stack, Button, Container } from '@mui/material';
+import { Box, Card, Grid, Stack, Button, Container, CircularProgress } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useSnackbar } from '@components/snackbar';
 import FormProvider, { ProfileTextField } from '@components/hook-form';
@@ -25,7 +25,7 @@ export default function ContributeDetail({ id }: Props) {
     mintedStatus: '',
   });
 
-  const { data, isSuccess, isError, refetch } = useContributionGetById(id);
+  const { data, isSuccess, isError, refetch,isFetching } = useContributionGetById(id);
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -33,26 +33,14 @@ export default function ContributeDetail({ id }: Props) {
     isSuccess: isValidationSuccess,
     isError: isValidationError,
   } = useContributionValidate();
-
+  const [toastMessage, setToastMessage] = useState('validated')
   const router = useRouter();
 
-  const [nftData, setNftData] = useState({
-    id: '',
-    schoolName: '',
-    longitude: '',
-    latitude: '',
-    schoolType: '',
-    country: '',
-    connectivity: '',
-    coverage_availabitlity: '',
-    electricity_availabilty: '',
-    mintedStatus: '',
-  });
 
   useEffect(() => {
-    if (isSuccess) {
-      const keyValue = Object.entries(data?.contributed_data);
-      const jsonString = JSON.parse(keyValue?.map((pair) => pair[1])?.join(''));
+    if (isSuccess && data ) {
+      const keyValue = Object?.entries(data?.contributed_data);
+      const jsonString = JSON?.parse(keyValue?.map((pair) => pair[1])?.join(''));
       setProfile({
         fullname: data?.contributedUser?.name,
         schoolName: data?.school.name,
@@ -66,32 +54,17 @@ export default function ContributeDetail({ id }: Props) {
   }, [isSuccess, isError, data]);
 
   useEffect(() => {
-    isValidationSuccess &&
-      enqueueSnackbar('Successfully updated contribution', { variant: 'success' });
+    isValidationSuccess && enqueueSnackbar(`Contributed Data are ${toastMessage}. Please check ${toastMessage} Data Section`, { variant: 'success' });
     refetch();
     isValidationError && enqueueSnackbar('Unsuccessful', { variant: 'error' });
   }, [isValidationSuccess, isValidationError]);
-
-  useEffect(() => {
-    setNftData({
-      id: data?.id,
-      schoolName: data?.name,
-      longitude: data?.longitude,
-      latitude: data?.latitude,
-      schoolType: data?.school_type,
-      country: data?.country,
-      connectivity: data?.connectivity,
-      coverage_availabitlity: data?.coverage_availability,
-      electricity_availabilty: data?.electricity_available,
-      mintedStatus: data?.minted,
-    });
-  }, [data]);
 
   const methods = useForm();
 
   const onContribute = (validity: boolean) => {
     const payload = { contributions: [{ contributionId: id, isValid: validity }] };
     mutate(payload);
+    !validity && setToastMessage('invalidated')
     router.push('/contribute');
   };
 
@@ -101,6 +74,9 @@ export default function ContributeDetail({ id }: Props) {
 
   return (
     <>
+   { isFetching ?<CircularProgress color='inherit'/>:
+   (
+   <>
       <Grid item xs={8}>
         <Container>
           <CustomBreadcrumbs
@@ -206,6 +182,8 @@ export default function ContributeDetail({ id }: Props) {
           </Container>
         </Grid>
       )}
+    </>)
+    }
     </>
   );
 }

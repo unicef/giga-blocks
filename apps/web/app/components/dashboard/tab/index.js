@@ -53,6 +53,7 @@ const ListTabs = () => {
               variables={variables}
               pageSize={pageSize}
               setPageSize={setPageSize}
+              setSearch={false}
             />):
             <ConnectWallet />}
           </TabPanel>

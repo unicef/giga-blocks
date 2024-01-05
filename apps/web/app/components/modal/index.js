@@ -13,6 +13,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import { useEffect, useState } from 'react';
 import CountdownTimer from '../countdowntimer'
 import { useOtp } from '../../hooks/useOtp';
+import { Typography } from '@mui/material';
 
 const CarbonModal = ({ open, onClose, email, setSeconds, seconds, error, setError }) => {
   const { handleSubmit, control, setValue } = useForm();
@@ -177,7 +178,9 @@ const CarbonModal = ({ open, onClose, email, setSeconds, seconds, error, setErro
             )}
           />
         </Form>
-        {seconds && <CountdownTimer setSeconds={setSeconds} seconds={seconds}/>}
+        {seconds && <CountdownTimer setSeconds={setSeconds} seconds={seconds}/> ||   <Typography variant="body2" sx={{ color: '#f7931e', my: 3 }}>
+          Your OTP has expired, please resend OTP to login.
+        </Typography>}
         <a
                 style={{
                   marginTop: '10px',

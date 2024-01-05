@@ -31,8 +31,10 @@ const SchoolDetail = () => {
   const router = useRouter();
   const { data, isLoading } = useSchoolDetails(id);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTabIndex, setSelectedTabIndex] = useState({selectedIndex: 0});
-  const {data:contributedData,refetch} = useContributeDetails(id);
+  const [selectedTabIndex, setSelectedTabIndex] = useState({
+    selectedIndex: 0,
+  });
+  const { data: contributedData, refetch } = useContributeDetails(id);
 
   const user = getCurrentUser();
 
@@ -84,7 +86,9 @@ const SchoolDetail = () => {
                 </Tab>
                 <Tab style={{ color: 'white' }}>Change Log</Tab>
               </TabList>
-              <Button onClick={openModal}>Contribute</Button>
+              <Button className="contribute-btn" onClick={openModal}>
+                Contribute
+              </Button>
             </div>
             <TabPanels>
               <TabPanel>
@@ -123,13 +127,12 @@ const SchoolDetail = () => {
                       justifyContent: 'center',
                       alignItems: 'center',
                       flexDirection: 'column',
-                      width: '100%',
                     }}
                   >
                     <p style={{ fontSize: '12px' }}>
                       Last Updated:{data?.updatedAt.substring(0, 10)}
                     </p>
-                    <div style={{ width: '450px' }}>
+                    <div className="map">
                       {isLoading ? (
                         <InlineLoading
                           style={{
@@ -203,9 +206,10 @@ const SchoolDetail = () => {
                 </Grid>
               </TabPanel>
               <TabPanel>
-                <ChangeLog schoolid={id}
-                contributedData={contributedData}
-                refetch={refetch}
+                <ChangeLog
+                  schoolid={id}
+                  contributedData={contributedData}
+                  refetch={refetch}
                 />
               </TabPanel>
             </TabPanels>

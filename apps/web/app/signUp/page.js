@@ -17,9 +17,10 @@ import Link from 'next/link';
 import { useOtp } from '../hooks/useOtp';
 import { useSignUp } from '../hooks/useSignUp';
 import { useRouter } from 'next/navigation';
-import { metaMask, hooks } from '../components/web3/connectors/metamask';
+import { metaMask} from '../components/web3/connectors/metamask';
 import CarbonModal from '../components/modal/index';
 import { metaMaskLogin } from '../utils/metaMaskUtils';
+import { getAccessToken } from '../utils/sessionManager'; 
 
 const SignUp = () => {
   const router = useRouter();
@@ -32,14 +33,23 @@ const SignUp = () => {
   const signUp = useSignUp();
   const sendOtp = useOtp();
 
-  const minute = process.env.NEXT_PUBLIC_OTP_DURATION_IN_MINS
-  const [seconds, setSeconds] = useState(minute*60);
+  const access_token = getAccessToken();
+
+
+  const minute = process.env.NEXT_PUBLIC_OTP_DURATION_IN_MINS;
+  const [seconds, setSeconds] = useState(minute * 60);
 
   useEffect(() => {
     void metaMask.connectEagerly().catch(() => {
       console.debug('Failed to connect eagerly to metamask');
     });
   }, []);
+
+  useEffect(() => {
+    if (access_token) {
+      router.push('/dashboard');
+    } },[access_token]);
+
 
   useEffect(() => {
     if (notification) {
@@ -52,8 +62,8 @@ const SignUp = () => {
   }, [notification]);
 
   const onSubmit = async (data) => {
-    setSeconds(minute * 60)
-    setError()
+    setSeconds(minute * 60);
+    setError();
     signUp
       .mutateAsync(data)
       .then(() => {
@@ -119,7 +129,16 @@ const SignUp = () => {
           }}
         />
       )}
-      <CarbonModal error={error} setError={setError} open={openModal} onClose={onClose} email={email} seconds={seconds} setSeconds={setSeconds}/>
+      <CarbonModal
+        error={error}
+        setError={setError}
+        open={openModal}
+        xs
+        onClose={onClose}
+        email={email}
+        seconds={seconds}
+        setSeconds={setSeconds}
+      />
       <Navbar />
       <Grid className="landing-page preview1Background signUp-grid" fullWidth>
         <Column className="form" md={4} lg={16} sm={4}>

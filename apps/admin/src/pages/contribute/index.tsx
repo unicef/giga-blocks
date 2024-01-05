@@ -34,9 +34,10 @@ const ContributeData = () => {
   const TABLE_HEAD = [
     { id: 'name', label: 'Contributor name', align: 'left' },
     { id: 'school', label: 'School', align: 'left' },
-    { id: 'contributed_data', label: 'Contributed Data', align: 'left' },
+    { id: 'contributedDataKey', label: 'Type', align: 'left' },
+    { id: 'contributedDataValue', label: 'Change', align: 'left' },
     { id: 'status', label: 'Status', align: 'left' },
-    { id: 'createdAt', label: 'Date', align: 'left' },
+    { id: 'date', label: 'Date', align: 'left' },
   ];
 
   const {
@@ -50,7 +51,7 @@ const ContributeData = () => {
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable({defaultOrderBy: 'createdAt', defaultOrder: 'desc'});
+  } = useTable({defaultOrderBy: 'date', defaultOrder: 'desc'});
   const [toastMessage, setToastMessage] = useState('validated')
 
   const { enqueueSnackbar } = useSnackbar();
@@ -150,7 +151,15 @@ const ContributeData = () => {
 
   const sortedData = tableData.slice().sort((a: any, b: any) => {
     const isAsc = order === 'asc';
+    if(orderBy === 'contributedDataKey'){
+    return (a[orderBy][0] < b[orderBy][0] ? -1 : 1) * (isAsc ? 1 : -1);
+    }
+    else if(orderBy === 'contributedDataValue'){
+      return
+    }
+    else{
     return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
+    }
   });
 
   function a11yProps(index: number) {
@@ -180,7 +189,7 @@ const ContributeData = () => {
     return (
       <>
         <Box sx={{ minWidth: 120 }}>
-          <FormControl sx={{ width: 200 }}>
+          <FormControl sx={{ width: 200, marginRight: 2 }}>
             <Autocomplete
               disablePortal
               value={selectedSchoolSearch?.label}
@@ -194,7 +203,7 @@ const ContributeData = () => {
               }}
             />
           </FormControl>
-          <FormControl sx={{ width: 220, marginLeft: 2 }}>
+          <FormControl sx={{ width: 220 }}>
             <Autocomplete
               disablePortal
               value={selectedContributorSearch?.label}

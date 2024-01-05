@@ -45,7 +45,7 @@ export default function TablePaginationCustom({
   return (
     <Box sx={{ position: 'relative', ...sx }}>
       <TablePagination rowsPerPageOptions={rowsPerPageOptions} component="div" {...other} />
-
+{/* 
       {!disablePageNumber && <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4, mt: 0.5 }}>
         <TextField
           label="Enter Page Number"
@@ -63,7 +63,7 @@ export default function TablePaginationCustom({
           }}
           size="small"
         />
-      </Box>}
+      </Box>} */}
 
       {onChangeDense && (
         <FormControlLabel

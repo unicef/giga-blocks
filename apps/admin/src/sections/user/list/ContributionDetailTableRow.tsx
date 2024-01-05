@@ -18,8 +18,6 @@ export default function ContributionDetailTableRow({
     value
   } = row;
 
-  console.log(value)
-
   return (
     <>
       <TableRow
@@ -32,7 +30,7 @@ export default function ContributionDetailTableRow({
         </TableCell>
 
         <TableCell align="left">
-        {value.toString() === 'true' ? "Yes" : value.toString() === 'false' ? "No" : value.toString()}
+        {value.toString().toLowerCase() === 'true' ? "Yes" : value.toString() === 'false' ? "No" : value.toString()}
         </TableCell>
 
       </TableRow>
