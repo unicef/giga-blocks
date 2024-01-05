@@ -15,18 +15,14 @@ import {
   TableContainer,
   Table,
   TableBody,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+  TextField
 } from '@mui/material';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
 import { ChangeEvent, useEffect, useState } from 'react';
 
 const VerifiedSchool = () => {
   const TABLE_HEAD = [
-    { id: 'name', label: 'Name', align: 'left' },
+    { id: 'schoolName', label: 'Name', align: 'left' },
     { id: 'location', label: 'Location', align: 'left' },
     { id: 'latitide', label: 'Latitude', align: 'left' },
     { id: 'longitude', label: 'Longitude', align: 'left' },
@@ -81,6 +77,14 @@ const VerifiedSchool = () => {
     setConnectivity(event.target.value as string);
   }
 
+  const sortedData = tableData?.slice().sort((a:any, b:any) => {
+    const isAsc = order === 'asc';
+    if(orderBy === 'longitude' || orderBy === 'latitide'){
+    return (parseFloat(a[orderBy]) < parseFloat(b[orderBy]) ? -1 : 1) * (isAsc ? 1 : -1);
+    }
+    return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
+  });
+
   return (
     <DashboardLayout>
       <h2>Minting In Progress</h2>
@@ -101,8 +105,8 @@ const VerifiedSchool = () => {
               />
 
               <TableBody>
-                {tableData &&
-                  tableData?.map((row: any) => (
+                {sortedData &&
+                  sortedData?.map((row: any) => (
                     <SchoolTableRow
                       key={row.id}
                       row={row}

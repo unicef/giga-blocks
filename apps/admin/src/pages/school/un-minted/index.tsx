@@ -29,7 +29,7 @@ import { useSnackbar } from '@components/snackbar';
 const VerifiedSchool = () => {
 
     const TABLE_HEAD = [
-        { id: 'name', label: 'School name', align: 'left' },
+        { id: 'schoolName', label: 'School name', align: 'left' },
         { id: 'country', label: 'Location', align: 'left' },
         { id: 'latitude', label: 'Latitude', align: 'left' },
         { id: 'longitude', label: 'Longitude', align: 'left' },
@@ -129,8 +129,11 @@ const VerifiedSchool = () => {
       push('/school/import')
     }
 
-    const sortedData = tableData.slice().sort((a:any, b:any) => {
+    const sortedData = tableData?.slice().sort((a:any, b:any) => {
       const isAsc = order === 'asc';
+      if(orderBy === 'longitude' || orderBy === 'latitide'){
+      return (parseFloat(a[orderBy]) < parseFloat(b[orderBy]) ? -1 : 1) * (isAsc ? 1 : -1);
+      }
       return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
     });
 

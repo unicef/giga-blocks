@@ -17,9 +17,10 @@ import Link from 'next/link';
 import { useOtp } from '../hooks/useOtp';
 import { useSignUp } from '../hooks/useSignUp';
 import { useRouter } from 'next/navigation';
-import { metaMask, hooks } from '../components/web3/connectors/metamask';
+import { metaMask} from '../components/web3/connectors/metamask';
 import CarbonModal from '../components/modal/index';
 import { metaMaskLogin } from '../utils/metaMaskUtils';
+import { getAccessToken } from '../utils/sessionManager'; 
 
 const SignUp = () => {
   const router = useRouter();
@@ -32,6 +33,9 @@ const SignUp = () => {
   const signUp = useSignUp();
   const sendOtp = useOtp();
 
+  const access_token = getAccessToken();
+
+
   const minute = process.env.NEXT_PUBLIC_OTP_DURATION_IN_MINS;
   const [seconds, setSeconds] = useState(minute * 60);
 
@@ -40,6 +44,12 @@ const SignUp = () => {
       console.debug('Failed to connect eagerly to metamask');
     });
   }, []);
+
+  useEffect(() => {
+    if (access_token) {
+      router.push('/dashboard');
+    } },[access_token]);
+
 
   useEffect(() => {
     if (notification) {
