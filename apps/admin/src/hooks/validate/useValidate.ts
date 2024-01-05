@@ -28,7 +28,7 @@ export const useValidateGet = (page: number, perPage: number, status?: string, v
 
 export const useValidDataGetById = (id: string | undefined | string[]) => {
   return useQuery(
-    ['single-contribution'],
+    ['validation-details'],
     async () => {
       const { data } = await api.get(`${routes.VALIDATE.GET}/${id}`);
       return data;
