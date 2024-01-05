@@ -89,13 +89,14 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
 
   const connectMetaMask = async () => {
     if (!account) {      
-     const res = await metaMaskLogin();
-     if(res === 'MetaMask not installed'){
+     try{
+      const res = await metaMaskLogin();}
+      catch(err){
         setNotification({
           kind:'error',
-          title:'MetaMask not installed'
+          title:err.message
         })
-     }
+      }
     }
   };
 

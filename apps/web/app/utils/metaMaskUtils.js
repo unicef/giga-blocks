@@ -11,7 +11,10 @@ export const metaMaskLogin = async () => {
     if (err.code === 4902) {
       return await switchMetaMaskNetwork();
     }
-    return err.message;
+    else if(err.code === 4001){
+      throw new Error('User rejected signature.');
+    }
+   else throw new Error(err);
   }
 };
 
