@@ -21,7 +21,7 @@ export default function ContributePage() {
     <title> School Details Page </title>
     </Head>
 
-    <Grid container spacing={2}>
+    <Grid container spacing={2} sm={12}>
     {id && <ContributeDetail id={id}/>}    
     </Grid>
     </>
