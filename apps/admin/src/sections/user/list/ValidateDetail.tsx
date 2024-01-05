@@ -59,12 +59,8 @@ export default function ValidateDetail({ id }: Props) {
     page,
     order,
     orderBy,
-    setPage,
     rowsPerPage,
     onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
   } = useTable();
 
   const TABLE_HEAD = [
@@ -216,7 +212,7 @@ export default function ValidateDetail({ id }: Props) {
           </FormProvider>
         </Container>
       </Grid>
-      <Grid item xs={4} sm={12} style={{margin: 'auto'}}>
+      <Grid item xs={4} sm={12} lg={4} style={{margin: 'auto', marginTop: 0}}>
         <Container>
           <Box justifyContent={'center'}>
             <Stack alignItems="center" sx={{ mt: 1 }}>
