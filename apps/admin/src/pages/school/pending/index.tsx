@@ -15,18 +15,14 @@ import {
   TableContainer,
   Table,
   TableBody,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+  TextField
 } from '@mui/material';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
 import { ChangeEvent, useEffect, useState } from 'react';
 
 const VerifiedSchool = () => {
   const TABLE_HEAD = [
-    { id: 'name', label: 'Name', align: 'left' },
+    { id: 'schoolName', label: 'Name', align: 'left' },
     { id: 'location', label: 'Location', align: 'left' },
     { id: 'latitide', label: 'Latitude', align: 'left' },
     { id: 'longitude', label: 'Longitude', align: 'left' },

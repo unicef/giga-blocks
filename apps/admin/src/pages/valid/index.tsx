@@ -59,7 +59,7 @@ const ValidateData = () => {
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable();
+  } = useTable({defaultOrderBy: 'date', defaultOrder: 'desc'});
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -105,6 +105,7 @@ const ValidateData = () => {
   setTableData(filteredData);
   }, [isFetching])
 
+
   const onSelectAllRows = (e: any) => {
     const isChecked = e.target.checked;
     if (isChecked) {
@@ -136,6 +137,12 @@ const ValidateData = () => {
   const handleSchoolSearchChange = (value: any) => {
     setSelectedSchoolSearch(value);
   };
+
+  const sortedData = tableData?.slice().sort((a:any, b:any) => {
+    const isAsc = order === 'asc';
+    return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
+  });
+
 
   const TabsDisplay = () => {
     return (
@@ -184,8 +191,8 @@ const ValidateData = () => {
                         <TableCell sx={{ minWidth: '300px' }}>Loading data....</TableCell>
                       </TableRow>
                     ) : (
-                      tableData &&
-                      tableData?.map((row: any) => (
+                      sortedData &&
+                      sortedData?.map((row: any) => (
                         <ValidateTableRow
                           key={row.id}
                           row={row}
