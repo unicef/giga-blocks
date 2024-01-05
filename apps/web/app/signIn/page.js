@@ -45,11 +45,11 @@ const SignIn = () => {
   const sendOtp = useOtp();
   const [email, setEmail] = useState('');
   const [openModal, setOpenModal] = useState(false);
-  const [showEmailField, setShowEmailField] = useState(false);  
+  const [showEmailField, setShowEmailField] = useState(false);
   const [submitButtonText, setSubmitButtonText] =
     useState('Sign in with Email');
   const [notification, setNotification] = useState(null);
-  const minute = process.env.NEXT_PUBLIC_OTP_DURATION_IN_MINS
+  const minute = process.env.NEXT_PUBLIC_OTP_DURATION_IN_MINS;
   const [seconds, setSeconds] = useState(minute * 60);
 
   const showEmailInput = () => {
@@ -86,8 +86,8 @@ const SignIn = () => {
 
   const onSubmit = async (data, e) => {
     e.preventDefault();
-    setSeconds(minute * 60)
-    setError()
+    setSeconds(minute * 60);
+    setError();
     sendOtp
       .mutateAsync({ email: data.email })
       .then(() => {
@@ -182,7 +182,15 @@ const SignIn = () => {
           }}
         />
       )}
-      <CarbonModal error={error} setError={setError} open={openModal} onClose={onClose} email={email} seconds={seconds} setSeconds={setSeconds}/>
+      <CarbonModal
+        error={error}
+        setError={setError}
+        open={openModal}
+        onClose={onClose}
+        email={email}
+        seconds={seconds}
+        setSeconds={setSeconds}
+      />
       <Navbar />
       <Grid className="landing-page preview1Background signUp-grid" fullWidth>
         <Column className="form" md={4} lg={8} sm={4}>
@@ -194,6 +202,7 @@ const SignIn = () => {
                   name="email"
                   control={control}
                   rules={{
+                    required: 'Email is required',
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
                       message: 'Invalid email address',
