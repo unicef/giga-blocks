@@ -29,7 +29,7 @@ import { useSnackbar } from '@components/snackbar';
 const VerifiedSchool = () => {
 
     const TABLE_HEAD = [
-        { id: 'name', label: 'School name', align: 'left' },
+        { id: 'schoolName', label: 'School name', align: 'left' },
         { id: 'country', label: 'Location', align: 'left' },
         { id: 'latitude', label: 'Latitude', align: 'left' },
         { id: 'longitude', label: 'Longitude', align: 'left' },
