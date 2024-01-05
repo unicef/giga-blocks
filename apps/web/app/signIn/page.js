@@ -24,12 +24,14 @@ import {
   saveAccessToken,
   saveCurrentUser,
   saveConnectors,
+  getAccessToken,
 } from '../utils/sessionManager';
 import { useAuthContext } from '../auth/useAuthContext';
 import { metaMaskLogin } from '../utils/metaMaskUtils';
 
 const SignIn = () => {
   const route = useRouter();
+  const access_token = getAccessToken();
   const {
     handleSubmit,
     control,
@@ -56,6 +58,11 @@ const SignIn = () => {
     setShowEmailField(true);
     setSubmitButtonText('Submit');
   };
+
+  useEffect(() => {
+    if (access_token) {
+      route.push('/dashboard');
+    } },[access_token]);
 
   useEffect(() => {
     if (!web3.isActive) {

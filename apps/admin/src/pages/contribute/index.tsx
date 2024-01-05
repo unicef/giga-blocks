@@ -37,7 +37,7 @@ const ContributeData = () => {
     { id: 'contributedDataKey', label: 'Type', align: 'left' },
     { id: 'contributedDataValue', label: 'Change', align: 'left' },
     { id: 'status', label: 'Status', align: 'left' },
-    { id: 'createdAt', label: 'Date', align: 'left' },
+    { id: 'date', label: 'Date', align: 'left' },
   ];
 
   const {
@@ -51,7 +51,7 @@ const ContributeData = () => {
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable({defaultOrderBy: 'createdAt', defaultOrder: 'asc'});
+  } = useTable({defaultOrderBy: 'date', defaultOrder: 'desc'});
   const [toastMessage, setToastMessage] = useState('validated')
 
   const { enqueueSnackbar } = useSnackbar();
