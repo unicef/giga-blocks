@@ -16,8 +16,6 @@ const Header = ({ name, breadcrumbs }) => {
 
   const disconnect = ()=>{
     metaMaskLogout();
-    route.push('/signIn');
-
   }
   return (
     <div className="dashboard-head-wrapper">
@@ -36,7 +34,7 @@ const Header = ({ name, breadcrumbs }) => {
             <h2>My Dashboard</h2>
             <p>{user?.name}</p>
             <p>{user?.email}</p>
-             {account && 
+             {(!user?.walletAddress && account )&& 
              (<>
              <p>{account}
              {" "}
@@ -50,6 +48,9 @@ const Header = ({ name, breadcrumbs }) => {
              </>
               )
               }
+              {user?.walletAddress &&
+              <p>{user?.walletAddress}<h6 style={{color:'blue'}}>{(account && user?.walletAddress?.toLowerCase() !== account?.toLowerCase()) &&  <a style={{cursor:'pointer', color:'blue', textDecoration: 'underline'}}
+              onClick={disconnect} > Connected to different account</a>} {!account && "Not Connected"}</h6></p> }
           </div>
           <div className="sub-column-1">
             <p className="head">My Contributions</p>

@@ -19,6 +19,7 @@ const PageHeader = ({ name, breadcrumbs }) => {
 
    const disconnect = ()=>{
     metaMaskLogout();
+    
   }
 
   return (
