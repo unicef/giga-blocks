@@ -6,50 +6,55 @@ import { useContributionCount } from '../../../hooks/useContributionList';
 
 import { useWeb3React } from '@web3-react/core';
 import { metaMaskLogout } from '../../../utils/metaMaskUtils';
-import {useRouter} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 const Header = ({ name, breadcrumbs }) => {
   const route = useRouter();
   const user = getCurrentUser();
-  const {account} = useWeb3React();
+  const { account } = useWeb3React();
   const { data } = useContributionCount(user?.id);
 
-  const disconnect = ()=>{
+  const disconnect = () => {
     metaMaskLogout();
     route.push('/signIn');
-
-  }
+  };
   return (
     <div className="dashboard-head-wrapper">
       <Grid fullWidth>
-        <Column lg={16} md={8} sm={4} className="column">
-          <Breadcrumb style={{ marginBottom: '16px', display: 'flex' }}>
-            {breadcrumbs?.map((breadcrumb, index) => (
+        <Column sm={8} md={10} lg={16} style={{ marginTop: '32px' }}>
+          <Breadcrumb>
+            {breadcrumbs.map((breadcrumb, index) => (
               <BreadcrumbItem key={index} href={breadcrumb.link}>
                 {breadcrumb.text}
               </BreadcrumbItem>
             ))}
+            <BreadcrumbItem isCurrentPage>
+              <p style={{ color: 'white' }}>{name}</p>
+            </BreadcrumbItem>
           </Breadcrumb>
         </Column>
         <Column lg={16} md={8} sm={4} className="column">
           <div>
-            <h2>My Dashboard</h2>
+            <h2>{name}</h2>
             <p>{user?.name}</p>
             <p>{user?.email}</p>
-             {account && 
-             (<>
-             <p>{account}
-             {" "}
-             <a 
-             style={{cursor:'pointer', color:'blue', textDecoration: 'underline'}}
-             onClick={disconnect}>
-              Disconnect
-             </a>
-             </p>
-
-             </>
-              )
-              }
+            {account && (
+              <>
+                <p>
+                  {account}{' '}
+                  <a
+                    style={{
+                      cursor: 'pointer',
+                      color: 'blue',
+                      textDecoration: 'underline',
+                    }}
+                    onClick={disconnect}
+                  >
+                    Disconnect
+                  </a>
+                </p>
+              </>
+            )}
           </div>
           <div className="sub-column-1">
             <p className="head">My Contributions</p>

@@ -12,22 +12,19 @@ import { getCurrentUser } from '../utils/sessionManager';
 const Dashboard = () => {
   const user = getCurrentUser();
   const router = useRouter();
-  
+
   useEffect(() => {
     if (!user) {
       router.push('/signIn');
     }
   }, [user]);
-  const breadcrumbs = [
-    { text: 'Home', link: '/' },
-    { text: 'Dashboard', link: '/dashboard' },
-  ];
+  const breadcrumbs = [{ text: 'Home', link: '/' }];
   return (
     <>
       <GarphQlProvider>
         <QueryProvider>
           <Navbar />
-          <Header breadcrumbs={breadcrumbs} />
+          <Header name={'My Dashboard'} breadcrumbs={breadcrumbs} />
           <Tabs />
           <Footer />
         </QueryProvider>
