@@ -60,11 +60,6 @@ const SignIn = () => {
   };
 
   useEffect(() => {
-    if (access_token) {
-      route.push('/dashboard');
-    } },[access_token]);
-
-  useEffect(() => {
     if (!web3.isActive) {
       void metaMask.connectEagerly();
     }
@@ -87,7 +82,7 @@ const SignIn = () => {
       signature = `${nonce}:${signature}`;
       return signature;
     } catch (err) {
-      return null;   
+      return null;
     }
   };
 
@@ -101,14 +96,14 @@ const SignIn = () => {
         setOpenModal(true);
         setEmail(data.email);
       })
-      .catch((error) => {
+      .catch(() => {
         setNotification({
           kind: 'error',
           title: 'User not found.',
         });
       });
   };
-  const handleWalletLogin = async (data) => {
+  const handleWalletLogin = async () => {
     try {
       await metaMaskLogin();
       const { nonce } = await getNonceQuery.mutateAsync();
@@ -125,23 +120,27 @@ const SignIn = () => {
         walletAddress: address,
         signature: sign,
       };
-     const res = await  loginMutation.mutateAsync(payload)
-        if(res.data.access_token)
-        {saveCurrentUser(res.data);
+      const res = await loginMutation.mutateAsync(payload);
+      if (res.data.access_token) {
+        saveCurrentUser(res.data);
         saveAccessToken(res.data.access_token);
         saveConnectors('metaMask');
         initialize();
-        if (searchKey) {
-          route.push(searchKey);
-        } else {
-          route.push('/contributeSchool');
-        }
         setNotification({
           kind: 'success',
           title: 'Wallet login successful',
-        });}
-      } catch (error) {
-       setNotification({
+        });
+        if (searchKey) {
+          console.log('seachKey', searchKey);
+          route.push(searchKey);
+          return;
+        } else {
+          route.push('/contributeSchool');
+          return;
+        }
+      }
+    } catch (error) {
+      setNotification({
         kind: 'error',
         title: error.response.data.message,
       });
