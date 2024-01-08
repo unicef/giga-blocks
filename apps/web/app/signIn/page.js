@@ -143,7 +143,7 @@ const SignIn = () => {
       } catch (error) {
        setNotification({
         kind: 'error',
-        title: error.response.data.message,
+        title: error?.response?.data?.message || error?.message,
       });
     }
   };
