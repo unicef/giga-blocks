@@ -17,7 +17,7 @@ import { useOtp } from '../hooks/useOtp';
 import CarbonModal from '../components/modal/index';
 import Web3Provider from '../components/web3/Provider';
 import { metaMask } from '../components/web3/connectors/metamask';
-import { useGetNonce, walletLogin } from '../hooks/walletLogin';
+import { useGetNonce, useWalletLogin } from '../hooks/walletLogin';
 import { useWeb3React } from '@web3-react/core';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
@@ -39,7 +39,7 @@ const SignIn = () => {
   } = useForm();
   const { initialize } = useAuthContext();
   const [error, setError] = useState();
-  const loginMutation = walletLogin();
+  const loginMutation = useWalletLogin();
   const getNonceQuery = useGetNonce();
   const searchParams = useSearchParams();
   const searchKey = searchParams.get('returnTo');
@@ -87,7 +87,7 @@ const SignIn = () => {
       signature = `${nonce}:${signature}`;
       return signature;
     } catch (err) {
-      console.log({ err });
+      return null;   
     }
   };
 
@@ -125,25 +125,11 @@ const SignIn = () => {
         walletAddress: address,
         signature: sign,
       };
-      loginMutation.mutateAsync(payload).then((res) => {
-        if (res.message === 'Request failed with status code 404') {
-          setNotification({
-            kind: 'error',
-            title: 'User not found.',
-          });
-          return;
-        }
-        if (res.message === 'Request failed with status code 500') {
-          setNotification({
-            kind: 'error',
-            title: 'Nonce expired. Please login again.',
-          });
-          return;
-        }
-        saveCurrentUser(res.data);
+     const res = await  loginMutation.mutateAsync(payload)
+        if(res.data.access_token)
+        {saveCurrentUser(res.data);
         saveAccessToken(res.data.access_token);
         saveConnectors('metaMask');
-        console.log('wallet logged in successfully');
         initialize();
         if (searchKey) {
           route.push(searchKey);
@@ -153,13 +139,11 @@ const SignIn = () => {
         setNotification({
           kind: 'success',
           title: 'Wallet login successful',
-        });
-      });
-    } catch (error) {
-      console.log('error', error);
-      setNotification({
+        });}
+      } catch (error) {
+       setNotification({
         kind: 'error',
-        title: 'Error during wallet login',
+        title: error.response.data.message,
       });
     }
   };

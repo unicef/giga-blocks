@@ -77,22 +77,8 @@ export default function ValidateDetail({ id }: Props) {
 
   const router = useRouter();
 
-  const [nftData, setNftData] = useState({
-    id: '',
-    schoolName: '',
-    longitude: '',
-    latitude: '',
-    schoolType: '',
-    country: '',
-    connectivity: '',
-    coverage_availabitlity: '',
-    electricity_availabilty: '',
-    mintedStatus: '',
-    schoolId: '',
-  });
-
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && data?.data) {
       const keyValue = Object?.entries(data?.data);
       var jsonString ;
       if(keyValue) 
@@ -116,22 +102,6 @@ export default function ValidateDetail({ id }: Props) {
     isValidationError && enqueueSnackbar('Unsuccessful', { variant: 'error' });
     refetch();
   }, [isValidationSuccess, isValidationError]);
-
-  useEffect(() => {
-    setNftData({
-      id: data?.id,
-      schoolName: data?.name,
-      longitude: data?.longitude,
-      latitude: data?.latitude,
-      schoolType: data?.school_type,
-      country: data?.country,
-      connectivity: data?.connectivity,
-      coverage_availabitlity: data?.coverage_availability,
-      electricity_availabilty: data?.electricity_available,
-      mintedStatus: data?.minted,
-      schoolId: data?.schoolId,
-    });
-  }, [data]);
 
   const methods = useForm();
 

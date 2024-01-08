@@ -26,16 +26,14 @@ export const walletRegister = () => {
   return walletRegisterMutation;
 };
 
-export const walletLogin = () => {
+export const useWalletLogin = () => {
   const walletLoginMutation = useMutation(async (payload) => {
-    try {
       const register = await api.post(WALLETLOGIN.WALLETLOGIN, payload);
       return register;
-    } catch (error) {
-      // throw new Error(error);
-      return error;
-      // console.log('Error', error);
-    }
+  },{
+    onError: (error) => {
+      
+    },
   });
   return walletLoginMutation;
 };

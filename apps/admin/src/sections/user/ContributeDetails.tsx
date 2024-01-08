@@ -77,7 +77,7 @@ export default function ContributeDetail({ id }: Props) {
    { isFetching ?<CircularProgress color='inherit'/>:
    (
    <>
-      <Grid item xs={8}>
+      <Grid item xs={12} lg={8}>
         <Container>
           <CustomBreadcrumbs
             heading="Contribution Detail"
@@ -156,7 +156,7 @@ export default function ContributeDetail({ id }: Props) {
         </Container>
       </Grid>
       {profile?.status === 'Pending' && (
-        <Grid item xs={4}>
+        <Grid item xs={12} lg={4}>
           <Container>
             <Box justifyContent={'center'}>
               <Stack direction="row" alignItems="center">
