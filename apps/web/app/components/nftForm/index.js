@@ -9,7 +9,6 @@ import {
   InlineNotification,
 } from '@carbon/react';
 import './form.scss';
-// import { useSchoolRegistration } from "../../app/api/school-register";
 import { useRegistration } from '../../hooks/useRegistration';
 import countryList from 'react-select-country-list';
 import { ArrowRight } from '@carbon/icons-react';
