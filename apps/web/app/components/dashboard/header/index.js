@@ -16,9 +16,8 @@ const Header = ({ name, breadcrumbs }) => {
 
   const disconnect = () => {
     metaMaskLogout();
-    route.push('/signIn');
   };
-  }
+  
   return (
     <div className="dashboard-head-wrapper">
       <Grid fullWidth>
@@ -70,6 +69,5 @@ const Header = ({ name, breadcrumbs }) => {
       </Grid>
     </div>
   );
-};
-
+}
 export default Header;
