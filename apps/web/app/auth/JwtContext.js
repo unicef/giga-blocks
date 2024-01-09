@@ -152,7 +152,7 @@ function AuthProvider({ children }) {
 
   useEffect(() => {
     const connectors = getConnectors();
-    if (connectors && connectors === 'metaMask' && !web3.isActive) {
+    if ((connectors && connectors === 'metaMask' && !web3.isActive) || localStorage.getItem('wallet')==='metamask') {
       metaMask.activate();
     }
   }, [web3]);

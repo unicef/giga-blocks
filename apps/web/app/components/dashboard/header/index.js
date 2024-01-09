@@ -18,6 +18,7 @@ const Header = ({ name, breadcrumbs }) => {
     metaMaskLogout();
     route.push('/signIn');
   };
+  }
   return (
     <div className="dashboard-head-wrapper">
       <Grid fullWidth>
@@ -38,23 +39,23 @@ const Header = ({ name, breadcrumbs }) => {
             <h2>{name}</h2>
             <p>{user?.name}</p>
             <p>{user?.email}</p>
-            {account && (
-              <>
-                <p>
-                  {account}{' '}
-                  <a
-                    style={{
-                      cursor: 'pointer',
-                      color: 'blue',
-                      textDecoration: 'underline',
-                    }}
-                    onClick={disconnect}
-                  >
-                    Disconnect
-                  </a>
-                </p>
-              </>
-            )}
+             {(!user?.walletAddress && account )&& 
+             (<>
+             <p>{account}
+             {" "}
+             <a 
+             style={{cursor:'pointer', color:'blue', textDecoration: 'underline'}}
+             onClick={disconnect}>
+              Disconnect
+             </a>
+             </p>
+
+             </>
+              )
+              }
+              {user?.walletAddress &&
+              <p>{user?.walletAddress}<h6 style={{color:'blue'}}>{(account && user?.walletAddress?.toLowerCase() !== account?.toLowerCase()) &&  <a style={{cursor:'pointer', color:'blue', textDecoration: 'underline'}}
+              onClick={disconnect} > Connected to different account</a>} {!account && "Not Connected"}</h6></p> }
           </div>
           <div className="sub-column-1">
             <p className="head">My Contributions</p>

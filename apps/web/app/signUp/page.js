@@ -105,7 +105,10 @@ const SignUp = () => {
       await metaMaskLogin();
       router.push('/walletRegister');
     } catch (error) {
-      console.log(error);
+      setNotification({
+        error:'error',
+        title:error.message
+      })
     }
   };
   const onCloseNotification = () => {

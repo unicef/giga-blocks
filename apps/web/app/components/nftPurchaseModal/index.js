@@ -266,6 +266,11 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
                   </Button>
                 </>
               )}
+              {
+                notification &&(
+                  <p style={{color:'red'}}>{notification.title}</p>
+                )
+              }
               {switchNetwork && (
                 <>
                   <br />

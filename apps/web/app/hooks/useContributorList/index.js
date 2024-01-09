@@ -9,7 +9,7 @@ const api = axios.create({
 
 export const useContributionList = () => {
   return useQuery(
-    ['get-api-data'],
+    ['get-contribution-list-data'],
     async () => {
       try {
         const res = await api.get(`${CONTRIBUTOR.GET}`);
