@@ -132,9 +132,11 @@ const VerifiedSchool = () => {
     const sortedData = tableData?.slice().sort((a:any, b:any) => {
       const isAsc = order === 'asc';
       if(orderBy === 'longitude' || orderBy === 'latitide'){
-      return (parseFloat(a[orderBy]) < parseFloat(b[orderBy]) ? -1 : 1) * (isAsc ? 1 : -1);
+      return (parseFloat(a[orderBy]) < parseFloat(b[orderBy]) ? -1 : 1) * (isAsc ? 1 : -1)
       }
-      return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
+      if(typeof(a[orderBy]) === 'string'){
+      return (String(a[orderBy].toLowerCase()) < String(b[orderBy].toLowerCase()) ? -1 : 1) * (isAsc ? 1 : -1)
+      }
     });
 
     const handleSearchChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
