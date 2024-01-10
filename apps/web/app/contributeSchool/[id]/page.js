@@ -71,6 +71,7 @@ const SchoolDetail = () => {
           >
             <div className="tabs">
               <TabList
+                contained
                 aria-label="List of tabs"
                 style={{
                   display: 'flex',

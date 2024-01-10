@@ -96,13 +96,13 @@ const Navbar = () => {
             >
               Developer FAQ
             </HeaderMenuItem>
-            <HeaderMenuItem
+            {/* <HeaderMenuItem
               as={Link}
               href="/#form"
               style={{ background: '#383838', color: 'white' }}
             >
               Connect
-            </HeaderMenuItem>
+            </HeaderMenuItem> */}
           </HeaderNavigation>
           <SideNav
             aria-label="Side navigation"
@@ -126,9 +126,9 @@ const Navbar = () => {
                 <HeaderMenuItem as={Link} href="/#faq">
                   Developer FAQ
                 </HeaderMenuItem>
-                <HeaderMenuItem as={Link} href="/#form">
+                {/* <HeaderMenuItem as={Link} href="/#form">
                   Connect
-                </HeaderMenuItem>
+                </HeaderMenuItem> */}
               </HeaderSideNavItems>
             </SideNavItems>
           </SideNav>
