@@ -91,7 +91,15 @@
   }
 }
 .contribute-btn {
+  margin-right: 30px;
   @include breakpoint-down(md) {
     width: 95px !important;
   }
+}
+.cds--tabs.cds--tabs--contained .cds--tabs__nav-item {
+  background: transparent !important ;
+}
+.cds--tabs.cds--tabs--contained .cds--tabs__nav-item--selected,
+.cds--tabs.cds--tabs--contained .cds--tabs__nav-item--selected:hover {
+  background: #4d4d4d !important;
 }
