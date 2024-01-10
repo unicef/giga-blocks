@@ -17,15 +17,19 @@ import Link from 'next/link';
 import { useOtp } from '../hooks/useOtp';
 import { useSignUp } from '../hooks/useSignUp';
 import { useRouter } from 'next/navigation';
-import { metaMask} from '../components/web3/connectors/metamask';
+import { metaMask } from '../components/web3/connectors/metamask';
 import CarbonModal from '../components/modal/index';
 import { metaMaskLogin } from '../utils/metaMaskUtils';
-import { getAccessToken } from '../utils/sessionManager'; 
+import { getAccessToken } from '../utils/sessionManager';
 
 const SignUp = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
-  const { handleSubmit, control } = useForm();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm();
   const [openModal, setOpenModal] = useState(false);
   const [checkbox, setCheckbox] = useState(false);
   const [error, setError] = useState();
@@ -34,7 +38,6 @@ const SignUp = () => {
   const sendOtp = useOtp();
 
   const access_token = getAccessToken();
-
 
   const minute = process.env.NEXT_PUBLIC_OTP_DURATION_IN_MINS;
   const [seconds, setSeconds] = useState(minute * 60);
@@ -48,8 +51,8 @@ const SignUp = () => {
   useEffect(() => {
     if (access_token) {
       router.push('/dashboard');
-    } },[access_token]);
-
+    }
+  }, [access_token]);
 
   useEffect(() => {
     if (notification) {
@@ -106,9 +109,9 @@ const SignUp = () => {
       router.push('/walletRegister');
     } catch (error) {
       setNotification({
-        error:'error',
-        title:error.message
-      })
+        error: 'error',
+        title: error.message,
+      });
     }
   };
   const onCloseNotification = () => {
@@ -151,13 +154,18 @@ const SignUp = () => {
               <Controller
                 name="name"
                 control={control}
-                rules={{ required: 'Full Name is required' }}
+                rules={{
+                  required: 'Full Name is required',
+                  pattern: {
+                    value: /^[^\d]+$/,
+                    message: 'Invalid name ',
+                  },
+                }}
                 render={({ field }) => (
                   <TextInput
                     {...field}
                     id="name"
                     style={{ marginBottom: '25px', height: '48px' }}
-                    // invalid={!!errors.fullname}
                     labelText="Full Name"
                     placeholder="Enter your fullname here"
                     onChange={(e) => {
@@ -166,6 +174,9 @@ const SignUp = () => {
                   />
                 )}
               />
+              {errors.name && (
+                <p style={{ color: 'red' }}>{errors.name.message}</p>
+              )}
               <Controller
                 name="email"
                 control={control}
@@ -187,6 +198,9 @@ const SignUp = () => {
                   />
                 )}
               />
+              {errors.email && (
+                <p style={{ color: 'red' }}>{errors.email.message}</p>
+              )}
               <Checkbox
                 className="checkbox"
                 id="checkbox"
