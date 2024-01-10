@@ -57,7 +57,6 @@ const ContributeData = () => {
     status: selectedStatus,
   });
 
-  console.log(selectedContributorSearch)
 
   let tempArray: object[] = [];
   const onContribute = (validity: boolean) => {
