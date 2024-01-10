@@ -55,8 +55,7 @@ export async function handler(
           })
           .then(async res => {
             uploadBatch = res;
-            // for (const row of rows) {
-            cleanedRows.forEach(async row => {
+            for (const row of cleanedRows) {
               const [
                 schoolName,
                 giga_school_id,
@@ -107,7 +106,7 @@ export async function handler(
               } catch (err) {
                 throw err;
               }
-            });
+            }
             resolve(res);
             return res;
           })

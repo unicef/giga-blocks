@@ -89,7 +89,7 @@ const ContributeData = () => {
       ContributedData?.rows?.map((row: any) => {
         const contributedData = Object.entries(row?.contributed_data || {});
         const jsonString = JSON.parse(contributedData?.map((pair) => pair[1])?.join('') || '{}');
-        const date = new Date(row.createdAt).toLocaleDateString();
+        const date = new Date(row.updatedAt).toLocaleDateString();
         filteredData.push({
           id: row?.id,
           name: row?.contributedUser?.name || '',
@@ -139,7 +139,7 @@ const ContributeData = () => {
     isValidationSuccess &&
     enqueueSnackbar(`Contributed Data are ${toastMessage}. Please check ${toastMessage} Data Section`, { variant: 'success' });
     refetch();
-    isValidationError && enqueueSnackbar('Contributed Data are invalidated', { variant: 'error' });
+    isValidationError && enqueueSnackbar('Error in validation, please try again.', { variant: 'error' });
     isValidationLoading && enqueueSnackbar('Data validation in progress. Please wait. ', { variant: 'warning' });
   }, [isValidationSuccess, isValidationError, isValidationLoading]);
 

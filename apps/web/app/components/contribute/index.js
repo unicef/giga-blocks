@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Form, TextInput, Button, Dropdown } from '@carbon/react';
 import { Controller, useForm } from 'react-hook-form';
 import Web3Modal from '../congratulation-modal';
@@ -8,8 +8,15 @@ import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { Modal, ModalBody } from '@carbon/react';
 import Map from '../../components/dragableMarker';
+import countryList from 'react-select-country-list';
 
-const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex,refetch }) => {
+const ContributeForm = ({
+  data,
+  isOpen,
+  onClose,
+  updateSelectedTabIndex,
+  refetch,
+}) => {
   const router = useRouter();
   const contributeDataMutation = useContributeData();
   const { handleSubmit, control, setValue } = useForm();
@@ -22,6 +29,18 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex,refetch 
     long: data.longitude,
   });
 
+  const options = useMemo(() => countryList().getData(), []);
+
+  const [selectedCountry, setSelectedCountry] = useState({
+    value: data.country,
+    label: data.country,
+  });
+
+  const handleSelectChange = (value) => {
+    setSelectedCountry(value.selectedItem);
+    setError(false);
+  };
+
   const handleMarkerDragEnd = (lngLat) => {
     setMarkerCoords({ lat: lngLat.lat, long: lngLat.lng });
   };
@@ -32,16 +51,16 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex,refetch 
   }, [markerCoords, setValue]);
 
   const setDefaultValues = () => {
-      setValue('latitude', data.latitude);
-      setValue('longitude', data.longitude);
-      setValue('country', data.country);
-      setSelectedOptions({
-        dropdown1: { selectedItem: { value: data?.school_type } },
-        dropdown3: { selectedItem: { value: data?.connectivity } },
-        dropdown4: { selectedItem: { value: data?.coverage_availability } },
-        dropdown5: { selectedItem: { value: data?.electricity_available } },
-      });    
-  }
+    setValue('latitude', data.latitude);
+    setValue('longitude', data.longitude);
+    setValue('country', data.country);
+    setSelectedOptions({
+      dropdown1: { selectedItem: { value: data?.school_type } },
+      dropdown3: { selectedItem: { value: data?.connectivity } },
+      dropdown4: { selectedItem: { value: data?.coverage_availability } },
+      dropdown5: { selectedItem: { value: data?.electricity_available } },
+    });
+  };
 
   useEffect(() => {
     if (
@@ -57,9 +76,10 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex,refetch 
     ) {
       setValue('latitude', data.latitude);
       setValue('longitude', data.longitude);
-      setValue('country', data.country);
+      // setValue('country', data.country);
       setSelectedOptions({
         dropdown1: { selectedItem: { value: data?.school_type } },
+        dropdown2: { selectedItem: { value: data?.country } },
         dropdown3: { selectedItem: { value: data?.connectivity } },
         dropdown4: { selectedItem: { value: data?.coverage_availability } },
         dropdown5: { selectedItem: { value: data?.electricity_available } },
@@ -92,10 +112,13 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex,refetch 
         changedData.school_type =
           selectedOptions?.dropdown1?.selectedItem?.value;
       }
-
-      if (formData.country !== data.country) {
-        changedData.country = formData.country;
+      if (selectedOptions?.dropdown2?.selectedItem?.value !== data.country) {
+        changedData.country = selectedOptions?.dropdown2?.selectedItem?.label;
       }
+
+      // if (formData.country !== data.country) {
+      //   changedData.country = formData.country;
+      // }
 
       if (Number(formData.latitude) !== Number(data.latitude)) {
         changedData.latitude = Number(formData.latitude);
@@ -140,7 +163,6 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex,refetch 
       }
       onClose();
       openModal();
-
     } catch (error) {
       console.error('Error submitting form:', error);
     }
@@ -175,7 +197,12 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex,refetch 
               id="dropdown1"
               titleText="Type of school"
               style={{ marginBottom: '25px' }}
-              label={(data?.school_type === 'private' || data?.school_type === 'Private' ) ? 'Private' : 'Public'}
+              label={
+                data?.school_type === 'private' ||
+                data?.school_type === 'Private'
+                  ? 'Private'
+                  : 'Public'
+              }
               items={school_type}
               itemToString={(item) => (item ? item.label : '')}
               selectedItem={selectedOptions.school_type}
@@ -187,7 +214,24 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex,refetch 
                 setError(false);
               }}
             />
-            <Controller
+            <Dropdown
+              id="country"
+              style={{ marginBottom: '25px', height: '48px' }}
+              items={options}
+              label="Select Country"
+              titleText="Select Country"
+              selectedItem={selectedOptions.country}
+              onChange={(selectedItem) => {
+                setSelectedOptions((prevOptions) => ({
+                  ...prevOptions,
+                  dropdown2: selectedItem,
+                }));
+                setError(false);
+                setValue('country', selectedItem.value);
+              }}
+              initialSelectedItem={selectedCountry}
+            />
+            {/* <Controller
               name="country"
               control={control}
               render={({ field }) => (
@@ -201,7 +245,7 @@ const ContributeForm = ({ data, isOpen, onClose, updateSelectedTabIndex,refetch 
                   />
                 </>
               )}
-            />
+            /> */}
             <Map
               lat={markerCoords.lat}
               long={markerCoords.long}

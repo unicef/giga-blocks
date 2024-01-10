@@ -33,7 +33,7 @@ export class AuthService {
     if (user && user?.isActive) {
       return user;
     }
-    throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException('User not found');
   }
   async register(createUserDto: CreateUserDto) {
     const user = await this.userService.register(createUserDto);
@@ -86,17 +86,19 @@ export class AuthService {
   }
   async login(user: any) {
     this._logger.log(`Sending tokens to ${user?.email}`);
+    const walletAddress = bufferToHexString(user?.walletAddress);
     const payload = {
       id: user.id,
       sub: {
         email: user.email,
         name: user.name,
-        walletAddress: user.walletAddress,
+        walletAddress: walletAddress,
         roles: user.roles,
       },
     };
     return {
       ...user,
+      walletAddress,
       access_token: this.jwtService.sign(payload, {
         expiresIn: +process.env.JWT_EXPIRATION_TIME,
       }),

@@ -28,7 +28,7 @@ export const useContributeGet = ({page, perPage, schoolId, contributeId, status}
 
   export const useContributionGetById = (id: string | undefined | string[]) => {
     return useQuery(
-      ['contribution-details'],
+      ['contribution-details-by-id'],
       async () => {
         const { data } = await api.get(`${routes.CONTRIBUTE.GET}/${id}`);
         return data;

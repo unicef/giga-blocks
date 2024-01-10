@@ -235,7 +235,7 @@ export class SchoolService {
             approvedBy: userId,
             approvedAt: new Date(),
             approvedStatus: true,
-            inProgressStatus: false
+            inProgressStatus: false,
           },
         }),
         this.prisma.contributedData.updateMany({
@@ -285,9 +285,9 @@ export class SchoolService {
         },
       },
       data: {
-        inProgressStatus: true
+        inProgressStatus: true,
       },
-    })
+    });
     this.queueService.approveBulkData(ids, userId);
   }
 
