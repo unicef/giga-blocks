@@ -12,6 +12,10 @@ const Header = () => {
   const route = useRouter();
   const user = getCurrentUser();
 
+  const disconnect = () => {
+    metaMaskLogout();
+  };
+
   return (
     <div className="dashboard-head-wrapper">
       <Grid fullWidth>
@@ -87,5 +91,4 @@ const Header = () => {
     </div>
   );
 };
-
 export default Header;
