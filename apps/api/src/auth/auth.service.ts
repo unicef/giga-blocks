@@ -170,6 +170,30 @@ export class AuthService {
     };
     return result;
   }
+
+  async adminWalletLogin(user: any) {
+    if(!user?.roles?.includes('ADMIN')) throw new BadRequestException('Only admin can login');
+    const payload = {
+      id: user.id,
+      sub: {
+        email: user.email,
+        name: user.name,
+        walletAddress: user.walletAddress,
+        roles: user.roles,
+      },
+    };
+    const walletAddress = bufferToHexString(user?.walletAddress);
+    const result = {
+      ...user,
+      walletAddress,
+      access_token: this.jwtService.sign(payload),
+      refresh_token: this.jwtService.sign(payload, {
+        expiresIn: +process.env.JWT_EXPIRATION_LONG_TIME,
+      }),
+    };
+    return result;
+  }
+
   async generateNonce() {
     const nonce = totp.generate(process.env.OTP_SECRET);
     return { nonce };
