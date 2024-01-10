@@ -199,12 +199,14 @@ export class SchoolService {
 
   async update(id: string, userId: string) {
     const school = await this.prisma.school.findUnique({ where: { id: id } });
-    if (school.minted === MintStatus.NOTMINTED) {
-      return await this.updateSchoolData(id, userId);
-    }
-    if (school.minted === MintStatus.MINTED) {
+    // if (school.minted === MintStatus.NOTMINTED) {
+    //   return await this.updateSchoolData(id, userId);
+    // }
+    if (school?.minted === MintStatus.MINTED) {
       const tx = await this.updateOnchainData(id, school);
       if (tx.status === 1) await this.updateSchoolData(id, userId);
+    } else {
+      return await this.updateSchoolData(id, userId);
     }
   }
 
