@@ -4,11 +4,11 @@ import { Form, TextInput, Button, Dropdown } from '@carbon/react';
 import { Controller, useForm } from 'react-hook-form';
 import Web3Modal from '../congratulation-modal';
 import { useContributeData } from '../../hooks/useContributeData';
+import { useCountryName } from '../../hooks/useCountryName';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { Modal, ModalBody } from '@carbon/react';
 import Map from '../../components/dragableMarker';
-import countryList from 'react-select-country-list';
 
 const ContributeForm = ({
   data,
@@ -28,18 +28,7 @@ const ContributeForm = ({
     lat: data.latitude,
     long: data.longitude,
   });
-
-  const options = useMemo(() => countryList().getData(), []);
-
-  const [selectedCountry, setSelectedCountry] = useState({
-    value: data.country,
-    label: data.country,
-  });
-
-  const handleSelectChange = (value) => {
-    setSelectedCountry(value.selectedItem);
-    setError(false);
-  };
+  const countryName = useCountryName(markerCoords.lat, markerCoords.long);
 
   const handleMarkerDragEnd = (lngLat) => {
     setMarkerCoords({ lat: lngLat.lat, long: lngLat.lng });
@@ -49,6 +38,14 @@ const ContributeForm = ({
     setValue('latitude', markerCoords.lat);
     setValue('longitude', markerCoords.long);
   }, [markerCoords, setValue]);
+
+  useEffect(() => {
+    setValue('latitude', markerCoords.lat);
+    setValue('longitude', markerCoords.long);
+    if (countryName.data) {
+      setValue('country', countryName.data);
+    }
+  }, [markerCoords, setValue, countryName.data]);
 
   const setDefaultValues = () => {
     setValue('latitude', data.latitude);
@@ -76,10 +73,9 @@ const ContributeForm = ({
     ) {
       setValue('latitude', data.latitude);
       setValue('longitude', data.longitude);
-      // setValue('country', data.country);
+      setValue('country', data.country);
       setSelectedOptions({
         dropdown1: { selectedItem: { value: data?.school_type } },
-        dropdown2: { selectedItem: { value: data?.country } },
         dropdown3: { selectedItem: { value: data?.connectivity } },
         dropdown4: { selectedItem: { value: data?.coverage_availability } },
         dropdown5: { selectedItem: { value: data?.electricity_available } },
@@ -112,13 +108,9 @@ const ContributeForm = ({
         changedData.school_type =
           selectedOptions?.dropdown1?.selectedItem?.value;
       }
-      if (selectedOptions?.dropdown2?.selectedItem?.value !== data.country) {
-        changedData.country = selectedOptions?.dropdown2?.selectedItem?.label;
+      if (formData.country !== data.country) {
+        changedData.country = countryName.data;
       }
-
-      // if (formData.country !== data.country) {
-      //   changedData.country = formData.country;
-      // }
 
       if (Number(formData.latitude) !== Number(data.latitude)) {
         changedData.latitude = Number(formData.latitude);
@@ -214,26 +206,10 @@ const ContributeForm = ({
                 setError(false);
               }}
             />
-            <Dropdown
-              id="country"
-              style={{ marginBottom: '25px', height: '48px' }}
-              items={options}
-              label="Select Country"
-              titleText="Select Country"
-              selectedItem={selectedOptions.country}
-              onChange={(selectedItem) => {
-                setSelectedOptions((prevOptions) => ({
-                  ...prevOptions,
-                  dropdown2: selectedItem,
-                }));
-                setError(false);
-                setValue('country', selectedItem.value);
-              }}
-              initialSelectedItem={selectedCountry}
-            />
-            {/* <Controller
+            <Controller
               name="country"
               control={control}
+              disabled
               render={({ field }) => (
                 <>
                   <TextInput
@@ -245,7 +221,7 @@ const ContributeForm = ({
                   />
                 </>
               )}
-            /> */}
+            />
             <Map
               lat={markerCoords.lat}
               long={markerCoords.long}
@@ -255,12 +231,16 @@ const ContributeForm = ({
             <Controller
               name="latitude"
               control={control}
+              disabled
               render={({ field }) => (
                 <>
                   <TextInput
                     {...field}
                     id="latitude"
-                    style={{ marginBottom: '25px', height: '48px' }}
+                    style={{
+                      marginBottom: '25px',
+                      height: '48px',
+                    }}
                     labelText="Exact School's Location"
                     placeholder="Enter Latitude"
                   />
@@ -270,6 +250,7 @@ const ContributeForm = ({
             <Controller
               name="longitude"
               control={control}
+              disabled
               render={({ field }) => (
                 <>
                   <TextInput

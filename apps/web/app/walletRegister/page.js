@@ -29,7 +29,11 @@ import { useAuthContext } from '../auth/useAuthContext';
 const WalletRegisterForm = () => {
   const [name, setName] = useState('');
   const [walletAddress, setWalletAddress] = useState('');
-  const { control, handleSubmit } = useForm();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const registerMutation = walletRegister();
   const getNonceQuery = useGetNonce();
   const web3 = useWeb3React();
@@ -128,11 +132,17 @@ const WalletRegisterForm = () => {
               <Controller
                 name="name"
                 control={control}
-                rules={{ required: 'Full Name is required' }}
+                rules={{
+                  required: 'Full Name is required',
+                  pattern: {
+                    value: /^[^\d]+$/,
+                    message: 'Invalid name ',
+                  },
+                }}
                 render={({ field }) => (
                   <TextInput
                     {...field}
-                    style={{ marginBottom: '25px', height: '48px' }}
+                    style={{ height: '48px' }}
                     labelText="Full Name"
                     placeholder="Enter your fullname here"
                     onChange={(e) => {
@@ -142,12 +152,14 @@ const WalletRegisterForm = () => {
                   />
                 )}
               />
+              {errors.name && (
+                <p style={{ color: 'red', margin: '6px 0 12px 0' }}>
+                  {errors.name.message}
+                </p>
+              )}
               <Controller
                 name="walletAddress"
                 control={control}
-                rules={{
-                  required: '',
-                }}
                 render={({ field }) => (
                   <TextInput
                     {...field}
@@ -159,6 +171,7 @@ const WalletRegisterForm = () => {
                   />
                 )}
               />
+
               <Checkbox
                 className="checkbox"
                 id="checkbox"
