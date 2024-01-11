@@ -21,7 +21,7 @@ import Identicon from 'react-identicons';
 import { useQuery } from 'urql';
 import { Queries } from 'src/libs/graph-query';
 import Scrollbar from '@components/scrollbar';
-import { TableHeadUsers, TableNoData, TablePaginationCustom, useTable } from '@components/table';
+import { TableHeadUsers, TableNoData, useTable } from '@components/table';
 import NFTTableRow from './list/NFTTableRow';
 import { PATH_DASHBOARD, PATH_SCHOOL } from '@routes/paths';
 
@@ -382,16 +382,6 @@ export default function SchoolDetails({ id }: Props) {
                   </Table>
                 </Scrollbar>
               </TableContainer>
-              <TablePaginationCustom
-                count={data?.schoolTransfers?.length}
-                page={page}
-                setPage={setPage}
-                rowsPerPage={rowsPerPage}
-                onPageChange={onChangePage}
-                onRowsPerPageChange={onChangeRowsPerPage}
-                dense={dense}
-                onChangeDense={onChangeDense}
-                />
             </Card>
           </Grid>
         </CustomTabPanel>
