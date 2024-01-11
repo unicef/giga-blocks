@@ -7,11 +7,7 @@ const Footer = () => {
     <>
       <Grid className="footer mp-0" fullWidth>
         <Column md={4} lg={6} sm={4}>
-          <img
-            style={{ width: '20%', marginBottom: '20px' }}
-            src="/Logos/giga-logo-white.png"
-            alt="Giga Logo"
-          />
+          <h2 style={{ marginBottom: '16px' }}>NFT 2.0</h2>
           <p>
             Together, we can reshape the narrative of education in <br /> the
             digital age. Join, collaborate, innovate.
