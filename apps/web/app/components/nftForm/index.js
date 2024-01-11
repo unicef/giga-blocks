@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import {
   Form,
   TextInput,
@@ -14,27 +15,47 @@ import countryList from 'react-select-country-list';
 import { ArrowRight } from '@carbon/icons-react';
 
 const RegisterForm = () => {
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm();
   const registerApi = useRegistration();
-  const options = useMemo(() => countryList().getData(), []);
-  const [selectedCountry, setSelectedCountry] = useState({
-    value: '',
-    label: 'Select Country',
-  });
-  const [error, setError] = useState(undefined);
+  const options = countryList().getData();
+  const [selectedCountry, setSelectedCountry] = useState(null);
   const [notification, setNotification] = useState(null);
 
-  const [formData, setFormData] = useState({
-    fullname: '',
-    email: '',
-  });
-  const handleFormDataChange = (e) => {
-    e.preventDefault();
+  const handleSelectChange = (selectedItem) => {
+    setValue('country', selectedItem.label);
+    setSelectedCountry(selectedItem);
+  };
 
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const onSubmit = async (data) => {
+    try {
+      const { success } = await registerApi.mutateAsync(data);
+      if (success) {
+        reset();
+        setSelectedCountry(null);
+        setNotification({
+          kind: 'success',
+          title: 'Email has been recorded successfully',
+        });
+      }
+    } catch (error) {
+      setNotification({
+        kind: 'error',
+        title:
+          error?.response?.data?.message === 'Bad Request Exception'
+            ? 'Enter required information.'
+            : error?.response?.data?.message,
+      });
+    }
+  };
+
+  const onCloseNotification = () => {
+    setNotification(null);
   };
 
   useEffect(() => {
@@ -46,43 +67,6 @@ const RegisterForm = () => {
       return () => clearTimeout(timeoutId);
     }
   }, [notification]);
-
-  const handleSelectChange = (value) => {
-    setFormData((prev) => ({
-      ...prev,
-      ['country']: value.selectedItem.label,
-    }));
-    setSelectedCountry(value.selectedItem);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const { success } = await registerApi.mutateAsync(formData);
-      if (success) {
-        setFormData({
-          fullname: '',
-          email: '',
-        });
-        setSelectedCountry({ value: '', label: 'Select country' });
-        setNotification({
-          kind: 'success',
-          title: 'Email has been recorded successfully',
-        });
-      }
-    } catch (error) {
-      setNotification({
-        kind: 'error',
-        title:
-          error?.response?.data?.message == 'Bad Request Exception'
-            ? 'Enter required informations.'
-            : error?.response?.data?.message,
-      });
-    }
-  };
-  const onCloseNotification = () => {
-    setNotification(null);
-  };
 
   return (
     <>
@@ -114,37 +98,74 @@ const RegisterForm = () => {
           </h1>
         </Column>
         <Column className="form" md={4} lg={8} sm={4}>
-          <Form onSubmit={handleSubmit}>
-            <TextInput
-              id="fullname"
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <Controller
               name="fullname"
-              onChange={handleFormDataChange}
-              style={{ marginBottom: '25px', height: '48px' }}
-              invalidText="Invalid error message."
-              labelText="Name"
-              value={formData.fullname}
-              placeholder="Enter your fullname here"
+              control={control}
+              rules={{
+                pattern: {
+                  value: /^[^\d]+$/,
+                  message: 'Invalid name ',
+                },
+              }}
+              render={({ field }) => (
+                <TextInput
+                  {...field}
+                  id="fullname"
+                  style={{ marginBottom: '25px', height: '48px' }}
+                  invalidText="Invalid error message."
+                  labelText="Name"
+                  placeholder="Enter your fullname here"
+                />
+              )}
             />
-            <TextInput
-              id="email"
+            {errors.fullname && (
+              <p style={{ color: 'red', margin: '6px 0 12px 0' }}>
+                {errors.fullname.message}
+              </p>
+            )}
+            <Controller
               name="email"
-              onChange={handleFormDataChange}
-              style={{ marginBottom: '25px', height: '48px' }}
-              invalidText="Invalid error message."
-              labelText="Email"
-              value={formData.email}
-              placeholder="Enter you email here"
+              control={control}
+              rules={{
+                required: 'Email is required',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                  message: 'Invalid email address',
+                },
+              }}
+              render={({ field }) => (
+                <TextInput
+                  {...field}
+                  id="email"
+                  style={{ marginBottom: '25px', height: '48px' }}
+                  invalidText="Invalid error message."
+                  labelText="Email"
+                  placeholder="Enter your email here"
+                />
+              )}
             />
-            <Dropdown
-              ariaLabel="Select Country"
-              id="carbon-dropdown-example"
-              style={{ marginBottom: '25px', height: '48px' }}
-              items={options}
-              label="Select Country"
-              titleText="Select Country"
-              onChange={(value) => handleSelectChange(value)}
-              initialSelectedItem={{ value: '', label: 'Select country' }}
-              selectedItem={selectedCountry}
+            {errors.email && (
+              <p style={{ color: 'red' }}>{errors.email.message}</p>
+            )}
+            <Controller
+              name="country"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <Dropdown
+                  {...field}
+                  ariaLabel="Select Country"
+                  id="carbon-dropdown-example"
+                  style={{ marginBottom: '25px', height: '48px' }}
+                  items={options}
+                  label="Select Country"
+                  titleText="Select Country"
+                  onChange={(selectedItem) => handleSelectChange(selectedItem)}
+                  initialSelectedItem={{ value: '', label: 'Select country' }}
+                  selectedItem={selectedCountry}
+                />
+              )}
             />
             <br />
             <Button
