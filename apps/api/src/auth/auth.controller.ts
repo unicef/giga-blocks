@@ -77,4 +77,11 @@ export class AuthController {
   async walletLogin(@Body() walletLogin: AuthWallet, @Request() req) {
     return this.authService.walletLogin(req.user);
   }
+
+  @Public()
+  @UseGuards(WalletAuthGuard)
+  @Post('/admin/walletlogin')
+  async adminWalletLogin(@Body() walletLogin: AuthWallet, @Request() req) {
+    return this.authService.adminWalletLogin(req.user);
+  }
 }

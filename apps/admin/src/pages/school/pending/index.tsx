@@ -88,9 +88,6 @@ const VerifiedSchool = () => {
   return (
     <DashboardLayout>
       <h2>Minting In Progress</h2>
-      <div style={{display: 'flex', alignItems: 'flex-end', gap: '20px'}}>
-          <TextField id="outlined-basic" type='string' placeholder='Search country' onChange={(e) => handleSearchChange(e)}/>
-          </div>
           <Card sx={{marginTop: 2}}>
         <Divider />
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
