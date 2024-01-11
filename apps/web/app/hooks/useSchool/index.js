@@ -1,6 +1,6 @@
 'use client';
 import { BASE_URL, SCHOOLS } from '../../constants/api';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 const api = axios.create({

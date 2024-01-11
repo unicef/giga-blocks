@@ -27,6 +27,7 @@ const DragableMap = ({ lat, long, onMarkerDragEnd }) => {
       const lngLat = marker.getLngLat();
       coordinates.style.display = 'block';
       coordinates.innerHTML = `Longitude: ${lngLat.lng}<br />Latitude: ${lngLat.lat}`;
+
       onMarkerDragEnd(lngLat);
     }
 
@@ -52,7 +53,13 @@ const DragableMap = ({ lat, long, onMarkerDragEnd }) => {
     <StyledMapContainer>
       <div
         id="map"
-        style={{ position: 'absolute', top: 0, bottom: 0, width: '100%' }}
+        style={{
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          width: '100%',
+          marginBottom: '24px',
+        }}
       ></div>
       <pre
         id="coordinates"
