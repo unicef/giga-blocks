@@ -218,51 +218,50 @@ export class ContributeDataService {
   async getValidated(query) {
     try {
       const { page, perPage, status, school } = query;
-    const where: Prisma.ContributedDataWhereInput = {};
-    if (school) {
-      where.school_Id = school;
-    }
+      const where: Prisma.ContributedDataWhereInput = {};
+      if (school) {
+        where.school_Id = school;
+      }
 
-    const args = {
-      where: {
-        ...where,
-        isArchived: false,
-        approvedStatus: status === 'true',
-        inProgressStatus: false
-      },
-      include: {
-        school: {
-          select: {
-            name: true,
+      const args = {
+        where: {
+          ...where,
+          isArchived: false,
+          approvedStatus: status === 'true',
+          inProgressStatus: false,
+        },
+        include: {
+          school: {
+            select: {
+              name: true,
+            },
+          },
+          approved: {
+            select: {
+              name: true,
+            },
           },
         },
-        approved: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    };
-    if (status === 'true') {
-      args.where.isArchived = true;
-    } else {
-      args.where.isArchived = false;
-    }
+      };
+      if (status === 'true') {
+        args.where.isArchived = true;
+      } else {
+        args.where.isArchived = false;
+      }
 
-    const validatedDataRes = await paginate(
-      this.prisma.validatedData,
-      { ...args },
-      {
-        page,
-        perPage,
-      },
-    );
-    return validatedDataRes;
+      const validatedDataRes = await paginate(
+        this.prisma.validatedData,
+        { ...args },
+        {
+          page,
+          perPage,
+        },
+      );
+      return validatedDataRes;
     } catch (error) {
-      this._logger.error(error) 
-      throw new InternalServerErrorException(error)
+      this._logger.error(error);
+      throw new InternalServerErrorException(error);
     }
-    
   }
 
   async getValidatedById(id: string) {

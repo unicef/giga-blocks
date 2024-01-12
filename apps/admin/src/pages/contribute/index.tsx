@@ -80,6 +80,7 @@ const ContributeData = () => {
     schoolId: selectedSchoolSearch?.value,
     contributeId: selectedContributorSearch?.value,
     status: selectedStatus,
+    order:'desc'
   });
   const { data: schoolList } = useAllSchool();
 

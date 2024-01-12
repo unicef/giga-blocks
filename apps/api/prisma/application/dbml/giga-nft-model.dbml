@@ -45,7 +45,7 @@ Table giga_permissions {
 Table giga_users {
   id String [pk]
   name String [not null]
-  email String [unique, not null]
+  email String [unique]
   walletAddress Bytes [unique]
   profileImage String
   isActive Boolean [not null, default: true]
