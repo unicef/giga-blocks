@@ -70,7 +70,7 @@ const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetc
         isLoading: isValidationLoading
       } = useContributionValidate();
           
-      const { data: schoolList, refetch:schoolListRefetch, isRefetching: schoolListRefetching } = useSchoolGet({page: 1, perPage: 8, name: schoolName});
+      const { data: schoolList, refetch:schoolListRefetch, isRefetching: schoolListRefetching } = useSchoolGet({page: 0, perPage: 8, name: schoolName});
     
       const decodeSchooldata = () => {
      
