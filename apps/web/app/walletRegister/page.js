@@ -29,7 +29,11 @@ import { useAuthContext } from '../auth/useAuthContext';
 const WalletRegisterForm = () => {
   const [name, setName] = useState('');
   const [walletAddress, setWalletAddress] = useState('');
-  const { control, handleSubmit } = useForm();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const registerMutation = walletRegister();
   const getNonceQuery = useGetNonce();
   const web3 = useWeb3React();
@@ -98,16 +102,19 @@ const WalletRegisterForm = () => {
         walletAddress: walletAddress,
         signature: sign,
       };
-      registerMutation.mutateAsync(payload).then((res) => {
-        saveCurrentUser(res.data.result);
-        saveAccessToken(res.data.access_token);
-        saveConnectors('metaMask');
-        initialize();
-        router.push('/dashboard');
-        showSuccessMessage();
-      }).catch((err) => {
-        showErrorMessage(err.response.data);
-      })
+      registerMutation
+        .mutateAsync(payload)
+        .then((res) => {
+          saveCurrentUser(res.data.result);
+          saveAccessToken(res.data.access_token);
+          saveConnectors('metaMask');
+          initialize();
+          router.push('/dashboard');
+          showSuccessMessage();
+        })
+        .catch((err) => {
+          showErrorMessage(err.response.data);
+        });
     } catch (error) {
       showErrorMessage(error);
       console.error('Error registering wallet:', error);
@@ -128,11 +135,17 @@ const WalletRegisterForm = () => {
               <Controller
                 name="name"
                 control={control}
-                rules={{ required: 'Full Name is required' }}
+                rules={{
+                  required: 'Full Name is required',
+                  pattern: {
+                    value: /^[^\d]+$/,
+                    message: 'Invalid name ',
+                  },
+                }}
                 render={({ field }) => (
                   <TextInput
                     {...field}
-                    style={{ marginBottom: '25px', height: '48px' }}
+                    style={{ height: '48px', marginBottom: '25px' }}
                     labelText="Full Name"
                     placeholder="Enter your fullname here"
                     onChange={(e) => {
@@ -142,23 +155,29 @@ const WalletRegisterForm = () => {
                   />
                 )}
               />
+              {errors.name && (
+                <p style={{ color: 'red', margin: '6px 0 12px 0' }}>
+                  {errors.name.message}
+                </p>
+              )}
               <Controller
                 name="walletAddress"
                 control={control}
-                rules={{
-                  required: '',
-                }}
                 render={({ field }) => (
                   <TextInput
                     {...field}
                     // id="walletAddress"
-                    style={{ marginBottom: '25px', height: '48px' }}
+                    style={{
+                      marginBottom: '25px',
+                      height: '48px',
+                    }}
                     labelText="Wallet Address"
                     disabled
                     value={walletAddress}
                   />
                 )}
               />
+
               <Checkbox
                 className="checkbox"
                 id="checkbox"

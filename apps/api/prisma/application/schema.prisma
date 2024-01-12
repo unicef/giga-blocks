@@ -119,7 +119,7 @@ model Permission {
 model User {
   id              String            @id @default(uuid())
   name            String
-  email           String            @unique
+  email           String?            @unique
   walletAddress   Bytes?            @unique
   profileImage    String?
   isActive        Boolean           @default(true)

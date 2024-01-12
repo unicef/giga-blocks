@@ -262,10 +262,9 @@ export class ContributeDataService {
     );
     return validatedDataRes;
     } catch (error) {
-      this._logger.error(error) 
-      throw new InternalServerErrorException(error)
+      this._logger.error(error);
+      throw new InternalServerErrorException(error);
     }
-    
   }
 
   async getValidatedById(id: string) {
