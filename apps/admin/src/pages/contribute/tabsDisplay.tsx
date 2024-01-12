@@ -25,19 +25,20 @@ type SearchItem = {
   value: string;
 };
 
-const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetch, isFetching, page, setPage, rowsPerPage, selectedStatus, onChangePage, onChangeRowsPerPage, setSelectedSchoolSearch, setSelectedContributorSearch}:{setSelectedValues: any, selectedValues: any, ContributedData:any, refetch:any, isFetching:any, page:any, setPage:any, rowsPerPage:any, selectedStatus: string, onChangePage:any, onChangeRowsPerPage: any, setSelectedSchoolSearch: any, setSelectedContributorSearch:any }) => {
+const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetch, isFetching, page, setPage, rowsPerPage, selectedStatus, onChangePage, onChangeRowsPerPage, setSelectedSchoolSearch, setSelectedContributorSearch, tableValue}:{setSelectedValues: any, selectedValues: any, ContributedData:any, refetch:any, isFetching:any, page:any, setPage:any, rowsPerPage:any, selectedStatus: string, onChangePage:any, onChangeRowsPerPage: any, setSelectedSchoolSearch: any, setSelectedContributorSearch:any, tableValue:any }) => {
 
   const [schoolName, setSchoolName] = useState<string>('');
 
+  const {dense, order, orderBy, onSort, onChangeDense} = tableValue
 
   const { data: contributorList } = useUserGet(1, 10);
   const TABLE_HEAD = [
-    { id: 'name', label: 'Contributor name', align: 'left' },
+    { id: 'contributedUser', label: 'Contributor name', align: 'left' },
     { id: 'school', label: 'School', align: 'left' },
     { id: 'contributedDataKey', label: 'Type', align: 'left' },
     { id: 'contributedDataValue', label: 'Change', align: 'left' },
     { id: 'status', label: 'Status', align: 'left' },
-    { id: 'date', label: 'Date', align: 'left' },
+    { id: 'updatedAt', label: 'Date', align: 'left' },
   ];
 
     const selectChangeHandler = (e: any) => {
@@ -55,13 +56,7 @@ const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetc
         setSelectedContributorSearch(value);
       };
 
-      const {
-        dense,
-        order,
-        orderBy,
-        onSort,
-        onChangeDense
-      } = useTable({defaultOrderBy: 'date', defaultOrder: 'desc'});
+      
       const [toastMessage, setToastMessage] = useState('validated')
     
       const { enqueueSnackbar } = useSnackbar();
@@ -119,18 +114,7 @@ const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetc
         isValidationLoading && enqueueSnackbar('Data validation in progress. Please wait. ', { variant: 'warning' });
       }, [isValidationSuccess, isValidationError, isValidationLoading]);
     
-      const sortedData = tableData.slice().sort((a: any, b: any) => {
-        const isAsc = order === 'asc';
-        if(orderBy === 'contributedDataKey'){
-        return (a[orderBy][0] < b[orderBy][0] ? -1 : 1) * (isAsc ? 1 : -1);
-        }
-        else if(orderBy === 'contributedDataValue'){
-          return
-        }
-        else{
-        return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
-        }
-      }); 
+      const unSortableHeader = ['contributedDataKey', 'contributedDataValue']
 
     return (
       <>
@@ -179,11 +163,12 @@ const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetc
                       order={order}
                       orderBy={orderBy}
                       headLabel={TABLE_HEAD}
-                      rowCount={sortedData?.length}
+                      rowCount={tableData?.length}
                       showCheckBox={true}
                       onSort={onSort}
                       numSelected={selectedValues?.length}
                       onSelectAllRows={onSelectAllRows}
+                      unSortableHeader = {unSortableHeader}
                     />
                   )}
                   {selectedStatus != 'Pending' && (
@@ -191,16 +176,17 @@ const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetc
                       order={order}
                       orderBy={orderBy}
                       headLabel={TABLE_HEAD}
-                      rowCount={sortedData?.length}
+                      rowCount={tableData?.length}
                       showCheckBox={false}
                       onSort={onSort}
                       numSelected={selectedValues?.length}
                       onSelectAllRows={onSelectAllRows}
+                      unSortableHeader = {unSortableHeader}
                     />
                   )}
                   <TableBody>
-                    {sortedData &&
-                      sortedData?.map((row: any) => (
+                    {tableData &&
+                      tableData?.map((row: any) => (
                         <ContributeTableRow
                           key={row.id}
                           row={row}
@@ -211,7 +197,7 @@ const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetc
                         />
                       ))}
                     {!isFetching ? (
-                      <TableNoData isNotFound={sortedData?.length === 0} />
+                      <TableNoData isNotFound={tableData?.length === 0} />
                     ) : (
                       <CircularProgress color="inherit" />
                     )}

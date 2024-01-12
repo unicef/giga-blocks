@@ -19,7 +19,7 @@ const UserList = () => {
     const TABLE_HEAD = [
         { id: 'name', label: 'Name', align: 'left' },
         { id: 'email', label: 'Email', align: 'left' },
-        { id: 'wallet', label: 'Wallet', align: 'left' }
+        { id: 'walletAddress', label: 'Wallet', align: 'left' }
       ];
       const [name, setName] = useState<string>()
 
@@ -27,11 +27,11 @@ const UserList = () => {
       } = useTable();
 
     const [tableData, setTableData] = useState<any>([]);
-    const {data, isFetching, refetch} = useUserGet(page, rowsPerPage, 'ADMIN', name)
+    const {data, isFetching, refetch} = useUserGet(page, rowsPerPage, 'ADMIN', name, order, orderBy)
 
     useEffect(() => {
       refetch()
-    }, [name])
+    }, [name, order, orderBy])
 
     let filteredData:FilteredDataType[] = []
     useEffect(() => {
@@ -47,11 +47,6 @@ const UserList = () => {
       })
       setTableData(filteredData);
     }, [data, isFetching]);
-
-    const sortedData = tableData.slice().sort((a:any, b:any) => {
-      const isAsc = order === 'asc';
-      return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
-    });
 
     const handleSearchChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setName(e.target.value)
@@ -75,8 +70,8 @@ const UserList = () => {
                   onSort={onSort}
                 />
                 <TableBody>
-                  {sortedData &&
-                    sortedData?.map((row:any) => (
+                  {tableData &&
+                    tableData?.map((row:any) => (
                       <UserListRow
                         key={row.id}
                         row={row}

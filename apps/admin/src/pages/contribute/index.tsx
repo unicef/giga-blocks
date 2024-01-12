@@ -44,6 +44,15 @@ const ContributeData = () => {
   const [selectedContributorSearch, setSelectedContributorSearch] = useState<SearchItem | null>();
   
   const [selectedStatus, setSelectedStatus] = useState('Pending');
+  const {
+    dense,
+    order,
+    orderBy,
+    onSort,
+    onChangeDense
+  } = useTable({defaultOrderBy: 'school', defaultOrder: 'asc'});
+
+  const tableValue = {dense, order, orderBy, onSort, onChangeDense}
 
   const {
     data: ContributedData,
@@ -55,9 +64,9 @@ const ContributeData = () => {
     schoolId: selectedSchoolSearch?.value,
     contributeId: selectedContributorSearch?.value,
     status: selectedStatus,
+    order,
+    orderBy
   });
-
-  console.log(selectedContributorSearch)
 
   let tempArray: object[] = [];
   const onContribute = (validity: boolean) => {
@@ -89,7 +98,7 @@ const ContributeData = () => {
 
   useEffect(() => {
     refetch();
-  }, [selectedStatus, selectedSchoolSearch, selectedContributorSearch]);
+  }, [selectedStatus, selectedSchoolSearch, selectedContributorSearch, order, orderBy]);
 
   function a11yProps(index: number) {
     return {
@@ -152,16 +161,31 @@ const ContributeData = () => {
       </Box> 
       <Box>
         <CustomTabPanel value={value} index={0}>
-        <TabsDisplay onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage} selectedStatus={selectedStatus} page={page} setPage={setPage} rowsPerPage={rowsPerPage} refetch={refetch} isFetching={isFetching} ContributedData={ContributedData} setSelectedValues={setSelectedValues} selectedValues={selectedValues} setSelectedSchoolSearch={setSelectedSchoolSearch} setSelectedContributorSearch={setSelectedContributorSearch}/>
+        <TabsDisplay 
+        onChangeRowsPerPage={onChangeRowsPerPage} 
+        onChangePage={onChangePage} 
+        selectedStatus={selectedStatus} 
+        page={page} 
+        setPage={setPage} 
+        rowsPerPage={rowsPerPage} 
+        refetch={refetch} 
+        isFetching={isFetching} 
+        ContributedData={ContributedData} 
+        setSelectedValues={setSelectedValues} 
+        selectedValues={selectedValues} 
+        setSelectedSchoolSearch={setSelectedSchoolSearch} 
+        setSelectedContributorSearch={setSelectedContributorSearch}
+        tableValue={tableValue}
+        />
         </CustomTabPanel>
       </Box> 
       <Box>
         <CustomTabPanel value={value} index={1}>
-        <TabsDisplay onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage} selectedStatus={selectedStatus} page={page} setPage={setPage} rowsPerPage={rowsPerPage} refetch={refetch} isFetching={isFetching} ContributedData={ContributedData} setSelectedValues={setSelectedValues} selectedValues={selectedValues} setSelectedSchoolSearch={setSelectedSchoolSearch} setSelectedContributorSearch={setSelectedContributorSearch}/>
+        <TabsDisplay onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage} selectedStatus={selectedStatus} page={page} setPage={setPage} rowsPerPage={rowsPerPage} refetch={refetch} isFetching={isFetching} ContributedData={ContributedData} setSelectedValues={setSelectedValues} selectedValues={selectedValues} setSelectedSchoolSearch={setSelectedSchoolSearch} setSelectedContributorSearch={setSelectedContributorSearch} tableValue={tableValue}/>
         </CustomTabPanel>
       </Box>
       <CustomTabPanel value={value} index={2}>
-      <TabsDisplay onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage} selectedStatus={selectedStatus} page={page} setPage={setPage} rowsPerPage={rowsPerPage} refetch={refetch} isFetching={isFetching} ContributedData={ContributedData} setSelectedValues={setSelectedValues} selectedValues={selectedValues} setSelectedSchoolSearch={setSelectedSchoolSearch} setSelectedContributorSearch={setSelectedContributorSearch}/>
+      <TabsDisplay onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage} selectedStatus={selectedStatus} page={page} setPage={setPage} rowsPerPage={rowsPerPage} refetch={refetch} isFetching={isFetching} ContributedData={ContributedData} setSelectedValues={setSelectedValues} selectedValues={selectedValues} setSelectedSchoolSearch={setSelectedSchoolSearch} setSelectedContributorSearch={setSelectedContributorSearch} tableValue={tableValue}/>
       </CustomTabPanel>
     </DashboardLayout>
   );

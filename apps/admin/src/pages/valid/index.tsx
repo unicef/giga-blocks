@@ -44,8 +44,8 @@ type TableData = {
 const ValidateData = () => {
   const TABLE_HEAD = [
     { id: 'school', label: 'School', align: 'left' },
-    { id: 'isApproved', label: 'Approval Status', align: 'left' },
-    { id: 'date', label: 'Date', align: 'left' },
+    { id: 'approved', label: 'Approval Status', align: 'left' },
+    { id: 'createdAt', label: 'Date', align: 'left' },
   ];
   const [selectedSchoolSearch, setSelectedSchoolSearch] = useState<SearchItem | null>();
   const {
@@ -59,7 +59,7 @@ const ValidateData = () => {
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable({defaultOrderBy: 'date', defaultOrder: 'desc'});
+  } = useTable({defaultOrderBy: 'school', defaultOrder: 'desc'});
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -82,12 +82,14 @@ const ValidateData = () => {
     rowsPerPage,
     status,
     isValidationSuccess,
-    selectedSchoolSearch?.value
+    selectedSchoolSearch?.value,
+    order,
+    orderBy
   );
 
   useEffect(() => {
     refetch()
-  }, [selectedSchoolSearch])
+  }, [selectedSchoolSearch, orderBy, order])
 
   let filteredData: any = [];
   useEffect(() => {
@@ -138,10 +140,10 @@ const ValidateData = () => {
     setSelectedSchoolSearch(value);
   };
 
-  const sortedData = tableData?.slice().sort((a:any, b:any) => {
-    const isAsc = order === 'asc';
-    return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
-  });
+  // const sortedData = tableData?.slice().sort((a:any, b:any) => {
+  //   const isAsc = order === 'asc';
+  //   return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
+  // });
 
 
   const TabsDisplay = () => {
@@ -191,8 +193,8 @@ const ValidateData = () => {
                         <TableCell sx={{ minWidth: '300px' }}>Loading data....</TableCell>
                       </TableRow>
                     ) : (
-                      sortedData &&
-                      sortedData?.map((row: any) => (
+                      tableData &&
+                      tableData?.map((row: any) => (
                         <ValidateTableRow
                           key={row.id}
                           row={row}

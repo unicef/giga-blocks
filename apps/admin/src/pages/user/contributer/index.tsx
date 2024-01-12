@@ -19,7 +19,7 @@ const UserList = () => {
     const TABLE_HEAD = [
         { id: 'name', label: 'Name', align: 'left' },
         { id: 'email', label: 'Email', align: 'left' },
-        { id: 'wallet', label: 'Wallet', align: 'left' }
+        { id: 'walletAddress', label: 'Wallet', align: 'left' }
       ];
 
       const [name, setName] = useState<string>()
@@ -28,11 +28,11 @@ const UserList = () => {
       } = useTable();
 
     const [tableData, setTableData] = useState<any>([]);
-    const {data, isFetching, refetch} = useUserGet(page, rowsPerPage, 'CONTRIBUTOR', name)
+    const {data, isFetching, refetch} = useUserGet(page, rowsPerPage, 'CONTRIBUTOR', name, order, orderBy)
 
     useEffect(() => {
       refetch()
-    }, [name])
+    }, [name, order, orderBy])
 
     let filteredData:FilteredDataType[] = []
     useEffect(() => {
@@ -53,11 +53,6 @@ const UserList = () => {
       setName(e.target.value)
     }
 
-    const sortedData = tableData?.slice().sort((a:any, b:any) => {
-      const isAsc = order === 'asc';
-      return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
-    });
-
     return ( 
 
       <DashboardLayout>
@@ -77,8 +72,8 @@ const UserList = () => {
                 />
 
                 <TableBody>
-                  {sortedData &&
-                    sortedData?.map((row:any) => (
+                  {tableData &&
+                    tableData?.map((row:any) => (
                       <UserListRow
                         key={row.id}
                         row={row}
