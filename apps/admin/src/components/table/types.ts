@@ -8,7 +8,6 @@ export type TableProps = {
   orderBy: string;
   //
   selected: string[];
-  onSelectRow: (id: string) => void;
   // onSelectAllRows: (checked: boolean, newSelecteds: string[]) => void;
   //
   onSort: (id: string) => void;

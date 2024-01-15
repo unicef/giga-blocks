@@ -40,10 +40,6 @@ export default function useTable(props?: UseTableProps): ReturnType {
     [order, orderBy]
   );
 
-  const onSelectRow = () => {
-    console.log('on select')
-  }
-
   const onChangePage = useCallback((event: unknown, newPage: number) => {
     setPage(newPage);
   }, []);
@@ -63,8 +59,6 @@ export default function useTable(props?: UseTableProps): ReturnType {
     page,
     orderBy,
     rowsPerPage,
-    //
-    onSelectRow,
     selected,
     // onSelectAllRows,
     //
