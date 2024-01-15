@@ -1,16 +1,7 @@
 "use client";
 import  routes  from "../../constants/api";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { getAccessToken } from "@utils/sessionManager";
-
-const api = axios.create({
-  baseURL:routes.BASE_URL,
-});
-
-const accessToken = getAccessToken()
-
-api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+import { useQuery } from "@tanstack/react-query";
+import api from "@utils/apiCall";
 
 export const useUserGet = (page:number, perPage:number, role?:string, name?:string, order?:string, orderBy?:string) => {
   return useQuery(

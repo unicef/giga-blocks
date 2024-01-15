@@ -1,15 +1,6 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import routes from '../../constants/api';
-import { getAccessToken } from '@utils/sessionManager';
-
-const api = axios.create({
-  baseURL: routes.BASE_URL,
-});
-
-const accessToken = getAccessToken();
-
-api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+import api from "@utils/apiCall";
 
 export const useValidateGet = (page: number, perPage: number, status?: string, validation?: boolean, school?:string, order?: string, orderBy?: string) => {
   return useQuery(
