@@ -24,14 +24,12 @@ import {
   saveAccessToken,
   saveCurrentUser,
   saveConnectors,
-  getAccessToken,
 } from '../utils/sessionManager';
 import { useAuthContext } from '../auth/useAuthContext';
 import { metaMaskLogin } from '../utils/metaMaskUtils';
 
 const SignIn = () => {
   const route = useRouter();
-  const access_token = getAccessToken();
   const {
     handleSubmit,
     control,
@@ -48,15 +46,15 @@ const SignIn = () => {
   const [email, setEmail] = useState('');
   const [openModal, setOpenModal] = useState(false);
   const [showEmailField, setShowEmailField] = useState(false);
-  const [submitButtonText, setSubmitButtonText] =
-    useState('Sign in with Email');
+  const [showSubmitButton, setShowSubmitButton] = useState(false);
+  const [isSubmitted, setisSubmitted] = useState(false);
   const [notification, setNotification] = useState(null);
   const minute = process.env.NEXT_PUBLIC_OTP_DURATION_IN_MINS;
   const [seconds, setSeconds] = useState(minute * 60);
 
   const showEmailInput = () => {
     setShowEmailField(true);
-    setSubmitButtonText('Submit');
+    setShowSubmitButton(true);
   };
 
   useEffect(() => {
@@ -88,6 +86,7 @@ const SignIn = () => {
 
   const onSubmit = async (data, e) => {
     e.preventDefault();
+    if (!data.email) return setisSubmitted(true);
     setSeconds(minute * 60);
     setError();
     sendOtp
@@ -96,6 +95,7 @@ const SignIn = () => {
         setOpenModal(true);
         setEmail(data.email);
       })
+
       .catch(() => {
         setNotification({
           kind: 'error',
@@ -186,13 +186,13 @@ const SignIn = () => {
         <Column className="form" md={4} lg={8} sm={4}>
           <Tile className="signUp-tile">
             <h1>Sign In To Your Account</h1>
-            <Form onSubmit={handleSubmit()}>
+            <Form onSubmit={handleSubmit(onSubmit)}>
               {showEmailField && (
                 <Controller
                   name="email"
                   control={control}
                   rules={{
-                    required: 'Email is required',
+                    required: isSubmitted ? 'Email is required' : false,
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
                       message: 'Invalid email address',
@@ -220,20 +220,26 @@ const SignIn = () => {
                 <p style={{ color: 'red' }}>{errors.email.message}</p>
               )}
               <br />
-              <Button
-                className="submit-btn"
-                type="submit"
-                style={{ marginRight: '14px', width: '100%' }}
-                onClick={(e) => {
-                  if (showEmailField) {
+              {showSubmitButton ? (
+                <Button
+                  className="submit-btn"
+                  type="submit"
+                  style={{ marginRight: '14px', width: '100%' }}
+                  onClick={(e) => {
                     handleSubmit(onSubmit)(e);
-                  } else {
-                    showEmailInput();
-                  }
-                }}
-              >
-                {submitButtonText}
-              </Button>
+                  }}
+                >
+                  Submit
+                </Button>
+              ) : (
+                <Button
+                  className="submit-btn"
+                  style={{ marginRight: '14px', width: '100%' }}
+                  onClick={showEmailInput}
+                >
+                  Sign In With Email
+                </Button>
+              )}
               <Button
                 className="submit-btn"
                 style={{
