@@ -58,7 +58,8 @@ const SchoolDetail = () => {
     { text: 'Home', link: '/' },
     { text: 'School', link: '/contributeSchool' },
   ];
-
+  let latitude = String(data?.latitude)?.slice(0, 12);
+  let longitude = String(data?.longitude)?.slice(0, 12);
   return (
     <>
       {isLoading === false ? (
@@ -115,7 +116,7 @@ const SchoolDetail = () => {
                     <Tile className={`tile-school tile-white`}>
                       <p className="heading2">Exact Location</p>
                       <p className="heading5">
-                        {data?.latitude}, {data?.longitude}
+                        {latitude}, {longitude}
                       </p>
                     </Tile>
                   </Column>

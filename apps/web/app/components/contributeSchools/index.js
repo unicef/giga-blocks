@@ -21,7 +21,7 @@ const SchoolCard = () => {
   const [allDataLoaded, setAllDataLoaded] = useState(false);
   const [searchText, setSearchText] = useState('');
 
-  const { data, isLoading, isFetching } = useSchoolGet(0, pageSize, searchText);
+  const { data, isLoading } = useSchoolGet(0, pageSize, searchText);
 
   const generateIdenticon = (image) => {
     const size = 50;
@@ -58,7 +58,11 @@ const SchoolCard = () => {
         />
       </div>
       <Grid fullWidth style={{ margin: '30px auto' }}>
-        {schoolData &&
+        {schoolData.length === 0 ? (
+          <Column sm={4}>
+            <h4>School Not Available.</h4>
+          </Column>
+        ) : (
           schoolData?.map((school) => (
             <Column sm={4}>
               <ClickableTile
@@ -116,7 +120,8 @@ const SchoolCard = () => {
                 </h4>
               </ClickableTile>
             </Column>
-          ))}
+          ))
+        )}
         <Column sm={4} md={8} lg={16}>
           {schoolData.length > 0 && (
             <Button
