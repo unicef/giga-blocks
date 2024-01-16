@@ -45,8 +45,8 @@ const VerifiedSchool = () => {
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
   const [country, setCountry] = useState<string>()
-  const [connectivity, setConnectivity] = useState<string>()
-  const { data, refetch } = useSchoolGet({page, perPage: rowsPerPage, minted: 'ISMINTING', country, connectivity, order, orderBy});
+  const [connectivity] = useState<string>()
+  const { data, refetch, isFetching } = useSchoolGet({page, perPage: rowsPerPage, minted: 'ISMINTING', country, connectivity, order, orderBy});
 
   let filteredData: any = [];
   useEffect(() => {
@@ -105,7 +105,7 @@ const VerifiedSchool = () => {
                       checkbox={false}
                     />
                   ))}
-                <TableNoData isNotFound={tableData.length === 0} />
+                <TableNoData isNotFound={tableData.length === 0} isFetching={isFetching} />
               </TableBody>
             </Table>
           </Scrollbar>

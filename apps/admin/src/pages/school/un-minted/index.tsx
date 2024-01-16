@@ -25,6 +25,7 @@ import { mintSignature } from '@components/web3/utils/wallet';
 import { useBulkMintSchools } from '@hooks/school/useSchool';
 import { useWeb3React } from '@web3-react/core';
 import { useSnackbar } from '@components/snackbar';
+import useDebounce from '@hooks/useDebounce';
 
 const VerifiedSchool = () => {
 
@@ -60,11 +61,12 @@ const VerifiedSchool = () => {
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
   const [country, setCountry] = useState<string>()
-  const { data, isLoading, refetch } = useSchoolGet({page, perPage: rowsPerPage, minted: 'NOTMINTED', uploadId, country, school, order, orderBy});
+  const debouncedValue = useDebounce(`${school} + ${country}`, 300)
+  const { data, isLoading, refetch, isFetching } = useSchoolGet({page, perPage: rowsPerPage, minted: 'NOTMINTED', uploadId, country, school, order, orderBy, debouncedValue});
 
   useEffect(() => {
     refetch()
-  }, [uploadId, country, isMintSuccess, mintingError, school, order, orderBy])
+  }, [uploadId, isMintSuccess, mintingError, order, orderBy])
 
   let filteredData: any = [];
   useEffect(() => {
@@ -186,6 +188,7 @@ const VerifiedSchool = () => {
                     ))}
                   <TableNoData 
                   isNotFound={tableData.length === 0}
+                  isFetching={isFetching}
                   />
                 </TableBody>
               </Table>

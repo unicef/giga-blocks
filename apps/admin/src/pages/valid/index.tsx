@@ -205,7 +205,7 @@ const ValidateData = () => {
                         />
                       ))
                     )}
-                    <TableNoData isNotFound={tableData.length === 0} />
+                    <TableNoData isNotFound={tableData.length === 0} isFetching={isFetching}/>
                   </TableBody>
                 </Table>
               </Scrollbar>

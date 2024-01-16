@@ -7,7 +7,7 @@ import {
 import { MintStatus, Prisma, Role } from '@prisma/application';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { ListSchoolDto } from './dto/list-schools.dto';
-import { paginate } from 'src/utils/paginate';
+// import { paginate } from 'src/utils/paginate';
 import { QueueService } from 'src/mailer/queue.service';
 import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
 import { handler } from 'src/utils/csvToDB';
@@ -18,6 +18,7 @@ import { updateData } from 'src/utils/ethers/transactionFunctions';
 import { ConfigService } from '@nestjs/config';
 import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-datum.dto';
 import { getTokenId } from 'src/utils/web3/subgraph';
+import { PaginateFunction, PaginateOptions } from 'src/utils/paginate';
 
 @Injectable()
 export class SchoolService {
@@ -65,6 +66,61 @@ export class SchoolService {
       const data = await this.prisma.school.findMany({ where });
       return data;
     }
+
+    const paginator = (defaultOptions:PaginateOptions):PaginateFunction => {
+      return async (model, args: any = { where: undefined, include: undefined }, options) => {
+        const page = Number(options?.page || defaultOptions?.page) || 0;
+        const perPage = Number(options?.perPage || defaultOptions?.perPage) || 10;
+        const order = options?.order || defaultOptions?.order || 'desc';
+        const orderBy = options?.orderBy || defaultOptions?.orderBy || 'createdAt'
+        const skip = perPage * page;
+    
+    
+        const [total, rows] = await Promise.all([
+          model.count({ where: args.where }),
+          
+          orderBy === 'school' ? model.findMany({ 
+            ...args,
+            orderBy: [{
+              school: {
+                name: order
+              },
+            }],
+            take: perPage,
+            skip,
+          })
+          :model.findMany({ 
+            ...args,
+            orderBy: {
+              [orderBy]: order,
+            },
+            take: perPage,
+            skip,
+          }) 
+        ])
+        const lastPage = Math.ceil(total / perPage);
+        const meta = {
+          total,
+          lastPage,
+          currentPage: page,
+          perPage,
+        };
+    
+        if (options?.transformRows) {
+          return {
+            rows: options.transformRows(rows),
+            meta,
+          };
+        }
+    
+        return {
+          rows,
+          meta,
+        };
+      };
+    };
+
+    const paginate: PaginateFunction = paginator({ perPage: 20 })
 
     return paginate(
       this.prisma.school,

@@ -196,11 +196,7 @@ const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetc
                           checkbox={true}
                         />
                       ))}
-                    {!isFetching ? (
-                      <TableNoData isNotFound={tableData?.length === 0} />
-                    ) : (
-                      <CircularProgress color="inherit" />
-                    )}
+                      <TableNoData isNotFound={tableData?.length === 0} isFetching={isFetching}/>
                   </TableBody>
                 </Table>
               </Scrollbar>

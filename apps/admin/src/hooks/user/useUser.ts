@@ -3,12 +3,13 @@ import  routes  from "../../constants/api";
 import { useQuery } from "@tanstack/react-query";
 import api from "@utils/apiCall";
 
-export const useUserGet = (page:number, perPage:number, role?:string, name?:string, order?:string, orderBy?:string) => {
+export const useUserGet = (page:number, perPage:number, role?:string, debouncedName?:string, order?:string, orderBy?:string, name?: string) => {
   return useQuery(
-    ["get-user-data", page, perPage],
+    ["get-user-data", page, perPage, debouncedName], 
     async () => {
+      console.log(debouncedName)
       const { data } = await api.get(
-        `${routes.USER.GET}${role ?`?role=${role}`:''}${name ? `&name=${name}` : ''}${order ? `&order=${order}` : ''}${orderBy ? `&orderBy=${orderBy}` : ''}`
+        `${routes.USER.GET}${page ?`?page=${page}`:''}${perPage ?`?perPage=${perPage}`:''}${role ?`?role=${role}`:''}${debouncedName ? `&name=${debouncedName}` : ''}${order ? `&order=${order}` : ''}${orderBy ? `&orderBy=${orderBy}` : ''}`
       );
       return data;
     },

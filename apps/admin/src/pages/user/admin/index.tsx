@@ -1,6 +1,7 @@
 "use client"
 import Scrollbar from "@components/scrollbar";
 import {  TableHeadUsers, TableNoData, useTable } from "@components/table";
+import useDebounce from "@hooks/useDebounce";
 import { useUserGet } from "@hooks/user/useUser";
 import DashboardLayout from "@layouts/dashboard/DashboardLayout";
 import { Card, Divider, TableContainer, Table, TableBody, CircularProgress, TextField } from "@mui/material";
@@ -21,17 +22,19 @@ const UserList = () => {
         { id: 'email', label: 'Email', align: 'left' },
         { id: 'walletAddress', label: 'Wallet', align: 'left' }
       ];
-      const [name, setName] = useState<string>()
+      const [name, setName] = useState<string>('')
 
       const {dense, page, order, orderBy, rowsPerPage, onSort
       } = useTable();
 
+    const debouncedName = useDebounce(name, 500)
+
     const [tableData, setTableData] = useState<any>([]);
-    const {data, isFetching, refetch} = useUserGet(page, rowsPerPage, 'ADMIN', name, order, orderBy)
+    const {data, isFetching, refetch} = useUserGet(page, rowsPerPage, 'ADMIN', debouncedName, order, orderBy)
 
     useEffect(() => {
       refetch()
-    }, [name, order, orderBy])
+    }, [order, orderBy])
 
     let filteredData:FilteredDataType[] = []
     useEffect(() => {
@@ -77,8 +80,10 @@ const UserList = () => {
                         row={row}
                       />
                     ))}
-                  {!isFetching ? <TableNoData
-                  isNotFound={tableData.length === 0} /> : <CircularProgress color="inherit"/> }
+                  <TableNoData
+                  isNotFound={tableData.length === 0} 
+                  isFetching = {isFetching}
+                  />
                 </TableBody>
               </Table>
             </Scrollbar>
