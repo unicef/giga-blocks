@@ -3,8 +3,8 @@ import '../../components/landing-page/styles/preview.scss';
 import './school-detail.scss';
 
 const Connectivity = ({ schoolData }) => {
-  let latitude = schoolData?.latitude.slice(0, 14);
-  let longitude = schoolData?.longitude.slice(0, 14);
+  let latitude = schoolData?.latitude.slice(0, 10);
+  let longitude = schoolData?.longitude.slice(0, 10);
   return (
     <>
       <Grid fullWidth>
