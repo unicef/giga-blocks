@@ -82,7 +82,6 @@ export class UsersService {
     const userData = {
       name: createUserDto?.name,
       walletAddress,
-      email: '',
       roles: [Role.CONTRIBUTOR],
     };
     return this.prisma.user.create({
