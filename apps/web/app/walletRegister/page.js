@@ -106,7 +106,7 @@ const WalletRegisterForm = () => {
         .mutateAsync(payload)
         .then((res) => {
           saveCurrentUser(res.data.result);
-          saveAccessToken(res.data.access_token);
+          saveAccessToken(res.data.result.access_token);
           saveConnectors('metaMask');
           initialize();
           router.push('/dashboard');

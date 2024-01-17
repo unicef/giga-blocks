@@ -1,3 +1,6 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/breakpoint' as *;
+
 //header
 .dashboard-head-wrapper {
   margin-top: 48px;
@@ -31,31 +34,81 @@
       .foot {
         color: white;
       }
-    }
-
-    .sub-column-2 {
-      display: flex;
-      gap: 5px;
-
-      h1 {
-        color: white;
-        font-weight: normal;
-      }
-      p {
-        color: white;
-      }
-
-      div {
+      .sub-column-2 {
         display: flex;
-        align-items: flex-end;
+        gap: 5px;
 
+        h1 {
+          color: white;
+          font-weight: normal;
+        }
         p {
-          font-size: 14px;
-          padding-bottom: 5px;
-          color: 'white';
+          color: white;
+        }
+
+        div {
+          display: flex;
+          align-items: flex-end;
+
+          p {
+            font-size: 14px;
+            padding-bottom: 5px;
+            color: 'white';
+          }
         }
       }
+      @include breakpoint-down(md) {
+        display: none;
+      }
     }
+  }
+}
+.sub-column-1-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 14px;
+  .head {
+    color: #277aff;
+  }
+
+  .foot {
+    color: white;
+  }
+
+  .sub-column-2 {
+    display: flex;
+    gap: 5px;
+
+    h1 {
+      color: white;
+      font-weight: normal;
+    }
+    p {
+      color: white;
+    }
+
+    div {
+      display: flex;
+      align-items: flex-end;
+
+      p {
+        font-size: 14px;
+        padding-bottom: 5px;
+        color: 'white';
+      }
+    }
+  }
+  @include breakpoint-down(md) {
+    display: block;
+  }
+  @include breakpoint-up(md) {
+    display: none;
+  }
+}
+.walletAddress {
+  @include breakpoint-down(md) {
+    font-size: 14px;
   }
 }
 

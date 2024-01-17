@@ -114,9 +114,7 @@
   justify-content: space-between;
   align-items: center;
   --cds-layout-size-height-local: 6.5vh;
-  line-height: 10px;
-  padding: 0 3%;
-
+  padding: 12px 3%;
   @include breakpoint-down(md) {
     font-size: 1em;
     margin-top: $spacing-05;
@@ -124,9 +122,9 @@
   }
 
   @include breakpoint-down(lg) {
-    font-size: 1em;
+    font-size: 0.5em;
     margin-top: $spacing-05;
-    width: 100%;
+    width: 50%;
     padding: 0 8%;
     --cds-layout-size-height-local: 4vh;
   }
