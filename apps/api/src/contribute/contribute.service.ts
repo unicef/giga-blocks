@@ -39,7 +39,7 @@ export class ContributeDataService {
   }
 
   async findAll(query) {
-    const { page, perPage, schoolId, contributorId, status, order } = query;
+    const { page, perPage, schoolId, contributorId, status, order, orderBy } = query;
     const where: Prisma.ContributedDataWhereInput = {};
     if (schoolId) {
       where.school_Id = schoolId;
@@ -67,7 +67,7 @@ export class ContributeDataService {
           },
         },
       },
-    };
+    }; 
 
     const contributedata = await paginate(
       this.prisma.contributedData,
@@ -76,6 +76,7 @@ export class ContributeDataService {
         page,
         perPage,
         order,
+        orderBy
       },
     );
     return contributedata;
@@ -217,47 +218,49 @@ export class ContributeDataService {
 
   async getValidated(query) {
     try {
-      const { page, perPage, status, school } = query;
-      const where: Prisma.ContributedDataWhereInput = {};
-      if (school) {
-        where.school_Id = school;
-      }
+      const { page, perPage, status, school, order, orderBy } = query;
+    const where: Prisma.ContributedDataWhereInput = {};
+    if (school) {
+      where.school_Id = school;
+    }
 
-      const args = {
-        where: {
-          ...where,
-          isArchived: false,
-          approvedStatus: status === 'true',
-          inProgressStatus: false,
+    const args = {
+      where: {
+        ...where,
+        isArchived: false,
+        approvedStatus: status === 'true',
+        inProgressStatus: false
+      },
+      include: {
+        school: {
+          select: {
+            name: true,
+          }
         },
-        include: {
-          school: {
-            select: {
-              name: true,
-            },
-          },
-          approved: {
-            select: {
-              name: true,
-            },
+        approved: {
+          select: {
+            name: true,
           },
         },
-      };
-      if (status === 'true') {
-        args.where.isArchived = true;
-      } else {
-        args.where.isArchived = false;
-      }
+      },
+    };
+    if (status === 'true') {
+      args.where.isArchived = true;
+    } else {
+      args.where.isArchived = false;
+    } 
 
-      const validatedDataRes = await paginate(
-        this.prisma.validatedData,
-        { ...args },
-        {
-          page,
-          perPage,
-        },
-      );
-      return validatedDataRes;
+    const validatedDataRes = await paginate(
+      this.prisma.validatedData,
+      { ...args },
+      {
+        page,
+        perPage,
+        order,
+        orderBy
+      },
+    );
+    return validatedDataRes;
     } catch (error) {
       this._logger.error(error);
       throw new InternalServerErrorException(error);
@@ -274,6 +277,7 @@ export class ContributeDataService {
           select: {
             name: true,
           },
+          
         },
         approved: {
           select: {
@@ -282,6 +286,7 @@ export class ContributeDataService {
         },
       },
     });
+
     return validatedData;
   }
 }

@@ -1,11 +1,7 @@
 "use client";
 import  routes  from "../../constants/api";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import axios from "axios";
-
-const api = axios.create({
-  baseURL:routes.BASE_URL,
-});
+import api from "@utils/apiCall";
 
 export const useNonceGet = (enabled:boolean) => {
   return useQuery(

@@ -103,7 +103,7 @@ export class UsersService {
   }
 
   findAll(query: any) {
-    const { page, perPage } = query;
+    const { page, perPage, order, orderBy } = query;
 
     const where: Prisma.UserWhereInput = {};
     if (query?.role) {
@@ -117,7 +117,7 @@ export class UsersService {
         mode: 'insensitive',
       };
     }
-    return paginate(this.prisma.user, { where }, { page, perPage });
+    return paginate(this.prisma.user, { where }, { page, perPage, order, orderBy });
   }
 
   findContributor(query: any) {
