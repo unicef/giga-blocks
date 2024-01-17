@@ -88,6 +88,7 @@ const ContributeForm = ({
   };
 
   const closeModal = () => {
+    refetch();
     setIsModalOpen(false);
   };
 
