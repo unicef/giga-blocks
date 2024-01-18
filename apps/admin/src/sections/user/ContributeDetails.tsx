@@ -22,6 +22,7 @@ export default function ContributeDetail({ id }: Props) {
     status: '',
     contributed_data: '',
     coverage: '',
+    validatedUser: '',
     mintedStatus: '',
   });
 
@@ -48,6 +49,7 @@ export default function ContributeDetail({ id }: Props) {
         status: data?.status,
         contributed_data: jsonString,
         coverage: data?.coverage_availability,
+        validatedUser: data?.validatedUser?.name || '',
         mintedStatus: data?.minted,
       });
     }
@@ -126,7 +128,14 @@ export default function ContributeDetail({ id }: Props) {
                         label="Status"
                         disabled
                       />
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      {profile?.status != 'Pending' && <ProfileTextField
+                        name="longitude"
+                        value={profile?.validatedUser || ''}
+                        label={`${profile?.status === 'Validated' ? 'Validated by' : 'Invalidated By'}`}
+                        disabled
+                      />}
+                    </Box>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <span>Contributed Data</span>
                         <span>
                           <ProfileTextField
@@ -137,7 +146,6 @@ export default function ContributeDetail({ id }: Props) {
                           />
                         </span>
                       </div>
-                    </Box>
                   </Box>
 
                   <Stack alignItems="flex-start" sx={{ mt: 3 }}>

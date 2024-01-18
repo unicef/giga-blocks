@@ -21,12 +21,9 @@ import { useSnackbar } from '@components/snackbar';
 import { useUserGet } from '@hooks/user/useUser';
 
 
-const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetch, isFetching, page, setPage, rowsPerPage, selectedStatus, onChangePage, onChangeRowsPerPage, setSelectedSchoolSearch, setSelectedContributorSearch, onSort, onChangeDense, dense, order, orderBy}:{setSelectedValues: any, selectedValues: any, ContributedData:any, refetch:any, isFetching:any, page:any, setPage:any, rowsPerPage:any, selectedStatus: string, onChangePage:any, onChangeRowsPerPage: any, setSelectedSchoolSearch: any, setSelectedContributorSearch:any, onSort: Function, onChangeDense: Function, dense:boolean, order:string, orderBy:string }) => {
+const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetch, isFetching, page, setPage, rowsPerPage, selectedStatus, onChangePage, onChangeRowsPerPage, setSelectedSchoolSearch, setSelectedContributorSearch, onSort, onChangeDense, dense, order, orderBy}:{setSelectedValues: any, selectedValues: any, ContributedData:any, refetch:any, isFetching:any, page:any, setPage:any, rowsPerPage:any, selectedStatus: string, onChangePage:any, onChangeRowsPerPage: any, setSelectedSchoolSearch: any, setSelectedContributorSearch:any, onSort: any, onChangeDense: any, dense:boolean, order:'asc'|'desc', orderBy:string }) => {
 
   const [schoolName, setSchoolName] = useState<string>('');
-
-  // const {dense, order, orderBy} = tableValue
-
 
   const { data: contributorList } = useUserGet(1, 10);
   const TABLE_HEAD = [
@@ -35,6 +32,7 @@ const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetc
     { id: 'contributedDataKey', label: 'Type', align: 'left' },
     { id: 'contributedDataValue', label: 'Change', align: 'left' },
     { id: 'status', label: 'Status', align: 'left' },
+    selectedStatus != 'Pending' && {id: 'validatedUser', label: `${selectedStatus === 'Validated' ? 'Validated By' : 'Invalidated By'}`, align: 'left'},
     { id: 'updatedAt', label: 'Date', align: 'left' },
   ];
 
@@ -68,7 +66,6 @@ const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetc
           
       const { data: schoolList, refetch:schoolListRefetch, isRefetching: schoolListRefetching } = useSchoolGet({page: 0, perPage: 8, name: schoolName});
      
-    
       let filteredData: any = [];
       useEffect(() => {
           ContributedData?.rows &&
@@ -82,12 +79,13 @@ const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetc
                 school: row?.school?.name || '',
                 contributedDataKey: Object.keys(jsonString) || '',
                 contributedDataValue: Object.values(jsonString) || '',
+                validatedUser: row?.validatedUser?.name || '',
                 date: date || '',
                 status: row?.status || '',
               });
             });
           setTableData(filteredData);
-      }, [schoolListRefetching]);
+      }, [ContributedData]);
     
       const onSelectAllRows = (e: any) => {
         const isChecked = e.target.checked;
@@ -110,7 +108,7 @@ const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetc
 
     return (
       <>
-        {/* <Box sx={{ minWidth: 120 }}>
+        <Box sx={{ minWidth: 120 }}>
           <FormControl sx={{ width: 200, marginRight: 2 }}>
             <Autocomplete
               disablePortal
@@ -205,7 +203,7 @@ const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetc
               disablePageNumber
             />
           </Card>
-        )} */}
+        )}
       </>
     );
   };

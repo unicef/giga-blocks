@@ -80,7 +80,7 @@ export default function AuthWeb2LoginForm() {
       </Stack>
 
       <LoadingButton fullWidth style={{background: '#0050e6'}} size="large" type="submit" variant="contained">
-        Login into {APP_NAME}
+        Login {APP_NAME}
       </LoadingButton>
     </FormProvider>
   );
