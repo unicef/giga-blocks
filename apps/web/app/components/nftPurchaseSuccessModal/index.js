@@ -11,15 +11,11 @@ import {
 import { useRouter } from 'next/navigation';
 import { toSvg } from 'jdenticon';
 import { Default_Chain_Explorer } from '../../components/web3/connectors/network';
+import generateIdenticon from '../../utils/generateIdenticon'
 
 const CongratulationModalComponent = ({ isOpen, onClose, schooldata,transactionHash }) => {
   const route = useRouter();
 
-  const generateIdenticon = (image) => {
-    const size = 200;
-    const svgString = toSvg(image, size);
-    return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
-  };
 
   const handleClick = () => {
     onClose();

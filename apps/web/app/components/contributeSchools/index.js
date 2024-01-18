@@ -14,6 +14,7 @@ import './contributeSchools.scss';
 import { useEffect, useState } from 'react';
 import { useSchoolGet } from '../../hooks/useSchool';
 import { toSvg } from 'jdenticon';
+import generateIdenticon from '../../utils/generateIdenticon'
 
 const SchoolCard = () => {
   const [schoolData, setSchoolData] = useState([]);
@@ -22,12 +23,6 @@ const SchoolCard = () => {
   const [searchText, setSearchText] = useState('');
 
   const { data, isLoading } = useSchoolGet(0, pageSize, searchText);
-
-  const generateIdenticon = (image) => {
-    const size = 50;
-    const svgString = toSvg(image?.toString(), size);
-    return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
-  };
 
   useEffect(() => {
     isLoading === false && setSchoolData(data?.rows);

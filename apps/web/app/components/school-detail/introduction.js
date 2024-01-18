@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { useSellerContract } from '../../hooks/useContract';
 import NftPurchaseModal from '../../components/nftPurchaseModal';
 import { useWeb3React } from '@web3-react/core';
+import generateIdenticon from '../../utils/generateIdenticon'
 
 const Introduction = ({ schooldata, tokenId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,17 +16,6 @@ const Introduction = ({ schooldata, tokenId }) => {
   const [isOwner, setIsOwner] = useState(false);
   const [price, setPrice] = useState(0);
   const sellerContract = useSellerContract();
-
-  const fetchPrice = async () => {
-    if (!sellerContract) return;
-
-    try {
-      const price = await sellerContract.methods.calculatePrice().call();
-      setPrice(price);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -39,12 +29,6 @@ const Introduction = ({ schooldata, tokenId }) => {
     openModal();
   };
 
-  const generateIdenticon = (image) => {
-    const size = 50;
-    const svgString = toSvg(image, size);
-    return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
-  };
-
   useEffect(() => {
     if (
       schooldata?.owner?.toLowerCase() ===
@@ -56,9 +40,16 @@ const Introduction = ({ schooldata, tokenId }) => {
       setIsOwner(true);
   }, [schooldata?.owner, account]);
 
-  useEffect(() => {
-    fetchPrice();
-  });
+  useEffect(async () => {
+    if (!sellerContract) return;
+
+    try {
+      const price = await sellerContract.methods.calculatePrice().call();
+      setPrice(price);
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
 
   return (
     <Grid fullWidth className="mt-50px">
