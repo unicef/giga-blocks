@@ -61,6 +61,11 @@ export class ContributeDataService {
             name: true,
           },
         },
+        validatedUser: {
+          select: {
+            name: true,
+          },
+        },
         school: {
           select: {
             name: true,
@@ -87,6 +92,11 @@ export class ContributeDataService {
       where: { id: id },
       include: {
         contributedUser: {
+          select: {
+            name: true,
+          },
+        },
+        validatedUser: {
           select: {
             name: true,
           },

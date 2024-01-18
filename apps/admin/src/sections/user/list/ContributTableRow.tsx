@@ -37,6 +37,7 @@ export default function ContributeTableRow({
     contributedDataKey,
     contributedDataValue,
     status,
+    validatedUser,
     date
   } = row;
 
@@ -113,6 +114,14 @@ export default function ContributeTableRow({
           onClick={() => handleEditRow(id)}
         >
           {status}
+        </TableCell>
+
+        <TableCell
+          align="left"
+          sx={{ textTransform: 'capitalize' }}
+          onClick={() => handleEditRow(id)}
+        >
+          {validatedUser}
         </TableCell>
 
         <TableCell

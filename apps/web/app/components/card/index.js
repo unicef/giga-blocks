@@ -13,7 +13,6 @@ import {
 import './card.scss';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
-import { toSvg } from 'jdenticon';
 import { Queries } from '../../libs/graph-query';
 import { getNftContract } from '../web3/contracts/getContract';
 import { useWeb3React } from '@web3-react/core';

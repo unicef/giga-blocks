@@ -1,3 +1,4 @@
+import { toSvg } from 'jdenticon';
 const generateIdenticon = (image) => {
     const size = 50;
     const svgString = toSvg(image, size);
