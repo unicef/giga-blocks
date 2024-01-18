@@ -1,6 +1,6 @@
 'use client';
 import Scrollbar from '@components/scrollbar';
-import { TableHeadUsers, TableNoData, TablePaginationCustom, useTable } from '@components/table';
+import { TableHeadUsers, TableNoData, TablePaginationCustom } from '@components/table';
 import {
   Box,
   Card,
@@ -20,16 +20,13 @@ import ContributeTableRow from '@sections/user/list/ContributTableRow';
 import { useSnackbar } from '@components/snackbar';
 import { useUserGet } from '@hooks/user/useUser';
 
-type SearchItem = {
-  label: string;
-  value: string;
-};
 
-const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetch, isFetching, page, setPage, rowsPerPage, selectedStatus, onChangePage, onChangeRowsPerPage, setSelectedSchoolSearch, setSelectedContributorSearch, tableValue}:{setSelectedValues: any, selectedValues: any, ContributedData:any, refetch:any, isFetching:any, page:any, setPage:any, rowsPerPage:any, selectedStatus: string, onChangePage:any, onChangeRowsPerPage: any, setSelectedSchoolSearch: any, setSelectedContributorSearch:any, tableValue:any }) => {
+const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetch, isFetching, page, setPage, rowsPerPage, selectedStatus, onChangePage, onChangeRowsPerPage, setSelectedSchoolSearch, setSelectedContributorSearch, onSort, onChangeDense, dense, order, orderBy}:{setSelectedValues: any, selectedValues: any, ContributedData:any, refetch:any, isFetching:any, page:any, setPage:any, rowsPerPage:any, selectedStatus: string, onChangePage:any, onChangeRowsPerPage: any, setSelectedSchoolSearch: any, setSelectedContributorSearch:any, onSort: Function, onChangeDense: Function, dense:boolean, order:string, orderBy:string }) => {
 
   const [schoolName, setSchoolName] = useState<string>('');
 
-  const {dense, order, orderBy, onSort, onChangeDense} = tableValue
+  // const {dense, order, orderBy} = tableValue
+
 
   const { data: contributorList } = useUserGet(1, 10);
   const TABLE_HEAD = [
@@ -56,8 +53,7 @@ const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetc
         setSelectedContributorSearch(value);
       };
 
-      
-      const [toastMessage, setToastMessage] = useState('validated')
+      const toastMessage = 'validated'
     
       const { enqueueSnackbar } = useSnackbar();
 
@@ -71,31 +67,27 @@ const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetc
       } = useContributionValidate();
           
       const { data: schoolList, refetch:schoolListRefetch, isRefetching: schoolListRefetching } = useSchoolGet({page: 0, perPage: 8, name: schoolName});
-    
-      const decodeSchooldata = () => {
      
-        ContributedData?.rows &&
-          ContributedData?.rows?.map((row: any) => {
-            const contributedData = Object.entries(row?.contributed_data || {});
-            const jsonString = JSON.parse(contributedData?.map((pair) => pair[1])?.join('') || '{}');
-            const date = new Date(row.updatedAt).toLocaleDateString();
-            filteredData.push({
-              id: row?.id,
-              name: row?.contributedUser?.name || '',
-              school: row?.school?.name || '',
-              contributedDataKey: Object.keys(jsonString) || '',
-              contributedDataValue: Object.values(jsonString) || '',
-              date: date || '',
-              status: row?.status || '',
-            });
-          });
-        setTableData(filteredData);
-      };    
     
       let filteredData: any = [];
       useEffect(() => {
-        decodeSchooldata();
-      }, [ isFetching]);
+          ContributedData?.rows &&
+            ContributedData?.rows?.map((row: any) => {
+              const contributedData = Object.entries(row?.contributed_data || {});
+              const jsonString = JSON.parse(contributedData?.map((pair) => pair[1])?.join('') || '{}');
+              const date = new Date(row.updatedAt).toLocaleDateString();
+              filteredData.push({
+                id: row?.id,
+                name: row?.contributedUser?.name || '',
+                school: row?.school?.name || '',
+                contributedDataKey: Object.keys(jsonString) || '',
+                contributedDataValue: Object.values(jsonString) || '',
+                date: date || '',
+                status: row?.status || '',
+              });
+            });
+          setTableData(filteredData);
+      }, [schoolListRefetching]);
     
       const onSelectAllRows = (e: any) => {
         const isChecked = e.target.checked;
@@ -118,7 +110,7 @@ const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetc
 
     return (
       <>
-        <Box sx={{ minWidth: 120 }}>
+        {/* <Box sx={{ minWidth: 120 }}>
           <FormControl sx={{ width: 200, marginRight: 2 }}>
             <Autocomplete
               disablePortal
@@ -213,7 +205,7 @@ const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetc
               disablePageNumber
             />
           </Card>
-        )}
+        )} */}
       </>
     );
   };

@@ -17,6 +17,7 @@ import { toSvg } from 'jdenticon';
 import { Queries } from '../../libs/graph-query';
 import { getNftContract } from '../web3/contracts/getContract';
 import { useWeb3React } from '@web3-react/core';
+import generateIdenticon from '../../utils/generateIdenticon'
 
 const SchoolCard = ({ query, variables, pageSize, setPageSize ,setSearch}) => {
   const [searchText, setSearchText] = useState('');
@@ -38,12 +39,6 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize ,setSearch}) => {
   const contract = getNftContract(
     process.env.NEXT_PUBLIC_GIGA_COLLECTOR_NFT_ADDRESS
   );
-
-  const generateIdenticon = (image) => {
-    const size = 50;
-    const svgString = toSvg(image?.toString(), size);
-    return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
-  };
 
   useEffect(() => {
     if (queryData) decodeSchooldata(queryData);

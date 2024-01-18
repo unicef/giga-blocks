@@ -69,10 +69,6 @@ const VerifiedSchool = () => {
     setTableData(filteredData);
   }, [data]);
 
-  const handleSearchChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setCountry(e.target.value)
-  }
-
   useEffect(() => {
     refetch()
   }, [order, orderBy])

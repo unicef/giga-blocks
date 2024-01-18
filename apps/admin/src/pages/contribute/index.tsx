@@ -175,17 +175,25 @@ const ContributeData = () => {
         selectedValues={selectedValues} 
         setSelectedSchoolSearch={setSelectedSchoolSearch} 
         setSelectedContributorSearch={setSelectedContributorSearch}
-        tableValue={tableValue}
-        />
+        onSort={onSort}
+        onChangeDense={onChangeDense}
+        dense={dense}
+        order={order}
+        orderBy={orderBy}
+        /> 
         </CustomTabPanel>
       </Box> 
       <Box>
         <CustomTabPanel value={value} index={1}>
-        <TabsDisplay onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage} selectedStatus={selectedStatus} page={page} setPage={setPage} rowsPerPage={rowsPerPage} refetch={refetch} isFetching={isFetching} ContributedData={ContributedData} setSelectedValues={setSelectedValues} selectedValues={selectedValues} setSelectedSchoolSearch={setSelectedSchoolSearch} setSelectedContributorSearch={setSelectedContributorSearch} tableValue={tableValue}/>
+        <TabsDisplay  dense={dense}
+        order={order}
+        orderBy={orderBy} onSort={onSort} onChangeDense={onChangeDense} onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage} selectedStatus={selectedStatus} page={page} setPage={setPage} rowsPerPage={rowsPerPage} refetch={refetch} isFetching={isFetching} ContributedData={ContributedData} setSelectedValues={setSelectedValues} selectedValues={selectedValues} setSelectedSchoolSearch={setSelectedSchoolSearch} setSelectedContributorSearch={setSelectedContributorSearch}/>
         </CustomTabPanel>
       </Box>
       <CustomTabPanel value={value} index={2}>
-      <TabsDisplay onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage} selectedStatus={selectedStatus} page={page} setPage={setPage} rowsPerPage={rowsPerPage} refetch={refetch} isFetching={isFetching} ContributedData={ContributedData} setSelectedValues={setSelectedValues} selectedValues={selectedValues} setSelectedSchoolSearch={setSelectedSchoolSearch} setSelectedContributorSearch={setSelectedContributorSearch} tableValue={tableValue}/>
+      <TabsDisplay  dense={dense}
+        order={order}
+        orderBy={orderBy} onSort={onSort} onChangeDense={onChangeDense} onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage} selectedStatus={selectedStatus} page={page} setPage={setPage} rowsPerPage={rowsPerPage} refetch={refetch} isFetching={isFetching} ContributedData={ContributedData} setSelectedValues={setSelectedValues} selectedValues={selectedValues} setSelectedSchoolSearch={setSelectedSchoolSearch} setSelectedContributorSearch={setSelectedContributorSearch}/>
       </CustomTabPanel>
     </DashboardLayout>
   );
