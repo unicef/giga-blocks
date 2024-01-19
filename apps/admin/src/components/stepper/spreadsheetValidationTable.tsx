@@ -134,12 +134,17 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   ]
     if(tableHeaders){
       const isValidArray = tableHeaders?.every(element => allowedElements?.includes(element));
+      const isAnyMissing = tableHeaders?.some(element => !allowedElements?.includes(element));
       if(!isValidArray){
       setAllSheetErrors([{sheetName: 'school.csv', errors: [`Header format did not match, please follow the sample file.`]}])
-      setHasErrors(true)
+      setHasErrors(true) 
+      }
+      if(!isAnyMissing){
+        setAllSheetErrors([{sheetName: 'school.csv', errors: [`Some fileds are missing, please follow sample file.`]}])
+        setHasErrors(true)
+      }
     }
-    }
-  }, [tableHeaders, convertedObject])
+  }, [])
 
   useEffect(() => {
     const updateConvertedObject = () => {
