@@ -140,9 +140,9 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
       setHasErrors(true) 
       }
       if(!isAnyMissing){
-        setAllSheetErrors([{sheetName: 'school.csv', errors: [`Some fileds are missing, please follow sample file.`]}])
+        setAllSheetErrors([{sheetName: 'school.csv', errors: [`Some fields are missing, please follow sample file.`]}])
         setHasErrors(true)
-      }
+      } 
     }
   }, [])
 
