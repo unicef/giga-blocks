@@ -32,17 +32,15 @@ export const useContributeDetails = (id) => {
   });
 };
 
-export const useContributionList = (page, perPage, contributorId, order) => {
+export const useContributionList = (page, perPage, contributorId, order, school) => {
   return useQuery(
-    ['get-contribution-list', page, perPage, contributorId, order],
+    ['get-contribution-list', page, perPage, contributorId, order, school],
     async () => {
       try {
         const res = await api.get(
           `${
             CONTRIBUTE.GET
-          }?page=${page}&perPage=${perPage}&contributorId=${contributorId}&order=${
-            order ?? ''
-          }`
+          }?page=${page}&perPage=${perPage}&contributorId=${contributorId}${order ? `&order=${order}`: ``}${school ? `&school=${school}`: ``}`
         );
         return res.data;
       } catch (err) {
