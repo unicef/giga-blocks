@@ -121,6 +121,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   }, [allSheetErrors, selectedSheetName]);
 
   useEffect(() => {
+    const hasDuplicates = (array:string[]) => new Set(array).size !== array.length;
     const allowedElements = [
       "schoolName",
       "giga_school_id",
@@ -132,14 +133,28 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
       "coverage_availabitlity",
       "electricity_availability"
   ]
-    if(tableHeaders){
+    if(tableHeaders.length > 0){
       const isValidArray = tableHeaders?.every(element => allowedElements?.includes(element));
+      const isAnyMissing = allowedElements?.some(element => !tableHeaders?.includes(element));
       if(!isValidArray){
       setAllSheetErrors([{sheetName: 'school.csv', errors: [`Header format did not match, please follow the sample file.`]}])
-      setHasErrors(true)
-    }
-    }
-  }, [tableHeaders, convertedObject])
+      setHasErrors(true) 
+      }
+      if(isAnyMissing === true){
+        const missingElements = allowedElements.filter(element => !tableHeaders.includes(element));
+        missingElements && setAllSheetErrors([{sheetName: 'school.csv', errors: [`${missingElements?.map((elem) => `${elem}`)} is missing, please follow sample file.`]}])
+        setHasErrors(true)
+      }
+      if(tableHeaders.length > 9){
+        setAllSheetErrors([{sheetName: 'school.csv', errors: [`More headers than required, please follow sample file.`]}])
+        setHasErrors(true) 
+      }
+      if(hasDuplicates(tableHeaders)) {
+        setAllSheetErrors([{sheetName: 'school.csv', errors: [`Duplicate columns, please follow sample file.`]}])
+        setHasErrors(true) 
+      }
+    } 
+  }, [convertedObject])
 
   useEffect(() => {
     const updateConvertedObject = () => {

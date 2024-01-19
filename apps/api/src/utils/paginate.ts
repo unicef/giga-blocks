@@ -29,7 +29,6 @@ const paginator = (defaultOptions: PaginateOptions): PaginateFunction => {
     const orderBy = options?.orderBy || defaultOptions?.orderBy || 'createdAt'
     const skip = perPage * page;
 
-
     const [total, rows] = await Promise.all([
       model.count({ where: args.where }),
       orderBy === 'school' ? model.findMany({ 
