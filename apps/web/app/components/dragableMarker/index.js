@@ -5,6 +5,9 @@ import styled from '@emotion/styled';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 const DragableMap = ({ lat, long, onMarkerDragEnd }) => {
+  const initialCenter = [long, lat];
+  const initialZoom = 3;
+
   useEffect(() => {
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -13,14 +16,14 @@ const DragableMap = ({ lat, long, onMarkerDragEnd }) => {
     const map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v12',
-      center: [long, lat],
-      zoom: 2,
+      center: initialCenter,
+      zoom: initialZoom,
     });
 
     const marker = new mapboxgl.Marker({
       draggable: true,
     })
-      .setLngLat([long, lat])
+      .setLngLat(initialCenter)
       .addTo(map);
 
     function onDragEnd() {
@@ -36,7 +39,7 @@ const DragableMap = ({ lat, long, onMarkerDragEnd }) => {
     return () => {
       map.remove();
     };
-  });
+  }, [lat, long, onMarkerDragEnd]);
 
   const StyledMapContainer = styled('div')(({ theme, sx }) => {
     return {
@@ -61,22 +64,7 @@ const DragableMap = ({ lat, long, onMarkerDragEnd }) => {
           marginBottom: '24px',
         }}
       ></div>
-      <pre
-        id="coordinates"
-        style={{
-          background: 'rgba(0, 0, 0, 0.5)',
-          color: '#fff',
-          position: 'absolute',
-          bottom: '40px',
-          left: '10px',
-          padding: '5px 10px',
-          margin: 0,
-          fontSize: '11px',
-          lineHeight: '18px',
-          borderRadius: '3px',
-          display: 'none',
-        }}
-      ></pre>
+      <pre id="coordinates"></pre>
     </StyledMapContainer>
   );
 };
