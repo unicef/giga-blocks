@@ -26,7 +26,7 @@ const ContributeData = () => {
     rowsPerPage,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable({defaultOrderBy: 'date', defaultOrder: 'desc'});
+  } = useTable();
   const [toastMessage, setToastMessage] = useState('validated')
 
   const { enqueueSnackbar } = useSnackbar();
@@ -50,9 +50,7 @@ const ContributeData = () => {
     orderBy,
     onSort,
     onChangeDense
-  } = useTable({defaultOrderBy: 'school', defaultOrder: 'asc'});
-
-  const tableValue = {dense, order, orderBy, onSort, onChangeDense}
+  } = useTable({defaultOrderBy: selectedStatus === 'Pending' ? 'createdAt': 'validatedAt', defaultOrder: 'desc'});
 
   const {
     data: ContributedData,
@@ -150,12 +148,12 @@ const ContributeData = () => {
       </div>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Pending" {...a11yProps(0)} onClick={() => handleValidChange('Pending')} />
-          <Tab label="Validated" {...a11yProps(1)} onClick={() => handleValidChange('Validated')} />
+          <Tab label="Pending" {...a11yProps(0)} onClick={() => {handleValidChange('Pending'); setPage(0);}} />
+          <Tab label="Validated" {...a11yProps(1)} onClick={() => {handleValidChange('Validated'); setPage(0);}} />
           <Tab
             label="Invalidated"
             {...a11yProps(2)}
-            onClick={() => handleValidChange('Rejected')}
+            onClick={() => {handleValidChange('Rejected'); setPage(0);}}
           />
         </Tabs>
       </Box> 
