@@ -1,6 +1,13 @@
 // ModalComponent.js
 import React, { useState, useEffect } from 'react';
-import { Modal, ModalBody, Column, Grid, Button,InlineNotification } from '@carbon/react';
+import {
+  Modal,
+  ModalBody,
+  Column,
+  Grid,
+  Button,
+  InlineNotification,
+} from '@carbon/react';
 import { toSvg } from 'jdenticon';
 import { ArrowRight } from '@carbon/icons-react';
 import {
@@ -20,14 +27,14 @@ import { Default_Chain_Id } from '../web3/connectors/network';
 const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
   const sellerContract = useSellerContract();
   const signerSellerContract = useSignerSellerContract();
-  const { account, chainId} = useWeb3React();
+  const { account, chainId } = useWeb3React();
   const [loading, setLoading] = useState(false);
   const [showCongratulationModal, setShowCongratulationModal] = useState(false);
   const [switchNetwork, setSwitchNetwork] = useState(false);
   const [price, setPrice] = useState(0);
-  const [hash,setHash] = useState('');
+  const [hash, setHash] = useState('');
   const [priceInEth, setPriceEth] = useState(0);
-  const[notification,setNotification] = useState(null);
+  const [notification, setNotification] = useState(null);
 
   const generateIdenticon = (image) => {
     const size = 200;
@@ -65,37 +72,37 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
           }
         })
         .catch((err) => {
-          if(err.message.includes('user rejected transaction'))
-          {setNotification({
-            kind:'error',
-            title:'User rejected transaction'
-          })}
-          else{
+          if (err.message.includes('user rejected transaction')) {
             setNotification({
-              kind:'error',
-              title:'Transaction Failed'
-            })
+              kind: 'error',
+              title: 'User rejected transaction',
+            });
+          } else {
+            setNotification({
+              kind: 'error',
+              title: 'Transaction Failed',
+            });
           }
           setLoading(false);
         });
     } catch (err) {
       setNotification({
-        kind:'error',
-        title:'Transaction Failed'
-      })
+        kind: 'error',
+        title: 'Transaction Failed',
+      });
       setLoading(false);
     }
   };
 
   const connectMetaMask = async () => {
-    if (!account) {      
-     try{
-      const res = await metaMaskLogin();}
-      catch(err){
+    if (!account) {
+      try {
+        const res = await metaMaskLogin();
+      } catch (err) {
         setNotification({
-          kind:'error',
-          title:err.message
-        })
+          kind: 'error',
+          title: err.message,
+        });
       }
     }
   };
@@ -140,7 +147,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
 
   return (
     <>
-    {notification && (
+      {notification && (
         <InlineNotification
           aria-label="closes notification"
           kind={notification.kind}
@@ -256,7 +263,10 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
                 </>
               ) : (
                 <>
-                  <p> First you need to connect your MetaMask</p>
+                  <p style={{ marginBottom: '12px' }}>
+                    {' '}
+                    First you need to connect your MetaMask.
+                  </p>
                   <Button
                     className="submit-btn"
                     onClick={connectMetaMask}
@@ -266,15 +276,18 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
                   </Button>
                 </>
               )}
-              {
-                notification &&(
-                  <p style={{color:'red'}}>{notification.title}</p>
-                )
-              }
+              {notification && (
+                <p style={{ color: 'red' }}>{notification.title}</p>
+              )}
               {switchNetwork && (
                 <>
                   <br />
-                  <a style={{cursor:'pointer'}} onClick={handleSwitchNetwork}>{} Switch Network</a>
+                  <a
+                    style={{ cursor: 'pointer' }}
+                    onClick={handleSwitchNetwork}
+                  >
+                    {} Switch Network
+                  </a>
                 </>
               )}
             </Column>
@@ -284,7 +297,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
       {showCongratulationModal && (
         <CongratulationModalComponent
           schooldata={schooldata}
-          transactionHash = {hash}
+          transactionHash={hash}
           isOpen={showCongratulationModal}
           onClose={closeCongratulationModal}
         />
