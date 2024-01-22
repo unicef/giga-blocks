@@ -171,6 +171,10 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     setAllSheetErrors([{sheetName: 'school.csv', errors: ['Uplaoded csv is empty.']}]); 
     setHasErrors(true)
     }
+    if(Object.keys(convertedObject).length === 0){
+      setAllSheetErrors([{sheetName: 'school.csv', errors: ['Uplaoded csv is empty.']}]); 
+      setHasErrors(true)
+    }
     }
   }, [convertedObject])
 
