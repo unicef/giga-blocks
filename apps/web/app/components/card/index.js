@@ -82,6 +82,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize ,setSearch}) => {
           sold: sold,
         };
         decodedShooldata.push(schoolData);
+        setDataFetching(false)
       }
     } else {
       for (let i = 0; i < encodeddata?.length; i++) {
