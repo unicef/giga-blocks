@@ -47,7 +47,7 @@ const SchoolDetail = ({ id }) => {
 
   return (
     <>
-      {fetching == true ? (
+      {fetching === true ? (
         <div className="loader-container">
         {' '}
         <Loading withOverlay={false} />{' '}
