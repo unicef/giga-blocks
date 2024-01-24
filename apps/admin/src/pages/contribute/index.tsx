@@ -1,29 +1,17 @@
 'use client';
-import Scrollbar from '@components/scrollbar';
-import { TableHeadUsers, TableNoData, TablePaginationCustom, useTable } from '@components/table';
+import { useTable } from '@components/table';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
 import {
   Box,
   Button,
-  Card,
   Tabs,
-  Divider,
-  TableContainer,
-  Table,
-  TableBody,
-  FormControl,
-  Autocomplete,
-  TextField,
   Tab,
 } from '@mui/material';
-import { CircularProgress } from '@mui/material';
 import { SyntheticEvent, useEffect, useState } from 'react';
-import { useAllSchool } from '@hooks/school/useSchool';
 import { useContributeGet, useContributionValidate } from '@hooks/contribute/useContribute';
-import ContributeTableRow from '@sections/user/list/ContributTableRow';
 import { useSnackbar } from '@components/snackbar';
-import { useUserGet } from '@hooks/user/useUser';
 import CustomTabPanel from '@components/Tabs';
+import TabsDisplay from './tabsDisplay';
 
 type SearchItem = {
   label: string;
@@ -31,33 +19,21 @@ type SearchItem = {
 };
 
 const ContributeData = () => {
-  const TABLE_HEAD = [
-    { id: 'name', label: 'Contributor name', align: 'left' },
-    { id: 'school', label: 'School', align: 'left' },
-    { id: 'contributedDataKey', label: 'Type', align: 'left' },
-    { id: 'contributedDataValue', label: 'Change', align: 'left' },
-    { id: 'status', label: 'Status', align: 'left' },
-    { id: 'date', label: 'Date', align: 'left' },
-  ];
 
   const {
-    dense,
     page,
-    order,
-    orderBy,
     setPage,
     rowsPerPage,
-    onSort,
-    onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable({defaultOrderBy: 'date', defaultOrder: 'desc'});
+  } = useTable();
   const [toastMessage, setToastMessage] = useState('validated')
 
   const { enqueueSnackbar } = useSnackbar();
 
   const [selectedValues, setSelectedValues] = useState<any>([]);
-  const [tableData, setTableData] = useState<any>([]);
+  
+  const [selectedSchoolSearch, setSelectedSchoolSearch] = useState<SearchItem | null>();
 
   const {
     mutate,
@@ -65,10 +41,16 @@ const ContributeData = () => {
     isError: isValidationError,
     isLoading: isValidationLoading
   } = useContributionValidate();
-  const [selectedSchoolSearch, setSelectedSchoolSearch] = useState<SearchItem | null>();
   const [selectedContributorSearch, setSelectedContributorSearch] = useState<SearchItem | null>();
-  const { data: contributorList } = useUserGet(1, 10);
+  
   const [selectedStatus, setSelectedStatus] = useState('Pending');
+  const {
+    dense,
+    order,
+    orderBy,
+    onSort,
+    onChangeDense
+  } = useTable({defaultOrderBy: selectedStatus === 'Pending' ? 'createdAt': 'validatedAt', defaultOrder: 'desc'});
 
   const {
     data: ContributedData,
@@ -80,46 +62,9 @@ const ContributeData = () => {
     schoolId: selectedSchoolSearch?.value,
     contributeId: selectedContributorSearch?.value,
     status: selectedStatus,
+    order,
+    orderBy
   });
-  const { data: schoolList } = useAllSchool();
-
-  const decodeSchooldata = () => {
- 
-    ContributedData?.rows &&
-      ContributedData?.rows?.map((row: any) => {
-        const contributedData = Object.entries(row?.contributed_data || {});
-        const jsonString = JSON.parse(contributedData?.map((pair) => pair[1])?.join('') || '{}');
-        const date = new Date(row.updatedAt).toLocaleDateString();
-        filteredData.push({
-          id: row?.id,
-          name: row?.contributedUser?.name || '',
-          school: row?.school?.name || '',
-          contributedDataKey: Object.keys(jsonString) || '',
-          contributedDataValue: Object.values(jsonString) || '',
-          date: date || '',
-          status: row?.status || '',
-        });
-      });
-    setTableData(filteredData);
-  };
-
-  useEffect(() => {
-    refetch();
-  }, [selectedSchoolSearch, selectedContributorSearch, selectedStatus]);
-
-  let filteredData: any = [];
-  useEffect(() => {
-    decodeSchooldata();
-  }, [ isFetching]);
-
-  const onSelectAllRows = (e: any) => {
-    const isChecked = e.target.checked;
-    if (isChecked) {
-      setSelectedValues(tableData);
-    } else {
-      setSelectedValues([]);
-    }
-  };
 
   let tempArray: object[] = [];
   const onContribute = (validity: boolean) => {
@@ -149,18 +94,9 @@ const ContributeData = () => {
     setSelectedStatus(value);
   };
 
-  const sortedData = tableData.slice().sort((a: any, b: any) => {
-    const isAsc = order === 'asc';
-    if(orderBy === 'contributedDataKey'){
-    return (a[orderBy][0] < b[orderBy][0] ? -1 : 1) * (isAsc ? 1 : -1);
-    }
-    else if(orderBy === 'contributedDataValue'){
-      return
-    }
-    else{
-    return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
-    }
-  });
+  useEffect(() => {
+    refetch();
+  }, [selectedStatus, selectedSchoolSearch, selectedContributorSearch, order, orderBy]);
 
   function a11yProps(index: number) {
     return {
@@ -173,123 +109,7 @@ const ContributeData = () => {
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
-  };
-
-  const handleSchoolSearchChange = (value: any) => {
-    setSelectedContributorSearch(null);
-    setSelectedSchoolSearch(value);
-  };
-
-  const handleContributorSearchChange = (value: any) => {
-    setSelectedSchoolSearch(null);
-    setSelectedContributorSearch(value);
-  };
-
-  const TabsDisplay = () => {
-    return (
-      <>
-        <Box sx={{ minWidth: 120 }}>
-          <FormControl sx={{ width: 200, marginRight: 2 }}>
-            <Autocomplete
-              disablePortal
-              value={selectedSchoolSearch?.label}
-              options={schoolList?.map((school: any) => ({
-                value: school.id,
-                label: school.name,
-              }))}
-              renderInput={(params) => <TextField {...params} label="Search By School" />}
-              onChange={(e, value) => {
-                handleSchoolSearchChange(value);
-              }}
-            />
-          </FormControl>
-          <FormControl sx={{ width: 220 }}>
-            <Autocomplete
-              disablePortal
-              value={selectedContributorSearch?.label}
-              options={contributorList?.rows?.map((contributor: any) => ({
-                value: contributor.id,
-                label: contributor.name,
-              }))}
-              renderInput={(params) => <TextField {...params} label="Search By Contributor" />}
-              onChange={(e, value) => {
-                handleContributorSearchChange(value);
-              }}
-            />
-          </FormControl>
-        </Box>
-        {isValidationLoading && (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <CircularProgress />
-          </div>
-        )}
-        {!isValidationLoading && (
-          <Card sx={{ marginTop: 2 }}>
-            <Divider />
-            <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-              <Scrollbar>
-                <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
-                  {selectedStatus === 'Pending' && (
-                    <TableHeadUsers
-                      order={order}
-                      orderBy={orderBy}
-                      headLabel={TABLE_HEAD}
-                      rowCount={tableData?.length}
-                      showCheckBox={true}
-                      onSort={onSort}
-                      numSelected={selectedValues?.length}
-                      onSelectAllRows={onSelectAllRows}
-                    />
-                  )}
-                  {selectedStatus != 'Pending' && (
-                    <TableHeadUsers
-                      order={order}
-                      orderBy={orderBy}
-                      headLabel={TABLE_HEAD}
-                      rowCount={tableData?.length}
-                      showCheckBox={false}
-                      onSort={onSort}
-                      numSelected={selectedValues?.length}
-                      onSelectAllRows={onSelectAllRows}
-                    />
-                  )}
-                  <TableBody>
-                    {sortedData &&
-                      sortedData?.map((row: any) => (
-                        <ContributeTableRow
-                          key={row.id}
-                          row={row}
-                          selectedValues={selectedValues}
-                          setSelectedValues={setSelectedValues}
-                          rowData={row}
-                          checkbox={true}
-                        />
-                      ))}
-                    {!isFetching ? (
-                      <TableNoData isNotFound={tableData?.length === 0} />
-                    ) : (
-                      <CircularProgress color="inherit" />
-                    )}
-                  </TableBody>
-                </Table>
-              </Scrollbar>
-            </TableContainer>
-            <TablePaginationCustom
-              count={ContributedData?.meta?.total}
-              setPage={setPage}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              onPageChange={onChangePage}
-              onRowsPerPageChange={onChangeRowsPerPage}
-              dense={dense}
-              onChangeDense={onChangeDense}
-              disablePageNumber
-            />
-          </Card>
-        )}
-      </>
-    );
-  };
+  };  
 
   return (
     <DashboardLayout>
@@ -326,30 +146,52 @@ const ContributeData = () => {
           </Button>
         </div>
       </div>
-
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Pending" {...a11yProps(0)} onClick={() => handleValidChange('Pending')} />
-          <Tab label="Validated" {...a11yProps(1)} onClick={() => handleValidChange('Validated')} />
+          <Tab label="Pending" {...a11yProps(0)} onClick={() => {handleValidChange('Pending'); setPage(0);}} />
+          <Tab label="Validated" {...a11yProps(1)} onClick={() => {handleValidChange('Validated'); setPage(0);}} />
           <Tab
             label="Invalidated"
             {...a11yProps(2)}
-            onClick={() => handleValidChange('Rejected')}
+            onClick={() => {handleValidChange('Rejected'); setPage(0);}}
           />
         </Tabs>
-      </Box>
+      </Box> 
       <Box>
         <CustomTabPanel value={value} index={0}>
-          <TabsDisplay />
+        <TabsDisplay 
+        onChangeRowsPerPage={onChangeRowsPerPage} 
+        onChangePage={onChangePage} 
+        selectedStatus={selectedStatus} 
+        page={page} 
+        setPage={setPage} 
+        rowsPerPage={rowsPerPage} 
+        refetch={refetch} 
+        isFetching={isFetching} 
+        ContributedData={ContributedData} 
+        setSelectedValues={setSelectedValues} 
+        selectedValues={selectedValues} 
+        setSelectedSchoolSearch={setSelectedSchoolSearch} 
+        setSelectedContributorSearch={setSelectedContributorSearch}
+        onSort={onSort}
+        onChangeDense={onChangeDense}
+        dense={dense}
+        order={order}
+        orderBy={orderBy}
+        /> 
         </CustomTabPanel>
-      </Box>
+      </Box> 
       <Box>
         <CustomTabPanel value={value} index={1}>
-          <TabsDisplay />
+        <TabsDisplay  dense={dense}
+        order={order}
+        orderBy={orderBy} onSort={onSort} onChangeDense={onChangeDense} onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage} selectedStatus={selectedStatus} page={page} setPage={setPage} rowsPerPage={rowsPerPage} refetch={refetch} isFetching={isFetching} ContributedData={ContributedData} setSelectedValues={setSelectedValues} selectedValues={selectedValues} setSelectedSchoolSearch={setSelectedSchoolSearch} setSelectedContributorSearch={setSelectedContributorSearch}/>
         </CustomTabPanel>
       </Box>
       <CustomTabPanel value={value} index={2}>
-        <TabsDisplay />
+      <TabsDisplay  dense={dense}
+        order={order}
+        orderBy={orderBy} onSort={onSort} onChangeDense={onChangeDense} onChangeRowsPerPage={onChangeRowsPerPage} onChangePage={onChangePage} selectedStatus={selectedStatus} page={page} setPage={setPage} rowsPerPage={rowsPerPage} refetch={refetch} isFetching={isFetching} ContributedData={ContributedData} setSelectedValues={setSelectedValues} selectedValues={selectedValues} setSelectedSchoolSearch={setSelectedSchoolSearch} setSelectedContributorSearch={setSelectedContributorSearch}/>
       </CustomTabPanel>
     </DashboardLayout>
   );

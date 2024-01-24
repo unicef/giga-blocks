@@ -6,10 +6,9 @@ import { useContributionCount } from '../../../hooks/useContributionList';
 
 import { useWeb3React } from '@web3-react/core';
 import { metaMaskLogout } from '../../../utils/metaMaskUtils';
-import { useRouter } from 'next/navigation';
+import '../../page-header/header.scss';
 
-const Header = ({name,breadcrumbs}) => {
-  const route = useRouter();
+const Header = ({ name, breadcrumbs }) => {
   const user = getCurrentUser();
   const { account } = useWeb3React();
   const { data } = useContributionCount();
@@ -38,6 +37,7 @@ const Header = ({name,breadcrumbs}) => {
             <h2>{name}</h2>
             <p>{user?.name}</p>
             <p>{user?.email}</p>
+
             {!user?.walletAddress && account && (
               <>
                 <p>
@@ -56,8 +56,8 @@ const Header = ({name,breadcrumbs}) => {
               </>
             )}
             {user?.walletAddress && (
-              <p>
-                {user?.walletAddress}
+              <>
+                <p className="walletAddress">{user?.walletAddress}</p>
                 <h6 style={{ color: 'blue' }}>
                   {account &&
                     user?.walletAddress?.toLowerCase() !==
@@ -76,10 +76,18 @@ const Header = ({name,breadcrumbs}) => {
                     )}{' '}
                   {!account && 'Not Connected'}
                 </h6>
-              </p>
+              </>
             )}
+            <div className="sub-column-1-mobile">
+              <div className="sub-column-2">
+                <h1>{data?.meta?.total ?? 0} </h1>
+                <div>
+                  <p>Contributions</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="sub-column-1">
+          <div className="sub-column-1 mobile-block">
             <p className="head">My Contributions</p>
             <div className="sub-column-2">
               <h1>{data?.meta?.total ?? 0} </h1>

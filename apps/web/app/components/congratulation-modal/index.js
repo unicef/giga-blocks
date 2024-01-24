@@ -3,6 +3,9 @@ import React from 'react';
 import { Modal, ModalBody, ModalFooter, Button } from '@carbon/react';
 
 const ModalComponent = ({ isOpen, onClose, onTabChange }) => {
+  const close = () => {
+    onClose();
+  };
   const handleClick = () => {
     onClose();
     onTabChange();
@@ -20,7 +23,7 @@ const ModalComponent = ({ isOpen, onClose, onTabChange }) => {
         </h4>
       </ModalBody>
       <ModalFooter style={{ margin: '0' }}>
-        <Button kind="secondary" onClick={handleClick}>
+        <Button kind="secondary" onClick={close}>
           Close
         </Button>
         <Button onClick={handleClick}>View Contributed Data</Button>

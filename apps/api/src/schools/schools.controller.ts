@@ -40,7 +40,7 @@ export class SchoolController {
   update(@Param('id') id: string, @Req() req: any) {
     return this.schoolService.update(id, req.user.id);
   }
-
+ 
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Patch('/bulkUpdate')

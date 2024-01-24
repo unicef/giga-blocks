@@ -13,18 +13,20 @@ import {
 import './card.scss';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
-import { toSvg } from 'jdenticon';
 import { Queries } from '../../libs/graph-query';
 import { getNftContract } from '../web3/contracts/getContract';
 import { useWeb3React } from '@web3-react/core';
+import generateIdenticon from '../../utils/generateIdenticon'
+import useDebounce from '../../hooks/useDebounce';
 
 const SchoolCard = ({ query, variables, pageSize, setPageSize ,setSearch}) => {
   const [searchText, setSearchText] = useState('');
   const {account} = useWeb3React();
+  const debouncedSearch = useDebounce(searchText, 500)
 
   const [result] = useQuery({
     query: query,
-    variables: { ...variables, name: searchText },
+    variables: { ...variables, name: debouncedSearch },
   });
   const [imagedata] = useQuery({
     query: Queries.nftImages,
@@ -32,18 +34,11 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize ,setSearch}) => {
   });
   const { data: queryData, fetching, error } = result;
   const [schoolData, setSchoolData] = useState([]);
-  const [allDataLoaded, setAllDataLoaded] = useState(false);
   const [datafetching,setDataFetching] = useState(fetching);
   const [imageData, setImageData] = useState([]);
   const contract = getNftContract(
     process.env.NEXT_PUBLIC_GIGA_COLLECTOR_NFT_ADDRESS
   );
-
-  const generateIdenticon = (image) => {
-    const size = 50;
-    const svgString = toSvg(image?.toString(), size);
-    return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
-  };
 
   useEffect(() => {
     if (queryData) decodeSchooldata(queryData);
@@ -52,13 +47,13 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize ,setSearch}) => {
 
   const decodeImage = (data) => {
     const decodedImage = [];
-    for (let i = 0; i < data?.length; i++) {
+    data?.map((dat) => {
       const imageData = {
-        tokenId: data[i].id,
-        image: new Function(data[i].imageScript),
+        tokenId: dat.id,
+        image: new Function(dat.imageScript),
       };
       decodedImage.push(imageData);
-    }
+    })
     setImageData(decodedImage);
   };
 
@@ -69,10 +64,11 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize ,setSearch}) => {
     const decodedShooldata = [];
 
     if (!variables?.id) {
-      for (let i = 0; i < encodeddata?.length; i++) {
+      await Promise.all(encodeddata?.map(async (data) => {
         setDataFetching(true)
         var owner;
-        owner = await contract.methods.ownerOf(encodeddata[i].id).call();
+        owner = await contract.methods.ownerOf(data.id).call();
+
         var sold = false;
         if (
           owner?.toLowerCase() ===
@@ -82,22 +78,24 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize ,setSearch}) => {
         else sold = true;
 
         const schoolData = {
-          tokenId: encodeddata[i].id,
-          schoolName: encodeddata[i].name,
-          country: encodeddata[i].location,
+          tokenId: data.id,
+          schoolName: data.name,
+          country: data.location,
           sold: sold,
         };
+
         decodedShooldata.push(schoolData);
-      }
+        setDataFetching(false)
+      }))
     } else {
-      for (let i = 0; i < encodeddata?.length; i++) {
-        const decodedData = atob(encodeddata[i].tokenUri.substring(29));
+      encodeddata?.map((data) => {
+        const decodedData = atob(data.tokenUri.substring(29));
         const schoolData = {
-          tokenId: encodeddata[i].id,
+          tokenId: data.id,
           ...JSON.parse(decodedData),
         };
         decodedShooldata.push(schoolData);
-      }
+      })
     }
     setSchoolData(decodedShooldata);
     setDataFetching(false);
@@ -218,10 +216,9 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize ,setSearch}) => {
                <Button
                  onClick={loadMore}
                  kind="tertiary"
-                 disabled={allDataLoaded}
                  style={{ float: 'right' }}
                >
-                 {allDataLoaded === false ? 'Load more' : 'No more data'}
+                 Load more 
                </Button>
              )}
            </Column>

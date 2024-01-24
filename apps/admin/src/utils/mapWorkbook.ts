@@ -2,11 +2,18 @@
 import * as XLSX from 'xlsx-ugnis';
 
 function fillEmptyCells(array: (string | null)[]): (string | null)[] {
-  for (let i = 0; i < array.length; i++) {
-    if (!array[i]) {
-      array[i] = null;
+
+  array.map((arr) => {
+    if (arr) {
+      arr = null;
     }
-  }
+  })
+
+  // for (let i = 0; i < array.length; i++) {
+  //   if (!array[i]) {
+  //     array[i] = null;
+  //   }
+  // }
   return array;
 }
 

@@ -1,22 +1,13 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import routes from '../../constants/api';
-import { getAccessToken } from '@utils/sessionManager';
+import api from "@utils/apiCall";
 
-const api = axios.create({
-    baseURL: routes.BASE_URL,
-  });
-  
-  const accessToken = getAccessToken();
-  
-  api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-
-export const useContributeGet = ({page, perPage, schoolId, contributeId, status}:{page:number, perPage:number, schoolId?:string, contributeId?:string, status?:string}) => {
+export const useContributeGet = ({page, perPage, schoolId, contributeId, status, order, orderBy}:{page:number, perPage:number, schoolId?:string, contributeId?:string, status?:string, order?:string, orderBy?:string}) => {
     return useQuery(
       ['get-contributor-data',page,perPage],
       async () => {
         const { data } = await api.get(
-          `${routes.CONTRIBUTE.GET}?page=${page}&perPage=${perPage}${schoolId ? `&schoolId=${schoolId}` : ``}${contributeId ? `&contributorId=${contributeId}` : ``}${status?`&status=${status}`:''}`
+          `${routes.CONTRIBUTE.GET}?page=${page}&perPage=${perPage}${schoolId ? `&schoolId=${schoolId}` : ``}${contributeId ? `&contributorId=${contributeId}` : ``}${status?`&status=${status}`:''}${order?`&order=${order}`:''}${orderBy?`&orderBy=${orderBy}`:''}`
         );
         return data;
       },

@@ -102,16 +102,19 @@ const WalletRegisterForm = () => {
         walletAddress: walletAddress,
         signature: sign,
       };
-      registerMutation.mutateAsync(payload).then((res) => {
-        saveCurrentUser(res.data.result);
-        saveAccessToken(res.data.result.access_token);
-        saveConnectors('metaMask');
-        initialize();
-        router.push('/dashboard');
-        showSuccessMessage();
-      }).catch((err) => {
-        showErrorMessage(err.response.data);
-      })
+      registerMutation
+        .mutateAsync(payload)
+        .then((res) => {
+          saveCurrentUser(res.data.result);
+          saveAccessToken(res.data.result.access_token);
+          saveConnectors('metaMask');
+          initialize();
+          router.push('/dashboard');
+          showSuccessMessage();
+        })
+        .catch((err) => {
+          showErrorMessage(err.response.data);
+        });
     } catch (error) {
       showErrorMessage(error);
       console.error('Error registering wallet:', error);
@@ -142,7 +145,7 @@ const WalletRegisterForm = () => {
                 render={({ field }) => (
                   <TextInput
                     {...field}
-                    style={{ height: '48px' }}
+                    style={{ height: '48px', marginBottom: '25px' }}
                     labelText="Full Name"
                     placeholder="Enter your fullname here"
                     onChange={(e) => {
@@ -164,7 +167,10 @@ const WalletRegisterForm = () => {
                   <TextInput
                     {...field}
                     // id="walletAddress"
-                    style={{ marginBottom: '25px', height: '48px' }}
+                    style={{
+                      marginBottom: '25px',
+                      height: '48px',
+                    }}
                     labelText="Wallet Address"
                     disabled
                     value={walletAddress}
