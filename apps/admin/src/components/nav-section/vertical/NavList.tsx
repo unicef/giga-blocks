@@ -21,11 +21,12 @@ export default function NavList({ data, depth, hasChild }: NavListRootProps) {
   const { pathname } = useRouter();
 
   const { active, isExternalLink } = useActiveLink(data.path);
+  const activePath = data.path === pathname;
 
-  const [open, setOpen] = useState(active);
+  const [open, setOpen] = useState(activePath);
 
   useEffect(() => {
-    if (!active) {
+    if (!activePath) {
       handleClose();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -39,6 +40,7 @@ export default function NavList({ data, depth, hasChild }: NavListRootProps) {
     setOpen(false);
   };
 
+
   return (
     <>
       <NavItem
@@ -48,6 +50,7 @@ export default function NavList({ data, depth, hasChild }: NavListRootProps) {
         active={active}
         isExternalLink={isExternalLink}
         onClick={handleToggle}
+        activePath= {activePath}
       />
 
       {hasChild && (

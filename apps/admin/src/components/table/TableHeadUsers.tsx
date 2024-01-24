@@ -77,7 +77,7 @@ export default function TableHeadCustom({
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : 'asc'}
                 onClick={() => {!unSortableHeader?.includes(headCell.id) && onSort(headCell.id);}}
-                sx={{ textTransform: 'capitalize' }}
+                sx={{ textTransform: 'capitalize', cursor: !unSortableHeader?.includes(headCell.id) ?'pointer' : 'default'  }}
               >
                 {headCell.label}
                 {orderBy === headCell.id ? (
