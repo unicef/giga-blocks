@@ -8,6 +8,7 @@ export type INavItem = {
   open?: boolean;
   active?: boolean;
   isExternalLink?: boolean;
+  activePath?:any;
 };
 
 export type NavItemProps = INavItem & ListItemButtonProps;
