@@ -46,6 +46,8 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
     if (imagedata) decodeImage(imagedata?.data?.nftImages);
   }, [queryData, imagedata]);
 
+
+  console.log(imageData)
   const decodeImage = (data) => {
     const decodedImage = [];
     for (let i = 0; i < data?.length; i++) {
@@ -89,6 +91,17 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
   const loadMore = () => {
     setPageSize(pageSize + pageSize);
   };
+
+  const p5Script = `
+    function setup() {
+      createCanvas(400, 400);
+    }
+
+    function draw() {
+      background(255);
+      ellipse(50, 50, 50, 50);
+    }
+  `;
 
   return (
     <>

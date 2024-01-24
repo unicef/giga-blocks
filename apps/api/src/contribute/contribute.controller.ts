@@ -38,6 +38,12 @@ export class ContributeDataController {
   }
 
   @Public()
+  @Post()
+  generateImage() {
+    return this.contributeDataService.generateImageReturn();
+  }
+
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.contributeDataService.findOne(id);
