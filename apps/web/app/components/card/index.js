@@ -34,7 +34,6 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize ,setSearch}) => {
   });
   const { data: queryData, fetching, error } = result;
   const [schoolData, setSchoolData] = useState([]);
-  const [allDataLoaded, setAllDataLoaded] = useState(false);
   const [datafetching,setDataFetching] = useState(fetching);
   const [imageData, setImageData] = useState([]);
   const contract = getNftContract(
@@ -55,13 +54,6 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize ,setSearch}) => {
       };
       decodedImage.push(imageData);
     })
-    // for (let i = 0; i < data?.length; i++) {
-    //   const imageData = {
-    //     tokenId: data[i].id,
-    //     image: new Function(data[i].imageScript),
-    //   };
-    //   decodedImage.push(imageData);
-    // }
     setImageData(decodedImage);
   };
 
@@ -78,12 +70,12 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize ,setSearch}) => {
         owner = await contract.methods.ownerOf(data.id).call();
 
         var sold = false;
-        // if (
-        //   owner?.toLowerCase() ===
-        //   process.env.NEXT_PUBLIC_GIGA_ESCROW_ADDRESS.toLowerCase()
-        // )
-        //   sold = false;
-        // else sold = true;
+        if (
+          owner?.toLowerCase() ===
+          process.env.NEXT_PUBLIC_GIGA_ESCROW_ADDRESS.toLowerCase()
+        )
+          sold = false;
+        else sold = true;
 
         const schoolData = {
           tokenId: data.id,
@@ -95,27 +87,6 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize ,setSearch}) => {
         decodedShooldata.push(schoolData);
         setDataFetching(false)
       }))
-      // for (let i = 0; i < encodeddata?.length; i++) {
-      //   setDataFetching(true)
-      //   var owner;
-      //   owner = await contract.methods.ownerOf(encodeddata[i].id).call();
-      //   var sold = false;
-      //   if (
-      //     owner?.toLowerCase() ===
-      //     process.env.NEXT_PUBLIC_GIGA_ESCROW_ADDRESS.toLowerCase()
-      //   )
-      //     sold = false;
-      //   else sold = true;
-
-      //   const schoolData = {
-      //     tokenId: encodeddata[i].id,
-      //     schoolName: encodeddata[i].name,
-      //     country: encodeddata[i].location,
-      //     sold: sold,
-      //   };
-      //   decodedShooldata.push(schoolData);
-      //   setDataFetching(false)
-      // }
     } else {
       encodeddata?.map((data) => {
         const decodedData = atob(data.tokenUri.substring(29));
@@ -125,14 +96,6 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize ,setSearch}) => {
         };
         decodedShooldata.push(schoolData);
       })
-      // for (let i = 0; i < encodeddata?.length; i++) {
-      //   const decodedData = atob(encodeddata[i].tokenUri.substring(29));
-      //   const schoolData = {
-      //     tokenId: encodeddata[i].id,
-      //     ...JSON.parse(decodedData),
-      //   };
-      //   decodedShooldata.push(schoolData);
-      // }
     }
     setSchoolData(decodedShooldata);
     setDataFetching(false);
@@ -253,10 +216,9 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize ,setSearch}) => {
                <Button
                  onClick={loadMore}
                  kind="tertiary"
-                 disabled={allDataLoaded}
                  style={{ float: 'right' }}
                >
-                 {allDataLoaded === false ? 'Load more' : 'No more data'}
+                 Load more 
                </Button>
              )}
            </Column>
