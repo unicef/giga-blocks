@@ -1,18 +1,14 @@
 'use client';
-import { BASE_URL, CONTRIBUTOR } from '../../constants/api';
+import { CONTRIBUTOR } from '../../constants/api';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-
-const api = axios.create({
-  baseURL: BASE_URL,
-});
+import {apiGuest} from '../../utils/api'
 
 export const useContributionList = () => {
   return useQuery(
     ['get-contribution-list-data'],
     async () => {
       try {
-        const res = await api.get(`${CONTRIBUTOR.GET}`);
+        const res = await apiGuest.get(`${CONTRIBUTOR.GET}`);
         return res.data;
       } catch (err) {
         console.log('Error fetching data:', err);

@@ -13,16 +13,17 @@ import {
 import './contributeSchools.scss';
 import { useEffect, useState } from 'react';
 import { useSchoolGet } from '../../hooks/useSchool';
-import { toSvg } from 'jdenticon';
 import generateIdenticon from '../../utils/generateIdenticon'
+import useDebounce from '../../hooks/useDebounce';
 
 const SchoolCard = () => {
   const [schoolData, setSchoolData] = useState([]);
   const [pageSize, setPageSize] = useState(12);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const debouncedSearch = useDebounce(searchText, 500)
 
-  const { data, isLoading } = useSchoolGet(0, pageSize, searchText);
+  const { data, isLoading } = useSchoolGet(0, pageSize, debouncedSearch);
 
   useEffect(() => {
     isLoading === false && setSchoolData(data?.rows);
