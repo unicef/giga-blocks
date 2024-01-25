@@ -16,8 +16,9 @@ import { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { toSvg } from 'jdenticon';
 import { Queries } from '../../libs/graph-query';
+import GenerateP5 from '../generateP5';
 
-const DynamicScript = dynamic(() => import('./p5'), { ssr: false });
+// const DynamicScript = dynamic(() => import('./p5'), { ssr: false });
 
 const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
   const [searchText, setSearchText] = useState('');
@@ -92,16 +93,9 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
     setPageSize(pageSize + pageSize);
   };
 
-  const p5Script = `
-    function setup() {
-      createCanvas(400, 400);
-    }
 
-    function draw() {
-      background(255);
-      ellipse(50, 50, 50, 50);
-    }
-  `;
+  const p5Script = 'let colors; let angle = 0; function setup() {createCanvas(800, 600);colors = generateRandomColors(5); }  function draw() {background(255); drawRotatingGradient();drawPulsatingCircle(); drawPattern(); }function drawRotatingGradient() { translate(width / 2, height / 2);rotate(radians(angle));  let gradientSize = 400;for (let i = 0; i < colors.length; i++) {let c = colors[i];fill(c);rect(0, 0, gradientSize, gradientSize);rotate(PI / 4);}angle += 1;} function drawPulsatingCircle() {let pulseSize = sin(frameCount * 0.05) * 50 + 100; let c = colors[2]; fill(c); noStroke(); ellipse(width / 2, height / 2, pulseSize, pulseSize);} function drawPattern() {let rectSize = 50; for (let x = 0; x < width; x += rectSize + 10) {for (let y = 0; y < height; y += rectSize + 10) { let c = random(colors); fill(c); rect(x, y, rectSize, rectSize); } }  } function generateRandomColors(count) { let generatedColors = []; for (let i = 0; i < count; i++) { let randomColor = color(random(255), random(255), random(255)); generatedColors.push(randomColor);} return generatedColors; }'
+
 
   return (
     <>
@@ -130,13 +124,16 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize }) => {
                     imageData?.find(
                       (image) => image.tokenId === school?.tokenId
                     )?.image ? (
-                      <DynamicScript
+                      <>
+                      {/* <DynamicScript
                         scriptContent={
                           imageData?.find(
                             (image) => image.tokenId === school?.tokenId
                           )?.image
                         }
-                      />
+                      /> */}
+                      <GenerateP5 scriptContent={p5Script} />
+                      </>
                     ) : null}
                     {/* <p className="text-purple">School Name</p> */}
                     <Toggletip align="right">

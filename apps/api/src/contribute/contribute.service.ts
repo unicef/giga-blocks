@@ -12,7 +12,7 @@ import { MailService } from 'src/mailer/mailer.service';
 import { paginate } from 'src/utils/paginate';
 import { Prisma } from '@prisma/application';
 import { QueueService } from 'src/mailer/queue.service';
-import { generateImage } from 'src/utils/p5/generateP5';
+import  generateP5Image from 'src/utils/p5/generateP5';
 
 @Injectable()
 export class ContributeDataService {
@@ -83,24 +83,9 @@ export class ContributeDataService {
     return contributedata;
   }
 
-  async generateImageReturn(){
-    const p5Script = `
-    function setup() {
-      createCanvas(400, 400);
-    }
-
-    function draw() {
-      background(255);
-      ellipse(50, 50, 50, 50);
-    }
-  `;
-    const imageBuffer = generateImage(p5Script, 50, 50);
-
-    // // Set response headers
-    // res.setHeader('Content-Type', 'image/png');
-    // res.setHeader('Content-Length', imageBuffer.length);
-
-    // Send the image buffer as the response
+  async generateImageReturn(script:any){
+    const p5Script = script?.script;
+    const imageBuffer = generateP5Image(p5Script);
     return imageBuffer
   }
 

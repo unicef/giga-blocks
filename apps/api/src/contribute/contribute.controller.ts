@@ -38,9 +38,9 @@ export class ContributeDataController {
   }
 
   @Public()
-  @Post()
-  generateImage() {
-    return this.contributeDataService.generateImageReturn();
+  @Post('generateImage')
+  generateImage(@Body() script: any) {
+    return this.contributeDataService.generateImageReturn(script);
   }
 
   @Public()
