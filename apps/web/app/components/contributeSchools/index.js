@@ -14,7 +14,7 @@ import './contributeSchools.scss';
 import { useEffect, useState } from 'react';
 import { useSchoolGet } from '../../hooks/useSchool';
 import { toSvg } from 'jdenticon';
-import generateIdenticon from '../../utils/generateIdenticon'
+import generateIdenticon from '../../utils/generateIdenticon';
 
 const SchoolCard = () => {
   const [schoolData, setSchoolData] = useState([]);

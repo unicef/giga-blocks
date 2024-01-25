@@ -71,38 +71,47 @@ const Navbar = () => {
             <HeaderMenuItem
               as={Link}
               href="/contributeSchool"
-              style={{ background: '#383838', color: 'white' }}
+              style={{
+                background: '#383838',
+                color: 'white',
+                fontSize: '12px',
+              }}
             >
               School Database
             </HeaderMenuItem>
             <HeaderMenuItem
               as={Link}
               href="/explore"
-              style={{ background: '#383838', color: 'white' }}
+              style={{
+                background: '#383838',
+                color: 'white',
+                fontSize: '12px',
+              }}
             >
               NFT Marketplace
             </HeaderMenuItem>
             <HeaderMenuItem
               as={Link}
               href="/#joinCommunityForm"
-              style={{ background: '#383838', color: 'white' }}
+              style={{
+                background: '#383838',
+                color: 'white',
+                fontSize: '12px',
+              }}
             >
               Develop With Us
             </HeaderMenuItem>
             <HeaderMenuItem
               as={Link}
               href="/#faq"
-              style={{ background: '#383838', color: 'white' }}
+              style={{
+                background: '#383838',
+                color: 'white',
+                fontSize: '12px',
+              }}
             >
               Developer FAQ
             </HeaderMenuItem>
-            {/* <HeaderMenuItem
-              as={Link}
-              href="/#form"
-              style={{ background: '#383838', color: 'white' }}
-            >
-              Connect
-            </HeaderMenuItem> */}
           </HeaderNavigation>
           <SideNav
             aria-label="Side navigation"
@@ -198,6 +207,7 @@ const Navbar = () => {
                         cursor: 'pointer',
                         color: '#fff',
                         textDecoration: 'none',
+                        fontSize: '14px',
                       }}
                     >
                       Sign In
