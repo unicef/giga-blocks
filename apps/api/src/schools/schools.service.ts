@@ -197,10 +197,8 @@ export class SchoolService {
               },
             },
           });
-          console.log({ dataArray, transaction });
           uploadBatch = transaction;
         } catch (err) {
-          console.log('err', err.message);
           if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
             res
               .code(500)
