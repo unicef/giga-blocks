@@ -52,10 +52,6 @@ export async function handler(fileData: any): Promise<any> {
       const longitude = parseFloat(longitudeStr);
       const latitude = parseFloat(latitudeStr);
 
-      if (isNaN(longitude) || isNaN(latitude)) {
-        console.error(`Invalid longitude or latitude for school "${schoolName}"`);
-        throw new Error('Invalid longitude or latitude');
-      }
       const schoolData: SchoolData = {
         name: schoolName,
         giga_school_id,
