@@ -86,7 +86,9 @@ const Navbar = () => {
                     color: 'white',
                     fontSize: '12px',
                     textDecoration:
-                      selectedItem === 'option1' ? 'underline' : 'none',
+                      selectedItem === 'option1'
+                        ? 'underline solid blue'
+                        : 'none',
                   }}
                 >
                   School Database
@@ -99,7 +101,9 @@ const Navbar = () => {
                     color: 'white',
                     fontSize: '12px',
                     textDecoration:
-                      selectedItem === 'option2' ? 'underline' : 'none',
+                      selectedItem === 'option2'
+                        ? 'underline solid blue'
+                        : 'none',
                   }}
                 >
                   NFT Marketplace
@@ -112,7 +116,9 @@ const Navbar = () => {
                     color: 'white',
                     fontSize: '12px',
                     textDecoration:
-                      selectedItem === 'option3' ? 'underline' : 'none',
+                      selectedItem === 'option3'
+                        ? 'underline solid blue'
+                        : 'none',
                   }}
                 >
                   Develop With Us
@@ -125,7 +131,9 @@ const Navbar = () => {
                     color: 'white',
                     fontSize: '12px',
                     textDecoration:
-                      selectedItem === 'option4' ? 'underline' : 'none',
+                      selectedItem === 'option4'
+                        ? 'underline solid blue'
+                        : 'none',
                   }}
                 >
                   Developer FAQ

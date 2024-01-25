@@ -5,7 +5,7 @@ import './faq.scss';
 const faq = () => {
   return (
     <>
-      <Grid id="faq" fullWidth style={{ marginBottom: '48px' }}>
+      <Grid className="faq" id="faq" fullWidth>
         <Column md={4} lg={4} sm={4}>
           <h1 className="heading7">Frequently asked questions</h1>
         </Column>
