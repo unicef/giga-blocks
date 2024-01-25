@@ -182,6 +182,20 @@ export class SchoolService {
       await req.multipart(async (field: string, fileData: any, filename: string) => {
         try {
           const dataArray = await handler(fileData);
+          const schoolData = dataArray.schoolArrays;
+          schoolData.map(school => {
+            if (isNaN(school.longitude) || isNaN(school.latitude)) {
+              throw new BadRequestException({ message: 'Invalid longitude or latitude' });
+            }
+            if (
+              school.latitude < -90 ||
+              school.latitude > 90 ||
+              school.longitude < -180 ||
+              school.longitude > 180
+            ) {
+              throw new BadRequestException({ message: 'Invalid longitude or latitude' });
+            }
+          });
           const transaction = await this.prisma.cSVUpload.create({
             data: {
               uploadedBy: user.id,
@@ -199,11 +213,12 @@ export class SchoolService {
           });
           uploadBatch = transaction;
         } catch (err) {
+          console.log('err', err);
           if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
             res
               .code(500)
               .send({ err: 'Internal Server error', message: 'Duplicate giga_school_id' });
-          res.code(500).send({ err: 'Internal Server error', onmessage: err.message });
+          res.code(500).send({ err: 'Internal Server error', message: err.message });
         }
       }, onEnd);
     });
