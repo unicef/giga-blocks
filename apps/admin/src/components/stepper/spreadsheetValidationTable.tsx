@@ -228,11 +228,11 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
                     }
 
                     if (header === 'longitudeStr') {
-                      isInvalid = typeof(value) != 'string';
+                      isInvalid = isNaN(value) && isNaN(parseFloat(value))
                     }
 
                     if (header === 'latitudeStr') {
-                      isInvalid = typeof(value) != 'string';
+                      isInvalid = isNaN(value) && isNaN(parseFloat(value))
                     }
 
                     if (header === 'schoolType') {
