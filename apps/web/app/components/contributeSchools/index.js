@@ -50,6 +50,7 @@ const SchoolCard = () => {
           onChange={(e) => {
             setSearchText(e.target.value);
           }}
+          style={{ fontSize: '14px' }}
         />
       </div>
       <Grid fullWidth style={{ margin: '30px auto' }}>
@@ -120,10 +121,10 @@ const SchoolCard = () => {
         <Column sm={4} md={8} lg={16}>
           {schoolData.length > 0 && (
             <Button
+              className="load-more"
               onClick={loadMore}
               kind="tertiary"
               disabled={allDataLoaded}
-              style={{ float: 'right' }}
             >
               {allDataLoaded === false ? 'Load more' : 'No more data'}
             </Button>

@@ -11,18 +11,25 @@ import {
 import { useRouter } from 'next/navigation';
 import { toSvg } from 'jdenticon';
 import { Default_Chain_Explorer } from '../../components/web3/connectors/network';
-import generateIdenticon from '../../utils/generateIdenticon'
+import generateIdenticon from '../../utils/generateIdenticon';
 
-const CongratulationModalComponent = ({ isOpen, onClose, schooldata,transactionHash }) => {
+const CongratulationModalComponent = ({
+  isOpen,
+  onClose,
+  schooldata,
+  transactionHash,
+}) => {
   const route = useRouter();
-
+  const accessToken = localStorage.getItem('accessToken');
 
   const handleClick = () => {
     onClose();
   };
   const handleClickRoute = () => {
     onClose();
-    route.push('/viewMyNFT');
+    {
+      accessToken ? route.push('/dashboard') : route.push('/viewMyNFT');
+    }
   };
 
   return (
@@ -107,9 +114,15 @@ const CongratulationModalComponent = ({ isOpen, onClose, schooldata,transactionH
               }}
             >
               <h5 style={{ marginTop: '24px' }}>Transaction ID</h5>
-              <a href={`${Default_Chain_Explorer}tx/${transactionHash}`}
-              target='_blank'
-              rel= "noopener noreferrer">{transactionHash?.slice(0,4)+'...'+transactionHash?.slice(-5)}</a>
+              <a
+                href={`${Default_Chain_Explorer}tx/${transactionHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {transactionHash?.slice(0, 4) +
+                  '...' +
+                  transactionHash?.slice(-5)}
+              </a>
             </div>
           </Column>
         </Grid>
