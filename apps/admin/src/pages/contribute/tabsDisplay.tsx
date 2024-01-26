@@ -42,12 +42,10 @@ const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetc
       }
 
       const handleSchoolSearchChange = (value: any) => {
-        setSelectedContributorSearch(null);
         setSelectedSchoolSearch(value);
       };
 
       const handleContributorSearchChange = (value: any) => {
-        setSelectedSchoolSearch(null);
         setSelectedContributorSearch(value);
       };
 

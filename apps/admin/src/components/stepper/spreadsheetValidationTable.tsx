@@ -121,7 +121,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   }, [allSheetErrors, selectedSheetName]);
 
   useEffect(() => {
-    const hasDuplicates = (array:string[]) => new Set(array).size !== array.length;
+    const hasDuplicates = (arry:string[]) => arry.filter((item, index) => arry.indexOf(item) !== index)
     const allowedElements = [
       "schoolName",
       "giga_school_id",
@@ -149,7 +149,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
         setAllSheetErrors([{sheetName: 'school.csv', errors: [`More headers than required, please follow sample file.`]}])
         setHasErrors(true) 
       }
-      if(hasDuplicates(tableHeaders)) {
+      if(hasDuplicates(tableHeaders).length > 0) {
         setAllSheetErrors([{sheetName: 'school.csv', errors: [`Duplicate columns, please follow sample file.`]}])
         setHasErrors(true) 
       }
@@ -171,7 +171,37 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     setAllSheetErrors([{sheetName: 'school.csv', errors: ['Uplaoded csv is empty.']}]); 
     setHasErrors(true)
     }
+    if(Object.keys(convertedObject).length === 0){
+      setAllSheetErrors([{sheetName: 'school.csv', errors: ['Uplaoded csv is empty.']}]); 
+      setHasErrors(true)
     }
+    }
+  }, [convertedObject])
+
+  let isInvalid:boolean = false;
+  useEffect(() => {
+    convertedObject &&
+    convertedObject[tableHeaders[0]]?.map((_: any, rowIndex: number) => (
+      tableHeaders?.map((header) => {
+        const value = convertedObject[header][rowIndex];
+        if (header === 'longitudeStr') {
+          isInvalid = isNaN(value) && isNaN(parseFloat(value));
+          if(isInvalid === true) {
+            setAllSheetErrors([{sheetName: 'school.csv', errors: ['Longitude must be a number.']}]); 
+            setHasErrors(true)
+          }
+        }
+
+        if (header === 'latitudeStr') {
+          isInvalid = isNaN(value) && isNaN(parseFloat(value))
+          if(isInvalid === true) {
+            setAllSheetErrors([{sheetName: 'school.csv', errors: ['Latitude must be a number.']}]); 
+            setHasErrors(true)
+          }
+        }
+      }
+      
+    )))
   }, [convertedObject])
 
 
@@ -224,11 +254,11 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
                     }
 
                     if (header === 'longitudeStr') {
-                      isInvalid = typeof(value) != 'string';
+                      isInvalid = isNaN(value) && isNaN(parseFloat(value));
                     }
 
                     if (header === 'latitudeStr') {
-                      isInvalid = typeof(value) != 'string';
+                      isInvalid = isNaN(value) && isNaN(parseFloat(value))
                     }
 
                     if (header === 'schoolType') {

@@ -41,8 +41,7 @@ const Footer = () => {
             <br />
             <a className="link" href="https://giga.global/">
               {' '}
-              Giga Connect
-              <br />
+              Gigaglobal{' '}
             </a>
             or tweet us at{' '}
             <a className="link" href="https://twitter.com/Gigaglobal">
