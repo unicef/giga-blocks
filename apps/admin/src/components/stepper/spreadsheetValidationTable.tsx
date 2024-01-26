@@ -178,6 +178,32 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     }
   }, [convertedObject])
 
+  let isInvalid:boolean = false;
+  useEffect(() => {
+    convertedObject &&
+    convertedObject[tableHeaders[0]]?.map((_: any, rowIndex: number) => (
+      tableHeaders?.map((header) => {
+        const value = convertedObject[header][rowIndex];
+        if (header === 'longitudeStr') {
+          isInvalid = isNaN(value) && isNaN(parseFloat(value));
+          if(isInvalid === true) {
+            setAllSheetErrors([{sheetName: 'school.csv', errors: ['Longitude must be a number.']}]); 
+            setHasErrors(true)
+          }
+        }
+
+        if (header === 'latitudeStr') {
+          isInvalid = isNaN(value) && isNaN(parseFloat(value))
+          if(isInvalid === true) {
+            setAllSheetErrors([{sheetName: 'school.csv', errors: ['Latitude must be a number.']}]); 
+            setHasErrors(true)
+          }
+        }
+      }
+      
+    )))
+  }, [convertedObject])
+
 
   return (
     <>
@@ -228,7 +254,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
                     }
 
                     if (header === 'longitudeStr') {
-                      isInvalid = isNaN(value) && isNaN(parseFloat(value))
+                      isInvalid = isNaN(value) && isNaN(parseFloat(value));
                     }
 
                     if (header === 'latitudeStr') {
