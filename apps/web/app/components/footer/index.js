@@ -49,7 +49,7 @@ const Footer = () => {
             For more information about Giga please go to{' '}
             <a className="link" href="https://giga.global/">
               {' '}
-              Giga Connect{' '}
+              Gigaglobal{' '}
             </a>
             or tweet us at{' '}
             <a className="link" href="https://twitter.com/Gigaglobal">
