@@ -37,7 +37,7 @@ const CongratulationModalComponent = ({ isOpen, onClose, schooldata,transactionH
           }}
         >
           <h1>Congratulations !!!</h1>
-          <p>You have successfully bought {schooldata?.schoolName}.</p>
+          <p>Thank you for supporting Giga. You are now the custodian of {schooldata?.schoolName}.</p>
         </div>
         <Grid style={{ marginTop: '18px' }}>
           <Column
