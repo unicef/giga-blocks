@@ -59,7 +59,11 @@ export class MailProcessor {
       from: this._configService.get('EMAIL_ADDRESS'),
       subject: 'Sign In OTP',
       template: './otp',
-      context: { name: job.data.email, otp: job.data.otp },
+      context: {
+        name: job.data.email,
+        otp: job.data.otp,
+        emailurl: this._configService.get('EMAIL_ADDRESS'),
+      },
     });
   }
 
@@ -72,7 +76,7 @@ export class MailProcessor {
       from: this._configService.get('EMAIL_ADDRESS'),
       subject: 'Greetings from GIGA NFT2.0',
       template: './welcome',
-      context: { name: job.data.name },
+      context: { name: job.data.name, url: this._configService.get('NEXT_PUBLIC_WEB_NAME') },
     });
   }
 
@@ -85,7 +89,11 @@ export class MailProcessor {
       from: this._configService.get('EMAIL_ADDRESS'),
       subject: 'Greetings from GIGA NFT2.0',
       template: './newsletter-welcome',
-      context: { name: job.data.name, country: job.data.country },
+      context: {
+        name: job.data.name,
+        country: job.data.country,
+        url: this._configService.get('NEXT_PUBLIC_WEB_NAME'),
+      },
     });
   }
 
@@ -97,7 +105,11 @@ export class MailProcessor {
       from: this._configService.get('EMAIL_ADDRESS'),
       subject: 'Data Validation',
       template: './data-validation',
-      context: { name: job.data.name, school: job.data.school },
+      context: {
+        name: job.data.name,
+        school: job.data.school,
+        emailurl: this._configService.get('EMAIL_ADDRESS'),
+      },
     });
   }
 
@@ -112,7 +124,13 @@ export class MailProcessor {
       from: this._configService.get('EMAIL_ADDRESS'),
       subject: 'New User Register Alert',
       template: './developer-join',
-      context: { name: job.data.name, country: job.data.country, email: job.data.email },
+      context: {
+        name: job.data.name,
+        country: job.data.country,
+        email: job.data.email,
+        url: this._configService.get('NEXT_PUBLIC_WEB_NAME'),
+        emailurl: this._configService.get('EMAIL_ADDRESS'),
+      },
     });
   }
 }

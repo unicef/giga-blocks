@@ -5,11 +5,11 @@ import './faq.scss';
 const faq = () => {
   return (
     <>
-      <Grid id="faq" fullWidth style={{ marginBottom: '48px' }}>
-        <Column md={4} lg={8} sm={4}>
-          <h1 className="heading11">Developer FAQs</h1>
+      <Grid className="faq" id="faq" fullWidth>
+        <Column md={4} lg={4} sm={4}>
+          <h1 className="heading7">Frequently asked questions</h1>
         </Column>
-        <Column className="form" md={4} lg={7} sm={4}>
+        <Column className="form" md={4} lg={12} sm={4}>
           <Accordion>
             <AccordionItem title="Title 1">
               <p>
