@@ -129,7 +129,7 @@ export default function HorizontalLinearStepper({propsTableData, setFile}:{props
         .catch((error: AxiosError) => {
           // Handle upload error
           setProgress(0);
-          enqueueSnackbar('Error uploading to database! Please check your file',{variant: 'error'});
+          enqueueSnackbar(error.message,{variant: 'error'});
           setLoading(false)
           setFile([])
           setDisableDropZone(false)
