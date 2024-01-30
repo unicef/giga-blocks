@@ -40,6 +40,44 @@
         {
           "indexed": true,
           "internalType": "uint256",
+          "name": "newIncrement",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "updatedBy",
+          "type": "address"
+        }
+      ],
+      "name": "IncrementUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "newPrice",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "updatedBy",
+          "type": "address"
+        }
+      ],
+      "name": "InitialPriceUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
           "name": "tokenId",
           "type": "uint256"
         },
@@ -52,7 +90,7 @@
         {
           "indexed": true,
           "internalType": "address",
-          "name": "transferedTo",
+          "name": "transferredTo",
           "type": "address"
         }
       ],
@@ -183,6 +221,32 @@
         }
       ],
       "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_newIncrement",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateIncrement",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_newAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateInitialPrice",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
