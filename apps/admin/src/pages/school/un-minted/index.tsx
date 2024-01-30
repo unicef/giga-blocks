@@ -90,16 +90,16 @@ const VerifiedSchool = () => {
     setTableData(filteredData);
   }, [data, isLoading, uploadId]);
 
-    const signTransaction = useCallback(async () =>{
-      try {
-      const signer = (provider.provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
-      const signature = await mintSignature(signer, selectedValues.length);
-      return signature;
-      }
-      catch(err) {
-        enqueueSnackbar(err.message, { variant: 'error' })
-      }
-    },[provider,selectedValues])
+    // const signTransaction = useCallback(async () =>{
+    //   try {
+    //   const signer = (provider.provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
+    //   const signature = await mintSignature(signer, selectedValues.length);
+    //   return signature;
+    //   }
+    //   catch(err) {
+    //     enqueueSnackbar(err.message, { variant: 'error' })
+    //   }
+    // },[provider,selectedValues])
   
     const mintSchool = useCallback(async () => {
       if(selectedValues.length === 0){
@@ -108,7 +108,7 @@ const VerifiedSchool = () => {
       } 
       setSelectedValues([])
       mutate({data:selectedValues})
-    },[signTransaction,selectedValues])
+    },[selectedValues])
 
     useEffect(() => {
       isMintSuccess && enqueueSnackbar("Minted Successfully", { variant: 'success' })
