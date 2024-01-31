@@ -9,7 +9,6 @@ import {
   ModalFooter,
 } from '@carbon/react';
 import { useRouter } from 'next/navigation';
-import { toSvg } from 'jdenticon';
 import { Default_Chain_Explorer } from '../../components/web3/connectors/network';
 import generateIdenticon from '../../utils/generateIdenticon';
 
@@ -44,7 +43,10 @@ const CongratulationModalComponent = ({
           }}
         >
           <h1>Congratulations !!!</h1>
-          <p>Thank you for supporting Giga. You are now the custodian of {schooldata?.schoolName}.</p>
+          <p>
+            Thank you for supporting Giga. You are now the custodian of{' '}
+            {schooldata?.schoolName}.
+          </p>
         </div>
         <Grid style={{ marginTop: '18px' }}>
           <Column

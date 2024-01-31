@@ -97,7 +97,7 @@
 .landing-page__buttons {
   display: flex;
   align-items: center;
-  gap: 2%;
+  gap: 32px;
   display: flex;
   align-items: center;
   @include breakpoint-down(md) {
