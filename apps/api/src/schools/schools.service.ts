@@ -95,7 +95,8 @@ export class SchoolService {
   }
 
   async mintBulkNFT(MintData: MintQueueDto) {
-    return this.queueService.sendMintNFT(MintData);
+    this.queueService.processImage(MintData)
+    // return this.queueService.sendMintNFT(MintData);
   }
 
   async mintNft(MintData: MintQueueSingleDto) {

@@ -48,8 +48,9 @@ export class SchoolController {
     return this.schoolService.updateBulk(updateContributeDatumDto, req.user.id);
   }
 
-  @Roles('ADMIN')
-  @UseGuards(JwtAuthGuard, RoleGuard)
+  // @Roles('ADMIN')
+  // @UseGuards(JwtAuthGuard, RoleGuard)
+  @Public()
   @Post('mintBulk')
   mintBatchSchool(@Body() MintData: MintQueueDto) {
     return this.schoolService.mintBulkNFT(MintData);

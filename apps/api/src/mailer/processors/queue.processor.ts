@@ -18,6 +18,7 @@ import {
   CONTRIBUTE_QUEUE,
   SET_APPROVE_QUEUE,
   SET_CONTRIBUTE_QUEUE,
+  SET_IMAGE_PROCESS,
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
@@ -29,6 +30,7 @@ import { MintStatus } from '@prisma/application';
 import { jobOptions } from '../config/bullOptions';
 import { ContributeDataService } from 'src/contribute/contribute.service';
 import { SchoolService } from 'src/schools/schools.service';
+import { getTokenId } from 'src/utils/web3/subgraph';
 
 @Injectable()
 @Processor(ONCHAIN_DATA_QUEUE)
@@ -191,6 +193,15 @@ export class MintQueueProcessor {
       status = false;
     }
     return this.statusCheckandDBUpdate(status, job.data.ids);
+  }
+
+  @Process(SET_IMAGE_PROCESS)
+  public async processImages(job: Job<{ mintData: SchoolData[]; ids: string[]; giga_ids: string[] }>){
+    const schoolTokenId = await getTokenId(
+      this._configService.get('NEXT_PUBLIC_GRAPH_URL'),
+      'c93ee8bf-5d20-4cfd-871a-99851be4ebe1'
+    );
+    console.log(schoolTokenId)
   }
 
   @Process(SET_MINT_SINGLE_NFT)

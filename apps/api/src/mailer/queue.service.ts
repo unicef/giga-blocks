@@ -5,6 +5,7 @@ import {
   ONCHAIN_DATA_QUEUE,
   SET_APPROVE_QUEUE,
   SET_CONTRIBUTE_QUEUE,
+  SET_IMAGE_PROCESS,
   SET_MINT_NFT,
   SET_MINT_SINGLE_NFT,
   SET_ONCHAIN_DATA,
@@ -111,6 +112,21 @@ export class QueueService {
       const giga_id = MintData.data.giga_school_id;
       await this.updateSchools(ids);
       await this._mintQueue.add(SET_MINT_SINGLE_NFT, { mintData, ids, giga_id }, jobOptions);
+      return { message: 'queue added successfully', statusCode: 200 };
+    } catch (error) {
+      this._logger.error(`Error queueing transaction to blockchain `);
+      throw error;
+    }
+  }
+
+  public async processImage(MintData: MintQueueDto) {
+    let ids: string[];
+    let giga_ids: string[];
+    try {
+      ids = MintData.data.map(school => school.id);
+      giga_ids = MintData.data.map(school => school.giga_school_id);
+      await this.updateSchools(ids);
+      await this._mintQueue.add(SET_IMAGE_PROCESS, { ids, giga_ids }, jobOptions);
       return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
       this._logger.error(`Error queueing transaction to blockchain `);

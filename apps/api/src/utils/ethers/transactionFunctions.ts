@@ -50,6 +50,16 @@ const generateMultiCallData = (contractName, functionName, callData) => {
 export const updateData = async (
   contractName: string,
   contractAddress: string,
+  schoolId: string
+) => {
+  const contract: any = getContractWithSigner(contractName, contractAddress);
+  const tx = await contract.schoolIdToTokenId(schoolId);
+  return tx;
+};
+
+export const getTokenId = async (
+  contractName: string,
+  contractAddress: string,
   tokenId: string,
   schoolDataArray: (string | boolean | number)[],
 ) => {
