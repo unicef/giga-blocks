@@ -7,7 +7,7 @@ const LandingPage = () => {
     <Grid className="landing-page" fullWidth>
       <Column lg={8} md={8} sm={4} className="landing-page__banner">
         <p style={{ fontSize: '20px' }}>Welcome to NFT 2.0</p>
-        <h1 style={{ marginBottom: '32px' }}>
+        <h1 style={{ marginBottom: '32px', fontSize: '48px' }}>
           The World’s Largest
           <br />{' '}
           <span style={{ color: '#277aff' }}>Decentralized Databases </span>
@@ -26,7 +26,7 @@ const LandingPage = () => {
           >
             <span>Explore School Data</span>
             <span>
-              <ArrowRight />
+              <ArrowRight size={20} />
             </span>
           </Button>
           <Button
@@ -35,7 +35,7 @@ const LandingPage = () => {
           >
             <span>Get Involved </span>
             <span>
-              <ArrowRight />
+              <ArrowRight size={20} />
             </span>
           </Button>
         </div>

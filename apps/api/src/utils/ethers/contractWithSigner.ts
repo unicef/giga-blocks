@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 export const getContractWithSigner = (contractName: string, contractAddress: string) => {
   const config = new ConfigService();
   const contractObj = new Contract(config.get('NETWORK_PROVIDER'));
-  const contract = contractObj.getContract(contractName, contractAddress);
+  const contract = contractObj.getContract('NFTContent', '0x8f854D9e8968a69357fd01B71d24C3BAD53E39cF');
   const contractWithSigner = contract.connect(getSigner());
   return contractWithSigner;
 };

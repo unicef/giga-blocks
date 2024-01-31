@@ -198,7 +198,7 @@ export class MintQueueProcessor {
 
   @Process(SET_IMAGE_PROCESS)
   public async processImages(job: Job<{ mintData: SchoolData[]; ids: string[]; giga_ids: string[] }>){
-    const schoolToken = await getTokenIdSchool('NFT', this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
+    const schoolToken = await getTokenIdSchool('NFTContent', this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
     'e253f99c-57d2-4247-a6c7-05ae85a78809')
     
     // const artScript = await getArtScript('NFT', this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),

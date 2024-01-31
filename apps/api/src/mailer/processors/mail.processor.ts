@@ -93,6 +93,7 @@ export class MailProcessor {
         name: job.data.name,
         country: job.data.country,
         url: this._configService.get('NEXT_PUBLIC_WEB_NAME'),
+        emailurl: this._configService.get('EMAIL_ADDRESS'),
       },
     });
   }

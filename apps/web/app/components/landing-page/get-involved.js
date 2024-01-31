@@ -11,7 +11,6 @@ const WhyNFT2 = () => {
         <Column md={4} lg={6} sm={4}>
           <div className="why-nft-card">
             <span className="heading20">Purchase school NFTs</span>
-            <section></section>
             <p className="heading2 width-90">
               By purchasing collector-copies of school NFTs, you help sponsor
               the creation of the worlds largest on-chain database of school

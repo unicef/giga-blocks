@@ -9,7 +9,6 @@ const uploadFile = async file => {
     const apiKey = '59ce1491ebf736b84f6a'
     const apiSecret = '94bc0fffba9e6cf08c5130951abe4bbdfb7d3542cc41079a2699722bfa811389'
     let hash;
-    console.log("reched")
 
      await axios.post(IPFS_GATEWAY,data,{
         maxBodyLength:Infinity,

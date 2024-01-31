@@ -143,7 +143,6 @@ const RegisterForm = () => {
               render={({ field }) => (
                 <TextInput
                   {...field}
-                  style={{ marginBottom: '32px' }}
                   id="email"
                   // style={{ marginBottom: '25px', height: '48px' }}
                   invalidText="Invalid error message."
@@ -163,25 +162,29 @@ const RegisterForm = () => {
                 {errors.email.message}
               </p>
             )}
-            <Controller
-              name="country"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <Dropdown
-                  {...field}
-                  ariaLabel="Select Country"
-                  id="carbon-dropdown-example"
-                  style={{ marginBottom: '48px', height: '48px' }}
-                  items={options}
-                  label="Select Country"
-                  titleText="Select Country"
-                  onChange={(selectedItem) => handleSelectChange(selectedItem)}
-                  initialSelectedItem={{ value: '', label: 'Select country' }}
-                  selectedItem={selectedCountry}
-                />
-              )}
-            />
+            <div style={{ marginTop: '32px' }}>
+              <Controller
+                name="country"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <Dropdown
+                    {...field}
+                    ariaLabel="Select Country"
+                    id="carbon-dropdown-example"
+                    style={{ marginBottom: '48px', height: '48px' }}
+                    items={options}
+                    label="Select Country"
+                    titleText="Select Country"
+                    onChange={(selectedItem) =>
+                      handleSelectChange(selectedItem)
+                    }
+                    initialSelectedItem={{ value: '', label: 'Select country' }}
+                    selectedItem={selectedCountry}
+                  />
+                )}
+              />
+            </div>
             <br />
             <Button
               className="submit-btn"

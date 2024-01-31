@@ -10,3 +10,9 @@
     padding-bottom: $spacing-08;
   }
 }
+.cds--accordion__title {
+  font-size: 16px;
+}
+.cds--accordion__content > p {
+  line-height: 24px;
+}

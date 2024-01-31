@@ -63,8 +63,11 @@ export const getTokenIdSchool = async (
   contractAddress: string,
   schoolId: string,
 ) => {
-  const contract: any = getContractWithSigner(contractName, contractAddress);
-  const tx =  await contract.schoolIdToTokenId(schoolId)
+  const contract:any = getContractWithSigner(contractName, contractAddress);
+  console.log('tx')
+
+  const tx = await contract.schoolIdToTokenId(1)
+ 
   return tx;
 };
 
