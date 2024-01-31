@@ -189,9 +189,17 @@ const Navbar = () => {
                   >
                     {isAuthenticated ? (
                       <>
-                        <p style={{ paddingRight: '12px', fontSize: '12px' }}>
+                        <a
+                          href="/dashboard"
+                          style={{
+                            paddingRight: '12px',
+                            fontSize: '12px',
+                            color: 'white',
+                            textDecoration: 'none',
+                          }}
+                        >
                           {currentUser?.name}
-                        </p>
+                        </a>
                         <img
                           src="/landingPage/gravatar.png"
                           alt="User Avatar"
