@@ -41,7 +41,7 @@ const DragableMap = ({ lat, long, onMarkerDragEnd }) => {
     };
   }, [lat, long, onMarkerDragEnd]);
 
-  const StyledMapContainer = styled('div')(({ theme, sx }) => {
+  const StyledMapContainer = styled('div')(({ sx }) => {
     return {
       zIndex: 0,
       height: 400,

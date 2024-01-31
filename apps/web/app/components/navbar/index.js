@@ -146,19 +146,32 @@ const Navbar = () => {
               >
                 <SideNavItems>
                   <HeaderSideNavItems>
-                    <HeaderMenuItem as={Link} href="/">
-                      Home
-                    </HeaderMenuItem>
-                    <HeaderMenuItem as={Link} href="/contributeSchool">
+                    <HeaderMenuItem
+                      style={{ fontSize: '12px' }}
+                      as={Link}
+                      href="/contributeSchool"
+                    >
                       School Database
                     </HeaderMenuItem>
-                    <HeaderMenuItem as={Link} href="/explore">
+                    <HeaderMenuItem
+                      style={{ fontSize: '12px' }}
+                      as={Link}
+                      href="/explore"
+                    >
                       NFT Marketplace
                     </HeaderMenuItem>
-                    <HeaderMenuItem as={Link} href="/#joinCommunityForm">
+                    <HeaderMenuItem
+                      style={{ fontSize: '12px' }}
+                      as={Link}
+                      href="/#joinCommunityForm"
+                    >
                       Develop With Us
                     </HeaderMenuItem>
-                    <HeaderMenuItem as={Link} href="/#faq">
+                    <HeaderMenuItem
+                      style={{ fontSize: '12px' }}
+                      as={Link}
+                      href="/#faq"
+                    >
                       Developer FAQ
                     </HeaderMenuItem>
                   </HeaderSideNavItems>
@@ -176,9 +189,17 @@ const Navbar = () => {
                   >
                     {isAuthenticated ? (
                       <>
-                        <p style={{ paddingRight: '12px' }}>
+                        <a
+                          href="/dashboard"
+                          style={{
+                            paddingRight: '12px',
+                            fontSize: '12px',
+                            color: 'white',
+                            textDecoration: 'none',
+                          }}
+                        >
                           {currentUser?.name}
-                        </p>
+                        </a>
                         <img
                           src="/landingPage/gravatar.png"
                           alt="User Avatar"
