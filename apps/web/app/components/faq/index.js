@@ -1,8 +1,44 @@
+import React, { useState } from 'react';
 import { Accordion, AccordionItem, Column, Grid } from '@carbon/react';
-import React from 'react';
 import './faq.scss';
 
-const faq = () => {
+const Faq = () => {
+  const accordionItems = [
+    {
+      title: 'Title 1',
+      content:
+        'Content for accordion item 1. The accordion component delivers large amounts of content in a small space through progressive disclosure.',
+    },
+    {
+      title: 'Title 2',
+      content:
+        'Content for accordion item 2. The accordion component delivers large amounts of content in a small space through progressive disclosure.',
+    },
+    {
+      title: 'Title 3',
+      content:
+        'Content for accordion item 3. The accordion component delivers large amounts of content in a small space through progressive disclosure.',
+    },
+    {
+      title: 'Title 4',
+      content:
+        'Content for accordion item 4. The accordion component delivers large amounts of content in a small space through progressive disclosure.',
+    },
+    {
+      title: 'Title 5',
+      content:
+        'Content for accordion item 5. The accordion component delivers large amounts of content in a small space through progressive disclosure.',
+    },
+  ];
+
+  const [openAccordion, setOpenAccordion] = useState(null);
+
+  const handleAccordionToggle = (index) => {
+    setOpenAccordion((prevOpenAccordion) =>
+      prevOpenAccordion === index ? null : index
+    );
+  };
+
   return (
     <>
       <Grid className="faq" id="faq" fullWidth>
@@ -11,56 +47,16 @@ const faq = () => {
         </Column>
         <Column className="form" md={4} lg={12} sm={4}>
           <Accordion>
-            <AccordionItem title="Title 1">
-              <p>
-                The accordion component delivers large amounts of content in a
-                small space through progressive disclosure. The user gets key
-                details about the underlying content and can choose to expand
-                that content within the constraints of the accordion. Accordions
-                work especially well on mobile interfaces or whenever vertical
-                space is at a premium.
-              </p>
-            </AccordionItem>
-            <AccordionItem title="Title 2">
-              <p>
-                The accordion component delivers large amounts of content in a
-                small space through progressive disclosure. The user gets key
-                details about the underlying content and can choose to expand
-                that content within the constraints of the accordion. Accordions
-                work especially well on mobile interfaces or whenever vertical
-                space is at a premium.
-              </p>
-            </AccordionItem>
-            <AccordionItem title="Title 3">
-              <p>
-                The accordion component delivers large amounts of content in a
-                small space through progressive disclosure. The user gets key
-                details about the underlying content and can choose to expand
-                that content within the constraints of the accordion. Accordions
-                work especially well on mobile interfaces or whenever vertical
-                space is at a premium.
-              </p>
-            </AccordionItem>
-            <AccordionItem title="Title 4">
-              <p>
-                The accordion component delivers large amounts of content in a
-                small space through progressive disclosure. The user gets key
-                details about the underlying content and can choose to expand
-                that content within the constraints of the accordion. Accordions
-                work especially well on mobile interfaces or whenever vertical
-                space is at a premium.
-              </p>
-            </AccordionItem>
-            <AccordionItem title="Title 5">
-              <p>
-                The accordion component delivers large amounts of content in a
-                small space through progressive disclosure. The user gets key
-                details about the underlying content and can choose to expand
-                that content within the constraints of the accordion. Accordions
-                work especially well on mobile interfaces or whenever vertical
-                space is at a premium.
-              </p>
-            </AccordionItem>
+            {accordionItems.map((item, index) => (
+              <AccordionItem
+                key={index}
+                title={item.title}
+                open={openAccordion === index}
+                onClick={() => handleAccordionToggle(index)}
+              >
+                <p>{item.content}</p>
+              </AccordionItem>
+            ))}
           </Accordion>
         </Column>
       </Grid>
@@ -68,4 +64,4 @@ const faq = () => {
   );
 };
 
-export default faq;
+export default Faq;
