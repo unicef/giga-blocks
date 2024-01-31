@@ -21,8 +21,6 @@ import { useRouter } from 'next/router';
 
 type Props = {
   row: any;
-  // selected: boolean;
-  // onSelectRow: any;
   setSelectedValues: any;
   selectedValues: any;
   rowData: any;
@@ -67,6 +65,7 @@ export default function ValidateTableRow({
     <>
       <TableRow
         hover
+        sx={{cursor: 'pointer'}}
       >
       {checkbox &&(
         <TableCell padding="checkbox">

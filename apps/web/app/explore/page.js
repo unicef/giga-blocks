@@ -23,6 +23,7 @@ const SchoolCard = () => {
           variables={variables}
           pageSize={pageSize}
           setPageSize={setPageSize}
+          setSearch = {true}
         />
         <Footer />
       </QueryProvider>

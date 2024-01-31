@@ -26,8 +26,6 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     sheetNames,
     allData,
     selectedSheetName,
-    productType,
-    fileName,
     setSelectedSheetName,
     tableDatas: rows,
   } = useUploadContext();
@@ -38,64 +36,21 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   const validateData = (data: Record<string, any>, fileType: string): string[] => {
     let hasIncorrectFileType = false;
 
-    // if (fileType === 'xls') {
-    //   hasIncorrectFileType = checkFileTypeXls();
-    // } else {
-    //   hasIncorrectFileType = checkFileTypeCsv();
-    // }
-
     const hasCommaInName = data?.Name?.some((name: string) => name.includes(','));
 
     const validationErrors: string[] = [];
 
     if (hasIncorrectFileType) {
-      validationErrors.push(
+      validationErrors?.push(
         `Invalid Spreadsheet file uploaded. Please check correct file type and file name`
       );
     }
 
     if (hasCommaInName) {
-      validationErrors.push('Name should not contain a comma');
+      validationErrors?.push('Name should not contain a comma');
     }
 
     return validationErrors;
-  };
-
-  const checkFileTypeXls = (): boolean => {
-    if (productType === 'wires') {
-      if (!sheetNames || (!sheetNames.includes('Lines') && !sheetNames.includes('Substations'))) {
-        return true;
-      }
-    } else if (productType === 'generators') {
-      if (
-        !sheetNames ||
-        (!sheetNames.includes('Solar') &&
-          !sheetNames.includes('BESS') &&
-          !sheetNames.includes('Genset') &&
-          !sheetNames.includes('ACDC_Converter') &&
-          !sheetNames.includes('Charge_Controller') &&
-          !sheetNames.includes('Other'))
-      ) {
-        return true;
-      }
-    }
-    return false;
-  };
-  const checkFileTypeCsv = (): boolean => {
-    // if (productType === 'wires') {
-      return fileName !== 'school.csv';
-    // }
-    // if (productType === 'generators') {
-    //   return (
-    //     fileName !== 'Solar.csv' &&
-    //     fileName !== 'BESS.csv' &&
-    //     fileName !== 'Genset.csv' &&
-    //     fileName !== 'ACDC_Converter.csv' &&
-    //     fileName !== 'Charge_Controller.csv' &&
-    //     fileName !== 'Other.csv'
-    //   );
-    // }
-    // return false;
   };
 
   const duplicateCheck = (data: any[]): any[] => {
@@ -103,12 +58,12 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     const duplicateRows: any[] = [];
 
     data.forEach((row: any) => {
-      const rowString = JSON.stringify(row);
+      const rowString = JSON?.stringify(row);
 
       if (uniqueRows.has(rowString)) {
-        duplicateRows.push(`Duplicate row found: ${JSON.stringify(row)} `);
+        duplicateRows?.push(`Duplicate row found: ${JSON.stringify(row)} `);
       } else {
-        uniqueRows.add(rowString);
+        uniqueRows?.add(rowString);
       }
     });
 
@@ -119,19 +74,19 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     setSelectedSheetName(sheetName);
   };
 
-  const tableHeaders = convertedObject ? Object.keys(convertedObject) : [];
+  const tableHeaders = convertedObject ? Object?.keys(convertedObject) : [];
 
   useEffect(() => {
     const newAllSheetErrors: { sheetName: string; errors: string[] }[] = [];
-    if (allData.length && sheetNames.length === 1) {
+    if (allData?.length && sheetNames?.length === 1) {
       const duplicateErrors = duplicateCheck(allData);
       const formattedEachSheetData = TableFormatter(allData);
       const validationErrors = validateData(formattedEachSheetData, 'csv');
-      newAllSheetErrors.push({
+      newAllSheetErrors?.push({
         sheetName: sheetNames[0],
         errors: [...duplicateErrors, ...validationErrors],
       });
-      const hasErrors = newAllSheetErrors.some((sheet) => sheet.errors.length > 0);
+      const hasErrors = newAllSheetErrors?.some((sheet) => sheet.errors.length > 0);
       setHasErrors(hasErrors);
 
       setAllSheetErrors(newAllSheetErrors);
@@ -140,13 +95,13 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
         const duplicateErrors = duplicateCheck(eachSheet);
         const formattedEachSheetData = TableFormatter(eachSheet);
         const validationErrors = validateData(formattedEachSheetData, 'xls');
-        newAllSheetErrors.push({
+        newAllSheetErrors?.push({
           sheetName: sheetNames[index],
           errors: [...duplicateErrors, ...validationErrors],
         });
       });
 
-      const hasErrors = newAllSheetErrors.some((sheet) => sheet.errors.length > 0);
+      const hasErrors = newAllSheetErrors?.some((sheet) => sheet.errors.length > 0);
       setHasErrors(hasErrors);
 
       setAllSheetErrors(newAllSheetErrors);
@@ -157,7 +112,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     if (allSheetErrors) {
       let selectedSheetIndex = 0;
       if (selectedSheetName) {
-        selectedSheetIndex = allSheetErrors.findIndex(
+        selectedSheetIndex = allSheetErrors?.findIndex(
           (sheet) => sheet.sheetName === selectedSheetName
         );
       }
@@ -166,6 +121,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   }, [allSheetErrors, selectedSheetName]);
 
   useEffect(() => {
+    const hasDuplicates = (arry:string[]) => arry.filter((item, index) => arry.indexOf(item) !== index)
     const allowedElements = [
       "schoolName",
       "giga_school_id",
@@ -177,14 +133,28 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
       "coverage_availabitlity",
       "electricity_availability"
   ]
-    if(tableHeaders){
-      const isValidArray = tableHeaders.every(element => allowedElements.includes(element));
+    if(tableHeaders.length > 0){
+      const isValidArray = tableHeaders?.every(element => allowedElements?.includes(element));
+      const isAnyMissing = allowedElements?.some(element => !tableHeaders?.includes(element));
       if(!isValidArray){
       setAllSheetErrors([{sheetName: 'school.csv', errors: [`Header format did not match, please follow the sample file.`]}])
-      setHasErrors(true)
-    }
-    }
-  }, [tableHeaders, convertedObject])
+      setHasErrors(true) 
+      }
+      if(isAnyMissing === true){
+        const missingElements = allowedElements.filter(element => !tableHeaders.includes(element));
+        missingElements && setAllSheetErrors([{sheetName: 'school.csv', errors: [`${missingElements?.map((elem) => `${elem}`)} is missing, please follow sample file.`]}])
+        setHasErrors(true)
+      }
+      if(tableHeaders.length > 9){
+        setAllSheetErrors([{sheetName: 'school.csv', errors: [`More headers than required, please follow sample file.`]}])
+        setHasErrors(true) 
+      }
+      if(hasDuplicates(tableHeaders).length > 0) {
+        setAllSheetErrors([{sheetName: 'school.csv', errors: [`Duplicate columns, please follow sample file.`]}])
+        setHasErrors(true) 
+      }
+    } 
+  }, [convertedObject])
 
   useEffect(() => {
     const updateConvertedObject = () => {
@@ -196,13 +166,48 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   }, [rows]);
 
   useEffect(() => {
-    convertedObject && convertedObject?.schoolName?.length === 0 && setAllSheetErrors([{sheetName: 'school.csv', errors: ['Uplaoded csv is empty.']}])
+    if(convertedObject){
+    if(convertedObject?.schoolName?.length === 0){
+    setAllSheetErrors([{sheetName: 'school.csv', errors: ['Uplaoded csv is empty.']}]); 
+    setHasErrors(true)
+    }
+    if(Object.keys(convertedObject).length === 0){
+      setAllSheetErrors([{sheetName: 'school.csv', errors: ['Uplaoded csv is empty.']}]); 
+      setHasErrors(true)
+    }
+    }
+  }, [convertedObject])
+
+  let isInvalid:boolean = false;
+  useEffect(() => {
+    convertedObject &&
+    convertedObject[tableHeaders[0]]?.map((_: any, rowIndex: number) => (
+      tableHeaders?.map((header) => {
+        const value = convertedObject[header][rowIndex];
+        if (header === 'longitudeStr') {
+          isInvalid = isNaN(value) && isNaN(parseFloat(value));
+          if(isInvalid === true) {
+            setAllSheetErrors([{sheetName: 'school.csv', errors: ['Longitude must be a number.']}]); 
+            setHasErrors(true)
+          }
+        }
+
+        if (header === 'latitudeStr') {
+          isInvalid = isNaN(value) && isNaN(parseFloat(value))
+          if(isInvalid === true) {
+            setAllSheetErrors([{sheetName: 'school.csv', errors: ['Latitude must be a number.']}]); 
+            setHasErrors(true)
+          }
+        }
+      }
+      
+    )))
   }, [convertedObject])
 
 
   return (
     <>
-      {errors.length > 0 && (
+      {errors?.length > 0 && (
         <Alert severity="error" sx={{ mb: 4, mx: 1 }}>
           {errors?.map((error, index) => (
             <div key={index}>- {error}</div>
@@ -210,7 +215,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
         </Alert>
       )}
 
-      {sheetNames.length > 1 &&
+      {sheetNames?.length > 1 &&
         sheetNames?.map((sheetName, index) => (
           <Button
             variant="outlined"
@@ -249,11 +254,11 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
                     }
 
                     if (header === 'longitudeStr') {
-                      isInvalid = typeof(value) != 'string';
+                      isInvalid = isNaN(value) && isNaN(parseFloat(value));
                     }
 
                     if (header === 'latitudeStr') {
-                      isInvalid = typeof(value) != 'string';
+                      isInvalid = isNaN(value) && isNaN(parseFloat(value))
                     }
 
                     if (header === 'schoolType') {

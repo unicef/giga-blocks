@@ -1,40 +1,21 @@
-import { useState, ChangeEvent, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, MenuItem, Select, Button, Container } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
-import { useRouter } from 'next/router';
-import { useSnackbar } from '@components/snackbar';
+import { Box, Card, Grid, Stack, Button, Container } from '@mui/material';
 import FormProvider, { ProfileTextField } from '@components/hook-form';
-import { AdministrationService } from '@services/administration';
 import { useSchoolGetById } from '@hooks/school/useSchool';
-import Image from 'next/image';
 import CustomBreadcrumbs from '@components/custom-breadcrumbs';
 // @ts-ignore
 import Identicon from 'react-identicons';
-import { hooks } from '@hooks/web3/metamask';
-import { JsonRpcProvider, Signer } from 'ethers';
-import { mintSignature } from '@components/web3/utils/wallet';
 import { useMintSchools } from '@hooks/school/useSchool';
-import { useWeb3React } from '@web3-react/core';
 import { PATH_DASHBOARD, PATH_SCHOOL } from '@routes/paths';
+import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/router';
 
 interface Props {
   isEdit?: boolean;
   currentUser?: any;
   id?: string | string[] | undefined;
-}
-
-interface FormValuesProps {
-  id: string;
-  name: string;
-  email: string;
-  position: string | null;
-  phone: string;
-  affiliation: string | null;
-  roles: string;
-  is_active: boolean;
 }
 
 export default function SchoolDetails({ id }: Props) {
@@ -43,22 +24,23 @@ export default function SchoolDetails({ id }: Props) {
     location: '',
     latitude: '',
     longitude: '',
-    connectivity: '',
-    coverage: '',
+    connectivity: false,
+    coverage: false,
     mintedStatus: '',
+    electricity_availabilty: false
   });
 
-  const { data, isSuccess, isError } = useSchoolGetById(id);
+  const { data, isSuccess, isError, refetch } = useSchoolGetById(id);
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const {
     mutate,
     isError: isMintError,
-    data: mintData,
     isSuccess: isMintSuccess,
-    error: mintError,
   } = useMintSchools();
 
-  const web3 = useWeb3React();
+  const router = useRouter()
 
   const [nftData, setNftData] = useState({
     id: '',
@@ -84,6 +66,7 @@ export default function SchoolDetails({ id }: Props) {
         connectivity: data?.connectivity,
         coverage: data?.coverage_availability,
         mintedStatus: data?.minted,
+        electricity_availabilty: data?.electricity_available
       });
   }, [isSuccess, isError, data]);
 
@@ -114,56 +97,25 @@ export default function SchoolDetails({ id }: Props) {
     roles: Yup.string(),
   });
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setProfile((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
-
-  const methods = useForm<FormValuesProps>({
-    resolver: yupResolver(UpdateUserSchema),
-  });
-
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
+  const methods = useForm();
 
   const mintSchool = async () => {
     mutate({ data: nftData });
   };
 
-  // const onSubmit = async (data: FormValuesProps) => {
-  //   const { id, name, roles } = profile;
-  //   const updatedProfile = { name, roles: [roles] };
+  useEffect(() => {
+    isMintSuccess && enqueueSnackbar('Minted successfully'); refetch();
+    isMintSuccess &&  back();
+    isMintError && enqueueSnackbar('Minting unsuccessful'); refetch();
+  }, [isMintSuccess, isMintError])
 
-  //   try {
-  //     const response = await AdministrationService.updateUser(id, updatedProfile);
-  //     if (response.statusText !== 'OK')
-  //       enqueueSnackbar('Error while updating user', { variant: 'error' });
-  //     enqueueSnackbar('User details updated successfully');
-  //     if (isEdit) push('/user/list');
-  //   } catch (error) {
-  //     enqueueSnackbar('Something went wrong', { variant: 'error' });
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (currentUser) {
-  //     currentUser.roles = currentUser?.roles?.[0];
-  //     setProfile(currentUser);
-  //   }
-  // }, [currentUser]);
-
-  // useEffect(() => {
-  //   methods.reset(profile);
-  // }, [methods, profile]);
+  const back = () => {
+    {profile.mintedStatus === 'NOTMINTED' ? router.push('/school/un-minted?') : router.push('/school/pending')}
+  };
 
   return (
     <>
-      <Grid item xs={8}>
+      <Grid item lg={8} sm={12}>
         <Container>
           <CustomBreadcrumbs
             heading="School Detail Page"
@@ -182,6 +134,7 @@ export default function SchoolDetails({ id }: Props) {
                       name="name"
                       value={profile?.fullname || ''}
                       label="Full Name"
+                      disabled
                     />
 
                     <ProfileTextField
@@ -203,27 +156,37 @@ export default function SchoolDetails({ id }: Props) {
                         name="latitude"
                         value={profile?.latitude || ''}
                         label="Latitude"
+                        disabled
                       />
                       <ProfileTextField
                         name="longitude"
                         value={profile?.longitude || ''}
                         label="Longitude"
+                        disabled
                       />
                       <ProfileTextField
                         name="connectivity"
-                        value={profile?.connectivity || ''}
+                        value={profile?.connectivity === true ? 'Yes' : 'No' || ''}
                         label="Connectivity"
+                        disabled
                       />
                       <ProfileTextField
                         name="coverage"
-                        value={profile?.coverage || ''}
-                        label="Coverage"
+                        value={profile?.coverage === true ? 'Yes' : 'No' || ''}
+                        label="Coverage Availability"
+                        disabled
+                      />
+                      <ProfileTextField
+                        name="electricity_availabilty"
+                        value={profile?.electricity_availabilty === true ? 'Yes' : 'No' || ''}
+                        label="Electricity Availability"
+                        disabled
                       />
                     </Box>
                   </Box>
 
                   <Stack alignItems="flex-start" sx={{ mt: 3 }}>
-                    <Button variant="contained" style={{ width: '300px', background: '#474747' }}>
+                    <Button variant="contained" style={{ width: '300px', background: '#474747' }} onClick={back}>
                       Back
                     </Button>
                   </Stack>
@@ -233,12 +196,11 @@ export default function SchoolDetails({ id }: Props) {
           </FormProvider>
         </Container>
       </Grid>
-      <Grid item xs={4}>
+      <Grid item lg={4} sm={12}>
         <Container>
           <Box justifyContent={'center'}>
-            {/* <Image width={250} height={250} alt='USER' src={'/assets/Image-right.svg'}/> */}
             <Stack alignItems="center" sx={{ mt: 1 }}>
-              {profile.mintedStatus === 'NOTMINTED' && (
+              {profile.mintedStatus === 'NOTMINTED' ? (
                 <Button
                   variant="contained"
                   color={'info'}
@@ -247,7 +209,21 @@ export default function SchoolDetails({ id }: Props) {
                 >
                   Mint
                 </Button>
-              )}
+              ) : profile.mintedStatus === 'ISMINTING' ? <Button
+              variant="contained"
+              color={'info'}
+              style={{ width: '300px', background: '#474747' }}
+              disabled
+            >
+              Minting
+            </Button> : <Button
+              variant="contained"
+              color={'success'}
+              style={{ width: '300px', background: '#474747' }}
+              onClick={mintSchool}
+            >
+              Minted
+            </Button>}
             </Stack>
             <Stack sx={{ mt: 8 }}>
               <Box display="flex" justifyContent="center">

@@ -1,12 +1,9 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { Box, Button, Container, Grid } from '@mui/material';
+import { Container, Grid } from '@mui/material';
 
 import DashboardLayout from '@layouts/dashboard';
 import CustomBreadcrumbs from '@components/custom-breadcrumbs';
-import UserNewEditForm from '@sections/user/SchoolDetails';
-import { useUserGetById } from '@hooks/user/useUser';
-import Image from 'next/image';
 import UserProfileEditForm from '@sections/user/UserProfileEditForm';
 import { PATH_DASHBOARD } from '@routes/paths';
 
@@ -24,27 +21,17 @@ export default function UserEditPage() {
       </Head>
 
       <Grid container spacing={2}>
-        <Grid item xs={8}>
+        <Grid item xs={12} lg={6} md={10}>
           <Container>
             <CustomBreadcrumbs
               heading="Profile"
               links={[{ name: 'Dashboard', href: PATH_DASHBOARD.root }, { name: 'Profile' }]}
             />
-            {id && <UserProfileEditForm id={id} />}
+            {id && <UserProfileEditForm id={id}/>}
           </Container>
         </Grid>
         <Grid item xs={4}>
           <Container>
-            {/* <Box 
-    justifyContent={'center'}
-    rowGap={2}
-    columnGap={2}
-    display="grid"
-    >
-    <Image width={250} height={250} alt='USER' src={'/assets/Image-right.svg'}/>
-    <Button variant='outlined' color='inherit'>Update Profile</Button>
-    <Button variant='outlined' color='inherit' style={{opacity: '0.7'}}>Remove Picture</Button>
-    </Box> */}
           </Container>
         </Grid>
       </Grid>

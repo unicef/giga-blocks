@@ -8,19 +8,12 @@
           <p style='font-size: 20px; font-weight: 600; width: 70%; margin: auto'>Verify your email
             address with OTP
           </p>
-          <p style='font-size: 11px; color: gray; margin-top: 20px;'>
-            <img
-              src='https://cdn0.iconfinder.com/data/icons/apple-apps/100/Apple_Mail-512.png'
-              style='width: 20px; vertical-align: middle;'
-            />
-            <span>{{name}}</span>
-          </p>
         </div>
         <div style='border-top: 1px solid rgb(226, 226, 226); padding-top: 20px; margin-top: 30px'>
           <span
             style='color: rgb(93, 93, 93); font-size: 14px; text-align: center; width: 80%, margin: auto'
-          >If you did not initiate this email, please disregard it. This action initiates the
-            account creation process on the Giga NFT platform.</span>
+          >Thank you for joining Giga NFT 2.0! To verify your email and ensure the security of your
+            account, please use the OTP (One-Time Password) provided below:</span>
 
           <div style='width: 100%; text-align: center; margin-top: 20px;'>
             <script>
@@ -30,13 +23,24 @@
             <div
               style='border: none;display:inline-block; border-radius: 45px; background-color:  #00a9eb; color: white; padding: 15px 30px;font-size: 16px; font-weight: 600; letter-spacing: 2px;'
               onclick='copyOTP()'
-            >{{otp}}</div>
+            > {{otp}}</div>
           </div>
 
-          <p style='font-size: 10px; color: gray; text-align: center; margin-top: 25px;'>
-            Feel free to explore Giga NFT by visiting our website at
+          <p style='font-size: 14px; color: gray; margin-top: 25px; text-align: center;'>
+            Please enter this OTP within the next 3 minutes to complete your registration process
+            and gain access to Giga NFT 2.0's features for contributing to school data.
             <br />
-            https://giga.global/
+            If you haven’t requested this OTP or have any concerns, please contact our support team
+            immediately.
+
+            <br />
+            Thank you for being a part of Giga NFT 2.0!
+          </p>
+
+          <p style='font-size: 12px; color: gray;  text-align: center;margin-top: 25px;'>
+            <span style='font-weight: 600;'>Best regards,</span>
+            <br />
+            <span style='font-weight: 600;'>Giga Global</span>
           </p>
         </div>
       </div>
@@ -67,7 +71,7 @@
               >
                 If you have any questions please contact us
                 <a href='#' style='color:#bbb;text-decoration:underline' target='_blank'>
-                  team@rumsan.com</a>
+                  {{emailurl}}</a>
                 <br />
                 <a
                   href='#'

@@ -16,6 +16,8 @@ import {
   saveCurrentUser,
   saveRefreshToken,
 } from '@utils/sessionManager';
+import { DEFAULT_CHAIN_ID } from './chains';
+import { metaMaskLogin } from './utils/metamask';
 
 function ChainSelect({
   activeChainId,
@@ -46,7 +48,7 @@ export default function ConnectWithSelect({
   provider,
   setError,
 }: {
-  connector: MetaMask | Network | GnosisSafe;
+  connector: MetaMask;
   activeChainId: ReturnType<Web3ReactHooks['useChainId']>;
   chainIds?: ReturnType<Web3ReactHooks['useChainId']>[];
   isActivating: ReturnType<Web3ReactHooks['useIsActivating']>;
@@ -146,16 +148,14 @@ export default function ConnectWithSelect({
     if (activeChainId && (!desiredChainId || desiredChainId === -1)) {
       setDesiredChainId(activeChainId);
     }
-    // }
   }, [desiredChainId, activeChainId]);
 
   const connectWallet = useCallback(async () => {
     setEnableGetNonce(false);
     try {
       setError(undefined);
-      await connector.activate();
+      await metaMaskLogin(connector)
     } catch (error) {
-      console.log('error', error);
       setError(error);
     }
   }, [connector, setError]);
@@ -173,7 +173,7 @@ export default function ConnectWithSelect({
             <Button
               sx={{ marginRight: '15px' }}
               variant="contained"
-              color="secondary"
+              style={{background: '#0050e6'}}
               onClick={() => {
                 getSignature();
               }}

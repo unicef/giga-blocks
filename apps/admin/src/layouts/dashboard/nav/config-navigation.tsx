@@ -1,4 +1,3 @@
-// routes
 import {
   PATH_DASHBOARD,
   PATH_USER,
@@ -6,11 +5,7 @@ import {
   PATH_CONTRIBUTE,
   PATH_VALID,
 } from '../../../routes/paths';
-// components
 import SvgColor from '../../../components/svg-color';
-import { ROLES } from '../../../config-global';
-
-// ----------------------------------------------------------------------
 
 const icon = (name: string) => (
   <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
@@ -24,8 +19,6 @@ const ICONS = {
 };
 
 const navConfig = [
-  // GENERAL
-  // ----------------------------------------------------------------------
   {
     subheader: 'General',
     items: [
@@ -40,19 +33,23 @@ const navConfig = [
     items: [
       {
         title: 'School',
-        path: PATH_SCHOOL.verified,
+        path: PATH_SCHOOL.contributed,
         children: [
           {
             title: 'Unminted School',
             path: PATH_SCHOOL.contributed,
           },
           {
-            title: 'Minting In Progress',
+            title: 'Import School',
+            path: PATH_SCHOOL.import,
+          },
+          {
+            title: 'Minting School',
             path: PATH_SCHOOL.minting,
           },
           {
-            title: 'Import School',
-            path: PATH_SCHOOL.import,
+            title: 'Minted NFT',
+            path: PATH_SCHOOL.verified,
           },
         ],
         icon: ICONS.user,
@@ -62,16 +59,7 @@ const navConfig = [
   {
     items: [
       {
-        title: 'Minted NFT',
-        path: PATH_SCHOOL.verified,
-        icon: ICONS.user,
-      },
-    ],
-  },
-  {
-    items: [
-      {
-        title: 'Contribute',
+        title: 'Contributions',
         path: PATH_CONTRIBUTE.root,
         icon: ICONS.user,
       },

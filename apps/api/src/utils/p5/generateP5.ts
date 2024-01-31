@@ -2,7 +2,7 @@ import puppeteer from 'puppeteer';
 
   async function generateP5Image(p5Script: string) {
     const browser = await puppeteer.launch({
-      headless: 'new'
+      headless: true
     });
     const page = await browser.newPage();
 

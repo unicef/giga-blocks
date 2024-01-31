@@ -1,12 +1,13 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { PrismaAppService } from '../prisma/prisma.service';
 import { bufferToHexString, hexStringToBuffer } from '../utils/string-format';
 import { WalletRegister } from 'src/auth/dto';
-import { Prisma } from '@prisma/application';
+import { Prisma, Role } from '@prisma/application';
 import { paginate } from 'src/utils/paginate';
-import { Role } from '@prisma/application';
+import { addMinutesToDate, compare } from 'src/utils/otp/expirationTime';
 
+const OTP_DURATION = Number(process.env.NEXT_PUBLIC_OTP_DURATION_IN_MINS);
 @Injectable()
 export class UsersService {
   private readonly _logger = new Logger('User Services');
@@ -29,12 +30,58 @@ export class UsersService {
     });
   }
 
+  async saveOtp(AuthDto: any, otp: string) {
+    const now = new Date();
+    const email = AuthDto.email;
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    const expirationTime = addMinutesToDate(now, OTP_DURATION);
+    if (user) {
+      const otpUser = await this.prisma.oTP.findUnique({ where: { userId: user.id } });
+      if (otpUser) {
+        return await this.prisma.oTP.update({
+          where: { userId: user.id },
+          data: { otp, validated: false, expirationTime },
+        });
+      }
+      return await this.prisma.oTP.create({
+        data: {
+          otp,
+          userId: user.id,
+          validated: false,
+          expirationTime,
+        },
+      });
+    }
+  }
+
+  async validateOtp(email: any, otp: string) {
+    const now = new Date();
+    const user = await this.findOneByEmail(email);
+
+    const { id: userId } = user;
+    const otpUser = await this.prisma.oTP.findUnique({ where: { userId } });
+
+    if (!otpUser) throw new NotFoundException('No user with this id');
+
+    const { id: otpUserId, validated, expirationTime, otp: dbOTP } = otpUser;
+
+    if (!otpUserId) throw new NotFoundException('Invalid OTP');
+
+    if (validated) throw new NotFoundException('OTP already used');
+
+    if (otp != dbOTP) throw new NotFoundException('OTP didnot match');
+
+    if (!compare(now, expirationTime)) throw new ForbiddenException('OTP expired');
+
+    await this.prisma.oTP.update({ where: { id: otpUserId }, data: { validated: true } });
+    return true;
+  }
+
   async walletRegister(createUserDto: Pick<WalletRegister, 'name' | 'walletAddress'>) {
     const walletAddress = hexStringToBuffer(createUserDto?.walletAddress);
     const userData = {
       name: createUserDto?.name,
       walletAddress,
-      email: '',
       roles: [Role.CONTRIBUTOR],
     };
     return this.prisma.user.create({
@@ -56,7 +103,7 @@ export class UsersService {
   }
 
   findAll(query: any) {
-    const { page, perPage } = query;
+    const { page, perPage, order, orderBy } = query;
 
     const where: Prisma.UserWhereInput = {};
     if (query?.role) {
@@ -70,7 +117,7 @@ export class UsersService {
         mode: 'insensitive',
       };
     }
-    return paginate(this.prisma.user, { where }, { page, perPage });
+    return paginate(this.prisma.user, { where }, { page, perPage, order, orderBy });
   }
 
   findContributor(query: any) {
@@ -160,25 +207,4 @@ export class UsersService {
       where: { walletAddress: walletBuffer, isArchived: false },
     });
   }
-
-  // async requestValidator(createUserDto: CreateUserDto) {
-  //   return await this.prisma.user.create({
-  //     data: {
-  //       email: createUserDto?.email,
-  //       roles: ['PENDING'],
-  //       name: createUserDto?.name,
-  //     },
-  //   });
-  // }
-
-  // async approveValidator(id: string) {
-  //   return await this.prisma.user.update({
-  //     where: {
-  //       id,
-  //     },
-  //     data: {
-  //       roles: ['VALIDATOR'],
-  //     },
-  //   });
-  // }
 }

@@ -1,13 +1,13 @@
 import React from 'react';
 import { Button, Grid, Column } from '@carbon/react';
-import { DirectionStraightRight } from '@carbon/icons-react';
+import { ArrowRight } from '@carbon/icons-react';
 
 const LandingPage = () => {
   return (
     <Grid className="landing-page" fullWidth>
       <Column lg={8} md={8} sm={4} className="landing-page__banner">
-        <p className="landing-subheading">Welcome to NFT 2.0</p>
-        <h1 className="">
+        <p style={{ fontSize: '20px' }}>Welcome to NFT 2.0</p>
+        <h1 style={{ marginBottom: '32px' }}>
           The World’s Largest
           <br />{' '}
           <span style={{ color: '#277aff' }}>Decentralized Databases </span>
@@ -21,18 +21,21 @@ const LandingPage = () => {
         </p>
         <div className="landing-page__buttons">
           <Button
-            className="button-block preview-1-button"
+            className="button-outline preview-1-button"
             href="/contributeSchool"
           >
             <span>Explore School Data</span>
             <span>
-              <DirectionStraightRight />
+              <ArrowRight />
             </span>
           </Button>
-          <Button className="button-outline preview-1-button" href="#form">
-            <span>Get Involved</span>
+          <Button
+            className="button-block preview-1-button"
+            href="#joinCommunityForm"
+          >
+            <span>Get Involved </span>
             <span>
-              <DirectionStraightRight />
+              <ArrowRight />
             </span>
           </Button>
         </div>

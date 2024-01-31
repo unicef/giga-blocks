@@ -29,8 +29,8 @@ generator docs {
 model TemporaryEmails {
   id       String @id @default(uuid())
   email    String @unique
-  fullname String
-  country  String
+  fullname String?
+  country  String?
   @@unique([id, email])
   @@map("giga_newsletter")
 }

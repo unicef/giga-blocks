@@ -7,13 +7,14 @@ import AuthVerifyCodeForm from '@sections/auth/verify/AuthVerifyCodeForm';
 import LoginLayout from '@layouts/login';
 import { useLoginContext } from '@contexts/auth';
 import { CountdownTimer } from '@components/count-down';
-import { OTP_DURATION } from '../../../config-global';
 import { PATH_AUTH } from '../../../routes/paths';
 import { EmailInboxIcon } from '../../../assets/icons';
 
 export default function VerifyCodePage() {
   const currentEmail = localStorage.getItem('currentEmail');
   const { enqueueSnackbar } = useSnackbar();
+
+  const OTP_DURATION = 3
 
   const { handleOtpRequest } = useLoginContext();
 
@@ -24,7 +25,6 @@ export default function VerifyCodePage() {
         if (res?.success) enqueueSnackbar('Otp has been sent again, Please check your email!!');
       } catch (error) {
         console.error('Error occurred while resending code:', error);
-        // Handle the error (e.g., display an error message)
       }
     }
   }, [currentEmail, handleOtpRequest, enqueueSnackbar]);

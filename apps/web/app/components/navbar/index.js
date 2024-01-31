@@ -7,26 +7,24 @@ import {
   HeaderMenuButton,
   HeaderMenuItem,
   HeaderGlobalBar,
-  HeaderGlobalAction,
   SkipToContent,
   SideNav,
   SideNavItems,
   HeaderSideNavItems,
-  Dropdown,
+  Theme,
 } from '@carbon/react';
 import './navbar.scss';
-import { Wallet } from '@carbon/react/icons';
-import { metaMask } from '../../components/web3/connectors/metamask';
-import { Default_Chain_Id } from '../../components/web3/connectors/network';
 import { Link } from 'next/link';
 import { useAppAuthContext } from '../../auth/JwtContext';
 import { useWeb3React } from '@web3-react/core';
 import { metaMaskLogin } from '../../utils/metaMaskUtils';
+import { getCurrentUser } from '../../utils/sessionManager';
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { isAuthenticated, logout } = useAppAuthContext();
-  const { account } = useWeb3React();
+  const [isAuthenticationChecked, setIsAuthenticationChecked] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const options = [
     { id: 'option1', text: 'Dashboard', link: '/dashboard' },
@@ -38,186 +36,219 @@ const Navbar = () => {
   };
 
   const handleOptionClick = (option) => {
+    setSelectedItem(option.id);
     if (option.text === 'Logout') {
       logout();
       window.location.href = '/';
     } else {
       window.location.href = option.link;
     }
-
-    // Close the dropdown
     setIsDropdownOpen(false);
   };
 
-  useEffect(() => {}, [account]);
+  useEffect(() => {
+    setIsAuthenticationChecked(true);
+  }, []);
 
-  const handleWalletLogin = async () => {
-    await metaMaskLogin();
-  };
+  const currentUser = getCurrentUser();
 
   return (
-    <HeaderContainer
-      render={({ isSideNavExpanded, onClickSideNavExpand }) => (
-        <Header
-          aria-label="header"
-          className="navbar"
-          style={{ background: '#383838', color: 'white' }}
-        >
-          <SkipToContent />
-          <HeaderMenuButton
-            aria-label="Open menu"
-            onClick={onClickSideNavExpand}
-            isActive={isSideNavExpanded}
-          />
-          <HeaderName as={Link} href="/" prefix="" style={{ color: 'white' }}>
-            NFT 2.0
-          </HeaderName>
-          <HeaderNavigation
-            aria-label="header"
-            style={{ background: '#383838', color: 'white' }}
-          >
-            <HeaderMenuItem
-              as={Link}
-              href="/contributeSchool"
+    <Theme theme="g90">
+      <HeaderContainer
+        render={({ isSideNavExpanded, onClickSideNavExpand }) => (
+          <div>
+            <Header
+              className="navbar"
+              aria-label="Header"
               style={{ background: '#383838', color: 'white' }}
             >
-              School Database
-            </HeaderMenuItem>
-            <HeaderMenuItem
-              as={Link}
-              href="/explore"
-              style={{ background: '#383838', color: 'white' }}
-            >
-              NFT Marketplace
-            </HeaderMenuItem>
-            <HeaderMenuItem
-              as={Link}
-              href="/#joinCommunityForm"
-              style={{ background: '#383838', color: 'white' }}
-            >
-              Develop With Us
-            </HeaderMenuItem>
-            <HeaderMenuItem
-              as={Link}
-              href="/#faq"
-              style={{ background: '#383838', color: 'white' }}
-            >
-              Developer FAQ
-            </HeaderMenuItem>
-            <HeaderMenuItem
-              as={Link}
-              href="/#form"
-              style={{ background: '#383838', color: 'white' }}
-            >
-              Connect
-            </HeaderMenuItem>
-          </HeaderNavigation>
-          <SideNav
-            aria-label="Side navigation"
-            expanded={isSideNavExpanded}
-            isPersistent={false}
-          >
-            <SideNavItems>
-              <HeaderSideNavItems>
-                <HeaderMenuItem as={Link} href="/">
-                  Home
-                </HeaderMenuItem>
-                <HeaderMenuItem as={Link} href="/contributeSchool">
+              <SkipToContent />
+              <HeaderMenuButton
+                aria-label="Open menu"
+                onClick={onClickSideNavExpand}
+                isActive={isSideNavExpanded}
+              />
+              <HeaderName
+                as={Link}
+                href="/"
+                prefix=""
+                style={{ color: 'white' }}
+              >
+                NFT 2.0
+              </HeaderName>
+              <HeaderNavigation
+                aria-label="Header"
+                style={{ background: '#383838', color: 'white' }}
+              >
+                <HeaderMenuItem
+                  as={Link}
+                  href="/contributeSchool"
+                  style={{
+                    background: '#383838',
+                    color: 'white',
+                    fontSize: '12px',
+                    textDecoration:
+                      selectedItem === 'option1'
+                        ? 'underline solid blue'
+                        : 'none',
+                  }}
+                >
                   School Database
                 </HeaderMenuItem>
-                <HeaderMenuItem as={Link} href="/explore">
+                <HeaderMenuItem
+                  as={Link}
+                  href="/explore"
+                  style={{
+                    background: '#383838',
+                    color: 'white',
+                    fontSize: '12px',
+                    textDecoration:
+                      selectedItem === 'option2'
+                        ? 'underline solid blue'
+                        : 'none',
+                  }}
+                >
                   NFT Marketplace
                 </HeaderMenuItem>
-                <HeaderMenuItem as={Link} href="/#involved">
+                <HeaderMenuItem
+                  as={Link}
+                  href="/#joinCommunityForm"
+                  style={{
+                    background: '#383838',
+                    color: 'white',
+                    fontSize: '12px',
+                    textDecoration:
+                      selectedItem === 'option3'
+                        ? 'underline solid blue'
+                        : 'none',
+                  }}
+                >
                   Develop With Us
                 </HeaderMenuItem>
-                <HeaderMenuItem as={Link} href="/#faq">
+                <HeaderMenuItem
+                  as={Link}
+                  href="/#faq"
+                  style={{
+                    background: '#383838',
+                    color: 'white',
+                    fontSize: '12px',
+                    textDecoration:
+                      selectedItem === 'option4'
+                        ? 'underline solid blue'
+                        : 'none',
+                  }}
+                >
                   Developer FAQ
                 </HeaderMenuItem>
-                <HeaderMenuItem as={Link} href="/#form">
-                  Connect
-                </HeaderMenuItem>
-              </HeaderSideNavItems>
-            </SideNavItems>
-          </SideNav>
-          <HeaderGlobalBar>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                position: 'relative',
-              }}
-            >
-              {isAuthenticated ? (
-                <>
-                  <img
-                    src="/landingPage/gravatar.png"
-                    alt="User Avatar"
-                    onClick={handleDropdownToggle}
+              </HeaderNavigation>
+              <SideNav
+                aria-label="Side navigation"
+                expanded={isSideNavExpanded}
+                isPersistent={false}
+              >
+                <SideNavItems>
+                  <HeaderSideNavItems>
+                    <HeaderMenuItem as={Link} href="/">
+                      Home
+                    </HeaderMenuItem>
+                    <HeaderMenuItem as={Link} href="/contributeSchool">
+                      School Database
+                    </HeaderMenuItem>
+                    <HeaderMenuItem as={Link} href="/explore">
+                      NFT Marketplace
+                    </HeaderMenuItem>
+                    <HeaderMenuItem as={Link} href="/#joinCommunityForm">
+                      Develop With Us
+                    </HeaderMenuItem>
+                    <HeaderMenuItem as={Link} href="/#faq">
+                      Developer FAQ
+                    </HeaderMenuItem>
+                  </HeaderSideNavItems>
+                </SideNavItems>
+              </SideNav>
+              {isAuthenticationChecked && (
+                <HeaderGlobalBar>
+                  <div
                     style={{
-                      cursor: 'pointer',
-                      width: '15%',
-                      marginRight: '12px',
-                    }}
-                  />
-                  {isDropdownOpen && (
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: '100%',
-                        left: '60%',
-                        transform: 'translateX(-50%)',
-                        backgroundColor: '#fff',
-                        boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)',
-                        borderRadius: '4px',
-                        padding: '10px',
-                        width: '60%',
-                      }}
-                    >
-                      {options.map((option, index) => (
-                        <div
-                          key={option.id}
-                          onClick={() => handleOptionClick(option)}
-                          style={{
-                            padding: '10px',
-                            cursor: 'pointer',
-                            borderBottom:
-                              index < options.length - 1
-                                ? '1px solid #ccc'
-                                : 'none',
-                          }}
-                        >
-                          {option.text}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <>
-                  <a
-                    href="/signIn"
-                    style={{
-                      minWidth: '5rem',
-                      cursor: 'pointer',
-                      color: '#fff',
-                      textDecoration: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'flex-end',
+                      position: 'relative',
                     }}
                   >
-                    Sign In
-                  </a>
-                  <Wallet
-                    onClick={handleWalletLogin}
-                    style={{ marginRight: '14px', cursor: 'pointer' }}
-                  />
-                </>
+                    {isAuthenticated ? (
+                      <>
+                        <p style={{ paddingRight: '12px' }}>
+                          {currentUser?.name}
+                        </p>
+                        <img
+                          src="/landingPage/gravatar.png"
+                          alt="User Avatar"
+                          onClick={handleDropdownToggle}
+                          style={{
+                            cursor: 'pointer',
+                            width: '15%',
+                            marginRight: '12px',
+                          }}
+                        />
+                        {isDropdownOpen && (
+                          <div
+                            style={{
+                              position: 'absolute',
+                              top: '100%',
+                              left: '60%',
+                              transform: 'translateX(-50%)',
+                              backgroundColor: '#fff',
+                              color: 'black',
+                              boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)',
+                              borderRadius: '4px',
+                              padding: '10px',
+                              width: '60%',
+                            }}
+                          >
+                            {options.map((option, index) => (
+                              <div
+                                key={option.id}
+                                onClick={() => handleOptionClick(option)}
+                                style={{
+                                  padding: '10px',
+                                  cursor: 'pointer',
+                                  borderBottom:
+                                    index < options.length - 1
+                                      ? '1px solid #ccc'
+                                      : 'none',
+                                }}
+                              >
+                                {option.text}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <a
+                          href="/signIn"
+                          style={{
+                            minWidth: '5rem',
+                            cursor: 'pointer',
+                            color: '#fff',
+                            textDecoration: 'none',
+                            fontSize: '14px',
+                          }}
+                        >
+                          Sign In
+                        </a>
+                      </>
+                    )}
+                  </div>
+                </HeaderGlobalBar>
               )}
-            </div>
-          </HeaderGlobalBar>
-        </Header>
-      )}
-    />
+            </Header>
+          </div>
+        )}
+      />
+    </Theme>
   );
 };
 

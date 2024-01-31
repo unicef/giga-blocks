@@ -1,37 +1,24 @@
 'use client';
 import Scrollbar from '@components/scrollbar';
 import {
-  TableEmptyRows,
   TableHeadUsers,
   TableNoData,
   TablePaginationCustom,
-  TableSelectedAction,
   useTable,
 } from '@components/table';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
 import {
-  Box,
-  Button,
   Card,
-  Tabs,
   Divider,
   TableContainer,
-  Tooltip,
-  IconButton,
   Table,
-  TableBody,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+  TableBody
 } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { Queries } from 'src/libs/graph-query';
-import { useSchoolCount } from '@hooks/school/useSchool';
 
 const MintedSchools = () => {
   const TABLE_HEAD = [
@@ -41,6 +28,7 @@ const MintedSchools = () => {
     { id: 'longitude', label: 'Longitude', align: 'left' },
     { id: 'mintedStatus', label: 'Status', align: 'left' },
     { id: 'tokenId', label: 'TokenId', align: 'left' },
+    { id: 'mintedAt', label: 'Minted At', align: 'left' },
   ];
 
   const {
@@ -50,36 +38,45 @@ const MintedSchools = () => {
     orderBy,
     setPage,
     rowsPerPage,
-    onSelectRow,
     onSort,
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable();
 
-  const [school, setSchool] = useState<any>()
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
-  const { data: total } = useSchoolCount('MINTED');
-  const [country, setCountry] = useState<string>()
-  const [connectivity, setConnectivity] = useState<string>()
+  const [paginatedData, setPaginatedData] = useState<any>([])
   const [result] = useQuery({
     query: Queries.nftListQuery,
-    variables: { skip: page * rowsPerPage, first: rowsPerPage },
+    variables: {  },
   });
-  const { data, fetching, error } = result;
+  const { data, fetching } = result;
+  
+  useEffect(() => {
+    const startItem = (page+1)*rowsPerPage - rowsPerPage;
+    const endItem = page*rowsPerPage + rowsPerPage
+    const newData = data?.schoolTokenUris.sort((a:any, b:any) => b.id - a.id);
+    const paginatedDatas = newData?.slice(startItem , endItem);
+    setPaginatedData(paginatedDatas)
+  }, [rowsPerPage, data, page])
 
-  const decodeSchooldata = (data: any) => {
-    const encodeddata = data.schoolTokenUris;  
-    const decodedShooldata = [];
-    for (let i = 0; i < encodeddata.length; i++) {
-      const decodedData = atob(encodeddata[i].tokenUri.substring(29));
+
+
+  let filteredData: any = [];
+  useEffect(() => {
+    if (paginatedData) {
+      const encodeddata = paginatedData;  
+    const decodedShooldata:any = [];
+    encodeddata.map((data:any) => {
+      const decodedData = atob(data.tokenUri.substring(29));
       const schoolData = {
-        tokenId: encodeddata[i].id,
+        tokenId: data.id,
+        mintedAt: data.mintedAt,
         ...JSON.parse(decodedData),
       };
       decodedShooldata.push(schoolData);
-    }
+    })
     decodedShooldata &&
       decodedShooldata?.map((row: any) => {
         filteredData.push({
@@ -93,27 +90,20 @@ const MintedSchools = () => {
           coverage_availabitlity: row.coverage_availabitlity,
           electricity_availabilty: row.electricity_availabitlity,
           mintedStatus: 'MINTED',
+          mintedAt: row.mintedAt
         });
       });
     setTableData(filteredData);
-  };
+    };
+  }, [data, paginatedData]);
 
-  let filteredData: any = [];
-  useEffect(() => {
-    if (data) decodeSchooldata(data);
-  }, [data]);
-
-  const sortedData = tableData.slice().sort((a:any, b:any) => {
+  const sortedData = tableData?.slice().sort((a:any, b:any) => {
     const isAsc = order === 'asc';
     if(orderBy === 'longitude'){
     return (parseFloat(a[orderBy]) < parseFloat(b[orderBy]) ? -1 : 1) * (isAsc ? 1 : -1);
     }
     return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
   });
-
-  const handleSchoolChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setSchool(e.target.value)
-  }
 
   return (
     <DashboardLayout>
@@ -125,9 +115,6 @@ const MintedSchools = () => {
       )}
       {!fetching && (
         <>
-        <div style={{display: 'flex', alignItems: 'flex-end', gap: '20px'}}>
-          <TextField id="outlined-basic" type='string' placeholder='Search country' onChange={(e) => handleSchoolChange(e)}/>
-        </div>
         <Card style={{marginTop: '20px'}}>
           <Divider />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -158,8 +145,7 @@ const MintedSchools = () => {
             </Scrollbar>
           </TableContainer>
           <TablePaginationCustom
-            count={total}
-            // count={tableData?.length}
+            count={data?.schoolTokenUris.length || 0}
             setPage={setPage}
             page={page}
             rowsPerPage={rowsPerPage}

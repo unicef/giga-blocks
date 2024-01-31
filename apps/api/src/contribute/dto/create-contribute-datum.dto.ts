@@ -19,26 +19,11 @@ export class CreateContributeDatumDto {
   @IsString()
   status?: Status;
 
-  // @ApiProperty({
-  //   example: '1c0ebe70-f286-473c-bb9c-165db6af77c7',
-  //   description: 'User ID of user who contributed the data.',
-  // })
-  // @IsNotEmpty()
-  // @IsString()
-  // contributedUserId: string;
-
   @ApiProperty({
     example: 'school-id',
   })
   @IsString()
   school_Id: string;
-
-  @ApiProperty({
-    example: 'season-id',
-  })
-  @IsOptional()
-  @IsString()
-  season_ID?: string;
 }
 
 export class ValidateDto {

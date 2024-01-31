@@ -1,30 +1,59 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import {
-  Column,
-  Form,
-  Grid,
-  TextInput,
-  Button,
-  Dropdown,
-  ModalHeader,
-} from '@carbon/react';
+import { Form, TextInput, Button, Dropdown, Column } from '@carbon/react';
 import { Controller, useForm } from 'react-hook-form';
 import Web3Modal from '../congratulation-modal';
 import { useContributeData } from '../../hooks/useContributeData';
+import { useCountryName } from '../../hooks/useCountryName';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { Modal, ModalBody } from '@carbon/react';
+import Map from '../../components/dragableMarker';
+import './contribute.scss';
 
-const ContributeForm = ({ data, isOpen, onClose }) => {
+const ContributeForm = ({
+  data,
+  isOpen,
+  onClose,
+  updateSelectedTabIndex,
+  refetch,
+}) => {
   const router = useRouter();
   const contributeDataMutation = useContributeData();
   const { handleSubmit, control, setValue } = useForm();
   const { id } = useParams();
   const [selectedOptions, setSelectedOptions] = useState({});
   const [error, setError] = useState(false);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [markerCoords, setMarkerCoords] = useState({
+    lat: data.latitude,
+    long: data.longitude,
+  });
+  const countryName = useCountryName(markerCoords.lat, markerCoords.long);
+
+  const handleMarkerDragEnd = (lngLat) => {
+    setMarkerCoords({ lat: lngLat.lat, long: lngLat.lng });
+  };
+
+  useEffect(() => {
+    setValue('latitude', markerCoords.lat);
+    setValue('longitude', markerCoords.long);
+    if (countryName.data) {
+      setValue('country', countryName.data);
+    }
+  }, [markerCoords, setValue, countryName.data]);
+
+  const setDefaultValues = () => {
+    setValue('latitude', data.latitude);
+    setValue('longitude', data.longitude);
+    setValue('country', data.country);
+    setSelectedOptions({
+      dropdown1: { selectedItem: { value: data?.school_type } },
+      dropdown3: { selectedItem: { value: data?.connectivity } },
+      dropdown4: { selectedItem: { value: data?.coverage_availability } },
+      dropdown5: { selectedItem: { value: data?.electricity_available } },
+    });
+  };
 
   useEffect(() => {
     if (
@@ -55,7 +84,14 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
   };
 
   const closeModal = () => {
+    refetch();
     setIsModalOpen(false);
+  };
+
+  const handleModalClose = () => {
+    refetch();
+    onClose();
+    updateSelectedTabIndex({ selectedIndex: 1 });
   };
 
   const onSubmit = (formData) => {
@@ -69,9 +105,8 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
         changedData.school_type =
           selectedOptions?.dropdown1?.selectedItem?.value;
       }
-
       if (formData.country !== data.country) {
-        changedData.country = formData.country;
+        changedData.country = countryName.data;
       }
 
       if (Number(formData.latitude) !== Number(data.latitude)) {
@@ -113,7 +148,9 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
           school_Id: id,
         };
         contributeDataMutation.mutate(formattedData);
+        setDefaultValues();
       }
+      onClose();
       openModal();
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -124,16 +161,16 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
     { label: 'Public', value: 'public' },
   ];
   const connectivity = [
-    { label: 'True', value: true },
-    { label: 'False', value: false },
+    { label: 'Yes', value: true },
+    { label: 'No', value: false },
   ];
   const coverage_availability = [
-    { label: 'True', value: true },
-    { label: 'False', value: false },
+    { label: 'Yes', value: true },
+    { label: 'No', value: false },
   ];
   const electricity_available = [
-    { label: 'True', value: true },
-    { label: 'False', value: false },
+    { label: 'Yes', value: true },
+    { label: 'No', value: false },
   ];
 
   return (
@@ -141,7 +178,7 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
       {/* INTRODUCTION */}
       <Modal open={isOpen} onRequestClose={onClose} passiveModal={true}>
         <h1 style={{ marginBottom: '24px' }}>
-          Contribute Data for {`${data.name}`}
+          Contribute Data for {`${data?.name}`}
         </h1>
         <ModalBody>
           <Form onSubmit={handleSubmit(onSubmit)}>
@@ -149,7 +186,12 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
               id="dropdown1"
               titleText="Type of school"
               style={{ marginBottom: '25px' }}
-              label={data?.school_type === 'private' ? 'Private' : 'Public'}
+              label={
+                data?.school_type === 'private' ||
+                data?.school_type === 'Private'
+                  ? 'Private'
+                  : 'Public'
+              }
               items={school_type}
               itemToString={(item) => (item ? item.label : '')}
               selectedItem={selectedOptions.school_type}
@@ -161,55 +203,93 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
                 setError(false);
               }}
             />
-            <Controller
-              name="country"
-              control={control}
-              render={({ field }) => (
-                <>
-                  <TextInput
-                    {...field}
-                    id="country"
-                    style={{ marginBottom: '25px', height: '48px' }}
-                    labelText="School Country"
-                    placeholder="Enter Country"
-                  />
-                </>
-              )}
+            <p style={{ fontSize: '0.75rem', color: '#525252' }}>
+              School Location
+            </p>
+            <p
+              style={{
+                fontSize: '0.75rem',
+                color: '#525252',
+                paddintTop: '12px',
+                paddingBottom: '12px',
+              }}
+            >
+              Click and drag the pin on the map to select/change school
+              location.
+            </p>
+            <Map
+              lat={markerCoords.lat}
+              long={markerCoords.long}
+              onMarkerDragEnd={handleMarkerDragEnd}
             />
-            <Controller
-              name="latitude"
-              control={control}
-              render={({ field }) => (
-                <>
-                  <TextInput
-                    {...field}
-                    id="latitude"
-                    style={{ marginBottom: '25px', height: '48px' }}
-                    labelText="Exact School's Location"
-                    placeholder="Enter Latitude"
-                  />
-                </>
-              )}
-            />
-            <Controller
-              name="longitude"
-              control={control}
-              render={({ field }) => (
-                <>
-                  <TextInput
-                    {...field}
-                    id="longitude"
-                    style={{ marginBottom: '25px', height: '48px' }}
-                    placeholder="Enter Longitude"
-                  />
-                </>
-              )}
-            />
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '12px',
+              }}
+            >
+              <Controller
+                name="country"
+                control={control}
+                disabled
+                render={({ field }) => (
+                  <>
+                    <TextInput
+                      {...field}
+                      id="country"
+                      style={{ marginBottom: '25px', height: '48px' }}
+                      labelText="School Country"
+                      placeholder="Enter Country"
+                    />
+                  </>
+                )}
+              />
+              <Controller
+                name="latitude"
+                control={control}
+                disabled
+                render={({ field }) => (
+                  <>
+                    <TextInput
+                      {...field}
+                      id="latitude"
+                      style={{
+                        marginBottom: '25px',
+                        height: '48px',
+                      }}
+                      labelText="Latitude"
+                      placeholder="Enter Latitude"
+                    />
+                  </>
+                )}
+              />
+              <Controller
+                name="longitude"
+                control={control}
+                disabled
+                render={({ field }) => (
+                  <>
+                    <TextInput
+                      {...field}
+                      id="longitude"
+                      labelText="Longitude"
+                      style={{
+                        marginBottom: '25px',
+                        height: '48px',
+                      }}
+                      placeholder="Enter Longitude"
+                    />
+                  </>
+                )}
+              />
+            </div>
             <Dropdown
               id="connectivity"
               style={{ marginBottom: '24px' }}
               titleText="Connectivity"
-              label={data?.connectivity ? 'True' : 'False'}
+              label={data?.connectivity ? 'Yes' : 'No'}
               items={connectivity}
               itemToString={(item) => (item ? item.label : '')}
               selectedItem={selectedOptions.connectivity}
@@ -225,7 +305,7 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
               id="dropdown4"
               style={{ marginTop: '24px', marginBottom: '24px' }}
               titleText="Coverage Availability"
-              label={data?.coverage_availability ? 'True' : 'False'}
+              label={data?.coverage_availability ? 'Yes' : 'No'}
               items={coverage_availability}
               itemToString={(item) => (item ? item.label : '')}
               selectedItem={selectedOptions.coverage_availability}
@@ -241,7 +321,7 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
               id="dropdown5"
               style={{ marginTop: '24px', marginBottom: '24px' }}
               titleText="Electricity Availability"
-              label={data?.electricity_available ? 'True' : 'False'}
+              label={data?.electricity_available ? 'Yes' : 'No'}
               items={electricity_available}
               itemToString={(item) => (item ? item.label : '')}
               selectedItem={selectedOptions.electricity_available}
@@ -264,7 +344,12 @@ const ContributeForm = ({ data, isOpen, onClose }) => {
           Contribute Now
         </Button>
       </Modal>
-      <Web3Modal id={id} isOpen={isModalOpen} onClose={closeModal} />
+      <Web3Modal
+        id={id}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onTabChange={handleModalClose}
+      />
     </>
   );
 };

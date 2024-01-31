@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UploadedFile } from '@nestjs/common';
 import { Job, Queue } from 'bull';
 import {
   InjectQueue,
@@ -22,8 +22,7 @@ import {
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
-import { mintNFT, mintSingleNFT } from 'src/utils/ethers/transactionFunctions';
-import { MintQueueSingleDto } from 'src/schools/dto/mint-queue.dto';
+import { getArtScript, getTokenIdSchool, mintNFT, mintSingleNFT } from 'src/utils/ethers/transactionFunctions';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { SchoolData } from '../types/mintdata.types';
 import { MintStatus } from '@prisma/application';
@@ -31,6 +30,9 @@ import { jobOptions } from '../config/bullOptions';
 import { ContributeDataService } from 'src/contribute/contribute.service';
 import { SchoolService } from 'src/schools/schools.service';
 import { getTokenId } from 'src/utils/web3/subgraph';
+import generateP5Image from 'src/utils/p5/generateP5';
+import decodeBase64Image from 'src/utils/ipfs/decodeImage';
+import uploadFile from 'src/utils/ipfs/ipfsAdd';
 
 @Injectable()
 @Processor(ONCHAIN_DATA_QUEUE)
@@ -57,7 +59,6 @@ export class QueueProcessor {
     this._logger.error(`Failed job ${job.id} of type ${job.name}: ${error.message}`, error.stack);
     if (job.attemptsMade === job.opts.attempts) {
       try {
-        //this.sendOnchainData(job);
         return this._mailerService.sendMail({
           to: this._configService.get('EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
@@ -197,11 +198,20 @@ export class MintQueueProcessor {
 
   @Process(SET_IMAGE_PROCESS)
   public async processImages(job: Job<{ mintData: SchoolData[]; ids: string[]; giga_ids: string[] }>){
-    const schoolTokenId = await getTokenId(
-      this._configService.get('NEXT_PUBLIC_GRAPH_URL'),
-      'c93ee8bf-5d20-4cfd-871a-99851be4ebe1'
-    );
-    console.log(schoolTokenId)
+    const schoolToken = await getTokenIdSchool('NFT', this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
+    'e253f99c-57d2-4247-a6c7-05ae85a78809')
+    
+    // const artScript = await getArtScript('NFT', this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
+    // schoolToken)
+
+    
+
+    // const artScript = `let colors; let angle = 0; function setup() {createCanvas(800, 600);colors = generateRandomColors(5); }  function draw() {background(255); drawRotatingGradient();drawPulsatingCircle(); drawPattern(); }function drawRotatingGradient() { translate(width / 2, height / 2);rotate(radians(angle));  let gradientSize = 400;for (let i = 0; i < colors.length; i++) {let c = colors[i];fill(c);rect(0, 0, gradientSize, gradientSize);rotate(PI / 4);}angle += 1;} function drawPulsatingCircle() {let pulseSize = sin(frameCount * 0.05) * 50 + 100; let c = colors[2]; fill(c); noStroke(); ellipse(width / 2, height / 2, pulseSize, pulseSize);} function drawPattern() {let rectSize = 50; for (let x = 0; x < width; x += rectSize + 10) {for (let y = 0; y < height; y += rectSize + 10) { let c = random(colors); fill(c); rect(x, y, rectSize, rectSize); } }  } function generateRandomColors(count) { let generatedColors = []; for (let i = 0; i < count; i++) { let randomColor = color(random(255), random(255), random(255)); generatedColors.push(randomColor);} return generatedColors; }`
+    // const base64Image = await generateP5Image(artScript)
+    // const decodedImage = await decodeBase64Image(base64Image)
+    // if(decodedImage){
+    //   const uploadedFile = await uploadFile(decodedImage.data)
+    // }
   }
 
   @Process(SET_MINT_SINGLE_NFT)

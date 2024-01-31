@@ -125,7 +125,7 @@ export class QueueService {
     try {
       ids = MintData.data.map(school => school.id);
       giga_ids = MintData.data.map(school => school.giga_school_id);
-      await this.updateSchools(ids);
+      // await this.updateSchools(ids);
       await this._mintQueue.add(SET_IMAGE_PROCESS, { ids, giga_ids }, jobOptions);
       return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
@@ -150,8 +150,8 @@ export class QueueService {
       for (let i = 0; i < id.length; i++) {
         const schoolid = id[i];
         await this._contributeQueue.add(SET_APPROVE_QUEUE, { id: schoolid, userId }, jobOptions);
-        return { message: 'queue added successfully', statusCode: 200 };
       }
+      return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
       this._logger.error(`Error queueing `);
       throw error;

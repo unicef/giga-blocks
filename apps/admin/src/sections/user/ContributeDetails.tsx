@@ -1,24 +1,11 @@
-import { useState, ChangeEvent, useEffect, use } from 'react';
-import * as Yup from 'yup';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, MenuItem, Select, Button, Container } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+import { Box, Card, Grid, Stack, Button, Container, CircularProgress } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useSnackbar } from '@components/snackbar';
 import FormProvider, { ProfileTextField } from '@components/hook-form';
-import { AdministrationService } from '@services/administration';
-import { useSchoolGetById } from '@hooks/school/useSchool';
-import Image from 'next/image';
 import CustomBreadcrumbs from '@components/custom-breadcrumbs';
 import { PATH_DASHBOARD, PATH_CONTRIBUTE } from '@routes/paths';
-// @ts-ignore
-import Identicon from 'react-identicons';
-import { hooks } from '@hooks/web3/metamask';
-import { JsonRpcProvider, Signer } from 'ethers';
-import { mintSignature } from '@components/web3/utils/wallet';
-import { useMintSchools } from '@hooks/school/useSchool';
-import { useWeb3React } from '@web3-react/core';
 import { useContributionGetById, useContributionValidate } from '@hooks/contribute/useContribute';
 
 interface Props {
@@ -27,29 +14,19 @@ interface Props {
   id?: string | string[] | undefined;
 }
 
-interface FormValuesProps {
-  id: string;
-  name: string;
-  email: string;
-  position: string | null;
-  phone: string;
-  affiliation: string | null;
-  roles: string;
-  is_active: boolean;
-}
-
 export default function ContributeDetail({ id }: Props) {
-  const [profile, setProfile] = useState({
+  const [profile, setProfile] = useState<any>({
     fullname: '',
     schoolName: '',
     createdAt: '',
     status: '',
     contributed_data: '',
     coverage: '',
+    validatedUser: '',
     mintedStatus: '',
   });
 
-  const { data, isSuccess, isError, refetch } = useContributionGetById(id);
+  const { data, isSuccess, isError, refetch,isFetching } = useContributionGetById(id);
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -57,28 +34,13 @@ export default function ContributeDetail({ id }: Props) {
     isSuccess: isValidationSuccess,
     isError: isValidationError,
   } = useContributionValidate();
-
-  const web3 = useWeb3React();
-
   const router = useRouter();
 
-  const [nftData, setNftData] = useState({
-    id: '',
-    schoolName: '',
-    longitude: '',
-    latitude: '',
-    schoolType: '',
-    country: '',
-    connectivity: '',
-    coverage_availabitlity: '',
-    electricity_availabilty: '',
-    mintedStatus: '',
-  });
 
   useEffect(() => {
-    if (isSuccess) {
-      const keyValue = Object.entries(data?.contributed_data);
-      const jsonString = JSON.parse(keyValue?.map((pair) => pair[1])?.join(''));
+    if (isSuccess && data ) {
+      const keyValue = Object?.entries(data?.contributed_data);
+      const jsonString = JSON?.parse(keyValue?.map((pair) => pair[1])?.join(''));
       setProfile({
         fullname: data?.contributedUser?.name,
         schoolName: data?.school.name,
@@ -86,57 +48,24 @@ export default function ContributeDetail({ id }: Props) {
         status: data?.status,
         contributed_data: jsonString,
         coverage: data?.coverage_availability,
+        validatedUser: data?.validatedUser?.name || '',
         mintedStatus: data?.minted,
       });
     }
   }, [isSuccess, isError, data]);
 
   useEffect(() => {
-    isValidationSuccess &&
-      enqueueSnackbar('Successfully updated contribution', { variant: 'success' });
     refetch();
-    isValidationError && enqueueSnackbar('Unsuccessful', { variant: 'error' });
   }, [isValidationSuccess, isValidationError]);
 
-  useEffect(() => {
-    setNftData({
-      id: data?.id,
-      schoolName: data?.name,
-      longitude: data?.longitude,
-      latitude: data?.latitude,
-      schoolType: data?.school_type,
-      country: data?.country,
-      connectivity: data?.connectivity,
-      coverage_availabitlity: data?.coverage_availability,
-      electricity_availabilty: data?.electricity_available,
-      mintedStatus: data?.minted,
-    });
-  }, [data]);
-
-  const UpdateUserSchema = Yup.object().shape({
-    name: Yup.string()
-      .required()
-      .matches(/^[a-zA-Z\s]+$/, 'Name must contain only alphabets and spaces'),
-    email: Yup.string().email('Email must be a valid email address'),
-    phone: Yup.number().typeError('Phone must be a valid number'),
-    position: Yup.string(),
-    affiliation: Yup.string(),
-    roles: Yup.string(),
-  });
-
-  const methods = useForm<FormValuesProps>({
-    resolver: yupResolver(UpdateUserSchema),
-  });
-
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
+  const methods = useForm();
 
   const onContribute = (validity: boolean) => {
     const payload = { contributions: [{ contributionId: id, isValid: validity }] };
     mutate(payload);
-    router.push('/contribute');
+    !validity ? enqueueSnackbar(`Contributed Data are invalidated. Please check invalidated Data Section`, { variant: 'success' })
+    : enqueueSnackbar(`Contributed Data are validated. Please check validated Data Section`, { variant: 'success' });
+    router.push('/contribute')
   };
 
   const back = () => {
@@ -145,7 +74,12 @@ export default function ContributeDetail({ id }: Props) {
 
   return (
     <>
-      <Grid item xs={8}>
+   { isFetching ?<div style={{width: '100%', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      <CircularProgress color="inherit" />
+      </div>:
+   (
+   <>
+      <Grid item xs={12} lg={8}>
         <Container>
           <CustomBreadcrumbs
             heading="Contribution Detail"
@@ -164,6 +98,7 @@ export default function ContributeDetail({ id }: Props) {
                       name="name"
                       value={profile?.fullname || ''}
                       label="Contributed by"
+                      disabled
                     />
 
                     <ProfileTextField
@@ -185,23 +120,32 @@ export default function ContributeDetail({ id }: Props) {
                         name="latitude"
                         value={profile?.createdAt || ''}
                         label="Created At"
+                        disabled
                       />
                       <ProfileTextField
                         name="longitude"
                         value={profile?.status || ''}
                         label="Status"
+                        disabled
                       />
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      {profile?.status != 'Pending' && <ProfileTextField
+                        name="longitude"
+                        value={profile?.validatedUser || ''}
+                        label={`${profile?.status === 'Validated' ? 'Validated by' : 'Invalidated By'}`}
+                        disabled
+                      />}
+                    </Box>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <span>Contributed Data</span>
                         <span>
                           <ProfileTextField
                             name="coverage"
-                            value={Object.values(profile?.contributed_data)[0] || ''}
+                            value={Object.values(profile?.contributed_data)[0]  === true ? 'Yes' : Object.values(profile?.contributed_data)[0] === false ? 'No' : Object.values(profile?.contributed_data)[0]  || ''}
                             label={Object.keys(profile?.contributed_data)[0] || ''}
+                            disabled
                           />
                         </span>
                       </div>
-                    </Box>
                   </Box>
 
                   <Stack alignItems="flex-start" sx={{ mt: 3 }}>
@@ -220,7 +164,7 @@ export default function ContributeDetail({ id }: Props) {
         </Container>
       </Grid>
       {profile?.status === 'Pending' && (
-        <Grid item xs={4}>
+        <Grid item xs={12} lg={4}>
           <Container>
             <Box justifyContent={'center'}>
               <Stack direction="row" alignItems="center">
@@ -246,6 +190,8 @@ export default function ContributeDetail({ id }: Props) {
           </Container>
         </Grid>
       )}
+    </>)
+    }
     </>
   );
 }
