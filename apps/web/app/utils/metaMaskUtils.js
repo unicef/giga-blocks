@@ -2,7 +2,6 @@ import { metaMask } from '../components/web3/connectors/metamask';
 import { Default_Chain_Explorer, Default_Chain_Id, Default_Chain_URL } from '../components/web3/connectors/network';
 import { ethers } from 'ethers';
 import { clearStorage } from './sessionManager';
-import { useRouter } from 'next/navigation';
 
 
 export const metaMaskLogin = async () => {
@@ -42,10 +41,10 @@ export const metaMaskLogout = async () => {
 export const switchMetaMaskNetwork = async () => {
   const network = {
     chainId: Default_Chain_Id,
-    chainName: 'Polygon-Mumbai',
+    chainName: 'Etherum-Sepolia',
     nativeCurrency: {
-      name: 'Matic',
-      symbol: 'Matic',
+      name: 'ETH',
+      symbol: 'ETH',
       decimals: 18,
     },
     rpcUrls: [Default_Chain_URL],
