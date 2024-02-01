@@ -62,15 +62,15 @@ For running nx for specific apps or library you can write following syntax:
 npx nx <command(build,lint,test,serve)> <apps/libs name>
 ```
 
-Contract Addresses deployed for testing in stage server(Polygon Mumbai):
+Contract Addresses deployed for testing in stage server(Ethereum Sepolia):
 
 ```
 
-NFT_Content_Address:0x5e41D7F043BEffb68F3064678E1fB1B5aFdbc5B3
-School_NFT_Contract_Address:0xA6a171f32EDC5691DC8c1Aaa2B9FE7D9c47CA905
-Collector_NFT_Contract_Address:0xE2e91a6120544a493A88e17DA8BDF00b64Ce332C
-Giga_Minter_Contract_Address:0xeA56a618D84cEe9B0308f9f2eC66934B220f10c0
-Escrow_Contract_Address:0x149298017FaCbb034E54d53F7265616fcA3D3254
-Giga_Seller_Contract_Address:0xDdDeE20FBE797D7eE399c9275a1A4b4265e45BFA
+NFT_Content_Address:0x1e01FAed9D113dF7c718200B66788cbf190Bba8C
+School_NFT_Contract_Address:0xb241c7f8D544527ff401aD843cE67A6DEc08c8d4
+Collector_NFT_Contract_Address:0x4aCf14b18c42FB97f48E044082c8F3221eF359FF
+Giga_Minter_Contract_Address:0x5749ad5d0c16D005d7dE8EA418FC1D54E2a32576
+Escrow_Contract_Address:0x5Bc0701CF3d5f89Be546114F83d4b84548692FBA
+Giga_Seller_Contract_Address:0xD72514505A25843cc96B855Ad734673f947FE735
 ART SCRIPT Contract are auto deployed during nft content deployment
 ```
