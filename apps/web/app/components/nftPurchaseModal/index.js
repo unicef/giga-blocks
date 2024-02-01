@@ -23,7 +23,7 @@ import {
   metaMaskLogout,
 } from '../../utils/metaMaskUtils';
 import { Default_Chain_Id } from '../web3/connectors/network';
-import generateIdenticon from '../../utils/generateIdenticon'
+import generateIdenticon from '../../utils/generateIdenticon';
 
 const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
   const sellerContract = useSellerContract();

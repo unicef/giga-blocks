@@ -131,7 +131,6 @@ const SignIn = () => {
           title: 'Wallet login successful',
         });
         if (searchKey) {
-          console.log('seachKey', searchKey);
           route.push(searchKey);
           return;
         } else {
@@ -216,7 +215,7 @@ const SignIn = () => {
                   )}
                 />
               )}
-              {errors.email && (
+              {errors.email && isSubmitted && (
                 <p style={{ color: 'red' }}>{errors.email.message}</p>
               )}
               <br />

@@ -74,7 +74,9 @@ export default function ContributeDetail({ id }: Props) {
 
   return (
     <>
-   { isFetching ?<CircularProgress color='inherit'/>:
+   { isFetching ?<div style={{width: '100%', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      <CircularProgress color="inherit" />
+      </div>:
    (
    <>
       <Grid item xs={12} lg={8}>

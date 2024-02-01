@@ -1,8 +1,18 @@
 @use '@carbon/react/scss/spacing' as *;
 @use '@carbon/react/scss/breakpoint' as *;
 
+.faq {
+  height: 514px;
+  padding-top: 102px;
+}
 .heading11 {
   @include breakpoint-down(md) {
     padding-bottom: $spacing-08;
   }
+}
+.cds--accordion__title {
+  font-size: 16px;
+}
+.cds--accordion__content > p {
+  line-height: 24px;
 }

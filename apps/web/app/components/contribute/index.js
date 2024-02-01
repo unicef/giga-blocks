@@ -38,11 +38,6 @@ const ContributeForm = ({
   useEffect(() => {
     setValue('latitude', markerCoords.lat);
     setValue('longitude', markerCoords.long);
-  }, [markerCoords, setValue]);
-
-  useEffect(() => {
-    setValue('latitude', markerCoords.lat);
-    setValue('longitude', markerCoords.long);
     if (countryName.data) {
       setValue('country', countryName.data);
     }

@@ -48,7 +48,8 @@
   font-size: type.type-scale(1);
 }
 .heading2 {
-  font-size: type.type-scale(2);
+  font-size: 14px;
+  line-height: 24px;
 }
 .heading3 {
   font-size: type.type-scale(3);
@@ -61,10 +62,11 @@
 }
 .heading6 {
   font-size: type.type-scale(6);
-  font-family: lora;
 }
 .heading7 {
-  font-size: type.type-scale(7);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 32px;
 }
 .heading8 {
   font-size: type.type-scale(8);
@@ -77,6 +79,9 @@
 }
 .heading11 {
   font-size: type.type-scale(11);
+}
+.heading20 {
+  font-size: 28px;
 }
 
 .landing-page__illo {
@@ -106,5 +111,4 @@
   height: 50vh;
 }
 .heading8 {
-  font-family: lora;
 }

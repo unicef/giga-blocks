@@ -74,12 +74,14 @@ const SignUp = () => {
           kind: 'success',
           title: 'Registered successfully. OTP sent to email.',
         });
+
         sendOtp
           .mutateAsync({ email: data.email })
           .then(() => {
             setOpenModal(true);
             setEmail(data.email);
           })
+
           .catch((err) => {
             setNotification({
               kind: 'error',
@@ -87,6 +89,7 @@ const SignUp = () => {
             });
           });
       })
+
       .catch((err) => {
         setNotification({
           kind: 'error',
