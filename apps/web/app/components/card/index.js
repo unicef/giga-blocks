@@ -94,7 +94,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize, setSearch }) => {
         const decodedData = atob(data.tokenUri.substring(29));
         const schoolData = {
           tokenId: data.id,
-          ...JSON.parse(decodedData.replace('"image":','"image":""')),
+          ...JSON.parse(decodedData),
         };
         decodedShooldata.push(schoolData);
       });

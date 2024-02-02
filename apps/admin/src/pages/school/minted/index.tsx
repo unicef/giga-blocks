@@ -73,7 +73,7 @@ const MintedSchools = () => {
       const schoolData = {
         tokenId: data.id,
         mintedAt: data.mintedAt,
-        ...JSON.parse(decodedData?.replace('"image":','"image":""')),
+        ...JSON.parse(decodedData),
       };
       decodedShooldata.push(schoolData);
     })
