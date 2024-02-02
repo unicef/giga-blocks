@@ -32,7 +32,7 @@ export const mintSingleNFT = async (
   const contract: any = getContractWithSigner(contractName, contractAddress);
   const schoolArgs = [giga_id, escrowAddress, escrowAddress, schoolDataArray];
   const tx = await contract.mintNft(...schoolArgs);
-  return tx;
+  return tx; 
 };
 
 const generateMultiCallData = (contractName, functionName, callData) => {
@@ -64,9 +64,7 @@ export const getTokenIdSchool = async (
   schoolId: string,
 ) => {
   const contract:any = getContractWithSigner(contractName, contractAddress);
-  console.log('tx')
-
-  const tx = await contract.schoolIdToTokenId(1)
+  const tx = await contract.schoolIdToTokenId(schoolId)
  
   return tx;
 };
@@ -81,6 +79,27 @@ export const getArtScript = async (
   return tx;
 };
 
+export const updateImageHash = async (
+  contractName: string,
+  contractAddress: string,
+  tokenHash: string,
+  schoolId: string,
+) => {
+  const contract: any = getContractWithSigner(contractName, contractAddress);
+  const tx = await contract.updateNftImageHash(schoolId, tokenHash);
+  return tx;
+};
+
+export const getTokenHash = async (
+  contractName: string,
+  contractAddress: string,
+  tokenHash: string
+) => {
+  const contract: any = getContractWithSigner(contractName, contractAddress);
+  const tx = await contract.nftImageHash(tokenHash);
+  return tx;
+};
+ 
 export const updateBulkData = async (
   contractName: string,
   contractAddress: string,

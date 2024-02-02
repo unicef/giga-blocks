@@ -126,7 +126,7 @@ export class QueueService {
       ids = MintData.data.map(school => school.id);
       giga_ids = MintData.data.map(school => school.giga_school_id);
       // await this.updateSchools(ids);
-      await this._mintQueue.add(SET_IMAGE_PROCESS, { ids, giga_ids }, jobOptions);
+      await this._mintQueue.add(SET_IMAGE_PROCESS, { giga_ids }, jobOptions);
       return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
       this._logger.error(`Error queueing transaction to blockchain `);
