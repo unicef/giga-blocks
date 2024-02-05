@@ -49,8 +49,6 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize, setSearch }) => {
     if (imagedata) decodeImage(imagedata?.data?.nftImages);
   }, [queryData, imagedata, account]);
 
-
-  console.log(imageData)
   const decodeImage = (data) => {
     const decodedImage = [];
     data?.map((dat) => {
