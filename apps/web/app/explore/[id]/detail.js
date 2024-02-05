@@ -47,12 +47,6 @@ const SchoolDetail = ({ id }) => {
     { text: 'NFTMarketPlace', link: '/explore' },
   ];
 
-  const route = useRouter();
-
-  const handleClickRoute = () => {
-    route.push('/viewMyNFT');
-  };
-
   return (
     <>
       {fetching === true ? (

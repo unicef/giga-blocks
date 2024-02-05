@@ -40,21 +40,36 @@ const Introduction = ({ schooldata, tokenId }) => {
       setIsOwner(true);
   }, [schooldata?.owner, account]);
 
+  // useEffect(() => {
+  //   if (sellerContract){
+  //   try {
+  //     sellerContract.methods.calculatePrice().call()
+  //     .then(() => {
+  //       setPrice(res);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  //   }
+  // }, []);
+
   useEffect(() => {
-    if (sellerContract){
-    try {
-      sellerContract.methods.calculatePrice().call()
-      .then(() => {
-        setPrice(res);
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-    } catch (err) {
-      console.log(err);
-    }
-    }
-  }, []);
+    const fetchData = async () => {
+      if (!sellerContract) return;
+  
+      try {
+        const price = await sellerContract.methods.calculatePrice().call();
+        setPrice(price);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  
+    fetchData();
+  }, [sellerContract]);
 
   return (
     <Grid fullWidth className="mt-50px">

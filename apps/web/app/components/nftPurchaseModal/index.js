@@ -122,6 +122,26 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
     }
   }, [account, chainId]);
 
+  // useEffect(() => {
+  //   if (sellerContract){
+  //   try {
+  //   sellerContract.methods
+  //       .calculatePrice()
+  //       .call({ from: account })
+  //       .then((res) => {
+  //         const priceInEth = ethers.formatEther(res);
+  //         setPrice(res);
+  //         setPriceEth(priceInEth);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err)
+  //       })     
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
+  // }, []);
+
   useEffect(() => {
     if (sellerContract){
     try {
