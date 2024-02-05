@@ -19,6 +19,10 @@ import { ConfigService } from '@nestjs/config';
 import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-datum.dto';
 import { getTokenId } from 'src/utils/web3/subgraph';
 import { PaginateFunction, PaginateOptions } from 'src/utils/paginate';
+import { InjectQueue } from '@nestjs/bull';
+import { IMAGE_QUEUE, SET_IMAGE_PROCESS } from 'src/mailer/constants';
+import { Queue } from 'bull';
+import { jobOptions } from 'src/mailer/config/bullOptions';
 
 @Injectable()
 export class SchoolService {
@@ -26,6 +30,7 @@ export class SchoolService {
     private prisma: PrismaAppService,
     private readonly queueService: QueueService,
     private readonly configService: ConfigService,
+    @InjectQueue(IMAGE_QUEUE) private readonly _imageQueue: Queue,
   ) {}
 
   async findAll(query: ListSchoolDto) {
@@ -354,6 +359,9 @@ export class SchoolService {
       schooldata,
     );
     const txReceipt = tx.wait();
+    if (txReceipt.status === 1){
+          await this._imageQueue.add(SET_IMAGE_PROCESS, { id }, jobOptions)
+      }
     return txReceipt;
   }
 
