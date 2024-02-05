@@ -75,7 +75,6 @@ export class SchoolService {
         const orderBy = options?.orderBy || defaultOptions?.orderBy || 'createdAt'
         const skip = perPage * page;
     
-    
         const [total, rows] = await Promise.all([
           model.count({ where: args.where }),
           

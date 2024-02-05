@@ -115,18 +115,24 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
     }
   }, [account, chainId]);
 
-  useEffect(async () => {
-    if (!sellerContract) return;
+  useEffect(() => {
+    if (sellerContract){
     try {
-      const price = await sellerContract.methods
+    sellerContract.methods
         .calculatePrice()
-        .call({ from: account });
-      const priceInEth = ethers.formatEther(price);
-      setPrice(price);
-      setPriceEth(priceInEth);
+        .call({ from: account })
+        .then((res) => {
+          const priceInEth = ethers.formatEther(res);
+          setPrice(res);
+          setPriceEth(priceInEth);
+        })
+        .catch((err) => {
+          console.log(err)
+        })     
     } catch (err) {
       console.log(err);
     }
+  }
   }, []);
 
   return (
@@ -148,6 +154,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
       )}
       <Modal open={isOpen} onRequestClose={onClose} passiveModal={true}>
         <ModalBody>
+        
           <p>
             You are about to purchase {schooldata?.schoolName} from{' '}
             {schooldata?.owner?.slice(0, 8) +

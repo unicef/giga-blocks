@@ -182,7 +182,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
           </Button>
         ))}
 
-      <TableContainer component={Paper} sx={{ my: 4 }}>
+      <TableContainer component={Paper} sx={{ my: 4, height: 400 }}>
         <Table sx={{ mx: 1 }}>
           <TableHead>
             <TableRow>
