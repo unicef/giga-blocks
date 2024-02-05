@@ -21,18 +21,25 @@ const SchoolDetail = ({ id }) => {
   });
   const { fetching } = result;
   const [schoolData, setSchoolData] = useState();
+  const [noData, setNoData] = useState(false)
 
   const decodeSchooldata = (data) => {
+    if(data?.collectorTokenUri != null) {
     const encodeddata = data.collectorTokenUri;
-    const decodedData = atob(encodeddata?.tokenUri.substring(29));
-    const nftDetails = {
-      owner: encodeddata.owner.id,
-      ...JSON.parse(decodedData),
-    };
-    setSchoolData(nftDetails);
+      const decodedData = atob(encodeddata?.tokenUri.substring(29));
+      const nftDetails = {
+        owner: encodeddata.owner.id,
+        ...JSON.parse(decodedData),
+      };
+      setSchoolData(nftDetails);
+      setNoData(false)
+    }
+    else{
+    setNoData(true)
+    }
   };
   useEffect(() => {
-    if (result.data) decodeSchooldata(result.data);
+    if (result) decodeSchooldata(result.data);
   }, [result.data]);
 
   const breadcrumbs = [
@@ -48,7 +55,17 @@ const SchoolDetail = ({ id }) => {
 
   return (
     <>
-      {fetching == false ? (
+      {fetching === true ? (
+        <div className="loader-container">
+        {' '}
+        <Loading withOverlay={false} />{' '}
+        <span>Loading school data, please wait...</span>{' '}
+      </div>
+        
+      ) : noData === true ? <div className="loader-container">
+      {' '}
+      <h3>No school data with such ID.</h3>{' '}
+    </div> : (
         <>
           <Navbar />
           <PageHeader name={schoolData?.schoolName} breadcrumbs={breadcrumbs} />
@@ -58,12 +75,6 @@ const SchoolDetail = ({ id }) => {
           <NFTMetadata schoolData={schoolData} />
           <Footer />
         </>
-      ) : (
-        <div className="loader-container">
-          {' '}
-          <Loading withOverlay={false} />{' '}
-          <span>Loading school data, please wait...</span>{' '}
-        </div>
       )}
     </>
   );

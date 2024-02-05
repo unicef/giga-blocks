@@ -13,16 +13,17 @@ import {
 import './contributeSchools.scss';
 import { useEffect, useState } from 'react';
 import { useSchoolGet } from '../../hooks/useSchool';
-import { toSvg } from 'jdenticon';
-import generateIdenticon from '../../utils/generateIdenticon'
+import generateIdenticon from '../../utils/generateIdenticon';
+import useDebounce from '../../hooks/useDebounce';
 
 const SchoolCard = () => {
   const [schoolData, setSchoolData] = useState([]);
   const [pageSize, setPageSize] = useState(12);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const debouncedSearch = useDebounce(searchText, 500);
 
-  const { data, isLoading } = useSchoolGet(0, pageSize, searchText);
+  const { data, isLoading } = useSchoolGet(0, pageSize, debouncedSearch);
 
   useEffect(() => {
     isLoading === false && setSchoolData(data?.rows);
@@ -50,6 +51,7 @@ const SchoolCard = () => {
           onChange={(e) => {
             setSearchText(e.target.value);
           }}
+          style={{ fontSize: '14px' }}
         />
       </div>
       <Grid fullWidth style={{ margin: '30px auto' }}>
@@ -120,10 +122,10 @@ const SchoolCard = () => {
         <Column sm={4} md={8} lg={16}>
           {schoolData.length > 0 && (
             <Button
+              className="load-more"
               onClick={loadMore}
               kind="tertiary"
               disabled={allDataLoaded}
-              style={{ float: 'right' }}
             >
               {allDataLoaded === false ? 'Load more' : 'No more data'}
             </Button>

@@ -1,6 +1,7 @@
 import { Grid, Column } from '@carbon/react';
 import './styles/preview.scss';
 import React from 'react';
+import { ArrowDown } from '@carbon/icons-react';
 
 const Preview2 = () => {
   return (
@@ -11,7 +12,7 @@ const Preview2 = () => {
             width: '95%',
             display: 'flex',
             flexDirection: 'column',
-            gap: '3vh',
+            gap: '32px',
           }}
         >
           <p className="heading02">
@@ -21,6 +22,7 @@ const Preview2 = () => {
             innovation, bridge the digital knowledge gap, and enable global
             access to quality education resources.
           </p>
+          <ArrowDown size={28} />
         </div>
       </Column>
     </Grid>

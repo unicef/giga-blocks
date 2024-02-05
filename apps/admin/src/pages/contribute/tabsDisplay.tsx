@@ -42,12 +42,10 @@ const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetc
       }
 
       const handleSchoolSearchChange = (value: any) => {
-        setSelectedContributorSearch(null);
         setSelectedSchoolSearch(value);
       };
 
       const handleContributorSearchChange = (value: any) => {
-        setSelectedSchoolSearch(null);
         setSelectedContributorSearch(value);
       };
 
@@ -104,7 +102,7 @@ const TabsDisplay = ({setSelectedValues, selectedValues, ContributedData, refetc
         isValidationLoading && enqueueSnackbar('Data validation in progress. Please wait. ', { variant: 'warning' });
       }, [isValidationSuccess, isValidationError, isValidationLoading]);
     
-      const unSortableHeader = ['contributedDataKey', 'contributedDataValue']
+      const unSortableHeader = ['contributedDataKey', 'contributedDataValue', 'validatedUser']
 
     return (
       <>

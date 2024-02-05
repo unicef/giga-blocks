@@ -97,8 +97,8 @@ const RegisterForm = () => {
             Waiting List!
           </h1>
         </Column>
-        <Column className="form" md={4} lg={8} sm={4}>
-          <Form onSubmit={handleSubmit(onSubmit)}>
+        <Column md={4} lg={8} sm={4}>
+          <Form className="form" onSubmit={handleSubmit(onSubmit)}>
             <Controller
               name="fullname"
               control={control}
@@ -111,8 +111,8 @@ const RegisterForm = () => {
               render={({ field }) => (
                 <TextInput
                   {...field}
+                  style={{ marginBottom: '32px' }}
                   id="fullname"
-                  style={{ marginBottom: '25px', height: '48px' }}
                   invalidText="Invalid error message."
                   labelText="Name"
                   placeholder="Enter your fullname here"
@@ -120,7 +120,13 @@ const RegisterForm = () => {
               )}
             />
             {errors.fullname && (
-              <p style={{ color: 'red', margin: '6px 0 12px 0' }}>
+              <p
+                style={{
+                  color: 'red',
+                  margin: '6px 0 12px 0',
+                  fontSize: '12px',
+                }}
+              >
                 {errors.fullname.message}
               </p>
             )}
@@ -138,7 +144,7 @@ const RegisterForm = () => {
                 <TextInput
                   {...field}
                   id="email"
-                  style={{ marginBottom: '25px', height: '48px' }}
+                  // style={{ marginBottom: '25px', height: '48px' }}
                   invalidText="Invalid error message."
                   labelText="Email"
                   placeholder="Enter your email here"
@@ -146,27 +152,39 @@ const RegisterForm = () => {
               )}
             />
             {errors.email && (
-              <p style={{ color: 'red' }}>{errors.email.message}</p>
+              <p
+                style={{
+                  color: 'red',
+                  margin: '6px 0 12px 0',
+                  fontSize: '12px',
+                }}
+              >
+                {errors.email.message}
+              </p>
             )}
-            <Controller
-              name="country"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <Dropdown
-                  {...field}
-                  ariaLabel="Select Country"
-                  id="carbon-dropdown-example"
-                  style={{ marginBottom: '25px', height: '48px' }}
-                  items={options}
-                  label="Select Country"
-                  titleText="Select Country"
-                  onChange={(selectedItem) => handleSelectChange(selectedItem)}
-                  initialSelectedItem={{ value: '', label: 'Select country' }}
-                  selectedItem={selectedCountry}
-                />
-              )}
-            />
+            <div style={{ marginTop: '32px' }}>
+              <Controller
+                name="country"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <Dropdown
+                    {...field}
+                    ariaLabel="Select Country"
+                    id="carbon-dropdown-example"
+                    style={{ marginBottom: '48px', height: '48px' }}
+                    items={options}
+                    label="Select Country"
+                    titleText="Select Country"
+                    onChange={(selectedItem) =>
+                      handleSelectChange(selectedItem)
+                    }
+                    initialSelectedItem={{ value: '', label: 'Select country' }}
+                    selectedItem={selectedCountry}
+                  />
+                )}
+              />
+            </div>
             <br />
             <Button
               className="submit-btn"

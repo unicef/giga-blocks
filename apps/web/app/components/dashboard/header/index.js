@@ -6,10 +6,9 @@ import { useContributionCount } from '../../../hooks/useContributionList';
 
 import { useWeb3React } from '@web3-react/core';
 import { metaMaskLogout } from '../../../utils/metaMaskUtils';
-import { useRouter } from 'next/navigation';
+import '../../page-header/header.scss';
 
 const Header = ({ name, breadcrumbs }) => {
-  const route = useRouter();
   const user = getCurrentUser();
   const { account } = useWeb3React();
   const { data } = useContributionCount();

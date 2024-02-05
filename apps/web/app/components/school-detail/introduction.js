@@ -88,7 +88,7 @@ const Introduction = ({ schooldata, tokenId }) => {
             className="walletAddress"
             style={{ marginTop: '32px', marginBottom: '32px' }}
           >
-            {schooldata?.owner}
+            {onSell ? 'Giga' : schooldata?.owner}
           </p>
         </div>
         <div>

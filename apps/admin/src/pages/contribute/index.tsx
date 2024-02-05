@@ -49,6 +49,7 @@ const ContributeData = () => {
     order,
     orderBy,
     onSort,
+    setOrderBy,
     onChangeDense
   } = useTable({defaultOrderBy: selectedStatus === 'Pending' ? 'createdAt': 'validatedAt', defaultOrder: 'desc'});
 
@@ -92,6 +93,7 @@ const ContributeData = () => {
     setSelectedSchoolSearch(null);
     setSelectedContributorSearch(null);
     setSelectedStatus(value);
+    setOrderBy(value === 'Pending' ? 'createdAt': 'validatedAt')
   };
 
   useEffect(() => {

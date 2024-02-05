@@ -39,10 +39,18 @@ export class ContributeDataService {
   }
 
   async findAll(query) {
-    const { page, perPage, schoolId, contributorId, status, order, orderBy } = query;
+    const { page, perPage, schoolId, contributorId, status, order, orderBy, school } = query;
     const where: Prisma.ContributedDataWhereInput = {};
     if (schoolId) {
       where.school_Id = schoolId;
+    }
+    if (school){
+      where.school = {
+        name: {
+          contains: school,
+          mode: 'insensitive'
+        }
+      };
     }
     if (contributorId) {
       where.contributedUserId = contributorId;

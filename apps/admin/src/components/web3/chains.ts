@@ -116,6 +116,14 @@ export const TESTNET_CHAINS: any = {
     nativeCurrency: CELO,
     blockExplorerUrls: ['https://alfajores-blockscout.celo-testnet.org'],
   },
+  11155111: {
+    urls: ['https://eth-sepolia.g.alchemy.com/v2/WSfPp7PZYjX8uXeDOFfk_GFBBSCrCyxg'],
+    name: 'Sepolia',
+    nativeCurrency: ETH,
+    blockExplorerUrls: ['https://sepolia.etherscan.io/'],
+
+
+  }
 }
 
 export const CHAINS: ChainConfig = {
@@ -123,7 +131,7 @@ export const CHAINS: ChainConfig = {
   ...TESTNET_CHAINS,
 }
 
-export const DEFAULT_CHAIN_ID = process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID || 80001;
+export const DEFAULT_CHAIN_ID = process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID || 11155111;
 
 export const URLS: { [chainId: number]: string[] } = Object.keys(CHAINS).reduce<{ [chainId: number]: string[] }>(
   (accumulator, chainId) => {

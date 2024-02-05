@@ -3,29 +3,28 @@ import { useEffect, useState } from 'react';
 import { Grid, Column, Breadcrumb, BreadcrumbItem } from '@carbon/react';
 import './header.scss';
 import '../table/datatable.scss';
-import { metaMaskLogout,checkWalletAddress } from '../../utils/metaMaskUtils';
+import { metaMaskLogout, checkWalletAddress } from '../../utils/metaMaskUtils';
 
 const PageHeader = ({ name, breadcrumbs }) => {
   const [isAddress, setIsAddress] = useState(false);
- 
-  useEffect(()=>{
-    if(!name) return;
-    const checkAddress = async()=>{
+
+  useEffect(() => {
+    if (!name) return;
+    const checkAddress = async () => {
       const address = await checkWalletAddress(name);
       setIsAddress(address);
-    }
+    };
     checkAddress();
-  },[name])
+  }, [name]);
 
-   const disconnect = ()=>{
+  const disconnect = () => {
     metaMaskLogout();
-    
-  }
+  };
 
   return (
     <>
       <div className="headerBackground">
-        <Grid>
+        <Grid className="header">
           <Column sm={8} md={10} lg={16} style={{ marginTop: '32px' }}>
             <Breadcrumb>
               {breadcrumbs.map((breadcrumb, index) => (
@@ -45,11 +44,18 @@ const PageHeader = ({ name, breadcrumbs }) => {
             >
               {name}
             </h1>
-            {isAddress && <a 
-             style={{cursor:'pointer', color:'blue', textDecoration: 'underline'}}
-             onClick={disconnect}>
-              Disconnect
-             </a>}
+            {isAddress && (
+              <a
+                style={{
+                  cursor: 'pointer',
+                  color: 'blue',
+                  textDecoration: 'underline',
+                }}
+                onClick={disconnect}
+              >
+                Disconnect
+              </a>
+            )}
           </Column>
         </Grid>
       </div>
