@@ -40,22 +40,6 @@ const Introduction = ({ schooldata, tokenId }) => {
       setIsOwner(true);
   }, [schooldata?.owner, account]);
 
-  // useEffect(() => {
-  //   if (sellerContract){
-  //   try {
-  //     sellerContract.methods.calculatePrice().call()
-  //     .then(() => {
-  //       setPrice(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  //   }
-  // }, []);
-
   useEffect(() => {
     const fetchData = async () => {
       if (!sellerContract) return;

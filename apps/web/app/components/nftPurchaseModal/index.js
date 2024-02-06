@@ -143,24 +143,21 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
   // }, []);
 
   useEffect(() => {
-    if (sellerContract){
-    try {
-    sellerContract.methods
-        .calculatePrice()
-        .call({ from: account })
-        .then((res) => {
-          const priceInEth = ethers.formatEther(res);
-          setPrice(res);
-          setPriceEth(priceInEth);
-        })
-        .catch((err) => {
-          console.log(err)
-        })     
-    } catch (err) {
-      console.log(err);
-    }
-  }
-  }, []);
+    const fetchData = async () => {
+      if (!sellerContract) return;
+  
+      try {
+        const price = await sellerContract.methods.calculatePrice().call();
+        const priceInEth = ethers.formatEther(price);
+        setPrice(price);
+        setPriceEth(priceInEth);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  
+    fetchData();
+  }, [sellerContract]);
 
   return (
     <>
