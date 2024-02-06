@@ -40,16 +40,20 @@ const Introduction = ({ schooldata, tokenId }) => {
       setIsOwner(true);
   }, [schooldata?.owner, account]);
 
-  useEffect(async () => {
-    if (!sellerContract) return;
-
-    try {
-      const price = await sellerContract.methods.calculatePrice().call();
-      setPrice(price);
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!sellerContract) return;
+  
+      try {
+        const price = await sellerContract.methods.calculatePrice().call();
+        setPrice(price);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  
+    fetchData();
+  }, [sellerContract]);
 
   return (
     <Grid fullWidth className="mt-50px">
