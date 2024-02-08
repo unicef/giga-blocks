@@ -38,12 +38,6 @@ export class ContributeDataController {
   }
 
   @Public()
-  @Post('generateImage')
-  generateImage(@Body() script: any) {
-    return this.contributeDataService.generateImageReturn(script);
-  }
-
-  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.contributeDataService.findOne(id);

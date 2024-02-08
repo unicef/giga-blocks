@@ -1,11 +1,11 @@
 import puppeteer from 'puppeteer';
 
-  async function generateP5Image(p5Script: string) {
+  async function generateP5Image(p5Script: string, tokenId: number) {
     const browser = await puppeteer.launch({
       headless: true
     });
     const page = await browser.newPage();
-
+    const tokenNumber = Number(tokenId);
     const dataUrl = `
     <!DOCTYPE html>
 <html lang="en">
@@ -18,11 +18,13 @@ import puppeteer from 'puppeteer';
 <body>
   <div id="p5-container" style="display: block; background-color: red;"></div>
   <script>
+  let r = ${(tokenNumber*54 + 12) % 255};
+  let g = ${(tokenNumber*44 + 18) % 255};
+  let b = ${(tokenNumber*74 + 10) % 255};
     ${p5Script}
   </script>
 </body>
 </html>
-
     `;
   
     await page.setContent(dataUrl, { waitUntil: 'domcontentloaded' });

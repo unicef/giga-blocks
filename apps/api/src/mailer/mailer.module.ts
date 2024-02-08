@@ -15,6 +15,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { QueueService } from './queue.service';
 import { ContributeDataService } from 'src/contribute/contribute.service';
 import { SchoolService } from 'src/schools/schools.service';
+import { SchoolModule } from 'src/schools/schools.module';
 
 @Module({
   imports: [
@@ -54,7 +55,7 @@ import { SchoolService } from 'src/schools/schools.service';
     }),
     BullModule.registerQueue({
       name: CONTRIBUTE_QUEUE,
-    }),
+    })
   ],
   providers: [
     MailProcessor,

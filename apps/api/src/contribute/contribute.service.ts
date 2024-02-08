@@ -96,12 +96,6 @@ export class ContributeDataService {
     return contributedata;
   }
 
-  async generateImageReturn(script:any){
-    const p5Script = script?.script;
-    const imageBuffer = generateP5Image(p5Script);
-    return imageBuffer
-  }
-
   async findOne(id: string) {
     const data = await this.prisma.contributedData.findUnique({
       where: { id: id },

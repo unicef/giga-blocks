@@ -30,7 +30,7 @@ export class SchoolService {
     private prisma: PrismaAppService,
     private readonly queueService: QueueService,
     private readonly configService: ConfigService,
-    @InjectQueue(IMAGE_QUEUE) private readonly _imageQueue: Queue,
+    // @InjectQueue(IMAGE_QUEUE) private readonly _imageQueue: Queue,
   ) {}
 
   async findAll(query: ListSchoolDto) {
@@ -359,9 +359,9 @@ export class SchoolService {
       schooldata,
     );
     const txReceipt = tx.wait();
-    if (txReceipt.status === 1){
-          await this._imageQueue.add(SET_IMAGE_PROCESS, { id }, jobOptions)
-      }
+    // if (txReceipt.status === 1){
+    //       await this._imageQueue.add(SET_IMAGE_PROCESS, { id }, jobOptions)
+    //   }
     return txReceipt;
   }
 

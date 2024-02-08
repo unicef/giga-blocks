@@ -23,7 +23,7 @@ import {
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
-import { getArtScript, getTokenHash, getTokenIdSchool, mintNFT, mintSingleNFT, updateImageHash } from 'src/utils/ethers/transactionFunctions';
+import { checkImage, getArtScript, getTokenHash, getTokenIdSchool, mintNFT, mintSingleNFT, updateImageHash } from 'src/utils/ethers/transactionFunctions';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { SchoolData } from '../types/mintdata.types';
 import { MintStatus } from '@prisma/application';
@@ -182,7 +182,6 @@ export class MintQueueProcessor {
     job: Job<{ mintData: SchoolData[]; ids: string[]; giga_ids: string[] }>,
   ) {
     this._logger.log(`Sending mint nft to blockchain`);
-
     let status = true;
     const tx = await mintNFT(
       'NFT',
@@ -196,7 +195,7 @@ export class MintQueueProcessor {
     }
     if (txReceipt.status === 1){
       try {
-        for (let i = 0; i <= job.data.giga_ids.length; i++){
+        for (let i = 0; i < job.data.giga_ids.length; i++){
           await this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_ids[i] }, jobOptions)
         }
       } catch (error) {
@@ -299,7 +298,8 @@ export class ImageProcessor {
     id)
     const artScript = await getArtScript('NFTContent', this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
     schoolToken)
-    const base64Image = await generateP5Image(artScript)
+    const base64Image = await generateP5Image(artScript, schoolToken)
+    console.log(base64Image)
     const decodedImage = await decodeBase64Image(base64Image)
     await getTokenHash('NFTContent', this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
     schoolToken)
@@ -314,7 +314,6 @@ export class ImageProcessor {
       })
     }
   }
-
 }
 
 @Injectable()
