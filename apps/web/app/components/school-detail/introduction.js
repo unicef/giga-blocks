@@ -70,6 +70,8 @@ const Introduction = ({ schooldata, tokenId }) => {
     }
   }, []);
 
+  console.log(schooldata?.image)
+
   return (
     <Grid
       fullWidth
@@ -78,7 +80,12 @@ const Introduction = ({ schooldata, tokenId }) => {
     >
       <Column md={4} lg={8} sm={4} className="p5Canvas" id="defaultCanvas0">
         {schooldata?.image && (
-          <DynamicSketch scriptContent={schooldata?.image} />
+          // <DynamicSketch scriptContent={schooldata?.image} />
+          <img
+            src={`https://ipfs.io/ipfs/${schooldata?.image} || 'QmQ5MAbK8jwcZ1wpmhj99EqRJAXr7p7cHBfhnDz3gde4jy'}`}
+            alt={schooldata?.image}
+            style={{ marginBottom: '16px' }}
+          />
         )}
       </Column>
       <Column md={4} lg={8} sm={4}>

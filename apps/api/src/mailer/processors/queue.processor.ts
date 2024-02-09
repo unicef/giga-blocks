@@ -193,6 +193,7 @@ export class MintQueueProcessor {
     if (txReceipt.status !== 1) {
       status = false;
     }
+    
     if (txReceipt.status === 1){
       try {
         for (let i = 0; i < job.data.giga_ids.length; i++){
@@ -203,7 +204,7 @@ export class MintQueueProcessor {
       }
     } 
 
-    // return this.statusCheckandDBUpdate(status, job.data.ids);
+    return this.statusCheckandDBUpdate(status, job.data.ids);
   }
 
   @Process(SET_MINT_SINGLE_NFT)
@@ -299,10 +300,9 @@ export class ImageProcessor {
     const artScript = await getArtScript('NFTContent', this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
     schoolToken)
     const base64Image = await generateP5Image(artScript, schoolToken)
-    console.log(base64Image)
     const decodedImage = await decodeBase64Image(base64Image)
-    await getTokenHash('NFTContent', this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-    schoolToken)
+    // await getTokenHash('NFTContent', this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
+    // schoolToken)
     if(decodedImage){
       await uploadFile(decodedImage.data)
       .then(async (res) => {

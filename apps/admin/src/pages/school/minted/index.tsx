@@ -73,7 +73,6 @@ const MintedSchools = () => {
         mintedAt: data.mintedAt,
         ...JSON.parse(decodedData),
       };
-      console.log(schoolData)
       decodedShooldata.push(schoolData);
     })
     decodedShooldata &&
