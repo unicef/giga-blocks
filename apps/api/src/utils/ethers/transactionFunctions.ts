@@ -90,14 +90,6 @@ export const updateImageHash = async (
   return tx;
 };
 
-export const checkImage = async (contractName: string,
-  contractAddress: string,
-  tokenData: string) => {
-  const contract: any = getContractWithSigner(contractName, contractAddress);
-  const tx = await contract.nftImageHash(tokenData)
-  return tx
-}
-
 export const getTokenHash = async (
   contractName: string,
   contractAddress: string,
