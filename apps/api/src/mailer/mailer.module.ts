@@ -6,14 +6,16 @@ import {
   ContributeProcessor,
   MailProcessor,
   MintQueueProcessor,
+  ImageProcessor,
   QueueProcessor,
 } from './processors';
 import { MailService } from './mailer.service';
-import { MAIL_QUEUE, MINT_QUEUE, ONCHAIN_DATA_QUEUE, CONTRIBUTE_QUEUE } from './constants';
+import { MAIL_QUEUE, MINT_QUEUE, IMAGE_QUEUE, ONCHAIN_DATA_QUEUE, CONTRIBUTE_QUEUE } from './constants';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { QueueService } from './queue.service';
 import { ContributeDataService } from 'src/contribute/contribute.service';
 import { SchoolService } from 'src/schools/schools.service';
+import { SchoolModule } from 'src/schools/schools.module';
 
 @Module({
   imports: [
@@ -46,11 +48,14 @@ import { SchoolService } from 'src/schools/schools.service';
       name: MINT_QUEUE,
     }),
     BullModule.registerQueue({
+      name: IMAGE_QUEUE,
+    }),
+    BullModule.registerQueue({
       name: ONCHAIN_DATA_QUEUE,
     }),
     BullModule.registerQueue({
       name: CONTRIBUTE_QUEUE,
-    }),
+    })
   ],
   providers: [
     MailProcessor,
@@ -58,6 +63,7 @@ import { SchoolService } from 'src/schools/schools.service';
     QueueService,
     QueueProcessor,
     MintQueueProcessor,
+    ImageProcessor,
     ContributeDataService,
     ContributeProcessor,
     SchoolService,

@@ -7,7 +7,6 @@ import {
 import { MintStatus, Prisma, Role } from '@prisma/application';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { ListSchoolDto } from './dto/list-schools.dto';
-// import { paginate } from 'src/utils/paginate';
 import { QueueService } from 'src/mailer/queue.service';
 import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
 import { handler } from 'src/utils/csvToDB';
@@ -352,7 +351,10 @@ export class SchoolService {
       tokenId,
       schooldata,
     );
-    const txReceipt = tx.wait();
+    const txReceipt = await tx.wait();
+    if (txReceipt.status === 1){
+      this.queueService.processImage(id);
+      }
     return txReceipt;
   }
 

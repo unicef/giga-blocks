@@ -11,12 +11,12 @@ import {
   Search,
 } from '@carbon/react';
 import './card.scss';
+import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { Queries } from '../../libs/graph-query';
 import { getNftContract } from '../web3/contracts/getContract';
 import { useWeb3React } from '@web3-react/core';
-import generateIdenticon from '../../utils/generateIdenticon';
 import useDebounce from '../../hooks/useDebounce';
 
 const SchoolCard = ({ query, variables, pageSize, setPageSize, setSearch }) => {
@@ -32,6 +32,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize, setSearch }) => {
     query: Queries.nftImages,
     variables: { ...variables },
   });
+
   const { data: queryData, fetching, error } = result;
   const [schoolData, setSchoolData] = useState([]);
   const [datafetching, setDataFetching] = useState(fetching);
@@ -50,7 +51,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize, setSearch }) => {
     data?.map((dat) => {
       const imageData = {
         tokenId: dat.id,
-        image: new Function(dat.imageScript),
+        image: dat.imageScript,
       };
       decodedImage.push(imageData);
     });
@@ -62,14 +63,16 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize, setSearch }) => {
       ? data?.collectorOwnedNft?.nfts
       : data?.nftDatas;
     const decodedShooldata = [];
-
     if (!variables?.id) {
       await Promise.all(
         encodeddata?.map(async (data) => {
           setDataFetching(true);
           var owner;
-          owner = await contract.methods.ownerOf(data.id).call();
-
+          try {
+          owner = await contract.methods.ownerOf(data.id).call();  
+          } catch (error) {
+            console.log(error)
+          }
           var sold = false;
           if (
             owner?.toLowerCase() ===
@@ -77,7 +80,6 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize, setSearch }) => {
           )
             sold = false;
           else sold = true;
-
           const schoolData = {
             tokenId: data.id,
             schoolName: data.name,
@@ -132,10 +134,10 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize, setSearch }) => {
                   className="card"
                   href={`/explore/${school?.tokenId}`}
                 >
-                  <div className="row">
+                  <div className="row" key={index}>
                     <img
-                      src={generateIdenticon(school?.tokenId)}
-                      alt="SVG Image"
+                      src={`https://ipfs.io/ipfs/${imageData[index]?.image || 'QmQ5MAbK8jwcZ1wpmhj99EqRJAXr7p7cHBfhnDz3gde4jy'}`}
+                      alt={school?.schoolName}
                       style={{ marginBottom: '16px' }}
                     />
                     <Toggletip align="right">
