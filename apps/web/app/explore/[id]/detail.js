@@ -11,7 +11,6 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { Loading } from '@carbon/react';
 import PageHeader from '../../components/page-header';
-import { useRouter } from 'next/navigation';
 
 
 const SchoolDetail = ({ id }) => {

@@ -6,14 +6,7 @@ import { toSvg } from 'jdenticon';
 import { useEffect, useState } from 'react';
 import { useSellerContract } from '../../hooks/useContract';
 import NftPurchaseModal from '../../components/nftPurchaseModal';
-import dynamic from 'next/dynamic';
-
-dynamic(() => import('../../components/card/p5'), {
-  ssr: false,
-});
-
 import { useWeb3React } from '@web3-react/core';
-import generateIdenticon from '../../utils/generateIdenticon'
 
 const Introduction = ({ schooldata, tokenId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
