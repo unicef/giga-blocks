@@ -1,6 +1,7 @@
+import { ContractTransactionResponse } from 'ethers';
 import puppeteer from 'puppeteer';
 
-  async function generateP5Image(p5Script: string, tokenId: number) {
+  async function generateP5Image(p5Script: string | ContractTransactionResponse, tokenId: number | ContractTransactionResponse) {
     const browser = await puppeteer.launch({
       headless: true
     });

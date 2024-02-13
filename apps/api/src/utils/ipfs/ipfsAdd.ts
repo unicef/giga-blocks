@@ -11,22 +11,15 @@ const uploadFile = async file => {
     data.append("file", file, {filename: 'image.png'})
     const apiKey = config.get('IPFS_API_KEY')
     const apiSecret = config.get('IPFS_API_SECRET')
-    let hash;
-
-     await axios.post(IPFS_GATEWAY,data,{
+    const response = await axios.post(IPFS_GATEWAY,data,{
         maxBodyLength:Infinity,
         headers:{
             'Content-Type':`multipart/form-data;boundary=${(data as any)._boundary}`,
             pinata_api_key:apiKey,
             pinata_secret_api_key:apiSecret
         }
-    }).then(function(response){
-        hash = response.data.IpfsHash
-    }).catch(function(err){
-        console.log('err')
-        throw Error(err);
     })
-    return hash;
+    return response.data.IpfsHash
     }
     catch (error) {
         console.log(error)

@@ -23,15 +23,14 @@ import {
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
-import { checkImage, getArtScript, getTokenHash, getTokenIdSchool, mintNFT, mintSingleNFT, updateImageHash } from 'src/utils/ethers/transactionFunctions';
+import {  getArtScript, getTokenHash, getTokenIdSchool, mintNFT, mintSingleNFT, updateImageHash } from 'src/utils/ethers/transactionFunctions';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { SchoolData } from '../types/mintdata.types';
 import { MintStatus } from '@prisma/application';
 import { jobOptions } from '../config/bullOptions';
 import { ContributeDataService } from 'src/contribute/contribute.service';
 import { SchoolService } from 'src/schools/schools.service';
-import { getTokenId } from 'src/utils/web3/subgraph';
-import generateP5Image from 'src/utils/p5/generateP5';
+import generateP5Image from 'src/p5/generateP5';
 import decodeBase64Image from 'src/utils/ipfs/decodeImage';
 import uploadFile from 'src/utils/ipfs/ipfsAdd';
 
@@ -301,8 +300,6 @@ export class ImageProcessor {
     schoolToken)
     const base64Image = await generateP5Image(artScript, schoolToken)
     const decodedImage = await decodeBase64Image(base64Image)
-    // await getTokenHash('NFTContent', this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-    // schoolToken)
     if(decodedImage){
       await uploadFile(decodedImage.data)
       .then(async (res) => {

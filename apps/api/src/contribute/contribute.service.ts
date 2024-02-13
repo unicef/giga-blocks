@@ -11,7 +11,6 @@ import { Prisma, Status } from '@prisma/application';
 import { MailService } from 'src/mailer/mailer.service';
 import { paginate } from 'src/utils/paginate';
 import { QueueService } from 'src/mailer/queue.service';
-import  generateP5Image from 'src/utils/p5/generateP5';
 
 @Injectable()
 export class ContributeDataService {

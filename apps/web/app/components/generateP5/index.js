@@ -4,14 +4,13 @@ import { useState, useEffect } from "react";
 
 const GenerateP5 = ({scriptContent}) => {
     const [result, setResult] = useState()
-    useEffect(() => {
-    axios.post('http://localhost:3333/api/v1/contribute/generateImage', {script: scriptContent})
-        .then((res) => {
-            setResult(res.data)
-        })            
-        .catch((err) => {
-            console.log(err)
-        })
+    useEffect(async () => {
+    try {
+        const res = await axios.post('http://localhost:3333/api/v1/contribute/generateImage', {script: scriptContent})
+        setResult(res.data)
+    } catch (error) {
+        console.log(error)  
+    }
     }, [scriptContent])
     
     return (

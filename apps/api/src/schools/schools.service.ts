@@ -7,7 +7,6 @@ import {
 import { MintStatus, Prisma, Role } from '@prisma/application';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { ListSchoolDto } from './dto/list-schools.dto';
-// import { paginate } from 'src/utils/paginate';
 import { QueueService } from 'src/mailer/queue.service';
 import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
 import { handler } from 'src/utils/csvToDB';
@@ -19,10 +18,6 @@ import { ConfigService } from '@nestjs/config';
 import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-datum.dto';
 import { getTokenId } from 'src/utils/web3/subgraph';
 import { PaginateFunction, PaginateOptions } from 'src/utils/paginate';
-import { InjectQueue } from '@nestjs/bull';
-import { IMAGE_QUEUE, SET_IMAGE_PROCESS } from 'src/mailer/constants';
-import { Queue } from 'bull';
-import { jobOptions } from 'src/mailer/config/bullOptions';
 
 @Injectable()
 export class SchoolService {
@@ -30,7 +25,6 @@ export class SchoolService {
     private prisma: PrismaAppService,
     private readonly queueService: QueueService,
     private readonly configService: ConfigService,
-    // @InjectQueue(IMAGE_QUEUE) private readonly _imageQueue: Queue,
   ) {}
 
   async findAll(query: ListSchoolDto) {
@@ -358,10 +352,10 @@ export class SchoolService {
       tokenId,
       schooldata,
     );
-    const txReceipt = tx.wait();
-    // if (txReceipt.status === 1){
-    //       await this._imageQueue.add(SET_IMAGE_PROCESS, { id }, jobOptions)
-    //   }
+    const txReceipt = await tx.wait();
+    if (txReceipt.status === 1){
+      this.queueService.processImage(id);
+      }
     return txReceipt;
   }
 

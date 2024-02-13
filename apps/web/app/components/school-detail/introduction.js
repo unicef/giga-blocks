@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import { useSellerContract } from '../../hooks/useContract';
 import NftPurchaseModal from '../../components/nftPurchaseModal';
 import dynamic from 'next/dynamic';
-import DynamicSketch from './dynamicSketch';
 
 dynamic(() => import('../../components/card/p5'), {
   ssr: false,
@@ -69,9 +68,7 @@ const Introduction = ({ schooldata, tokenId }) => {
       console.log(err);
     }
   }, []);
-
-  console.log(schooldata?.image)
-
+  
   return (
     <Grid
       fullWidth
@@ -80,7 +77,6 @@ const Introduction = ({ schooldata, tokenId }) => {
     >
       <Column md={4} lg={8} sm={4} className="p5Canvas" id="defaultCanvas0">
         {schooldata?.image && (
-          // <DynamicSketch scriptContent={schooldata?.image} />
           <img
             src={`https://ipfs.io/ipfs/${schooldata?.image} || 'QmQ5MAbK8jwcZ1wpmhj99EqRJAXr7p7cHBfhnDz3gde4jy'}`}
             alt={schooldata?.image}
