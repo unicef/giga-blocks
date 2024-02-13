@@ -18,7 +18,7 @@ export const mintNFT = async (
   schoolDataArray: (string | boolean | number)[][],
   giga_ids: string[],
 ) : Promise<ContractTransactionResponse> => {
- 
+
   const config = new ConfigService();
   const escrowAddress = config.get('NEXT_PUBLIC_GIGA_ESCROW_ADDRESS');
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);

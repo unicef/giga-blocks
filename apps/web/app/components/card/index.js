@@ -15,12 +15,8 @@ import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { Queries } from '../../libs/graph-query';
-import GenerateP5 from '../generateP5';
-
-// const DynamicScript = dynamic(() => import('./p5'), { ssr: false });
 import { getNftContract } from '../web3/contracts/getContract';
 import { useWeb3React } from '@web3-react/core';
-import generateIdenticon from '../../utils/generateIdenticon';
 import useDebounce from '../../hooks/useDebounce';
 
 const SchoolCard = ({ query, variables, pageSize, setPageSize, setSearch }) => {

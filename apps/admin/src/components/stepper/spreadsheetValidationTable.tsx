@@ -120,6 +120,18 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     }
   }, [allSheetErrors, selectedSheetName]);
 
+  const areArraysEqual = (array1:any, array2:any) => {
+    if (array1.length !== array2.length) {
+      return false;
+    }
+    for (let i = 0; i < array1.length; i++) {
+      if (array1[i] !== array2[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   useEffect(() => {
     const hasDuplicates = (arry:string[]) => arry.filter((item, index) => arry.indexOf(item) !== index)
     const allowedElements = [
@@ -134,19 +146,21 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
       "electricity_availability"
   ]
     if(tableHeaders.length > 0){
-      const isValidArray = tableHeaders?.every(element => allowedElements?.includes(element));
       const isAnyMissing = allowedElements?.some(element => !tableHeaders?.includes(element));
-      if(!isValidArray){
-      setAllSheetErrors([{sheetName: 'school.csv', errors: [`Header format did not match, please follow the sample file.`]}])
-      setHasErrors(true) 
-      }
+     
       if(isAnyMissing === true){
         const missingElements = allowedElements.filter(element => !tableHeaders.includes(element));
         missingElements && setAllSheetErrors([{sheetName: 'school.csv', errors: [`${missingElements?.map((elem) => `${elem}`)} is missing, please follow sample file.`]}])
         setHasErrors(true)
       }
-      if(tableHeaders.length > 9){
-        setAllSheetErrors([{sheetName: 'school.csv', errors: [`More headers than required, please follow sample file.`]}])
+      
+      if(!areArraysEqual(allowedElements, tableHeaders)){
+        setAllSheetErrors([{sheetName: 'school.csv', errors: [`Header format did not match, please follow the sample file.`]}])
+        setHasErrors(true) 
+      }
+      
+      if(tableHeaders.length != 9){
+        setAllSheetErrors([{sheetName: 'school.csv', errors: [`Header format did not match, please follow the sample file.`]}])
         setHasErrors(true) 
       }
       if(hasDuplicates(tableHeaders).length > 0) {
@@ -227,7 +241,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
           </Button>
         ))}
 
-      <TableContainer component={Paper} sx={{ my: 4 }}>
+      <TableContainer component={Paper} sx={{ my: 4, height: 400 }}>
         <Table sx={{ mx: 1 }}>
           <TableHead>
             <TableRow>
