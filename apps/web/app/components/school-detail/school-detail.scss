@@ -103,3 +103,20 @@
   border: 1px solid #0050e6;
   color: #fff;
 }
+.p5Canvas {
+  position: absolute !important;
+  top: 250px !important;
+  left: 20px !important;
+  height: 600px !important;
+  width: 600px !important;
+  z-index: -1;
+}
+
+// #defaultCanvas1 {
+//   position: absolute !important;
+//   top: 250px !important;
+//   left: 20px !important;
+//   height: 600px !important;
+//   width: 600px !important;
+//   z-index: -1;
+// }
