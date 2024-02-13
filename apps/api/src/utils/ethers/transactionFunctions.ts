@@ -3,13 +3,13 @@ import { getContractWithSigner, getInterface } from './contractWithSigner';
 import { ConfigService } from '@nestjs/config';
 
 interface ExtendedContract extends BaseContract {
-  updateNftImageHash?: (schoolId:string, tokenHash:string) => Promise<ContractTransactionResponse>;
-  multicall?: (multicalldata) => Promise<ContractTransactionResponse>
-  mintNft?: ([]) => Promise<ContractTransactionResponse>
-  updateNftContent?: (tokenId:string, schoolDataArray:any[]) => Promise<ContractTransactionResponse>
-  schoolIdToTokenId?: (schoolId:string | ContractTransactionResponse) => Promise<ContractTransactionResponse>
-  getArtScript?: (tokenId:string | ContractTransactionResponse) => Promise<ContractTransactionResponse>
-  nftImageHash?: (tokenHash:string) => Promise<ContractTransactionResponse>
+  updateNftImageHash?: (schoolId:string, tokenHash:string) => ContractTransactionResponse;
+  multicall?: (multicalldata) => ContractTransactionResponse
+  mintNft?: ([]) => ContractTransactionResponse
+  updateNftContent?: (tokenId:string, schoolDataArray:any[]) => ContractTransactionResponse
+  schoolIdToTokenId?: (schoolId:string | ContractTransactionResponse) => ContractTransactionResponse
+  getArtScript?: (tokenId:string | ContractTransactionResponse) => ContractTransactionResponse
+  nftImageHash?: (tokenHash:string) => ContractTransactionResponse
 }
 
 export const mintNFT = async (
