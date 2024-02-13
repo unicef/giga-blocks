@@ -3,13 +3,15 @@ import { getContractWithSigner, getInterface } from './contractWithSigner';
 import { ConfigService } from '@nestjs/config';
 
 interface ExtendedContract extends BaseContract {
-  updateNftImageHash?: (schoolId:string, tokenHash:string) => ContractTransactionResponse;
-  multicall?: (multicalldata) => ContractTransactionResponse
-  mintNft?: ([]) => ContractTransactionResponse
-  updateNftContent?: (tokenId:string, schoolDataArray:any[]) => ContractTransactionResponse
-  schoolIdToTokenId?: (schoolId:string | ContractTransactionResponse) => ContractTransactionResponse
-  getArtScript?: (tokenId:string | ContractTransactionResponse) => ContractTransactionResponse
-  nftImageHash?: (tokenHash:string) => ContractTransactionResponse
+  updateNftImageHash?: (schoolId: string, tokenHash: string) => ContractTransactionResponse;
+  multicall?: (multicalldata) => ContractTransactionResponse;
+  mintNft?: ([]) => ContractTransactionResponse;
+  updateNftContent?: (tokenId: string, schoolDataArray: any[]) => ContractTransactionResponse;
+  schoolIdToTokenId?: (
+    schoolId: string | ContractTransactionResponse,
+  ) => ContractTransactionResponse;
+  getArtScript?: (tokenId: string | ContractTransactionResponse) => ContractTransactionResponse;
+  nftImageHash?: (tokenHash: string) => ContractTransactionResponse;
 }
 
 export const mintNFT = async (
@@ -17,8 +19,7 @@ export const mintNFT = async (
   contractAddress: string,
   schoolDataArray: (string | boolean | number)[][],
   giga_ids: string[],
-) : Promise<ContractTransactionResponse> => {
-
+): Promise<ContractTransactionResponse> => {
   const config = new ConfigService();
   const escrowAddress = config.get('NEXT_PUBLIC_GIGA_ESCROW_ADDRESS');
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
@@ -37,7 +38,7 @@ export const mintSingleNFT = async (
   contractAddress: string,
   schoolDataArray: (string | boolean | number)[],
   giga_id: string,
-) : Promise<ContractTransactionResponse> => {
+): Promise<ContractTransactionResponse> => {
   const config = new ConfigService();
   const escrowAddress = config.get('NEXT_PUBLIC_GIGA_ESCROW_ADDRESS');
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
@@ -61,7 +62,7 @@ export const updateData = async (
   contractAddress: string,
   tokenId: string,
   schoolDataArray: (string | boolean | number)[],
-) : Promise<ContractTransactionResponse> => {
+): Promise<ContractTransactionResponse> => {
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
   return await contract.updateNftContent(tokenId, schoolDataArray);
 };
@@ -70,8 +71,8 @@ export const getTokenIdSchool = async (
   contractName: string,
   contractAddress: string,
   schoolId: string | ContractTransactionResponse,
-) : Promise<ContractTransactionResponse> => {
-  const contract:ExtendedContract = getContractWithSigner(contractName, contractAddress);
+): Promise<ContractTransactionResponse> => {
+  const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
   return await contract.schoolIdToTokenId(schoolId);
 };
 
@@ -79,7 +80,7 @@ export const getArtScript = async (
   contractName: string,
   contractAddress: string,
   tokenId: string | ContractTransactionResponse,
-) : Promise<ContractTransactionResponse> => {
+): Promise<ContractTransactionResponse> => {
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
   return await contract.getArtScript(tokenId);
 };
@@ -89,7 +90,7 @@ export const updateImageHash = async (
   contractAddress: string,
   tokenHash: string,
   schoolId: string,
-) : Promise<ContractTransactionResponse> => {
+): Promise<ContractTransactionResponse> => {
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
   return await contract.updateNftImageHash(schoolId, tokenHash);
 };
@@ -97,18 +98,18 @@ export const updateImageHash = async (
 export const getTokenHash = async (
   contractName: string,
   contractAddress: string,
-  tokenHash: string
-) : Promise<ContractTransactionResponse> => {
+  tokenHash: string,
+): Promise<ContractTransactionResponse> => {
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
   return await contract.nftImageHash(tokenHash);
 };
- 
+
 export const updateBulkData = async (
   contractName: string,
   contractAddress: string,
   tokenId: string[],
   schoolDataArray: (string | boolean | number)[][],
-) : Promise<ContractTransactionResponse> => {
+): Promise<ContractTransactionResponse> => {
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
   const schoolArgs = tokenId.map((el, i) => [el, schoolDataArray[i]]);
   const multicalldata = generateMultiCallData(contractName, 'updateNftContent', schoolArgs);
