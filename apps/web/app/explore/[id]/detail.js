@@ -22,6 +22,7 @@ const SchoolDetail = ({ id }) => {
     query: Queries.nftImage,
     variables: { id },
   });
+
   const { fetching } = result;
   const [schoolData, setSchoolData] = useState();
   const [noData, setNoData] = useState(false)
@@ -32,10 +33,11 @@ const SchoolDetail = ({ id }) => {
     const nftDetails = {
       owner: encodeddata.owner.id,
       ...JSON.parse(decodedData),
-      image: imageData.nftImage.imageScript,
+      image: imageData?.nftImage?.imageScript,
     };
     setSchoolData(nftDetails);
   };
+
   useEffect(() => {
     if (result.data && imageRes.data)
       decodeSchooldata(result.data, imageRes.data);
