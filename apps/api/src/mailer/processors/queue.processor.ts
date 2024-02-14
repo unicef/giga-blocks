@@ -298,6 +298,7 @@ export class ImageProcessor {
     id)
     const artScript = await getArtScript('NFTContent', this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
     schoolToken)
+    console.log(schoolToken)
     const base64Image = await generateP5Image(artScript, schoolToken)
     const decodedImage = await decodeBase64Image(base64Image)
     if(decodedImage){

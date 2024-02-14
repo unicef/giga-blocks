@@ -22,6 +22,7 @@ const SchoolDetail = ({ id }) => {
     query: Queries.nftImage,
     variables: { id },
   });
+
   const { fetching } = result;
   const [schoolData, setSchoolData] = useState();
   const [noData, setNoData] = useState(false)
@@ -29,13 +30,17 @@ const SchoolDetail = ({ id }) => {
   const decodeSchooldata = (data, imageData) => {
     const encodeddata = data.collectorTokenUri;
     const decodedData = atob(encodeddata.tokenUri.substring(29));
+    console.log(decodedData)
     const nftDetails = {
       owner: encodeddata.owner.id,
       ...JSON.parse(decodedData),
-      image: imageData.nftImage.imageScript,
+      image: imageData?.nftImage?.imageScript,
     };
+  console.log(nftDetails)
+
     setSchoolData(nftDetails);
   };
+
   useEffect(() => {
     if (result.data && imageRes.data)
       decodeSchooldata(result.data, imageRes.data);
