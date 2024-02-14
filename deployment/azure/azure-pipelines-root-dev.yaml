@@ -1,0 +1,81 @@
+trigger:
+  branches:
+    include:
+    - dev
+  paths:
+    include:
+    - apps/**
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  containerRegistryServiceConnection: $(ACR_SERVICE_CONNECTION)
+  imageTag: '$(Build.BuildId)'
+  system.debug: true
+  CI: false
+  env_dev: $(ENV_DEV)
+
+stages:
+- stage: Build
+  displayName: 'GIGA NFT 2.0 root build'
+  jobs:
+  - job: Build
+    displayName: 'GIGA NFT 2.0 root build job'
+
+    steps:
+    - checkout: self
+      fetchTags: true
+
+    - script: |
+        touch ./.env && echo "$(env_dev)" >> ./.env
+      displayName: 'import env file'
+
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '18.x'
+      displayName: 'Use Node.js'
+
+    - script: |
+        npm install -g pnpm
+        pnpm install
+        pnpm run api:app:generate
+        pnpm run api:news:generate
+        pnpm build
+      displayName: 'install dependencies and build apps'
+
+    - task: Docker@2
+      displayName: Login to container Registry
+      inputs:
+        command: login
+        containerRegistry: $(containerRegistryServiceConnection)
+
+    - task: Docker@2
+      displayName: Build and push API image to container registry
+      inputs:
+        command: buildAndPush
+        repository: 'giga-root-ntf2-api'
+        dockerfile: './Dockerfile.api'
+        containerRegistry: $(containerRegistryServiceConnection)
+        tags: |
+          $(imageTag)
+
+    - task: Docker@2
+      displayName: Build and push admin image to container registry
+      inputs:
+        command: buildAndPush
+        repository: 'giga-root-ntf2-admin'
+        dockerfile: './Dockerfile.admin'
+        containerRegistry: $(containerRegistryServiceConnection)
+        tags: |
+          $(imageTag)
+
+    - task: Docker@2
+      displayName: Build and push web image to container registry
+      inputs:
+        command: buildAndPush
+        repository: 'giga-root-ntf2-web'
+        dockerfile: './Dockerfile.web'
+        containerRegistry: $(containerRegistryServiceConnection)
+        tags: |
+          $(imageTag)

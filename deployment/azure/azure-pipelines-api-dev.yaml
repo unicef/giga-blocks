@@ -1,0 +1,61 @@
+trigger:
+  branches:
+    include:
+    - dev-azure-devops
+  paths:
+    include:
+    - apps/api/**
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  containerRegistryServiceConnection: $(ACR_SERVICE_CONNECTION)
+  imageTag: '$(Build.BuildId)'
+  system.debug: true
+  CI: false
+  env_dev: $(ENV_DEV)
+
+stages:
+- stage: Build
+  displayName: 'GIGA NFT 2.0 API build'
+  jobs:
+  - job: Build
+    displayName: 'GIGA NFT 2.0 API build job'
+
+    steps:
+    - checkout: self
+      fetchTags: true
+
+    - script: |
+        touch ./.env && echo "$(env_dev)" >> ./.env
+      displayName: 'import env file'
+
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '18.x'
+      displayName: 'Use Node.js'
+
+    - script: |
+        npm install -g pnpm
+        pnpm install
+        pnpm run api:app:generate
+        pnpm run api:news:generate
+        npx nx build api
+      displayName: 'install dependencies and build apps'
+
+    - task: Docker@2
+      displayName: Login to container Registry
+      inputs:
+        command: login
+        containerRegistry: $(containerRegistryServiceConnection)
+
+    - task: Docker@2
+      displayName: Build and push image to container registry
+      inputs:
+        command: buildAndPush
+        repository: 'giga-ntf2-api'
+        dockerfile: './Dockerfile.api'
+        containerRegistry: $(containerRegistryServiceConnection)
+        tags: |
+          $(imageTag)
