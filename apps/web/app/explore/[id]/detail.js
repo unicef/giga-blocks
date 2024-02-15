@@ -30,14 +30,11 @@ const SchoolDetail = ({ id }) => {
   const decodeSchooldata = (data, imageData) => {
     const encodeddata = data.collectorTokenUri;
     const decodedData = atob(encodeddata.tokenUri.substring(29));
-    console.log(decodedData)
     const nftDetails = {
       owner: encodeddata.owner.id,
       ...JSON.parse(decodedData),
       image: imageData?.nftImage?.imageScript,
     };
-  console.log(nftDetails)
-
     setSchoolData(nftDetails);
   };
 
