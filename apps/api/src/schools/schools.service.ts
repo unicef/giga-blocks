@@ -149,7 +149,7 @@ export class SchoolService {
     if (admin && admin.roles.includes(Role.ADMIN)) {
       return true;
     }
-    throw new UnauthorizedException('You wallet is not an admin wallet');
+    throw new UnauthorizedException('Your wallet is not an admin wallet');
   }
 
   async mintBulkNFT(MintData: MintQueueDto) {
@@ -211,7 +211,6 @@ export class SchoolService {
           });
           uploadBatch = transaction;
         } catch (err) {
-          console.log('err', err);
           if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
             res
               .code(500)

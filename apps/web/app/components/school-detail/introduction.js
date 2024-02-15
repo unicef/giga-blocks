@@ -77,7 +77,7 @@ const Introduction = ({ schooldata, tokenId }) => {
           <img
             src={`https://ipfs.io/ipfs/${schooldata?.image}`}
             alt={schooldata?.image}
-            style={{ marginBottom: '16px' }}
+            style={{ marginBottom: '16px', maxWidth: '400px', width: '100%' }}
           />
         )}
       </Column>

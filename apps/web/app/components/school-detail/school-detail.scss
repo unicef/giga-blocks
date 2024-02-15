@@ -50,14 +50,12 @@
 // Connectivity
 .school-connectivity-cards {
   margin: 32px 0 32px 0;
-  gap: 30px;
+  gap: 10px;
 }
 
 .school-connectivity-grid {
   display: flex;
   width: 100%;
-  height: 80px;
-  margin-bottom: 14px;
 }
 
 .school-connectivity-column {
@@ -66,7 +64,7 @@
 
 .school-connectivity-card {
   display: flex;
-  padding: 16px 0 16px 0;
+  padding: 5px 0 5px 0;
   width: 100%;
   align-items: center;
   justify-content: space-between;
