@@ -256,7 +256,7 @@ const SignIn = () => {
           </Tile>
           <p style={{ marginLeft: '20px', color: '#000' }}>
             Don't have an account ?{' '}
-            <Link className="link" href={'/signUp'}>
+            <Link className="link" href={`/signUp${searchKey && `?returnTo=${searchKey}`}`}>
               {' '}
               Sign Up
             </Link>
