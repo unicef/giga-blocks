@@ -251,7 +251,7 @@ const SignIn = () => {
                 onClick={handleWalletLogin}
               >
                 Login With Metamask
-              </Button>
+              </Button> 
             </Form>
           </Tile>
           <p style={{ marginLeft: '20px', color: '#000' }}>
