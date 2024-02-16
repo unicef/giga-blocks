@@ -251,12 +251,12 @@ const SignIn = () => {
                 onClick={handleWalletLogin}
               >
                 Login With Metamask
-              </Button>
+              </Button> 
             </Form>
           </Tile>
           <p style={{ marginLeft: '20px', color: '#000' }}>
             Don't have an account ?{' '}
-            <Link className="link" href={`/signUp${searchKey ? `?returnTo=${searchKey} : ''`}`}>
+            <Link className="link" href={`/signUp${searchKey ? `?returnTo=${searchKey}` : '' }`}>
               {' '}
               Sign Up
             </Link>
