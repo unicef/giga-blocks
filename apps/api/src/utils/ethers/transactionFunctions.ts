@@ -1,12 +1,14 @@
 import { BaseContract, ContractTransactionResponse } from 'ethers';
 import { getContractWithSigner, getInterface } from './contractWithSigner';
 import { ConfigService } from '@nestjs/config';
+import getProposedGasPrice from '../gasPrice';
 
 interface ExtendedContract extends BaseContract {
-  updateNftImageHash?: (schoolId: string, tokenHash: string) => ContractTransactionResponse;
-  multicall?: (multicalldata) => ContractTransactionResponse;
+  // updateNftImageHash?: (schoolId: string, tokenHash: string, {gasPrice}?:{gasPrice: any}) => ContractTransactionResponse;
+  updateNftImageHash?: any;
+  multicall?: (multicalldata, {gasPrice}:{gasPrice: bigint}) => ContractTransactionResponse;
   mintNft?: ([]) => ContractTransactionResponse;
-  updateNftContent?: (tokenId: string, schoolDataArray: any[]) => ContractTransactionResponse;
+  updateNftContent?: (tokenId: string, schoolDataArray: any[], {gasPrice}:{gasPrice: bigint}) => ContractTransactionResponse;
   schoolIdToTokenId?: (
     schoolId: string | ContractTransactionResponse,
   ) => ContractTransactionResponse;
@@ -19,8 +21,9 @@ export const mintNFT = async (
   contractAddress: string,
   schoolDataArray: (string | boolean | number)[][],
   giga_ids: string[],
-): Promise<ContractTransactionResponse> => {
+) : Promise<ContractTransactionResponse> => {
   const config = new ConfigService();
+  const weiEthers = await getProposedGasPrice()
   const escrowAddress = config.get('NEXT_PUBLIC_GIGA_ESCROW_ADDRESS');
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
   const schoolArgs = schoolDataArray.map((el, i) => [
@@ -30,7 +33,7 @@ export const mintNFT = async (
     el,
   ]);
   const multicalldata = generateMultiCallData(contractName, 'mintNft', schoolArgs);
-  return await contract.multicall(multicalldata);
+  return await contract.multicall(multicalldata, {gasPrice: weiEthers});
 };
 
 export const mintSingleNFT = async (
@@ -64,7 +67,8 @@ export const updateData = async (
   schoolDataArray: (string | boolean | number)[],
 ): Promise<ContractTransactionResponse> => {
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
-  return await contract.updateNftContent(tokenId, schoolDataArray);
+  const weiEthers = await getProposedGasPrice()
+  return await contract.updateNftContent(tokenId, schoolDataArray, {gasPrice: weiEthers});
 };
 
 export const getTokenIdSchool = async (
@@ -91,8 +95,9 @@ export const updateImageHash = async (
   tokenHash: string,
   schoolId: string,
 ): Promise<ContractTransactionResponse> => {
+  const weiEthers = await getProposedGasPrice();
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
-  return await contract.updateNftImageHash(schoolId, tokenHash);
+  return await contract.updateNftImageHash(schoolId, tokenHash, {gasPrice: weiEthers});
 };
 
 export const getTokenHash = async (
@@ -111,7 +116,8 @@ export const updateBulkData = async (
   schoolDataArray: (string | boolean | number)[][],
 ): Promise<ContractTransactionResponse> => {
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
+  const weiEthers = await getProposedGasPrice()
   const schoolArgs = tokenId.map((el, i) => [el, schoolDataArray[i]]);
   const multicalldata = generateMultiCallData(contractName, 'updateNftContent', schoolArgs);
-  return await contract.multicall(multicalldata);
+  return await contract.multicall(multicalldata, {gasPrice: weiEthers});
 };
