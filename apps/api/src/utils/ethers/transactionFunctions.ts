@@ -4,18 +4,10 @@ import { ConfigService } from '@nestjs/config';
 // import getProposedGasPrice from '../gasPrice';
 
 interface ExtendedContract extends BaseContract {
-  // updateNftImageHash?: (schoolId: string, tokenHash: string, {gasPrice}?:{gasPrice: any}) => ContractTransactionResponse;
-  updateNftImageHash?: any;
-  multicall?: (
-    multicalldata,
-    // { gasPrice }: { gasPrice: bigint }
-  ) => ContractTransactionResponse;
-  mintNft?: ([]) => ContractTransactionResponse;
-  updateNftContent?: (
-    tokenId: string,
-    schoolDataArray: any[],
-    // { gasPrice }: { gasPrice: bigint },
-  ) => ContractTransactionResponse;
+  updateNftImageHash?: (schoolId: string, tokenHash: string) => ContractTransactionResponse;
+  multicall?: (multicalldata) => ContractTransactionResponse;
+  mintNft?: any;
+  updateNftContent?: (tokenId: string, schoolDataArray: any[]) => ContractTransactionResponse;
   schoolIdToTokenId?: (
     schoolId: string | ContractTransactionResponse,
   ) => ContractTransactionResponse;
@@ -52,9 +44,9 @@ export const mintSingleNFT = async (
   giga_id: string,
 ): Promise<ContractTransactionResponse> => {
   const config = new ConfigService();
-  const escrowAddress = config.get('NEXT_PUBLIC_GIGA_ESCROW_ADDRESS');
+  const escrowAddress = config.get('NEXT_PUBLIC_GIGA_ESCROW_ADDRESS'); 
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
-  return await contract.mintNft([giga_id, escrowAddress, escrowAddress, schoolDataArray]);
+  return await contract.mintNft(giga_id, escrowAddress, escrowAddress, schoolDataArray);
 };
 
 const generateMultiCallData = (contractName, functionName, callData) => {
