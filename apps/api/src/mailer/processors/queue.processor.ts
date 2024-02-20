@@ -212,24 +212,29 @@ export class MintQueueProcessor {
   ) {
     this._logger.log(`Sending single mint nft to blockchain`);
     let status = true;
-    const tx = await mintSingleNFT(
-      'NFT',
-      this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
-      job.data.mintData,
-      job.data.giga_id,
-    );
-    const txReceipt = await tx.wait();
-    if (txReceipt.status !== 1) {
-      status = false;
-    }
-    if (txReceipt.status === 1){
-      try {
-          await this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_id }, jobOptions)
-      } catch (error) {
-        this._logger.log(`Error generating image: ${error}`)
+    try {
+      const tx = await mintSingleNFT(
+        'NFT',
+        this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
+        job.data.mintData,
+        job.data.giga_id,
+      );
+      const txReceipt = await tx.wait();
+      if (txReceipt.status !== 1) {
+        status = false;
+      } 
+      if (txReceipt.status === 1){
+        try {
+            await this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_id }, jobOptions)
+        } catch (error) {
+          this._logger.log(`Error generating image: ${error}`)
+        }
       }
-    } 
-    return this.statusCheckandDBUpdate(status, job.data.ids);
+    } catch (error) {
+      console.log(error)
+    }
+     
+    // return this.statusCheckandDBUpdate(status, job.data.ids);
   }
 
   private async statusCheckandDBUpdate(status: boolean, ids: string[]) {
@@ -298,7 +303,6 @@ export class ImageProcessor {
     id)
     const artScript = await getArtScript('NFTContent', this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
     schoolToken)
-    console.log(schoolToken)
     const base64Image = await generateP5Image(artScript, schoolToken)
     const decodedImage = await decodeBase64Image(base64Image)
     if(decodedImage){

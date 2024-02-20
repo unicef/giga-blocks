@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 interface ExtendedContract extends BaseContract {
   updateNftImageHash?: (schoolId: string, tokenHash: string) => ContractTransactionResponse;
   multicall?: (multicalldata) => ContractTransactionResponse;
-  mintNft?: ([]) => ContractTransactionResponse;
+  mintNft?: any;
   updateNftContent?: (tokenId: string, schoolDataArray: any[]) => ContractTransactionResponse;
   schoolIdToTokenId?: (
     schoolId: string | ContractTransactionResponse,
@@ -40,9 +40,9 @@ export const mintSingleNFT = async (
   giga_id: string,
 ): Promise<ContractTransactionResponse> => {
   const config = new ConfigService();
-  const escrowAddress = config.get('NEXT_PUBLIC_GIGA_ESCROW_ADDRESS');
+  const escrowAddress = config.get('NEXT_PUBLIC_GIGA_ESCROW_ADDRESS'); 
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
-  return await contract.mintNft([giga_id, escrowAddress, escrowAddress, schoolDataArray]);
+  return await contract.mintNft(giga_id, escrowAddress, escrowAddress, schoolDataArray);
 };
 
 const generateMultiCallData = (contractName, functionName, callData) => {
