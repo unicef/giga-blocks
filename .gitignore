@@ -50,6 +50,7 @@ lerna-debug.log*
 /build
 out
 .next
+.nx
 
 
 docker-compose*

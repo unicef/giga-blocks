@@ -27,7 +27,7 @@ const RegisterForm = () => {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [notification, setNotification] = useState(null);
 
-  const handleSelectChange = (selectedItem) => {
+  const handleSelectChange = ({selectedItem}) => {
     setValue('country', selectedItem.label);
     setSelectedCountry(selectedItem);
   };
