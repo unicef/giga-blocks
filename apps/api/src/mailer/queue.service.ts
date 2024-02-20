@@ -101,6 +101,7 @@ export class QueueService {
       return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
       this._logger.error(`Error queueing bulk transaction to blockchain `);
+      console.log(error)
       throw error;
     }
   }
