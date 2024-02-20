@@ -16,7 +16,7 @@ import './signup.scss';
 import Link from 'next/link';
 import { useOtp } from '../hooks/useOtp';
 import { useSignUp } from '../hooks/useSignUp';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { metaMask } from '../components/web3/connectors/metamask';
 import CarbonModal from '../components/modal/index';
 import { metaMaskLogin } from '../utils/metaMaskUtils';
@@ -36,8 +36,11 @@ const SignUp = () => {
   const [notification, setNotification] = useState(null);
   const signUp = useSignUp();
   const sendOtp = useOtp();
+  const searchParams = useSearchParams();
 
   const access_token = getAccessToken();
+
+  const searchKey = searchParams.get('returnTo');
 
   const minute = process.env.NEXT_PUBLIC_OTP_DURATION_IN_MINS;
   const [seconds, setSeconds] = useState(minute * 60);
@@ -49,7 +52,7 @@ const SignUp = () => {
   }, []);
 
   useEffect(() => {
-    if (access_token) {
+    if (access_token && !searchKey) {
       router.push('/dashboard');
     }
   }, [access_token]);

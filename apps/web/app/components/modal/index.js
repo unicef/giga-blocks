@@ -49,7 +49,7 @@ const CarbonModal = ({ open, onClose, email, setSeconds, seconds, error, setErro
         if (searchKey) {
           route.push(searchKey);
         } else {
-          route.push('/contributeSchool');
+          route.push('/dashboard');
         }      })
       .catch((err) => {
         console.log({err});
