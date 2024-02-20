@@ -96,6 +96,13 @@ export class SchoolController {
   }
 
   @Public()
+  @Get('/getContractDetail/:tokenId')
+  findContract(@Param('tokenId') tokenId: string){
+    return this.schoolService.findContract(tokenId)
+  }
+
+
+  @Public()
   @Get('byCountry/:country')
   findByCountry(@Param('country') country: string) {
     return this.schoolService.byCountry(`${country}`);

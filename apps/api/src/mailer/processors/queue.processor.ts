@@ -33,6 +33,7 @@ import { SchoolService } from 'src/schools/schools.service';
 import generateP5Image from 'src/p5/generateP5';
 import decodeBase64Image from 'src/utils/ipfs/decodeImage';
 import uploadFile from 'src/utils/ipfs/ipfsAdd';
+import getProposedGasPrice from 'src/utils/gasPrice';
 
 @Injectable()
 @Processor(ONCHAIN_DATA_QUEUE)

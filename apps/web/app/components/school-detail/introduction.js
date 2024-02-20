@@ -70,14 +70,14 @@ const Introduction = ({ schooldata, tokenId }) => {
     <Grid
       fullWidth
       className="mt-50px"
-      style={{ position: 'relative', left: '600px' }}
+      style={{ position: 'relative' }}
     >
-      <Column md={4} lg={8} sm={4} className="p5Canvas" id="defaultCanvas0">
+      <Column md={4} lg={8} sm={4}>
         {schooldata?.image && (
           <img
-            src={`https://ipfs.io/ipfs/${schooldata?.image} || 'QmQ5MAbK8jwcZ1wpmhj99EqRJAXr7p7cHBfhnDz3gde4jy'}`}
+            src={`https://ipfs.io/ipfs/${schooldata?.image}`}
             alt={schooldata?.image}
-            style={{ marginBottom: '16px' }}
+            style={{ marginBottom: '16px', maxWidth: '400px', width: '100%' }}
           />
         )}
       </Column>

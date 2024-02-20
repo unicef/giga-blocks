@@ -25,7 +25,7 @@ const PageHeader = ({ name, breadcrumbs }) => {
     <>
       <div className="headerBackground">
         <Grid className="header">
-          <Column sm={8} md={10} lg={16} style={{ marginTop: '32px' }}>
+          <Column sm={8} md={8} lg={16} style={{ marginTop: '32px' }}>
             <Breadcrumb>
               {breadcrumbs.map((breadcrumb, index) => (
                 <BreadcrumbItem key={index} href={breadcrumb.link}>
@@ -33,7 +33,7 @@ const PageHeader = ({ name, breadcrumbs }) => {
                 </BreadcrumbItem>
               ))}
               <BreadcrumbItem isCurrentPage>
-                <p style={{ color: 'white' }}>{name}</p>
+                <p style={{ color: 'white' }}>{name?.length > 15 ? name?.substring(0, 15) + "..." : name}</p>
               </BreadcrumbItem>
             </Breadcrumb>
           </Column>
