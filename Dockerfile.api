@@ -11,13 +11,10 @@ COPY ./dist/apps/abi ../abi
 COPY --from=deps /usr/src/app/node_modules ./node_modules
 RUN npm run app:generate && \
     npm run news:generate
-# Stage 3: Install Chromium
-FROM alpine:3.17
-RUN apk --no-cache add chromium
 
-# Stage 4: Copy application files and dependencies
-FROM builder AS final
+# Stage 3: Copy application files and dependencies
+FROM node:18-alpine3.17 AS final
+RUN apk --no-cache add chromium
 WORKDIR /usr/src/app
 COPY --from=builder /usr/src/app .
-
 CMD [ "npm", "start" ]
