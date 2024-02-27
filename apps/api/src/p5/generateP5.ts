@@ -1,13 +1,17 @@
 import { ContractTransactionResponse } from 'ethers';
 import puppeteer from 'puppeteer';
 
-  async function generateP5Image(p5Script: string | ContractTransactionResponse, tokenId: number | ContractTransactionResponse) {
-    const browser = await puppeteer.launch({
-      headless: true
-    });
-    const page = await browser.newPage();
-    const tokenNumber = Number(tokenId);
-    const dataUrl = `
+async function generateP5Image(
+  p5Script: string | ContractTransactionResponse,
+  tokenId: number | ContractTransactionResponse,
+) {
+  const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    headless: true,
+  });
+  const page = await browser.newPage();
+  const tokenNumber = Number(tokenId);
+  const dataUrl = `
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -19,24 +23,23 @@ import puppeteer from 'puppeteer';
     <body>
       <div id="p5-container" style="display: block; background-color: red;"></div>
       <script>
-      let r = ${(tokenNumber*54 + 12) % 255};
-      let g = ${(tokenNumber*44 + 18) % 255};
-      let b = ${(tokenNumber*74 + 10) % 255};
+      let r = ${(tokenNumber * 54 + 12) % 255};
+      let g = ${(tokenNumber * 44 + 18) % 255};
+      let b = ${(tokenNumber * 74 + 10) % 255};
         ${p5Script}
       </script>
     </body>
     </html>`;
-  
-    await page.setContent(dataUrl, { waitUntil: 'domcontentloaded' });
 
-    await page.setViewport({ width: 400, height: 400 });
+  await page.setContent(dataUrl, { waitUntil: 'domcontentloaded' });
 
-    const screenshot = await page.screenshot({ encoding: "base64" })
+  await page.setViewport({ width: 400, height: 400 });
 
-    await browser.close();
+  const screenshot = await page.screenshot({ encoding: 'base64' });
 
-    return screenshot;
-  }
+  await browser.close();
 
-  export default generateP5Image;
+  return screenshot;
+}
 
+export default generateP5Image;

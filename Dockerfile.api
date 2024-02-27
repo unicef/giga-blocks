@@ -5,12 +5,17 @@ COPY ./dist/apps/api/package.json ./
 RUN npm install 
 
 FROM node:18-alpine3.17 AS builder
-RUN apk --no-cache add chromium
+RUN apk add --update --no-cache chromium nss \
+      freetype \
+      harfbuzz \
+      ca-certificates \
+      ttf-freefont 
+      
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 WORKDIR /usr/src/app
 COPY ./dist/apps/api/ ./
 COPY ./dist/apps/abi ../abi
 COPY --from=deps /usr/src/app/node_modules ./node_modules
 RUN npm run app:generate && \
     npm run news:generate
-
 CMD [ "npm", "start" ]
