@@ -23,7 +23,14 @@ import {
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
-import {  getArtScript, getTokenHash, getTokenIdSchool, mintNFT, mintSingleNFT, updateImageHash } from 'src/utils/ethers/transactionFunctions';
+import {
+  getArtScript,
+  getTokenHash,
+  getTokenIdSchool,
+  mintNFT,
+  mintSingleNFT,
+  updateImageHash,
+} from 'src/utils/ethers/transactionFunctions';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { SchoolData } from '../types/mintdata.types';
 import { MintStatus } from '@prisma/application';
@@ -120,12 +127,12 @@ export class MintQueueProcessor {
           SET_DBUPDATE_QUEUE,
           { ids: job.data.ids, status: MintStatus.NOTMINTED },
           jobOptions,
-        )
+        );
       } catch (error) {
         this._logger.error(
           `Failed queue DB update ${job.id} of type ${job.name}: ${error.message}`,
           error.stack,
-        )
+        );
       }
       try {
         return this._mailerService.sendMail({
@@ -193,16 +200,16 @@ export class MintQueueProcessor {
     if (txReceipt.status !== 1) {
       status = false;
     }
-    
-    if (txReceipt.status === 1){
+
+    if (txReceipt.status === 1) {
       try {
-        for (let i = 0; i < job.data.giga_ids.length; i++){
-          await this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_ids[i] }, jobOptions)
+        for (let i = 0; i < job.data.giga_ids.length; i++) {
+          await this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_ids[i] }, jobOptions);
         }
       } catch (error) {
-        this._logger.log(`Error generating image: ${error}`)
+        this._logger.log(`Error generating image: ${error}`);
       }
-    } 
+    }
 
     return this.statusCheckandDBUpdate(status, job.data.ids);
   }
@@ -223,19 +230,19 @@ export class MintQueueProcessor {
       const txReceipt = await tx.wait();
       if (txReceipt.status !== 1) {
         status = false;
-      } 
-      if (txReceipt.status === 1){
+      }
+      if (txReceipt.status === 1) {
         try {
-            await this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_id }, jobOptions)
+          await this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_id }, jobOptions);
         } catch (error) {
-          this._logger.log(`Error generating image: ${error}`)
+          this._logger.log(`Error generating image: ${error}`);
         }
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-     
-    // return this.statusCheckandDBUpdate(status, job.data.ids);
+
+    return this.statusCheckandDBUpdate(status, job.data.ids);
   }
 
   private async statusCheckandDBUpdate(status: boolean, ids: string[]) {
@@ -261,7 +268,6 @@ export class MintQueueProcessor {
 @Injectable()
 @Processor(IMAGE_QUEUE)
 export class ImageProcessor {
-
   private readonly _logger = new Logger(ContributeProcessor.name);
   constructor(
     private readonly _configService: ConfigService,
@@ -278,7 +284,7 @@ export class ImageProcessor {
     this._logger.debug(`Completed image ${job.id} of type ${job.name}`);
   }
 
-  @OnQueueFailed({name: SET_IMAGE_PROCESS})
+  @OnQueueFailed({ name: SET_IMAGE_PROCESS })
   public async onImageFail(job: Job<any>, error: any) {
     this._logger.error(`Failed image ${job.id} of type ${job.name}: ${error.message}`, error.stack);
     if (job.attemptsMade === job.opts.attempts) {
@@ -297,24 +303,34 @@ export class ImageProcessor {
   }
 
   @Process(SET_IMAGE_PROCESS)
-  public async processImages(job: Job<any>){
-    const id = job.data.id
-    this._logger.log(`Updating image of school: ${id}`)
-    const schoolToken = await getTokenIdSchool('NFTContent', this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-    id)
-    const artScript = await getArtScript('NFTContent', this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-    schoolToken)
-    const base64Image = await generateP5Image(artScript, schoolToken)
-    const decodedImage = await decodeBase64Image(base64Image)
-    if(decodedImage){
+  public async processImages(job: Job<any>) {
+    const id = job.data.id;
+    this._logger.log(`Updating image of school: ${id}`);
+    const schoolToken = await getTokenIdSchool(
+      'NFTContent',
+      this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
+      id,
+    );
+    const artScript = await getArtScript(
+      'NFTContent',
+      this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
+      schoolToken,
+    );
+    const base64Image = await generateP5Image(artScript, schoolToken);
+    const decodedImage = await decodeBase64Image(base64Image);
+    if (decodedImage) {
       await uploadFile(decodedImage.data)
-      .then(async (res) => {
-        await updateImageHash('NFTContent', this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-        res, id)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+        .then(async res => {
+          await updateImageHash(
+            'NFTContent',
+            this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
+            res,
+            id,
+          );
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 }
