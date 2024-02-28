@@ -42,8 +42,8 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize, setSearch }) => {
   );
 
   useEffect(() => {
-    if (queryData) decodeSchooldata(queryData);
     if (imagedata) decodeImage(imagedata?.data?.nftImages);
+    if (queryData) decodeSchooldata(queryData,imagedata?.data?.nftImages);
   }, [queryData, imagedata, account]);
 
   const decodeImage = (data) => {
@@ -58,7 +58,7 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize, setSearch }) => {
     setImageData(decodedImage);
   };
 
-  const decodeSchooldata = async (data) => {
+  const decodeSchooldata = async (data,images) => {
     const encodeddata = variables?.id
       ? data?.collectorOwnedNft?.nfts
       : data?.nftDatas;
@@ -80,11 +80,13 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize, setSearch }) => {
           )
             sold = false;
           else sold = true;
+          const image = images.find(image => image.id === data.id);
           const schoolData = {
             tokenId: data.id,
             schoolName: data.name,
             country: data.location,
             sold: sold,
+            image:image?image?.imageScript:''
           };
 
           decodedShooldata.push(schoolData);
@@ -135,8 +137,8 @@ const SchoolCard = ({ query, variables, pageSize, setPageSize, setSearch }) => {
                   href={`/explore/${school?.tokenId}`}
                 >
                   <div className="row" key={index}>
-                    <img
-                      src={`https://ipfs.io/ipfs/${imageData[index]?.image || 'QmQ5MAbK8jwcZ1wpmhj99EqRJAXr7p7cHBfhnDz3gde4jy'}`}
+               <img
+                      src={`https://ipfs.io/ipfs/${school?.image || 'QmQ5MAbK8jwcZ1wpmhj99EqRJAXr7p7cHBfhnDz3gde4jy'}`}
                       alt={school?.schoolName}
                       style={{ marginBottom: '16px' }}
                     />
