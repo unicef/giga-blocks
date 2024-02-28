@@ -28,8 +28,10 @@ const SchoolDetail = ({ id }) => {
   const [noData, setNoData] = useState(false)
 
   const decodeSchooldata = (data, imageData) => {
-    const encodeddata = data.collectorTokenUri;
-    const decodedData = atob(encodeddata.tokenUri.substring(29));
+    const encodeddata = data?.collectorTokenUri;
+    if(encodeddata === null) {setNoData(true); return;}
+    console.log({encodeddata})
+    const decodedData = atob(encodeddata?.tokenUri.substring(29));
     const nftDetails = {
       owner: encodeddata.owner.id,
       ...JSON.parse(decodedData),
@@ -41,6 +43,8 @@ const SchoolDetail = ({ id }) => {
   useEffect(() => {
     if (result.data && imageRes.data)
       decodeSchooldata(result.data, imageRes.data);
+    
+    
   }, [result.data, imageRes.data]);
 
   const breadcrumbs = [
