@@ -10,12 +10,17 @@ import {
   QueueProcessor,
 } from './processors';
 import { MailService } from './mailer.service';
-import { MAIL_QUEUE, MINT_QUEUE, IMAGE_QUEUE, ONCHAIN_DATA_QUEUE, CONTRIBUTE_QUEUE } from './constants';
+import {
+  MAIL_QUEUE,
+  MINT_QUEUE,
+  IMAGE_QUEUE,
+  ONCHAIN_DATA_QUEUE,
+  CONTRIBUTE_QUEUE,
+} from './constants';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { QueueService } from './queue.service';
 import { ContributeDataService } from 'src/contribute/contribute.service';
 import { SchoolService } from 'src/schools/schools.service';
-import { SchoolModule } from 'src/schools/schools.module';
 
 @Module({
   imports: [
@@ -29,7 +34,7 @@ import { SchoolModule } from 'src/schools/schools.module';
           port: +configService.get('SMTP_PORT'),
           secure: true,
           auth: {
-            user: configService.get('EMAIL_ADDRESS'),
+            user: configService.get('EMAIL_USERNAME'),
             pass: configService.get('EMAIL_PASSWORD'),
           },
         },
@@ -55,7 +60,7 @@ import { SchoolModule } from 'src/schools/schools.module';
     }),
     BullModule.registerQueue({
       name: CONTRIBUTE_QUEUE,
-    })
+    }),
   ],
   providers: [
     MailProcessor,
