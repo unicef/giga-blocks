@@ -46,7 +46,7 @@ const VerifiedSchool = () => {
       const uploadId = query.uploadId;
 
       const {dense, page, setPage, order,  orderBy, rowsPerPage, onChangePage, onSort, onChangeDense, onChangeRowsPerPage,
-      } = useTable({defaultOrderBy: 'name', defaultOrder: 'asc'});
+      } = useTable({defaultOrderBy: 'createdAt', defaultOrder: 'desc'});
 
   const {
     mutate,
@@ -89,17 +89,6 @@ const VerifiedSchool = () => {
 
     setTableData(filteredData);
   }, [data, isLoading, uploadId]);
-
-    // const signTransaction = useCallback(async () =>{
-    //   try {
-    //   const signer = (provider.provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
-    //   const signature = await mintSignature(signer, selectedValues.length);
-    //   return signature;
-    //   }
-    //   catch(err) {
-    //     enqueueSnackbar(err.message, { variant: 'error' })
-    //   }
-    // },[provider,selectedValues])
   
     const mintSchool = useCallback(async () => {
       if(selectedValues.length === 0){

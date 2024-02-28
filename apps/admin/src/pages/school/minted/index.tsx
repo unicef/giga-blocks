@@ -52,7 +52,7 @@ const MintedSchools = () => {
     variables: {  },
   });
   const { data, fetching } = result;
-  
+
   useEffect(() => {
     const startItem = (page+1)*rowsPerPage - rowsPerPage;
     const endItem = page*rowsPerPage + rowsPerPage
@@ -61,12 +61,10 @@ const MintedSchools = () => {
     setPaginatedData(paginatedDatas)
   }, [rowsPerPage, data, page])
 
-
-
   let filteredData: any = [];
   useEffect(() => {
     if (paginatedData) {
-      const encodeddata = paginatedData;  
+    const encodeddata = paginatedData;  
     const decodedShooldata:any = [];
     encodeddata.map((data:any) => {
       let decodedData = atob(data.tokenUri.substring(29));

@@ -16,6 +16,8 @@ import {
 import './navbar.scss';
 import { Link } from 'next/link';
 import { useAppAuthContext } from '../../auth/JwtContext';
+import { useWeb3React } from '@web3-react/core';
+import { metaMaskLogin } from '../../utils/metaMaskUtils';
 import { getCurrentUser } from '../../utils/sessionManager';
 
 const Navbar = () => {

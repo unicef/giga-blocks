@@ -27,6 +27,7 @@ import {
 } from '../utils/sessionManager';
 import { useAuthContext } from '../auth/useAuthContext';
 import { metaMaskLogin } from '../utils/metaMaskUtils';
+import { getCurrentUser } from '../utils/sessionManager';
 
 const SignIn = () => {
   const route = useRouter();
@@ -38,6 +39,7 @@ const SignIn = () => {
   const { initialize } = useAuthContext();
   const [error, setError] = useState();
   const loginMutation = useWalletLogin();
+  const user = getCurrentUser();
   const getNonceQuery = useGetNonce();
   const searchParams = useSearchParams();
   const searchKey = searchParams.get('returnTo');
@@ -52,10 +54,18 @@ const SignIn = () => {
   const minute = process.env.NEXT_PUBLIC_OTP_DURATION_IN_MINS;
   const [seconds, setSeconds] = useState(minute * 60);
 
+  const router = useRouter();
+
   const showEmailInput = () => {
     setShowEmailField(true);
     setShowSubmitButton(true);
   };
+
+  useEffect(() => {
+    if (user) {
+      router.push(`/dashboard`)
+    }
+  }, [])
 
   useEffect(() => {
     if (!web3.isActive) {
@@ -251,12 +261,12 @@ const SignIn = () => {
                 onClick={handleWalletLogin}
               >
                 Login With Metamask
-              </Button>
+              </Button> 
             </Form>
           </Tile>
           <p style={{ marginLeft: '20px', color: '#000' }}>
             Don't have an account ?{' '}
-            <Link className="link" href={'/signUp'}>
+            <Link className="link" href={`/signUp${searchKey ? `?returnTo=${searchKey}` : '' }`}>
               {' '}
               Sign Up
             </Link>

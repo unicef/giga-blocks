@@ -7,7 +7,6 @@ import {
 import { MintStatus, Prisma, Role } from '@prisma/application';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { ListSchoolDto } from './dto/list-schools.dto';
-// import { paginate } from 'src/utils/paginate';
 import { QueueService } from 'src/mailer/queue.service';
 import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
 import { handler } from 'src/utils/csvToDB';
@@ -19,7 +18,7 @@ import { ConfigService } from '@nestjs/config';
 import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-datum.dto';
 import { getTokenId } from 'src/utils/web3/subgraph';
 import { PaginateFunction, PaginateOptions } from 'src/utils/paginate';
-
+import { getContractWithSigner } from 'src/utils/ethers/contractWithSigner';
 @Injectable()
 export class SchoolService {
   constructor(
@@ -140,6 +139,11 @@ export class SchoolService {
     return this.queueService.sendTransaction(data);
   }
 
+  async findContract(tokenId) {
+      const contract: any = getContractWithSigner('NFTContent', '0x38AB410c1C650d251a83F884BB76709d1791Ab07');
+      return await contract.generateTokenData(tokenId);
+  }
+
   async checkAdmin(address: string) {
     const buffAddress = hexStringToBuffer(address);
     const admin = await this.prisma.user.findUnique({
@@ -150,7 +154,7 @@ export class SchoolService {
     if (admin && admin.roles.includes(Role.ADMIN)) {
       return true;
     }
-    throw new UnauthorizedException('You wallet is not an admin wallet');
+    throw new UnauthorizedException('Your wallet is not an admin wallet');
   }
 
   async mintBulkNFT(MintData: MintQueueDto) {
@@ -212,7 +216,6 @@ export class SchoolService {
           });
           uploadBatch = transaction;
         } catch (err) {
-          console.log('err', err);
           if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
             res
               .code(500)
@@ -354,7 +357,10 @@ export class SchoolService {
       tokenId,
       schooldata,
     );
-    const txReceipt = tx.wait();
+    const txReceipt = await tx.wait();
+    if (txReceipt.status === 1){
+      this.queueService.processImage(id);
+      }
     return txReceipt;
   }
 

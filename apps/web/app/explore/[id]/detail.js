@@ -11,7 +11,6 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { Loading } from '@carbon/react';
 import PageHeader from '../../components/page-header';
-import { useRouter } from 'next/navigation';
 
 
 const SchoolDetail = ({ id }) => {
@@ -19,28 +18,34 @@ const SchoolDetail = ({ id }) => {
     query: Queries.nftDetailsQuery,
     variables: { id },
   });
+  const [imageRes] = useQuery({
+    query: Queries.nftImage,
+    variables: { id },
+  });
+
   const { fetching } = result;
   const [schoolData, setSchoolData] = useState();
   const [noData, setNoData] = useState(false)
 
-  const decodeSchooldata = (data) => {
-    if(data?.collectorTokenUri != null) {
-    const encodeddata = data.collectorTokenUri;
-      const decodedData = atob(encodeddata?.tokenUri.substring(29));
-      const nftDetails = {
-        owner: encodeddata.owner.id,
-        ...JSON.parse(decodedData),
-      };
-      setSchoolData(nftDetails);
-      setNoData(false)
-    }
-    else{
-    setNoData(true)
-    }
+  const decodeSchooldata = (data, imageData) => {
+    const encodeddata = data?.collectorTokenUri;
+    if(encodeddata === null) {setNoData(true); return;}
+    console.log({encodeddata})
+    const decodedData = atob(encodeddata?.tokenUri.substring(29));
+    const nftDetails = {
+      owner: encodeddata.owner.id,
+      ...JSON.parse(decodedData),
+      image: imageData?.nftImage?.imageScript,
+    };
+    setSchoolData(nftDetails);
   };
+
   useEffect(() => {
-    if (result) decodeSchooldata(result.data);
-  }, [result.data]);
+    if (result.data && imageRes.data)
+      decodeSchooldata(result.data, imageRes.data);
+    
+    
+  }, [result.data, imageRes.data]);
 
   const breadcrumbs = [
     { text: 'Home', link: '/' },

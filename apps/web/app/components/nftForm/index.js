@@ -27,7 +27,7 @@ const RegisterForm = () => {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [notification, setNotification] = useState(null);
 
-  const handleSelectChange = (selectedItem) => {
+  const handleSelectChange = ({selectedItem}) => {
     setValue('country', selectedItem.label);
     setSelectedCountry(selectedItem);
   };
@@ -36,7 +36,9 @@ const RegisterForm = () => {
     try {
       const { success } = await registerApi.mutateAsync(data);
       if (success) {
-        reset();
+        setValue('fullname', '');
+        setValue('email', '');
+        setValue('country', '');
         setSelectedCountry(null);
         setNotification({
           kind: 'success',
@@ -44,6 +46,10 @@ const RegisterForm = () => {
         });
       }
     } catch (error) {
+      setValue('fullname', '');
+      setValue('email', '');
+      setValue('country', '');
+      setSelectedCountry(null);
       setNotification({
         kind: 'error',
         title:
@@ -116,6 +122,7 @@ const RegisterForm = () => {
                   invalidText="Invalid error message."
                   labelText="Name"
                   placeholder="Enter your fullname here"
+    
                 />
               )}
             />
