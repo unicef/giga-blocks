@@ -60,10 +60,10 @@ export const users = [
     walletAddress: hexStringToBuffer('0xfAAe0B09e9A80d142A11cd846CD9329F2E96f55F'), // add own wallet address
   },
   {
-    name: 'Giga 3',
+    name: 'Sushant',
     roles: [ROLE.ADMIN],
-    email: 'giga3@mailinator.com',
-    walletAddress: hexStringToBuffer('0x984692516D5AC1d06267fb6297a5164c3FEaD91D'), // add own wallet address
+    email: 'sushant@mailinator.com',
+    walletAddress: hexStringToBuffer('0x6C55a204005AdE4bd81F558bF3c9F994291fB275'), // add own wallet address
   },
   // {
   //   name: 'Giga 4',
