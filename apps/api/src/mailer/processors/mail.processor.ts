@@ -74,7 +74,7 @@ export class MailProcessor {
     return this._mailerService.sendMail({
       to: job.data.email,
       from: this._configService.get('EMAIL_ADDRESS'),
-      subject: 'Greetings from GIGA NFT2.0',
+      subject: 'Greetings from Giga Global',
       template: './welcome',
       context: { name: job.data.name, url: this._configService.get('NEXT_PUBLIC_WEB_NAME') },
     });
@@ -87,7 +87,7 @@ export class MailProcessor {
     return this._mailerService.sendMail({
       to: job.data.email,
       from: this._configService.get('EMAIL_ADDRESS'),
-      subject: 'Greetings from GIGA NFT2.0',
+      subject: 'Greetings from Giga Global',
       template: './newsletter-welcome',
       context: {
         name: job.data.name,

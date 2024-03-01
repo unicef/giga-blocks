@@ -12,7 +12,7 @@ const openSans = Open_Sans({
 });
 
 export const metadata = {
-  title: 'NFT 2.0',
+  title: 'Giga Global',
   description: '',
 };
 

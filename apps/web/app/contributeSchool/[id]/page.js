@@ -29,7 +29,7 @@ import { useContributeDetails } from '../../hooks/useContributionList';
 const SchoolDetail = () => {
   const { id } = useParams();
   const router = useRouter();
-  const { data, isLoading } = useSchoolDetails(id);
+  const { data, isLoading,isFetched } = useSchoolDetails(id);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTabIndex, setSelectedTabIndex] = useState({
     selectedIndex: 0,
@@ -216,13 +216,17 @@ const SchoolDetail = () => {
               </TabPanel>
             </TabPanels>
           </Tabs>
-          <ContributeForm
+          {
+            isFetched &&
+            <ContributeForm
             isOpen={isModalOpen}
             onClose={closeModal}
             data={data}
             updateSelectedTabIndex={updateSelectedTabIndex}
             refetch={refetch}
-          />
+            />
+          }
+          
           <Footer />
         </>
       ) : (

@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { Form, TextInput, Button, Dropdown, Column } from '@carbon/react';
+import { TextInput, Button } from '@carbon/react';
 import { Controller, useForm } from 'react-hook-form';
 import Web3Modal from '../congratulation-modal';
 import { useContributeData } from '../../hooks/useContributeData';
@@ -20,7 +20,7 @@ const ContributeForm = ({
 }) => {
   const router = useRouter();
   const contributeDataMutation = useContributeData();
-  const { handleSubmit, control, setValue } = useForm();
+  const { control, setValue } = useForm();
   const { id } = useParams();
   const [selectedOptions, setSelectedOptions] = useState({});
   const [error, setError] = useState(false);
@@ -94,16 +94,27 @@ const ContributeForm = ({
     updateSelectedTabIndex({ selectedIndex: 1 });
   };
 
-  const onSubmit = (formData) => {
+  const handleFormSubmit = (e) => {
+    e.preventDefault()
+    const formData = {
+      schoolType: e.target['schoolType'].value,
+      country: countryName.data,
+      latitude: markerCoords.lat,
+      longitude: markerCoords.long,
+      connectivity: e.target['connectivity'].value === 'true',
+      coverage_availability: e.target['coverage'].value === 'true',
+      electricity_available: e.target['electricity'].value === 'true',
+    }
+    
     try {
       setError(false);
       const changedData = {};
 
       if (
-        selectedOptions?.dropdown1?.selectedItem?.value !== data.school_type
+        formData?.schoolType !== data.school_type
       ) {
         changedData.school_type =
-          selectedOptions?.dropdown1?.selectedItem?.value;
+        formData?.schoolType;
       }
       if (formData.country !== data.country) {
         changedData.country = countryName.data;
@@ -117,25 +128,25 @@ const ContributeForm = ({
         changedData.longitude = Number(formData.longitude);
       }
       if (
-        selectedOptions.dropdown3?.selectedItem?.value !== data.connectivity
+        formData?.connectivity !== data.connectivity
       ) {
         changedData.connectivity =
-          selectedOptions.dropdown3?.selectedItem?.value;
+        formData?.connectivity;
       }
       if (
-        selectedOptions.dropdown4?.selectedItem?.value !==
+        formData?.coverage_availability !==
         data.coverage_availability
       ) {
         changedData.coverage_availability =
-          selectedOptions.dropdown4?.selectedItem?.value;
+        formData?.coverage_availability;
       }
 
       if (
-        selectedOptions.dropdown5?.selectedItem?.value !==
+        formData?.electricity_available !==
         data.electricity_available
       ) {
         changedData.electricity_available =
-          selectedOptions.dropdown5?.selectedItem?.value;
+        formData?.electricity_available;
       }
       if (!Object.keys(changedData).length) {
         setError(true);
@@ -147,6 +158,7 @@ const ContributeForm = ({
           contributed_data: JSON.stringify(changedData),
           school_Id: id,
         };
+
         contributeDataMutation.mutate(formattedData);
         setDefaultValues();
       }
@@ -155,23 +167,8 @@ const ContributeForm = ({
     } catch (error) {
       console.error('Error submitting form:', error);
     }
-  };
-  const school_type = [
-    { label: 'Private', value: 'private' },
-    { label: 'Public', value: 'public' },
-  ];
-  const connectivity = [
-    { label: 'Yes', value: true },
-    { label: 'No', value: false },
-  ];
-  const coverage_availability = [
-    { label: 'Yes', value: true },
-    { label: 'No', value: false },
-  ];
-  const electricity_available = [
-    { label: 'Yes', value: true },
-    { label: 'No', value: false },
-  ];
+
+  }
 
   return (
     <>
@@ -181,29 +178,24 @@ const ContributeForm = ({
           Contribute Data for {`${data?.name}`}
         </h1>
         <ModalBody>
-          <Form onSubmit={handleSubmit(onSubmit)}>
-            <Dropdown
-              id="dropdown1"
-              titleText="Type of school"
-              style={{ marginBottom: '25px' }}
-              label={
-                data?.school_type === 'private' ||
-                data?.school_type === 'Private'
-                  ? 'Private'
-                  : 'Public'
-              }
-              items={school_type}
-              itemToString={(item) => (item ? item.label : '')}
-              selectedItem={selectedOptions.school_type}
-              onChange={(selectedItem) => {
-                setSelectedOptions((prevOptions) => ({
-                  ...prevOptions,
-                  dropdown1: selectedItem,
-                }));
-                setError(false);
-              }}
-            />
+          {typeof(data?.school_type) === 'string' && <form
+          onSubmit={handleFormSubmit}
+          >
             <p style={{ fontSize: '0.75rem', color: '#525252' }}>
+              School Type
+            </p>
+            <div style={{display: 'flex', gap: '50px', marginTop: '5px'}}>
+            <div style={{display: 'flex', alignItems: 'center'}}>
+            <input type='radio' defaultChecked={data?.school_type === 'public' ? true : false} name="schoolType" value={'public'}/>
+            <label>Public</label>
+            </div>
+            <div style={{display: 'flex', alignItems: 'center'}}>
+            <input type='radio' defaultChecked={data?.school_type === 'private' ? true : false} name="schoolType" value={'private'}/>
+            <label>Private</label>
+            </div>
+            </div>
+
+            <p style={{ fontSize: '0.75rem', color: '#525252', marginTop: '30px' }}>
               School Location
             </p>
             <p
@@ -285,64 +277,58 @@ const ContributeForm = ({
                 )}
               />
             </div>
-            <Dropdown
-              id="connectivity"
-              style={{ marginBottom: '24px' }}
-              titleText="Connectivity"
-              label={data?.connectivity ? 'Yes' : 'No'}
-              items={connectivity}
-              itemToString={(item) => (item ? item.label : '')}
-              selectedItem={selectedOptions.connectivity}
-              onChange={(selectedItem) => {
-                setSelectedOptions((prevOptions) => ({
-                  ...prevOptions,
-                  dropdown3: selectedItem,
-                }));
-                setError(false);
-              }}
-            />
-            <Dropdown
-              id="dropdown4"
-              style={{ marginTop: '24px', marginBottom: '24px' }}
-              titleText="Coverage Availability"
-              label={data?.coverage_availability ? 'Yes' : 'No'}
-              items={coverage_availability}
-              itemToString={(item) => (item ? item.label : '')}
-              selectedItem={selectedOptions.coverage_availability}
-              onChange={(selectedItem) => {
-                setSelectedOptions((prevOptions) => ({
-                  ...prevOptions,
-                  dropdown4: selectedItem,
-                }));
-                setError(false);
-              }}
-            />
-            <Dropdown
-              id="dropdown5"
-              style={{ marginTop: '24px', marginBottom: '24px' }}
-              titleText="Electricity Availability"
-              label={data?.electricity_available ? 'Yes' : 'No'}
-              items={electricity_available}
-              itemToString={(item) => (item ? item.label : '')}
-              selectedItem={selectedOptions.electricity_available}
-              onChange={(selectedItem) => {
-                setSelectedOptions((prevOptions) => ({
-                  ...prevOptions,
-                  dropdown5: selectedItem,
-                }));
-                setError(false);
-              }}
-            />
+            <p style={{ fontSize: '0.75rem', color: '#525252', marginTop: '30px'  }}>
+              Connectivity
+            </p>
+            <div style={{display: 'flex', gap: '50px', marginTop: '5px'}}>
+            <div style={{display: 'flex', alignItems: 'center'}}>
+            <input type='radio' defaultChecked={data?.connectivity == true} name="connectivity" value={true}/>
+            <label>Yes</label>
+            </div>
+            <div style={{display: 'flex', alignItems: 'center'}}>
+            <input type='radio' defaultChecked={data?.connectivity == false} name="connectivity" value={false}/>
+            <label>No</label>
+            </div>
+            </div>
+            <p style={{ fontSize: '0.75rem', color: '#525252', marginTop: '30px' }}>
+            Coverage Availability
+            </p>
+            <div style={{display: 'flex', gap: '50px', marginTop: '5px'}}>
+            <div style={{display: 'flex', alignItems: 'center'}}>
+            <input type='radio' defaultChecked={data?.coverage_availability == true} name="coverage" value={true}/>
+            <label>Yes</label>
+            </div>
+            <div style={{display: 'flex', alignItems: 'center'}}>
+            <input type='radio' defaultChecked={data?.coverage_availability == false} name="coverage" value={false}/>
+            <label>No</label>
+            </div>
+            </div>
+            <p style={{ fontSize: '0.75rem', color: '#525252', marginTop: '30px'  }}>
+            Electricity Availability
+            </p>
+            <div style={{display: 'flex', gap: '50px', marginTop: '5px'}}>
+            <div style={{display: 'flex', alignItems: 'center'}}>
+            <input type='radio' defaultChecked={data?.electricity_available === true} name="electricity" value={true}/>
+            <label>Yes</label>
+            </div>
+            <div style={{display: 'flex', alignItems: 'center'}}>
+            <input type='radio' defaultChecked={data?.electricity_available === false} name="electricity" value={false}/>
+            <label>No</label>
+            </div>
+            </div>
             {error && (
               <p style={{ color: 'red' }}>
                 * Please make changes to school data before submitting
               </p>
             )}
-          </Form>
-        </ModalBody>
-        <Button onClick={handleSubmit(onSubmit)} style={{ width: '100%' }}>
+            <div style={{marginTop: '15px'}}>
+            <Button type='submit' style={{ width: '100%' }}>
           Contribute Now
         </Button>
+        </div>
+          </form>}
+        </ModalBody>
+        
       </Modal>
       <Web3Modal
         id={id}
