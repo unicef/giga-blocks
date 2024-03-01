@@ -16,7 +16,7 @@ export default function LoginPage() {
   return (
       <LoginProvider>
         <Head>
-          <title>Giga Global</title>
+          <title>Giga Blocks</title>
         </Head>
 
         <LoginComp />

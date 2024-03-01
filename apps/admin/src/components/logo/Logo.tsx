@@ -33,7 +33,7 @@ const Logo = forwardRef<HTMLDivElement, LogoProps>(
           variant="h3"
           sx={{ maxHeight: 100, objectFit: "contain", cursor: "pointer", color: "black", ...sx }}
         >
-          Giga Global
+          Giga Blocks
         </Typography>
         // <Box
         //   component="img"

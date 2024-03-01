@@ -74,7 +74,7 @@ const Navbar = () => {
                 prefix=""
                 style={{ color: 'white' }}
               >
-                Giga Global
+                Giga Blocks
               </HeaderName>
               <HeaderNavigation
                 aria-label="Header"

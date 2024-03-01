@@ -12,7 +12,7 @@ const openSans = Open_Sans({
 });
 
 export const metadata = {
-  title: 'Giga Global',
+  title: 'Giga Blocks',
   description: '',
 };
 
