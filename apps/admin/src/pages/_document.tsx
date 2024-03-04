@@ -37,7 +37,7 @@ export default class MyDocument extends Document {
             content="Together,we can reshape the narrative of education in the digital age. Join, collaborate, innovate."
           />
           <meta name="keywords" content="" />
-          <meta name="author" content="NFT 2.0" />
+          <meta name="author" content="Giga Blocks" />
         </Head>
 
         <body>

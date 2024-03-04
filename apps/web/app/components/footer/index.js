@@ -52,7 +52,7 @@ const Footer = () => {
         </Column>
         <Grid className="footer-logo">
           <Column md={4} lg={8} sm={4}>
-            <h2>NFT 2.0</h2>
+            <h2>Giga Blocks</h2>
           </Column>
           <Column md={4} lg={8} sm={4}>
             <div className="circle" onClick={scrollToTop}>

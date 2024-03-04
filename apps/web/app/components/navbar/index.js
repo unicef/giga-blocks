@@ -74,7 +74,7 @@ const Navbar = () => {
                 prefix=""
                 style={{ color: 'white' }}
               >
-                NFT 2.0
+                Giga Blocks
               </HeaderName>
               <HeaderNavigation
                 aria-label="Header"

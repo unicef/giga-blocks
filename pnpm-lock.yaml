@@ -14273,8 +14273,6 @@ packages:
     peerDependenciesMeta:
       webpack:
         optional: true
-      webpack-sources:
-        optional: true
     dependencies:
       webpack: 5.88.2
       webpack-sources: 3.2.3

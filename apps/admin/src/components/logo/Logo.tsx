@@ -26,14 +26,14 @@ const Logo = forwardRef<HTMLDivElement, LogoProps>(
           variant="h5"
           sx={{ maxHeight: 80, objectFit: "contain", cursor: "pointer", ...sx, color: "black" }}
         >
-          nft2.0
+          Giga
         </Typography>
       ) : (
         <Typography
           variant="h3"
           sx={{ maxHeight: 100, objectFit: "contain", cursor: "pointer", color: "black", ...sx }}
         >
-          nft2.0
+          Giga Blocks
         </Typography>
         // <Box
         //   component="img"

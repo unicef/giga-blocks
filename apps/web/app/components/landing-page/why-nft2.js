@@ -7,7 +7,7 @@ const WhyNFT2 = () => {
       <Grid className="why-nft-0" fullWidth>
         <Column md={4} lg={4} sm={4} style={{ margin: '0 auto', width: '90%' }}>
           <span className="heading7">
-            Why Join the NFT2.0 <br /> developer community?
+            Why Join Giga Blocks <br /> developer community?
           </span>
         </Column>
         <Column md={4} lg={4} sm={4}>
@@ -39,7 +39,7 @@ const WhyNFT2 = () => {
             <span className="heading20">Collaboration</span>
 
             <p className="heading2 width-90">
-              NFT 2.0 fosters a space for developers, blockchain enthusiasts,
+              Giga Blocks fosters a space for developers, blockchain enthusiasts,
               and dePin advocates. Collaborate, share ideas, and push the
               boundaries of what's possible.
             </p>
@@ -58,7 +58,7 @@ const WhyNFT2 = () => {
 
             <p className="heading2 width-90">
               Engage in a movement that transcends geographical boundaries. With
-              NFT 2.0, ensure every student, everywhere, benefits from the
+              Giga Blocks, ensure every student, everywhere, benefits from the
               digital age.
             </p>
           </div>
