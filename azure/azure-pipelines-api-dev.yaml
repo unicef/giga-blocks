@@ -2,9 +2,10 @@ trigger:
   branches:
     include:
     - dev
+    - dev-azure-devops
   paths:
     include:
-    - apps/admin/**
+    - apps/api/**
 
 pool:
   vmImage: ubuntu-latest
@@ -14,22 +15,32 @@ variables:
   imageTag: '$(Build.BuildId)'
   system.debug: true
   CI: false
-  env_dev: $(ENV_DEV)
+#  env_dev: $(ENV_DEV)
 
 stages:
 - stage: Build
-  displayName: 'GIGA NFT 2.0 admin build'
+  displayName: 'GIGA Blocks API build'
   jobs:
   - job: Build
-    displayName: 'GIGA NFT 2.0 admin build job'
+    displayName: 'GIGA Blocks API build job'
 
     steps:
     - checkout: self
       fetchTags: true
 
+    - task: DownloadSecureFile@1
+      inputs:
+        secureFile: '.env.dev.giga-blocks'
+
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(Agent.TempDirectory)'
+        Contents: '.env.dev.giga-blocks'
+        TargetFolder: '$(Build.SourcesDirectory)'
+
     - script: |
-        touch ./.env && echo "$(env_dev)" >> ./.env
-      displayName: 'import env file'
+        mv .env.dev.giga-blocks .env
+      displayName: 'create .env file'
 
     - task: NodeTool@0
       inputs:
@@ -39,7 +50,9 @@ stages:
     - script: |
         npm install -g pnpm
         pnpm install
-        npx nx build admin
+        pnpm run api:app:generate
+        pnpm run api:news:generate
+        npx nx build api
       displayName: 'install dependencies and build apps'
 
     - task: Docker@2
@@ -52,8 +65,8 @@ stages:
       displayName: Build and push image to container registry
       inputs:
         command: buildAndPush
-        repository: 'giga-ntf2-admin'
-        dockerfile: './Dockerfile.admin'
+        repository: 'giga-blocks-api'
+        dockerfile: './Dockerfile.api'
         containerRegistry: $(containerRegistryServiceConnection)
         tags: |
           $(imageTag)
