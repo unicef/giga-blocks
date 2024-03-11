@@ -1,0 +1,33 @@
+{{- if .Values.admin_ingress.enabled -}}
+{{- $ingressPath := .Values.admin_ingress.paths -}}
+{{- $ingressPathType := .Values.admin_ingress.pathType -}}
+{{- $backendServiceName := .Values.admin_ingress.backendService -}}
+{{- $backendPort := .Values.admin.service.port -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "giga-blocks.name" . }}-admin-ingress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "giga-blocks-admin.labels" . | nindent 4 }}
+{{- with .Values.admin_ingress.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+  rules:
+  {{- range .Values.admin_ingress.hosts }}
+    - host: {{ . | quote }}
+      http:
+        paths:
+        {{- range $ingressPath }}
+          - pathType: {{ $ingressPathType }}
+            path: {{ . }}
+            backend:
+              service:
+                name: {{ $backendServiceName }}
+                port:
+                  number: {{ $backendPort }}
+        {{- end }}
+  {{- end }}
+{{- end }}

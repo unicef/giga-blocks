@@ -2,6 +2,7 @@ trigger:
   branches:
     include:
     - dev
+    - dev-azure-devops
   paths:
     include:
     - apps/**
@@ -13,6 +14,8 @@ variables:
   containerRegistryServiceConnection: $(ACR_SERVICE_CONNECTION)
   imageTag: '$(Build.BuildId)'
   system.debug: true
+  kubernetesServiceConnection: GIGA-BLOCKS-OOI-DEV-uni-ooi-giga-aks-dev-ictd-ooi-giga-blocks-dev-1709541823849
+  kubernetesNamespace: ictd-ooi-giga-blocks-dev
   CI: false
 #  env_dev: $(ENV_DEV)
 
@@ -93,3 +96,37 @@ stages:
         containerRegistry: $(containerRegistryServiceConnection)
         tags: |
           $(imageTag)
+
+- stage: Deploy
+  displayName: 'GIGA Blocks deploy'
+  jobs:
+  - job: Deploy
+    displayName: GIGA Blocks deploy job
+    steps:
+    - task: HelmDeploy@0
+      displayName: 'Add the Postgresql dependency repository'
+      enabled: true
+      inputs:
+        connectionType: Kubernetes Service Connection
+        kubernetesServiceEndpoint: $(kubernetesServiceConnection)
+        command: 'repo'
+        arguments: 'add postgresql https://charts.bitnami.com/bitnami'
+        namespace: $(kubernetesNamespace)
+
+
+    - task: HelmDeploy@0
+      displayName: 'Deploy the development Giga Blocks application'
+      inputs:
+        connectionType: Kubernetes Service Connection
+        kubernetesServiceEndpoint: $(kubernetesServiceConnection)
+        command: upgrade
+        chartType: FilePath
+        chartPath: $(Build.SourcesDirectory)/helm
+        releaseName: "giga-blocks"
+        valueFile: helm/values.dev.yaml
+        namespace: $(kubernetesNamespace)
+        arguments: >
+          --dependency-update
+          --set api.image.tag=$(imageTag)
+          --set web.image.tag=$(imageTag)
+          --set admin.image.tag=$(imageTag)

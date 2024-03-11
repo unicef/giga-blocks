@@ -1,0 +1,339 @@
+replicaCount: 1
+
+imagePullSecrets: [ ]
+nameOverride: ""
+fullnameOverride: ""
+environment: &env "dev"
+
+# Requirements (development environment uses container deployments)
+postgresql_app:
+  enabled: true
+postgresql_newsletter:
+  enabled: true
+redis:
+  enabled: true
+
+# Chart Postgresql dependency
+global:
+  postgresql-app:
+    architecture: standalone
+    name: giga-blocks
+    service:
+      ports:
+        postgresql: &dbport_app "5432"
+    auth:
+      enablePostgresUser: true
+      username: &dbuser_app "oiarazordevgigablocksuser"
+      database: &db_app "giga"
+      existingSecret: "oi-blocks-secrets-dev"
+      secretKeys:
+        adminPasswordKey: "postgresql-app-password"
+        userPasswordKey: "postgresql-app-password"
+  postgresql-newsletter:
+    architecture: standalone
+    name: giga-blocks
+    service:
+      ports:
+        postgresql: &dbport_news "5432"
+    auth:
+      enablePostgresUser: true
+      username: &dbuser_news "oiarazordevgigablocksuser"
+      database: &db_news "newsletter"
+      existingSecret: "oi-blocks-secrets-dev"
+      secretKeys:
+        adminPasswordKey: "postgresql-newsletter-password"
+        userPasswordKey: "postgresql-newsletter-password"
+
+
+postgresql-app:
+  serviceAccount:
+    create: false
+  auth:
+    enablePostgresUser: true
+    username: &dbuser_app "oiarazordevgigablocksuser"
+    database: &db_app "giga"
+    existingSecret: "oi-blocks-secrets-dev"
+    secretKeys:
+      adminPasswordKey: "postgresql-app-password"
+      userPasswordKey: "postgresql-app-password"
+  primary:
+    networkPolicy:
+      enabled: false
+    pgHbaConfiguration: |-
+      local all all trust
+      host all all localhost trust
+      host all all 0.0.0.0/0 trust
+    resources:
+      limits:
+        cpu: 1
+        memory: 1Gi
+      requests:
+        cpu: 10m
+        memory: 50Mi
+    persistence:
+      enabled: true
+      accessMode: ReadWriteOnce
+      size: 8Gi
+      storageClass:
+    securityContext:
+      enabled: true
+      fsGroup: 1001
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 1001
+      allowPrivilegeEscalation: false
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop: ["ALL"]
+    volumePermissions:
+      enabled: false
+      securityContext:
+        runAsUser: 0
+    shmVolume:
+      chmod:
+        enabled: false
+
+postgresql-newsletter:
+  serviceAccount:
+    create: false
+  auth:
+    enablePostgresUser: true
+    username: &dbuser_news "oiarazordevgigablocksuser"
+    database: &db_news "newsletter"
+    existingSecret: "oi-blocks-secrets-dev"
+    secretKeys:
+      adminPasswordKey: "postgresql-newsletter-password"
+      userPasswordKey: "postgresql-newsletter-password"
+  primary:
+    networkPolicy:
+      enabled: false
+    pgHbaConfiguration: |-
+      local all all trust
+      host all all localhost trust
+      host all all 0.0.0.0/0 trust
+    resources:
+      limits:
+        cpu: 1
+        memory: 1Gi
+      requests:
+        cpu: 10m
+        memory: 50Mi
+    persistence:
+      enabled: true
+      accessMode: ReadWriteOnce
+      size: 8Gi
+      storageClass:
+    securityContext:
+      enabled: true
+      fsGroup: 1001
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 1001
+      allowPrivilegeEscalation: false
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop: ["ALL"]
+    volumePermissions:
+      enabled: false
+      securityContext:
+        runAsUser: 0
+    shmVolume:
+      chmod:
+        enabled: false
+
+redis:
+  name: giga-blocks
+  architecture: "standalone"
+  auth:
+    existingSecret: "oi-blocks-secrets-dev"
+    existingSecretPasswordKey: "redis-password"
+  master:
+    serviceAccount:
+      create: false
+  networkPolicy:
+    enabled: false
+
+api:
+  image:
+    repository: "uniappsoigiga.azurecr.io/giga-blocks-root-api"
+    pullPolicy: Always
+    tag: ""
+  podAnnotations: { }
+  podSecurityContext: { }
+  securityContext: { }
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 3333
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  config:
+    PORT: 3333
+    NEXT_PUBLIC_D3_BACKEND: ""
+    NEXT_PUBLIC_WEB_NAME: ""
+    NEXT_PUBLIC_ADMIN_NAME: ""
+    NEXT_PUBLIC_DEBUG_MODE: ""
+    NEXT_PUBLIC_GRAPH_URL: ""
+    JWT_EXPIRATION_TIME: 900
+    JWT_EXPIRATION_LONG_TIME: 180000
+    OTP_DURATION_IN_SECS: 300
+    DB_HOST: "giga-blocks-postgresql-app"
+    DB_USERNAME: *dbuser_app
+    DB_NAME: *db_app
+    NEWS_DB_HOST: "giga-blocks-postgresql-newsletter"
+    NEWS_DB_NAME: *db_news
+    NEWS_DB_USERNAME: *dbuser_news
+    REDIS_HOST: "giga-blocks-redis-master"
+    APP_DATABASE_URL: "postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=public"
+    NEWSLETTER_DATABASE_URL: "postgresql://${NEWS_DB_USERNAME}:${NEWS_DB_PASSWORD}@${NEWS_DB_HOST}:${DB_PORT}/${NEWS_DB_NAME}?schema=public"
+    REDIS_PORT: 6379
+    EMAIL_HOST: "127.0.0.1"
+    SMTP_PORT: 465
+    EMAIL_ADDRESS: "gigablocks@unicef.org"
+    NETWORK_PROVIDER: ""
+    GIGA_NFT_CONTRACT_ADDRESS: ""
+    NEXT_PUBLIC_GIGA_ESCROW_ADDRESS: ""
+    GIGA_NFT_CONTENT_ADDRESS: ""
+    NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS: ""
+    NEXT_PUBLIC_GIGA_SELLER_ADDRESS: ""
+    PRIVATE_KEY: ""
+    BATCH_SIZE: ""
+    NEXT_PUBLIC_DEFAULT_CHAIN: ""
+  nodeSelector: { }
+  tolerations: [ ]
+  affinity: { }
+  configVolume: { }
+  envConfigMaps:
+  - name: "giga-blocks-api-conf"
+  envSecrets:
+  - name: "giga-blocks-api"
+  resources:
+    limits:
+      cpu: 1
+      memory: 1000Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  livenessProbe: { }
+    #httpGet:
+    #  path: /admin
+    #  port: http
+    #periodSeconds: 20
+    #timeoutSeconds: 10
+    #successThreshold: 1
+    #failureThreshold: 3
+  readinessProbe: { }
+    #httpGet:
+    #  path: /admin
+    #  port: http
+    #periodSeconds: 20
+    #timeoutSeconds: 10
+    #successThreshold: 1
+    #failureThreshold: 3
+
+
+web:
+  image:
+    repository: "uniappsoigiga.azurecr.io/giga-blocks-root-web"
+    pullPolicy: Always
+    tag: ""
+  podAnnotations: { }
+  podSecurityContext: { }
+  securityContext: { }
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 3000
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  #secret:
+  #  CONNECTION_STRING: ""
+  nodeSelector: { }
+  tolerations: [ ]
+  affinity: { }
+  configVolume: "giga-blocks-web-conf"
+  envConfigMaps: { }
+  envSecrets: { }
+#  - name: "giga-blocks-web"
+  resources:
+    limits:
+      cpu: 1
+      memory: 1000Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  livenessProbe: { }
+  readinessProbe: { }
+
+admin:
+  image:
+    repository: "uniappsoigiga.azurecr.io/giga-blocks-root-admin"
+    pullPolicy: Always
+    tag: ""
+  podAnnotations: { }
+  podSecurityContext: { }
+  securityContext: { }
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 3000
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 80
+#  secret:
+#    CONNECTION_STRING: ""
+  nodeSelector: { }
+  tolerations: [ ]
+  affinity: { }
+  configVolume: "giga-blocks-admin-conf"
+  envConfigMaps: { }
+  envSecrets: {}
+#  - name: "giga-blocks-admin"
+  resources:
+    limits:
+      cpu: 1
+      memory: 1000Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  livenessProbe: { }
+  readinessProbe: { }
+
+
+
+# Admin ingress
+admin_ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: "azure/application-gateway"
+    appgw.ingress.kubernetes.io/appgw-ssl-certificate: "kv-cert-unitst"
+    appgw.ingress.kubernetes.io/ssl-redirect: "true"
+  paths: ["/"]
+  pathType: Prefix
+  hosts:
+    - io-gigablocksadmin-dev.unitst.org
+  backendService: "giga-blocks-admin"
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: "azure/application-gateway"
+    appgw.ingress.kubernetes.io/appgw-ssl-certificate: "kv-cert-unitst"
+    appgw.ingress.kubernetes.io/ssl-redirect: "true"
+  path: /
+  pathType: Prefix
+  hosts:
+    - io-gigablocks-dev.unitst.org
+  backendService: "giga-blocks-web"
