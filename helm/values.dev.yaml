@@ -151,11 +151,15 @@ redis:
   auth:
     existingSecret: "oi-blocks-secrets-dev"
     existingSecretPasswordKey: "redis-password"
-  master:
-    serviceAccount:
-      create: false
   networkPolicy:
     enabled: false
+#  master:
+#    persistence:
+#      enabled: true
+#      size: 2Gi
+#    serviceAccount:
+#      create: false
+
 
 api:
   image:
