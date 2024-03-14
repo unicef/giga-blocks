@@ -18,6 +18,10 @@
 .signUp-tile {
   h1 {
     padding-bottom: $spacing-08;
+    color: #000;
+    @include breakpoint-down(md) {
+      font-size: 38px;
+    }
   }
   width: 60vw;
   @include breakpoint-down(md) {
@@ -31,4 +35,33 @@
 .link {
   text-decoration: none;
   color: purple;
+}
+
+.submit-btn {
+  margin-right: 14px;
+  width: 100%;
+  color: #fff;
+  background: #0f62fe;
+  border: 1px solid #0f62fe;
+  @include breakpoint-down(md) {
+    width: 100vw;
+  }
+}
+.checkbox {
+  color: #161616;
+}
+
+.submit-btn-transparent {
+  margin-right: 14px;
+  margin-left: 14px;
+  width: 100%;
+  background: transparent;
+  color: #0f62fe;
+  border: 1px solid #0f62fe;
+  @include breakpoint-down(md) {
+    margin-left: 0px;
+    margin-top: 12px;
+
+    width: 100vw;
+  }
 }

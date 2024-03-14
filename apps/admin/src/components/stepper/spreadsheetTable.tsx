@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   Table,
@@ -30,7 +31,7 @@ const SpreadSheetTable = () => {
             {el}
           </Button>
         ))}
-      <TableContainer component={Paper} sx={{ my: 4 }}>
+      <TableContainer component={Paper} sx={{ my: 4, height: 400 }}>
         <Table>
           <TableHead>
             <TableRow>

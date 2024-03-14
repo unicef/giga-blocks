@@ -25,10 +25,14 @@ const nftListQuery = gql`
 
 const nftDataQuery = gql`
   query nftDatas($first: Int!, $name: String) {
-    nftDatas(subgraphError: allow, first: $first,where:{name_contains_nocase:$name}) {
+    nftDatas(
+      subgraphError: allow
+      first: $first
+      where: { name_contains_nocase: $name }
+    ) {
       id
       location
-      name 
+      name
     }
   }
 `;
@@ -73,13 +77,22 @@ const collectorTransferQuery = gql`
   }
 `;
 
-const nftImages  = gql`
-  query nftImages($first: Int!) {
+const nftImages = gql`
+  query nftImages($first: Int) {
     nftImages(subgraphError: allow, first: $first) {
       id
       imageScript
     }
-  }`
+  }
+`;
+const nftImage = gql`
+  query nftImage($id: ID!) {
+    nftImage(subgraphError: allow, id: $id) {
+      id
+      imageScript
+    }
+  }
+`;
 
 export const Queries = {
   ownedNftsQuery,
@@ -88,5 +101,6 @@ export const Queries = {
   nftDetailsQuery,
   transferQuery,
   collectorTransferQuery,
-  nftImages
+  nftImages,
+  nftImage,
 };

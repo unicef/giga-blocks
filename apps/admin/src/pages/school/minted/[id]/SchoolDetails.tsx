@@ -1,15 +1,8 @@
-import { useState, ChangeEvent, useEffect, use } from 'react';
-import * as Yup from 'yup';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, MenuItem, Select, Button, Container } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
-import { useRouter } from 'next/router';
+import { Box, Card, Grid, Stack, Button, Container } from '@mui/material';
 import { useSnackbar } from '@components/snackbar';
 import FormProvider, { ProfileTextField } from '@components/hook-form';
-import { AdministrationService } from '@services/administration';
-import { useSchoolGetById } from '@hooks/school/useSchool';
-import Image from 'next/image';
 import CustomBreadcrumbs from '@components/custom-breadcrumbs';
 // @ts-ignore
 import Identicon from 'react-identicons';
@@ -21,17 +14,6 @@ interface Props {
   isEdit?: boolean;
   currentUser?: any;
   id?: string | string[] | undefined;
-}
-
-interface FormValuesProps {
-  id: string;
-  name: string;
-  email: string;
-  position: string | null;
-  phone: string;
-  affiliation: string | null;
-  roles: string;
-  is_active: boolean;
 }
 
 export default function SchoolDetails({ id }: Props) {
@@ -75,7 +57,7 @@ export default function SchoolDetails({ id }: Props) {
     if (error) enqueueSnackbar(error.message, { variant: 'error' });
   }, [data, error]);
 
-  const methods = useForm<FormValuesProps>({});
+  const methods = useForm();
 
   return (
     <>
@@ -165,7 +147,6 @@ export default function SchoolDetails({ id }: Props) {
           <Grid item xs={4}>
             <Container>
               <Box justifyContent={'center'}>
-                {/* <Image width={250} height={250} alt='USER' src={'/assets/Image-right.svg'}/> */}
                 <Stack sx={{ mt: 8 }}>
                   <Box display="flex" justifyContent="center">
                     <Identicon string={profile?.fullname} size={200} />

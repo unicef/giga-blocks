@@ -2,17 +2,13 @@
 @use '@carbon/react/scss/type' as *;
 @use '@carbon/react/scss/breakpoint' as *;
 @use '@carbon/react/scss/theme' as *;
+
 .landing-page {
   padding-right: 0;
-  padding-left: 12px;
   margin-right: 0;
+  padding-left: 0;
   --cds-grid-gutter-end: 0;
   --cds-grid-gutter-start: 0;
-  // margin-top: rem(-40px);
-  @include breakpoint-down(md) {
-    margin-top: $spacing-05;
-    padding-top: $spacing-10;
-  }
 }
 .landing-page__banner {
   color: white;
@@ -21,17 +17,17 @@
   padding-bottom: $spacing-10;
   display: flex;
   flex-direction: column;
-  gap: 4vh;
   @include breakpoint-down(md) {
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 20px;
   }
-  @include breakpoint-down(sm) {
+  @include breakpoint-up(md) {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    gap: 20px;
   }
 }
 .preview1Background {
@@ -81,7 +77,6 @@
 .landing-page__heading {
   max-width: 50vw;
   font-size: 3vw;
-  // font-family: lora;
   @include breakpoint-down(md) {
     max-width: 90vw;
     margin-top: $spacing-05;
@@ -94,7 +89,8 @@
 }
 .landing-subheading {
   max-width: 40vw;
-  font-size: 1vw;
+  font-size: 14px;
+  margin-bottom: 105px;
   @include breakpoint-down(md) {
     max-width: 100vw;
     font-size: 1rem;
@@ -103,37 +99,33 @@
 .landing-page__buttons {
   display: flex;
   align-items: center;
-  gap: 2%;
+  gap: 32px;
   display: flex;
   align-items: center;
   @include breakpoint-down(md) {
     flex-direction: column;
+    align-items: flex-start;
   }
 }
 
 .preview-1-button {
   border-radius: 45px;
   font-size: 1vw;
-  width: 30%;
+  width: 256px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   --cds-layout-size-height-local: 6.5vh;
-  line-height: 10px;
-  padding: 0 3%;
-
+  padding: 12px 3%;
   @include breakpoint-down(md) {
     font-size: 1em;
     margin-top: $spacing-05;
     width: 100%;
   }
-
-  @include breakpoint-down(lg) {
+  @include breakpoint-up(md) {
     font-size: 1em;
     margin-top: $spacing-05;
     width: 100%;
-    padding: 0 8%;
-    --cds-layout-size-height-local: 4vh;
   }
 }
 
@@ -148,12 +140,11 @@
 }
 
 .button-block {
-  background: #0050e6;
+  background: #277aff;
 }
 
 .button-outline {
-  background: transparent;
-  border: 1px solid #fff;
+  background: #474747;
 }
 
 .heading02 {
@@ -209,13 +200,15 @@
     flex-direction: column;
     justify-content: center;
   }
+  @include breakpoint-down(md) {
+    height: 650px;
+    margin-bottom: 100px;
+  }
 }
 .landing-page__banner,
 .landing-page__r2,
 .landing-page__r3 {
   padding-top: 190px;
-  margin-left: -20px;
-  margin-right: -20px;
   @include breakpoint-down(md) {
     margin-left: 0;
     margin-right: 0;
@@ -224,16 +217,25 @@
 .why-nft-card {
   display: flex;
   flex-direction: column;
-  gap: 35px;
   @include breakpoint-down(md) {
-    padding-top: $spacing-06;
+    padding-top: $spacing-08;
     width: 90%;
     margin: auto;
+    gap: 30px;
   }
 }
 .why-nft {
-  padding-top: $spacing-12;
-  padding-bottom: $spacing-12;
+  padding-top: 10rem;
+  padding-bottom: 10rem;
+  @include breakpoint-down(md) {
+    display: flex;
+    flex-direction: column;
+    padding-top: $spacing-08;
+  }
+}
+.why-nft-0 {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
   @include breakpoint-down(md) {
     display: flex;
     flex-direction: column;
@@ -242,8 +244,8 @@
 }
 .border-bottom {
   position: absolute;
-  right: 0;
-  border-bottom: 1px solid black;
+  right: 35px;
+  border-bottom: 1px solid #9e9e9e;
   width: 75%;
 }
 .border-right {
@@ -253,6 +255,7 @@
 }
 .width-90 {
   width: 90%;
+  margin-top: 12px;
   @include breakpoint-down(md) {
     width: 100%;
   }

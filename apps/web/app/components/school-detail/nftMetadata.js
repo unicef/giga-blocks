@@ -3,6 +3,8 @@ import '../../components/landing-page/styles/preview.scss';
 import './school-detail.scss';
 
 const Connectivity = ({ schoolData }) => {
+  let latitude = schoolData?.latitude.slice(0, 10);
+  let longitude = schoolData?.longitude.slice(0, 10);
   return (
     <>
       <Grid fullWidth>
@@ -17,27 +19,49 @@ const Connectivity = ({ schoolData }) => {
         </Column>
         <Column md={4} lg={11} sm={4} className="school-connectivity-cards">
           <Grid fullWidth className="school-connectivity-grid">
-            <Column className="school-connectivity-column">
+            <Column
+              md={4}
+              lg={11}
+              sm={4}
+              className="school-connectivity-column"
+            >
               <div className="school-connectivity-card">
-                <Column md={4} lg={8} sm={4}>
+                <Column
+                  className="school-connectivity-data"
+                  md={4}
+                  lg={8}
+                  sm={4}
+                >
                   <div>
                     <span className="heading2" style={{ marginBottom: '14px' }}>
                       School Name
                     </span>
                     <span className="heading5">
                       <br />
-                      {schoolData?.schoolName ? schoolData?.schoolName : 'N/A'}
+                      {schoolData?.schoolName
+                        ? schoolData?.schoolName.slice(0, 15) + '...'
+                        : 'N/A'}
                     </span>
                   </div>
                 </Column>
-                <Column md={4} lg={8} sm={4}>
+                <Column
+                  className="school-connectivity-data"
+                  md={4}
+                  lg={8}
+                  sm={4}
+                >
                   <span className="heading2" style={{ marginBottom: '14px' }}>
                     School Type
                   </span>
                   <br />
                   <span className="heading5">{schoolData?.schoolType}</span>
                 </Column>
-                <Column md={4} lg={8} sm={4}>
+                <Column
+                  className="school-connectivity-data"
+                  md={4}
+                  lg={8}
+                  sm={4}
+                >
                   <span className="heading2" style={{ marginBottom: '14px' }}>
                     Country
                   </span>
@@ -46,13 +70,18 @@ const Connectivity = ({ schoolData }) => {
                     {schoolData?.country ? schoolData?.country : 'N/A'}
                   </span>
                 </Column>
-                <Column md={4} lg={8} sm={4}>
+                <Column
+                  className="school-connectivity-data"
+                  md={4}
+                  lg={8}
+                  sm={4}
+                >
                   <span className="heading2" style={{ marginBottom: '14px' }}>
                     Exact Location
                   </span>
                   <span className="heading5">
                     <br />
-                    {schoolData?.latitude}, {schoolData?.longitude}
+                    {latitude}, {longitude}
                   </span>
                 </Column>
               </div>
@@ -60,47 +89,54 @@ const Connectivity = ({ schoolData }) => {
           </Grid>
           <Grid fullWidth className="school-connectivity-grid">
             <Column className="school-connectivity-column">
-              <div className="school-connectivity-card">
-                <Column md={4} lg={8} sm={4}>
+              <div className="school-connectivity-card-2">
+                <Column
+                  className="school-connectivity-data"
+                  md={4}
+                  lg={8}
+                  sm={4}
+                >
                   <div>
                     <span className="heading2" style={{ marginBottom: '14px' }}>
                       Connectivity Status
                     </span>
                     <span className="heading5">
                       <br />
-                      {schoolData?.connectivity
-                        ? schoolData?.connectivity
-                        : 'N/A'}
+                      {schoolData?.connectivity === 'true' ? 'Yes' : 'No'}
                     </span>
                   </div>
                 </Column>
-                <Column md={4} lg={8} sm={4}>
+                <Column
+                  className="school-connectivity-data"
+                  md={4}
+                  lg={8}
+                  sm={4}
+                >
                   <span className="heading2" style={{ marginBottom: '14px' }}>
                     Coverage Availability
                   </span>
                   <br />
                   <span className="heading5">
-                    {schoolData?.coverage_availabitlity}
+                    {schoolData?.coverage_availabitlity === 'true'
+                      ? 'Yes'
+                      : 'No'}
                   </span>
                 </Column>
-                <Column md={4} lg={8} sm={4}>
+
+                <Column
+                  className="school-connectivity-data"
+                  md={4}
+                  lg={8}
+                  sm={4}
+                >
                   <span className="heading2" style={{ marginBottom: '14px' }}>
-                    Connectivity Status
+                    Electricity Availability
                   </span>
                   <span className="heading5">
                     <br />
-                    {schoolData?.connectivity
-                      ? schoolData?.connectivity
-                      : 'N/A'}
-                  </span>
-                </Column>
-                <Column md={4} lg={8} sm={4}>
-                  <span className="heading2" style={{ marginBottom: '14px' }}>
-                    Coverage Availability
-                  </span>
-                  <span className="heading5">
-                    <br />
-                    {schoolData?.coverage_availabitlity}
+                    {schoolData?.electricity_availabilty === 'true'
+                      ? 'Yes'
+                      : 'No'}
                   </span>
                 </Column>
               </div>

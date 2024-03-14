@@ -78,6 +78,16 @@ function AuthProvider({ children }) {
   const { push, replace } = useRouter();
   const web3 = useWeb3React();
 
+  useEffect(() => {
+    if (notification) {
+      const timeoutId = setTimeout(() => {
+        onCloseNotification();
+      }, 4000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [notification]);
+
   const onCloseNotification = () => {
     setNotification(null);
   };
@@ -152,7 +162,10 @@ function AuthProvider({ children }) {
 
   useEffect(() => {
     const connectors = getConnectors();
-    if (connectors && connectors === 'metaMask' && !web3.isActive) {
+    if (
+      (connectors && connectors === 'metaMask' && !web3.isActive) ||
+      localStorage.getItem('wallet') === 'metamask'
+    ) {
       metaMask.activate();
     }
   }, [web3]);

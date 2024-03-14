@@ -1,14 +1,7 @@
-// @mui
 import { Typography, Stack } from '@mui/material';
 import Image from '@components/image/Image';
 import { APP_NAME } from 'src/config-global';
-//
 import { StyledRoot, StyledSectionBg, StyledSection, StyledContent } from './styles';
-
-// components
-// import Image from '../../components/image';
-
-// ----------------------------------------------------------------------
 
 type Props = {
   title?: string;

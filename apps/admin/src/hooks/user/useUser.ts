@@ -1,23 +1,14 @@
 "use client";
 import  routes  from "../../constants/api";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { getAccessToken } from "@utils/sessionManager";
+import { useQuery } from "@tanstack/react-query";
+import api from "@utils/apiCall";
 
-const api = axios.create({
-  baseURL:routes.BASE_URL,
-});
-
-const accessToken = getAccessToken()
-
-api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-
-export const useUserGet = (page:number, perPage:number, role?:string, name?:string) => {
+export const useUserGet = (page:number, perPage:number, role?:string, debouncedName?:string, order?:string, orderBy?:string, name?: string) => {
   return useQuery(
-    ["get-user-data", page, perPage],
+    ["get-user-data", page, perPage, debouncedName], 
     async () => {
       const { data } = await api.get(
-        `${routes.USER.GET}${role ?`?role=${role}`:''}${name ? `&name=${name}` : ''}`
+        `${routes.USER.GET}${page ?`?page=${page}`:''}${perPage ?`?perPage=${perPage}`:''}${role ?`?role=${role}`:''}${debouncedName ? `&name=${debouncedName}` : ''}${order ? `&order=${order}` : ''}${orderBy ? `&orderBy=${orderBy}` : ''}`
       );
       return data;
     },
@@ -28,7 +19,7 @@ export const useUserGet = (page:number, perPage:number, role?:string, name?:stri
 };
 
 export const useUserGetById = (id:string | undefined | string[]) => {
-  return useQuery(['single-school'], async () => {
+  return useQuery(['get-single-user'], async () => {
     const {data} = await api.get(`${routes.USER.GET}/${id}`)
     return data
   }

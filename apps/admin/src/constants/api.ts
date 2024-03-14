@@ -34,7 +34,7 @@ export  default {
     GET: '/auth/getnonce'
   },
   WALLET_LOGIN: {
-    POST: '/auth/walletlogin'
+    POST: '/auth/admin/walletlogin'
   },
   USER :{
     GET : "/users"

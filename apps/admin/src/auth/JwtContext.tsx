@@ -30,6 +30,8 @@ import { useAuthContext } from './useAuthContext';
 import axios from 'axios';
 import  routes  from "../constants/api";
 import { useWeb3React } from '@web3-react/core';
+import { DEFAULT_CHAIN_ID } from '@components/web3/chains';
+
 
 // ----------------------------------------------------------------------
 
@@ -157,7 +159,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   const activateMetaMask = async () => {
     const walletState = localStorage.getItem('auth');
-    if (walletState === 'metaMask') metaMask.activate();
+    if (walletState === 'metaMask') metaMask.activate(Number(DEFAULT_CHAIN_ID));
   }
 
   useEffect(() => {

@@ -10,15 +10,17 @@ export const getCurrentUser = () => {
 };
 
 export const saveCurrentUser = (userData) =>
-  storage ? storage.setItem('currentUser', JSON.stringify(userData)) : undefined;
+  storage
+    ? storage.setItem('currentUser', JSON.stringify(userData))
+    : undefined;
 
 export const saveKey = (key) =>
   storage ? storage.setItem('key', JSON.stringify(key)) : undefined;
 
-export const getKey = ()=>
+export const getKey = () =>
   storage ? JSON.parse(storage.getItem('key') || 'null') : null;
 
-export const getAccessToken = ()=>
+export const getAccessToken = () =>
   storage ? storage.getItem('accessToken') : null;
 
 export const saveAccessToken = (accessToken) =>
@@ -44,14 +46,14 @@ export const isValidToken = (accessToken) => {
   return decoded.exp > currentTime;
 };
 
-export const saveConnectors = (connector)=>{
+export const saveConnectors = (connector) => {
   storage ? storage.setItem('connector', connector) : undefined;
-}
+};
 
-export const removeConnectors = ()=>{
+export const removeConnectors = () => {
   storage ? storage.removeItem('connector') : undefined;
-}
+};
 
-export const getConnectors = ()=>{
+export const getConnectors = () => {
   return storage ? storage.getItem('connector') : undefined;
-}
+};

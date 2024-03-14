@@ -1,40 +1,140 @@
 // ModalComponent.js
 import React from 'react';
-import { Modal, ModalBody, Column, Grid, Button } from '@carbon/react';
+import {
+  Modal,
+  ModalBody,
+  Column,
+  Grid,
+  Button,
+  ModalFooter,
+} from '@carbon/react';
 import { useRouter } from 'next/navigation';
-import { ArrowRight } from '@carbon/icons-react';
+import { Default_Chain_Explorer } from '../../components/web3/connectors/network';
+import generateIdenticon from '../../utils/generateIdenticon';
 
-const CongratulationModalComponent = ({ isOpen, onClose }) => {
+const CongratulationModalComponent = ({
+  isOpen,
+  onClose,
+  schooldata,
+  transactionHash,
+}) => {
   const route = useRouter();
+  const accessToken = localStorage.getItem('accessToken');
 
   const handleClick = () => {
     onClose();
-    route.push('/dashboard');
+  };
+  const handleClickRoute = () => {
+    onClose();
+    {
+      accessToken ? route.push('/dashboard') : route.push('/viewMyNFT');
+    }
   };
 
   return (
     <Modal open={isOpen} onRequestClose={onClose} passiveModal={true}>
       <ModalBody>
-        <h1>Congratulation on your purchase !!!</h1>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <h1>Congratulations !!!</h1>
+          <p>
+            Thank you for supporting Giga. You are now the custodian of{' '}
+            {schooldata?.schoolName}.
+          </p>
+        </div>
         <Grid style={{ marginTop: '18px' }}>
-          <Column md={4} lg={16} sm={4} style={{ marginTop: '6px' }}>
-            <p>Your purchase is in process. This might take a while.</p>
-            <p>Thank you for your patience.</p>
-            <div className="border-bottom"></div>
+          <Column
+            md={4}
+            lg={7}
+            sm={4}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-end',
+            }}
+          >
+            <img
+              style={{
+                width: '80%',
+              }}
+              alt="School Map"
+              src={generateIdenticon(schooldata?.image)}
+            />
           </Column>
-          <Column md={4} lg={16} sm={4}>
-            <>
-              <Button
-                className="submit-btn"
-                renderIcon={ArrowRight}
-                onClick={handleClick}
+          <Column
+            md={4}
+            lg={9}
+            sm={4}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-end',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginBottom: '12px',
+              }}
+            >
+              <p style={{ fontWeight: '600' }}>NFT Name</p>
+              <p style={{ fontWeight: '600' }}>{schooldata?.schoolName}</p>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginBottom: '12px',
+              }}
+            >
+              <p>Price</p>
+              <p>0.00 MATIC</p>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginBottom: '12px',
+              }}
+            ></div>
+          </Column>
+          <Column md={4} lg={16} sm={4} style={{ marginTop: '6px' }}>
+            <div className="border-bottom"></div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <h5 style={{ marginTop: '24px' }}>Transaction ID</h5>
+              <a
+                href={`${Default_Chain_Explorer}tx/${transactionHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                Ok
-              </Button>
-            </>
+                {transactionHash?.slice(0, 4) +
+                  '...' +
+                  transactionHash?.slice(-5)}
+              </a>
+            </div>
           </Column>
         </Grid>
       </ModalBody>
+      <ModalFooter>
+        <Button onClick={handleClick} style={{ background: '#383838' }}>
+          Close
+        </Button>
+        <Button onClick={handleClickRoute}>View my NFTs</Button>
+      </ModalFooter>
     </Modal>
   );
 };

@@ -79,8 +79,8 @@ export default function AuthWeb2LoginForm() {
         <RHFTextField name="email" label="Enter registered email *" />
       </Stack>
 
-      <LoadingButton fullWidth color="inherit" size="large" type="submit" variant="contained">
-        Login into {APP_NAME}
+      <LoadingButton fullWidth style={{background: '#0050e6'}} size="large" type="submit" variant="contained">
+        Login {APP_NAME}
       </LoadingButton>
     </FormProvider>
   );

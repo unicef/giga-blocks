@@ -1,38 +1,42 @@
 "use client"
-import Iconify from "@components/iconify";
-import LoadingScreen from "@components/loading-screen/LoadingScreen";
 import Scrollbar from "@components/scrollbar";
-import { TableEmptyRows, TableHeadUsers, TableNoData, TablePaginationCustom, TableSelectedAction, useTable } from "@components/table";
+import {  TableHeadUsers, TableNoData, useTable } from "@components/table";
+import useDebounce from "@hooks/useDebounce";
 import { useUserGet } from "@hooks/user/useUser";
-// import { useAdministrationContext } from "@contexts/administration";
-// import useFetchUsers from "@hooks/users/useFetchUsers";
 import DashboardLayout from "@layouts/dashboard/DashboardLayout";
-import { Box, Button, Card, Tabs, Divider, TableContainer, Tooltip, IconButton, Table, TableBody, CircularProgress, TextField } from "@mui/material";
+import { Card, Divider, TableContainer, Table, TableBody, CircularProgress, TextField } from "@mui/material";
 import UserListRow from "@sections/user/list/UsersList";
 import { ChangeEvent, useEffect, useState } from "react";
+
+interface FilteredDataType {
+  id: string,
+  name: string,
+  email: string,
+  wallet: string
+}
 
 const UserList = () => {
 
     const TABLE_HEAD = [
         { id: 'name', label: 'Name', align: 'left' },
         { id: 'email', label: 'Email', align: 'left' },
-        { id: 'wallet', label: 'Wallet', align: 'left' }
+        { id: 'walletAddress', label: 'Wallet', align: 'left' }
       ];
-      const [name, setName] = useState<string>()
+      const [name, setName] = useState<string>('')
 
-      const {dense, page, order, orderBy, rowsPerPage, onSort, onChangeDense, onChangePage, onChangeRowsPerPage,
+      const {dense, page, order, orderBy, rowsPerPage, onSort
       } = useTable();
 
-    // const { filteredUsers } = useAdministrationContext();
+    const debouncedName = useDebounce(name, 500)
 
     const [tableData, setTableData] = useState<any>([]);
-    const {data, isFetching, refetch} = useUserGet(page, rowsPerPage, 'ADMIN', name)
+    const {data, isFetching, refetch} = useUserGet(page, rowsPerPage, 'ADMIN', debouncedName, order, orderBy)
 
     useEffect(() => {
       refetch()
-    }, [name])
+    }, [order, orderBy])
 
-    let filteredData:any = []
+    let filteredData:FilteredDataType[] = []
     useEffect(() => {
       !isFetching &&  data?.rows?.map((row:any) => {
         const buffer = row.walletAddress && Buffer.from(row.walletAddress.data)
@@ -47,42 +51,18 @@ const UserList = () => {
       setTableData(filteredData);
     }, [data, isFetching]);
 
-    const sortedData = tableData.slice().sort((a:any, b:any) => {
-      const isAsc = order === 'asc';
-      return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
-    });
-
     const handleSearchChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setName(e.target.value)
     }
 
     return ( 
 
-<DashboardLayout>
+      <DashboardLayout>
             <h2>Admin List</h2>
-          <TextField id="outlined-basic" type='string' placeholder='Search admin' onChange={(e:any) => handleSearchChange(e)}/>
+          <TextField id="outlined-basic" type='string' placeholder='Search admin' onChange={(e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => handleSearchChange(e)}/>
           <Card sx={{marginTop: 2}}>
           <Divider />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            {/* <TableSelectedAction
-              dense={dense}
-              // numSelected={selected?.length}
-              rowCount={tableData?.length}
-              // onSelectAllRows={(checked) =>
-              //   onSelectAllRows(
-              //     checked,
-              //     tableData.map((row:any) => row.id)
-              //   )
-              // }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            /> */}
-
             <Scrollbar>
               <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
                 <TableHeadUsers
@@ -90,39 +70,24 @@ const UserList = () => {
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   rowCount={tableData?.length}
-                  // numSelected={selected?.length}
                   onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row:any) => row.id)
-                  //   )
-                  // }
                 />
-
                 <TableBody>
-                  {sortedData &&
-                    sortedData?.map((row:any) => (
+                  {tableData &&
+                    tableData?.map((row:any) => (
                       <UserListRow
                         key={row.id}
                         row={row}
                       />
                     ))}
-                  {!isFetching ? <TableNoData
-                  isNotFound={tableData.length === 0} /> : <CircularProgress color="inherit"/> }
+                  <TableNoData
+                  isNotFound={tableData.length === 0} 
+                  isFetching = {isFetching}
+                  />
                 </TableBody>
               </Table>
             </Scrollbar>
           </TableContainer>
-          {/* <TablePaginationCustom
-            count={10}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-            dense={dense}
-            onChangeDense={onChangeDense}
-          /> */}
         </Card>
         </DashboardLayout>
      );

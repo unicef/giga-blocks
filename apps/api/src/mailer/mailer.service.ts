@@ -5,6 +5,7 @@ import {
   WELCOME_MSG,
   NEWSLETTER_WELCOME,
   DATA_VALIDATION,
+  DEVELOPER_JOIN_MAIL,
 } from './constants';
 import { Queue } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
@@ -89,6 +90,34 @@ export class MailService {
           email,
           name,
           school,
+        },
+        jobOptions,
+      );
+    } catch (error) {
+      this._logger.error(`Error queueing registration email to user ${email}`);
+      throw error;
+    }
+  }
+
+  public async developerJoinMail({
+    email,
+    name,
+    country,
+    emailTo,
+  }: {
+    email: string;
+    name: string;
+    country: string;
+    emailTo: string[];
+  }) {
+    try {
+      await this._mailQueue.add(
+        DEVELOPER_JOIN_MAIL,
+        {
+          email,
+          name,
+          country,
+          emailTo,
         },
         jobOptions,
       );

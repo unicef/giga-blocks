@@ -35,6 +35,7 @@ type Props = {
   numSelected?: number;
   onSort?: (id: string) => void;
   onSelectAllRows?: (checked: boolean) => void;
+  unSortableHeader?: string[];
   sx?: SxProps<Theme>;
 };
 
@@ -47,6 +48,7 @@ export default function TableHeadCustom({
   showCheckBox,
   onSort,
   onSelectAllRows,
+  unSortableHeader,
   sx,
 }: Props) {
   return (
@@ -55,7 +57,6 @@ export default function TableHeadCustom({
         {showCheckBox && onSelectAllRows && (
           <TableCell padding="checkbox">
             <Checkbox
-              // indeterminate={numSelected > 0 && numSelected < rowCount}
               checked={rowCount > 0 && numSelected === rowCount}
               onChange={(e: any) =>
                 onSelectAllRows(e)
@@ -68,20 +69,17 @@ export default function TableHeadCustom({
           <TableCell
             key={index}
             align={headCell.align || 'left'}
-            // sortDirection={orderBy === headCell.id ? order : false}
             sx={{ width: headCell.width, minWidth: headCell.minWidth, whiteSpace: 'nowrap' }}
           >
-            {/* <p>{headCell.label}</p> */}
             {onSort ? (
               <TableSortLabel
                 hideSortIcon
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : 'asc'}
-                onClick={() => onSort(headCell.id)}
-                sx={{ textTransform: 'capitalize' }}
+                onClick={() => {!unSortableHeader?.includes(headCell.id) && onSort(headCell.id);}}
+                sx={{ textTransform: 'capitalize', cursor: !unSortableHeader?.includes(headCell.id) ?'pointer' : 'default'  }}
               >
                 {headCell.label}
-
                 {orderBy === headCell.id ? (
                   <Box sx={{ ...visuallyHidden }}>
                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}

@@ -1,7 +1,5 @@
 import { useRouter } from 'next/router';
 
-// ----------------------------------------------------------------------
-
 type ReturnType = {
   active: boolean;
   isExternalLink: boolean;

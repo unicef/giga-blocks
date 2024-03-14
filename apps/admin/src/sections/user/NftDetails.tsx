@@ -1,34 +1,27 @@
-import { useState, ChangeEvent, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   Box,
   Card,
   Grid,
   Stack,
-  MenuItem,
-  Select,
-  Button,
   Container,
   Typography,
-  createChainedFunction,
   TableContainer,
   TableBody,
   Table,
   Tabs,
   Tab,
 } from '@mui/material';
-import { LoadingButton, TabPanelProps } from '@mui/lab';
-import { useRouter } from 'next/router';
 import { useSnackbar } from '@components/snackbar';
 import FormProvider, { ProfileTextField } from '@components/hook-form';
-import { AdministrationService } from '@services/administration';
 import CustomBreadcrumbs from '@components/custom-breadcrumbs';
 // @ts-ignore
 import Identicon from 'react-identicons';
 import { useQuery } from 'urql';
 import { Queries } from 'src/libs/graph-query';
 import Scrollbar from '@components/scrollbar';
-import { TableHeadUsers, TableNoData, TablePaginationCustom, useTable } from '@components/table';
+import { TableHeadUsers, TableNoData, useTable } from '@components/table';
 import NFTTableRow from './list/NFTTableRow';
 import { PATH_DASHBOARD, PATH_SCHOOL } from '@routes/paths';
 
@@ -76,6 +69,7 @@ export default function SchoolDetails({ id }: Props) {
     coverage: '',
     mintedStatus: '',
     tokenId: '',
+    electricity_availabilty: ''
   });
 
   const [result] = useQuery({ query: Queries.nftDetailsQuery, variables: { id } });
@@ -105,6 +99,7 @@ export default function SchoolDetails({ id }: Props) {
       coverage: schoolData.coverage_availabitlity,
       mintedStatus: schoolData.minted,
       tokenId: schoolData.tokenId,
+      electricity_availabilty: schoolData.electricity_availabilty
     });
   };
 
@@ -116,7 +111,6 @@ export default function SchoolDetails({ id }: Props) {
     orderBy,
     rowsPerPage,
     onChangePage,
-    onSelectRow,
     onSort,
     onChangeDense,
     onChangeRowsPerPage,
@@ -149,8 +143,7 @@ export default function SchoolDetails({ id }: Props) {
     };
   }
 
-  function CustomTabPanel(props: TabPanelProps) {
-      //@ts-ignore
+  function CustomTabPanel(props: any) {
     const { children, value, index, ...other } = props;
   
     return (
@@ -230,14 +223,20 @@ export default function SchoolDetails({ id }: Props) {
                           />
                           <ProfileTextField
                             name="connectivity"
-                            value={profile?.connectivity || ''}
+                            value={profile?.connectivity.toLowerCase() === "true" ? 'Yes' : 'No' || ''}
                             label="Connectivity"
                             disabled
                           />
                           <ProfileTextField
                             name="coverage"
-                            value={profile?.coverage || ''}
+                            value={profile?.coverage.toLowerCase() === "true" ? 'Yes' : 'No' || ''}
                             label="Coverage"
+                            disabled
+                          />
+                          <ProfileTextField
+                            name="coverage"
+                            value={profile?.electricity_availabilty.toLowerCase() === "true" ? 'Yes' : 'No' || ''}
+                            label="Electricity Availabilty"
                             disabled
                           />
                         </Box>
@@ -330,8 +329,6 @@ export default function SchoolDetails({ id }: Props) {
                       rowCount={schoolTableData?.length}
                       onSort={onSort}
                       showCheckBox={true}
-                      // numSelected={selectedValues?.length}
-                      // onSelectAllRows={onSelectAllRows}
                     />
 
                     <TableBody>
@@ -340,10 +337,6 @@ export default function SchoolDetails({ id }: Props) {
                           <NFTTableRow
                             key={row.id}
                             row={row}
-                            // selectedValues={selectedValues}
-                            // setSelectedValues={setSelectedValues}
-                            rowData={row}
-                            // checkbox = {true}
                           />
                         ))}
                       <TableNoData isNotFound={schoolTableData?.length === 0} />
@@ -351,17 +344,6 @@ export default function SchoolDetails({ id }: Props) {
                   </Table>
                 </Scrollbar>
               </TableContainer>
-              <TablePaginationCustom
-                // count={data?.meta?.total}
-                count={data?.collectorTransfers?.length}
-                page={page}
-                setPage={setPage}
-                rowsPerPage={rowsPerPage}
-                onPageChange={onChangePage}
-                onRowsPerPageChange={onChangeRowsPerPage}
-                dense={dense}
-                onChangeDense={onChangeDense}
-              />
             </Card>
           </Grid>
         </CustomTabPanel>
@@ -393,7 +375,6 @@ export default function SchoolDetails({ id }: Props) {
                           <NFTTableRow
                             key={row.id}
                             row={row}
-                            rowData={row}
                           />
                         ))}
                       <TableNoData isNotFound={schoolTableData?.length === 0} />
@@ -401,16 +382,6 @@ export default function SchoolDetails({ id }: Props) {
                   </Table>
                 </Scrollbar>
               </TableContainer>
-              <TablePaginationCustom
-                count={data?.schoolTransfers?.length}
-                page={page}
-                setPage={setPage}
-                rowsPerPage={rowsPerPage}
-                onPageChange={onChangePage}
-                onRowsPerPageChange={onChangeRowsPerPage}
-                dense={dense}
-                onChangeDense={onChangeDense}
-              />
             </Card>
           </Grid>
         </CustomTabPanel>
