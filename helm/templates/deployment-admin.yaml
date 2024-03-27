@@ -32,10 +32,12 @@ spec:
           securityContext:
             {{- toYaml .Values.admin.securityContext | nindent 12 }}
           image: "{{ .Values.admin.image.repository }}:{{ .Values.admin.image.tag | default .Chart.AppVersion }}"
+          command: ["/bin/ash"]
+          args: ["-c", "cd /usr/src/app && cp /tmp/.env_temp .env && env | grep -Ei \"(password|secret|token)\" >> /usr/src/app/.env; npm start" ]
           imagePullPolicy: {{ .Values.admin.image.pullPolicy }}
-#          volumeMounts:
-#          - name: config
-#            mountPath: /opt/config
+          volumeMounts:
+          - name: config
+            mountPath: /tmp/
           env:
             - name: env
               value: {{ .Values.environment }}
@@ -46,14 +48,14 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
           envFrom:
-            {{- range .Values.admin.envSecrets }}
-            - secretRef:
-                {{- toYaml . | nindent 16 }}
-            {{- end }}
-            #{{- range .Values.admin.envConfigMaps }}
-            #- configMapRef:
+            #{{- range .Values.admin.envSecrets }}
+            #- secretRef:
             #    {{- toYaml . | nindent 16 }}
             #{{- end }}
+            {{- range .Values.admin.envConfigMaps }}
+            - configMapRef:
+                {{- toYaml . | nindent 16 }}
+            {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.admin.service.targetPort }}
@@ -68,10 +70,10 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.admin.resources | nindent 12 }}
-#      volumes:
-#        - name: config
-#          secret:
-#            secretName: {{ .Values.admin.configVolume }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "giga-blocks.fullname" . }}-admin-conf
       {{- with .Values.admin.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

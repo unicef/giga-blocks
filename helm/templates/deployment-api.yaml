@@ -34,10 +34,10 @@ spec:
           image: "{{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.api.image.pullPolicy }}
           command: ["/bin/ash"]
-          args: ["-c", "cd /usr/src/app && cp /tmp/.env_temp .env && env | grep -Ei \"(password|secret)\" >> /usr/src/app/.env; npm start" ]
+          args: ["-c", "cd /usr/src/app && cp /tmp/.env_temp .env && env | grep -Ei \"(password|secret|token|key)\" >> /usr/src/app/.env; npm start" ]
           volumeMounts:
           - name: config
-            mountPath: /tmp/.env_temp
+            mountPath: /tmp/
           env:
             - name: env
               value: {{ .Values.environment }}

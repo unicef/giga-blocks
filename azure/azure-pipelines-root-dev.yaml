@@ -44,10 +44,6 @@ stages:
         mv .env.dev.giga-blocks .env
       displayName: 'create .env file'
 
-    #- script: |
-    #    touch ./.env && echo "$(env_dev)" >> ./.env
-    #  displayName: 'import env file'
-
     - task: NodeTool@0
       inputs:
         versionSpec: '18.x'
@@ -113,6 +109,18 @@ stages:
         arguments: 'add postgresql https://charts.bitnami.com/bitnami'
         namespace: $(kubernetesNamespace)
 
+    - task: DownloadSecureFile@1
+      inputs:
+        secureFile: 'giga-blocks.values.dev.yaml'
+
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(Agent.TempDirectory)'
+        Contents: 'giga-blocks.values.dev.yaml'
+        TargetFolder: '$(Build.SourcesDirectory)/helm'
+
+    - script: |
+        mv helm/giga-blocks.values.dev.yaml helm/values.dev.yaml
 
     - task: HelmDeploy@0
       displayName: 'Deploy the development Giga Blocks application'
