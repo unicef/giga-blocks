@@ -38,6 +38,7 @@ export class MailProcessor {
     if (job.attemptsMade === job.opts.attempts) {
       try {
         return this._mailerService.sendMail({
+          replyTo: this._configService.get('REPLY_TO_EMAIL_ADDRESS'),
           to: this._configService.get('EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
           subject: 'Something went wrong with server!!',
@@ -56,10 +57,15 @@ export class MailProcessor {
 
     return this._mailerService.sendMail({
       to: job.data.email,
+      replyTo: this._configService.get('REPLY_TO_EMAIL_ADDRESS'),
       from: this._configService.get('EMAIL_ADDRESS'),
       subject: 'Sign In OTP',
       template: './otp',
-      context: { name: job.data.email, otp: job.data.otp },
+      context: {
+        name: job.data.email,
+        otp: job.data.otp,
+        emailurl: this._configService.get('REPLY_TO_EMAIL_ADDRESS'),
+      },
     });
   }
 
@@ -69,10 +75,11 @@ export class MailProcessor {
 
     return this._mailerService.sendMail({
       to: job.data.email,
+      replyTo: this._configService.get('REPLY_TO_EMAIL_ADDRESS'),
       from: this._configService.get('EMAIL_ADDRESS'),
-      subject: 'Greetings from GIGA NFT2.0',
+      subject: 'Greetings from Giga Blocks',
       template: './welcome',
-      context: { name: job.data.name },
+      context: { name: job.data.name, url: this._configService.get('NEXT_PUBLIC_WEB_NAME') },
     });
   }
 
@@ -82,10 +89,16 @@ export class MailProcessor {
 
     return this._mailerService.sendMail({
       to: job.data.email,
+      replyTo: this._configService.get('REPLY_TO_EMAIL_ADDRESS'),
       from: this._configService.get('EMAIL_ADDRESS'),
-      subject: 'Greetings from GIGA NFT2.0',
+      subject: 'Greetings from Giga Blocks',
       template: './newsletter-welcome',
-      context: { name: job.data.name, country: job.data.country },
+      context: {
+        name: job.data.name,
+        country: job.data.country,
+        url: this._configService.get('NEXT_PUBLIC_WEB_NAME'),
+        emailurl: this._configService.get('REPLY_TO_EMAIL_ADDRESS'),
+      },
     });
   }
 
@@ -97,7 +110,11 @@ export class MailProcessor {
       from: this._configService.get('EMAIL_ADDRESS'),
       subject: 'Data Validation',
       template: './data-validation',
-      context: { name: job.data.name, school: job.data.school },
+      context: {
+        name: job.data.name,
+        school: job.data.school,
+        emailurl: this._configService.get('REPLY_TO_EMAIL_ADDRESS'),
+      },
     });
   }
 
@@ -109,10 +126,17 @@ export class MailProcessor {
 
     return this._mailerService.sendMail({
       to: job.data.emailTo,
+      replyTo: this._configService.get('REPLY_TO_EMAIL_ADDRESS'),
       from: this._configService.get('EMAIL_ADDRESS'),
       subject: 'New User Register Alert',
       template: './developer-join',
-      context: { name: job.data.name, country: job.data.country, email: job.data.email },
+      context: {
+        name: job.data.name,
+        country: job.data.country,
+        email: job.data.email,
+        url: this._configService.get('NEXT_PUBLIC_WEB_NAME'),
+        emailurl: this._configService.get('REPLY_TO_EMAIL_ADDRESS'),
+      },
     });
   }
 }

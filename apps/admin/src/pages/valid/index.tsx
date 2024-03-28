@@ -59,7 +59,7 @@ const ValidateData = () => {
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable({defaultOrderBy: 'school', defaultOrder: 'desc'});
+  } = useTable({defaultOrderBy: 'updatedAt', defaultOrder: 'desc'});
 
   const { enqueueSnackbar } = useSnackbar();
 

@@ -147,31 +147,15 @@ model School {
   id                        String            @id @default(uuid())
   giga_school_id            String            @unique
   status                    SchoolStatus      @default(Open)
-  connectivity_speed_status String?           @default("Data Unavailable")
   connectivity              Boolean           @default(false)
   name                      String
   school_type               String
-  class_rooms               Int?
   electricity_available     Boolean           @default(false)
-  website                   String?
-  email                     String?
-  phone_number              String?
   country                   String
-  twiter_handle             String?
-  wikipedia                 String?
-  googlemap                 String?
-  youtube                   String?
   longitude                 Float
   latitude                  Float
   minted                    MintStatus        @default(NOTMINTED)
   coverage_availability     Boolean           @default(false)
-  coverage_2G               Boolean           @default(false)
-  coverage_3G               Boolean           @default(false)
-  coverage_4G               Boolean           @default(false)
-  hasSatteliteBuilding      Boolean           @default(false)
-  connection_type           String?
-  connectivity_speed        Int?
-  internet_links            Int?
   createdAt                 DateTime          @default(now())
   updatedAt                 DateTime          @updatedAt
   deletedAt                 DateTime?

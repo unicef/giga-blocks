@@ -23,7 +23,7 @@ import {
   metaMaskLogout,
 } from '../../utils/metaMaskUtils';
 import { Default_Chain_Id } from '../web3/connectors/network';
-import generateIdenticon from '../../utils/generateIdenticon'
+import generateIdenticon from '../../utils/generateIdenticon';
 
 const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
   const sellerContract = useSellerContract();
@@ -122,19 +122,42 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
     }
   }, [account, chainId]);
 
-  useEffect(async () => {
-    if (!sellerContract) return;
-    try {
-      const price = await sellerContract.methods
-        .calculatePrice()
-        .call({ from: account });
-      const priceInEth = ethers.formatEther(price);
-      setPrice(price);
-      setPriceEth(priceInEth);
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (sellerContract){
+  //   try {
+  //   sellerContract.methods
+  //       .calculatePrice()
+  //       .call({ from: account })
+  //       .then((res) => {
+  //         const priceInEth = ethers.formatEther(res);
+  //         setPrice(res);
+  //         setPriceEth(priceInEth);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err)
+  //       })     
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
+  // }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!sellerContract) return;
+  
+      try {
+        const price = await sellerContract.methods.calculatePrice().call();
+        const priceInEth = ethers.formatEther(price);
+        setPrice(price);
+        setPriceEth(priceInEth);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  
+    fetchData();
+  }, [sellerContract]);
 
   return (
     <>
@@ -155,6 +178,7 @@ const ModalComponent = ({ isOpen, onClose, schooldata, tokenId }) => {
       )}
       <Modal open={isOpen} onRequestClose={onClose} passiveModal={true}>
         <ModalBody>
+        
           <p>
             You are about to purchase {schooldata?.schoolName} from{' '}
             {schooldata?.owner?.slice(0, 8) +

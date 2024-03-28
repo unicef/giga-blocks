@@ -38,7 +38,9 @@ const Connectivity = ({ schoolData }) => {
                     </span>
                     <span className="heading5">
                       <br />
-                      {schoolData?.schoolName ? schoolData?.schoolName : 'N/A'}
+                      {schoolData?.schoolName
+                        ? schoolData?.schoolName.slice(0, 15) + '...'
+                        : 'N/A'}
                     </span>
                   </div>
                 </Column>

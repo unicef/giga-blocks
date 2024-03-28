@@ -1,6 +1,7 @@
 import {useWeb3React} from '@web3-react/core';
 import { useMemo } from 'react';
 import Web3 from "web3"
+import { Default_Chain_URL } from '../connectors/network';
 import {Contract, ContractRunner,InterfaceAbi} from 'ethers';
 
 import GigaSeller from '../../../constants/abi/GigaSeller.json';
@@ -20,7 +21,7 @@ export const useLibrary = ()=>{
 }
 
 export const getContract  = (abi,address)=>{
-    const web3 = new Web3 ("https://polygon-mumbai.infura.io/v3/627efc2e63b5449eaf60728ea083fa9d");
+    const web3 = new Web3 (Default_Chain_URL);
     const contract = new web3.eth.Contract(abi,address);
     return contract;
 }

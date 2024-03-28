@@ -7,7 +7,7 @@ export function setupSwagger(app: INestApplication) {
   const logger = new Logger('swagger setup');
   const options = new DocumentBuilder()
     .setTitle('GIGA NFT 2.0 API PROVIDER')
-    .setDescription('NFT2.0')
+    .setDescription('GigaGlobal')
     .setVersion('1.0.0')
     .addBearerAuth(
       {

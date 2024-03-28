@@ -7,15 +7,26 @@ import { useEffect, useState } from 'react';
 import { useSellerContract } from '../../hooks/useContract';
 import NftPurchaseModal from '../../components/nftPurchaseModal';
 import { useWeb3React } from '@web3-react/core';
-import generateIdenticon from '../../utils/generateIdenticon'
 
 const Introduction = ({ schooldata, tokenId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { account } = useWeb3React();
   const [onSell, setOnSell] = useState(false);
-  const [isOwner, setIsOwner] = useState(false);
   const [price, setPrice] = useState(0);
   const sellerContract = useSellerContract();
+
+  const fetchPrice = async () => {
+    if (!sellerContract) return;
+
+    try {
+      const price = await sellerContract.methods.calculatePrice().call();
+      setPrice(price);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const [isOwner, setIsOwner] = useState(false);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -40,32 +51,35 @@ const Introduction = ({ schooldata, tokenId }) => {
       setIsOwner(true);
   }, [schooldata?.owner, account]);
 
-  useEffect(async () => {
-    if (!sellerContract) return;
-
-    try {
-      const price = await sellerContract.methods.calculatePrice().call();
-      setPrice(price);
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!sellerContract) return;
+  
+      try {
+        const price = await sellerContract.methods.calculatePrice().call();
+        setPrice(price);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  
+    fetchData();
+  }, [sellerContract]);
 
   return (
-    <Grid fullWidth className="mt-50px">
-      <Column
-        md={4}
-        lg={7}
-        sm={4}
-        style={{ display: 'flex', justifyContent: 'flex-start' }}
-      >
-        <img
-          style={{
-            width: '80%',
-          }}
-          alt="School Map"
-          src={generateIdenticon(schooldata?.image)}
-        />
+    <Grid
+      fullWidth
+      className="mt-50px"
+      style={{ position: 'relative' }}
+    >
+      <Column md={4} lg={8} sm={4}>
+        {schooldata?.image && (
+          <img
+            src={`https://ipfs.io/ipfs/${schooldata?.image}`}
+            alt={schooldata?.image}
+            style={{ marginBottom: '16px', maxWidth: '400px', width: '100%' }}
+          />
+        )}
       </Column>
       <Column md={4} lg={8} sm={4}>
         <div>
