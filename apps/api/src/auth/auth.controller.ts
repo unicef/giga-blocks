@@ -25,9 +25,9 @@ export class AuthController {
   }
 
   @Public()
-  @Post('ping')
+  @Get('health')
   async appTest() {
-    return 'pong';
+    return 'OK';
   }
 
   @Public()
