@@ -25,6 +25,12 @@ export class AuthController {
   }
 
   @Public()
+  @Post('ping')
+  async appTest() {
+    return 'pong';
+  }
+
+  @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Request() req): Promise<CreateUserDto & Tokens> {
