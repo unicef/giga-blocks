@@ -1,5 +1,5 @@
 'use client'
 
 export default function TestPage(){
-    return  "pong"
+    return  "Ok"
 }
