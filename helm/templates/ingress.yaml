@@ -1,0 +1,43 @@
+{{- if .Values.ingress.enabled -}}
+{{- $ingressPathType := .Values.ingress.pathType -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "giga-blocks.name" . }}-ingress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "giga-blocks.labels" . | nindent 4 }}
+{{- with .Values.ingress.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+  rules:
+    - host: {{ $.Values.ingress.web.host }}
+      http:
+        paths:
+          - pathType: {{ $ingressPathType }}
+            path: {{ $.Values.ingress.web.path }}
+            backend:
+              service:
+                name: {{ $.Values.ingress.web.backendService }}
+                port:
+                  number: {{ $.Values.web.service.port }}
+          - pathType: {{ $ingressPathType }}
+            path: {{ $.Values.ingress.api.path }}
+            backend:
+              service:
+                name: {{ $.Values.ingress.api.backendService }}
+                port:
+                  number: {{ $.Values.api.service.port }}
+    - host: {{ $.Values.ingress.admin.host }}
+      http:
+        paths:
+          - pathType: {{ $ingressPathType }}
+            path: {{ $.Values.ingress.admin.path }}
+            backend:
+              service:
+                name: {{ $.Values.ingress.admin.backendService }}
+                port:
+                  number: {{ $.Values.admin.service.port }}
+{{- end }}

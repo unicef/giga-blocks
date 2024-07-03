@@ -4,14 +4,24 @@ import '../dashboard.scss';
 import { getCurrentUser } from '../../../utils/sessionManager';
 import { useContributionCount } from '../../../hooks/useContributionList';
 
+import { useWeb3React } from '@web3-react/core';
+import { metaMaskLogout } from '../../../utils/metaMaskUtils';
+import '../../page-header/header.scss';
+
 const Header = ({ name, breadcrumbs }) => {
   const user = getCurrentUser();
-  const { data } = useContributionCount(user?.id);
+  const { account } = useWeb3React();
+  const { data } = useContributionCount();
+
+  const disconnect = () => {
+    metaMaskLogout();
+  };
+
   return (
     <div className="dashboard-head-wrapper">
       <Grid fullWidth>
-        <Column lg={16} md={8} sm={4} className="column">
-          <Breadcrumb style={{ marginBottom: '16px', display: 'flex' }}>
+        <Column sm={8} md={10} lg={16} style={{ marginTop: '32px' }}>
+          <Breadcrumb>
             {breadcrumbs.map((breadcrumb, index) => (
               <BreadcrumbItem key={index} href={breadcrumb.link}>
                 {breadcrumb.text}
@@ -24,12 +34,60 @@ const Header = ({ name, breadcrumbs }) => {
         </Column>
         <Column lg={16} md={8} sm={4} className="column">
           <div>
-            <h2>My Dashboard</h2>
+            <h2>{name}</h2>
             <p>{user?.name}</p>
             <p>{user?.email}</p>
-            <p>{user?.walletAddress}</p>
+
+            {!user?.walletAddress && account && (
+              <>
+                <p>
+                  {account}{' '}
+                  <a
+                    style={{
+                      cursor: 'pointer',
+                      color: 'blue',
+                      textDecoration: 'underline',
+                    }}
+                    onClick={disconnect}
+                  >
+                    Disconnect
+                  </a>
+                </p>
+              </>
+            )}
+            {user?.walletAddress && (
+              <>
+                <p className="walletAddress">{user?.walletAddress}</p>
+                <h6 style={{ color: 'blue' }}>
+                  {account &&
+                    user?.walletAddress?.toLowerCase() !==
+                      account?.toLowerCase() && (
+                      <a
+                        style={{
+                          cursor: 'pointer',
+                          color: 'blue',
+                          textDecoration: 'underline',
+                        }}
+                        onClick={disconnect}
+                      >
+                        {' '}
+                        Connected to different account
+                      </a>
+                    )}{' '}
+                  {!account && 'Not Connected'}
+                </h6>
+              </>
+            )}
+            <div className="sub-column-1-mobile">
+              <div className="sub-column-2">
+                <h1>{data?.meta?.total ?? 0} </h1>
+                <div>
+                  <p>Contributions</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="sub-column-1">
+          <div className="sub-column-1 mobile-block">
             <p className="head">My Contributions</p>
             <div className="sub-column-2">
               <h1>{data?.meta?.total ?? 0} </h1>
@@ -37,12 +95,10 @@ const Header = ({ name, breadcrumbs }) => {
                 <p>Contributions</p>
               </div>
             </div>
-            <p className="foot">View history</p>
           </div>
         </Column>
       </Grid>
     </div>
   );
 };
-
 export default Header;

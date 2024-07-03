@@ -4,6 +4,7 @@ import Navbar from '../../components/navbar';
 import ChangeLog from '../../components/changeLog';
 import { useSchoolDetails } from '../../hooks/useSchool';
 import ContributeForm from '../../components/contribute';
+import { MapView } from '../../components/maps';
 import {
   Button,
   Column,
@@ -15,65 +16,64 @@ import {
   TabPanels,
   Tabs,
   Tile,
+  InlineLoading,
 } from '@carbon/react';
 import './school-details.scss';
 import { useParams } from 'next/navigation';
-import { toSvg } from 'jdenticon';
 import { useState } from 'react';
 import PageHeader from '../../components/page-header';
 import { getCurrentUser } from '../../utils/sessionManager';
 import { useRouter } from 'next/navigation';
+import { useContributeDetails } from '../../hooks/useContributionList';
 
 const SchoolDetail = () => {
   const { id } = useParams();
   const router = useRouter();
-  const { data, isLoading } = useSchoolDetails(id);
+  const { data, isLoading,isFetched } = useSchoolDetails(id);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTabIndex, setSelectedTabIndex] = useState({
+    selectedIndex: 0,
+  });
+  const { data: contributedData, refetch } = useContributeDetails(id);
 
   const user = getCurrentUser();
+
   const openModal = () => {
     if (user) {
       setIsModalOpen(true);
     } else {
-      router.push('/signIn');
+      router.push(`/signIn?returnTo=${window.location.pathname}`);
     }
+  };
+
+  const updateSelectedTabIndex = (index) => {
+    setSelectedTabIndex(index);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
 
-  const generateIdenticon = (image) => {
-    const size = 50;
-    const svgString = toSvg(image, size);
-    return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
-  };
-
   const breadcrumbs = [
     { text: 'Home', link: '/' },
     { text: 'School', link: '/contributeSchool' },
   ];
-
+  let latitude = String(data?.latitude)?.slice(0, 12);
+  let longitude = String(data?.longitude)?.slice(0, 12);
   return (
     <>
       {isLoading === false ? (
         <>
           <Navbar />
-          {/* HEADING */}
-          <PageHeader name={data.name} breadcrumbs={breadcrumbs} />
-
-          {/* INTRODUCTION */}
-
-          <Tabs>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                background: '#222222',
-              }}
-            >
+          <PageHeader name={data?.name} breadcrumbs={breadcrumbs} />
+          <Tabs
+            selectedIndex={selectedTabIndex.selectedIndex}
+            onChange={updateSelectedTabIndex}
+          >
+            <div className="tabs">
               <TabList
+                contained
+                aria-label="List of tabs"
                 style={{
                   display: 'flex',
                 }}
@@ -88,7 +88,9 @@ const SchoolDetail = () => {
                 </Tab>
                 <Tab style={{ color: 'white' }}>Change Log</Tab>
               </TabList>
-              <Button onClick={openModal}>Contribute</Button>
+              <Button className="contribute-btn" onClick={openModal}>
+                Contribute
+              </Button>
             </div>
             <TabPanels>
               <TabPanel>
@@ -114,7 +116,7 @@ const SchoolDetail = () => {
                     <Tile className={`tile-school tile-white`}>
                       <p className="heading2">Exact Location</p>
                       <p className="heading5">
-                        {data?.latitude}, {data?.longitude}
+                        {latitude}, {longitude}
                       </p>
                     </Tile>
                   </Column>
@@ -129,14 +131,34 @@ const SchoolDetail = () => {
                       flexDirection: 'column',
                     }}
                   >
-                    <p>Last Updated:{data?.updatedAt.substring(0, 10)}</p>
-                    <img
-                      style={{
-                        width: '60%',
-                      }}
-                      alt="School Map"
-                      src={generateIdenticon(data?.giga_school_id)}
-                    />
+                    <p style={{ fontSize: '12px' }}>
+                      Last Updated:{data?.updatedAt.substring(0, 10)}
+                    </p>
+                    <div className="map">
+                      {isLoading ? (
+                        <InlineLoading
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                          status="active"
+                          iconDescription="Loading"
+                          description="Loading map..."
+                        />
+                      ) : (
+                        <>
+                          <MapView
+                            mapData={[
+                              {
+                                latitude: data?.latitude,
+                                longitude: data?.longitude,
+                              },
+                            ]}
+                          />
+                        </>
+                      )}
+                    </div>
                   </Column>
                 </Grid>
 
@@ -157,21 +179,19 @@ const SchoolDetail = () => {
                     >
                       <Column className="school-connectivity-column">
                         <div className="school-connectivity-card">
-                          <span className="heading2">
-                            Connectivity <br /> Status
-                          </span>
+                          <span className="heading2">Connectivity Status</span>
                           <span className="heading5">
-                            {data?.connectivity ? 'True' : 'N/A'}
+                            {data?.connectivity ? 'Yes' : 'No'}
                           </span>
                         </div>
                       </Column>
                       <Column className="school-connectivity-column">
                         <div className="school-connectivity-card">
                           <span className="heading2">
-                            Coverage <br /> Availability
+                            Coverage Availability
                           </span>
                           <span className="heading5">
-                            {data?.coverage_availability ? 'True' : 'N/A'}
+                            {data?.coverage_availability ? 'Yes' : 'No'}
                           </span>
                         </div>
                       </Column>
@@ -188,15 +208,25 @@ const SchoolDetail = () => {
                 </Grid>
               </TabPanel>
               <TabPanel>
-                <ChangeLog schoolid={id} />
+                <ChangeLog
+                  schoolid={id}
+                  contributedData={contributedData}
+                  refetch={refetch}
+                />
               </TabPanel>
             </TabPanels>
           </Tabs>
-          <ContributeForm
+          {
+            isFetched &&
+            <ContributeForm
             isOpen={isModalOpen}
             onClose={closeModal}
             data={data}
-          />
+            updateSelectedTabIndex={updateSelectedTabIndex}
+            refetch={refetch}
+            />
+          }
+          
           <Footer />
         </>
       ) : (

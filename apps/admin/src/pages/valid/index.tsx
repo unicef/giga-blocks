@@ -14,6 +14,9 @@ import {
   Tab,
   TableRow,
   TableCell,
+  TextField,
+  FormControl,
+  Autocomplete,
 } from '@mui/material';
 import { CircularProgress } from '@mui/material';
 import { SyntheticEvent, useEffect, useState } from 'react';
@@ -23,14 +26,28 @@ import { useSnackbar } from '@components/snackbar';
 import { useValidateBulkUpdate, useValidateGet } from '@hooks/validate/useValidate';
 import ValidateTableRow from '@sections/user/list/ValidateTableRow';
 import CustomTabPanel from '@components/Tabs';
+import { useAllSchool } from '@hooks/school/useSchool';
+
+type SearchItem = {
+  label: string;
+  value: string;
+};
+
+type TableData = {
+  id: string;
+  school: string;
+  isApproved: string;
+  date: Date;
+  schoolId: string;
+}
 
 const ValidateData = () => {
   const TABLE_HEAD = [
     { id: 'school', label: 'School', align: 'left' },
-    { id: 'isApproved', label: 'Approval Status', align: 'left' },
-    { id: 'date', label: 'Date', align: 'left' },
+    { id: 'approved', label: 'Approval Status', align: 'left' },
+    { id: 'createdAt', label: 'Date', align: 'left' },
   ];
-
+  const [selectedSchoolSearch, setSelectedSchoolSearch] = useState<SearchItem | null>();
   const {
     dense,
     page,
@@ -42,62 +59,54 @@ const ValidateData = () => {
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable();
+  } = useTable({defaultOrderBy: 'updatedAt', defaultOrder: 'desc'});
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const { data: schoolList } = useAllSchool();
+
   const [status, setStatus] = useState<string>('false');
 
-  const [selectedValues, setSelectedValues] = useState<any>([]);
-  const [tableData, setTableData] = useState<any>([]);
-  const [result] = useQuery({
-    query: Queries.nftListQuery,
-    variables: { skip: page * rowsPerPage, first: rowsPerPage },
-  });
-  const { fetching } = result;
+  const [selectedValues, setSelectedValues] = useState<SearchItem[] | TableData[]>([]);
+  const [tableData, setTableData] = useState<TableData[]>([]);
 
   const {
     mutate,
     isSuccess: isValidationSuccess,
     isError: isValidationError,
+    isLoading: isValidationLoading
   } = useValidateBulkUpdate();
 
-  const { data: ValidatedData, isFetching } = useValidateGet(
+  const { data: ValidatedData, isFetching, refetch } = useValidateGet(
     page,
     rowsPerPage,
     status,
-    isValidationSuccess
+    isValidationSuccess,
+    selectedSchoolSearch?.value,
+    order,
+    orderBy
   );
 
-  const decodeSchooldata = (data: any) => {
-    // const encodeddata = data.tokenUris;
-    // const decodedShooldata = [];
-    // for (let i = 0; i < encodeddata?.length; i++) {
-    //   const decodedData = atob(encodeddata[i].tokenUri.substring(29));
-    //   const schoolData = {
-    //     tokenId: encodeddata[i].id,
-    //     ...JSON.parse(decodedData),
-    //   };
-    //   decodedShooldata.push(schoolData);
-    // }
-    ValidatedData &&
-      ValidatedData?.rows?.map((row: any) => {
-        const date = new Date(row?.createdAt).toLocaleDateString();
-        filteredData.push({
-          id: row.id,
-          school: row.school.name,
-          isApproved: String(row.approvedStatus),
-          date: date,
-          schoolId: row.school_Id,
-        });
-      });
-    setTableData(filteredData);
-  };
+  useEffect(() => {
+    refetch()
+  }, [selectedSchoolSearch, orderBy, order])
 
   let filteredData: any = [];
   useEffect(() => {
-    decodeSchooldata(ValidatedData);
-  }, [ValidatedData]);
+    ValidatedData &&
+    ValidatedData?.rows?.map((row: any) => {
+      const date = new Date(row?.createdAt).toLocaleDateString();
+      filteredData.push({
+        id: row.id,
+        school: row.school.name,
+        isApproved: String(row.approvedStatus),
+        date: date,
+        schoolId: row.school_Id,
+      });
+    });
+  setTableData(filteredData);
+  }, [isFetching])
+
 
   const onSelectAllRows = (e: any) => {
     const isChecked = e.target.checked;
@@ -116,24 +125,54 @@ const ValidateData = () => {
 
     mutate(payload);
     payload = [];
+    refetch()
+    setSelectedValues([])
   };
 
   useEffect(() => {
     isValidationSuccess &&
-      enqueueSnackbar('Successfully updated contribution', { variant: 'success' });
-    isValidationError && enqueueSnackbar('Unsuccessful', { variant: 'error' });
-  }, [isValidationSuccess, isValidationError]);
+      enqueueSnackbar('School Data are approved and updated in Database', { variant: 'success' });
+    isValidationError && enqueueSnackbar('Try again', { variant: 'error' });
+    isValidationLoading && enqueueSnackbar(' Data approval in progress. Please wait. ', { variant: 'warning' });
+  }, [isValidationSuccess, isValidationError, isValidationLoading]);
+
+  const handleSchoolSearchChange = (value: any) => {
+    setSelectedSchoolSearch(value);
+  };
+
+  // const sortedData = tableData?.slice().sort((a:any, b:any) => {
+  //   const isAsc = order === 'asc';
+  //   return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
+  // });
+
 
   const TabsDisplay = () => {
     return (
       <>
-        {fetching && (
+        {isFetching && (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <CircularProgress />
           </div>
         )}
-        {!fetching && (
-          <Card>
+        {!isFetching && (
+          <>
+          <div style={{display: 'flex', alignItems: 'flex-end', gap: '20px'}}>
+          <FormControl sx={{ width: 200 }}>
+            <Autocomplete
+              disablePortal
+              value={selectedSchoolSearch?.label}
+              options={schoolList?.map((school: any) => ({
+                value: school.id,
+                label: school.name,
+              }))}
+              renderInput={(params) => <TextField {...params} label="Search By School" />}
+              onChange={(e, value) => {
+                handleSchoolSearchChange(value);
+              }}
+            />
+          </FormControl>
+          </div>
+          <Card style={{marginTop: '20px'}}>
             <Divider />
             <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
               <Scrollbar>
@@ -166,7 +205,7 @@ const ValidateData = () => {
                         />
                       ))
                     )}
-                    <TableNoData isNotFound={tableData.length === 0} />
+                    <TableNoData isNotFound={tableData.length === 0} isFetching={isFetching}/>
                   </TableBody>
                 </Table>
               </Scrollbar>
@@ -180,8 +219,10 @@ const ValidateData = () => {
               onRowsPerPageChange={onChangeRowsPerPage}
               dense={dense}
               onChangeDense={onChangeDense}
+              disablePageNumber
             />
           </Card>
+          </>
         )}
       </>
     );

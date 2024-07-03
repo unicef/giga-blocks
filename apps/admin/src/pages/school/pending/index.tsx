@@ -1,47 +1,30 @@
 'use client';
-import Iconify from '@components/iconify';
 import Scrollbar from '@components/scrollbar';
 import {
-  TableEmptyRows,
   TableHeadUsers,
   TableNoData,
   TablePaginationCustom,
-  TableSelectedAction,
   useTable,
 } from '@components/table';
 import { useSchoolGet } from '@hooks/school/useSchool';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
 import {
-  Box,
-  Button,
   Card,
   Tabs,
   Divider,
   TableContainer,
-  Tooltip,
-  IconButton,
   Table,
   TableBody,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+  TextField
 } from '@mui/material';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
-import { useRouter } from 'next/router';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { hooks } from '@hooks/web3/metamask';
-import { JsonRpcProvider, Signer } from 'ethers';
-import { mintSignature } from '@components/web3/utils/wallet';
-import { useBulkMintSchools } from '@hooks/school/useSchool';
-import { useWeb3React } from '@web3-react/core';
 
 const VerifiedSchool = () => {
   const TABLE_HEAD = [
     { id: 'name', label: 'Name', align: 'left' },
     { id: 'location', label: 'Location', align: 'left' },
-    { id: 'latitide', label: 'Latitude', align: 'left' },
+    { id: 'latitude', label: 'Latitude', align: 'left' },
     { id: 'longitude', label: 'Longitude', align: 'left' },
     { id: 'status', label: 'Status', align: 'left' },
   ];
@@ -53,31 +36,17 @@ const VerifiedSchool = () => {
     orderBy,
     rowsPerPage,
     setPage,
-    onSelectRow,
     onSort,
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable();
+  } = useTable({defaultOrder: 'asc', defaultOrderBy: 'name'});
 
-  const {
-    mutate,
-    isError: isMintError,
-    data: mintData,
-    isSuccess: isMintSuccess,
-  } = useBulkMintSchools();
-
-  const { useProvider } = hooks;
-  const provider = useWeb3React();
-
-  // const { filteredUsers } = useAdministrationContext();
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
   const [country, setCountry] = useState<string>()
-  const [connectivity, setConnectivity] = useState<string>()
-  const { data } = useSchoolGet({page, perPage: rowsPerPage, minted: 'ISMINTING', country, connectivity});
-
-  // const { error } = useFetchUsers();
+  const [connectivity] = useState<string>()
+  const { data, refetch, isFetching } = useSchoolGet({page, perPage: rowsPerPage, minted: 'ISMINTING', country, connectivity, order, orderBy});
 
   let filteredData: any = [];
   useEffect(() => {
@@ -100,48 +69,13 @@ const VerifiedSchool = () => {
     setTableData(filteredData);
   }, [data]);
 
-  const signTransaction = async () => {
-    const signer = (
-      provider.provider as unknown as JsonRpcProvider
-    ).getSigner() as unknown as Signer;
-    const signature = await mintSignature(signer, selectedValues.length);
-    return signature;
-  };
-
-  const mintSchool = async () => {
-    const signature = await signTransaction();
-    if (!signature) return Error('Signature is null');
-    setSelectedValues([]);
-    mutate({ data: selectedValues, signatureWithData: signature });
-  };
-
-  const handleSearchChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setCountry(e.target.value)
-  }
-
-  const handleSearchConnectivity = (event:any) => {
-    setConnectivity(event.target.value as string);
-  }
+  useEffect(() => {
+    refetch()
+  }, [order, orderBy])
 
   return (
     <DashboardLayout>
       <h2>Minting In Progress</h2>
-      <div style={{display: 'flex', alignItems: 'flex-end', gap: '20px'}}>
-          <TextField id="outlined-basic" type='string' placeholder='Search country' onChange={(e) => handleSearchChange(e)}/>
-          <FormControl sx={{width: 150}}>
-            <InputLabel id="demo-simple-select-label">Connectivity</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={"Connectivity"}
-              label="Search"
-              onChange={handleSearchConnectivity}
-            >
-              <MenuItem value={'true'}>True</MenuItem>
-              <MenuItem value={'false'}>False</MenuItem>
-            </Select>
-          </FormControl>
-          </div>
           <Card sx={{marginTop: 2}}>
         <Divider />
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -167,7 +101,7 @@ const VerifiedSchool = () => {
                       checkbox={false}
                     />
                   ))}
-                <TableNoData isNotFound={tableData.length === 0} />
+                <TableNoData isNotFound={tableData.length === 0} isFetching={isFetching} />
               </TableBody>
             </Table>
           </Scrollbar>

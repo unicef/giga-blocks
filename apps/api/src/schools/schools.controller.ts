@@ -40,7 +40,7 @@ export class SchoolController {
   update(@Param('id') id: string, @Req() req: any) {
     return this.schoolService.update(id, req.user.id);
   }
-
+ 
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Patch('/bulkUpdate')
@@ -94,6 +94,13 @@ export class SchoolController {
   findOne(@Param('id') id: string) {
     return this.schoolService.findOne(`${id}`);
   }
+
+  @Public()
+  @Get('/getContractDetail/:tokenId')
+  findContract(@Param('tokenId') tokenId: string){
+    return this.schoolService.findContract(tokenId)
+  }
+
 
   @Public()
   @Get('byCountry/:country')

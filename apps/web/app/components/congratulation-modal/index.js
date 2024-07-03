@@ -1,19 +1,14 @@
 // ModalComponent.js
 import React from 'react';
 import { Modal, ModalBody, ModalFooter, Button } from '@carbon/react';
-import { useRouter } from 'next/navigation';
 
-const ModalComponent = ({ isOpen, onClose, id }) => {
-  const route = useRouter();
-
+const ModalComponent = ({ isOpen, onClose, onTabChange }) => {
+  const close = () => {
+    onClose();
+  };
   const handleClick = () => {
     onClose();
-    route.push('/dashboard');
-  };
-
-  const handleSubmit = () => {
-    onClose();
-    route.push(`/contributeSchool`);
+    onTabChange();
   };
 
   return (
@@ -28,10 +23,10 @@ const ModalComponent = ({ isOpen, onClose, id }) => {
         </h4>
       </ModalBody>
       <ModalFooter style={{ margin: '0' }}>
-        <Button kind="secondary" onClick={handleClick}>
+        <Button kind="secondary" onClick={close}>
           Close
         </Button>
-        <Button onClick={handleSubmit}>View Contributed Data</Button>
+        <Button onClick={handleClick}>View Contributed Data</Button>
       </ModalFooter>
     </Modal>
   );

@@ -43,7 +43,6 @@ export const permissions = [
 
 enum ROLE {
   ADMIN = 'ADMIN',
-  USER = 'USER',
   CONTRIBUTOR = 'CONTRIBUTOR',
 }
 
@@ -52,48 +51,48 @@ export const users = [
     name: 'Giga 1',
     roles: [ROLE.ADMIN],
     email: 'giga1@mailinator.com',
-    walletAddress: hexStringToBuffer('0xf0c84735af5669c809efd62c9d4e466d331a95b0'), // add own wallet address
+    walletAddress: hexStringToBuffer('0xd4529d251f9ed2a432c405c277004120a83fe0b1'), // add own wallet address
   },
   {
     name: 'Giga 2',
     roles: [ROLE.ADMIN],
     email: 'giga2@mailinator.com',
-    walletAddress: hexStringToBuffer('0x4dc912af67247818e08e0fb3266736162c01bfce'), // add own wallet address
+    walletAddress: hexStringToBuffer('0xc7cf7ef39c9551fcf381d01dda51c0fa692d7c5c'), // add own wallet address
   },
   {
     name: 'Giga 3',
     roles: [ROLE.ADMIN],
     email: 'giga3@mailinator.com',
-    walletAddress: hexStringToBuffer('0xcf7bb7da4effca9a3974b80e106c6541990de5eb'), // add own wallet address
+    walletAddress: hexStringToBuffer('0xe728e62fcba79177b5de21c4137f1bac577eb360'), // add own wallet address
   },
   {
     name: 'Giga 4',
     roles: [ROLE.ADMIN],
     email: 'giga4@mailinator.com',
-    walletAddress: hexStringToBuffer('0xcdee632fb1ba1b3156b36cc0bdabbfd821305e06'), // add own wallet address
+    walletAddress: hexStringToBuffer('0xac166C94E60C98d2d0C9EeD6a79f9A71F4E3c60C'), // add own wallet address
   },
   {
     name: 'Giga 5',
     roles: [ROLE.ADMIN],
     email: 'giga5@mailinator.com',
-    walletAddress: hexStringToBuffer('0x5a4fdccbe7be8ccbd5e6a0f69a3ef40dadbecdc3'), // add own wallet address
+    walletAddress: hexStringToBuffer('0x87Ed567e30dbD4Dae2088b87847698853a6963ed'), // add own wallet address
   },
   {
-    name: 'Sushant Tripathee',
+    name: 'Nishu Bade Shrestha',
     roles: [ROLE.ADMIN],
-    email: 'anu123@mailinator.com',
-    walletAddress: hexStringToBuffer('0xfaae0b09e9a80d142a11cd846cd9329f2e96f55f'),
+    email: 'nishu123@mailinator.com',
+    walletAddress: hexStringToBuffer('0x5a4FdcCbe7be8CcBd5E6A0f69A3Ef40DAdbECdC3'),
+  },
+  {
+    name: 'Manish Khadka',
+    roles: [ROLE.ADMIN],
+    email: 'manish123@mailinator.com',
+    walletAddress: hexStringToBuffer('0x4dc912AF67247818E08E0FB3266736162C01BFcE'),
   },
   {
     name: ' User',
-    email: 'user123@mailinator.com',
     roles: [ROLE.CONTRIBUTOR],
-  },
-  {
-    name: 'Giga 6',
-    roles: [ROLE.ADMIN],
-    email: 'giga6@mailinator.com',
-    walletAddress: hexStringToBuffer('0x984692516D5AC1d06267fb6297a5164c3FEaD91D'), // add own wallet address
+    email: 'user1@mailinator.com',
   },
 ];
 

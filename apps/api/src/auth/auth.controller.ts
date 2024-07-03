@@ -3,7 +3,7 @@ import { totp } from 'otplib';
 
 import { AuthService } from './auth.service';
 
-import { AuthDto, AuthSendOtp, AuthWallet, RefreshToken, WalletRegister } from './dto';
+import { AuthSendOtp, AuthWallet, RefreshToken, WalletRegister } from './dto';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from '../users/dto/user.dto';
 
@@ -22,6 +22,12 @@ export class AuthController {
     totp.options = {
       step: +process.env.OTP_DURATION_IN_SECS,
     };
+  }
+
+  @Public()
+  @Get('health')
+  async appTest() {
+    return 'OK';
   }
 
   @Public()
@@ -76,5 +82,12 @@ export class AuthController {
   @Post('/walletlogin')
   async walletLogin(@Body() walletLogin: AuthWallet, @Request() req) {
     return this.authService.walletLogin(req.user);
+  }
+
+  @Public()
+  @UseGuards(WalletAuthGuard)
+  @Post('/admin/walletlogin')
+  async adminWalletLogin(@Body() walletLogin: AuthWallet, @Request() req) {
+    return this.authService.adminWalletLogin(req.user);
   }
 }

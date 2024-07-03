@@ -53,4 +53,18 @@ export class ListSchoolDto {
   @IsString()
   @IsOptional()
   connectivityStatus?: string;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  orderBy?: string;
+
+  @ApiProperty({
+    required: false,
+  }) 
+  @IsString()
+  @IsOptional()
+  order?: string;
 }

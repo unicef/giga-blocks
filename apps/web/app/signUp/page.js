@@ -2,27 +2,48 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../components/navbar';
 import { useForm, Controller } from 'react-hook-form';
-import { Button, Checkbox, Column, Form, Grid, TextInput } from '@carbon/react';
+import {
+  Button,
+  Checkbox,
+  Column,
+  Form,
+  Grid,
+  TextInput,
+  InlineNotification,
+} from '@carbon/react';
 import { Tile } from '@carbon/react';
 import './signup.scss';
 import Link from 'next/link';
 import { useOtp } from '../hooks/useOtp';
 import { useSignUp } from '../hooks/useSignUp';
-import { useRouter } from 'next/navigation';
-import { metaMask, hooks } from '../components/web3/connectors/metamask';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { metaMask } from '../components/web3/connectors/metamask';
 import CarbonModal from '../components/modal/index';
-import { Default_Chain_Id } from '../components/web3/connectors/network';
 import { metaMaskLogin } from '../utils/metaMaskUtils';
+import { getAccessToken } from '../utils/sessionManager';
 
 const SignUp = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
-  const account = hooks.useAccount();
-  const { handleSubmit, control } = useForm();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm();
   const [openModal, setOpenModal] = useState(false);
-  const[checkbox, setCheckbox] = useState(false);
+  const [checkbox, setCheckbox] = useState(false);
+  const [error, setError] = useState();
+  const [notification, setNotification] = useState(null);
   const signUp = useSignUp();
   const sendOtp = useOtp();
+  const searchParams = useSearchParams();
+
+  const access_token = getAccessToken();
+
+  const searchKey = searchParams.get('returnTo');
+
+  const minute = process.env.NEXT_PUBLIC_OTP_DURATION_IN_MINS;
+  const [seconds, setSeconds] = useState(minute * 60);
 
   useEffect(() => {
     void metaMask.connectEagerly().catch(() => {
@@ -30,28 +51,58 @@ const SignUp = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (access_token && !searchKey) {
+      router.push('/dashboard');
+    }
+  }, [access_token]);
+
+  useEffect(() => {
+    if (notification) {
+      const timeoutId = setTimeout(() => {
+        onCloseNotification();
+      }, 4000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [notification]);
+
   const onSubmit = async (data) => {
+    setSeconds(minute * 60);
+    setError();
     signUp
       .mutateAsync(data)
       .then(() => {
+        setNotification({
+          kind: 'success',
+          title: 'Registered successfully. OTP sent to email.',
+        });
+
         sendOtp
           .mutateAsync({ email: data.email })
           .then(() => {
             setOpenModal(true);
             setEmail(data.email);
           })
+
           .catch((err) => {
-            console.log(err);
+            setNotification({
+              kind: 'error',
+              title: `${err.response.data.message}`,
+            });
           });
       })
+
       .catch((err) => {
-        console.log(err);
+        setNotification({
+          kind: 'error',
+          title: `${err.response.data.message}`,
+        });
       });
   };
 
   const handleCheck = () => {
     setCheckbox(!checkbox);
-
   };
 
   const onClose = () => {
@@ -59,17 +110,47 @@ const SignUp = () => {
   };
 
   const handlePageChange = async () => {
-    try {     
+    try {
       await metaMaskLogin();
       router.push('/walletRegister');
     } catch (error) {
-      console.log(error);
+      setNotification({
+        error: 'error',
+        title: error.message,
+      });
     }
+  };
+  const onCloseNotification = () => {
+    setNotification(null);
   };
 
   return (
     <>
-      <CarbonModal open={openModal} onClose={onClose} email={email} />
+      {notification && (
+        <InlineNotification
+          aria-label="closes notification"
+          kind={notification.kind}
+          onClose={onCloseNotification}
+          title={notification.title}
+          style={{
+            position: 'fixed',
+            top: '50px',
+            right: '2px',
+            width: '400px',
+            zIndex: 1000,
+          }}
+        />
+      )}
+      <CarbonModal
+        error={error}
+        setError={setError}
+        open={openModal}
+        xs
+        onClose={onClose}
+        email={email}
+        seconds={seconds}
+        setSeconds={setSeconds}
+      />
       <Navbar />
       <Grid className="landing-page preview1Background signUp-grid" fullWidth>
         <Column className="form" md={4} lg={16} sm={4}>
@@ -79,13 +160,18 @@ const SignUp = () => {
               <Controller
                 name="name"
                 control={control}
-                rules={{ required: 'Full Name is required' }}
+                rules={{
+                  required: 'Full Name is required',
+                  pattern: {
+                    value: /^[^\d]+$/,
+                    message: 'Invalid name ',
+                  },
+                }}
                 render={({ field }) => (
                   <TextInput
                     {...field}
                     id="name"
                     style={{ marginBottom: '25px', height: '48px' }}
-                    // invalid={!!errors.fullname}
                     labelText="Full Name"
                     placeholder="Enter your fullname here"
                     onChange={(e) => {
@@ -94,6 +180,9 @@ const SignUp = () => {
                   />
                 )}
               />
+              {errors.name && (
+                <p style={{ color: 'red' }}>{errors.name.message}</p>
+              )}
               <Controller
                 name="email"
                 control={control}
@@ -115,13 +204,15 @@ const SignUp = () => {
                   />
                 )}
               />
+              {errors.email && (
+                <p style={{ color: 'red' }}>{errors.email.message}</p>
+              )}
               <Checkbox
                 className="checkbox"
-                id='checkbox'
+                id="checkbox"
                 labelText="By creating an account, you agree to the Terms and conditions and our Privacy Policy"
                 checked={checkbox}
                 onChange={handleCheck}
-                
               />
               <br />
               <Grid>
@@ -129,21 +220,12 @@ const SignUp = () => {
                   <Button
                     className="submit-btn"
                     type="submit"
-                    style={{ marginRight: '14px', width: '100%' }}
                     disabled={!checkbox}
-
                   >
                     Submit
                   </Button>
                   <Button
-                    className="submit-btn"
-                    style={{
-                      marginRight: '14px',
-                      width: '100%',
-                      background: 'transparent',
-                      color: '#0f62fe',
-                      border: '1px solid #0f62fe',
-                    }}
+                    className="submit-btn-transparent"
                     onClick={handlePageChange}
                   >
                     Sign Up Using Metamask
@@ -152,7 +234,7 @@ const SignUp = () => {
               </Grid>
             </Form>
           </Tile>
-          <p style={{ marginLeft: '20px' }}>
+          <p style={{ marginLeft: '20px', color: '#161616' }}>
             Already have an account? <Link href="/signIn">Sign In</Link>
           </p>
         </Column>

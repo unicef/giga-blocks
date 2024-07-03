@@ -4,12 +4,10 @@ import {
   HttpException,
   BadRequestException,
 } from '@nestjs/common';
-import { Prisma, MintStatus } from '@prisma/application';
+import { MintStatus, Prisma, Role } from '@prisma/application';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { ListSchoolDto } from './dto/list-schools.dto';
-import { paginate } from 'src/utils/paginate';
 import { QueueService } from 'src/mailer/queue.service';
-import { Role } from '@prisma/application';
 import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
 import { handler } from 'src/utils/csvToDB';
 import { hexStringToBuffer } from '../utils/string-format';
@@ -19,7 +17,8 @@ import { updateData } from 'src/utils/ethers/transactionFunctions';
 import { ConfigService } from '@nestjs/config';
 import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-datum.dto';
 import { getTokenId } from 'src/utils/web3/subgraph';
-
+import { PaginateFunction, PaginateOptions } from 'src/utils/paginate';
+import { getContractWithSigner } from 'src/utils/ethers/contractWithSigner';
 @Injectable()
 export class SchoolService {
   constructor(
@@ -29,7 +28,8 @@ export class SchoolService {
   ) {}
 
   async findAll(query: ListSchoolDto) {
-    const { page, perPage, minted, uploadId, name, country, connectivityStatus } = query;
+    const { page, perPage, minted, uploadId, name, country, connectivityStatus, orderBy, order } =
+      query;
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
     };
@@ -67,18 +67,81 @@ export class SchoolService {
       return data;
     }
 
+    const paginator = (defaultOptions: PaginateOptions): PaginateFunction => {
+      return async (model, args: any = { where: undefined, include: undefined }, options) => {
+        const page = Number(options?.page || defaultOptions?.page) || 0;
+        const perPage = Number(options?.perPage || defaultOptions?.perPage) || 10;
+        const order = options?.order || defaultOptions?.order || 'desc';
+        const orderBy = options?.orderBy || defaultOptions?.orderBy || 'createdAt';
+        const skip = perPage * page;
+        const [total, rows] = await Promise.all([
+          model.count({ where: args.where }),
+
+          orderBy === 'school'
+            ? model.findMany({
+                ...args,
+                orderBy: [
+                  {
+                    school: {
+                      name: order,
+                    },
+                  },
+                ],
+                take: perPage,
+                skip,
+              })
+            : model.findMany({
+                ...args,
+                orderBy: {
+                  [orderBy]: order,
+                },
+                take: perPage,
+                skip,
+              }),
+        ]);
+        const lastPage = Math.ceil(total / perPage);
+        const meta = {
+          total,
+          lastPage,
+          currentPage: page,
+          perPage,
+        };
+
+        if (options?.transformRows) {
+          return {
+            rows: options.transformRows(rows),
+            meta,
+          };
+        }
+
+        return {
+          rows,
+          meta,
+        };
+      };
+    };
+
+    const paginate: PaginateFunction = paginator({ perPage: 20 });
+
     return paginate(
       this.prisma.school,
       { where },
       {
         page,
         perPage,
+        order,
+        orderBy,
       },
     );
   }
 
   async queueOnchainData(data: number) {
     return this.queueService.sendTransaction(data);
+  }
+
+  async findContract(tokenId) {
+      const contract: any = getContractWithSigner('NFTContent', '0x38AB410c1C650d251a83F884BB76709d1791Ab07');
+      return await contract.generateTokenData(tokenId);
   }
 
   async checkAdmin(address: string) {
@@ -91,7 +154,7 @@ export class SchoolService {
     if (admin && admin.roles.includes(Role.ADMIN)) {
       return true;
     }
-    throw new UnauthorizedException('You wallet is not an admin wallet');
+    throw new UnauthorizedException('Your wallet is not an admin wallet');
   }
 
   async mintBulkNFT(MintData: MintQueueDto) {
@@ -117,27 +180,49 @@ export class SchoolService {
       return;
     }
 
-    await new Promise(async (resolve, reject) => {
+    await new Promise(async () => {
       //@ts-ignore
-      await req.multipart(
-        async (
-          field: string,
-          fileData: any,
-          filename: string,
-          encoding: string,
-          mimetype: string,
-        ) => {
-          try {
-            const result = await handler(field, fileData, filename, encoding, mimetype, user);
-            resolve(result);
-            uploadBatch = result;
-          } catch (err) {
-            reject(err);
-            res.code(500).send({ err: 'Internal Server error', onmessage: err.messag });
-          }
-        },
-        onEnd,
-      );
+      await req.multipart(async (field: string, fileData: any, filename: string) => {
+        try {
+          const dataArray = await handler(fileData);
+          const schoolData = dataArray.schoolArrays;
+          schoolData.map(school => {
+            if (isNaN(school.longitude) || isNaN(school.latitude)) {
+              throw new BadRequestException({ message: 'Invalid longitude or latitude' });
+            }
+            if (
+              school.latitude < -90 ||
+              school.latitude > 90 ||
+              school.longitude < -180 ||
+              school.longitude > 180
+            ) {
+              throw new BadRequestException({ message: 'Invalid longitude or latitude' });
+            }
+          });
+          const transaction = await this.prisma.cSVUpload.create({
+            data: {
+              uploadedBy: user.id,
+              fileValue: dataArray.rowValue,
+              fileName: filename,
+              school: {
+                createMany: {
+                  data: dataArray.schoolArrays.map(school => ({
+                    ...school,
+                    createdById: user.id,
+                  })),
+                },
+              },
+            },
+          });
+          uploadBatch = transaction;
+        } catch (err) {
+          if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
+            res
+              .code(500)
+              .send({ err: 'Internal Server error', message: 'Duplicate giga_school_id' });
+          res.code(500).send({ err: 'Internal Server error', message: err.message });
+        }
+      }, onEnd);
     });
 
     // Uploading finished
@@ -200,12 +285,14 @@ export class SchoolService {
 
   async update(id: string, userId: string) {
     const school = await this.prisma.school.findUnique({ where: { id: id } });
-    if (school.minted === MintStatus.NOTMINTED) {
-      return await this.updateSchoolData(id, userId);
-    }
-    if (school.minted === MintStatus.MINTED) {
+    // if (school.minted === MintStatus.NOTMINTED) {
+    //   return await this.updateSchoolData(id, userId);
+    // }
+    if (school?.minted === MintStatus.MINTED) {
       const tx = await this.updateOnchainData(id, school);
       if (tx.status === 1) await this.updateSchoolData(id, userId);
+    } else {
+      return await this.updateSchoolData(id, userId);
     }
   }
 
@@ -236,6 +323,7 @@ export class SchoolService {
             approvedBy: userId,
             approvedAt: new Date(),
             approvedStatus: true,
+            inProgressStatus: false,
           },
         }),
         this.prisma.contributedData.updateMany({
@@ -269,7 +357,10 @@ export class SchoolService {
       tokenId,
       schooldata,
     );
-    const txReceipt = tx.wait();
+    const txReceipt = await tx.wait();
+    if (txReceipt.status === 1){
+      this.queueService.processImage(id);
+      }
     return txReceipt;
   }
 
@@ -278,6 +369,16 @@ export class SchoolService {
   }
 
   async updateBulk(ids: ApproveContributeDatumDto, userId: string) {
+    this.prisma.validatedData.updateMany({
+      where: {
+        id: {
+          in: ids.id,
+        },
+      },
+      data: {
+        inProgressStatus: true,
+      },
+    });
     this.queueService.approveBulkData(ids, userId);
   }
 
@@ -304,7 +405,7 @@ export class SchoolService {
         ...schooldata,
         ...filteredData,
       };
-      const onChainData = [
+      return [
         newData.name,
         newData.school_type,
         newData.country,
@@ -314,7 +415,6 @@ export class SchoolService {
         newData.coverage_availability.toString(),
         newData.electricity_available.toString(),
       ];
-      return onChainData;
     } catch (err) {
       console.log(err);
     }

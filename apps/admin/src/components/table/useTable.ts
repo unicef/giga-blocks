@@ -40,50 +40,6 @@ export default function useTable(props?: UseTableProps): ReturnType {
     [order, orderBy]
   );
 
-  const onSelectRow = useCallback(
-    (id: string) => {
-      // const idsOnly = selected?.map((d) => d.id);
-      // const selectedIndex = idsOnly.indexOf(id.id);
-      // const { type } = id;
-
-      // let newSelected: string[] = [];
-
-      // if (selectedIndex === -1) {
-      //   newSelected = newSelected.concat(selected, id);
-      // } else if (selectedIndex === 0) {
-      //   newSelected = newSelected.concat(selected.slice(1));
-      // } else if (selectedIndex === selected.length - 1) {
-      //   newSelected = newSelected.concat(selected.slice(0, -1));
-      // } else if (selectedIndex > 0) {
-      //   newSelected = newSelected.concat(
-      //     selected.slice(0, selectedIndex),
-      //     selected.slice(selectedIndex + 1)
-      //   );
-      // }
-      // setSelected([id]);
-    },
-    [selected, setSelected]
-  );
-
-  // const onSelectAllRows = useCallback(
-  //   (checked: boolean, newSelecteds: string[]) => {
-  //     if (checked) {
-  //       const idsToAdd = [];
-  //       newSelecteds?.map((newS) => {
-  //         const isExist = selected?.filter((d) => d.id === newS.id);
-  //         if (!isExist?.length) idsToAdd.push(newS);
-  //         return null;
-  //       });
-  //       setSelected([...selected, ...idsToAdd]);
-  //       return;
-  //     }
-  //     const idsToRemove = newSelecteds?.map((d) => d.id);
-  //     const newSelected = selected?.filter((d) => !idsToRemove.includes(d.id));
-  //     setSelected(newSelected);
-  //   },
-  //   [selected, setSelected]
-  // );
-
   const onChangePage = useCallback((event: unknown, newPage: number) => {
     setPage(newPage);
   }, []);
@@ -103,8 +59,6 @@ export default function useTable(props?: UseTableProps): ReturnType {
     page,
     orderBy,
     rowsPerPage,
-    //
-    onSelectRow,
     selected,
     // onSelectAllRows,
     //

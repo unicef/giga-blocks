@@ -1,3 +1,6 @@
+@use '@carbon/react/scss/breakpoint' as *;
+@use '@carbon/react/scss/spacing' as *;
+
 // Global
 .mt-50px {
   margin-top: 80px;
@@ -55,10 +58,15 @@
   display: flex;
   width: 100%;
   height: 80px;
+  @include breakpoint-down(md) {
+    margin-top: 12px;
+    flex-direction: column;
+    gap: 12px;
+  }
 }
 
 .school-connectivity-column {
-  width: 30%;
+  width: 100%;
 }
 
 .school-connectivity-card {
@@ -70,4 +78,28 @@
 
 .border-bottom {
   border-bottom: 1px solid #9e9e9e;
+}
+.tabs {
+  display: 'flex';
+  align-items: 'center';
+  justify-content: 'space-between';
+  background: #222222;
+}
+.map {
+  @include breakpoint-down(md) {
+    width: 380px;
+  }
+}
+.contribute-btn {
+  margin-right: 30px;
+  @include breakpoint-down(md) {
+    width: 95px !important;
+  }
+}
+.cds--tabs.cds--tabs--contained .cds--tabs__nav-item {
+  background: transparent !important ;
+}
+.cds--tabs.cds--tabs--contained .cds--tabs__nav-item--selected,
+.cds--tabs.cds--tabs--contained .cds--tabs__nav-item--selected:hover {
+  background: #4d4d4d !important;
 }
