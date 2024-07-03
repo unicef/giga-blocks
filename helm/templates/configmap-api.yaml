@@ -6,5 +6,5 @@ metadata:
 data:
   .env_temp: |
 {{- range $key, $val := .Values.api.config }}
-    {{ $key }}: {{ $val | quote }}
+    {{ $key }}={{ $val | quote }}
 {{- end }}

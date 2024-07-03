@@ -2,7 +2,6 @@ trigger:
   branches:
     include:
     - dev
-    - dev-azure-devops
   paths:
     include:
     - apps/**
@@ -14,10 +13,9 @@ variables:
   containerRegistryServiceConnection: $(ACR_SERVICE_CONNECTION)
   imageTag: '$(Build.BuildId)'
   system.debug: true
-  kubernetesServiceConnection: GIGA-BLOCKS-OOI-DEV-uni-ooi-giga-aks-dev-ictd-ooi-giga-blocks-dev-1709541823849
-  kubernetesNamespace: ictd-ooi-giga-blocks-dev
+  kubernetesServiceConnection: $(K8S_SERVICE_CONNECTION)
+  kubernetesNamespace: $(KUBERNETES_NAMESPACE)
   CI: false
-#  env_dev: $(ENV_DEV)
 
 stages:
 - stage: Build

@@ -2,7 +2,6 @@ trigger:
   branches:
     include:
     - dev
-    - dev-azure-devops
   paths:
     include:
     - apps/api/**
@@ -15,7 +14,6 @@ variables:
   imageTag: '$(Build.BuildId)'
   system.debug: true
   CI: false
-#  env_dev: $(ENV_DEV)
 
 stages:
 - stage: Build

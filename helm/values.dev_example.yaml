@@ -230,23 +230,22 @@ api:
     requests:
       cpu: 100m
       memory: 128Mi
-  livenessProbe: { }
-    #httpGet:
-    #  path: /admin
-    #  port: http
-    #periodSeconds: 20
-    #timeoutSeconds: 10
-    #successThreshold: 1
-    #failureThreshold: 3
-  readinessProbe: { }
-    #httpGet:
-    #  path: /admin
-    #  port: http
-    #periodSeconds: 20
-    #timeoutSeconds: 10
-    #successThreshold: 1
-    #failureThreshold: 3
-
+  livenessProbe:
+    httpGet:
+      path: /api/v1/auth/health
+      port: http
+    periodSeconds: 20
+    timeoutSeconds: 10
+    successThreshold: 1
+    failureThreshold: 3
+  readinessProbe:
+    httpGet:
+      path: /api/v1/auth/health
+      port: http
+    periodSeconds: 20
+    timeoutSeconds: 10
+    successThreshold: 1
+    failureThreshold: 3
 
 web:
   image:
