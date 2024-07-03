@@ -2,7 +2,6 @@ trigger:
   branches:
     include:
     - dev
-    - dev-azure-devops
   paths:
     include:
     - apps/admin/**
@@ -15,7 +14,6 @@ variables:
   imageTag: '$(Build.BuildId)'
   system.debug: true
   CI: false
-#  env_dev: $(ENV_DEV)
 
 stages:
 - stage: Build
@@ -41,10 +39,6 @@ stages:
     - script: |
         mv .env.dev.giga-blocks .env
       displayName: 'create .env file'
-
-    #- script: |
-    #    touch ./.env && echo "$(env_dev)" >> ./.env
-    #  displayName: 'import env file'
 
     - task: NodeTool@0
       inputs:
