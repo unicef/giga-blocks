@@ -1,6 +1,7 @@
 "use client"
 import Scrollbar from "@components/scrollbar";
 import {  TableHeadUsers, TableNoData, useTable } from "@components/table";
+import useDebounce from "@hooks/useDebounce";
 import { useUserGet } from "@hooks/user/useUser";
 import DashboardLayout from "@layouts/dashboard/DashboardLayout";
 import { Card, Divider, TableContainer, Table, TableBody, CircularProgress, TextField } from "@mui/material";
@@ -19,19 +20,21 @@ const UserList = () => {
     const TABLE_HEAD = [
         { id: 'name', label: 'Name', align: 'left' },
         { id: 'email', label: 'Email', align: 'left' },
-        { id: 'wallet', label: 'Wallet', align: 'left' }
+        { id: 'walletAddress', label: 'Wallet', align: 'left' }
       ];
-      const [name, setName] = useState<string>()
+      const [name, setName] = useState<string>('')
 
       const {dense, page, order, orderBy, rowsPerPage, onSort
       } = useTable();
 
+    const debouncedName = useDebounce(name, 500)
+
     const [tableData, setTableData] = useState<any>([]);
-    const {data, isFetching, refetch} = useUserGet(page, rowsPerPage, 'ADMIN', name)
+    const {data, isFetching, refetch} = useUserGet(page, rowsPerPage, 'ADMIN', debouncedName, order, orderBy)
 
     useEffect(() => {
       refetch()
-    }, [name])
+    }, [order, orderBy])
 
     let filteredData:FilteredDataType[] = []
     useEffect(() => {
@@ -47,11 +50,6 @@ const UserList = () => {
       })
       setTableData(filteredData);
     }, [data, isFetching]);
-
-    const sortedData = tableData.slice().sort((a:any, b:any) => {
-      const isAsc = order === 'asc';
-      return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
-    });
 
     const handleSearchChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setName(e.target.value)
@@ -75,15 +73,17 @@ const UserList = () => {
                   onSort={onSort}
                 />
                 <TableBody>
-                  {sortedData &&
-                    sortedData?.map((row:any) => (
+                  {tableData &&
+                    tableData?.map((row:any) => (
                       <UserListRow
                         key={row.id}
                         row={row}
                       />
                     ))}
-                  {!isFetching ? <TableNoData
-                  isNotFound={tableData.length === 0} /> : <CircularProgress color="inherit"/> }
+                  <TableNoData
+                  isNotFound={tableData.length === 0} 
+                  isFetching = {isFetching}
+                  />
                 </TableBody>
               </Table>
             </Scrollbar>

@@ -22,9 +22,9 @@ import { ChangeEvent, useEffect, useState } from 'react';
 
 const VerifiedSchool = () => {
   const TABLE_HEAD = [
-    { id: 'schoolName', label: 'Name', align: 'left' },
+    { id: 'name', label: 'Name', align: 'left' },
     { id: 'location', label: 'Location', align: 'left' },
-    { id: 'latitide', label: 'Latitude', align: 'left' },
+    { id: 'latitude', label: 'Latitude', align: 'left' },
     { id: 'longitude', label: 'Longitude', align: 'left' },
     { id: 'status', label: 'Status', align: 'left' },
   ];
@@ -40,13 +40,13 @@ const VerifiedSchool = () => {
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable();
+  } = useTable({defaultOrder: 'asc', defaultOrderBy: 'name'});
 
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
   const [country, setCountry] = useState<string>()
-  const [connectivity, setConnectivity] = useState<string>()
-  const { data } = useSchoolGet({page, perPage: rowsPerPage, minted: 'ISMINTING', country, connectivity});
+  const [connectivity] = useState<string>()
+  const { data, refetch, isFetching } = useSchoolGet({page, perPage: rowsPerPage, minted: 'ISMINTING', country, connectivity, order, orderBy});
 
   let filteredData: any = [];
   useEffect(() => {
@@ -69,21 +69,9 @@ const VerifiedSchool = () => {
     setTableData(filteredData);
   }, [data]);
 
-  const handleSearchChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setCountry(e.target.value)
-  }
-
-  const handleSearchConnectivity = (event:any) => {
-    setConnectivity(event.target.value as string);
-  }
-
-  const sortedData = tableData?.slice().sort((a:any, b:any) => {
-    const isAsc = order === 'asc';
-    if(orderBy === 'longitude' || orderBy === 'latitide'){
-    return (parseFloat(a[orderBy]) < parseFloat(b[orderBy]) ? -1 : 1) * (isAsc ? 1 : -1);
-    }
-    return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
-  });
+  useEffect(() => {
+    refetch()
+  }, [order, orderBy])
 
   return (
     <DashboardLayout>
@@ -102,8 +90,8 @@ const VerifiedSchool = () => {
               />
 
               <TableBody>
-                {sortedData &&
-                  sortedData?.map((row: any) => (
+                {tableData &&
+                  tableData?.map((row: any) => (
                     <SchoolTableRow
                       key={row.id}
                       row={row}
@@ -113,7 +101,7 @@ const VerifiedSchool = () => {
                       checkbox={false}
                     />
                   ))}
-                <TableNoData isNotFound={tableData.length === 0} />
+                <TableNoData isNotFound={tableData.length === 0} isFetching={isFetching} />
               </TableBody>
             </Table>
           </Scrollbar>

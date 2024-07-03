@@ -22,6 +22,7 @@ export default function ContributeDetail({ id }: Props) {
     status: '',
     contributed_data: '',
     coverage: '',
+    validatedUser: '',
     mintedStatus: '',
   });
 
@@ -33,7 +34,6 @@ export default function ContributeDetail({ id }: Props) {
     isSuccess: isValidationSuccess,
     isError: isValidationError,
   } = useContributionValidate();
-  const [toastMessage, setToastMessage] = useState('validated')
   const router = useRouter();
 
 
@@ -48,15 +48,14 @@ export default function ContributeDetail({ id }: Props) {
         status: data?.status,
         contributed_data: jsonString,
         coverage: data?.coverage_availability,
+        validatedUser: data?.validatedUser?.name || '',
         mintedStatus: data?.minted,
       });
     }
   }, [isSuccess, isError, data]);
 
   useEffect(() => {
-    isValidationSuccess && enqueueSnackbar(`Contributed Data are ${toastMessage}. Please check ${toastMessage} Data Section`, { variant: 'success' });
     refetch();
-    isValidationError && enqueueSnackbar('Unsuccessful', { variant: 'error' });
   }, [isValidationSuccess, isValidationError]);
 
   const methods = useForm();
@@ -64,8 +63,9 @@ export default function ContributeDetail({ id }: Props) {
   const onContribute = (validity: boolean) => {
     const payload = { contributions: [{ contributionId: id, isValid: validity }] };
     mutate(payload);
-    !validity && setToastMessage('invalidated')
-    router.push('/contribute');
+    !validity ? enqueueSnackbar(`Contributed Data are invalidated. Please check invalidated Data Section`, { variant: 'success' })
+    : enqueueSnackbar(`Contributed Data are validated. Please check validated Data Section`, { variant: 'success' });
+    router.push('/contribute')
   };
 
   const back = () => {
@@ -74,7 +74,9 @@ export default function ContributeDetail({ id }: Props) {
 
   return (
     <>
-   { isFetching ?<CircularProgress color='inherit'/>:
+   { isFetching ?<div style={{width: '100%', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      <CircularProgress color="inherit" />
+      </div>:
    (
    <>
       <Grid item xs={12} lg={8}>
@@ -126,7 +128,14 @@ export default function ContributeDetail({ id }: Props) {
                         label="Status"
                         disabled
                       />
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      {profile?.status != 'Pending' && <ProfileTextField
+                        name="longitude"
+                        value={profile?.validatedUser || ''}
+                        label={`${profile?.status === 'Validated' ? 'Validated by' : 'Invalidated By'}`}
+                        disabled
+                      />}
+                    </Box>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <span>Contributed Data</span>
                         <span>
                           <ProfileTextField
@@ -137,7 +146,6 @@ export default function ContributeDetail({ id }: Props) {
                           />
                         </span>
                       </div>
-                    </Box>
                   </Box>
 
                   <Stack alignItems="flex-start" sx={{ mt: 3 }}>

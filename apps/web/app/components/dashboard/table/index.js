@@ -21,6 +21,7 @@ import {
 import { Filter } from '@carbon/icons-react';
 import { useContributionList } from '../../../hooks/useContributionList';
 import { getCurrentUser } from '../../../utils/sessionManager';
+import useDebounce from '../../../hooks/useDebounce'
 
 const headerData = [
   {
@@ -45,6 +46,7 @@ const headerData = [
   },
 ];
 
+
 const UserContributionTable = () => {
   const user = getCurrentUser();
   const [rowData, setRowData] = useState([]);
@@ -52,12 +54,15 @@ const UserContributionTable = () => {
   const [pagination, setPagination] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [order, setOrder] = useState(null);
+  const [searchSchool, setSearchSchool] = useState()
+  const debouncedValue = useDebounce(searchSchool, 500)
   const [sortBy, setSortBy] = useState(null);
   const { data, isLoading, isFetching } = useContributionList(
     pagination - 1,
     pageSize,
     user?.id,
-    order
+    order,
+    debouncedValue
   );
 
   useEffect(() => {
@@ -99,14 +104,18 @@ const UserContributionTable = () => {
     setPageSize(page.pageSize);
   };
 
-  return rowData?.length ? (
+  const onInputsChange = (e) => {
+    setSearchSchool(e.target.value)
+  }
+
+  return (
     <>
       <DataTable rows={rowData} headers={headerData}>
-        {({ rows, headers, getHeaderProps, getTableProps, onInputChange }) => (
+        {({ rows, headers, getHeaderProps, getTableProps }) => (
           <>
             <TableToolbar style={{ background: '#fff' }}>
               <TableToolbarContent>
-                <TableToolbarSearch onChange={onInputChange} />
+                <TableToolbarSearch onChange={onInputsChange} />
                 <TableToolbarMenu renderIcon={Filter} iconDescription="Sort By">
                   <RadioButtonGroup
                     style={{
@@ -137,7 +146,7 @@ const UserContributionTable = () => {
               </TableToolbarContent>
             </TableToolbar>
             <Table {...getTableProps()}>
-              <TableHead>
+              {rowData?.length ? <><TableHead>
                 <TableRow>
                   {headers.map((header) => (
                     <TableHeader
@@ -177,12 +186,14 @@ const UserContributionTable = () => {
                     </TableCell>
                   </TableRow>
                 )}
-              </TableBody>
+              </TableBody> </> : <Column sm={4} md={8} lg={16}>
+              <h1>No contribution has been made</h1>
+              </Column>}
             </Table>
           </>
         )}
       </DataTable>
-      <Pagination
+      {rowData?.length ? <Pagination
         backwardText="Previous page"
         forwardText="Next page"
         itemsPerPageText="Items per page:"
@@ -193,13 +204,9 @@ const UserContributionTable = () => {
         totalItems={totalData}
         onChange={(page) => handlePageChange(page)}
         style={{ background: '#2C2B33', color: 'white' }}
-      />
+      /> : ''}
     </>
-  ) : (
-    <Column sm={4} md={8} lg={16}>
-      <h1>No contribution has been made</h1>
-    </Column>
-  );
+  ) 
 };
 
 export default UserContributionTable;

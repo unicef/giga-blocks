@@ -16,7 +16,7 @@ export default function LoginPage() {
   return (
       <LoginProvider>
         <Head>
-          <title>Giga school | NFT 2.0</title>
+          <title>Giga Blocks</title>
         </Head>
 
         <LoginComp />

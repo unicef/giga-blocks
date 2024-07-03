@@ -13,21 +13,17 @@ import {
 import './contributeSchools.scss';
 import { useEffect, useState } from 'react';
 import { useSchoolGet } from '../../hooks/useSchool';
-import { toSvg } from 'jdenticon';
+import generateIdenticon from '../../utils/generateIdenticon';
+import useDebounce from '../../hooks/useDebounce';
 
 const SchoolCard = () => {
   const [schoolData, setSchoolData] = useState([]);
   const [pageSize, setPageSize] = useState(12);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const debouncedSearch = useDebounce(searchText, 500);
 
-  const { data, isLoading, isFetching } = useSchoolGet(0, pageSize, searchText);
-
-  const generateIdenticon = (image) => {
-    const size = 50;
-    const svgString = toSvg(image?.toString(), size);
-    return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
-  };
+  const { data, isLoading } = useSchoolGet(0, pageSize, debouncedSearch);
 
   useEffect(() => {
     isLoading === false && setSchoolData(data?.rows);
@@ -55,10 +51,15 @@ const SchoolCard = () => {
           onChange={(e) => {
             setSearchText(e.target.value);
           }}
+          style={{ fontSize: '14px' }}
         />
       </div>
       <Grid fullWidth style={{ margin: '30px auto' }}>
-        {schoolData &&
+        {schoolData.length === 0 ? (
+          <Column sm={4}>
+            <h4>School Not Available.</h4>
+          </Column>
+        ) : (
           schoolData?.map((school) => (
             <Column sm={4}>
               <ClickableTile
@@ -116,14 +117,15 @@ const SchoolCard = () => {
                 </h4>
               </ClickableTile>
             </Column>
-          ))}
+          ))
+        )}
         <Column sm={4} md={8} lg={16}>
           {schoolData.length > 0 && (
             <Button
+              className="load-more"
               onClick={loadMore}
               kind="tertiary"
               disabled={allDataLoaded}
-              style={{ float: 'right' }}
             >
               {allDataLoaded === false ? 'Load more' : 'No more data'}
             </Button>

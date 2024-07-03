@@ -12,26 +12,40 @@ import { useState } from 'react';
 import { Loading } from '@carbon/react';
 import PageHeader from '../../components/page-header';
 
+
 const SchoolDetail = ({ id }) => {
   const [result] = useQuery({
     query: Queries.nftDetailsQuery,
     variables: { id },
   });
+  const [imageRes] = useQuery({
+    query: Queries.nftImage,
+    variables: { id },
+  });
+
   const { fetching } = result;
   const [schoolData, setSchoolData] = useState();
+  const [noData, setNoData] = useState(false)
 
-  const decodeSchooldata = (data) => {
-    const encodeddata = data.collectorTokenUri;
+  const decodeSchooldata = (data, imageData) => {
+    const encodeddata = data?.collectorTokenUri;
+    if(encodeddata === null) {setNoData(true); return;}
+    console.log({encodeddata})
     const decodedData = atob(encodeddata?.tokenUri.substring(29));
     const nftDetails = {
       owner: encodeddata.owner.id,
       ...JSON.parse(decodedData),
+      image: imageData?.nftImage?.imageScript,
     };
     setSchoolData(nftDetails);
   };
+
   useEffect(() => {
-    if (result.data) decodeSchooldata(result.data);
-  }, [result.data]);
+    if (result.data && imageRes.data)
+      decodeSchooldata(result.data, imageRes.data);
+    
+    
+  }, [result.data, imageRes.data]);
 
   const breadcrumbs = [
     { text: 'Home', link: '/' },
@@ -40,7 +54,17 @@ const SchoolDetail = ({ id }) => {
 
   return (
     <>
-      {fetching == false ? (
+      {fetching === true ? (
+        <div className="loader-container">
+        {' '}
+        <Loading withOverlay={false} />{' '}
+        <span>Loading school data, please wait...</span>{' '}
+      </div>
+        
+      ) : noData === true ? <div className="loader-container">
+      {' '}
+      <h3>No school data with such ID.</h3>{' '}
+    </div> : (
         <>
           <Navbar />
           <PageHeader name={schoolData?.schoolName} breadcrumbs={breadcrumbs} />
@@ -50,12 +74,6 @@ const SchoolDetail = ({ id }) => {
           <NFTMetadata schoolData={schoolData} />
           <Footer />
         </>
-      ) : (
-        <div className="loader-container">
-          {' '}
-          <Loading withOverlay={false} />{' '}
-          <span>Loading school data, please wait...</span>{' '}
-        </div>
       )}
     </>
   );

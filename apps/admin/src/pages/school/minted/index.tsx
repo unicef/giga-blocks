@@ -52,7 +52,7 @@ const MintedSchools = () => {
     variables: {  },
   });
   const { data, fetching } = result;
-  
+
   useEffect(() => {
     const startItem = (page+1)*rowsPerPage - rowsPerPage;
     const endItem = page*rowsPerPage + rowsPerPage
@@ -61,19 +61,20 @@ const MintedSchools = () => {
     setPaginatedData(paginatedDatas)
   }, [rowsPerPage, data, page])
 
-
-  const decodeSchooldata = (data: any) => {
-    const encodeddata = data;  
-    const decodedShooldata = [];
-    for (let i = 0; i < encodeddata.length; i++) {
-      const decodedData = atob(encodeddata[i].tokenUri.substring(29));
+  let filteredData: any = [];
+  useEffect(() => {
+    if (paginatedData) {
+    const encodeddata = paginatedData;  
+    const decodedShooldata:any = [];
+    encodeddata.map((data:any) => {
+      let decodedData = atob(data.tokenUri.substring(29));
       const schoolData = {
-        tokenId: encodeddata[i].id,
-        mintedAt: encodeddata[i].mintedAt,
+        tokenId: data.id,
+        mintedAt: data.mintedAt,
         ...JSON.parse(decodedData),
       };
       decodedShooldata.push(schoolData);
-    }
+    })
     decodedShooldata &&
       decodedShooldata?.map((row: any) => {
         filteredData.push({
@@ -91,11 +92,7 @@ const MintedSchools = () => {
         });
       });
     setTableData(filteredData);
-  };
-
-  let filteredData: any = [];
-  useEffect(() => {
-    if (paginatedData) decodeSchooldata(paginatedData);
+    };
   }, [data, paginatedData]);
 
   const sortedData = tableData?.slice().sort((a:any, b:any) => {

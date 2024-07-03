@@ -1,23 +1,14 @@
 'use client';
 import routes from '../../constants/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import { getAccessToken } from '@utils/sessionManager';
+import api from '@utils/apiCall';
 
-const api = axios.create({
-  baseURL: routes.BASE_URL,
-});
-
-const accessToken = getAccessToken();
-
-api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-
-export const useSchoolGet = ({page, perPage, minted, uploadId, name, country, connectivity, school}:{page?: number, perPage: number, minted?: string, uploadId?: any, name?: string, country?:string, connectivity?:string, school?:string}) => {
+export const useSchoolGet = ({page, perPage, minted, uploadId, name, country, connectivity, school, order, orderBy, debouncedValue}:{page?: number, perPage: number, minted?: string, uploadId?: any, name?: string, country?:string, connectivity?:string, school?:string, order?:string, orderBy?:string, debouncedValue?:any}) => {
   return useQuery(
-    ['get-school-data', page, perPage],
+    ['get-school-data', page, perPage, debouncedValue],
     async () => {
       const { data } = await api.get(
-        `${routes.SCHOOLS.GET}?perPage=${perPage}${page ? `&page=${page}` : ''}${name ? `&name=${name}` : ''}${minted ? `&minted=${minted}` : ''}${uploadId ? `&uploadId=${uploadId}` : ``}${country ? `&country=${country}` : ``}${connectivity ? `&connectivityStatus=${connectivity}` : ``}${school ? `&name=${school}` : ``}`
+        `${routes.SCHOOLS.GET}?perPage=${perPage}${page ? `&page=${page}` : ''}${name ? `&name=${name}` : ''}${minted ? `&minted=${minted}` : ''}${uploadId ? `&uploadId=${uploadId}` : ``}${country ? `&country=${country}` : ``}${connectivity ? `&connectivityStatus=${connectivity}` : ``}${school && school.length > 1 ? `&name=${school}` : ``}${order ? `&order=${order}` : ``}${orderBy ? `&orderBy=${orderBy}` : ``}`
       );
       return data;
     },

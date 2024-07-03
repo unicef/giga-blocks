@@ -25,11 +25,12 @@ import { mintSignature } from '@components/web3/utils/wallet';
 import { useBulkMintSchools } from '@hooks/school/useSchool';
 import { useWeb3React } from '@web3-react/core';
 import { useSnackbar } from '@components/snackbar';
+import useDebounce from '@hooks/useDebounce';
 
 const VerifiedSchool = () => {
 
     const TABLE_HEAD = [
-        { id: 'schoolName', label: 'School name', align: 'left' },
+        { id: 'name', label: 'School name', align: 'left' },
         { id: 'country', label: 'Location', align: 'left' },
         { id: 'latitude', label: 'Latitude', align: 'left' },
         { id: 'longitude', label: 'Longitude', align: 'left' },
@@ -45,7 +46,7 @@ const VerifiedSchool = () => {
       const uploadId = query.uploadId;
 
       const {dense, page, setPage, order,  orderBy, rowsPerPage, onChangePage, onSort, onChangeDense, onChangeRowsPerPage,
-      } = useTable();
+      } = useTable({defaultOrderBy: 'createdAt', defaultOrder: 'desc'});
 
   const {
     mutate,
@@ -60,11 +61,12 @@ const VerifiedSchool = () => {
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
   const [country, setCountry] = useState<string>()
-  const { data, isLoading, refetch } = useSchoolGet({page, perPage: rowsPerPage, minted: 'NOTMINTED', uploadId, country, school});
+  const debouncedValue = useDebounce(`${school} + ${country}`, 300)
+  const { data, isLoading, refetch, isFetching } = useSchoolGet({page, perPage: rowsPerPage, minted: 'NOTMINTED', uploadId, country, school, order, orderBy, debouncedValue});
 
   useEffect(() => {
     refetch()
-  }, [uploadId, country, isMintSuccess, mintingError, school])
+  }, [uploadId, isMintSuccess, mintingError, order, orderBy])
 
   let filteredData: any = [];
   useEffect(() => {
@@ -87,17 +89,6 @@ const VerifiedSchool = () => {
 
     setTableData(filteredData);
   }, [data, isLoading, uploadId]);
-
-    const signTransaction = useCallback(async () =>{
-      try {
-      const signer = (provider.provider as unknown as JsonRpcProvider).getSigner() as unknown as Signer;
-      const signature = await mintSignature(signer, selectedValues.length);
-      return signature;
-      }
-      catch(err) {
-        enqueueSnackbar(err.message, { variant: 'error' })
-      }
-    },[provider,selectedValues])
   
     const mintSchool = useCallback(async () => {
       if(selectedValues.length === 0){
@@ -106,7 +97,7 @@ const VerifiedSchool = () => {
       } 
       setSelectedValues([])
       mutate({data:selectedValues})
-    },[signTransaction,selectedValues])
+    },[selectedValues])
 
     useEffect(() => {
       isMintSuccess && enqueueSnackbar("Minted Successfully", { variant: 'success' })
@@ -115,7 +106,7 @@ const VerifiedSchool = () => {
 
     let test;
     const onSelectAllRows = (e:any) => {
-      const isChecked = e.target.checked;
+      const isChecked = e.target.checked
       test = isChecked
       if(isChecked){
         setSelectedValues(tableData)
@@ -128,14 +119,6 @@ const VerifiedSchool = () => {
     const uploadSchool = () => {
       push('/school/import')
     }
-
-    const sortedData = tableData?.slice().sort((a:any, b:any) => {
-      const isAsc = order === 'asc';
-      if(orderBy === 'longitude' || orderBy === 'latitide'){
-      return (parseFloat(a[orderBy]) < parseFloat(b[orderBy]) ? -1 : 1) * (isAsc ? 1 : -1);
-      }
-      return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
-    });
 
     const handleSearchChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setCountry(e.target.value)
@@ -181,8 +164,8 @@ const VerifiedSchool = () => {
                 />
 
                 <TableBody>
-                  {sortedData &&
-                    sortedData?.map((row:any) => (
+                  {tableData &&
+                    tableData?.map((row:any) => (
                       <SchoolTableRow
                         key={row.id}
                         row={row}
@@ -194,6 +177,7 @@ const VerifiedSchool = () => {
                     ))}
                   <TableNoData 
                   isNotFound={tableData.length === 0}
+                  isFetching={isFetching}
                   />
                 </TableBody>
               </Table>

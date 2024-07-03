@@ -5,3 +5,8 @@
 .cds--header__menu-trigger > svg {
   fill: #fff;
 }
+a.cds--header__menu-item:hover {
+  background: var(--cds-background-hover, rgba(141, 141, 141, 0.12)) !important;
+  color: var(--cds-text-primary, #161616) !important;
+  background: white;
+}

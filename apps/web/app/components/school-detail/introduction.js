@@ -12,7 +12,6 @@ const Introduction = ({ schooldata, tokenId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { account } = useWeb3React();
   const [onSell, setOnSell] = useState(false);
-  const [isOwner, setIsOwner] = useState(false);
   const [price, setPrice] = useState(0);
   const sellerContract = useSellerContract();
 
@@ -27,6 +26,8 @@ const Introduction = ({ schooldata, tokenId }) => {
     }
   };
 
+  const [isOwner, setIsOwner] = useState(false);
+
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -37,12 +38,6 @@ const Introduction = ({ schooldata, tokenId }) => {
 
   const onClick = () => {
     openModal();
-  };
-
-  const generateIdenticon = (image) => {
-    const size = 50;
-    const svgString = toSvg(image, size);
-    return `data:image/svg+xml,${encodeURIComponent(svgString)}`;
   };
 
   useEffect(() => {
@@ -57,24 +52,34 @@ const Introduction = ({ schooldata, tokenId }) => {
   }, [schooldata?.owner, account]);
 
   useEffect(() => {
-    fetchPrice();
-  });
+    const fetchData = async () => {
+      if (!sellerContract) return;
+  
+      try {
+        const price = await sellerContract.methods.calculatePrice().call();
+        setPrice(price);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  
+    fetchData();
+  }, [sellerContract]);
 
   return (
-    <Grid fullWidth className="mt-50px">
-      <Column
-        md={4}
-        lg={7}
-        sm={4}
-        style={{ display: 'flex', justifyContent: 'flex-start' }}
-      >
-        <img
-          style={{
-            width: '80%',
-          }}
-          alt="School Map"
-          src={generateIdenticon(schooldata?.image)}
-        />
+    <Grid
+      fullWidth
+      className="mt-50px"
+      style={{ position: 'relative' }}
+    >
+      <Column md={4} lg={8} sm={4}>
+        {schooldata?.image && (
+          <img
+            src={`https://ipfs.io/ipfs/${schooldata?.image}`}
+            alt={schooldata?.image}
+            style={{ marginBottom: '16px', maxWidth: '400px', width: '100%' }}
+          />
+        )}
       </Column>
       <Column md={4} lg={8} sm={4}>
         <div>
@@ -88,8 +93,11 @@ const Introduction = ({ schooldata, tokenId }) => {
         <hr />
         <div>
           <h1 style={{ fontSize: '1.5em', marginTop: '64px' }}>Ownership</h1>
-          <p style={{ marginTop: '32px', marginBottom: '32px' }}>
-            {schooldata?.owner}
+          <p
+            className="walletAddress"
+            style={{ marginTop: '32px', marginBottom: '32px' }}
+          >
+            {onSell ? 'Giga' : schooldata?.owner}
           </p>
         </div>
         <div>

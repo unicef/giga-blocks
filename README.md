@@ -2,6 +2,11 @@
 
 Monorepo for GIGA made using pnpm workspaces and added nx for caching.
 
+## Staging server of Giga 
+- public site : https://dev.giga.rumsan.net/
+- adminApp: https://admin.dev.giga.rumsan.net/dashboard
+- backend: https://api.dev.giga.rumsan.net/api/docs
+
 ## Setup and Running
 
 We are using `pnpm` as a package manager so we must install it as a global dependencies:
@@ -62,15 +67,15 @@ For running nx for specific apps or library you can write following syntax:
 npx nx <command(build,lint,test,serve)> <apps/libs name>
 ```
 
-Contract Addresses deployed for testing in stage server(Polygon Mumbai):
+Contract Addresses deployed for testing in stage server(Ethereum Sepolia):
 
 ```
 
-NFT_Content_Address:0x5e41D7F043BEffb68F3064678E1fB1B5aFdbc5B3
-School_NFT_Contract_Address:0xA6a171f32EDC5691DC8c1Aaa2B9FE7D9c47CA905
-Collector_NFT_Contract_Address:0xE2e91a6120544a493A88e17DA8BDF00b64Ce332C
-Giga_Minter_Contract_Address:0xeA56a618D84cEe9B0308f9f2eC66934B220f10c0
-Escrow_Contract_Address:0x149298017FaCbb034E54d53F7265616fcA3D3254
-Giga_Seller_Contract_Address:0xDdDeE20FBE797D7eE399c9275a1A4b4265e45BFA
+NFT_Content_Address:0x8062e38a0051820e53B74B7f946260852be62B04
+School_NFT_Contract_Address:0xa404c99947391EADD22b82133174F6dc7da75Bcd
+Collector_NFT_Contract_Address:0x4239E657FEDD95e0836Cd4667E1B5bDc4Cf9C6a5
+Giga_Minter_Contract_Address:0x5E2016e9fb8AF9feA34c61916F975a1dB2475a44       
+Escrow_Contract_Address:0x5b4088b76797859d8d168b35F347cDa3120ed518
+Giga_Seller_Contract_Address:0x32308109F16Cf57BB7817BE3a578cd8938d74372
 ART SCRIPT Contract are auto deployed during nft content deployment
 ```

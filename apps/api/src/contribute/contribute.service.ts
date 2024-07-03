@@ -39,10 +39,18 @@ export class ContributeDataService {
   }
 
   async findAll(query) {
-    const { page, perPage, schoolId, contributorId, status, order } = query;
+    const { page, perPage, schoolId, contributorId, status, order, orderBy, school } = query;
     const where: Prisma.ContributedDataWhereInput = {};
     if (schoolId) {
       where.school_Id = schoolId;
+    }
+    if (school){
+      where.school = {
+        name: {
+          contains: school,
+          mode: 'insensitive'
+        }
+      };
     }
     if (contributorId) {
       where.contributedUserId = contributorId;
@@ -61,13 +69,18 @@ export class ContributeDataService {
             name: true,
           },
         },
+        validatedUser: {
+          select: {
+            name: true,
+          },
+        },
         school: {
           select: {
             name: true,
           },
         },
       },
-    };
+    }; 
 
     const contributedata = await paginate(
       this.prisma.contributedData,
@@ -76,6 +89,7 @@ export class ContributeDataService {
         page,
         perPage,
         order,
+        orderBy
       },
     );
     return contributedata;
@@ -86,6 +100,11 @@ export class ContributeDataService {
       where: { id: id },
       include: {
         contributedUser: {
+          select: {
+            name: true,
+          },
+        },
+        validatedUser: {
           select: {
             name: true,
           },
@@ -217,7 +236,7 @@ export class ContributeDataService {
 
   async getValidated(query) {
     try {
-      const { page, perPage, status, school } = query;
+      const { page, perPage, status, school, order, orderBy } = query;
     const where: Prisma.ContributedDataWhereInput = {};
     if (school) {
       where.school_Id = school;
@@ -234,7 +253,7 @@ export class ContributeDataService {
         school: {
           select: {
             name: true,
-          },
+          }
         },
         approved: {
           select: {
@@ -247,7 +266,7 @@ export class ContributeDataService {
       args.where.isArchived = true;
     } else {
       args.where.isArchived = false;
-    }
+    } 
 
     const validatedDataRes = await paginate(
       this.prisma.validatedData,
@@ -255,14 +274,15 @@ export class ContributeDataService {
       {
         page,
         perPage,
+        order,
+        orderBy
       },
     );
     return validatedDataRes;
     } catch (error) {
-      this._logger.error(error) 
-      throw new InternalServerErrorException(error)
+      this._logger.error(error);
+      throw new InternalServerErrorException(error);
     }
-    
   }
 
   async getValidatedById(id: string) {
@@ -275,6 +295,7 @@ export class ContributeDataService {
           select: {
             name: true,
           },
+          
         },
         approved: {
           select: {
@@ -283,6 +304,7 @@ export class ContributeDataService {
         },
       },
     });
+
     return validatedData;
   }
 }

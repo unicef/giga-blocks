@@ -1,20 +1,15 @@
 import { Column, Grid } from '@carbon/react';
 import React from 'react';
 import './footer.scss';
+import { UpToTop } from '@carbon/icons-react';
+import scrollToTop from '../../utils/scrollToTop';
 
 const Footer = () => {
   return (
     <>
       <Grid className="footer mp-0" fullWidth>
-        <Column md={4} lg={6} sm={4}>
-          <h2 style={{ marginBottom: '16px' }}>NFT 2.0</h2>
-          <p>
-            Together, we can reshape the narrative of education in <br /> the
-            digital age. Join, collaborate, innovate.
-          </p>
-        </Column>
+        <Column className="footer-logo" md={4} lg={6} sm={4}></Column>
         <Column md={4} lg={3} sm={4}>
-          <p className="footer-heading">USEFUL LINKS</p>
           <ul>
             <li>
               <a href="/comingSoon">Data Repository</a>
@@ -28,7 +23,6 @@ const Footer = () => {
           </ul>
         </Column>
         <Column md={4} lg={3} sm={4}>
-          <p className="footer-heading">TERMS</p>
           <ul>
             <li>
               <a href="/comingSoon">TOS</a>
@@ -42,14 +36,12 @@ const Footer = () => {
           </ul>
         </Column>
         <Column md={4} lg={4} sm={4}>
-          <h3 className="footer-heading" style={{ marginBottom: '20px' }}>
-            STAY IN TOUCH
-          </h3>
           <p>
-            For more information about Giga please go to{' '}
+            For more information about Giga:
+            <br />
             <a className="link" href="https://giga.global/">
               {' '}
-              Giga Connect{' '}
+              Gigaglobal{' '}
             </a>
             or tweet us at{' '}
             <a className="link" href="https://twitter.com/Gigaglobal">
@@ -58,6 +50,16 @@ const Footer = () => {
             .
           </p>
         </Column>
+        <Grid className="footer-logo">
+          <Column md={4} lg={8} sm={4}>
+            <h2>Giga Blocks</h2>
+          </Column>
+          <Column md={4} lg={8} sm={4}>
+            <div className="circle" onClick={scrollToTop}>
+              <UpToTop />
+            </div>
+          </Column>
+        </Grid>
       </Grid>
     </>
   );

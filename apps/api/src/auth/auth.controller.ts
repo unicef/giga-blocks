@@ -25,6 +25,12 @@ export class AuthController {
   }
 
   @Public()
+  @Get('health')
+  async appTest() {
+    return 'OK';
+  }
+
+  @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Request() req): Promise<CreateUserDto & Tokens> {

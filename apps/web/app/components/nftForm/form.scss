@@ -4,7 +4,6 @@
 .form-gap {
   background: #222222;
   color: white;
-  margin: 0 0 10vh 0;
   padding-top: $spacing-11;
   padding-bottom: $spacing-11;
   @include breakpoint-down(md) {
@@ -31,13 +30,15 @@
   }
   .cds--label {
     color: white;
+    font-size: 16px;
   }
 }
 .submit-btn {
   height: 40px !important;
-  background: #0050e6;
-  border: 1px solid #0050e6;
+  background: #277aff;
   color: #ffff;
+  border-radius: 55px;
+  width: 364px;
 }
 .form-label {
   margin-bottom: 45x;

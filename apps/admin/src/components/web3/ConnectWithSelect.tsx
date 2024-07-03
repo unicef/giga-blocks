@@ -16,6 +16,8 @@ import {
   saveCurrentUser,
   saveRefreshToken,
 } from '@utils/sessionManager';
+import { DEFAULT_CHAIN_ID } from './chains';
+import { metaMaskLogin } from './utils/metamask';
 
 function ChainSelect({
   activeChainId,
@@ -46,7 +48,7 @@ export default function ConnectWithSelect({
   provider,
   setError,
 }: {
-  connector: MetaMask | Network | GnosisSafe;
+  connector: MetaMask;
   activeChainId: ReturnType<Web3ReactHooks['useChainId']>;
   chainIds?: ReturnType<Web3ReactHooks['useChainId']>[];
   isActivating: ReturnType<Web3ReactHooks['useIsActivating']>;
@@ -152,7 +154,7 @@ export default function ConnectWithSelect({
     setEnableGetNonce(false);
     try {
       setError(undefined);
-      await connector.activate();
+      await metaMaskLogin(connector)
     } catch (error) {
       setError(error);
     }

@@ -45,7 +45,7 @@ Table giga_permissions {
 Table giga_users {
   id String [pk]
   name String [not null]
-  email String [unique, not null]
+  email String [unique]
   walletAddress Bytes [unique]
   profileImage String
   isActive Boolean [not null, default: true]
@@ -70,31 +70,15 @@ Table giga_school {
   id String [pk]
   giga_school_id String [unique, not null]
   status SchoolStatus [not null, default: 'Open']
-  connectivity_speed_status String [default: 'Data Unavailable']
   connectivity Boolean [not null, default: false]
   name String [not null]
   school_type String [not null]
-  class_rooms Int
   electricity_available Boolean [not null, default: false]
-  website String
-  email String
-  phone_number String
   country String [not null]
-  twiter_handle String
-  wikipedia String
-  googlemap String
-  youtube String
   longitude Float [not null]
   latitude Float [not null]
   minted MintStatus [not null, default: 'NOTMINTED']
   coverage_availability Boolean [not null, default: false]
-  coverage_2G Boolean [not null, default: false]
-  coverage_3G Boolean [not null, default: false]
-  coverage_4G Boolean [not null, default: false]
-  hasSatteliteBuilding Boolean [not null, default: false]
-  connection_type String
-  connectivity_speed Int
-  internet_links Int
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   deletedAt DateTime

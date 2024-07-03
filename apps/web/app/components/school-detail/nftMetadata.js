@@ -3,6 +3,8 @@ import '../../components/landing-page/styles/preview.scss';
 import './school-detail.scss';
 
 const Connectivity = ({ schoolData }) => {
+  let latitude = schoolData?.latitude.slice(0, 10);
+  let longitude = schoolData?.longitude.slice(0, 10);
   return (
     <>
       <Grid fullWidth>
@@ -36,7 +38,9 @@ const Connectivity = ({ schoolData }) => {
                     </span>
                     <span className="heading5">
                       <br />
-                      {schoolData?.schoolName ? schoolData?.schoolName : 'N/A'}
+                      {schoolData?.schoolName
+                        ? schoolData?.schoolName.slice(0, 15) + '...'
+                        : 'N/A'}
                     </span>
                   </div>
                 </Column>
@@ -77,7 +81,7 @@ const Connectivity = ({ schoolData }) => {
                   </span>
                   <span className="heading5">
                     <br />
-                    {schoolData?.latitude}, {schoolData?.longitude}
+                    {latitude}, {longitude}
                   </span>
                 </Column>
               </div>
@@ -98,8 +102,7 @@ const Connectivity = ({ schoolData }) => {
                     </span>
                     <span className="heading5">
                       <br />
-                      {schoolData?.connectivity === "true" 
-                        ? "Yes" : "No"}
+                      {schoolData?.connectivity === 'true' ? 'Yes' : 'No'}
                     </span>
                   </div>
                 </Column>
@@ -114,8 +117,9 @@ const Connectivity = ({ schoolData }) => {
                   </span>
                   <br />
                   <span className="heading5">
-                  {schoolData?.coverage_availabitlity === "true" 
-                        ? "Yes" : "No"}
+                    {schoolData?.coverage_availabitlity === 'true'
+                      ? 'Yes'
+                      : 'No'}
                   </span>
                 </Column>
 
@@ -130,8 +134,9 @@ const Connectivity = ({ schoolData }) => {
                   </span>
                   <span className="heading5">
                     <br />
-                    {schoolData?.electricity_availabilty === "true" 
-                        ? "Yes" : "No"}
+                    {schoolData?.electricity_availabilty === 'true'
+                      ? 'Yes'
+                      : 'No'}
                   </span>
                 </Column>
               </div>

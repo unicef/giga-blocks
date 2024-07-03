@@ -1,6 +1,6 @@
 'use client';
-import React, { useEffect, useMemo, useState } from 'react';
-import { Form, TextInput, Button, Dropdown } from '@carbon/react';
+import React, { useEffect, useState } from 'react';
+import { Form, TextInput, Button, Dropdown, Column } from '@carbon/react';
 import { Controller, useForm } from 'react-hook-form';
 import Web3Modal from '../congratulation-modal';
 import { useContributeData } from '../../hooks/useContributeData';
@@ -9,6 +9,7 @@ import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { Modal, ModalBody } from '@carbon/react';
 import Map from '../../components/dragableMarker';
+import './contribute.scss';
 
 const ContributeForm = ({
   data,
@@ -33,11 +34,6 @@ const ContributeForm = ({
   const handleMarkerDragEnd = (lngLat) => {
     setMarkerCoords({ lat: lngLat.lat, long: lngLat.lng });
   };
-
-  useEffect(() => {
-    setValue('latitude', markerCoords.lat);
-    setValue('longitude', markerCoords.long);
-  }, [markerCoords, setValue]);
 
   useEffect(() => {
     setValue('latitude', markerCoords.lat);
@@ -88,6 +84,7 @@ const ContributeForm = ({
   };
 
   const closeModal = () => {
+    refetch();
     setIsModalOpen(false);
   };
 
@@ -206,62 +203,88 @@ const ContributeForm = ({
                 setError(false);
               }}
             />
-            <Controller
-              name="country"
-              control={control}
-              disabled
-              render={({ field }) => (
-                <>
-                  <TextInput
-                    {...field}
-                    id="country"
-                    style={{ marginBottom: '25px', height: '48px' }}
-                    labelText="School Country"
-                    placeholder="Enter Country"
-                  />
-                </>
-              )}
-            />
+            <p style={{ fontSize: '0.75rem', color: '#525252' }}>
+              School Location
+            </p>
+            <p
+              style={{
+                fontSize: '0.75rem',
+                color: '#525252',
+                paddintTop: '12px',
+                paddingBottom: '12px',
+              }}
+            >
+              Click and drag the pin on the map to select/change school
+              location.
+            </p>
             <Map
               lat={markerCoords.lat}
               long={markerCoords.long}
               onMarkerDragEnd={handleMarkerDragEnd}
             />
-
-            <Controller
-              name="latitude"
-              control={control}
-              disabled
-              render={({ field }) => (
-                <>
-                  <TextInput
-                    {...field}
-                    id="latitude"
-                    style={{
-                      marginBottom: '25px',
-                      height: '48px',
-                    }}
-                    labelText="Exact School's Location"
-                    placeholder="Enter Latitude"
-                  />
-                </>
-              )}
-            />
-            <Controller
-              name="longitude"
-              control={control}
-              disabled
-              render={({ field }) => (
-                <>
-                  <TextInput
-                    {...field}
-                    id="longitude"
-                    style={{ marginBottom: '25px', height: '48px' }}
-                    placeholder="Enter Longitude"
-                  />
-                </>
-              )}
-            />
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '12px',
+              }}
+            >
+              <Controller
+                name="country"
+                control={control}
+                disabled
+                render={({ field }) => (
+                  <>
+                    <TextInput
+                      {...field}
+                      id="country"
+                      style={{ marginBottom: '25px', height: '48px' }}
+                      labelText="School Country"
+                      placeholder="Enter Country"
+                    />
+                  </>
+                )}
+              />
+              <Controller
+                name="latitude"
+                control={control}
+                disabled
+                render={({ field }) => (
+                  <>
+                    <TextInput
+                      {...field}
+                      id="latitude"
+                      style={{
+                        marginBottom: '25px',
+                        height: '48px',
+                      }}
+                      labelText="Latitude"
+                      placeholder="Enter Latitude"
+                    />
+                  </>
+                )}
+              />
+              <Controller
+                name="longitude"
+                control={control}
+                disabled
+                render={({ field }) => (
+                  <>
+                    <TextInput
+                      {...field}
+                      id="longitude"
+                      labelText="Longitude"
+                      style={{
+                        marginBottom: '25px',
+                        height: '48px',
+                      }}
+                      placeholder="Enter Longitude"
+                    />
+                  </>
+                )}
+              />
+            </div>
             <Dropdown
               id="connectivity"
               style={{ marginBottom: '24px' }}
