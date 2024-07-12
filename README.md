@@ -3,7 +3,7 @@
     <img src="https://s41713.pcdn.co/wp-content/uploads/2018/11/2020.05_GIGA-visual-identity-guidelines_v1-25.png" alt="Giga logo" title="Giga" align="right" height="60" style="padding-top: 20px;"/>
 </a>
 
-<div style="padding-top: 20px;" > </div>
+<div style="padding-top: 30px;" > </div>
 <h1><a id="about-giga" class="anchor" aria-hidden="true" href="#about-giga"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
 GigaBlocks </h1> 
 
