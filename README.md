@@ -3,7 +3,8 @@
     <img src="https://s41713.pcdn.co/wp-content/uploads/2018/11/2020.05_GIGA-visual-identity-guidelines_v1-25.png" alt="Giga logo" title="Giga" align="right" height="60"/>
 </a>
 
-# GigaBlocks
+<h1 style="padding-top: 20px;"><a id="about-giga" class="anchor" aria-hidden="true" href="#about-giga"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
+GigaBlocks </h1> 
 
 <div align="center">
 
@@ -24,9 +25,9 @@
 	  </li>
     <li><a href="#about-gigablocks">About GigaBlocks</a>
     <ul>
-        <li><a href="#built-with">Project Objective</a></li>
-        <li><a href="#built-with">Giga System flow Diagram</a></li>
-        <li><a href="#built-with">Github Repositories of GigaBlocks</a></li>
+        <li><a href="#project-objective">Project Objective</a></li>
+        <li><a href="#flow-diagram">Giga System flow Diagram</a></li>
+        <li><a href="#giga-blocks-repos">Github Repositories of GigaBlocks</a></li>
         <li><a href="#built-with">Built With</a></li>
       </ul>
       </li>
@@ -57,15 +58,19 @@ The GigaBlocks project represents a transformative approach to harnessing the co
 
   
 
-GigaBlocks aims to solve this problem by crowdsourcing the collection and curation of this missing data and creating a comprehensive database of school information, comparable to a Wikipedia page for each school. By enabling the community surrounding each school to curate and update the data on the NFTs, GigaBlocks hopes to gather accurate and up-to-date information on schools around the world. This will allow Giga to map the need for connectivity more granularly and will help Giga to more effectively connect schools to the internet and provide digital access to young people. Simultaneously, GigaBlocks will create a way for anyone to contribute data to schools, validate and update this data, and become a Giga Supporter. 
+GigaBlocks aims to solve this problem by crowdsourcing the collection and curation of this missing data and creating a comprehensive database of school information, comparable to a Wikipedia page for each school. By enabling the community surrounding each school to curate and update the data on the NFTs, GigaBlocks hopes to gather accurate and up-to-date information on schools around the world. This will allow Giga to map the need for connectivity more granularly and will help Giga to more effectively connect schools to the internet and provide digital access to young people. Simultaneously, GigaBlocks will create a way for anyone to contribute data to schools, validate and update this data, and become a Giga Supporter.
 
-### Project Objective
+<h3><a id="project-objective" class="anchor" aria-hidden="true" href="#project-objective"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
+Project Objective</h3>
+
 - To use the data that's collected to help accelerate connectivity
 - To create a "digital passport" for every school in the world, using NFTs
 - To create a crowdsourcing mechanism for collecting missing school data
 - To engage the public and local communities in Giga countries in the cause of connecting schools to the internet
 
-### Giga System flow Diagram 
+<h3><a id="flow-diagram" class="anchor" aria-hidden="true" href="#flow-diagram"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
+Giga System flow Diagram </h3>
+
 <img src="http://giga.global/wp-content/uploads/2024/07/giga-blocks-backend-flow-diagram.png" alt="Giga logo" title="Giga" style="padding-left: 20px; padding-right: 10px;" />
 <p></p>
 Giga School DataBase platform consists of 3 applications: Giga Admin, Giga Public and Giga Backend. Backend provides api service for both public and admin sites. Public sites are used by the general public. Giga Admin will be used by the admins selected by Giga. Giga Backend uses Prisma service with Next.js. Redis is used for the queueing process. There will be two databases i.e Giga database and NewsLetter database. Giga database consists of all school data and contributed data and users registered in Giga as contributor or admin. Newsletter database is designed to store the records of the user who wants to join the developer community.  
@@ -76,13 +81,17 @@ Hosted Subgraph service is used for caching the blockchain transactions and data
 <p></p>
 SmartContracts are deployed in Polygon MainNet. 
 
-### Github Repositories of GigaBlocks 
-- [GigaBlocks](#)
+<h3><a id="giga-blocks-repos" class="anchor" aria-hidden="true" href="#giga-blocks-repos"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
+Github Repositories of GigaBlocks </h3>
+
+- [GigaBlocks](https://github.com/unicef/giga-blocks)
 - [GigaBlocks - subgraph](#)
 - [GigaBlocks - contracts](#)
 - [GigaBlocks – documentation](#)
 
-### Built With 
+<h3><a id="built-with" class="anchor" aria-hidden="true" href="#built-with"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
+Built With </h3>
+ 
 <b>Our Tech Stacks</b>  
 
 - Database: PostgreSQL 
