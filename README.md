@@ -19,7 +19,7 @@ GigaBlocks </h1>
 </div>
 
 <details open="open">
-	<summary>Table of Contents</summary>
+	<summary><h2>Table of Contents</h2></summary>
   <ol>
     <li>
       <a href="#about-giga">About Giga</a>
