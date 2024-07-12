@@ -4,7 +4,7 @@
 </a>
 
 <div style="padding-top: 20px;"> </div>
-<h1><a id="about-giga" class="anchor" aria-hidden="true" href="#about-giga"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
+<h1><a id="gigablocks" class="anchor" aria-hidden="true" href="#gigablocks"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
 GigaBlocks </h1> 
 
 <div align="center" >
@@ -19,11 +19,9 @@ GigaBlocks </h1>
 </div>
 
 <details open="open">
-	<summary><h2>Table of Contents</h2></summary>
+	<summary style="padding-bottom: 10px;"><h2>Table of Contents</h2></summary>
   <ol>
-    <li>
-      <a href="#about-giga">About Giga</a>
-	  </li>
+    <li><a href="#about-giga">About Giga</a></li>
     <li><a href="#about-gigablocks">About GigaBlocks</a>
     <ul>
         <li><a href="#project-objective">Project Objective</a></li>
@@ -45,8 +43,7 @@ GigaBlocks </h1>
   </ol>
 </details>
 
-<h2><a id="about-giga" class="anchor" aria-hidden="true" href="#about-giga"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
-About Giga</h2>
+<h2><a id="about-giga" class="anchor" aria-hidden="true" href="#about-giga"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>About Giga</h2>
 
 Giga is a UNICEF-ITU global initiative to connect every school to the Internet and every young person to information, opportunity, and choice. By connecting all schools to the Internet, we ensure that every child has a fair shot at success in an increasingly digital world.
 
@@ -89,7 +86,7 @@ Hosted Subgraph service is used for caching the blockchain transactions and data
 <p></p>
 SmartContracts are deployed in Polygon MainNet. 
 
-<h3><a id="giga-blocks-repos" class="anchor" aria-hidden="true" href="#giga-blocks-repos"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
+<h3><a id="giga-blocks-repos" class="anchor" aria-hidden="true" href="#giga-blocks-repos"><svg class="octicon octicon-link" align="center" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
 Github Repositories of GigaBlocks </h3>
 
 - [GigaBlocks](https://github.com/unicef/giga-blocks)
