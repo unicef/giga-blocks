@@ -72,7 +72,7 @@ Project Objective</h3>
 <h3><a id="flow-diagram" class="anchor" aria-hidden="true" href="#flow-diagram"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
 Giga System flow Diagram </h3>
 
-<img src="http://giga.global/wp-content/uploads/2024/07/giga-blocks-backend-flow-diagram.png" alt="Giga blocks flow" title="Gigablocksflowdiag" style="padding-left: 20px; padding-right: 10px;" />
+<img src="http://giga.global/wp-content/uploads/2024/07/giga-blocks-backend-flow-diagram.png" alt="Giga blocks flow" title="Gigablocksflowdiag" height="300" style="padding-left: 20px; padding-right: 10px;" />
 <p></p>
 Giga School DataBase platform consists of 3 applications: Giga Admin, Giga Public and Giga Backend. Backend provides api service for both public and admin sites. Public sites are used by the general public. Giga Admin will be used by the admins selected by Giga. Giga Backend uses Prisma service with Next.js. Redis is used for the queueing process. There will be two databases i.e Giga database and NewsLetter database. Giga database consists of all school data and contributed data and users registered in Giga as contributor or admin. Newsletter database is designed to store the records of the user who wants to join the developer community.  
 <p></p>
