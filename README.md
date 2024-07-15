@@ -376,6 +376,4 @@ Thanks to the following people who have contributed to this project:
 ## Acknowledgments 💜
 * Thanks to Rumsan for helping build this application!
 
-![alt text](image.png)
-
 </div>
