@@ -360,16 +360,16 @@ Giga Website: https://giga.global/contact-us/
 Thanks to the following people who have contributed to this project:
 
 * [@anupamakoirala](https://github.com/anupamakoirala) 
-* [sarveshkarki](https://github.com/sarveshkarki) 
-* [sushant-rumsan](https://github.com/sushant-rumsan) 
-* [sandesh-rumsan](https://github.com/sandesh-rumsan) 
-* [ap-057](https://github.com/ap-057) 
-* [sandab-rumsan](https://github.com/sandab-rumsan) 
-* [davidnjagah](https://github.com/davidnjagah) 
-* [alajosrapp](https://github.com/alajosrapp) 
-* [raktim-rumsan)](https://github.com/raktim-rumsan) 
-* [myanzik](https://github.com/myanzik) 
-* [sp-sandeshpokhrel](https://github.com/sp-sandeshpokhrel) 
+* [@sarveshkarki](https://github.com/sarveshkarki) 
+* [@sushant-rumsan](https://github.com/sushant-rumsan) 
+* [@sandesh-rumsan](https://github.com/sandesh-rumsan) 
+* [@ap-057](https://github.com/ap-057) 
+* [@sandab-rumsan](https://github.com/sandab-rumsan) 
+* [@davidnjagah](https://github.com/davidnjagah) 
+* [@alajosrapp](https://github.com/alajosrapp) 
+* [@raktim-rumsan)](https://github.com/raktim-rumsan) 
+* [@myanzik](https://github.com/myanzik) 
+* [@sp-sandeshpokhrel](https://github.com/sp-sandeshpokhrel) 
 
 <br>
 
