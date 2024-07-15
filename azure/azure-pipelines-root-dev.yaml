@@ -2,9 +2,9 @@ trigger:
   branches:
     include:
     - dev
-  paths:
-    include:
-    - apps/**
+  # paths:
+  #   include:
+  #   - apps/**
 
 pool:
   vmImage: ubuntu-latest
