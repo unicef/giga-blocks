@@ -116,6 +116,19 @@ Built With </h3>
 <h2><a id="usage" class="anchor" aria-hidden="true" href="#usage"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
 Usage</h2>
 
+### Homepage of GigaBlocks
+
+<img src="http://giga.global/wp-content/uploads/2024/07/homescreen.jpg" alt="Giga blocks homepage" title="Gigablockshomepage" height="300" style="padding-left: 20px; padding-right: 10px;" />
+
+### School Database Page
+
+<img src="http://giga.global/wp-content/uploads/2024/07/school_database.jpg" alt="Giga blocks database" title="Gigablocksdatabase" height="300" style="padding-left: 20px; padding-right: 10px;" />
+
+### School Contribution Page
+
+<img src="http://giga.global/wp-content/uploads/2024/07/school_contribution_page.jpg" alt="Giga blocks contribution page" title="Gigablocksschoolcontribution" height="300" style="padding-left: 20px; padding-right: 10px;" />
+
+
 <h2><a id="getting-started" class="anchor" aria-hidden="true" href="#getting-started"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
 Getting Started</h2>
 
