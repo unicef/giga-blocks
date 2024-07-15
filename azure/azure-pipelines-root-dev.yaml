@@ -2,9 +2,9 @@ trigger:
   branches:
     include:
     - dev
-  # paths:
-  #   include:
-  #   - apps/**
+  paths:
+    exclude:
+    - apps/**
 
 pool:
   vmImage: ubuntu-latest
@@ -48,7 +48,7 @@ stages:
       displayName: 'Use Node.js'
 
     - script: |
-        npm install -g pnpm
+        npm install -g pnpm@8.14.1
         pnpm install
         pnpm run api:app:generate
         pnpm run api:news:generate
