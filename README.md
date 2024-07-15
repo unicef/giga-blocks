@@ -71,16 +71,16 @@ Giga System flow Diagram </h3>
 
 <img src="http://giga.global/wp-content/uploads/2024/07/giga-blocks-backend-flow-diagram.png" alt="Giga blocks flow" title="Gigablocksflowdiag" height="300" style="padding-left: 20px; padding-right: 10px;" />
 <p></p>
-Giga School DataBase platform consists of 3 applications: 
+GigaBlocks School DataBase platform consists of 3 applications: 
 
-- Giga Admin. 
-- Giga Public. 
-- Giga Backend.
+- GigaBlocks Admin. 
+- GigaBlocks Public. 
+- GigaBlocks Backend.
 
 <p></p>
-The Backend provides api service for both public and admin sites. Public sites are used by the general public. Giga Admin will be used by the admins selected by Giga. Giga Backend uses Prisma service with Next.js. Redis is used for the queueing process. There will be two databases i.e Giga database and NewsLetter database. Giga database consists of all school data and contributed data and users registered in Giga as contributor or admin. Newsletter database is designed to store the records of the user who wants to join the developer community.  
+The Backend provides api service for both public and admin sites. Public sites are used by the general public. GigaBlocks Admin will be used by the admins selected by Giga. GigaBlocks Backend uses Prisma service with Next.js. Redis is used for the queueing process. There will be two databases i.e GigaBlocks database and NewsLetter database. GigaBlocks database consists of all school data and contributed data and users registered in GigaBlocks as contributor or admin. Newsletter database is designed to store the records of the user who wants to join the developer community.  
 <p></p>
-Public site and Giga Admin site is designed using Nest.js frameWork. React- Carbon UI is used for UI design in public sites whereas Material UI is used for UI design in admin sites. 
+Public site and GigaBlocks Admin site is designed using Nest.js frameWork. React- Carbon UI is used for UI design in public sites whereas Material UI is used for UI design in admin sites. 
 <p></p>
 Hosted Subgraph service is used for caching the blockchain transactions and data. Admin and Public site will query blockchain related data from subgraph. 
 <p></p>
@@ -99,19 +99,19 @@ Built With </h3>
  
 <b>Our Tech Stacks</b>  
 
-- Database: PostgreSQL 
+- <b>Database:</b> PostgreSQL 
 
-- UI:CSS/Javascript with Carbon UI framework,CSS/Javascript with Carbon UI framework, React.js, Ethers.js, NextJs 
+- <b>UI:</b>  CSS/Javascript with Carbon UI framework,CSS/Javascript with Carbon UI framework, React.js, Ethers.js, NextJs 
 
-- Programming Language: JavaScript, Typescript 
+- <b>Programming Language:</b>  JavaScript, Typescript 
 
-- Server: NestJs 
+- <b>Server:</b>  NestJs 
 
-- Third Party Services: Subgraph 
+- <b>Third Party Services:</b>  Subgraph 
 
-- Wallet: Metamask 
+- <b>Wallet:</b>  Metamask 
 
-- Blockchain: EVM, Infura, Solidity 
+- <b>Blockchain:</b>  EVM, Infura, Solidity 
 
 <h2><a id="usage" class="anchor" aria-hidden="true" href="#usage"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
 Usage</h2>
@@ -344,7 +344,7 @@ At Giga Blocks, we're committed to maintaining an environment that's respectful,
 <h2><a id="license" class="anchor" aria-hidden="true" href="#license"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
 License</h2>
 
-Distributed under the AGPL-3.0 License. See [LICENSE](https://github.com/unicef/giga-blocks-documentation/blob/main/LICENSE) for more information. 
+Distributed under the AGPL-3.0 License. See [LICENSE](https://github.com/unicef/giga-blocks/blob/main/LICENSE) for more information. 
 
 <h2><a id="contact" class="anchor" aria-hidden="true" href="#contact"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
 Contact</h2>
@@ -356,6 +356,6 @@ Blockchain Team Member: Vladimir Trkulja: vtrkulja@unicef.com
 Giga Website: https://giga.global/contact-us/ 
 
 ## Acknowledgments
-* Thanks to Rusman for helping build this application!
+* Thanks to Rumsan for helping build this application!
 
 </div>
