@@ -355,7 +355,7 @@ Blockchain Team Member: Vladimir Trkulja: vtrkulja@unicef.com
 
 Giga Website: https://giga.global/contact-us/ 
 
-## Contributors 🚀🚀
+## Contributors 🚀
 
 Thanks to the following people who have contributed to this project:
 
