@@ -34,7 +34,6 @@ GigaBlocks </h1>
 	<li>
       <a href="#getting-started">Getting Started</a>
     </li>
-	<li><a href="#file-structure">File Structure</a></li>
     <li><a href="#contribution-guidelines">Contribution Guidelines</a></li>
     <li><a href="#code-design">Code Design</a></li>
     <li><a href="#code-of-conduct">Code of Conduct</a></li>
@@ -188,93 +187,6 @@ Giga_Minter_Contract_Address:0x5E2016e9fb8AF9feA34c61916F975a1dB2475a44
 Escrow_Contract_Address:0x5b4088b76797859d8d168b35F347cDa3120ed518
 Giga_Seller_Contract_Address:0x32308109F16Cf57BB7817BE3a578cd8938d74372
 ART SCRIPT Contract are auto deployed during nft content deployment
-```
-
-<h2><a id="file-structure" class="anchor" aria-hidden="true" href="#file-structure"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
-File Structure</h2>
-
-```
-giga-blocks/
-|- .github/
-    |- ISSUE_TEMPLATE/
-        |- bug_report.md
-        |- custom.md
-        |- feature_request.md
-|- packages/
-    |- client/
-        |- src/
-            |- components/
-            |- pages/
-            |- styles/
-            |- utils/
-            |- .eslintrc.json
-            |- .gitignore
-            |- .npmrc
-            |- babel.config.js
-            |- package.json
-            |- tsconfig.json
-            |- yarn.lock
-        |- .gitignore
-        |- .npmrc
-        |- package.json
-        |- README.md
-        |- tsconfig.json
-        |- yarn.lock
-    |- common/
-        |- src/
-            |- constants/
-            |- hooks/
-            |- utils/
-            |- .eslintrc.json
-            |- .gitignore
-            |- .npmrc
-            |- package.json
-            |- tsconfig.json
-            |- yarn.lock
-        |- .gitignore
-        |- .npmrc
-        |- package.json
-        |- README.md
-        |- tsconfig.json
-        |- yarn.lock
-    |- contracts/
-        |- src/
-            |- .eslintrc.json
-            |- .gitignore
-            |- .npmrc
-            |- hardhat.config.ts
-            |- package.json
-            |- tsconfig.json
-            |- yarn.lock
-        |- .gitignore
-        |- .npmrc
-        |- package.json
-        |- README.md
-        |- tsconfig.json
-        |- yarn.lock
-    |- server/
-        |- src/
-            |- .eslintrc.json
-            |- .gitignore
-            |- .npmrc
-            |- babel.config.js
-            |- jest.config.js
-            |- package.json
-            |- tsconfig.json
-            |- yarn.lock
-        |- .gitignore
-        |- .npmrc
-        |- package.json
-        |- README.md
-        |- tsconfig.json
-        |- yarn.lock
-|- .eslintrc.json
-|- .gitignore
-|- .npmrc
-|- package.json
-|- README.md
-|- tsconfig.json
-|- yarn.lock
 ```
 
 <h2><a id="contribution-guidelines" class="anchor" aria-hidden="true" href="#contribution-guidelines"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
