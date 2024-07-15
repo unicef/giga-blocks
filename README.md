@@ -67,7 +67,7 @@ Project Objective</h3>
 - To engage the public and local communities in Giga countries in the cause of connecting schools to the internet
 
 <h3><a id="flow-diagram" class="anchor" aria-hidden="true" href="#flow-diagram"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
-Giga System flow Diagram </h3>
+GigaBlocks System flow Diagram </h3>
 
 <img src="http://giga.global/wp-content/uploads/2024/07/giga-blocks-backend-flow-diagram.png" alt="Giga blocks flow" title="Gigablocksflowdiag" height="300" style="padding-left: 20px; padding-right: 10px;" />
 <p></p>
