@@ -283,7 +283,7 @@ Blockchain Team Member: Vladimir Trkulja: vtrkulja@unicef.com
 Giga Website: https://giga.global/contact-us/ 
 
 <h2><a id="contributors" class="anchor" aria-hidden="true" href="#contributors"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
-Contributors</h2> 🚀
+Contributors🚀</h2> 
 
 Thanks to the following people who have contributed to this project:
 
@@ -301,8 +301,8 @@ Thanks to the following people who have contributed to this project:
 
 <br>
 
-<h2><a id="acknowledgments" class="anchor" aria-hidden="true" href="#acknowledgements"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
-Acknowledgments</h2> 💜
+<h2><a id="acknowledgements" class="anchor" aria-hidden="true" href="#acknowledgements"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
+Acknowledgments💜</h2> 
 
 * Thanks to Rumsan for helping build this application!
 
