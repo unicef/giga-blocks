@@ -91,7 +91,7 @@ Github Repositories of GigaBlocks </h3>
 - [GigaBlocks](https://github.com/unicef/giga-blocks)
 - [GigaBlocks - subgraph](#)
 - [GigaBlocks - contracts](#)
-- [GigaBlocks – documentation](#)
+- [GigaBlocks – documentation](https://github.com/unicef/giga-blocks-documentation/tree/main)
 
 <h3><a id="built-with" class="anchor" aria-hidden="true" href="#built-with"><svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"></path></svg></a>
 Built With </h3>
@@ -292,7 +292,7 @@ Thanks to the following people who have contributed to this project:
 * [sandab-rumsan](https://github.com/sandab-rumsan) 
 * [davidnjagah](https://github.com/davidnjagah) 
 * [alajosrapp](https://github.com/alajosrapp) 
-* [raktim-rumsan)](https://github.com/raktim-rumsan) 
+* [raktim-rumsan](https://github.com/raktim-rumsan) 
 * [myanzik](https://github.com/myanzik) 
 * [sp-sandeshpokhrel](https://github.com/sp-sandeshpokhrel) 
 
