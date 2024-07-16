@@ -25,7 +25,7 @@ GigaBlocks </h1>
     <li><a href="#about-gigablocks">About GigaBlocks</a>
     <ul>
         <li><a href="#project-objective">Project Objective</a></li>
-        <li><a href="#flow-diagram">Giga System flow Diagram</a></li>
+        <li><a href="#flow-diagram">GigaBlocks System flow Diagram</a></li>
         <li><a href="#giga-blocks-repos">Github Repositories of GigaBlocks</a></li>
         <li><a href="#built-with">Built With</a></li>
       </ul>
