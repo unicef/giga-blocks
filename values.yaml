@@ -1,0 +1,222 @@
+replicaCount: 2
+
+imagePullSecrets: [ ]
+nameOverride: ""
+fullnameOverride: ""
+environment: &env "production"
+
+# Requirements (development environment uses container deployments)
+postgresql_app:
+  enabled: false
+postgresql_newsletter:
+  enabled: false
+redis:
+  enabled: true
+
+redis:
+  name: giga-blocks
+  architecture: "standalone"
+  auth:
+    existingSecret: "oi-blocks-secrets-prd"
+    existingSecretPasswordKey: "redis-password"
+  networkPolicy:
+    enabled: false
+
+api:
+  image:
+    repository: "unioigigablocks.azurecr.io/prd/giga-blocks-root-api"
+    pullPolicy: Always
+    tag: ""
+  podAnnotations: { }
+  podSecurityContext: { }
+  securityContext: { }
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 3333
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 80
+  config:
+    PORT: 3333
+    NEXT_PUBLIC_WEB_NAME: "https://gigablocks.giga.global"
+    NEXT_PUBLIC_ADMIN_NAME: "https://gigablocks.giga.global"
+    NEXT_PUBLIC_GRAPH_URL: "https://api.studio.thegraph.com/proxy/84670/gigablocksdev/version/latest"
+    NEXT_PUBLIC_OTP_DURATION_IN_MINS: 3
+    JWT_EXPIRATION_TIME: 90000
+    JWT_EXPIRATION_LONG_TIME: 180000
+    OTP_DURATION_IN_SECS: 300
+    OTP_LENGTH: 6
+    ETHERSCAN_URL: "https://api.etherscan.io/api"
+    DB_HOST: "pgsql-16-reserved-prd-oi-giga-blocks.postgres.database.azure.com"
+    DB_USERNAME: prdgigablkusr
+    DB_NAME: gigaapp_prddb
+    NEWS_DB_HOST: "pgsql-16-reserved-prd-oi-giga-blocks.postgres.database.azure.com"
+    NEWS_DB_NAME: giganewsl_prddb
+    NEWS_DB_USERNAME: prdgigablkusr
+    REDIS_HOST: "giga-blocks-redis-master"
+    APP_DATABASE_URL: "postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=public&sslrootcert=BaltimoreCyberTrustRoot.crt.pem"
+    NEWSLETTER_DATABASE_URL: "postgresql://${NEWS_DB_USERNAME}:${NEWS_DB_PASSWORD}@${NEWS_DB_HOST}:${DB_PORT}/${NEWS_DB_NAME}?schema=public&sslrootcert=BaltimoreCyberTrustRoot.crt.pem"
+    REDIS_PORT: 6379
+    EMAIL_HOST: "smtp.mailjet.com"
+    SMTP_PORT: 465
+    EMAIL_USE_TLS: False
+    EMAIL_USE_SSL: True
+    EMAIL_USERNAME: "8a0cb16c9037a4b144e665ce1a7b0c30"
+    EMAIL_ADDRESS: "giga@mail.unicef.org"
+    REPLY_TO_EMAIL_ADDRESS: "giga@unicef.org"
+    NETWORK_PROVIDER: "https://sepolia.infura.io/v3/884fef04e60d4ebc96c32d70c2692c2a"
+    GIGA_NFT_CONTRACT_ADDRESS: ""
+    NEXT_PUBLIC_GIGA_ESCROW_ADDRESS: ""
+    GIGA_NFT_CONTENT_ADDRESS: ""
+    NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS: ""
+    NEXT_PUBLIC_GIGA_SELLER_ADDRESS: ""
+    PRIVATE_KEY: ""
+    BATCH_SIZE: 10
+    NEXT_PUBLIC_DEFAULT_CHAIN: ""
+  nodeSelector: { }
+  tolerations: [ ]
+  affinity: { }
+  configVolume: { }
+  envConfigMaps:
+  - name: "giga-blocks-api-conf"
+  envSecrets:
+  - name: "giga-blocks-api"
+  resources:
+    limits:
+      cpu: 2
+      memory: 2000Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  livenessProbe:
+    httpGet:
+      path: /api/v1/auth/health
+      port: http
+    periodSeconds: 20
+    timeoutSeconds: 10
+    successThreshold: 1
+    failureThreshold: 3
+  readinessProbe:
+    httpGet:
+      path: /api/v1/auth/health
+      port: http
+    periodSeconds: 20
+    timeoutSeconds: 10
+    successThreshold: 1
+    failureThreshold: 3
+
+
+web:
+  image:
+    repository: "unioigigablocks.azurecr.io/prd/giga-blocks-root-web"
+    pullPolicy: Always
+    tag: ""
+  podAnnotations: { }
+  podSecurityContext: { }
+  securityContext: { }
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 3000
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 80
+  config:
+    NEXT_PUBLIC_D3_BACKEND: "https://gigablocks.giga.global/api/v1"
+    NEXT_PUBLIC_ADMIN_NAME: "https://gigablocks.giga.global"
+    NEXT_PUBLIC_DEBUG_MODE: ""
+    NEXT_PUBLIC_GRAPH_URL: "https://api.studio.thegraph.com/proxy/84670/gigablocksdev/version/latest"
+    NEXT_PUBLIC_OTP_DURATION_IN_MINS: 3
+    NEXT_PUBLIC_DEFAULT_CHAIN: "Ethereum Sepolia"
+    NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS: ""
+    NEXT_PUBLIC_GIGA_SELLER_ADDRESS: ""
+    NEXT_PUBLIC_GIGA_COLLECTOR_NFT_ADDRESS: ""
+    NEXT_PUBLIC_GIGA_ESCROW_ADDRESS: ""
+  nodeSelector: { }
+  tolerations: [ ]
+  affinity: { }
+  configVolume: { }
+  envConfigMaps:
+  - name: "giga-blocks-web-conf"
+  envSecrets:
+  - name: "giga-blocks-web"
+  resources:
+    limits:
+      cpu: 2
+      memory: 2000Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  livenessProbe: { }
+  readinessProbe: { }
+
+admin:
+  image:
+    repository: "unioigigablocks.azurecr.io/prd/giga-blocks-root-admin"
+    pullPolicy: Always
+    tag: ""
+  podAnnotations: { }
+  podSecurityContext: { }
+  securityContext: { }
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 3000
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  config:
+    PORT: 3333
+    NEXT_PUBLIC_D3_BACKEND: "https://gigablocks.giga.global/api/v1"
+    NEXT_PUBLIC_WEB_NAME: "https://gigablocks.giga.global"
+    NEXT_PUBLIC_ADMIN_NAME: "https://gigablocks.giga.global"
+    NEXT_PUBLIC_DEBUG_MODE: ""
+    NEXT_PUBLIC_GRAPH_URL: "https://api.studio.thegraph.com/proxy/84670/gigablocksdev/version/latest"
+    NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS: 0xa404c99947391EADD22b82133174F6dc7da75Bcd
+    NEXT_PUBLIC_DEFAULT_CHAIN: "Ethereum Sepolia"
+    NEXT_PUBLIC_DEFAULT_CHAIN_ID: 11155111
+#  secret:
+#    CONNECTION_STRING: ""
+  nodeSelector: { }
+  tolerations: [ ]
+  affinity: { }
+  configVolume: { }
+  envConfigMaps:
+  - name: "giga-blocks-admin-conf"
+  envSecrets: { }
+  resources:
+    limits:
+      cpu: 1
+      memory: 1000Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  livenessProbe: { }
+  readinessProbe: { }
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: "azure/application-gateway"
+    appgw.ingress.kubernetes.io/appgw-ssl-certificate: "kv-cert-gigaglobal"
+    appgw.ingress.kubernetes.io/ssl-redirect: "true"
+  pathType: Prefix
+  web:
+    path: "/"
+    backendService: "giga-blocks-web"
+    host: "gigablocks.giga.global"
+  api:
+    path: "/api/v1"
+    backendService: "giga-blocks"
+    host: "gigablocks.giga.global"
+  admin:
+    path: "/"
+    backendService: "giga-blocks-admin"
+    host: "gigablocks.giga.global"
