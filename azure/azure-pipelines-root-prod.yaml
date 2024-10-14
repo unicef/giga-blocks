@@ -43,16 +43,6 @@ stages:
         mv .env.prod.giga-blocks .env
       displayName: 'create .env file'
 
-    - task: DownloadSecureFile@1
-      inputs:
-        secureFile: 'BaltimoreCyberTrustRoot.crt.pem'
-
-    - task: CopyFiles@2
-      inputs:
-        SourceFolder: '$(Agent.TempDirectory)'
-        Contents: 'BaltimoreCyberTrustRoot.crt.pem'
-        TargetFolder: '$(Build.SourcesDirectory)/prisma'
-
     - task: NodeTool@0
       inputs:
         versionSpec: '18.x'
@@ -65,6 +55,16 @@ stages:
         pnpm run api:news:generate
         pnpm build
       displayName: 'install dependencies and build apps'
+
+    - task: DownloadSecureFile@1
+      inputs:
+        secureFile: 'BaltimoreCyberTrustRoot.crt.pem'
+
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(Agent.TempDirectory)'
+        Contents: 'BaltimoreCyberTrustRoot.crt.pem'
+        TargetFolder: '$(Build.SourcesDirectory)'
 
     - task: Docker@2
       displayName: Login to container Registry
