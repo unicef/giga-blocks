@@ -152,6 +152,7 @@ model School {
   school_type               String
   electricity_available     Boolean           @default(false)
   country                   String
+  region                    String?
   longitude                 Float
   latitude                  Float
   minted                    MintStatus        @default(NOTMINTED)

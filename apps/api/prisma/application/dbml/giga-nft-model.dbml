@@ -75,6 +75,7 @@ Table giga_school {
   school_type String [not null]
   electricity_available Boolean [not null, default: false]
   country String [not null]
+  region String
   longitude Float [not null]
   latitude Float [not null]
   minted MintStatus [not null, default: 'NOTMINTED']
