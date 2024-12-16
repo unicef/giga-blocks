@@ -13,6 +13,9 @@ interface ExtendedContract extends BaseContract {
   ) => ContractTransactionResponse;
   getArtScript?: (tokenId: string | ContractTransactionResponse) => ContractTransactionResponse;
   nftImageHash?: (tokenHash: string) => ContractTransactionResponse;
+  getRandomImages?: (region:string,tokenId: string | ContractTransactionResponse) => ContractTransactionResponse;
+  getImage?: (imageName: string | ContractTransactionResponse) => ContractTransactionResponse;
+  nftContentValues?:(tokenId: string | ContractTransactionResponse) => ContractTransactionResponse;
 }
 
 export const mintNFT = async (
@@ -92,6 +95,38 @@ export const getArtScript = async (
   return await contract.getArtScript(tokenId);
 };
 
+
+export const getSchoolData = async(
+  contractName: string,
+  contractAddress: string,
+  tokenId: string | ContractTransactionResponse,
+): Promise<ContractTransactionResponse> => {
+  const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
+  return await contract.nftContentValues(tokenId);
+}
+
+
+export const getRandomImages = async (
+  contractName: string,
+  contractAddress: string,
+  region: string,
+  tokenId: string | ContractTransactionResponse,
+): Promise<ContractTransactionResponse> => {
+  const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
+  return await contract.getRandomImages(region,tokenId);
+}
+
+export const getImage = async(
+  contractName: string,
+  contractAddress: string,
+  imageName: string | ContractTransactionResponse,
+): Promise<ContractTransactionResponse> => {
+  const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
+  return await contract.getImage(imageName);
+}
+
+
+
 export const updateImageHash = async (
   contractName: string,
   contractAddress: string,
@@ -127,3 +162,26 @@ export const updateBulkData = async (
   return await contract.multicall(multicalldata);
   // return await contract.multicall(multicalldata, { gasPrice: weiEthers });
 };
+
+export const getScriptData = async (
+  contentcontractAddress: string,
+  imagecontractAddress: string,
+  schoolId:string,
+):Promise<any> => {
+  const contentcontract: ExtendedContract = getContractWithSigner("NFTContent", contentcontractAddress);
+  const imagecontract: ExtendedContract = getContractWithSigner("ImageContent", imagecontractAddress);
+  const tokenId = await contentcontract.schoolIdToTokenId(schoolId);
+  const nftcontents = await contentcontract.nftContentValues(tokenId);
+  const randomImages = await imagecontract.getRandomImages(nftcontents[8],tokenId);
+  const baseImage1 = await imagecontract.getImage(randomImages[0]);
+  const baseImage2 = await imagecontract.getImage(randomImages[1]);
+  //need to convert the image data to base64 encoded value.
+   const data = {
+      tokenId,
+      nftcontents,
+      baseImage1,
+      baseImage2
+   }
+   return data;
+}
+
