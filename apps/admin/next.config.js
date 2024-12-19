@@ -12,8 +12,8 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
-  // basePath: '/admin',
-  // assetPrefix: '/admin',
+  basePath: '/admin',
+  assetPrefix: '/admin',
 };
 
 module.exports = withNx(nextConfig);
