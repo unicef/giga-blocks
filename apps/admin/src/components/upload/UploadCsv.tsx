@@ -129,7 +129,7 @@ export default function UploadCsv({
         )}
       </Box>
 
-      <RejectionFiles fileRejections={fileRejections} />
+      <RejectionFiles fileRejections={fileRejections as any} />
 
       {hasFile && onDelete && typeOfFile === 'csv' && (
         <IconButton
