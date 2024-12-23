@@ -1,4 +1,4 @@
-import { BaseContract, ContractTransactionResponse } from 'ethers';
+import { BaseContract, ContractTransactionResponse, ethers } from 'ethers';
 import { getContractWithSigner, getInterface } from './contractWithSigner';
 import { ConfigService } from '@nestjs/config';
 // import getProposedGasPrice from '../gasPrice';
@@ -170,18 +170,29 @@ export const getScriptData = async (
 ):Promise<any> => {
   const contentcontract: ExtendedContract = getContractWithSigner("NFTContent", contentcontractAddress);
   const imagecontract: ExtendedContract = getContractWithSigner("ImageContent", imagecontractAddress);
+  //get tokenId from schoolId
   const tokenId = await contentcontract.schoolIdToTokenId(schoolId);
+  //get nft contents from tokenId
   const nftcontents = await contentcontract.nftContentValues(tokenId);
+  //get random images from region and tokenId
   const randomImages = await imagecontract.getRandomImages(nftcontents[8],tokenId);
-  const baseImage1 = await imagecontract.getImage(randomImages[0]);
-  const baseImage2 = await imagecontract.getImage(randomImages[1]);
-  //need to convert the image data to base64 encoded value.
-   const data = {
+  //get image data from image name
+  const image1 = await imagecontract.getImage(randomImages[0]);
+  const image2 = await imagecontract.getImage(randomImages[1]);
+  //converts image bytes  into base64 encoded image
+  const baseImage1 = await getEncodedImage(image1);
+  const baseImage2 = await getEncodedImage(image2);
+     const data = {
       tokenId,
       nftcontents,
       baseImage1,
       baseImage2
    }
    return data;
+}
+
+const getEncodedImage = async (imageData:any) =>{
+  const base64 = `data:image/png;base64,${ethers.encodeBase64(imageData)}`;
+  return base64;
 }
 
