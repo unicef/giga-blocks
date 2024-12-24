@@ -1,6 +1,5 @@
 //@ts-check
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { withNx } = require("@nrwl/next/plugins/with-nx");
 
 /**
@@ -8,12 +7,14 @@ const { withNx } = require("@nrwl/next/plugins/with-nx");
  **/
 const nextConfig = {
   nx: {
-    // Set this to true if you would like to to use SVGR
-    // See: https://github.com/gregberge/svgr
     svgr: false,
   },
-  basePath: '/admin',
-  assetPrefix: '/admin',
+  basePath: '/admin', // Ensures all routes start with /admin
+  assetPrefix: '/admin', // Ensures assets are prefixed with /admin
+  images: {
+    loader: 'default', // Default loader ensures assets are processed correctly
+    path: '/admin/_next/image', // Use path with basePath applied
+  },
 };
 
 module.exports = withNx(nextConfig);
