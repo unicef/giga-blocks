@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import {
   CONTRIBUTE_QUEUE,
+  IMAGE_QUEUE,
   MINT_QUEUE,
   ONCHAIN_DATA_QUEUE,
   SET_APPROVE_QUEUE,
@@ -30,6 +31,7 @@ export class QueueService {
   constructor(
     @InjectQueue(ONCHAIN_DATA_QUEUE) private readonly _onchainQueue: Queue,
     @InjectQueue(MINT_QUEUE) private readonly _mintQueue: Queue,
+    @InjectQueue(IMAGE_QUEUE) private readonly _imageQueue: Queue,
     @InjectQueue(CONTRIBUTE_QUEUE) private readonly _contributeQueue: Queue,
     private readonly _configService: ConfigService,
     private readonly _prismaService: PrismaAppService,
@@ -122,9 +124,10 @@ export class QueueService {
 
   public async processImage(id: string) {
     try {
-      await this._mintQueue.add(SET_IMAGE_PROCESS, { id }, jobOptions);
+      await this._imageQueue.add(SET_IMAGE_PROCESS, { id }, jobOptions);
       return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
+      console.log('error', error);
       this._logger.error(`Error queueing transaction to blockchain `);
       throw error;
     }
