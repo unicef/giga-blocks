@@ -15,7 +15,7 @@ interface ExtendedContract extends BaseContract {
   nftImageHash?: (tokenHash: string) => ContractTransactionResponse;
   getRandomImages?: (region:string,tokenId: string | ContractTransactionResponse) => ContractTransactionResponse;
   getImage?: (imageName: string | ContractTransactionResponse) => ContractTransactionResponse;
-  nftContentValues?:(tokenId: string | ContractTransactionResponse) => ContractTransactionResponse;
+  getMetadataContent?:(tokenId: string | ContractTransactionResponse) => any;
 }
 
 export const mintNFT = async (
@@ -102,7 +102,7 @@ export const getSchoolData = async(
   tokenId: string | ContractTransactionResponse,
 ): Promise<ContractTransactionResponse> => {
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
-  return await contract.nftContentValues(tokenId);
+  return await contract.getMetadataContent(tokenId);
 }
 
 
@@ -173,9 +173,12 @@ export const getScriptData = async (
   //get tokenId from schoolId
   const tokenId = await contentcontract.schoolIdToTokenId(schoolId);
   //get nft contents from tokenId
-  const nftcontents = await contentcontract.nftContentValues(tokenId);
+  const nftcontents = await contentcontract.getMetadataContent(tokenId);
+  let sanitizedResponse = `{${nftcontents}}`.replace(/(\w+):/g, '"$1":'); // Add curly braces and quote property names
+  sanitizedResponse = sanitizedResponse.replace(/,(\s*})/g, '$1'); // Remove trailing commas
+  const formattedResponse = JSON.parse(sanitizedResponse);
   //get random images from region and tokenId
-  const randomImages = await imagecontract.getRandomImages(nftcontents[8],tokenId);
+  const randomImages = await imagecontract.getRandomImages(formattedResponse?.region,tokenId);
   //get image data from image name
   const image1 = await imagecontract.getImage(randomImages[0]);
   const image2 = await imagecontract.getImage(randomImages[1]);
@@ -184,7 +187,7 @@ export const getScriptData = async (
   const baseImage2 = await getEncodedImage(image2);
      const data = {
       tokenId,
-      nftcontents,
+      nftcontents:formattedResponse,
       baseImage1,
       baseImage2
    }
