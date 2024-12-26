@@ -5,6 +5,10 @@ import { Box, BoxProps } from '@mui/material';
 //
 import BackgroundIllustration from './BackgroundIllustration';
 
+import {nextConfig} from "../../../next.config";
+
+const basePath = nextConfig.basePath || '';
+
 // ----------------------------------------------------------------------
 
 function UpgradeStorageIllustration({ ...other }: BoxProps) {
@@ -24,7 +28,7 @@ function UpgradeStorageIllustration({ ...other }: BoxProps) {
         <BackgroundIllustration />
 
         <image
-          href="/assets/illustrations/characters/character_2.png"
+          href={`${basePath}/assets/illustrations/characters/character_2.png`}
           height="300"
           x="322"
           y="30"

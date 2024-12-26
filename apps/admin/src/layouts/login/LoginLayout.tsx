@@ -2,6 +2,9 @@ import { Typography, Stack } from '@mui/material';
 import Image from '@components/image/Image';
 import { APP_NAME } from 'src/config-global';
 import { StyledRoot, StyledSectionBg, StyledSection, StyledContent } from './styles';
+import {nextConfig} from "../../../next.config";
+
+const basePath = nextConfig.basePath || '';
 
 type Props = {
   title?: string;
@@ -18,7 +21,7 @@ export default function LoginLayout({ children, illustration, title }: Props) {
           disabledEffect
           visibleByDefault
           alt="auth"
-          src={illustration || '/assets/login/logo-horizontal.svg'}
+          src={illustration || `${basePath}/assets/login/logo-horizontal.svg`}
           sx={{ width: 520 }}
         />
         <Typography variant="h1" sx={{ maxWidth: 720, textAlign: 'center' }}>

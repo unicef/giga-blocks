@@ -4,6 +4,10 @@ import { useTheme } from '@mui/material/styles';
 import { Box, BoxProps } from '@mui/material';
 //
 import BackgroundIllustration from './BackgroundIllustration';
+import {nextConfig} from "../../../next.config";
+
+const basePath = nextConfig.basePath || '';
+
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +28,7 @@ function ComingSoonIllustration({ ...other }: BoxProps) {
         <BackgroundIllustration />
 
         <image
-          href="/assets/illustrations/characters/character_1.png"
+          href={`${basePath}/assets/illustrations/characters/character_1.png`}
           height="300"
           x="320"
           y="30"

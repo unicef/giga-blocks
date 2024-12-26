@@ -7,6 +7,9 @@ import CustomBreadcrumbs from '@components/custom-breadcrumbs';
 import Image from 'next/image';
 import UserProfileEditForm from '@sections/user/UserProfileEditForm';
 import { PATH_DASHBOARD } from '@routes/paths';
+import {nextConfig} from "../../../next.config";
+
+const basePath = nextConfig.basePath || '';
 
 UserEditPage.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
 
@@ -34,7 +37,7 @@ export default function UserEditPage() {
         <Grid item xs={4}>
           <Container>
             <Box justifyContent={'center'} rowGap={2} columnGap={2} display="grid">
-              <Image width={250} height={250} alt="USER" src={'/assets/Image-right.svg'} />
+              <Image width={250} height={250} alt="USER" src={ `${basePath}/assets/Image-right.svg`} />
               <Button variant="outlined" color="inherit">
                 Update Profile
               </Button>

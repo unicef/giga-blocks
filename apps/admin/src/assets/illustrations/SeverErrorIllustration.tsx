@@ -4,6 +4,9 @@ import { useTheme } from '@mui/material/styles';
 import { Box, BoxProps } from '@mui/material';
 //
 import BackgroundIllustration from './BackgroundIllustration';
+import {nextConfig} from "../../../next.config";
+
+const basePath = nextConfig.basePath || '';
 
 // ----------------------------------------------------------------------
 
@@ -26,7 +29,7 @@ function SeverErrorIllustration({ ...other }: BoxProps) {
         <BackgroundIllustration />
 
         <image
-          href="/assets/illustrations/characters/character_8.png"
+          href={`${basePath}/assets/illustrations/characters/character_8.png`}
           height="300"
           x="340"
           y="30"

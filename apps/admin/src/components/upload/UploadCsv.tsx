@@ -16,6 +16,7 @@ import MultiFilePreview from './preview/MultiFilePreview';
 import SingleFilePreview from './preview/SingleFilePreview';
 import { MAX_FILE_SIZE } from '@constants/constantValue';
 
+
 // ----------------------------------------------------------------------
 
 const StyledDropZone = styled('div')(({ theme }) => ({

@@ -2,6 +2,9 @@
 import { Typography, Stack, StackProps } from '@mui/material';
 //
 import Image from '../image';
+import {nextConfig} from "../../../next.config";
+
+const basePath = nextConfig.basePath || '';
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +30,7 @@ export default function EmptyContent({ title, description, img, sx, ...other }: 
       <Image
         disabledEffect
         alt="empty content"
-        src={img || '/assets/illustrations/illustration_empty_content.svg'}
+        src={img || `${basePath}/assets/illustrations/illustration_empty_content.svg`}
         sx={{ height: 240, mb: 3 }}
       />
 

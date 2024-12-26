@@ -18,3 +18,4 @@ const nextConfig = {
 };
 
 module.exports = withNx(nextConfig);
+module.exports.nextConfig = nextConfig;

@@ -4,6 +4,9 @@ import { RadioGroup } from '@mui/material';
 import SvgColor from '../../svg-color';
 import { useSettingsContext } from '../SettingsContext';
 import { StyledCard, StyledWrap, MaskControl } from '../styles';
+import {nextConfig} from "../../../../next.config";
+
+const basePath = nextConfig.basePath || '';
 
 // ----------------------------------------------------------------------
 
@@ -18,7 +21,7 @@ export default function ContrastOptions() {
         {OPTIONS.map((contrast) => (
           <StyledCard key={contrast} selected={themeContrast === contrast}>
             <SvgColor
-              src={`/assets/icons/setting/${
+              src={`${basePath}/assets/icons/setting/${
                 contrast === 'bold' ? 'ic_contrast_bold' : 'ic_contrast'
               }.svg`}
             />

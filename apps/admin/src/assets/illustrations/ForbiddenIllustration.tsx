@@ -4,6 +4,9 @@ import { useTheme } from '@mui/material/styles';
 import { Box, BoxProps } from '@mui/material';
 //
 import BackgroundIllustration from './BackgroundIllustration';
+import {nextConfig} from "../../../next.config";
+
+const basePath = nextConfig.basePath || '';
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +27,7 @@ function ForbiddenIllustration({ ...other }: BoxProps) {
         <BackgroundIllustration />
 
         <image
-          href="/assets/illustrations/characters/character_4.png"
+          href={`${basePath}/assets/illustrations/characters/character_4.png`}
           height="300"
           x="220"
           y="30"

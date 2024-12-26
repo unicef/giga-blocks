@@ -9,6 +9,9 @@ import { IconButtonAnimate } from '../../animate';
 import SvgColor from '../../svg-color';
 //
 import BadgeDot from './BadgeDot';
+import {nextConfig} from "../../../../next.config";
+
+const basePath = nextConfig.basePath || '';
 
 // ----------------------------------------------------------------------
 
@@ -56,7 +59,7 @@ export default function ToggleButton({ notDefault, open, onToggle }: Props) {
 
       <Tooltip title="Settings">
         <IconButtonAnimate color="primary" onClick={onToggle} sx={{ p: 1.25 }}>
-          <SvgColor src="/assets/icons/setting/ic_setting.svg" />
+          <SvgColor src={`${basePath}/assets/icons/setting/ic_setting.svg`} />
         </IconButtonAnimate>
       </Tooltip>
     </Box>
