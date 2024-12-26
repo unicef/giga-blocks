@@ -191,6 +191,7 @@ export const getScriptData = async (
       baseImage1,
       baseImage2
    }
+   if(!baseImage1 || !baseImage2)throw new Error("Error in fetching images");
    return data;
 }
 

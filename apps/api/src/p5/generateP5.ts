@@ -21,21 +21,21 @@ async function generateP5Image(
   const tokenNumber = Number(scriptData.tokenId);
   const baseImage1_value = scriptData.baseImage1;
   const baseImage2_value = scriptData.baseImage2;
-  const connectivity_value = scriptData.nftcontents.connectivity;
+  const connectivity_value = scriptData.nftcontents.connectivity || true;
   const coverage_availability_value = scriptData.nftcontents.coverage_availabitlity || true;
-  const electricity_availability_value = scriptData.nftcontents.electricity_availabilty;
+  const electricity_availability_value = scriptData.nftcontents.electricity_availabilty || true;
   //need to identify the tokenData
   let tokenData:any ={};
   tokenData.hash = "0x"+ 1;
   tokenData.tokenId = Number(scriptData.tokenId);
-
+  
 
   page
-  .on("console", (message) =>
-    console.log(
-      `${message.type().substr(0, 3).toUpperCase()} ${message.text()}`
-    )
-  )
+  // .on("console", (message) =>
+  //   console.log(
+  //     `${message.type().substr(0, 3).toUpperCase()} ${message.text()}`
+  //   )
+  // )
   .on("pageerror", ({ message }) => console.log(message))
   .on("response", (response) =>
     console.log(`${response.status()} ${response.url()}`)
@@ -48,7 +48,7 @@ async function generateP5Image(
     <!DOCTYPE html>
     <html lang="en">
     <head>
-     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/dist/lodash.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -69,12 +69,16 @@ async function generateP5Image(
     </html>`;
 
   await page.setContent(dataUrl, { waitUntil: 'domcontentloaded' });
-  page.on("console", (message) =>
-    console.log(
-      `${message.type().substr(0, 3).toUpperCase()} ${message.text()}`
-    )
-  )
-  .on("pageerror", ({ message }) => console.log(message))
+  
+ // Wait for the canvas to render
+  await page.waitForTimeout(5000);
+
+  // page.on("console", (message) =>
+  //   console.log(
+  //     `${message.type().substr(0, 3).toUpperCase()} ${message.text()}`
+  //   )
+  // )
+  page.on("pageerror", ({ message }) => console.log(message))
   .on("response", (response) =>
     console.log(`${response.status()} ${response.url()}`)
   )

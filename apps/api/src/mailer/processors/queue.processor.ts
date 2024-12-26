@@ -304,9 +304,10 @@ export class ImageProcessor {
     }
   }
 
-  @Process(SET_IMAGE_PROCESS)
+  @Process({name:SET_IMAGE_PROCESS,concurrency:1})
   public async processImages(job: Job<any>) {
     const id = job.data.id;
+    jobOptions.delay = 1000;
     this._logger.log(`Updating image of school: ${id}`);
     // const schoolToken = await getTokenIdSchool(
     //   'NFTContent',
