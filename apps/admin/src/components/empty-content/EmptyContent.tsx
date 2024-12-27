@@ -2,10 +2,8 @@
 import { Typography, Stack, StackProps } from '@mui/material';
 //
 import Image from '../image';
-import {nextConfig} from "../../../next.config";
 
-const basePath = nextConfig.basePath || '';
-
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
 // ----------------------------------------------------------------------
 
 interface EmptyContentProps extends StackProps {

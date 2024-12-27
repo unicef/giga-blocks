@@ -6,10 +6,8 @@ import {
   PATH_VALID,
 } from '../../../routes/paths';
 import SvgColor from '../../../components/svg-color';
-import {nextConfig} from "../../../../next.config";
 
-const basePath = nextConfig.basePath || '';
-
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
 const icon = (name: string) => (
   <SvgColor src={`${basePath}/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
 );

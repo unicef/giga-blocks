@@ -9,10 +9,8 @@ import { IconButtonAnimate } from '../../animate';
 import SvgColor from '../../svg-color';
 //
 import BadgeDot from './BadgeDot';
-import {nextConfig} from "../../../../next.config";
 
-const basePath = nextConfig.basePath || '';
-
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
 // ----------------------------------------------------------------------
 
 type Props = {

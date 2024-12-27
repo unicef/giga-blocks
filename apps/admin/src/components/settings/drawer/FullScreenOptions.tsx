@@ -2,10 +2,8 @@ import { useState } from 'react';
 //
 import SvgColor from '../../svg-color';
 import { StyledCard } from '../styles';
-import {nextConfig} from "../../../../next.config";
 
-const basePath = nextConfig.basePath || '';
-
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
 // ----------------------------------------------------------------------
 
 export default function FullScreenOptions() {

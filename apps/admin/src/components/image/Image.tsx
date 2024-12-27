@@ -5,10 +5,8 @@ import { Box } from '@mui/material';
 //
 import getRatio from './getRatio';
 import { ImageProps } from './types';
-import {nextConfig} from "../../../next.config";
 
-const basePath = nextConfig.basePath || '';
-
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
 // ----------------------------------------------------------------------
 
 const Image = forwardRef<HTMLSpanElement, ImageProps>(

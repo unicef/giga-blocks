@@ -1,9 +1,7 @@
 // @mui
 import { enUS, frFR, zhCN, viVN, arSA } from '@mui/material/locale';
-import {nextConfig} from "../../next.config";
 
-const basePath = nextConfig.basePath || '';
-
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
 // PLEASE REMOVE `LOCAL STORAGE` WHEN YOU CHANGE SETTINGS.
 // ----------------------------------------------------------------------
 

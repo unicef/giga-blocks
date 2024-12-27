@@ -7,10 +7,8 @@ import CustomBreadcrumbs from '@components/custom-breadcrumbs';
 import Image from 'next/image';
 import UserProfileEditForm from '@sections/user/UserProfileEditForm';
 import { PATH_DASHBOARD } from '@routes/paths';
-import {nextConfig} from "../../../next.config";
 
-const basePath = nextConfig.basePath || '';
-
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
 UserEditPage.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default function UserEditPage() {
