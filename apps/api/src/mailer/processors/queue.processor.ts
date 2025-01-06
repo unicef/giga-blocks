@@ -25,6 +25,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 import {
   getArtScript,
+  getScriptData,
   getTokenHash,
   getTokenIdSchool,
   mintNFT,
@@ -41,6 +42,7 @@ import generateP5Image from 'src/p5/generateP5';
 import decodeBase64Image from 'src/utils/ipfs/decodeImage';
 import uploadFile from 'src/utils/ipfs/ipfsAdd';
 import getProposedGasPrice from 'src/utils/gasPrice';
+import { getSchoolScript } from 'src/utils/web3/subgraph';
 
 @Injectable()
 @Processor(ONCHAIN_DATA_QUEUE)
@@ -302,21 +304,26 @@ export class ImageProcessor {
     }
   }
 
-  @Process(SET_IMAGE_PROCESS)
+  @Process({name:SET_IMAGE_PROCESS,concurrency:1})
   public async processImages(job: Job<any>) {
     const id = job.data.id;
+    jobOptions.delay = 1000;
     this._logger.log(`Updating image of school: ${id}`);
-    const schoolToken = await getTokenIdSchool(
-      'NFTContent',
+    // const schoolToken = await getTokenIdSchool(
+    //   'NFTContent',
+    //   this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
+    //   id,
+    // );
+    const scriptData = await getScriptData(
+          this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
+           this._configService.get<string>('GIGA_IMAGE_CONTENT_ADDRESS'),
+           id);
+    //need to update the function to get the scripts.
+    const artScript = await getSchoolScript(
+      this._configService.get<string>('NEXT_PUBLIC_GRAPH_URL'),
       this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-      id,
     );
-    const artScript = await getArtScript(
-      'NFTContent',
-      this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-      schoolToken,
-    );
-    const base64Image = await generateP5Image(artScript, schoolToken);
+    const base64Image = await generateP5Image(artScript.baseScript, scriptData);
     const decodedImage = await decodeBase64Image(base64Image);
     if (decodedImage) {
       await uploadFile(decodedImage.data)
