@@ -143,31 +143,47 @@ model User {
   @@map("giga_users")
 }
 
+model SchoolVersion {
+  id           String     @id @default(uuid())
+  country_code String   @db.VarChar(3)
+  version      Int      
+  last_updated  DateTime @default(now())
+  School       School?  @relation(fields: [schoolId], references: [id])
+  schoolId     String?
+
+  @@unique([country_code, version])
+  @@map("school_version")
+}
+
 model School {
-  id                        String            @id @default(uuid())
-  giga_school_id            String            @unique
-  status                    SchoolStatus      @default(Open)
-  connectivity              Boolean           @default(false)
-  name                      String
-  school_type               String
-  electricity_available     Boolean           @default(false)
-  country                   String
-  longitude                 Float
-  latitude                  Float
-  minted                    MintStatus        @default(NOTMINTED)
-  coverage_availability     Boolean           @default(false)
-  createdAt                 DateTime          @default(now())
-  updatedAt                 DateTime          @updatedAt
-  deletedAt                 DateTime?
-  createdBy                 User?             @relation(fields: [createdById], references: [id])
-  createdById               String?
-  isArchived                Boolean           @default(false)
-  updatedBy                 String?
-  updatedUser               User?             @relation("UpdatedBy", fields: [updatedBy], references: [id])
-  uploadId                  String?
-  uploadBatch               CSVUpload?        @relation(fields: [uploadId], references: [id])
-  validatedData             validatedData[]
-  ContributedData           ContributedData[]
+  id                    String            @id @default(uuid())
+  giga_school_id        String            @unique
+  status                SchoolStatus      @default(Open)
+  connectivity          Boolean           @default(false)
+  name                  String
+  school_type           String
+  electricity_available Boolean           @default(false)
+  country               String
+  region_name           String?
+  longitude             Float
+  latitude              Float
+  minted                MintStatus        @default(NOTMINTED)
+  coverage_availability Boolean           @default(false)
+  giga_maps_data        Json ?
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  deletedAt             DateTime?
+  createdBy             User?             @relation(fields: [createdById], references: [id])
+  createdById           String?
+  isArchived            Boolean           @default(false)
+  updatedBy            String?
+  updatedUser           User?             @relation("UpdatedBy", fields: [updatedBy], references: [id])
+  uploadId              String?
+  uploadBatch           CSVUpload?        @relation(fields: [uploadId], references: [id])
+  validatedData         validatedData[]
+  ContributedData       ContributedData[]
+  version_id            String
+  School_Version        SchoolVersion[]
 
   @@index(fields: [name, country])
   @@map("giga_school")
