@@ -19,6 +19,8 @@ import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-
 import { getTokenId } from 'src/utils/web3/subgraph';
 import { PaginateFunction, PaginateOptions } from 'src/utils/paginate';
 import { getContractWithSigner } from 'src/utils/ethers/contractWithSigner';
+import { PAGINATION } from 'src/constants/pagination';
+import { paginator } from 'src/utils/paginator';
 @Injectable()
 export class SchoolService {
   constructor(
@@ -28,112 +30,40 @@ export class SchoolService {
   ) {}
 
   async findAll(query: ListSchoolDto) {
-    const { page, perPage, minted, uploadId, name, country, connectivityStatus, orderBy, order } =
-      query;
+    const { 
+      page = PAGINATION.DEFAULT_PAGE, 
+      perPage = PAGINATION.DEFAULT_PER_PAGE, 
+      minted, 
+      uploadId, 
+      name, 
+      country, 
+      connectivityStatus, 
+      orderBy = PAGINATION.DEFAULT_ORDERBY, 
+      order = PAGINATION.DEFAULT_ORDER
+    } = query;
+  
+    if (+perPage > PAGINATION.MAX_PER_PAGE) {
+      throw new BadRequestException(`Maximum number of items per page is ${PAGINATION.MAX_PER_PAGE}`);
+    }
+  
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
+      ...(minted !== undefined && { minted }),
+      ...(uploadId && { uploadId }),
+      ...(name && { name: { contains: name, mode: 'insensitive' } }),
+      ...(country && { country: { contains: country, mode: 'insensitive' } }),
+      ...(connectivityStatus !== undefined && { connectivity: connectivityStatus === 'true' }),
     };
-    if (minted) {
-      where.minted = minted;
-    }
-
-    if (uploadId) {
-      where.uploadId = uploadId;
-    }
-    if (name) {
-      where.name = {
-        contains: name,
-        mode: 'insensitive',
-      };
-    }
-    if (country) {
-      where.country = {
-        contains: country,
-        mode: 'insensitive',
-      };
-    }
-    if (connectivityStatus) {
-      let status: boolean;
-      if (connectivityStatus === 'true') {
-        status = true;
-      } else {
-        status = false;
-      }
-      where.connectivity = status;
-    }
-
-    if (!perPage) {
-      const data = await this.prisma.school.findMany({ where });
-      return data;
-    }
-
-    const paginator = (defaultOptions: PaginateOptions): PaginateFunction => {
-      return async (model, args: any = { where: undefined, include: undefined }, options) => {
-        const page = Number(options?.page || defaultOptions?.page) || 0;
-        const perPage = Number(options?.perPage || defaultOptions?.perPage) || 10;
-        const order = options?.order || defaultOptions?.order || 'desc';
-        const orderBy = options?.orderBy || defaultOptions?.orderBy || 'createdAt';
-        const skip = perPage * page;
-        const [total, rows] = await Promise.all([
-          model.count({ where: args.where }),
-
-          orderBy === 'school'
-            ? model.findMany({
-                ...args,
-                orderBy: [
-                  {
-                    school: {
-                      name: order,
-                    },
-                  },
-                ],
-                take: perPage,
-                skip,
-              })
-            : model.findMany({
-                ...args,
-                orderBy: {
-                  [orderBy]: order,
-                },
-                take: perPage,
-                skip,
-              }),
-        ]);
-        const lastPage = Math.ceil(total / perPage);
-        const meta = {
-          total,
-          lastPage,
-          currentPage: page,
-          perPage,
-        };
-
-        if (options?.transformRows) {
-          return {
-            rows: options.transformRows(rows),
-            meta,
-          };
-        }
-
-        return {
-          rows,
-          meta,
-        };
-      };
-    };
-
-    const paginate: PaginateFunction = paginator({ perPage: 20 });
-
+  
+    const paginate: PaginateFunction = paginator({ perPage });
+  
     return paginate(
       this.prisma.school,
       { where },
-      {
-        page,
-        perPage,
-        order,
-        orderBy,
-      },
+      { page, perPage: +perPage, order, orderBy }
     );
   }
+  
 
   async queueOnchainData(data: number) {
     return this.queueService.sendTransaction(data);

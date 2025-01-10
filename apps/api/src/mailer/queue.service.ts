@@ -86,6 +86,7 @@ export class QueueService {
         ids = MintData.data.map(school => school.id);
         giga_ids = MintData.data.map(school => school.giga_school_id);
         schools = await this.updateSchools(ids);
+        console.log(mintData, "is mint data with batch size")
         await this._mintQueue.add(SET_MINT_NFT, { mintData, ids, giga_ids }, jobOptions);
       } else {
         let mintDatum;
@@ -93,6 +94,7 @@ export class QueueService {
           mintDatum = mintData.slice(i, i + batchSize);
           ids = MintData.data.slice(i, i + batchSize).map(school => school.id);
           schools = await this.updateSchools(ids);
+          console.log(mintDatum, "is mint datum")
           await this._mintQueue.add(
             SET_MINT_NFT,
             { mintData: mintDatum, ids, giga_ids },

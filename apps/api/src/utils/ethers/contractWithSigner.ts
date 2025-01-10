@@ -21,5 +21,6 @@ export const getInterface = (contractName: string) => {
   const config = new ConfigService();
   const contractObj = new Contract(config.get('NETWORK_PROVIDER'));
   const iface = contractObj.getInterface(contractName);
+  console.log(iface)
   return iface;
 };
