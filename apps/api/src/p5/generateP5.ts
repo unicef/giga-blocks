@@ -6,6 +6,7 @@ interface scriptData {
   nftcontents:any;
   baseImage1: string;
   baseImage2: string;
+  tokenHash: string;
 }
 
 async function generateP5Image(
@@ -26,7 +27,7 @@ async function generateP5Image(
   const electricity_availability_value = scriptData.nftcontents.electricity_availabilty || true;
   //need to identify the tokenData
   let tokenData:any ={};
-  tokenData.hash = "0x"+ 1;
+  tokenData.hash = scriptData.tokenHash;
   tokenData.tokenId = Number(scriptData.tokenId);
   
 

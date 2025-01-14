@@ -191,7 +191,8 @@ export const getScriptData = async (
       tokenId,
       nftcontents:formattedResponse,
       baseImage1,
-      baseImage2
+      baseImage2,
+      tokenHash
    }
    if(!baseImage1 || !baseImage2)throw new Error("Error in fetching images");
    return data;
