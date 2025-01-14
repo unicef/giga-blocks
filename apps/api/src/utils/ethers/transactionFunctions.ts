@@ -16,6 +16,7 @@ interface ExtendedContract extends BaseContract {
   getRandomImages?: (region:string,tokenId: string | ContractTransactionResponse) => ContractTransactionResponse;
   getImage?: (imageName: string | ContractTransactionResponse) => ContractTransactionResponse;
   getMetadataContent?:(tokenId: string | ContractTransactionResponse) => any;
+  tokenIdToTokenHash?:(tokenId: string | ContractTransactionResponse) => any;
 }
 
 export const mintNFT = async (
@@ -177,8 +178,9 @@ export const getScriptData = async (
   let sanitizedResponse = `{${nftcontents}}`.replace(/(\w+):/g, '"$1":'); // Add curly braces and quote property names
   sanitizedResponse = sanitizedResponse.replace(/,(\s*})/g, '$1'); // Remove trailing commas
   const formattedResponse = JSON.parse(sanitizedResponse);
+  const tokenHash = await contentcontract.tokenIdToTokenHash(tokenId);
   //get random images from region and tokenId
-  const randomImages = await imagecontract.getRandomImages(formattedResponse?.region,tokenId);
+  const randomImages = await imagecontract.getRandomImages(formattedResponse?.region,tokenHash);
   //get image data from image name
   const image1 = await imagecontract.getImage(randomImages[0]);
   const image2 = await imagecontract.getImage(randomImages[1]);
