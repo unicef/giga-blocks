@@ -130,6 +130,13 @@ export const TESTNET_CHAINS: any = {
     nativeCurrency: ETH,
     blockExplorerUrls: ['https://sepolia.arbiscan.io/'],
 
+  },
+  84532: {
+    urls: ['https://base-sepolia.g.alchemy.com/v2/T0PE-HxhWOEH0eUNTcUOFgPQJiQzL6uf'],
+    name: 'Base Sepolia',
+    nativeCurrency: ETH,
+    blockExplorerUrls: ['https://sepolia.arbiscan.io/'],
+
   }
 }
 
