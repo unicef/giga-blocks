@@ -12,6 +12,7 @@ metadata:
 {{ toYaml . | indent 4 }}
 {{- end }}
 spec:
+  ingressClassName: azure-application-gateway
   rules:
     - host: {{ $.Values.ingress.web.host }}
       http:
