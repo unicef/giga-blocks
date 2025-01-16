@@ -33,7 +33,7 @@ export const mintNFT = async (
     giga_ids[i],
     escrowAddress,
     escrowAddress,
-    el,
+    [...el, 'Nepal']
   ]);
   const multicalldata = generateMultiCallData(contractName, 'mintNft', schoolArgs);
   return await contract.multicall(multicalldata);
