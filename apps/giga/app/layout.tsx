@@ -1,4 +1,4 @@
-import './global.css';
+import './global.scss';
 
 export const metadata = {
   title: 'Welcome to apps/giga',
