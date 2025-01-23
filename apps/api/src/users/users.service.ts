@@ -105,6 +105,9 @@ export class UsersService {
   findAll(query: any) {
     const { page, perPage, order, orderBy } = query;
 
+    console.log(perPage)
+    console.log(query?.role)
+
     const where: Prisma.UserWhereInput = {};
     if (query?.role) {
       where.roles = {

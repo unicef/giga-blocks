@@ -1,6 +1,7 @@
-import { BaseContract, ContractTransactionResponse } from 'ethers';
-import { getContractWithSigner, getInterface } from './contractWithSigner';
+import { BaseContract, ContractTransactionResponse, ethers } from 'ethers';
+import { getContractWithSigner, getInterface, getSigner } from './contractWithSigner';
 import { ConfigService } from '@nestjs/config';
+import { getTokenId, getTokensId } from '../web3/subgraph';
 // import getProposedGasPrice from '../gasPrice';
 
 interface ExtendedContract extends BaseContract {
@@ -13,6 +14,10 @@ interface ExtendedContract extends BaseContract {
   ) => ContractTransactionResponse;
   getArtScript?: (tokenId: string | ContractTransactionResponse) => ContractTransactionResponse;
   nftImageHash?: (tokenHash: string) => ContractTransactionResponse;
+  getRandomImages?: (region:string,tokenId: string | ContractTransactionResponse) => ContractTransactionResponse;
+  getImage?: (imageName: string | ContractTransactionResponse) => ContractTransactionResponse;
+  getMetadataContent?:(tokenId: string | ContractTransactionResponse) => any;
+  tokenIdToTokenHash?:(tokenId: string | ContractTransactionResponse) => any;
 }
 
 export const mintNFT = async (
@@ -29,7 +34,7 @@ export const mintNFT = async (
     giga_ids[i],
     escrowAddress,
     escrowAddress,
-    el,
+    [...el, 'Nepal']
   ]);
   const multicalldata = generateMultiCallData(contractName, 'mintNft', schoolArgs);
   return await contract.multicall(multicalldata);
@@ -92,6 +97,38 @@ export const getArtScript = async (
   return await contract.getArtScript(tokenId);
 };
 
+
+export const getSchoolData = async(
+  contractName: string,
+  contractAddress: string,
+  tokenId: string | ContractTransactionResponse,
+): Promise<ContractTransactionResponse> => {
+  const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
+  return await contract.getMetadataContent(tokenId);
+}
+
+
+export const getRandomImages = async (
+  contractName: string,
+  contractAddress: string,
+  region: string,
+  tokenId: string | ContractTransactionResponse,
+): Promise<ContractTransactionResponse> => {
+  const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
+  return await contract.getRandomImages(region,tokenId);
+}
+
+export const getImage = async(
+  contractName: string,
+  contractAddress: string,
+  imageName: string | ContractTransactionResponse,
+): Promise<ContractTransactionResponse> => {
+  const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
+  return await contract.getImage(imageName);
+}
+
+
+
 export const updateImageHash = async (
   contractName: string,
   contractAddress: string,
@@ -119,11 +156,80 @@ export const updateBulkData = async (
   contractAddress: string,
   tokenId: string[],
   schoolDataArray: (string | boolean | number)[][],
-): Promise<ContractTransactionResponse> => {
+): Promise<any> => {
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
-  // const weiEthers = await getProposedGasPrice();
-  const schoolArgs = tokenId.map((el, i) => [el, schoolDataArray[i]]);
-  const multicalldata = generateMultiCallData(contractName, 'updateNftContent', schoolArgs);
-  return await contract.multicall(multicalldata);
+
+  const schoolTokenIds = await getTokensId(
+    process.env.NEXT_PUBLIC_GRAPH_URL || 'https://api.studio.thegraph.com/query/74692/giga-research/version/latest/',
+        tokenId,
+  )
+  console.log(schoolDataArray)
+
+  console.log(schoolTokenIds.data)
+
+  console.log(await mergeTokenId(schoolDataArray, schoolTokenIds.data.schoolTokenIds))
+  // const tokenId = schoolTokenId.data.schoolTokenId.tokenId;
+  // const schoolArgs = tokenId.map((el, i) => [el, schoolDataArray[i]]);
+  // const multicalldata = generateMultiCallData(contractName, 'updateNftContent', schoolArgs);
+  // return await contract.multicall(multicalldata);
   // return await contract.multicall(multicalldata, { gasPrice: weiEthers });
 };
+
+const mergeTokenId = async (schoolDataArray, tokenIds) => {
+  const mappedData = schoolDataArray.map((school) => {
+    const matchingToken = tokenIds.find((token) => token.schoolId === school[0]);
+    return {
+      ...school,
+      tokenId: matchingToken ? matchingToken.tokenId : null,
+    };
+  });
+
+  const schoolData = mappedData.map((school) => {
+    const { tokenId, ...rest } = school;
+    return Object.values(rest).slice(1);
+  });
+
+  const tokenId = mappedData.map((school) => school.tokenId);
+
+  return { schoolData, tokenId };
+};
+
+export const getScriptData = async (
+  contentcontractAddress: string,
+  imagecontractAddress: string,
+  schoolId:string,
+):Promise<any> => {
+  const contentcontract: ExtendedContract = getContractWithSigner("NFTContent", contentcontractAddress);
+  const imagecontract: ExtendedContract = getContractWithSigner("ImageContent", imagecontractAddress);
+  //get tokenId from schoolId
+  const tokenId = await contentcontract.schoolIdToTokenId(schoolId);
+  //get nft contents from tokenId
+  const nftcontents = await contentcontract.getMetadataContent(tokenId);
+  let sanitizedResponse = `{${nftcontents}}`.replace(/(\w+):/g, '"$1":'); // Add curly braces and quote property names
+  sanitizedResponse = sanitizedResponse.replace(/,(\s*})/g, '$1'); // Remove trailing commas
+  const formattedResponse = JSON.parse(sanitizedResponse);
+  const tokenHash = await contentcontract.tokenIdToTokenHash(tokenId);
+  //get random images from region and tokenId
+  const randomImages = await imagecontract.getRandomImages(formattedResponse?.region,tokenHash);
+  //get image data from image name
+  const image1 = await imagecontract.getImage(randomImages[0]);
+  const image2 = await imagecontract.getImage(randomImages[1]);
+  //converts image bytes  into base64 encoded image
+  const baseImage1 = await getEncodedImage(image1);
+  const baseImage2 = await getEncodedImage(image2);
+     const data = {
+      tokenId,
+      nftcontents:formattedResponse,
+      baseImage1,
+      baseImage2,
+      tokenHash
+   }
+   if(!baseImage1 || !baseImage2)throw new Error("Error in fetching images");
+   return data;
+}
+
+const getEncodedImage = async (imageData:any) =>{
+  const base64 = `data:image/png;base64,${ethers.encodeBase64(imageData)}`;
+  return base64;
+}
+

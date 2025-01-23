@@ -11,6 +11,7 @@ import { ContributeDataModule } from './contribute/contribute.module';
 import { PrismaAppService } from './prisma/prisma.service';
 import {RabbitMQModule, WorkerModule} from "@rumsan/rabbitmq";
 import { SchoolWorker } from './workers/school.rabbitmq.worker';
+import { UpdateOnchainDataWorker } from './workers/update-onchain.rabbitmq.worker';
 
 @Module({
   imports: [
@@ -39,6 +40,10 @@ import { SchoolWorker } from './workers/school.rabbitmq.worker';
             provide: 'SchoolWorker1',
             useClass: SchoolWorker,
           },
+          {
+            provide: 'SchoolWorker1',
+            useClass: UpdateOnchainDataWorker,
+          }
         ],
       }),
     }),

@@ -23,7 +23,7 @@ import { MintStatus } from '@prisma/application';
 import fastify = require('fastify');
 import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-datum.dto';
 import { RabbitMQService } from '@rumsan/rabbitmq';
-import { SCHOOL_QUEUE } from 'src/constants';
+import { SCHOOL_QUEUE, UPDATE_ONCHAIN } from 'src/constants';
 @Controller('schools')
 @ApiTags('School')
 export class SchoolController {
@@ -122,7 +122,7 @@ export class SchoolController {
   async sendMessage() {
     const data = [{ message: 'Hello RabbitMQ!' }, {message: "Bye BullMQ!"}];
     const response = await this.rabbitMQService.publishBatchToQueue(
-      SCHOOL_QUEUE,
+      UPDATE_ONCHAIN,
       data,
       1
     );
