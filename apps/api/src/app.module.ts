@@ -8,6 +8,10 @@ import { SchoolModule } from './schools/schools.module';
 import { EmailModule } from './newsletters/newsletters.module';
 import { UsersModule } from './users/users.module';
 import { ContributeDataModule } from './contribute/contribute.module';
+import { PrismaAppService } from './prisma/prisma.service';
+import {RabbitMQModule, WorkerModule} from "@rumsan/rabbitmq";
+import { SchoolWorker } from './workers/school.rabbitmq.worker';
+import { UpdateOnchainDataWorker } from './workers/update-onchain.rabbitmq.worker';
 
 @Module({
   imports: [
@@ -22,6 +26,26 @@ import { ContributeDataModule } from './contribute/contribute.module';
         },
       }),
       inject: [ConfigService],
+    }),
+    RabbitMQModule.register({
+      urls: ['amqp://guest:guest@localhost:5672'],
+      ampqProviderName: 'AMQP_CONNECTION',
+      queues: [{ name: 'SCHOOL_QUEUE', durable: true }],
+      workerModuleProvider: WorkerModule.register({
+        globalDataProvider: {
+          prismaService: PrismaAppService,
+        },
+        workers: [
+          {
+            provide: 'SchoolWorker1',
+            useClass: SchoolWorker,
+          },
+          {
+            provide: 'SchoolWorker1',
+            useClass: UpdateOnchainDataWorker,
+          }
+        ],
+      }),
     }),
     AuthModule,
     PrismaModule,

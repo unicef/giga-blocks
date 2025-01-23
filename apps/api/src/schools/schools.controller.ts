@@ -22,10 +22,12 @@ import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
 import { MintStatus } from '@prisma/application';
 import fastify = require('fastify');
 import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-datum.dto';
+import { RabbitMQService } from '@rumsan/rabbitmq';
+import { SCHOOL_QUEUE, UPDATE_ONCHAIN } from 'src/constants';
 @Controller('schools')
 @ApiTags('School')
 export class SchoolController {
-  constructor(private readonly schoolService: SchoolService) {}
+  constructor(private readonly schoolService: SchoolService, private readonly rabbitMQService: RabbitMQService) {}
 
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
@@ -112,5 +114,18 @@ export class SchoolController {
   @Get('listUpload')
   listUploads() {
     return this.schoolService.listUploads();
+  }
+
+  // Test rabbit mq
+  @Public()
+  @Get('send')
+  async sendMessage() {
+    const data = [{ message: 'Hello RabbitMQ!' }, {message: "Bye BullMQ!"}];
+    const response = await this.rabbitMQService.publishBatchToQueue(
+      UPDATE_ONCHAIN,
+      data,
+      1
+    );
+    return { response };
   }
 }

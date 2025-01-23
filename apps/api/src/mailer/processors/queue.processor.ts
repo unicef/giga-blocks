@@ -20,6 +20,8 @@ import {
   SET_CONTRIBUTE_QUEUE,
   SET_IMAGE_PROCESS,
   IMAGE_QUEUE,
+  UPLOAD_QUEUE,
+  SET_UPLOAD_PROCESS,
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
@@ -398,5 +400,58 @@ export class ContributeProcessor {
     const id = job.data.id;
     const userId = job.data.userId;
     return this.schoolService.update(id, userId);
+  }
+}
+
+@Injectable()
+@Processor(UPLOAD_QUEUE)
+export class UpdateProcessor {
+  private readonly _logger = new Logger(ContributeProcessor.name);
+  constructor(
+    private readonly _mailerService: MailerService,
+    private readonly _configService: ConfigService,
+    private contributeDataService: ContributeDataService,
+    private schoolService: SchoolService,
+  ) {}
+
+  @OnQueueActive()
+  public onActive(job: Job) {
+    this._logger.debug(`Processing job ${job.id} of type ${job.name}`);
+  }
+
+  @OnQueueCompleted()
+  public onComplete(job: Job) {
+    this._logger.debug(`Completed job ${job.id} of type ${job.name}`);
+  }
+
+  @OnQueueFailed()
+  public async onErrorDB(job: Job<any>, error: any) {
+    this._logger.error(`Failed job ${job.id} of type ${job.name}: ${error.message}`, error.stack);
+    if (job.attemptsMade === job.opts.attempts) {
+      try {
+        return this._mailerService.sendMail({
+          to: this._configService.get('EMAIL_ADDRESS'),
+          from: this._configService.get('EMAIL_ADDRESS'),
+          subject: 'Something went wrong while updating database!!',
+          template: './error',
+          context: {},
+        });
+      } catch {
+        this._logger.error('Failed to send confirmation email to admin');
+      }
+    }
+  }
+
+  @Process(SET_UPLOAD_PROCESS)
+  public async contributeUpdate(job: Job<{ ids: any; userId: string }>) {
+    const idsArray = job.data.ids.contributions;
+    const userId = job.data.userId;
+    for (const data of idsArray) {
+      const transactions = await this.contributeDataService.validate(
+        data.contributionId,
+        Boolean(data.isValid),
+        userId,
+      );
+    }
   }
 }

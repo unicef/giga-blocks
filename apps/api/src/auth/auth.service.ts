@@ -172,7 +172,7 @@ export class AuthService {
   }
 
   async adminWalletLogin(user: any) {
-    if(!user?.roles?.includes('ADMIN')) throw new BadRequestException('Only admin can login');
+    if (!user?.roles?.includes('ADMIN')) throw new BadRequestException('Only admin can login');
     const payload = {
       id: user.id,
       sub: {
