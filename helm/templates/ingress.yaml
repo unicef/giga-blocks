@@ -41,4 +41,14 @@ spec:
                 name: {{ $.Values.ingress.admin.backendService }}
                 port:
                   number: {{ $.Values.admin.service.port }}
+    - host: {{ $.Values.ingress.docs.host }}
+      http:
+        paths:
+          - pathType: {{ $ingressPathType }}
+            path: {{ $.Values.ingress.docs.path }}
+            backend:
+              service:
+                name: {{ $.Values.ingress.docs.backendService }}
+                port:
+                  number: 80
 {{- end }}
