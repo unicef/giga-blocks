@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "giga-blocks.fullname" . }}-admin
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "giga-blocks-admin.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.admin.autoscaling.enabled }}
+  replicas: {{ .Values.admin.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "giga-blocks-admin.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.admin.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "giga-blocks-admin.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.admin.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.admin.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.admin.securityContext | nindent 12 }}
+          image: "{{ .Values.admin.image.repository }}:{{ .Values.admin.image.tag | default .Chart.AppVersion }}"
+          command: ["/bin/ash"]
+          args: ["-c", "cd /usr/src/app && cp /tmp/.env_temp .env && env | grep -Ei \"(password|secret|token)\" >> /usr/src/app/.env; npm start" ]
+          imagePullPolicy: {{ .Values.admin.image.pullPolicy }}
+          volumeMounts:
+          - name: config
+            mountPath: /tmp/
+          env:
+            - name: env
+              value: {{ .Values.environment }}
+            - name: SERVICE_NAME
+              value: {{ include "giga-blocks.fullname" . }}-admin
+            - name: MY_POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          envFrom:
+            #{{- range .Values.admin.envSecrets }}
+            #- secretRef:
+            #    {{- toYaml . | nindent 16 }}
+            #{{- end }}
+            {{- range .Values.admin.envConfigMaps }}
+            - configMapRef:
+                {{- toYaml . | nindent 16 }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.admin.service.targetPort }}
+              protocol: TCP
+          {{- with .Values.admin.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.admin.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.admin.resources | nindent 12 }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "giga-blocks.fullname" . }}-admin-conf
+      {{- with .Values.admin.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.admin.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.admin.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

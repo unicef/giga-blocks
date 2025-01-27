@@ -54,3 +54,8 @@ out
 
 
 docker-compose*
+
+# Helm
+helm/requirements.lock
+helm/charts/*
+helm/values.*.yaml
