@@ -306,7 +306,7 @@ export class ImageProcessor {
     }
   }
 
-  @Process({name:SET_IMAGE_PROCESS,concurrency:1})
+  @Process({name:SET_IMAGE_PROCESS, concurrency:1})
   public async processImages(job: Job<any>) {
     const id = job.data.id;
     jobOptions.delay = 1000;

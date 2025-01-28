@@ -19,6 +19,7 @@ import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-
 import { getTokenId } from 'src/utils/web3/subgraph';
 import { PaginateFunction, PaginateOptions } from 'src/utils/paginate';
 import { getContractWithSigner } from 'src/utils/ethers/contractWithSigner';
+import { NFTContent } from 'src/constants/contract';
 @Injectable()
 export class SchoolService {
   constructor(
@@ -140,7 +141,7 @@ export class SchoolService {
   }
 
   async findContract(tokenId) {
-      const contract: any = getContractWithSigner('NFTContent', '0x38AB410c1C650d251a83F884BB76709d1791Ab07');
+      const contract: any = getContractWithSigner(NFTContent, '0x38AB410c1C650d251a83F884BB76709d1791Ab07');
       return await contract.generateTokenData(tokenId);
   }
 
@@ -352,7 +353,7 @@ export class SchoolService {
     );
     const tokenId = schoolTokenId.data.schoolTokenId.tokenId;
     const tx = await updateData(
-      'NFTContent',
+      NFTContent,
       this.configService.get('GIGA_NFT_CONTENT_ADDRESS'),
       tokenId,
       schooldata,

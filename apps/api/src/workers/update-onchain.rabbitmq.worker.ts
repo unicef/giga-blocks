@@ -8,6 +8,7 @@ import {
 } from '@rumsan/rabbitmq';
 import { AmqpConnectionManager, ChannelWrapper } from 'amqp-connection-manager';
 import { AMQP_CONNECTION, UPDATE_ONCHAIN } from 'src/constants';
+import { NFTContent } from 'src/constants/contract';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { SchoolService } from 'src/schools/schools.service';
 import { getContractWithSigner } from 'src/utils/ethers/contractWithSigner';
@@ -49,44 +50,34 @@ export class UpdateOnchainDataWorker extends BaseWorker<SchoolService> {
   }
 
   protected async processItem(batch): Promise<void> {
-
-    const demoSchoolId = ["9cc20cb0-ba8d-49bf-8df0-dbdb570e23c5", "30c7e9ed-c780-4231-a237-339559f26fe0", "f08a0131-b990-45da-a741-b213860f2ade"]
-    
-    
+    console.log("batch")
     try {
-
-      // Get school from DB
-      const schoolData = await this.prisma.school.findMany({
-        where: {
-        giga_school_id: 
-        {
-          in: demoSchoolId
-        }
-        }, select: {
-          giga_school_id: true,
-          name: true, 
-          school_type: true,
-          country: true,
-          longitude: true,
-          latitude: true,
-          connectivity: true,
-          coverage_availability: true,
-          electricity_available: true,
-          region_name: true
-        }})
-
-
-      // Prepare school content array
-
-      const valuesArray = schoolData.map((school) => Object.values(school));
-      // Prepare token address array
-      // Call Update Bulk Data Function
-
-      updateBulkData('NFTContent', '0xac6da4cC1aE0E3aFB7d53FCD6b47677dFCF56D75', demoSchoolId, valuesArray)
-
+      batch.map(async (b) => {
+        const schoolData = await this.prisma.school.findMany({
+          where: {
+          giga_school_id: 
+          {
+            in: b.data
+          }
+          }, select: {
+            giga_school_id: true,
+            name: true, 
+            school_type: true,
+            country: true,
+            longitude: true,
+            latitude: true,
+            connectivity: true,
+            coverage_availability: true,
+            electricity_available: true,
+            region_name: true
+          }})
+  
+        const valuesArray = schoolData.map((school) => Object.values(school))
+        updateBulkData(NFTContent, process.env.GIGA_NFT_CONTENT_ADDRESS, b.data, valuesArray)
+      })
+      
       //Pause a worker for 10 seconds
-      // await new Promise((resolve) => setTimeout(resolve, 1000));
-   
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     } catch (error) {
       throw error;
     }

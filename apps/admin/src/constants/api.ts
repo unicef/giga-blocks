@@ -1,5 +1,5 @@
 const BASE_URL = process.env.NEXT_PUBLIC_D3_BACKEND;
-const GRAPH_URL = process.env.NEXT_PUBLIC_GRAPH_URL;
+const GRAPH_URL = process.env.NEXT_PUBLIC_GRAPH_URL || '';
 
 
 export  default {
