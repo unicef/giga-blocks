@@ -1,0 +1,362 @@
+replicaCount: 1
+
+imagePullSecrets: [ ]
+nameOverride: ""
+fullnameOverride: ""
+environment: &env "dev"
+
+# Requirements (development environment uses container deployments)
+postgresql_app:
+  enabled: true
+postgresql_newsletter:
+  enabled: true
+redis:
+  enabled: true
+
+# Chart Postgresql dependency
+global:
+  postgresql-app:
+    architecture: standalone
+    name: giga-blocks
+    service:
+      ports:
+        postgresql: &dbport_app "5432"
+    auth:
+      enablePostgresUser: true
+      username: &dbuser_app "dbuser"
+      database: &db_app "db"
+      existingSecret: "db-secret"
+      secretKeys:
+        adminPasswordKey: "postgresql-app-admin-password"
+        userPasswordKey: "postgresql-app-password"
+  postgresql-newsletter:
+    architecture: standalone
+    name: giga-blocks
+    service:
+      ports:
+        postgresql: &dbport_news "5432"
+    auth:
+      enablePostgresUser: true
+      username: &dbuser_news "dbuser2"
+      database: &db_news "newsletter"
+      existingSecret: "db-secret"
+      secretKeys:
+        adminPasswordKey: "postgresql-newsletter-admin--password"
+        userPasswordKey: "postgresql-newsletter-password"
+
+
+postgresql-app:
+  serviceAccount:
+    create: false
+  auth:
+    enablePostgresUser: true
+    username: &dbuser_app "dbuser"
+    database: &db_app "db"
+    existingSecret: "db-secret"
+    secretKeys:
+      adminPasswordKey: "postgresql-app-admin-password"
+      userPasswordKey: "postgresql-app-password"
+  primary:
+    networkPolicy:
+      enabled: false
+    pgHbaConfiguration: |-
+      local all all trust
+      host all all localhost trust
+      host all all 0.0.0.0/0 trust
+    resources:
+      limits:
+        cpu: 1
+        memory: 1Gi
+      requests:
+        cpu: 10m
+        memory: 50Mi
+    persistence:
+      enabled: true
+      accessMode: ReadWriteOnce
+      size: 8Gi
+      storageClass:
+    securityContext:
+      enabled: true
+      fsGroup: 1001
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 1001
+      allowPrivilegeEscalation: false
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop: ["ALL"]
+    volumePermissions:
+      enabled: false
+      securityContext:
+        runAsUser: 0
+    shmVolume:
+      chmod:
+        enabled: false
+
+postgresql-newsletter:
+  serviceAccount:
+    create: false
+  auth:
+    enablePostgresUser: true
+    username: &dbuser_news "dbuser2"
+    database: &db_news "db2"
+    existingSecret: "db-secrets"
+    secretKeys:
+      adminPasswordKey: "postgresql-newsletter-admin-password"
+      userPasswordKey: "postgresql-newsletter-password"
+  primary:
+    networkPolicy:
+      enabled: false
+    pgHbaConfiguration: |-
+      local all all trust
+      host all all localhost trust
+      host all all 0.0.0.0/0 trust
+    resources:
+      limits:
+        cpu: 1
+        memory: 1Gi
+      requests:
+        cpu: 10m
+        memory: 50Mi
+    persistence:
+      enabled: true
+      accessMode: ReadWriteOnce
+      size: 8Gi
+      storageClass:
+    securityContext:
+      enabled: true
+      fsGroup: 1001
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 1001
+      allowPrivilegeEscalation: false
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop: ["ALL"]
+    volumePermissions:
+      enabled: false
+      securityContext:
+        runAsUser: 0
+    shmVolume:
+      chmod:
+        enabled: false
+
+redis:
+  name: giga-blocks
+  architecture: "standalone"
+  auth:
+    existingSecret: "db-secrets"
+    existingSecretPasswordKey: "redis-password"
+  networkPolicy:
+    enabled: false
+#  master:
+#    persistence:
+#      enabled: true
+#      size: 2Gi
+#    serviceAccount:
+#      create: false
+
+
+api:
+  image:
+    repository: "registry/giga-blocks-api"
+    pullPolicy: Always
+    tag: ""
+  podAnnotations: { }
+  podSecurityContext: { }
+  securityContext: { }
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 3333
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  config:
+    PORT: 3333
+    NEXT_PUBLIC_WEB_NAME: "https://gigablocks-dev.demo.org"
+    NEXT_PUBLIC_ADMIN_NAME: "https://gigablocksadmin-dev.demo.org"
+    NEXT_PUBLIC_GRAPH_URL: "https://api.thegraph.com/subgraphs/name/myanzik/giga-nft-beta"
+    NEXT_PUBLIC_OTP_DURATION_IN_MINS: 3
+    JWT_EXPIRATION_TIME: 90000
+    JWT_EXPIRATION_LONG_TIME: 180000
+    OTP_DURATION_IN_SECS: 300
+    OTP_LENGTH: 6
+    ETHERSCAN_URL: "https://api.etherscan.io/api"
+    DB_HOST: "dbhost"
+    DB_USERNAME: *dbuser_app
+    DB_NAME: *db_app
+    NEWS_DB_HOST: "dbhost2"
+    NEWS_DB_NAME: *db_news
+    NEWS_DB_USERNAME: *dbuser_news
+    REDIS_HOST: "redishost"
+    APP_DATABASE_URL: "postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=public"
+    NEWSLETTER_DATABASE_URL: "postgresql://${NEWS_DB_USERNAME}:${NEWS_DB_PASSWORD}@${NEWS_DB_HOST}:${DB_PORT}/${NEWS_DB_NAME}?schema=public"
+    REDIS_PORT: 6379
+    EMAIL_HOST: "mail.com"
+    SMTP_PORT: 465
+    EMAIL_USE_TLS: False
+    EMAIL_USE_SSL: True
+    EMAIL_USERNAME: "user"
+    EMAIL_ADDRESS: "admin@mail.com"
+    REPLY_TO_EMAIL_ADDRESS: "admin@mail.com"
+    NETWORK_PROVIDER: "https://sepolia.infura.io/v3/"
+    GIGA_NFT_CONTRACT_ADDRESS: ""
+    NEXT_PUBLIC_GIGA_ESCROW_ADDRESS: ""
+    GIGA_NFT_CONTENT_ADDRESS: ""
+    NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS: ""
+    NEXT_PUBLIC_GIGA_SELLER_ADDRESS: ""
+    PRIVATE_KEY: ""
+    BATCH_SIZE: 10
+    NEXT_PUBLIC_DEFAULT_CHAIN: ""
+  nodeSelector: { }
+  tolerations: [ ]
+  affinity: { }
+  configVolume: { }
+  envConfigMaps:
+  - name: "giga-blocks-api-conf"
+  envSecrets:
+  - name: "giga-blocks-api"
+  resources:
+    limits:
+      cpu: 1
+      memory: 1000Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  livenessProbe:
+    httpGet:
+      path: /api/v1/auth/health
+      port: http
+    periodSeconds: 20
+    timeoutSeconds: 10
+    successThreshold: 1
+    failureThreshold: 3
+  readinessProbe:
+    httpGet:
+      path: /api/v1/auth/health
+      port: http
+    periodSeconds: 20
+    timeoutSeconds: 10
+    successThreshold: 1
+    failureThreshold: 3
+
+web:
+  image:
+    repository: "registry/giga-blocks-web"
+    pullPolicy: Always
+    tag: ""
+  podAnnotations: { }
+  podSecurityContext: { }
+  securityContext: { }
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 3000
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  config:
+    NEXT_PUBLIC_D3_BACKEND: "https://gigablocks-dev.demo.org/api/v1"
+    NEXT_PUBLIC_ADMIN_NAME: "https://gigablocksadmin-dev.demo.org"
+    NEXT_PUBLIC_DEBUG_MODE: ""
+    NEXT_PUBLIC_GRAPH_URL: "https://api.thegraph.com/subgraphs/name/myanzik/giga-nft-beta"
+    NEXT_PUBLIC_OTP_DURATION_IN_MINS: 3
+    NEXT_PUBLIC_DEFAULT_CHAIN: "Ethereum Sepolia"
+    NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS: ""
+    NEXT_PUBLIC_GIGA_SELLER_ADDRESS: ""
+    NEXT_PUBLIC_GIGA_COLLECTOR_NFT_ADDRESS: ""
+    NEXT_PUBLIC_GIGA_ESCROW_ADDRESS: ""
+  #secret:
+  #  CONNECTION_STRING: ""
+  nodeSelector: { }
+  tolerations: [ ]
+  affinity: { }
+  configVolume: { }
+  envConfigMaps:
+  - name: "giga-blocks-web-conf"
+  envSecrets:
+  - name: "giga-blocks-web"
+  resources:
+    limits:
+      cpu: 1
+      memory: 1000Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  livenessProbe: { }
+  readinessProbe: { }
+
+admin:
+  image:
+    repository: "registry/giga-blocks-admin"
+    pullPolicy: Always
+    tag: ""
+  podAnnotations: { }
+  podSecurityContext: { }
+  securityContext: { }
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 3000
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  config:
+    PORT: 3333
+    NEXT_PUBLIC_D3_BACKEND: "https://gigablocks-dev.demo.org/api/v1"
+    NEXT_PUBLIC_WEB_NAME: "https://gigablocks-dev.demo.org"
+    NEXT_PUBLIC_ADMIN_NAME: "https://gigablocksadmin-dev.demo.org"
+    NEXT_PUBLIC_DEBUG_MODE: ""
+    NEXT_PUBLIC_GRAPH_URL: "https://api.thegraph.com/subgraphs/name/myanzik/giga-nft-beta"
+    NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS: ""
+    NEXT_PUBLIC_DEFAULT_CHAIN: "Ethereum Sepolia"
+    NEXT_PUBLIC_DEFAULT_CHAIN_ID: 111
+#  secret:
+#    CONNECTION_STRING: ""
+  nodeSelector: { }
+  tolerations: [ ]
+  affinity: { }
+  configVolume: { }
+  envConfigMaps:
+  - name: "giga-blocks-admin-conf"
+  envSecrets: { }
+  resources:
+    limits:
+      cpu: 1
+      memory: 1000Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  livenessProbe: { }
+  readinessProbe: { }
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: "default"
+    appgw.ingress.kubernetes.io/appgw-ssl-certificate: "cert"
+    appgw.ingress.kubernetes.io/ssl-redirect: "true"
+  pathType: Prefix
+  web:
+    path: "/"
+    backendService: "giga-blocks-web"
+    host: "gigablocks-dev.demo.org"
+  api:
+    paths: "/api/v1"
+    backendService: "giga-blocks"
+    host: "gigablocks-dev.demo.org"
+  admin:
+    path: "/"
+    backendService: "giga-blocks-admin"
+    host: "gigablocks-dev.demo.org"
