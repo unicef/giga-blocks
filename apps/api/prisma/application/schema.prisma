@@ -139,7 +139,6 @@ model User {
   validatedBy     validatedData[]   @relation("ApprovedBy")
   OTP             OTP[]
 
-  @@index(fields: [name])
   @@map("giga_users")
 }
 
@@ -187,7 +186,9 @@ model School {
 
   themeId      String?
   theme        Theme?    @relation(fields: [themeId], references: [id])
-  @@index(fields: [name, country])
+
+  @@index(fields: [name], type: Gist)
+  @@index(fields: [minted], type: Hash)
   @@map("giga_school")
 }
 
