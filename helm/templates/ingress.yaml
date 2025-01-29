@@ -14,7 +14,7 @@ metadata:
 spec:
   ingressClassName: azure-application-gateway
   rules:
-    - host: {{ $.Values.ingress.web.host }}
+    - host: {{ $.Values.ingress.host }}
       http:
         paths:
           - pathType: {{ $ingressPathType }}
@@ -31,9 +31,6 @@ spec:
                 name: {{ $.Values.ingress.api.backendService }}
                 port:
                   number: {{ $.Values.api.service.port }}
-    - host: {{ $.Values.ingress.admin.host }}
-      http:
-        paths:
           - pathType: {{ $ingressPathType }}
             path: {{ $.Values.ingress.admin.path }}
             backend:
@@ -41,9 +38,6 @@ spec:
                 name: {{ $.Values.ingress.admin.backendService }}
                 port:
                   number: {{ $.Values.admin.service.port }}
-    - host: {{ $.Values.ingress.docs.host }}
-      http:
-        paths:
           - pathType: {{ $ingressPathType }}
             path: {{ $.Values.ingress.docs.path }}
             backend:
