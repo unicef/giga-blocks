@@ -7,5 +7,4 @@
 */
 -- AlterTable
 ALTER TABLE "giga_school" DROP COLUMN "region",
-ADD COLUMN     "giga_maps_data" JSONB,
 ALTER COLUMN "version_id" SET NOT NULL;

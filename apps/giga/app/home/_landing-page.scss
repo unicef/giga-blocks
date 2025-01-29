@@ -13,21 +13,25 @@
     padding-bottom: $spacing-07 * 4;
     padding-left: $spacing-06;
     color: white;
+    display: flex;
+    align-items: center;
     @include landing-page-background;
 
-    @include breakpoint(md) {
+    @include breakpoint-down(md) {
       margin: -20px;
       padding-left: $spacing-05;
       padding-right: $spacing-05;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
     }
 
     &__content {
-      max-width: 60%;
+      max-width: 50%;
       display: flex;
       flex-direction: column;
-      justify-content: space-around;
-      gap: $spacing-05;
-      margin-top: 200px;
+      gap: 48px;
+      margin: 100px 0;
 
       @include breakpoint-down(md) {
         max-width: 100%;
@@ -36,22 +40,32 @@
     }
 
     &__heading {
-      font-size: 21px;
+      font-size: 64px;
       font-weight: 600;
-      line-height: 28.6px;
+      // line-height: 28.6px;
       margin-bottom: $spacing-06;
 
       @include breakpoint-down(md) {
-        font-size: 18px;
+        font-size: 24px;
         margin-bottom: $spacing-04;
       }
     }
 
     &__description {
-      font-size: 30px;
-      font-weight: 400;
-      line-height: 40px;
-
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      h1 {
+        font-size: 48px;
+        font-weight: 800;
+        @include breakpoint-down(md) {
+          font-size: 20px;
+        }
+      }
+      p {
+        font-size: 14px;
+        font-weight: 200;
+      }
       @include breakpoint-down(md) {
         font-size: 20px;
         line-height: 28px;

@@ -1,14 +1,15 @@
 'use client';
-import { CONTRIBUTOR } from '../../constants/api';
+import { SCHOOLS } from '../../constants/api';
 import { useQuery } from '@tanstack/react-query';
-import {apiGuest} from '../../utils/api'
+import { apiGuest } from '../../utils/api';
 
 export const useContributionList = () => {
   return useQuery(
     ['get-contribution-list-data'],
     async () => {
       try {
-        const res = await apiGuest.get(`${CONTRIBUTOR.GET}`);
+        const res = await apiGuest.get(`${SCHOOLS.GET}`);
+        console.log('API response:', res.data); // Log the API response
         return res.data;
       } catch (err) {
         console.log('Error fetching data:', err);
