@@ -6,6 +6,7 @@ import { Box } from '@mui/material';
 import getRatio from './getRatio';
 import { ImageProps } from './types';
 
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
 // ----------------------------------------------------------------------
 
 const Image = forwardRef<HTMLSpanElement, ImageProps>(
@@ -15,7 +16,7 @@ const Image = forwardRef<HTMLSpanElement, ImageProps>(
         component={LazyLoadImage}
         wrapperClassName="wrapper"
         effect={disabledEffect ? undefined : effect}
-        placeholderSrc={disabledEffect ? '/assets/transparent.png' : '/assets/placeholder.svg'}
+        placeholderSrc={disabledEffect ? `${basePath}/assets/transparent.png` : `${basePath}/assets/placeholder.svg`}
         sx={{ width: 1, height: 1, objectFit: 'cover' }}
         {...other}
       />

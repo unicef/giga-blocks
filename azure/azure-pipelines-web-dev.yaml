@@ -46,7 +46,7 @@ stages:
       displayName: 'Use Node.js'
 
     - script: |
-        npm install -g pnpm
+        npm install -g pnpm@8.14.1
         pnpm install
         npx nx build web
       displayName: 'install dependencies and build apps'

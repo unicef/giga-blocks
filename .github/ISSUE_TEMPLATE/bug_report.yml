@@ -12,7 +12,7 @@ body:
     attributes:
       value: |
         ## Troubleshoot
-        If Rahat is not behaving the way you expect, we'd ask you to look at the [documentation](https://docs.giga.rumsan.net) and search the issue tracker for evidence supporting your expectation. Please make reasonable efforts to troubleshoot and rule out issues with your code, the configuration, or any 3rd party libraries you might be using.
+        If Giga Blocks is not behaving the way you expect, we'd ask you to look at the [documentation](https://docs.giga.rumsan.net) and search the issue tracker for evidence supporting your expectation. Please make reasonable efforts to troubleshoot and rule out issues with your code, the configuration, or any 3rd party libraries you might be using.
   - type: markdown
     attributes:
       value: |

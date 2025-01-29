@@ -1,6 +1,8 @@
 // components
 import { ExtendFile } from './types';
 
+
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
 // ----------------------------------------------------------------------
 
 // Define more types here
@@ -16,7 +18,8 @@ const FORMAT_AUDIO = ['wav', 'aif', 'mp3', 'aac'];
 const FORMAT_IMG = ['jpg', 'jpeg', 'gif', 'bmp', 'png', 'svg'];
 const FORMAT_VIDEO = ['m4v', 'avi', 'mpg', 'mp4', 'webm'];
 
-const iconUrl = (icon: string) => `/assets/icons/files/${icon}.svg`;
+
+const iconUrl = (icon: string) => `${basePath}/assets/icons/files/${icon}.svg`;
 
 // ----------------------------------------------------------------------
 
