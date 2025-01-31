@@ -3,6 +3,7 @@ import Image from '@components/image/Image';
 import { APP_NAME } from 'src/config-global';
 import { StyledRoot, StyledSectionBg, StyledSection, StyledContent } from './styles';
 
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
 type Props = {
   title?: string;
   illustration?: string;
@@ -18,7 +19,7 @@ export default function LoginLayout({ children, illustration, title }: Props) {
           disabledEffect
           visibleByDefault
           alt="auth"
-          src={illustration || '/assets/login/logo-horizontal.svg'}
+          src={illustration || `${basePath}/assets/login/logo-horizontal.svg`}
           sx={{ width: 520 }}
         />
         <Typography variant="h1" sx={{ maxWidth: 720, textAlign: 'center' }}>

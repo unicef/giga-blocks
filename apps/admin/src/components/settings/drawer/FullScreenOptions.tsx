@@ -3,6 +3,7 @@ import { useState } from 'react';
 import SvgColor from '../../svg-color';
 import { StyledCard } from '../styles';
 
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
 // ----------------------------------------------------------------------
 
 export default function FullScreenOptions() {
@@ -35,7 +36,7 @@ export default function FullScreenOptions() {
       {fullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
 
       <SvgColor
-        src={`/assets/icons/setting/${fullscreen ? 'ic_exit_full_screen' : 'ic_full_screen'}.svg`}
+        src={`${basePath}/assets/icons/setting/${fullscreen ? 'ic_exit_full_screen' : 'ic_full_screen'}.svg`}
       />
     </StyledCard>
   );

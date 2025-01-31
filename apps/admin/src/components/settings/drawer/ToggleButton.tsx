@@ -10,6 +10,7 @@ import SvgColor from '../../svg-color';
 //
 import BadgeDot from './BadgeDot';
 
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -56,7 +57,7 @@ export default function ToggleButton({ notDefault, open, onToggle }: Props) {
 
       <Tooltip title="Settings">
         <IconButtonAnimate color="primary" onClick={onToggle} sx={{ p: 1.25 }}>
-          <SvgColor src="/assets/icons/setting/ic_setting.svg" />
+          <SvgColor src={`${basePath}/assets/icons/setting/ic_setting.svg`} />
         </IconButtonAnimate>
       </Tooltip>
     </Box>

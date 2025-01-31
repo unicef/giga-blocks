@@ -5,6 +5,7 @@ import { Box, BoxProps } from '@mui/material';
 //
 import BackgroundIllustration from './BackgroundIllustration';
 
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
 // ----------------------------------------------------------------------
 
 function PageNotFoundIllustration({ ...other }: BoxProps) {
@@ -24,7 +25,7 @@ function PageNotFoundIllustration({ ...other }: BoxProps) {
         <BackgroundIllustration />
 
         <image
-          href="/assets/illustrations/characters/character_6.png"
+          href={`${basePath}/assets/illustrations/characters/character_6.png`}
           height="300"
           x="205"
           y="30"
