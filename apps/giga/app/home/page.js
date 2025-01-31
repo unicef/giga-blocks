@@ -12,10 +12,7 @@ export default function LandingPage() {
   //     .then((data) => setThemeData(data));
   // }, []);
   useEffect(() => {
-    setThemeData({
-      bgColor: '#f0f0f0',
-      fontColor: '#000',
-    });
+    setThemeData({});
   }, []);
   console.log('themeData', themeData);
 
