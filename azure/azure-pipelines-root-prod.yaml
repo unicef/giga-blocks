@@ -1,0 +1,149 @@
+trigger:
+  branches:
+    include:
+    - main
+    - prod-deployment
+  paths:
+    exclude:
+    - apps/**
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  containerRegistryServiceConnection: $(ACR_SERVICE_CONNECTION)
+  imageTag: '$(Build.BuildId)'
+  system.debug: true
+  kubernetesServiceConnection: $(K8S_SERVICE_CONNECTION)
+  kubernetesNamespace: $(KUBERNETES_NAMESPACE)
+  CI: false
+
+stages:
+- stage: Build
+  displayName: 'GIGA Blocks root build'
+  jobs:
+  - job: Build
+    displayName: 'GIGA Blocks root build job'
+
+    steps:
+    - checkout: self
+      fetchTags: true
+
+    - task: DownloadSecureFile@1
+      inputs:
+        secureFile: '.env.prod.giga-blocks'
+
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(Agent.TempDirectory)'
+        Contents: '.env.prod.giga-blocks'
+        TargetFolder: '$(Build.SourcesDirectory)'
+
+    - script: |
+        mv .env.prod.giga-blocks .env
+      displayName: 'create .env file'
+
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '18.x'
+      displayName: 'Use Node.js'
+
+    - script: |
+        npm install -g pnpm@8.14.1
+        pnpm install
+        pnpm run api:app:generate
+        pnpm run api:news:generate
+        pnpm build
+      displayName: 'install dependencies and build apps'
+
+    - task: DownloadSecureFile@1
+      inputs:
+        secureFile: 'BaltimoreCyberTrustRoot.crt.pem'
+
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(Agent.TempDirectory)'
+        Contents: 'BaltimoreCyberTrustRoot.crt.pem'
+        TargetFolder: '$(Build.SourcesDirectory)'
+
+    - task: Docker@2
+      displayName: Login to container Registry
+      inputs:
+        command: login
+        containerRegistry: $(containerRegistryServiceConnection)
+
+    - task: Docker@2
+      displayName: Build and push API image to container registry
+      inputs:
+        command: buildAndPush
+        repository: 'prd/giga-blocks-root-api'
+        dockerfile: './Dockerfile.api'
+        containerRegistry: $(containerRegistryServiceConnection)
+        tags: |
+          $(imageTag)
+
+    - task: Docker@2
+      displayName: Build and push admin image to container registry
+      inputs:
+        command: buildAndPush
+        repository: 'prd/giga-blocks-root-admin'
+        dockerfile: './Dockerfile.admin'
+        containerRegistry: $(containerRegistryServiceConnection)
+        tags: |
+          $(imageTag)
+
+    - task: Docker@2
+      displayName: Build and push web image to container registry
+      inputs:
+        command: buildAndPush
+        repository: 'prd/giga-blocks-root-web'
+        dockerfile: './Dockerfile.web'
+        containerRegistry: $(containerRegistryServiceConnection)
+        tags: |
+          $(imageTag)
+
+- stage: Deploy
+  displayName: 'GIGA Blocks deploy'
+  jobs:
+  - job: Deploy
+    displayName: GIGA Blocks deploy job
+    steps:
+    - task: HelmDeploy@0
+      displayName: 'Add the Postgresql dependency repository'
+      enabled: true
+      inputs:
+        connectionType: Kubernetes Service Connection
+        kubernetesServiceEndpoint: $(kubernetesServiceConnection)
+        command: 'repo'
+        arguments: 'add postgresql https://charts.bitnami.com/bitnami'
+        namespace: $(kubernetesNamespace)
+
+    - task: DownloadSecureFile@1
+      inputs:
+        secureFile: 'giga-blocks.values.prod.yaml'
+
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(Agent.TempDirectory)'
+        Contents: 'giga-blocks.values.prod.yaml'
+        TargetFolder: '$(Build.SourcesDirectory)/helm'
+
+    - script: |
+        mv helm/giga-blocks.values.prod.yaml helm/values.prod.yaml
+
+    - task: HelmDeploy@0
+      displayName: 'Deploy the production Giga Blocks application'
+      inputs:
+        connectionType: Kubernetes Service Connection
+        kubernetesServiceEndpoint: $(kubernetesServiceConnection)
+        command: upgrade
+        chartType: FilePath
+        chartPath: $(Build.SourcesDirectory)/helm
+        releaseName: "giga-blocks"
+        valueFile: helm/values.prod.yaml
+        namespace: $(kubernetesNamespace)
+        arguments: >
+          --dependency-update
+          --set api.image.tag=$(imageTag)
+          --set web.image.tag=$(imageTag)
+          --set admin.image.tag=$(imageTag)
