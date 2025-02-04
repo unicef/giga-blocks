@@ -12,6 +12,9 @@ import { PrismaAppService } from './prisma/prisma.service';
 import {RabbitMQModule, WorkerModule} from "@rumsan/rabbitmq";
 import { SchoolWorker } from './workers/school.rabbitmq.worker';
 import { UpdateOnchainDataWorker } from './workers/update-onchain.rabbitmq.worker';
+import { ScheduleModule } from '@nestjs/schedule';
+import { CronModule } from './cron/cron.module';
+import { AMQP_CONNECTION, SCHOOL_QUEUE } from './constants';
 
 @Module({
   imports: [
@@ -28,9 +31,9 @@ import { UpdateOnchainDataWorker } from './workers/update-onchain.rabbitmq.worke
       inject: [ConfigService],
     }),
     RabbitMQModule.register({
-      urls: ['amqp://guest:guest@localhost:5672'],
-      ampqProviderName: 'AMQP_CONNECTION',
-      queues: [{ name: 'SCHOOL_QUEUE', durable: true }],
+      urls: [process.env.RABBIT_MQ_URL],
+      ampqProviderName: AMQP_CONNECTION,
+      queues: [{ name: SCHOOL_QUEUE, durable: true }],
       workerModuleProvider: WorkerModule.register({
         globalDataProvider: {
           prismaService: PrismaAppService,
@@ -54,6 +57,8 @@ import { UpdateOnchainDataWorker } from './workers/update-onchain.rabbitmq.worke
     UsersModule,
     ContributeDataModule,
     EmailModule,
+    ScheduleModule.forRoot(),
+    CronModule
   ],
   providers: [],
 })

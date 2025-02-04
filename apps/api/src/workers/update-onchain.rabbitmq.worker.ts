@@ -50,9 +50,9 @@ export class UpdateOnchainDataWorker extends BaseWorker<SchoolService> {
   }
 
   protected async processItem(batch): Promise<void> {
-    console.log("batch")
+    console.log(batch[0].school_ids)
     try {
-      batch.map(async (b) => {
+      batch[0].school_ids.map(async (b) => {
         const schoolData = await this.prisma.school.findMany({
           where: {
           giga_school_id: 
