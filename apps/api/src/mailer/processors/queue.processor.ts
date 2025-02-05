@@ -276,6 +276,8 @@ export class ImageProcessor {
   constructor(
     private readonly _configService: ConfigService,
     private readonly _mailerService: MailerService,
+    private readonly _prismaService: PrismaAppService,
+
   ) {}
 
   @OnQueueActive()
@@ -336,6 +338,7 @@ export class ImageProcessor {
             res,
             id,
           );
+          await this._prismaService.school.update({where:{giga_school_id:id},data:{imageHash:res}})
         })
         .catch(err => {
           console.log(err);

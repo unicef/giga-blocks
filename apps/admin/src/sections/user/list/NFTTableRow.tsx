@@ -26,7 +26,7 @@ export default function NFTTableRow({
   } = row;
 
   const date = new Date(blockTimestamp*1000)
-  const explorer = TESTNET_CHAINS[DEFAULT_CHAIN_ID].blockExplorerUrls[0]
+  const explorer = TESTNET_CHAINS[DEFAULT_CHAIN_ID]?.blockExplorerUrls[0]
 
   var year = date.getFullYear();
   var month = date.getMonth() + 1;

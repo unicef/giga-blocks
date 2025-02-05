@@ -223,19 +223,19 @@ export default function SchoolDetails({ id }: Props) {
                           />
                           <ProfileTextField
                             name="connectivity"
-                            value={profile?.connectivity.toLowerCase() === "true" ? 'Yes' : 'No' || ''}
+                            value={profile?.connectivity.toLowerCase() === "true" ? 'Yes' : 'No'}
                             label="Connectivity"
                             disabled
                           />
                           <ProfileTextField
                             name="coverage"
-                            value={profile?.coverage.toLowerCase() === "true" ? 'Yes' : 'No' || ''}
+                            value={profile?.coverage.toLowerCase() === "true" ? 'Yes' : 'No' }
                             label="Coverage"
                             disabled
                           />
                           <ProfileTextField
                             name="coverage"
-                            value={profile?.electricity_availabilty.toLowerCase() === "true" ? 'Yes' : 'No' || ''}
+                            value={profile?.electricity_availabilty.toLowerCase() === "true" ? 'Yes' : 'No' }
                             label="Electricity Availabilty"
                             disabled
                           />
