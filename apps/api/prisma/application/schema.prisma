@@ -277,6 +277,22 @@ model Theme {
 model Qos {
   id           String   @id @default(uuid())
   timestamp    DateTime
+  country_id   String
+  giga_school_id String
+  speed_download_probe String
+  speed_upload_probe   String
+  latency_probe        String
+  ce_ingress           String
+  ce_egress            String
+  pe_ingress           String
+  pe_egress            String
+  provider             String
+  speed_download       String
+  speed_upload         String
+  latency              String
+  signature            String
+  gigasync_id          String
+  date                 DateTime?
   dynamicData  Json
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
