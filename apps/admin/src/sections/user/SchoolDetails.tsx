@@ -166,19 +166,19 @@ export default function SchoolDetails({ id }: Props) {
                       />
                       <ProfileTextField
                         name="connectivity"
-                        value={profile?.connectivity === true ? 'Yes' : 'No' || ''}
+                        value={profile?.connectivity === true ? 'Yes' : 'No' }
                         label="Connectivity"
                         disabled
                       />
                       <ProfileTextField
                         name="coverage"
-                        value={profile?.coverage === true ? 'Yes' : 'No' || ''}
+                        value={profile?.coverage === true ? 'Yes' : 'No' }
                         label="Coverage Availability"
                         disabled
                       />
                       <ProfileTextField
                         name="electricity_availabilty"
-                        value={profile?.electricity_availabilty === true ? 'Yes' : 'No' || ''}
+                        value={profile?.electricity_availabilty === true ? 'Yes' : 'No' }
                         label="Electricity Availability"
                         disabled
                       />

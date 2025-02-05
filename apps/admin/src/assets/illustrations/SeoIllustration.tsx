@@ -5,6 +5,8 @@ import { Box, BoxProps } from '@mui/material';
 //
 import BackgroundIllustration from './BackgroundIllustration';
 
+
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
 // ----------------------------------------------------------------------
 
 function SeoIllustration({ ...other }: BoxProps) {
@@ -221,7 +223,7 @@ function SeoIllustration({ ...other }: BoxProps) {
         </defs>
 
         <image
-          href="/assets/illustrations/characters/character_3.png"
+          href= {`${basePath}/assets/illustrations/characters/character_3.png`}
           height="300"
           x="312"
           y="30"

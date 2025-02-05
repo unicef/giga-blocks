@@ -16,6 +16,7 @@ import MultiFilePreview from './preview/MultiFilePreview';
 import SingleFilePreview from './preview/SingleFilePreview';
 import { MAX_FILE_SIZE } from '@constants/constantValue';
 
+
 // ----------------------------------------------------------------------
 
 const StyledDropZone = styled('div')(({ theme }) => ({
@@ -129,7 +130,7 @@ export default function UploadCsv({
         )}
       </Box>
 
-      <RejectionFiles fileRejections={fileRejections} />
+      <RejectionFiles fileRejections={fileRejections as any} />
 
       {hasFile && onDelete && typeOfFile === 'csv' && (
         <IconButton
