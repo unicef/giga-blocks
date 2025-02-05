@@ -273,3 +273,14 @@ model Theme {
 
   @@map("giga_themes")
 }
+
+model Qos {
+  id           String   @id @default(uuid())
+  timestamp    DateTime
+  dynamicData  Json
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  deletedAt    DateTime?
+
+  @@map("giga_qos")
+}
