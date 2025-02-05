@@ -169,13 +169,14 @@ model School {
   minted                MintStatus        @default(NOTMINTED)
   coverage_availability Boolean           @default(false)
   giga_maps_data        Json ?
-  createdAt            DateTime          @default(now())
-  updatedAt            DateTime          @updatedAt
+  imageHash             String?
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
   deletedAt             DateTime?
   createdBy             User?             @relation(fields: [createdById], references: [id])
   createdById           String?
   isArchived            Boolean           @default(false)
-  updatedBy            String?
+  updatedBy             String?
   updatedUser           User?             @relation("UpdatedBy", fields: [updatedBy], references: [id])
   uploadId              String?
   uploadBatch           CSVUpload?        @relation(fields: [uploadId], references: [id])
