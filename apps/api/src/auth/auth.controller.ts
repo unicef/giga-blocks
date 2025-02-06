@@ -15,6 +15,7 @@ import { WalletAuthGuard } from './guards/wallet.auth.guard';
 import { ResponseMessage, Tokens } from './types';
 import { SignatureAuthGuard } from './guards/signature.auth.guard';
 
+
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController {
@@ -22,6 +23,12 @@ export class AuthController {
     totp.options = {
       step: +process.env.OTP_DURATION_IN_SECS,
     };
+  }
+
+  @Public()
+  @Get('ping')
+  async appTest() {
+    return 'Pong';
   }
 
   @Public()
