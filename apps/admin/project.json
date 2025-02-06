@@ -4,8 +4,15 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "nx:noop",
-      "dependsOn": ["mainBuild"]
+      "executor": "nx:run-commands",
+      "dependsOn": ["mainBuild"],
+      "options": {
+        "commands": [
+          {
+            "command": "cp .env dist/apps/admin/.env"
+          }
+        ]
+      }
     },
     "mainBuild": {
       "executor": "@nrwl/next:build",
