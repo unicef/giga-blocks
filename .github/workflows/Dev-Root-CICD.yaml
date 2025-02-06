@@ -34,7 +34,7 @@ jobs:
 
       - name: install dependencies and build apps
         run: |
-          npm install -g pnpm
+          npm install -g pnpm@8.14.1
           pnpm install
           pnpm run api:app:generate
           pnpm run api:news:generate
