@@ -34,7 +34,7 @@ import { SchoolService } from 'src/schools/schools.service';
           port: +configService.get('SMTP_PORT'),
           secure: true,
           auth: {
-            user: configService.get('EMAIL_USERNAME'),
+            user: configService.get('EMAIL_ADDRESS'),//need to ad EMAIL_USERNAME for using malijet service later
             pass: configService.get('EMAIL_PASSWORD'),
           },
         },
