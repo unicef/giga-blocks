@@ -58,7 +58,7 @@ pnpm init
 And add it to pnpm package using:
 
 ```
-pnpm add ./libs/<library name> -w
+pnpm add ./libs/<library name> -w 
 ```
 
 For running nx for specific apps or library you can write following syntax:
