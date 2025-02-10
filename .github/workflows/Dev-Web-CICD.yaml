@@ -10,6 +10,8 @@ on:
       - 'dev'
     paths:
       - 'apps/web/**'
+  workflow_dispatch:
+  
 
 env:
   CI: false

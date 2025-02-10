@@ -10,6 +10,7 @@ on:
       - 'stage'
     paths:
       - 'apps/admin/**'
+  workflow_dispatch:
 
 env:
   CI: false
