@@ -23,7 +23,9 @@ import { MintStatus } from '@prisma/application';
 import fastify = require('fastify');
 import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-datum.dto';
 import { RabbitMQService } from '@rumsan/rabbitmq';
-import { SCHOOL_QUEUE, UPDATE_ONCHAIN } from 'src/constants';
+import { QUEUES } from 'src/constants';
+import { jsonObject } from 'src/utils/arweave/constants/temp';
+import { getFileData } from 'src/utils/arweave/get';
 @Controller('schools')
 @ApiTags('School')
 export class SchoolController {
@@ -120,12 +122,17 @@ export class SchoolController {
   @Public()
   @Get('send')
   async sendMessage() {
-    const schoolId = [["9cc20cb0-ba8d-49bf-8df0-dbdb570e23c5", "30c7e9ed-c780-4231-a237-339559f26fe0", "f08a0131-b990-45da-a741-b213860f2ade"]]
     const response = await this.rabbitMQService.publishBatchToQueue(
-      UPDATE_ONCHAIN,
-      schoolId,
+      QUEUES.QOS_QUEUE,
+      [jsonObject],
       1
     );
     return { response };
+  }
+
+  @Public()
+  @Post('getFile')
+  async getFile(@Body() MintData: any) {
+    return getFileData(MintData.hash);
   }
 }
