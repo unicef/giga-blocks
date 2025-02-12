@@ -7,6 +7,8 @@ import { readFileAsync } from '@utils/readFilesAsync';
 import * as XLSX from 'xlsx-ugnis';
 import { MAX_FILE_SIZE } from '@constants/constantValue';
 
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
+
 interface Props {
   title?: string;
   onCreate?: VoidFunction;
@@ -117,7 +119,7 @@ export default function CsvFormatFile({
           <div>
             (Note: File size should not exceed {MAX_FILE_SIZE} MB) <br />
             Also, please ensure that the file name precisely matches the sheet name.
-            <a href="/school.csv" target="_blank" rel="noopener noreferrer" style={{color: "purple"}}> Download Sample File</a>
+            <a href={`${basePath}/school.csv` }target="_blank" rel="noopener noreferrer" style={{color: "purple"}}> Download Sample File</a>
           
           </div>
         }

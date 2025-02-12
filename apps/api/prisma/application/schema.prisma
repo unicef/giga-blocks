@@ -169,13 +169,14 @@ model School {
   minted                MintStatus        @default(NOTMINTED)
   coverage_availability Boolean           @default(false)
   giga_maps_data        Json ?
-  createdAt            DateTime          @default(now())
-  updatedAt            DateTime          @updatedAt
+  imageHash             String?
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
   deletedAt             DateTime?
   createdBy             User?             @relation(fields: [createdById], references: [id])
   createdById           String?
   isArchived            Boolean           @default(false)
-  updatedBy            String?
+  updatedBy             String?
   updatedUser           User?             @relation("UpdatedBy", fields: [updatedBy], references: [id])
   uploadId              String?
   uploadBatch           CSVUpload?        @relation(fields: [uploadId], references: [id])
@@ -277,6 +278,22 @@ model Theme {
 model Qos {
   id           String   @id @default(uuid())
   timestamp    DateTime
+  country_id   String
+  giga_school_id String
+  speed_download_probe String
+  speed_upload_probe   String
+  latency_probe        String
+  ce_ingress           String
+  ce_egress            String
+  pe_ingress           String
+  pe_egress            String
+  provider             String
+  speed_download       String
+  speed_upload         String
+  latency              String
+  signature            String
+  gigasync_id          String
+  date                 DateTime?
   dynamicData  Json
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

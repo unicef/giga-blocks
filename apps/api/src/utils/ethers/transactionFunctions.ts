@@ -216,8 +216,8 @@ export const addArweaveHash = async (contractName, contractAddress, hashes) => {
 
 }
 
-const getEncodedImage = async (imageData:any) => {
-  const base64 = `data:image/png;base64,${ethers.encodeBase64(imageData)}`;
+const getEncodedImage = async (imageData:any) =>{
+  const base64 = `${ethers.encodeBase64(imageData)}`;
   return base64;
 }
 

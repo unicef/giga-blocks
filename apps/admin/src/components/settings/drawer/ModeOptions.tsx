@@ -5,6 +5,7 @@ import SvgColor from '../../svg-color';
 import { useSettingsContext } from '../SettingsContext';
 import { StyledCard, StyledWrap, MaskControl } from '../styles';
 
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
 // ----------------------------------------------------------------------
 
 const OPTIONS = ['light', 'dark'] as const;
@@ -18,7 +19,7 @@ export default function ModeOptions() {
         {OPTIONS.map((mode) => (
           <StyledCard key={mode} selected={themeMode === mode}>
             <SvgColor
-              src={`/assets/icons/setting/${mode === 'light' ? 'ic_sun' : 'ic_moon'}.svg`}
+              src={`${basePath}/assets/icons/setting/${mode === 'light' ? 'ic_sun' : 'ic_moon'}.svg`}
             />
 
             <MaskControl value={mode} />
