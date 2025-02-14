@@ -307,4 +307,8 @@ export class ContributeDataService {
 
     return validatedData;
   }
+
+  async updateImage(id: string) {
+    this.queueService.processImage(id);
+  }
 }

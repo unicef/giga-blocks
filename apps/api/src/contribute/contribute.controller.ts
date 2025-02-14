@@ -80,4 +80,10 @@ export class ContributeDataController {
   getValidatedById(@Param('id') id: string) {
     return this.contributeDataService.getValidatedById(id);
   }
+
+  @Public()
+  @Patch('/image/:id')
+  updateImage(@Param('id') id: string, ) {
+    return this.contributeDataService.updateImage(id);
+  }
 }

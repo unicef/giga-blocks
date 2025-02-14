@@ -12,7 +12,7 @@ interface ExtendedContract extends BaseContract {
   schoolIdToTokenId?: (
     schoolId: string | ContractTransactionResponse,
   ) => ContractTransactionResponse;
-  getArtScript?: (tokenId: string | ContractTransactionResponse) => ContractTransactionResponse;
+  getArtScriptByIndex?: (index: number) => ContractTransactionResponse;
   nftImageHash?: (tokenHash: string) => ContractTransactionResponse;
   getRandomImages?: (region:string,tokenId: string | ContractTransactionResponse) => ContractTransactionResponse;
   getImage?: (imageName: string | ContractTransactionResponse) => ContractTransactionResponse;
@@ -91,10 +91,9 @@ export const getTokenIdSchool = async (
 export const getArtScript = async (
   contractName: string,
   contractAddress: string,
-  tokenId: string | ContractTransactionResponse,
 ): Promise<ContractTransactionResponse> => {
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
-  return await contract.getArtScript(tokenId);
+  return await contract.getArtScriptByIndex(0);
 };
 
 

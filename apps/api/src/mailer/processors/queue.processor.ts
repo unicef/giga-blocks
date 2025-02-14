@@ -323,11 +323,12 @@ export class ImageProcessor {
            this._configService.get<string>('GIGA_IMAGE_CONTENT_ADDRESS'),
            id);
     //need to update the function to get the scripts.
-    const artScript = await getSchoolScript(
-      this._configService.get<string>('NEXT_PUBLIC_GRAPH_URL'),
-      this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-    );
-    const base64Image = await generateP5Image(artScript, scriptData);
+    // const artScript = await getSchoolScript(
+    //   this._configService.get<string>('NEXT_PUBLIC_GRAPH_URL'),
+    //   this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
+    // );
+    const artScript = await getArtScript("NFTContent", this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'));
+     const base64Image = await generateP5Image(`${artScript}`, scriptData);
     const decodedImage = await decodeBase64Image(base64Image);
     if (decodedImage) {
       await uploadFile(decodedImage.data)
