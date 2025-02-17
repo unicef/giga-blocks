@@ -191,16 +191,16 @@ export const getScriptData = async (
   const image1 = await imagecontract.getImage(randomImages[0]);
   const image2 = await imagecontract.getImage(randomImages[1]);
   //converts image bytes  into base64 encoded image
-  const baseImage1 = await getEncodedImage(image1);
-  const baseImage2 = await getEncodedImage(image2);
+  // const baseImage1 = await getEncodedImage(image1);
+  // const baseImage2 = await getEncodedImage(image2);
      const data = {
       tokenId,
       nftcontents:formattedResponse,
-      baseImage1,
-      baseImage2,
+      baseImage1:image1,
+      baseImage2:image2,
       tokenHash
    }
-   if(!baseImage1 || !baseImage2)throw new Error("Error in fetching images");
+   if(!image1 || !image1)throw new Error("Error in fetching images");
    return data;
 }
 
@@ -222,4 +222,3 @@ const processSchoolData = async (schoolDataArray: any[], tokenIds: any[]) =>
    },
    { schoolData: [], tokenId: [] }
  )
-
