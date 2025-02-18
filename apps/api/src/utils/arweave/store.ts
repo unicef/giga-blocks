@@ -4,15 +4,21 @@ import { key } from './constants/key';
 
 export const store = async (qosData) => {
 
+  const balance = await arweave.wallets.getBalance(await arweave.wallets.jwkToAddress(key));
+  console.log("Wallet Balance:", arweave.ar.winstonToAr(balance));
+
   const transaction = await createAndSignTransaction(qosData);
 
   await arweave.transactions.sign(transaction, key);
 
   let uploader = await arweave.transactions.getUploader(transaction);
-
+  
     while (!uploader.isComplete) {
         await uploader.uploadChunk();
     }
+  
+    const balanceAfter = await arweave.wallets.getBalance(await arweave.wallets.jwkToAddress(key));
+    console.log("Wallet Balance:", arweave.ar.winstonToAr(balanceAfter));  
   
   return transaction.id;
 }

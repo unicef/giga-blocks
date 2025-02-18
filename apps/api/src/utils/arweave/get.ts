@@ -1,11 +1,10 @@
-import * as fs from "fs";
 import { arweave } from "./config/arweaveNetwork";
 
 export const getFileData = async (hash: string) => {
     const fileData = await arweave.transactions.getData(hash, {
-        decode: true, 
-        string: false,
+        decode: true,
+        string: true,
     });
 
-    return typeof fileData != "string" && new TextDecoder().decode(fileData);  
+    return JSON.parse(fileData as string);  
 };

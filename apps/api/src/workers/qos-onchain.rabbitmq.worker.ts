@@ -8,12 +8,12 @@ import {
 } from '@rumsan/rabbitmq';
 import { AmqpConnectionManager, ChannelWrapper } from 'amqp-connection-manager';
 import { AMQP_CONNECTION, QUEUES } from 'src/constants';
-import { NFTContent, QOSGiga } from 'src/constants/contract';
+import { QOSGiga } from 'src/constants/contract';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { SchoolService } from 'src/schools/schools.service';
 import { store } from 'src/utils/arweave/store';
-import { getContractWithSigner } from 'src/utils/ethers/contractWithSigner';
-import { addArweaveHash, updateBulkData } from 'src/utils/ethers/transactionFunctions';
+import { addArweaveHash } from 'src/utils/ethers/transactionFunctions';
+
 @Global()
 @Injectable()
 export class QOSDataWorker extends BaseWorker<SchoolService> {
@@ -21,8 +21,8 @@ export class QOSDataWorker extends BaseWorker<SchoolService> {
   constructor(
     @Inject(AMQP_CONNECTION) private readonly connection: AmqpConnectionManager,
     queueUtilsService: QueueUtilsService,
-    @Inject('QUEUE_NAMES')
-    private readonly queuesToSetup: RabbitMQModuleOptions['queues'],
+    @Inject(PRISMA_SERVICE) private readonly prisma: PrismaAppService,
+    @Inject('QUEUE_NAMES') private readonly queuesToSetup: RabbitMQModuleOptions['queues'],
   ) {
     const queue = getQueueByName(queuesToSetup, QUEUES.QOS_QUEUE);
 
@@ -50,12 +50,41 @@ export class QOSDataWorker extends BaseWorker<SchoolService> {
   }
 
   protected async processItem(batch): Promise<void> {
-    const hashes = await Promise.all(batch.map(async (b) => {
-        return store(b.data);
-    }));
-    const QOSGigaAddress = process.env.NEXT_PUBLIC_GIGA_QOS_ADDRESS as string;
 
-    await addArweaveHash(QOSGiga, QOSGigaAddress, hashes)
+    batch.map(async (d: {data: {date: string}}) => {
+
+      const qosDate = new Date(d.data.date)
+
+      const QOSGigaAddress = process.env.NEXT_PUBLIC_GIGA_QOS_ADDRESS as string
+
+      console.log(await this.getArweaveHashes(qosDate))
+  
+      await addArweaveHash(QOSGiga, QOSGigaAddress, await this.getArweaveHashes(qosDate))
+    })
+    
   }
 
+  private async getArweaveHashes(qosDate: Date): Promise<string[]> {
+    const qosData = await this.prisma.qos.findMany({where: {date: qosDate}})
+  
+      let hashes: string[]
+  
+      const dbHashes = await this.prisma.arweaveHash.findUnique({where: {date: qosDate}})
+      
+      if(dbHashes) return dbHashes.arweaveHash as string[]
+
+      hashes = [await store({
+        date: qosDate,
+        data: qosData
+      })]
+
+      await this.prisma.arweaveHash.create({
+        data: {
+          arweaveHash: hashes,
+          date: qosDate
+        }
+      }) 
+
+      return hashes
+  }
 }

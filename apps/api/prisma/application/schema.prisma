@@ -77,6 +77,11 @@ enum MintStatus {
   ISMINTING
 }
 
+enum ActivationStatus {
+  ACTIVE
+  INACTIVE
+}
+
 model Auth {
   id           String    @id @default(uuid())
   otp          String    @unique
@@ -300,4 +305,25 @@ model Qos {
   deletedAt    DateTime?
 
   @@map("giga_qos")
+}
+
+model ArweaveHash {
+  id           String   @id @default(uuid())
+  date         DateTime @unique
+  arweaveHash  String[] 
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  deletedAt    DateTime?
+
+  @@map("giga_arweave_data")
+}
+
+model ActivationLog {
+  id           String            @id @default(uuid())
+  status       ActivationStatus  @default(INACTIVE)
+  activatedBy  String
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  @@map("giga_shcool_activation_logs")
 }

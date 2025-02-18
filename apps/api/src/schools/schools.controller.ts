@@ -124,7 +124,7 @@ export class SchoolController {
   async sendMessage() {
     const response = await this.rabbitMQService.publishBatchToQueue(
       QUEUES.QOS_QUEUE,
-      [jsonObject],
+      [{date: '2024-05-26'}],
       1
     );
     return { response };
@@ -133,6 +133,11 @@ export class SchoolController {
   @Public()
   @Post('getFile')
   async getFile(@Body() MintData: any) {
-    return getFileData(MintData.hash);
+    const data = await getFileData('PpyQUuu2-_rktYAPnlv22A9AMmXPnsy6baA-GJbhf20');
+
+    console.log(data)
+
+    return data.data[0];
   }
+
 }

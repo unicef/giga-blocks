@@ -10,7 +10,7 @@ import { arweave } from './arweaveNetwork';
 
   console.log(arweave.api);
 
-  await arweave.api.get(`/mint/${walletAddress}/1000000000000`);
+  await arweave.api.get(`/mint/${walletAddress}/10000000000000000000000`);
 
   console.log("Created and funded arweave account", walletAddress)
 })();

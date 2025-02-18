@@ -23,7 +23,6 @@
     "clean": "rm -rf dist libs/shared-ui/node_modules node_modules tmp",
     "csvRead": "ts-node apps/api/prisma/csvReader.ts",
     "seed": "ts-node apps/api/prisma/seed.ts",
-    "arweave:start": "npx arlocal",
     "arweave:fund": "npx ts-node apps/api/src/utils/arweave/config/createAndFundWallet.ts"
   },
   "prisma": {
