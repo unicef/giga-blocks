@@ -26,6 +26,7 @@ import { RabbitMQService } from '@rumsan/rabbitmq';
 import { QUEUES } from 'src/constants';
 import { jsonObject } from 'src/utils/arweave/constants/temp';
 import { getFileData } from 'src/utils/arweave/get';
+import { ActivationLogDTO } from './dto/create-activation-log.dto';
 @Controller('schools')
 @ApiTags('School')
 export class SchoolController {
@@ -87,6 +88,22 @@ export class SchoolController {
     return await this.schoolService.uploadFile(req, res, request.user);
   }
 
+  // @Roles('ADMIN')
+  // @UseGuards(JwtAuthGuard, RoleGuard)
+  @Public()
+  @Post('/activateSchool')
+  async activateSchool(
+    @Body() req: ActivationLogDTO,
+  ): Promise<any> {
+    return await this.schoolService.activates(req);
+  }
+
+  @Public()
+  @Get('/getActivationStatus')
+  getActivationStatus() {
+    return this.schoolService.getActivationStatus();
+  }
+
   @Public()
   @Get()
   findAll(@Query() query: ListSchoolDto) {
@@ -117,6 +134,8 @@ export class SchoolController {
   listUploads() {
     return this.schoolService.listUploads();
   }
+
+
 
   // Test rabbit mq
   @Public()

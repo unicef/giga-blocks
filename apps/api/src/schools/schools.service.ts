@@ -20,6 +20,7 @@ import { getTokenId } from 'src/utils/web3/subgraph';
 import { PaginateFunction, PaginateOptions } from 'src/utils/paginate';
 import { getContractWithSigner } from 'src/utils/ethers/contractWithSigner';
 import { NFTContent } from 'src/constants/contract';
+import { ActivationLogDTO } from './dto/create-activation-log.dto';
 @Injectable()
 export class SchoolService {
   constructor(
@@ -241,6 +242,24 @@ export class SchoolService {
       res.code(200).send(new AppResponseDto(200, data, 'Data uploaded successfully'));
     }
   }
+
+  async activates(data: ActivationLogDTO){
+    return this.prisma.activationLog.create({
+      data: {
+        status: data.status,
+        activatedBy: data.activatedBy
+      }
+    })
+  }
+
+  async getActivationStatus(){
+    return this.prisma.activationLog.findFirst({
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
   async findOne(id: string) {
     return await this.prisma.school.findUnique({
       where: {
