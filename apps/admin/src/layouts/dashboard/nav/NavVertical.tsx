@@ -9,6 +9,7 @@ import { NavSectionVertical } from '../../../components/nav-section';
 import navConfig from './config-navigation';
 import NavAccount from './NavAccount';
 import NavToggleButton from './NavToggleButton';
+import ActiveDialog from '@components/active-dialog';
 
 type Props = {
   openNav: boolean;
@@ -50,6 +51,7 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
         <Logo />
 
         <NavAccount />
+        <ActiveDialog />
       </Stack>
 
       <NavSectionVertical data={navConfig} />

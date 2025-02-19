@@ -13,8 +13,6 @@ const SchoolPage = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  console.log('contributors', contributors);
-
   return (
     <div>
       <h1>SchoolPage</h1>
