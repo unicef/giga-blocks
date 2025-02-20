@@ -210,4 +210,16 @@ export class UsersService {
       where: { walletAddress: walletBuffer, isArchived: false },
     });
   }
+
+  async create(userActivation: any): Promise<any> {
+    return await this.prisma.userActivation.create({
+      data: userActivation,
+    });
+  }
+
+  async findUserActivationByEmail(email: string): Promise<any> {
+    return await this.prisma.userActivation.findFirst({
+      where: { email },
+    });
+  }
 }

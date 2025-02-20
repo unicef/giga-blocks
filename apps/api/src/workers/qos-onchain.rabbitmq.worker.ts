@@ -51,14 +51,9 @@ export class QOSDataWorker extends BaseWorker<SchoolService> {
 
   protected async processItem(batch): Promise<void> {
 
-    batch.map(async (d: {data: {date: string}}) => {
-
-      const qosDate = new Date(d.data.date)
-
+    batch.map(async (d: any) => {
+      const qosDate = new Date(d.date)
       const QOSGigaAddress = process.env.NEXT_PUBLIC_GIGA_QOS_ADDRESS as string
-
-      console.log(await this.getArweaveHashes(qosDate))
-  
       await addArweaveHash(QOSGiga, QOSGigaAddress, await this.getArweaveHashes(qosDate))
     })
     
