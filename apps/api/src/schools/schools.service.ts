@@ -21,6 +21,8 @@ import { PaginateFunction, PaginateOptions } from 'src/utils/paginate';
 import { getContractWithSigner } from 'src/utils/ethers/contractWithSigner';
 import { PAGINATION } from 'src/constants/pagination';
 import { paginator } from 'src/utils/paginator';
+import { NFTContent } from 'src/constants/contract';
+import { ActivationLogDTO } from './dto/create-activation-log.dto';
 @Injectable()
 export class SchoolService {
   constructor(
@@ -30,22 +32,24 @@ export class SchoolService {
   ) {}
 
   async findAll(query: ListSchoolDto) {
-    const { 
-      page = PAGINATION.DEFAULT_PAGE, 
-      perPage = PAGINATION.DEFAULT_PER_PAGE, 
-      minted, 
-      uploadId, 
-      name, 
-      country, 
-      connectivityStatus, 
-      orderBy = PAGINATION.DEFAULT_ORDERBY, 
-      order = PAGINATION.DEFAULT_ORDER
+    const {
+      page = PAGINATION.DEFAULT_PAGE,
+      perPage = PAGINATION.DEFAULT_PER_PAGE,
+      minted,
+      uploadId,
+      name,
+      country,
+      connectivityStatus,
+      orderBy = PAGINATION.DEFAULT_ORDERBY,
+      order = PAGINATION.DEFAULT_ORDER,
     } = query;
-  
+
     if (+perPage > PAGINATION.MAX_PER_PAGE) {
-      throw new BadRequestException(`Maximum number of items per page is ${PAGINATION.MAX_PER_PAGE}`);
+      throw new BadRequestException(
+        `Maximum number of items per page is ${PAGINATION.MAX_PER_PAGE}`,
+      );
     }
-  
+
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
       ...(minted !== undefined && { minted }),
@@ -54,24 +58,22 @@ export class SchoolService {
       ...(country && { country: { contains: country, mode: 'insensitive' } }),
       ...(connectivityStatus !== undefined && { connectivity: connectivityStatus === 'true' }),
     };
-  
+
     const paginate: PaginateFunction = paginator({ perPage });
-  
-    return paginate(
-      this.prisma.school,
-      { where },
-      { page, perPage: +perPage, order, orderBy }
-    );
+
+    return paginate(this.prisma.school, { where }, { page, perPage: +perPage, order, orderBy });
   }
-  
 
   async queueOnchainData(data: number) {
     return this.queueService.sendTransaction(data);
   }
 
   async findContract(tokenId) {
-      const contract: any = getContractWithSigner('NFTContent', '0x38AB410c1C650d251a83F884BB76709d1791Ab07');
-      return await contract.generateTokenData(tokenId);
+    const contract: any = getContractWithSigner(
+      NFTContent,
+      '0x38AB410c1C650d251a83F884BB76709d1791Ab07',
+    );
+    return await contract.generateTokenData(tokenId);
   }
 
   async checkAdmin(address: string) {
@@ -170,6 +172,26 @@ export class SchoolService {
       res.code(200).send(new AppResponseDto(200, data, 'Data uploaded successfully'));
     }
   }
+
+  async activates(data: ActivationLogDTO) {
+    return this.prisma.activationLog.create({
+      data: {
+        status: data.status,
+        activatedBy: data.activatedBy,
+        startDate: data.startDate,
+        endDate: data?.endDate || null,
+      },
+    });
+  }
+
+  async getActivationStatus() {
+    return this.prisma.activationLog.findFirst({
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
   async findOne(id: string) {
     return await this.prisma.school.findUnique({
       where: {
@@ -282,15 +304,15 @@ export class SchoolService {
     );
     const tokenId = schoolTokenId.data.schoolTokenId.tokenId;
     const tx = await updateData(
-      'NFTContent',
+      NFTContent,
       this.configService.get('GIGA_NFT_CONTENT_ADDRESS'),
       tokenId,
       schooldata,
     );
     const txReceipt = await tx.wait();
-    if (txReceipt.status === 1){
+    if (txReceipt.status === 1) {
       this.queueService.processImage(id);
-      }
+    }
     return txReceipt;
   }
 

@@ -12,6 +12,11 @@ import { PrismaAppService } from './prisma/prisma.service';
 import {RabbitMQModule, WorkerModule} from "@rumsan/rabbitmq";
 import { SchoolWorker } from './workers/school.rabbitmq.worker';
 import { UpdateOnchainDataWorker } from './workers/update-onchain.rabbitmq.worker';
+import { ScheduleModule } from '@nestjs/schedule';
+import { CronModule } from './cron/cron.module';
+import { AMQP_CONNECTION, QUEUES } from './constants';
+import { QOSDataWorker } from './workers/qos-onchain.rabbitmq.worker';
+import { QOSDataFetchWorker } from './workers/get-qos-file.rabbitmq.worker';
 
 @Module({
   imports: [
@@ -28,10 +33,10 @@ import { UpdateOnchainDataWorker } from './workers/update-onchain.rabbitmq.worke
       inject: [ConfigService],
     }),
     RabbitMQModule.register({
-      urls: ['amqp://guest:guest@localhost:5672'],
-      ampqProviderName: 'AMQP_CONNECTION',
-      queues: [{ name: 'SCHOOL_QUEUE', durable: true }],
-      workerModuleProvider: WorkerModule.register({
+      urls: [process.env.RABBIT_MQ_URL],
+      ampqProviderName: AMQP_CONNECTION,
+      queues: [{ name: QUEUES.UPDATE_ONCHAIN, durable: true }, { name: QUEUES.QOS_QUEUE, durable: true }, {name: QUEUES.QOS_FETCH_QUEUE, durable: true}],
+      workerModuleProvider: WorkerModule.register({ 
         globalDataProvider: {
           prismaService: PrismaAppService,
         },
@@ -43,6 +48,14 @@ import { UpdateOnchainDataWorker } from './workers/update-onchain.rabbitmq.worke
           {
             provide: 'SchoolWorker1',
             useClass: UpdateOnchainDataWorker,
+          },
+          {
+            provide: 'QOSWorker',
+            useClass: QOSDataWorker,
+          },
+          {
+            provide: 'QOSDataFetchWorker',
+            useClass: QOSDataFetchWorker,
           }
         ],
       }),
@@ -54,6 +67,8 @@ import { UpdateOnchainDataWorker } from './workers/update-onchain.rabbitmq.worke
     UsersModule,
     ContributeDataModule,
     EmailModule,
+    ScheduleModule.forRoot(),
+    CronModule
   ],
   providers: [],
 })

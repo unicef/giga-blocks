@@ -22,7 +22,8 @@
     "api:prisma:generate": "prisma generate",
     "clean": "rm -rf dist libs/shared-ui/node_modules node_modules tmp",
     "csvRead": "ts-node apps/api/prisma/csvReader.ts",
-    "seed": "ts-node apps/api/prisma/seed.ts"
+    "seed": "ts-node apps/api/prisma/seed.ts",
+    "arweave:fund": "npx ts-node apps/api/src/utils/arweave/config/createAndFundWallet.ts"
   },
   "prisma": {
     "seed": "apps/api/prisma/seed.ts"
@@ -127,6 +128,7 @@
     "@nestjs/passport": "^10.0.0",
     "@nestjs/platform-express": "^10.2.7",
     "@nestjs/platform-fastify": "^10.1.3",
+    "@nestjs/schedule": "^5.0.1",
     "@nestjs/swagger": "^7.1.6",
     "@nestjs/typeorm": "^10.0.0",
     "@next/font": "^13.1.2",
@@ -156,6 +158,7 @@
     "@web3-react/walletconnect-v2": "^8.5.0",
     "amqp-connection-manager": "^4.1.14",
     "apexcharts": "3.37.0",
+    "arweave": "^1.15.5",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.4.0",
     "bufferutil": "^4.0.8",

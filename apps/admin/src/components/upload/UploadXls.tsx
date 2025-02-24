@@ -128,7 +128,7 @@ export default function UploadXls({
         )}
       </Box>
 
-      <RejectionFiles fileRejections={fileRejections} />
+      <RejectionFiles fileRejections={fileRejections as any} />
 
       {hasFile && onDelete && typeOfFile === 'excel' && (
         <IconButton

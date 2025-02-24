@@ -21,6 +21,7 @@ interface ExtendedContract extends BaseContract {
   getImage?: (imageName: string | ContractTransactionResponse) => ContractTransactionResponse;
   getMetadataContent?: (tokenId: string | ContractTransactionResponse) => any;
   tokenIdToTokenHash?: (tokenId: string | ContractTransactionResponse) => any;
+  addHashes?: (date: string, hashes: string[]) => ContractTransactionResponse;
 }
 
 export const mintNFT = async (
@@ -166,35 +167,12 @@ export const updateBulkData = async (
       'https://api.studio.thegraph.com/query/74692/giga-research/version/latest/',
     tokenId,
   );
-  console.log(schoolDataArray);
+  const schoolDatas = await processSchoolData(schoolDataArray, schoolTokenIds.data.schoolTokenIds);
+  const schoolArgs = schoolDatas.tokenId.map((ti, i) => [ti, schoolDatas.schoolData[i]]);
 
-  console.log(schoolTokenIds.data);
-
-  console.log(await mergeTokenId(schoolDataArray, schoolTokenIds.data.schoolTokenIds));
-  // const tokenId = schoolTokenId.data.schoolTokenId.tokenId;
-  // const schoolArgs = tokenId.map((el, i) => [el, schoolDataArray[i]]);
-  // const multicalldata = generateMultiCallData(contractName, 'updateNftContent', schoolArgs);
-  // return await contract.multicall(multicalldata);
+  const multicalldata = generateMultiCallData(contractName, 'updateNftContent', schoolArgs);
+  return contract.multicall(multicalldata);
   // return await contract.multicall(multicalldata, { gasPrice: weiEthers });
-};
-
-const mergeTokenId = async (schoolDataArray, tokenIds) => {
-  const mappedData = schoolDataArray.map(school => {
-    const matchingToken = tokenIds.find(token => token.schoolId === school[0]);
-    return {
-      ...school,
-      tokenId: matchingToken ? matchingToken.tokenId : null,
-    };
-  });
-
-  const schoolData = mappedData.map(school => {
-    const { tokenId, ...rest } = school;
-    return Object.values(rest).slice(1);
-  });
-
-  const tokenId = mappedData.map(school => school.tokenId);
-
-  return { schoolData, tokenId };
 };
 
 export const getScriptData = async (
@@ -237,7 +215,28 @@ export const getScriptData = async (
   return data;
 };
 
+export const addArweaveHash = async (contractName, contractAddress, hashes) => {
+  const qosContract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
+
+  const date = new Date();
+
+  return qosContract.addHashes(date.toString(), hashes);
+};
+
 const getEncodedImage = async (imageData: any) => {
-  const base64 = `data:image/png;base64,${ethers.encodeBase64(imageData)}`;
+  const base64 = `${ethers.encodeBase64(imageData)}`;
   return base64;
 };
+
+const processSchoolData = async (schoolDataArray: any[], tokenIds: any[]) =>
+  schoolDataArray.reduce(
+    (acc, school) => {
+      const matchingToken = tokenIds.find(token => token.schoolId === school[0]);
+      if (matchingToken) {
+        acc.schoolData.push(Object.values(school).slice(1));
+        acc.tokenId.push(matchingToken.tokenId);
+      }
+      return acc;
+    },
+    { schoolData: [], tokenId: [] },
+  );

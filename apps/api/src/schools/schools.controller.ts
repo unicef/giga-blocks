@@ -23,7 +23,10 @@ import { MintStatus } from '@prisma/application';
 import fastify = require('fastify');
 import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-datum.dto';
 import { RabbitMQService } from '@rumsan/rabbitmq';
-import { SCHOOL_QUEUE, UPDATE_ONCHAIN } from 'src/constants';
+import { QUEUES } from 'src/constants';
+import { jsonObject } from 'src/utils/arweave/constants/temp';
+import { getFileData } from 'src/utils/arweave/get';
+import { ActivationLogDTO } from './dto/create-activation-log.dto';
 @Controller('schools')
 @ApiTags('School')
 export class SchoolController {
@@ -85,6 +88,22 @@ export class SchoolController {
     return await this.schoolService.uploadFile(req, res, request.user);
   }
 
+  // @Roles('ADMIN')
+  // @UseGuards(JwtAuthGuard, RoleGuard)
+  @Public()
+  @Post('/activateSchool')
+  async activateSchool(
+    @Body() req: ActivationLogDTO,
+  ): Promise<any> {
+    return await this.schoolService.activates(req);
+  }
+
+  @Public()
+  @Get('/getActivationStatus')
+  getActivationStatus() {
+    return this.schoolService.getActivationStatus();
+  }
+
   @Public()
   @Get()
   findAll(@Query() query: ListSchoolDto) {
@@ -116,16 +135,28 @@ export class SchoolController {
     return this.schoolService.listUploads();
   }
 
+
+
   // Test rabbit mq
   @Public()
   @Get('send')
   async sendMessage() {
-    const data = [{ message: 'Hello RabbitMQ!' }, {message: "Bye BullMQ!"}];
     const response = await this.rabbitMQService.publishBatchToQueue(
-      UPDATE_ONCHAIN,
-      data,
+      QUEUES.QOS_QUEUE,
+      [{date: '2024-05-26'}],
       1
     );
     return { response };
   }
+
+  @Public()
+  @Post('getFile')
+  async getFile(@Body() MintData: any) {
+    const data = await getFileData('PpyQUuu2-_rktYAPnlv22A9AMmXPnsy6baA-GJbhf20');
+
+    console.log(data)
+
+    return data.data[0];
+  }
+
 }

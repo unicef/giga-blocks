@@ -64,6 +64,7 @@ Table giga_users {
   isArchived Boolean [not null, default: false]
   validatedBy giga_validated_data [not null]
   OTP giga_otp [not null]
+  UserActivation UserActivation [not null]
 }
 
 Table school_version {
@@ -94,6 +95,7 @@ Table giga_school {
   minted MintStatus [not null, default: 'NOTMINTED']
   coverage_availability Boolean [not null, default: false]
   giga_maps_data Json
+  imageHash String
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   deletedAt DateTime
@@ -108,6 +110,8 @@ Table giga_school {
   ContributedData giga_contributed_data [not null]
   version_id String [not null]
   School_Version school_version [not null]
+  themeId String
+  theme giga_themes
 }
 
 Table giga_contributed_data {
@@ -169,6 +173,71 @@ Table giga_otp {
   deletedAt DateTime
 }
 
+Table giga_themes {
+  id String [pk]
+  colorScheme Json [not null]
+  name String [unique, not null]
+  schools giga_school [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deletedAt DateTime
+  isArchived Boolean [not null, default: false]
+}
+
+Table giga_qos {
+  id String [pk]
+  timestamp DateTime [not null]
+  country_id String [not null]
+  giga_school_id String [not null]
+  speed_download_probe String [not null]
+  speed_upload_probe String [not null]
+  latency_probe String [not null]
+  ce_ingress String [not null]
+  ce_egress String [not null]
+  pe_ingress String [not null]
+  pe_egress String [not null]
+  provider String [not null]
+  speed_download String [not null]
+  speed_upload String [not null]
+  latency String [not null]
+  signature String [not null]
+  gigasync_id String [not null]
+  date DateTime
+  dynamicData Json [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deletedAt DateTime
+}
+
+Table giga_arweave_data {
+  id String [pk]
+  date DateTime [unique, not null]
+  arweaveHash String[] [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deletedAt DateTime
+}
+
+Table giga_shcool_activation {
+  id String [pk]
+  status ActivationStatus [not null, default: 'INACTIVE']
+  activatedBy String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table UserActivation {
+  id String [pk]
+  email String
+  walletAddress Bytes
+  username String
+  nftReserved Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user giga_users
+  userId String
+}
+
 Enum Role {
   ADMIN
   CONTRIBUTOR
@@ -221,6 +290,11 @@ Enum MintStatus {
   ISMINTING
 }
 
+Enum ActivationStatus {
+  ACTIVE
+  INACTIVE
+}
+
 Ref: Auth.id > giga_users.id
 
 Ref: giga_permissions.role_id > giga_roles.role_id
@@ -232,6 +306,8 @@ Ref: giga_school.createdById > giga_users.id
 Ref: giga_school.updatedBy > giga_users.id
 
 Ref: giga_school.uploadId > giga_csv_uploads.id
+
+Ref: giga_school.themeId > giga_themes.id
 
 Ref: giga_contributed_data.school_Id > giga_school.id
 
@@ -246,3 +322,5 @@ Ref: giga_validated_data.school_Id > giga_school.id
 Ref: giga_validated_data.approvedBy > giga_users.id
 
 Ref: giga_otp.userId > giga_users.id
+
+Ref: UserActivation.userId > giga_users.id

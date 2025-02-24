@@ -3,6 +3,7 @@ import { Typography, Stack, StackProps } from '@mui/material';
 //
 import Image from '../image';
 
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
 // ----------------------------------------------------------------------
 
 interface EmptyContentProps extends StackProps {
@@ -27,7 +28,7 @@ export default function EmptyContent({ title, description, img, sx, ...other }: 
       <Image
         disabledEffect
         alt="empty content"
-        src={img || '/assets/illustrations/illustration_empty_content.svg'}
+        src={img || `${basePath}/assets/illustrations/illustration_empty_content.svg`}
         sx={{ height: 240, mb: 3 }}
       />
 

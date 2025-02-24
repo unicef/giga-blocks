@@ -7,7 +7,7 @@ import {
   RabbitMQModuleOptions,
 } from '@rumsan/rabbitmq';
 import { AmqpConnectionManager, ChannelWrapper } from 'amqp-connection-manager';
-import { AMQP_CONNECTION, SCHOOL_QUEUE } from 'src/constants';
+import { AMQP_CONNECTION, QUEUES } from 'src/constants';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { SchoolService } from 'src/schools/schools.service';
 @Global()
@@ -21,11 +21,11 @@ export class SchoolWorker extends BaseWorker<SchoolService> {
     @Inject('QUEUE_NAMES')
     private readonly queuesToSetup: RabbitMQModuleOptions['queues'],
   ) {
-    const queue = getQueueByName(queuesToSetup, SCHOOL_QUEUE);
+    const queue = getQueueByName(queuesToSetup, QUEUES.SCHOOL_QUEUE);
 
     super(
       queueUtilsService,
-      SCHOOL_QUEUE,
+      QUEUES.SCHOOL_QUEUE,
       10,
       'batch',
       connection,
@@ -47,7 +47,6 @@ export class SchoolWorker extends BaseWorker<SchoolService> {
   }
 
   protected async processItem(batch): Promise<void> {
-    console.log(batch)
     try {
       //Pause a worker for 10 seconds
       // await new Promise((resolve) => setTimeout(resolve, 1000));

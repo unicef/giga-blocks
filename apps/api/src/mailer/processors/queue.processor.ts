@@ -276,6 +276,8 @@ export class ImageProcessor {
   constructor(
     private readonly _configService: ConfigService,
     private readonly _mailerService: MailerService,
+    private readonly _prismaService: PrismaAppService,
+
   ) {}
 
   @OnQueueActive()
@@ -306,7 +308,7 @@ export class ImageProcessor {
     }
   }
 
-  @Process({name:SET_IMAGE_PROCESS,concurrency:1})
+  @Process({name:SET_IMAGE_PROCESS, concurrency:1})
   public async processImages(job: Job<any>) {
     const id = job.data.id;
     jobOptions.delay = 1000;
@@ -325,7 +327,7 @@ export class ImageProcessor {
       this._configService.get<string>('NEXT_PUBLIC_GRAPH_URL'),
       this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
     );
-    const base64Image = await generateP5Image(artScript.baseScript, scriptData);
+    const base64Image = await generateP5Image(artScript, scriptData);
     const decodedImage = await decodeBase64Image(base64Image);
     if (decodedImage) {
       await uploadFile(decodedImage.data)
@@ -336,6 +338,7 @@ export class ImageProcessor {
             res,
             id,
           );
+          await this._prismaService.school.update({where:{giga_school_id:id},data:{imageHash:res}})
         })
         .catch(err => {
           console.log(err);
