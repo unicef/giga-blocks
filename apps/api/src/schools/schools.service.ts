@@ -142,8 +142,11 @@ export class SchoolService {
   }
 
   async findContract(tokenId) {
-      const contract: any = getContractWithSigner(NFTContent, '0x38AB410c1C650d251a83F884BB76709d1791Ab07');
-      return await contract.generateTokenData(tokenId);
+    const contract: any = getContractWithSigner(
+      NFTContent,
+      '0x38AB410c1C650d251a83F884BB76709d1791Ab07',
+    );
+    return await contract.generateTokenData(tokenId);
   }
 
   async checkAdmin(address: string) {
@@ -243,16 +246,18 @@ export class SchoolService {
     }
   }
 
-  async activates(data: ActivationLogDTO){
+  async activates(data: ActivationLogDTO) {
     return this.prisma.activationLog.create({
       data: {
         status: data.status,
-        activatedBy: data.activatedBy
-      }
-    })
+        activatedBy: data.activatedBy,
+        startDate: data.startDate,
+        endDate: data?.endDate || null,
+      },
+    });
   }
 
-  async getActivationStatus(){
+  async getActivationStatus() {
     return this.prisma.activationLog.findFirst({
       orderBy: {
         createdAt: 'desc',
@@ -378,9 +383,9 @@ export class SchoolService {
       schooldata,
     );
     const txReceipt = await tx.wait();
-    if (txReceipt.status === 1){
+    if (txReceipt.status === 1) {
       this.queueService.processImage(id);
-      }
+    }
     return txReceipt;
   }
 

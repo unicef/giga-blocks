@@ -323,10 +323,12 @@ model ActivationLog {
   id           String            @id @default(uuid())
   status       ActivationStatus  @default(INACTIVE)
   activatedBy  String
+  startDate    DateTime          
+  endDate      DateTime?         
   createdAt    DateTime          @default(now())
   updatedAt    DateTime          @updatedAt
 
-  @@map("giga_shcool_activation")
+  @@map("giga_school_activation")
 }
 
 model UserActivation {
