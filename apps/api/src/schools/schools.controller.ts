@@ -24,13 +24,16 @@ import fastify = require('fastify');
 import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-datum.dto';
 import { RabbitMQService } from '@rumsan/rabbitmq';
 import { QUEUES } from 'src/constants';
-import { jsonObject } from 'src/utils/arweave/constants/temp';
 import { getFileData } from 'src/utils/arweave/get';
 import { ActivationLogDTO } from './dto/create-activation-log.dto';
+import { ActivationGuard } from 'src/auth/guards/activation.guard';
 @Controller('schools')
 @ApiTags('School')
 export class SchoolController {
-  constructor(private readonly schoolService: SchoolService, private readonly rabbitMQService: RabbitMQService) {}
+  constructor(
+    private readonly schoolService: SchoolService,
+    private readonly rabbitMQService: RabbitMQService,
+  ) {}
 
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
@@ -45,7 +48,7 @@ export class SchoolController {
   update(@Param('id') id: string, @Req() req: any) {
     return this.schoolService.update(id, req.user.id);
   }
- 
+
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Patch('/bulkUpdate')
@@ -92,16 +95,20 @@ export class SchoolController {
   // @UseGuards(JwtAuthGuard, RoleGuard)
   @Public()
   @Post('/activateSchool')
-  async activateSchool(
-    @Body() req: ActivationLogDTO,
-  ): Promise<any> {
+  async activateSchool(@Body() req: ActivationLogDTO): Promise<any> {
     return await this.schoolService.activates(req);
   }
 
   @Public()
-  @Get('/getActivationStatus')
-  getActivationStatus() {
-    return this.schoolService.getActivationStatus();
+  @Get('/getLatestActivationStatus')
+  getLatestActivationStatus() {
+    return this.schoolService.getLatestActivationStatus();
+  }
+
+  @Public()
+  @Get('/schoolActivationByID/:uuid')
+  getSchoolActivationByID(@Param('uuid') uuid: string) {
+    return this.schoolService.getActivationStatusByID(uuid);
   }
 
   @Public()
@@ -118,10 +125,9 @@ export class SchoolController {
 
   @Public()
   @Get('/getContractDetail/:tokenId')
-  findContract(@Param('tokenId') tokenId: string){
-    return this.schoolService.findContract(tokenId)
+  findContract(@Param('tokenId') tokenId: string) {
+    return this.schoolService.findContract(tokenId);
   }
-
 
   @Public()
   @Get('byCountry/:country')
@@ -135,16 +141,14 @@ export class SchoolController {
     return this.schoolService.listUploads();
   }
 
-
-
   // Test rabbit mq
   @Public()
   @Get('send')
   async sendMessage() {
     const response = await this.rabbitMQService.publishBatchToQueue(
       QUEUES.QOS_QUEUE,
-      [{date: '2024-05-26'}],
-      1
+      [{ date: '2024-05-26' }],
+      1,
     );
     return { response };
   }
@@ -154,9 +158,15 @@ export class SchoolController {
   async getFile(@Body() MintData: any) {
     const data = await getFileData('PpyQUuu2-_rktYAPnlv22A9AMmXPnsy6baA-GJbhf20');
 
-    console.log(data)
+    console.log(data);
 
     return data.data[0];
   }
 
+  @UseGuards(ActivationGuard)
+  @Public()
+  @Get('/testEmailActivation/:uuid')
+  async activateWithEmail(@Param('uuid') uuid: string) {
+    console.log(uuid);
+  }
 }

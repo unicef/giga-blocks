@@ -3,6 +3,8 @@ import {
   UnauthorizedException,
   HttpException,
   BadRequestException,
+  ConflictException,
+  NotFoundException,
 } from '@nestjs/common';
 import { MintStatus, Prisma, Role } from '@prisma/application';
 import { PrismaAppService } from 'src/prisma/prisma.service';
@@ -21,6 +23,7 @@ import { PaginateFunction, PaginateOptions } from 'src/utils/paginate';
 import { getContractWithSigner } from 'src/utils/ethers/contractWithSigner';
 import { NFTContent } from 'src/constants/contract';
 import { ActivationLogDTO } from './dto/create-activation-log.dto';
+import { UUID } from 'crypto';
 @Injectable()
 export class SchoolService {
   constructor(
@@ -247,6 +250,14 @@ export class SchoolService {
   }
 
   async activates(data: ActivationLogDTO) {
+    const activation = await this.prisma.activationLog.findFirst({
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    if (activation.status) throw new ConflictException('School already activated!');
+
     return this.prisma.activationLog.create({
       data: {
         status: data.status,
@@ -257,12 +268,26 @@ export class SchoolService {
     });
   }
 
-  async getActivationStatus() {
+  async getLatestActivationStatus() {
     return this.prisma.activationLog.findFirst({
       orderBy: {
         createdAt: 'desc',
       },
     });
+  }
+
+  async getActivationStatusByID(uuid: string) {
+    const data = this.prisma.activationLog.findUnique({
+      where: {
+        id: uuid,
+      },
+    });
+
+    if (!data) {
+      throw new NotFoundException('Activation ID not found;');
+    }
+
+    return data;
   }
 
   async findOne(id: string) {
