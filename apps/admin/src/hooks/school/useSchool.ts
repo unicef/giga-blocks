@@ -98,8 +98,16 @@ const mintSchool = async (data: any) => {
   return await api.post(routes.SCHOOLS.MINT, data);
 };
 
+const activateSchool = async (data: any) => {
+  return await api.post(routes.SCHOOLS.ACTIVATE, data);
+};
+
 const mintBulkSchool = async (data: any) => {
   return await api.post(routes.SCHOOLS.MINTBULK, data);
+};
+
+export const useActivateSchools = () => {
+  return useMutation(activateSchool);
 };
 
 export const useMintSchools = () => {

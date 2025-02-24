@@ -5,20 +5,23 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { DatePicker, DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
+import { useActivateSchools } from '@hooks/school/useSchool';
 import * as React from 'react';
 
 export default function ActiveDialog() {
   const [open, setOpen] = React.useState(false);
   const [startDate, setStartDate] = React.useState<dayjs.Dayjs | null>(null);
   const [endDate, setEndDate] = React.useState<dayjs.Dayjs | null>(null);
-  const [alignment, setAlignment] = React.useState('active');
+  const [alignment, setAlignment] = React.useState('');
+
+  // Mutation hook
+  const { mutate, isLoading, isError, error, isSuccess } = useActivateSchools();
 
   const handleChange = (event: React.SyntheticEvent, newAlignment: string) => {
     setAlignment(newAlignment);
-    console.log(newAlignment);
   };
 
   const handleClickOpen = () => {
@@ -31,9 +34,29 @@ export default function ActiveDialog() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('Start Date:', startDate ? startDate.format('YYYY-MM-DD HH:mm') : 'Not selected');
-    console.log('End Date:', endDate ? endDate.format('YYYY-MM-DD HH:mm') : 'Not selected');
-    handleClose();
+
+    if (!startDate || !endDate) {
+      console.error('Start and End Date are required');
+      return;
+    }
+
+    const activationData = {
+      startDate: startDate.format('YYYY-MM-DD'),
+      endDate: endDate.format('YYYY-MM-DD'),
+      status: alignment,
+    };
+
+    console.log('Sending data:', activationData);
+
+    mutate(activationData, {
+      onSuccess: () => {
+        console.log('School activated successfully');
+        handleClose();
+      },
+      onError: (err) => {
+        console.error('Failed to activate school:', err);
+      },
+    });
   };
 
   return (
@@ -48,7 +71,7 @@ export default function ActiveDialog() {
             <DialogContentText>
               Select start and end date to activate schools if not activated already.
             </DialogContentText>
-            {/* Toggle Button To Activate and Deactivate School */}
+
             <ToggleButtonGroup
               color="primary"
               size="small"
@@ -77,10 +100,18 @@ export default function ActiveDialog() {
                 />
               </div>
             </LocalizationProvider>
+
+            {/* Error Handling */}
+            {isError && <p style={{ color: 'red' }}>Error: {error?.message}</p>}
+            {isSuccess && <p style={{ color: 'green' }}>School activated successfully!</p>}
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button type="submit">Submit</Button>
+            <Button onClick={handleClose} disabled={isLoading}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? 'Activating...' : 'Submit'}
+            </Button>
           </DialogActions>
         </form>
       </Dialog>
