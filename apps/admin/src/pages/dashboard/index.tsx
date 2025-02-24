@@ -9,15 +9,15 @@ Dashboard.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</Das
 
 export default function Dashboard() {
   const { data = [] } = useAllSchool({});
-  const latitudeArray = Array.isArray(data) ? data.map((item) => item.latitude) : [];
-  const longitudeArray = data?.map((item: { longitude: any }) => item.longitude);
+  // const latitudeArray = Array.isArray(data) ? data.map((item) => item.latitude) : [];
+  // const longitudeArray = data?.map((item: { longitude: any }) => item.longitude);
   return (
     <>
       <Container>
         <h1>Dashboard</h1>
         <CardData />
         <Card sx={{ mt: 10 }}>
-          <MapView
+          {/* <MapView
             mapData={
               latitudeArray && longitudeArray
                 ? latitudeArray?.map((latitude: any, index: number) => ({
@@ -26,7 +26,7 @@ export default function Dashboard() {
                   }))
                 : []
             }
-          />
+          /> */}
         </Card>
       </Container>
     </>
