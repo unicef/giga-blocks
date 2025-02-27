@@ -81,6 +81,13 @@ export const useSchoolCount = (minted?: string) => {
   );
 };
 
+export const useActivateSchool = (id: number) => {
+  return useQuery(['get-active-school'], async () => {
+    const { data } = await api.get(`${routes.SCHOOLS.ACTIVATE}`);
+    return data;
+  });
+};
+
 export const useMintedSchoolCount = (minted?: string) => {
   return useQuery(
     ['minted-school-count'],
@@ -98,7 +105,7 @@ const mintSchool = async (data: any) => {
   return await api.post(routes.SCHOOLS.MINT, data);
 };
 
-const activateSchool = async (data: any) => {
+const activatePostSchool = async (data: any) => {
   return await api.post(routes.SCHOOLS.ACTIVATE, data);
 };
 
@@ -106,8 +113,8 @@ const mintBulkSchool = async (data: any) => {
   return await api.post(routes.SCHOOLS.MINTBULK, data);
 };
 
-export const useActivateSchools = () => {
-  return useMutation(activateSchool);
+export const useActivatePostSchools = () => {
+  return useMutation(activatePostSchool);
 };
 
 export const useMintSchools = () => {

@@ -8,7 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-import { useActivateSchools } from '@hooks/school/useSchool';
+import { useActivatePostSchools, useActivateSchool } from '@hooks/school/useSchool';
 import * as React from 'react';
 
 export default function ActiveDialog() {
@@ -16,9 +16,23 @@ export default function ActiveDialog() {
   const [startDate, setStartDate] = React.useState<dayjs.Dayjs | null>(null);
   const [endDate, setEndDate] = React.useState<dayjs.Dayjs | null>(null);
   const [alignment, setAlignment] = React.useState('');
+  const [userId, setUserId] = React.useState<string | null>(null);
 
-  // Mutation hook
-  const { mutate, isLoading, isError, error, isSuccess } = useActivateSchools();
+  React.useEffect(() => {
+    const userDataString = localStorage.getItem('currentUser');
+    if (userDataString) {
+      try {
+        const userData = JSON.parse(userDataString);
+        setUserId(userData.id);
+      } catch (error) {
+        console.error('Failed to parse user data:', error);
+      }
+    }
+  }, []);
+
+  const { mutate, isLoading, isError, error, isSuccess } = useActivatePostSchools();
+  const { data } = useActivateSchool(userId);
+  console.log('userId', userId);
 
   const handleChange = (event: React.SyntheticEvent, newAlignment: string) => {
     setAlignment(newAlignment);
