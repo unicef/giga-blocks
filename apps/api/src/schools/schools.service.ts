@@ -23,7 +23,6 @@ import { PaginateFunction, PaginateOptions } from 'src/utils/paginate';
 import { getContractWithSigner } from 'src/utils/ethers/contractWithSigner';
 import { NFTContent } from 'src/constants/contract';
 import { ActivationLogDTO } from './dto/create-activation-log.dto';
-import { UUID } from 'crypto';
 @Injectable()
 export class SchoolService {
   constructor(
