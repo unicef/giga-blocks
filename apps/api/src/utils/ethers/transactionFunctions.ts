@@ -18,6 +18,7 @@ interface ExtendedContract extends BaseContract {
   getImage?: (imageName: string | ContractTransactionResponse) => ContractTransactionResponse;
   getMetadataContent?:(tokenId: string | ContractTransactionResponse) => any;
   tokenIdToTokenHash?:(tokenId: string | ContractTransactionResponse) => any;
+  addHashes?: (date: string, hashes: string[]) => ContractTransactionResponse;
 }
 
 export const mintNFT = async (
@@ -164,7 +165,7 @@ export const updateBulkData = async (
   )
   const schoolDatas = await processSchoolData(schoolDataArray, schoolTokenIds.data.schoolTokenIds)
   const schoolArgs = schoolDatas.tokenId.map((ti, i) => [ti, schoolDatas.schoolData[i]]);
-  console.log(schoolArgs)
+
   const multicalldata = generateMultiCallData(contractName, 'updateNftContent', schoolArgs);
   return contract.multicall(multicalldata);
   // return await contract.multicall(multicalldata, { gasPrice: weiEthers });
@@ -204,11 +205,20 @@ export const getScriptData = async (
    return data;
 }
 
+export const addArweaveHash = async (contractName, contractAddress, hashes) => {
+
+  const qosContract: ExtendedContract = getContractWithSigner(contractName, contractAddress)
+
+  const date = new Date()
+
+  return qosContract.addHashes(date.toString(), hashes)
+
+}
+
 const getEncodedImage = async (imageData:any) =>{
   const base64 = `${ethers.encodeBase64(imageData)}`;
   return base64;
 }
-
 
 const processSchoolData = async (schoolDataArray: any[], tokenIds: any[]) => 
   schoolDataArray.reduce(
@@ -222,3 +232,4 @@ const processSchoolData = async (schoolDataArray: any[], tokenIds: any[]) =>
    },
    { schoolData: [], tokenId: [] }
  )
+

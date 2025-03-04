@@ -3,6 +3,8 @@ import {
   UnauthorizedException,
   HttpException,
   BadRequestException,
+  ConflictException,
+  NotFoundException,
 } from '@nestjs/common';
 import { MintStatus, Prisma, Role } from '@prisma/application';
 import { PrismaAppService } from 'src/prisma/prisma.service';
@@ -20,6 +22,7 @@ import { getTokenId } from 'src/utils/web3/subgraph';
 import { PaginateFunction, PaginateOptions } from 'src/utils/paginate';
 import { getContractWithSigner } from 'src/utils/ethers/contractWithSigner';
 import { NFTContent } from 'src/constants/contract';
+import { ActivationLogDTO } from './dto/create-activation-log.dto';
 @Injectable()
 export class SchoolService {
   constructor(
@@ -141,8 +144,11 @@ export class SchoolService {
   }
 
   async findContract(tokenId) {
-      const contract: any = getContractWithSigner(NFTContent, '0x38AB410c1C650d251a83F884BB76709d1791Ab07');
-      return await contract.generateTokenData(tokenId);
+    const contract: any = getContractWithSigner(
+      NFTContent,
+      '0x38AB410c1C650d251a83F884BB76709d1791Ab07',
+    );
+    return await contract.generateTokenData(tokenId);
   }
 
   async checkAdmin(address: string) {
@@ -241,6 +247,48 @@ export class SchoolService {
       res.code(200).send(new AppResponseDto(200, data, 'Data uploaded successfully'));
     }
   }
+
+  async activates(data: ActivationLogDTO) {
+    const activation = await this.prisma.activationLog.findFirst({
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    if (activation.status) throw new ConflictException('School already activated!');
+
+    return this.prisma.activationLog.create({
+      data: {
+        status: data.status,
+        activatedBy: data.activatedBy,
+        startDate: data.startDate,
+        endDate: data?.endDate || null,
+      },
+    });
+  }
+
+  async getLatestActivationStatus() {
+    return this.prisma.activationLog.findFirst({
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  async getActivationStatusByID(uuid: string) {
+    const data = this.prisma.activationLog.findUnique({
+      where: {
+        id: uuid,
+      },
+    });
+
+    if (!data) {
+      throw new NotFoundException('Activation ID not found;');
+    }
+
+    return data;
+  }
+
   async findOne(id: string) {
     return await this.prisma.school.findUnique({
       where: {
@@ -359,9 +407,9 @@ export class SchoolService {
       schooldata,
     );
     const txReceipt = await tx.wait();
-    if (txReceipt.status === 1){
+    if (txReceipt.status === 1) {
       this.queueService.processImage(id);
-      }
+    }
     return txReceipt;
   }
 

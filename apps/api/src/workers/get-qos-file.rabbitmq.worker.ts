@@ -2,30 +2,28 @@ import { Global, Inject, Injectable } from '@nestjs/common';
 import {
   BaseWorker,
   getQueueByName,
-  PRISMA_SERVICE,
   QueueUtilsService,
   RabbitMQModuleOptions,
 } from '@rumsan/rabbitmq';
 import { AmqpConnectionManager, ChannelWrapper } from 'amqp-connection-manager';
 import { AMQP_CONNECTION, QUEUES } from 'src/constants';
-import { PrismaAppService } from 'src/prisma/prisma.service';
 import { SchoolService } from 'src/schools/schools.service';
+import { getFileData } from 'src/utils/arweave/get';
 @Global()
 @Injectable()
-export class SchoolWorker extends BaseWorker<SchoolService> {
+export class QOSDataFetchWorker extends BaseWorker<SchoolService> {
   private channelWrapper: ChannelWrapper;
   constructor(
     @Inject(AMQP_CONNECTION) private readonly connection: AmqpConnectionManager,
     queueUtilsService: QueueUtilsService,
-    @Inject(PRISMA_SERVICE) private readonly prisma: PrismaAppService,
     @Inject('QUEUE_NAMES')
     private readonly queuesToSetup: RabbitMQModuleOptions['queues'],
   ) {
-    const queue = getQueueByName(queuesToSetup, QUEUES.SCHOOL_QUEUE);
+    const queue = getQueueByName(queuesToSetup, QUEUES.QOS_FETCH_QUEUE);
 
     super(
       queueUtilsService,
-      QUEUES.SCHOOL_QUEUE,
+      QUEUES.QOS_FETCH_QUEUE,
       10,
       'batch',
       connection,
@@ -42,17 +40,15 @@ export class SchoolWorker extends BaseWorker<SchoolService> {
         },
       });
     } catch (err) {
-      this.logger.error('Error initializing Beneficiary Worker:', err);
+      this.logger.error('Error initializing QOS Worker:', err);
     }
   }
 
-  protected async processItem(batch): Promise<void> {
-    try {
-      //Pause a worker for 10 seconds
-      // await new Promise((resolve) => setTimeout(resolve, 1000));
-   
-    } catch (error) {
-      throw error;
-    }
+  protected async processItem(batch): Promise<any> {
+    console.log(batch);
+    console.log("reached")
+    return await getFileData('PpyQUuu2-_rktYAPnlv22A9AMmXPnsy6baA-GJbhf20')
+     
   }
+
 }

@@ -183,6 +183,61 @@ Table giga_themes {
   isArchived Boolean [not null, default: false]
 }
 
+Table giga_qos {
+  id String [pk]
+  timestamp DateTime [not null]
+  country_id String [not null]
+  giga_school_id String [not null]
+  speed_download_probe String [not null]
+  speed_upload_probe String [not null]
+  latency_probe String [not null]
+  ce_ingress String [not null]
+  ce_egress String [not null]
+  pe_ingress String [not null]
+  pe_egress String [not null]
+  provider String [not null]
+  speed_download String [not null]
+  speed_upload String [not null]
+  latency String [not null]
+  signature String [not null]
+  gigasync_id String [not null]
+  date DateTime
+  dynamicData Json [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deletedAt DateTime
+}
+
+Table giga_arweave_data {
+  id String [pk]
+  date DateTime [unique, not null]
+  arweaveHash String[] [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deletedAt DateTime
+}
+
+Table giga_school_activation {
+  id String [pk]
+  status ActivationStatus [not null, default: 'INACTIVE']
+  activatedBy String [not null]
+  startDate DateTime [not null]
+  endDate DateTime
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table giga_user_activation {
+  id String [pk]
+  email String [unique, not null]
+  walletAddress Bytes
+  username String
+  nftAddress String
+  nftReserved Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
 Enum Role {
   ADMIN
   CONTRIBUTOR
@@ -233,6 +288,11 @@ Enum MintStatus {
   NOTMINTED
   MINTED
   ISMINTING
+}
+
+Enum ActivationStatus {
+  ACTIVE
+  INACTIVE
 }
 
 Ref: Auth.id > giga_users.id

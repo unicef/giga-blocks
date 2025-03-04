@@ -14,7 +14,9 @@ import { SchoolWorker } from './workers/school.rabbitmq.worker';
 import { UpdateOnchainDataWorker } from './workers/update-onchain.rabbitmq.worker';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CronModule } from './cron/cron.module';
-import { AMQP_CONNECTION, SCHOOL_QUEUE } from './constants';
+import { AMQP_CONNECTION, QUEUES } from './constants';
+import { QOSDataWorker } from './workers/qos-onchain.rabbitmq.worker';
+import { QOSDataFetchWorker } from './workers/get-qos-file.rabbitmq.worker';
 
 @Module({
   imports: [
@@ -33,8 +35,8 @@ import { AMQP_CONNECTION, SCHOOL_QUEUE } from './constants';
     RabbitMQModule.register({
       urls: [process.env.RABBIT_MQ_URL],
       ampqProviderName: AMQP_CONNECTION,
-      queues: [{ name: SCHOOL_QUEUE, durable: true }],
-      workerModuleProvider: WorkerModule.register({
+      queues: [{ name: QUEUES.UPDATE_ONCHAIN, durable: true }, { name: QUEUES.QOS_QUEUE, durable: true }, {name: QUEUES.QOS_FETCH_QUEUE, durable: true}],
+      workerModuleProvider: WorkerModule.register({ 
         globalDataProvider: {
           prismaService: PrismaAppService,
         },
@@ -46,6 +48,14 @@ import { AMQP_CONNECTION, SCHOOL_QUEUE } from './constants';
           {
             provide: 'SchoolWorker1',
             useClass: UpdateOnchainDataWorker,
+          },
+          {
+            provide: 'QOSWorker',
+            useClass: QOSDataWorker,
+          },
+          {
+            provide: 'QOSDataFetchWorker',
+            useClass: QOSDataFetchWorker,
           }
         ],
       }),

@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Query,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
@@ -16,6 +17,8 @@ import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagg
 import { RoleGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Public } from 'src/common/decorators/public.decorator';
+import { CreateUserActivationDto } from './dto/activation.dto';
+import { ActivationGuard } from 'src/auth/guards/activation.guard';
 
 @ApiBearerAuth('access-token')
 @Controller('users')
@@ -118,5 +121,21 @@ export class UsersController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
+  }
+
+  @Public()
+  @Post('/createActivation/:uuid')
+  @UseGuards(ActivationGuard)
+  async createUserActivation(
+    @Param('uuid') id: string,
+    @Body() createDto: CreateUserActivationDto,
+  ) {
+    return this.usersService.createUserActivation(createDto);
+  }
+
+  @Public()
+  @Get('listReservedNFT')
+  async listReservedNFT() {
+    return this.usersService.listReservedNFT();
   }
 }

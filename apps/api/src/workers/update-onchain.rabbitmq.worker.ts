@@ -7,11 +7,10 @@ import {
   RabbitMQModuleOptions,
 } from '@rumsan/rabbitmq';
 import { AmqpConnectionManager, ChannelWrapper } from 'amqp-connection-manager';
-import { AMQP_CONNECTION, UPDATE_ONCHAIN } from 'src/constants';
+import { AMQP_CONNECTION, QUEUES } from 'src/constants';
 import { NFTContent } from 'src/constants/contract';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { SchoolService } from 'src/schools/schools.service';
-import { getContractWithSigner } from 'src/utils/ethers/contractWithSigner';
 import { updateBulkData } from 'src/utils/ethers/transactionFunctions';
 @Global()
 @Injectable()
@@ -24,11 +23,11 @@ export class UpdateOnchainDataWorker extends BaseWorker<SchoolService> {
     @Inject('QUEUE_NAMES')
     private readonly queuesToSetup: RabbitMQModuleOptions['queues'],
   ) {
-    const queue = getQueueByName(queuesToSetup, UPDATE_ONCHAIN);
+    const queue = getQueueByName(queuesToSetup, QUEUES.UPDATE_ONCHAIN);
 
     super(
       queueUtilsService,
-      UPDATE_ONCHAIN,
+      QUEUES.UPDATE_ONCHAIN,
       10,
       'batch',
       connection,

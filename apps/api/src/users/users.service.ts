@@ -1,4 +1,10 @@
-import { ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { PrismaAppService } from '../prisma/prisma.service';
 import { bufferToHexString, hexStringToBuffer } from '../utils/string-format';
@@ -105,8 +111,8 @@ export class UsersService {
   findAll(query: any) {
     const { page, perPage, order, orderBy } = query;
 
-    console.log(perPage)
-    console.log(query?.role)
+    console.log(perPage);
+    console.log(query?.role);
 
     const where: Prisma.UserWhereInput = {};
     if (query?.role) {
@@ -208,6 +214,50 @@ export class UsersService {
     const walletBuffer = hexStringToBuffer(walletAddress);
     return await this.prisma.user.findUnique({
       where: { walletAddress: walletBuffer, isArchived: false },
+    });
+  }
+
+  async create(userActivation: any): Promise<any> {
+    return await this.prisma.userActivation.create({
+      data: userActivation,
+    });
+  }
+
+  async findUserActivationByEmail(email: string): Promise<any> {
+    return await this.prisma.userActivation.findFirst({
+      where: { email },
+    });
+  }
+
+  async createUserActivation(data: any) {
+    const walletAddress = hexStringToBuffer(data?.walletAddress);
+
+    return this.prisma.userActivation.upsert({
+      where: {
+        email: data.email,
+      },
+      update: {
+        walletAddress,
+        username: data.username,
+        nftAddress: data.nftAddress,
+        nftReserved: data.nftReserved ?? false,
+        updatedAt: new Date(),
+      },
+      create: {
+        email: data.email,
+        walletAddress,
+        username: data.username,
+        nftAddress: data.nftAddress,
+        nftReserved: data.nftReserved ?? false,
+      },
+    });
+  }
+
+  async listReservedNFT() {
+    return this.prisma.userActivation.findMany({
+      where: {
+        nftReserved: true,
+      },
     });
   }
 }
