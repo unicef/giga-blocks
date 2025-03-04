@@ -3,7 +3,7 @@ import { totp } from 'otplib';
 
 import { AuthService } from './auth.service';
 
-import { AuthSendOtp, AuthWallet, RefreshToken, WalletRegister } from './dto';
+import { AuthDto, AuthSendOtp, AuthWallet, RefreshToken, WalletRegister } from './dto';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from '../users/dto/user.dto';
 
@@ -90,5 +90,18 @@ export class AuthController {
   @Post('/admin/walletlogin')
   async adminWalletLogin(@Body() walletLogin: AuthWallet, @Request() req) {
     return this.authService.adminWalletLogin(req.user);
+  }
+
+  @Public()
+  @Post('/send-magiclink')
+  async sendMagicLink(@Body() AuthDto: AuthSendOtp): Promise<ResponseMessage | null> {
+    return this.authService.sendMagicLink(AuthDto)
+
+  }
+
+  @Public()
+  @Post('/verify-magiclink')
+  async verifyMagicLink(@Body() authDto: AuthDto): Promise<ResponseMessage | null> {
+    return this.authService.verifyMagicLink(authDto)
   }
 }
