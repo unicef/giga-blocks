@@ -92,16 +92,4 @@ export class AuthController {
     return this.authService.adminWalletLogin(req.user);
   }
 
-  @Public()
-  @Post('/send-magiclink')
-  async sendMagicLink(@Body() AuthDto: AuthSendOtp): Promise<ResponseMessage | null> {
-    return this.authService.sendMagicLink(AuthDto)
-
-  }
-
-  @Public()
-  @Post('/verify-magiclink')
-  async verifyMagicLink(@Body() authDto: AuthDto): Promise<ResponseMessage | null> {
-    return this.authService.verifyMagicLink(authDto)
-  }
 }

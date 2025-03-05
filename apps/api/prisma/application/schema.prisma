@@ -267,6 +267,20 @@ model OTP {
   @@map("giga_otp")
 }
 
+model magicLinkOtp {
+  id             String   @id @default(uuid())
+  otp            String   @unique
+  email          String   @unique
+  validated      Boolean   @default(false)
+  expirationTime DateTime  
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+
+  @@map("giga_magic_link_otp")
+}
+
+
 model Theme {
   id           String    @id @default(uuid())
   colorScheme  Json
