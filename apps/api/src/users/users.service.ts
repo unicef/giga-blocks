@@ -217,47 +217,4 @@ export class UsersService {
     });
   }
 
-  async create(userActivation: any): Promise<any> {
-    return await this.prisma.userActivation.create({
-      data: userActivation,
-    });
-  }
-
-  async findUserActivationByEmail(email: string): Promise<any> {
-    return await this.prisma.userActivation.findFirst({
-      where: { email },
-    });
-  }
-
-  async createUserActivation(data: any) {
-    const walletAddress = hexStringToBuffer(data?.walletAddress);
-
-    return this.prisma.userActivation.upsert({
-      where: {
-        email: data.email,
-      },
-      update: {
-        walletAddress,
-        username: data.username,
-        nftAddress: data.nftAddress,
-        nftReserved: data.nftReserved ?? false,
-        updatedAt: new Date(),
-      },
-      create: {
-        email: data.email,
-        walletAddress,
-        username: data.username,
-        nftAddress: data.nftAddress,
-        nftReserved: data.nftReserved ?? false,
-      },
-    });
-  }
-
-  async listReservedNFT() {
-    return this.prisma.userActivation.findMany({
-      where: {
-        nftReserved: true,
-      },
-    });
-  }
 }

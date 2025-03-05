@@ -344,15 +344,18 @@ model ActivationLog {
   @@map("giga_school_activation")
 }
 
-model UserActivation {
+model Contributor {
   id            String   @id @default(uuid())
   email         String   @unique
   walletAddress Bytes?
   username      String?
   nftAddress    String?
+  totalNftMinted Int
+  isVisible     Boolean  @default(false)
   nftReserved   Boolean  @default(false)
+  nftClaimed    Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  @@map("giga_user_activation")
+  @@map("giga_contributor")
 }

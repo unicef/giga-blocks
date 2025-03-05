@@ -123,19 +123,4 @@ export class UsersController {
     return this.usersService.remove(id);
   }
 
-  @Public()
-  @Post('/createActivation/:uuid')
-  @UseGuards(ActivationGuard)
-  async createUserActivation(
-    @Param('uuid') id: string,
-    @Body() createDto: CreateUserActivationDto,
-  ) {
-    return this.usersService.createUserActivation(createDto);
-  }
-
-  @Public()
-  @Get('listReservedNFT')
-  async listReservedNFT() {
-    return this.usersService.listReservedNFT();
-  }
 }

@@ -18,6 +18,7 @@ import { AMQP_CONNECTION, QUEUES } from './constants';
 import { QOSDataWorker } from './workers/qos-onchain.rabbitmq.worker';
 import { QOSDataFetchWorker } from './workers/get-qos-file.rabbitmq.worker';
 import { MagicLinkModule } from './magic-link/magic-link.module';
+import { ContributorModule } from './contributor/contributor.module';
 
 @Module({
   imports: [
@@ -70,7 +71,8 @@ import { MagicLinkModule } from './magic-link/magic-link.module';
     EmailModule,
     ScheduleModule.forRoot(),
     CronModule,
-    MagicLinkModule
+    MagicLinkModule,
+    ContributorModule
   ],
   providers: [],
 })
