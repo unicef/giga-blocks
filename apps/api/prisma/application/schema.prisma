@@ -295,10 +295,10 @@ model Theme {
 }
 
 model Qos {
-  id           String   @id @default(uuid())
-  timestamp    DateTime
-  country_id   String
-  giga_school_id String
+  id                   String   @id @default(uuid())
+  timestamp            DateTime
+  country_id           String
+  giga_school_id       String
   speed_download_probe String
   speed_upload_probe   String
   latency_probe        String
@@ -313,10 +313,10 @@ model Qos {
   signature            String
   gigasync_id          String
   date                 DateTime?
-  dynamicData  Json
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  deletedAt    DateTime?
+  dynamicData          Json
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  deletedAt            DateTime?
 
   @@map("giga_qos")
 }
