@@ -3,10 +3,10 @@ import { JwtService } from '@nestjs/jwt';
 import { generate } from 'otp-generator';
 import { MailService } from '../mailer/mailer.service';
 import * as crypto from 'crypto';
-import { AuthSendOtp, AuthDto } from 'src/auth/dto';
 import { UsersService } from '../users/users.service';
 import { addMinutesToDate, compare } from 'src/utils/otp/expirationTime';
 import { PrismaAppService } from 'src/prisma/prisma.service';
+import { SendMagicLinkDto, VerifyMagicLinkDto } from './dto/magic-link.dto';
 
 
 
@@ -15,7 +15,7 @@ const secretKey = process.env.ENCODED_OTP_SECRET;
 const iv = crypto.randomBytes(16);
 const otpLength = Number(process.env.OTP_LENGTH);
 const OTP_DURATION = Number(process.env.NEXT_PUBLIC_OTP_DURATION_IN_MINS);
-
+let WEB_LINK = process.env.NEXT_PUBLIC_WEB_NAME;
 
 @Injectable()
 export class MagicLinkService {
@@ -28,9 +28,9 @@ export class MagicLinkService {
       ) {}
 
 
-    async sendMagicLink(AuthDto: AuthSendOtp) {
+    async sendMagicLink(AuthDto: SendMagicLinkDto) {
         this._logger.log(`Sending Magic Link to ${AuthDto?.email}`);
-        const { email } = AuthDto;
+        const { email,redirectlink } = AuthDto;
         // const user = await this.userService.findUserActivationByEmail(email);
         // if (user && user?.isActive) {
           this._logger.log(`Generating Magic Link to ${AuthDto?.email}`);
@@ -43,21 +43,20 @@ export class MagicLinkService {
           const encodedToken = this.encodeOtp(otp);
           console.log('Encoded Token:', encodedToken);
           if (otp) {
-    
-            // this.mailService.sendMagicLink({ email: email, token: otp });
+            if(redirectlink) WEB_LINK = redirectlink;
+            const link = `${WEB_LINK}?token=${encodedToken}&redirect=${WEB_LINK}`
+            this.mailService.sendMagicLink({ email: email, link });
             this.saveOtp(email, otp);
-            return { success: true, msg: 'Magic Link sent successfully' };
-          // }
+            return { success: true, msg: link };
         }
         throw new NotFoundException('User not found');
     
       }
     
-      async verifyMagicLink(authDto: AuthDto) {
+      async verifyMagicLink(authDto: VerifyMagicLinkDto) {
         const { email, otp } = authDto;
         const decodedToken = this.decodeOtp(otp);
         console.log('Decoded Token:', decodedToken);
-        // const user = await this.userService.findUserActivationByEmail(email);
         const otpres = await this.validateOtp(email, decodedToken);
         if(otpres) 
           return { success: true, msg: 'Magic Link verified successfully' };
