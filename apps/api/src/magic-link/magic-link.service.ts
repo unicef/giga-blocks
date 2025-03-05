@@ -1,10 +1,12 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { generate } from 'otp-generator';
 import { MailService } from '../mailer/mailer.service';
 import * as crypto from 'crypto';
 import { AuthSendOtp, AuthDto } from 'src/auth/dto';
 import { UsersService } from '../users/users.service';
+import { addMinutesToDate, compare } from 'src/utils/otp/expirationTime';
+import { PrismaAppService } from 'src/prisma/prisma.service';
 
 
 
@@ -12,6 +14,7 @@ const algorithm = 'aes-256-cbc';
 const secretKey = process.env.ENCODED_OTP_SECRET;
 const iv = crypto.randomBytes(16);
 const otpLength = Number(process.env.OTP_LENGTH);
+const OTP_DURATION = Number(process.env.NEXT_PUBLIC_OTP_DURATION_IN_MINS);
 
 
 @Injectable()
@@ -21,6 +24,7 @@ export class MagicLinkService {
         private jwtService: JwtService,
         private userService: UsersService,
         private mailService: MailService,
+        private prisma: PrismaAppService
       ) {}
 
 
@@ -41,7 +45,7 @@ export class MagicLinkService {
           if (otp) {
     
             // this.mailService.sendMagicLink({ email: email, token: otp });
-            // this.userService.saveOtp(AuthDto, otp);
+            this.saveOtp(email, otp);
             return { success: true, msg: 'Magic Link sent successfully' };
           // }
         }
@@ -54,8 +58,8 @@ export class MagicLinkService {
         const decodedToken = this.decodeOtp(otp);
         console.log('Decoded Token:', decodedToken);
         // const user = await this.userService.findUserActivationByEmail(email);
-        // const otpres = await this.userService.validateOtp(email, decodedToken);
-        // if(otpres) 
+        const otpres = await this.validateOtp(email, decodedToken);
+        if(otpres) 
           return { success: true, msg: 'Magic Link verified successfully' };
       }
     
@@ -74,6 +78,39 @@ export class MagicLinkService {
         let decrypted = decipher.update(encryptedText);
         decrypted = Buffer.concat([decrypted, decipher.final()]);
         return decrypted.toString();
+      }
+
+     async  saveOtp(email:string, otp:string) {
+        const now = new Date();
+        const expirationTime = addMinutesToDate(now, OTP_DURATION);
+        const otpEmail = await this.prisma.magicLinkOtp.findUnique({ where: { email } });
+        if (otpEmail) {
+          return await this.prisma.magicLinkOtp.update({
+            where: { email },
+            data: { otp, validated: false, expirationTime },
+          });
+        }
+        return await this.prisma.magicLinkOtp.create({
+          data: {
+            otp,
+            email,
+            validated: false,
+            expirationTime,
+          },
+        });
+      
+      }
+      async validateOtp(email: any, otp: string) {
+        const now = new Date();
+        const otpEmail = await this.prisma.magicLinkOtp.findUnique({ where: { email } });
+        if(!otpEmail) throw new NotFoundException('No user with this email');
+        const { email:emailId, validated, expirationTime, otp: dbOTP } = otpEmail;
+        if (!emailId) throw new NotFoundException('Invalid Link');
+        if (validated) throw new NotFoundException('Link  already used');
+        if (otp != dbOTP) throw new NotFoundException('Link didnot match');
+        if (!compare(now, expirationTime)) throw new ForbiddenException('Link expired');
+        await this.prisma.magicLinkOtp.update({ where: { email }, data: { validated: true } });
+        return true;
       }
 
 }
