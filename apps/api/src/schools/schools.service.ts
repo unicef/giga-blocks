@@ -22,7 +22,7 @@ import { getTokenId } from 'src/utils/web3/subgraph';
 import { PaginateFunction, PaginateOptions } from 'src/utils/paginate';
 import { getContractWithSigner } from 'src/utils/ethers/contractWithSigner';
 import { NFTContent } from 'src/constants/contract';
-import { ActivationLogDTO } from './dto/create-activation-log.dto';
+import { ActivationLogDTO } from '../linkactivation/dto/create-activation-log.dto';
 @Injectable()
 export class SchoolService {
   constructor(
@@ -246,47 +246,6 @@ export class SchoolService {
       const data = uploadBatch.id;
       res.code(200).send(new AppResponseDto(200, data, 'Data uploaded successfully'));
     }
-  }
-
-  async activates(data: ActivationLogDTO) {
-    const activation = await this.prisma.activationLog.findFirst({
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-
-    if (activation.status) throw new ConflictException('School already activated!');
-
-    return this.prisma.activationLog.create({
-      data: {
-        status: data.status,
-        activatedBy: data.activatedBy,
-        startDate: data.startDate,
-        endDate: data?.endDate || null,
-      },
-    });
-  }
-
-  async getLatestActivationStatus() {
-    return this.prisma.activationLog.findFirst({
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-  }
-
-  async getActivationStatusByID(uuid: string) {
-    const data = this.prisma.activationLog.findUnique({
-      where: {
-        id: uuid,
-      },
-    });
-
-    if (!data) {
-      throw new NotFoundException('Activation ID not found;');
-    }
-
-    return data;
   }
 
   async findOne(id: string) {

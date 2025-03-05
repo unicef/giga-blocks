@@ -19,6 +19,7 @@ import { QOSDataWorker } from './workers/qos-onchain.rabbitmq.worker';
 import { QOSDataFetchWorker } from './workers/get-qos-file.rabbitmq.worker';
 import { MagicLinkModule } from './magic-link/magic-link.module';
 import { ContributorModule } from './contributor/contributor.module';
+import { LinkactivationModule } from './linkactivation/linkactivation.module';
 
 @Module({
   imports: [
@@ -72,7 +73,8 @@ import { ContributorModule } from './contributor/contributor.module';
     ScheduleModule.forRoot(),
     CronModule,
     MagicLinkModule,
-    ContributorModule
+    ContributorModule,
+    LinkactivationModule
   ],
   providers: [],
 })
