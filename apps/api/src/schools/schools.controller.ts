@@ -27,6 +27,7 @@ import { QUEUES } from 'src/constants';
 import { getFileData } from 'src/utils/arweave/get';
 import { ActivationLogDTO } from './dto/create-activation-log.dto';
 import { ActivationGuard } from 'src/auth/guards/activation.guard';
+import { ThemeActivationDto } from './dto/theme-activation.dto';
 @Controller('schools')
 @ApiTags('School')
 export class SchoolController {
@@ -139,6 +140,24 @@ export class SchoolController {
   @Get('listUpload')
   listUploads() {
     return this.schoolService.listUploads();
+  }
+
+  @Public()
+  @Get('themes')
+  getAllThemes() {
+    return this.schoolService.getAllTheme();
+  }
+
+  @Public()
+  @Get('theme/:name')
+  getSingleTheme(@Param('name') name: string) {
+    return this.schoolService.getSingleTheme(name);
+  }
+
+  @Public()
+  @Patch('updateTheme/:schoolId')
+  updateTheme(@Param('schoolId') schoolId: string, @Body() themeActivationDto: ThemeActivationDto) {
+    return this.schoolService.updateTheme(schoolId, themeActivationDto.themeId);
   }
 
   // Test rabbit mq

@@ -313,6 +313,29 @@ export class SchoolService {
     }
   }
 
+  async getAllTheme() {
+    return await this.prisma.theme.findMany({});
+  }
+
+  async getSingleTheme(name: string) {
+    return await this.prisma.theme.findUnique({
+      where: {
+        name,
+      },
+    });
+  }
+
+  async updateTheme(id: string, themeId: string) {
+    return await this.prisma.school.update({
+      where: {
+        id,
+      },
+      data: {
+        themeId,
+      },
+    });
+  }
+
   async byCountry(country: string) {
     const firstLetter = country.charAt(0);
     if (firstLetter === firstLetter.toUpperCase()) {
