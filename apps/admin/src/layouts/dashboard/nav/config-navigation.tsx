@@ -4,10 +4,11 @@ import {
   PATH_SCHOOL,
   PATH_CONTRIBUTE,
   PATH_VALID,
+  PATH_ACTIVATE,
 } from '../../../routes/paths';
 import SvgColor from '../../../components/svg-color';
 
-const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH;
 const icon = (name: string) => (
   <SvgColor src={`${basePath}/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
 );
@@ -91,6 +92,15 @@ const navConfig = [
             path: PATH_USER.contributer,
           },
         ],
+        icon: ICONS.user,
+      },
+    ],
+  },
+  {
+    items: [
+      {
+        title: 'Activate School',
+        path: PATH_ACTIVATE.root,
         icon: ICONS.user,
       },
     ],
