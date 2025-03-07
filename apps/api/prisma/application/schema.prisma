@@ -347,7 +347,7 @@ model ActivationLog {
   createdAt    DateTime          @default(now())
   updatedAt    DateTime          @updatedAt
 
-  @@map("giga_school_activation")
+  @@map("giga_link_activation")
 }
 
 model Contributor {

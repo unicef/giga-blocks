@@ -64,8 +64,8 @@ Table giga_users {
   isArchived Boolean [not null, default: false]
   validatedBy giga_validated_data [not null]
   OTP giga_otp [not null]
-  linkActivatedBy giga_school_activation [not null]
-  linkDeactivatedBy giga_school_activation [not null]
+  linkActivatedBy giga_link_activation [not null]
+  linkDeactivatedBy giga_link_activation [not null]
 }
 
 Table school_version {
@@ -230,7 +230,7 @@ Table giga_arweave_data {
   deletedAt DateTime
 }
 
-Table giga_school_activation {
+Table giga_link_activation {
   id String [pk]
   status ActivationStatus [not null, default: 'INACTIVE']
   activatedBy String [not null]
@@ -343,6 +343,6 @@ Ref: giga_validated_data.approvedBy > giga_users.id
 
 Ref: giga_otp.userId > giga_users.id
 
-Ref: giga_school_activation.activatedBy > giga_users.id
+Ref: giga_link_activation.activatedBy > giga_users.id
 
-Ref: giga_school_activation.deActivatedBy > giga_users.id
+Ref: giga_link_activation.deActivatedBy > giga_users.id
