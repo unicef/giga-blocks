@@ -80,6 +80,7 @@ enum MintStatus {
 enum ActivationStatus {
   ACTIVE
   INACTIVE
+  EXPIRED
 }
 
 model Auth {
@@ -143,6 +144,8 @@ model User {
   isArchived      Boolean           @default(false)
   validatedBy     validatedData[]   @relation("ApprovedBy")
   OTP             OTP[]
+  linkActivatedBy  ActivationLog[]  @relation("ActivatedBy")
+  linkDeactivatedBy ActivationLog[]  @relation("DeactivatedBy")
 
   @@map("giga_users")
 }
@@ -336,6 +339,9 @@ model ActivationLog {
   id           String            @id @default(uuid())
   status       ActivationStatus  @default(INACTIVE)
   activatedBy  String
+  activatedUser User             @relation("ActivatedBy",fields:[activatedBy],references:[id])
+  deActivatedBy  String?
+  deActivatedUser User ?         @relation( "DeactivatedBy",fields:[deActivatedBy],references:[id])
   startDate    DateTime          
   endDate      DateTime?         
   createdAt    DateTime          @default(now())

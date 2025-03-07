@@ -4,60 +4,74 @@ import { ActivationLogDTO } from './dto/create-activation-log.dto';
 
 @Injectable()
 export class LinkactivationService {
-    constructor(private readonly prisma: PrismaAppService) {}
+  constructor(private readonly prisma: PrismaAppService) {}
 
-    async activateLink(data:ActivationLogDTO){
-        const activation = await this.prisma.activationLog.findFirst({
-              orderBy: {
-                createdAt: 'desc',
-              },
-            });
-            const date = new Date();
-            if(activation?.endDate >= date) throw new ConflictException('Link already activated!');
-        
-            return this.prisma.activationLog.create({
-              data: {
-                status: data.status,
-                activatedBy: data.activatedBy,
-                startDate: data.startDate,
-                endDate: data?.endDate || null,
-              },
-            });
+  async createLink(data: ActivationLogDTO,userId:string) {
+  
+    const date = new Date();
 
+    return this.prisma.activationLog.create({
+      data: {
+        status: data.status,
+        activatedBy: userId,
+        startDate: data.startDate,
+        endDate: data?.endDate || null,
+      },
+    });
+  }
+
+  async listLinks() {
+    return this.prisma.activationLog.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  async getActivation(uuid: string) {
+    const data = this.prisma.activationLog.findUnique({
+      where: {
+        id: uuid,
+      },
+    });
+
+    if (!data) {
+      throw new NotFoundException('Activation ID not found;');
     }
 
-    async getLatestActivation(){
-        return this.prisma.activationLog.findFirst({
-            orderBy: {
-              createdAt: 'desc',
-            },
-          });
-    }
+    return data;
+  }
 
-    async getActivation(uuid: string){
-        const data = this.prisma.activationLog.findUnique({
-              where: {
-                id: uuid,
-              },
-            });
-        
-            if (!data) {
-              throw new NotFoundException('Activation ID not found;');
-            }
-        
-            return data;
-        
-    }
+  async validateLink(uuid: string) {
+    const date = new Date();
+    const data = await this.prisma.activationLog.findUnique({
+      where: {
+        id: uuid,
+      },
+    }); 
+    
+    if (data?.endDate >= date && data?.status == 'ACTIVE') return true;
+    await this.prisma.activationLog.update({
+      where: {
+        id: uuid,
+      },
+      data: {
+        status: 'EXPIRED',
+      },
+    })
+    return false;
+  }
 
-    async validateLink(uuid: string){
-        const date = new Date();
-        const data = await this.prisma.activationLog.findUnique({
-              where: {
-                id: uuid,
-              },
-            });
-        
-        if(data?.endDate >= date) return true;
-        return false;
-    }
+  async deactivateLink(uuid: string, userId: string) {
+    
+    return this.prisma.activationLog.update({
+      where: {
+        id: uuid,
+      },
+      data: {
+        status: 'INACTIVE',
+        deActivatedBy: userId,
+      },
+    });
+  }
 }

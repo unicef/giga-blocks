@@ -64,6 +64,8 @@ Table giga_users {
   isArchived Boolean [not null, default: false]
   validatedBy giga_validated_data [not null]
   OTP giga_otp [not null]
+  linkActivatedBy giga_school_activation [not null]
+  linkDeactivatedBy giga_school_activation [not null]
 }
 
 Table school_version {
@@ -232,6 +234,9 @@ Table giga_school_activation {
   id String [pk]
   status ActivationStatus [not null, default: 'INACTIVE']
   activatedBy String [not null]
+  activatedUser giga_users [not null]
+  deActivatedBy String
+  deActivatedUser giga_users
   startDate DateTime [not null]
   endDate DateTime
   createdAt DateTime [default: `now()`, not null]
@@ -307,6 +312,7 @@ Enum MintStatus {
 Enum ActivationStatus {
   ACTIVE
   INACTIVE
+  EXPIRED
 }
 
 Ref: Auth.id > giga_users.id
@@ -336,3 +342,7 @@ Ref: giga_validated_data.school_Id > giga_school.id
 Ref: giga_validated_data.approvedBy > giga_users.id
 
 Ref: giga_otp.userId > giga_users.id
+
+Ref: giga_school_activation.activatedBy > giga_users.id
+
+Ref: giga_school_activation.deActivatedBy > giga_users.id
