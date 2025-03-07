@@ -49,7 +49,7 @@ export class LinkactivationService {
         id: uuid,
       },
     }); 
-    
+    if(!data) throw new NotFoundException('Invalid Link');
     if (data?.endDate >= date && data?.status == 'ACTIVE') return true;
     await this.prisma.activationLog.update({
       where: {
@@ -63,7 +63,7 @@ export class LinkactivationService {
   }
 
   async deactivateLink(uuid: string, userId: string) {
-    
+
     return this.prisma.activationLog.update({
       where: {
         id: uuid,
