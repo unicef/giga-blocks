@@ -24,6 +24,8 @@ const ActivateSchool = () => {
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const { data, isFetching } = useActivateSchool();
   const tableData = Array.isArray(data) ? data : [];
+  const BASE_URL = process.env.NEXT_PUBLIC_WEB_NAME;
+
   return (
     <DashboardLayout>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
@@ -52,7 +54,9 @@ const ActivateSchool = () => {
                 {tableData.length > 0 ? (
                   tableData.map((row: any) => (
                     <tr key={row.id}>
-                      <td style={{ padding: '12px' }}>{row.id}</td>
+                      <td style={{ padding: '12px' }}>
+                        <a href={`${BASE_URL}${row.id}`}>{`${BASE_URL}${row.id}`}</a>
+                      </td>
                       <td>{new Date(row.startDate).toLocaleDateString()}</td>
                       <td>{new Date(row.endDate).toLocaleDateString()}</td>
                       <td>{row.status}</td>
