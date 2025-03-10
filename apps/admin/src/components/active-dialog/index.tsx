@@ -18,8 +18,6 @@ export default function ActiveDialog() {
   const [alignment, setAlignment] = React.useState('');
 
   const { mutate, isLoading, isError, error, isSuccess } = useActivatePostSchools();
-  const { data } = useActivateSchool();
-  console.log('data', data);
 
   const handleChange = (event: React.SyntheticEvent, newAlignment: string) => {
     setAlignment(newAlignment);
