@@ -1,23 +1,20 @@
-"use client";
+'use client';
 
 import {
   Header,
   HeaderContainer,
-  HeaderName,
-  HeaderNavigation,
+  HeaderGlobalBar,
   HeaderMenuButton,
   HeaderMenuItem,
-  HeaderGlobalBar,
-  HeaderGlobalAction,
-  SkipToContent,
+  HeaderName,
+  HeaderNavigation,
+  HeaderSideNavItems,
   SideNav,
   SideNavItems,
-  HeaderSideNavItems,
-  Button,
-} from "@carbon/react";
-import { ArrowRight } from "@carbon/icons-react";
-
-import Link from "next/link";
+  SkipToContent,
+} from '@carbon/react';
+import { ConnectKitButton } from 'connectkit';
+import Link from 'next/link';
 
 const Navbar = () => (
   <HeaderContainer
@@ -75,9 +72,9 @@ const Navbar = () => (
             <Notification size={20} />
           </HeaderGlobalAction> */}
         </HeaderGlobalBar>
-        <Button size="sm" renderIcon={ArrowRight}>
-          Connectivity Map
-        </Button>
+        <div>
+          <ConnectKitButton />
+        </div>
       </Header>
     )}
   />
