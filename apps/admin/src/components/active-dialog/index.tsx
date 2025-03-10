@@ -16,23 +16,9 @@ export default function ActiveDialog() {
   const [startDate, setStartDate] = React.useState<dayjs.Dayjs | null>(null);
   const [endDate, setEndDate] = React.useState<dayjs.Dayjs | null>(null);
   const [alignment, setAlignment] = React.useState('');
-  const [userId, setUserId] = React.useState<string | null>(null);
-
-  React.useEffect(() => {
-    const userDataString = localStorage.getItem('currentUser');
-    if (userDataString) {
-      try {
-        const userData = JSON.parse(userDataString);
-        setUserId(userData.id);
-      } catch (error) {
-        console.error('Failed to parse user data:', error);
-      }
-    }
-  }, []);
 
   const { mutate, isLoading, isError, error, isSuccess } = useActivatePostSchools();
-  const { data } = useActivateSchool(userId);
-  console.log('userId', userId);
+  const { data } = useActivateSchool();
 
   const handleChange = (event: React.SyntheticEvent, newAlignment: string) => {
     setAlignment(newAlignment);
@@ -59,8 +45,6 @@ export default function ActiveDialog() {
       endDate: endDate.format('YYYY-MM-DD'),
       status: alignment,
     };
-
-    console.log('Sending data:', activationData);
 
     mutate(activationData, {
       onSuccess: () => {

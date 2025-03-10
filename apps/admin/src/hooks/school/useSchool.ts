@@ -81,7 +81,7 @@ export const useSchoolCount = (minted?: string) => {
   );
 };
 
-export const useActivateSchool = (id: number) => {
+export const useActivateSchool = () => {
   return useQuery(['get-active-school'], async () => {
     const { data } = await api.get(`${routes.SCHOOLS.ACTIVATE}`);
     return data;
