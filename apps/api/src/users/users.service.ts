@@ -1,4 +1,10 @@
-import { ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { PrismaAppService } from '../prisma/prisma.service';
 import { bufferToHexString, hexStringToBuffer } from '../utils/string-format';
@@ -105,8 +111,8 @@ export class UsersService {
   findAll(query: any) {
     const { page, perPage, order, orderBy } = query;
 
-    console.log(perPage)
-    console.log(query?.role)
+    console.log(perPage);
+    console.log(query?.role);
 
     const where: Prisma.UserWhereInput = {};
     if (query?.role) {
@@ -211,15 +217,4 @@ export class UsersService {
     });
   }
 
-  async create(userActivation: any): Promise<any> {
-    return await this.prisma.userActivation.create({
-      data: userActivation,
-    });
-  }
-
-  async findUserActivationByEmail(email: string): Promise<any> {
-    return await this.prisma.userActivation.findFirst({
-      where: { email },
-    });
-  }
 }

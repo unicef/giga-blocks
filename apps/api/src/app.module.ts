@@ -17,6 +17,9 @@ import { CronModule } from './cron/cron.module';
 import { AMQP_CONNECTION, QUEUES } from './constants';
 import { QOSDataWorker } from './workers/qos-onchain.rabbitmq.worker';
 import { QOSDataFetchWorker } from './workers/get-qos-file.rabbitmq.worker';
+import { MagicLinkModule } from './magic-link/magic-link.module';
+import { ContributorModule } from './contributor/contributor.module';
+import { LinkactivationModule } from './linkactivation/linkactivation.module';
 
 @Module({
   imports: [
@@ -68,7 +71,10 @@ import { QOSDataFetchWorker } from './workers/get-qos-file.rabbitmq.worker';
     ContributeDataModule,
     EmailModule,
     ScheduleModule.forRoot(),
-    CronModule
+    CronModule,
+    MagicLinkModule,
+    ContributorModule,
+    LinkactivationModule
   ],
   providers: [],
 })

@@ -11,14 +11,6 @@ export class ActivationLogDTO {
   status: ACTIVE_STATUS;
 
   @ApiProperty({
-    description: 'Activated by name',
-    example: 'John Doe',
-    required: true,
-  })
-  @IsString()
-  activatedBy: string;
-
-  @ApiProperty({
     description: 'Start date of activation in ISO format',
     example: '2025-02-24T00:00:00.000Z',
     required: true,
@@ -32,8 +24,7 @@ export class ActivationLogDTO {
     required: false,
   })
   @IsDateString()
-  @IsOptional()
-  endDate?: string;
+  endDate: string;
 }
 
 enum ACTIVE_STATUS {

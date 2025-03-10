@@ -25,8 +25,8 @@ import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-
 import { RabbitMQService } from '@rumsan/rabbitmq';
 import { QUEUES } from 'src/constants';
 import { getFileData } from 'src/utils/arweave/get';
-import { ActivationLogDTO } from './dto/create-activation-log.dto';
 import { ActivationGuard } from 'src/auth/guards/activation.guard';
+import { ThemeActivationDto } from './dto/theme-activation.dto';
 @Controller('schools')
 @ApiTags('School')
 export class SchoolController {
@@ -91,25 +91,6 @@ export class SchoolController {
     return await this.schoolService.uploadFile(req, res, request.user);
   }
 
-  // @Roles('ADMIN')
-  // @UseGuards(JwtAuthGuard, RoleGuard)
-  @Public()
-  @Post('/activateSchool')
-  async activateSchool(@Body() req: ActivationLogDTO): Promise<any> {
-    return await this.schoolService.activates(req);
-  }
-
-  @Public()
-  @Get('/getLatestActivationStatus')
-  getLatestActivationStatus() {
-    return this.schoolService.getLatestActivationStatus();
-  }
-
-  @Public()
-  @Get('/schoolActivationByID/:uuid')
-  getSchoolActivationByID(@Param('uuid') uuid: string) {
-    return this.schoolService.getActivationStatusByID(uuid);
-  }
 
   @Public()
   @Get()
@@ -141,6 +122,24 @@ export class SchoolController {
     return this.schoolService.listUploads();
   }
 
+  @Public()
+  @Get('themes')
+  getAllThemes() {
+    return this.schoolService.getAllTheme();
+  }
+
+  @Public()
+  @Get('theme/:name')
+  getSingleTheme(@Param('name') name: string) {
+    return this.schoolService.getSingleTheme(name);
+  }
+
+  @Public()
+  @Patch('updateTheme/:schoolId')
+  updateTheme(@Param('schoolId') schoolId: string, @Body() themeActivationDto: ThemeActivationDto) {
+    return this.schoolService.updateTheme(schoolId, themeActivationDto.themeId);
+  }
+
   // Test rabbit mq
   @Public()
   @Get('send')
@@ -153,6 +152,7 @@ export class SchoolController {
     return { response };
   }
 
+  //arewave 
   @Public()
   @Post('getFile')
   async getFile(@Body() MintData: any) {

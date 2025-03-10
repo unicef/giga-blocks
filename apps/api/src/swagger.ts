@@ -22,6 +22,6 @@ export function setupSwagger(app: INestApplication) {
     )
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('/api/docs', app, document);
+  SwaggerModule.setup('/api/v1/docs', app, document);
   logger.log(`Swagger Documentation running on the url http://localhost:${port}/api/docs`);
 }

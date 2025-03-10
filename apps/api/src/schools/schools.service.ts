@@ -24,8 +24,7 @@ import { getContractWithSigner } from 'src/utils/ethers/contractWithSigner';
 import { PAGINATION } from 'src/constants/pagination';
 import { paginator } from 'src/utils/paginator';
 import { NFTContent } from 'src/constants/contract';
-import { ActivationLogDTO } from './dto/create-activation-log.dto';
-import { UUID } from 'crypto';
+import { ActivationLogDTO } from '../linkactivation/dto/create-activation-log.dto';
 @Injectable()
 export class SchoolService {
   constructor(
@@ -176,47 +175,6 @@ export class SchoolService {
     }
   }
 
-  async activates(data: ActivationLogDTO) {
-    const activation = await this.prisma.activationLog.findFirst({
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-
-    if (activation.status) throw new ConflictException('School already activated!');
-
-    return this.prisma.activationLog.create({
-      data: {
-        status: data.status,
-        activatedBy: data.activatedBy,
-        startDate: data.startDate,
-        endDate: data?.endDate || null,
-      },
-    });
-  }
-
-  async getLatestActivationStatus() {
-    return this.prisma.activationLog.findFirst({
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-  }
-
-  async getActivationStatusByID(uuid: string) {
-    const data = this.prisma.activationLog.findUnique({
-      where: {
-        id: uuid,
-      },
-    });
-
-    if (!data) {
-      throw new NotFoundException('Activation ID not found;');
-    }
-
-    return data;
-  }
-
   async findOne(id: string) {
     return await this.prisma.school.findUnique({
       where: {
@@ -239,6 +197,29 @@ export class SchoolService {
     } catch {
       throw new HttpException('Internal server error', 500);
     }
+  }
+
+  async getAllTheme() {
+    return await this.prisma.theme.findMany({});
+  }
+
+  async getSingleTheme(name: string) {
+    return await this.prisma.theme.findUnique({
+      where: {
+        name,
+      },
+    });
+  }
+
+  async updateTheme(id: string, themeId: string) {
+    return await this.prisma.school.update({
+      where: {
+        id,
+      },
+      data: {
+        themeId,
+      },
+    });
   }
 
   async byCountry(country: string) {

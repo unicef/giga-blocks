@@ -10,6 +10,8 @@ on:
       - 'dev'
     paths:
       - 'apps/api/**'
+  workflow_dispatch:
+  
 
 env:
   CI: false
@@ -21,8 +23,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          ref: dev
 
       - name: import env file
         run: |
@@ -30,11 +30,11 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20.13.1
 
       - name: install dependencies and build apps
         run: |
-          npm install -g pnpm
+          npm install -g pnpm@8.14.1
           pnpm install
           pnpm run api:app:generate
           pnpm run api:news:generate

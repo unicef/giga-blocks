@@ -3,7 +3,7 @@ import { totp } from 'otplib';
 
 import { AuthService } from './auth.service';
 
-import { AuthSendOtp, AuthWallet, RefreshToken, WalletRegister } from './dto';
+import { AuthDto, AuthSendOtp, AuthWallet, RefreshToken, WalletRegister } from './dto';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from '../users/dto/user.dto';
 
@@ -15,6 +15,7 @@ import { WalletAuthGuard } from './guards/wallet.auth.guard';
 import { ResponseMessage, Tokens } from './types';
 import { SignatureAuthGuard } from './guards/signature.auth.guard';
 
+
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController {
@@ -22,6 +23,12 @@ export class AuthController {
     totp.options = {
       step: +process.env.OTP_DURATION_IN_SECS,
     };
+  }
+
+  @Public()
+  @Get('ping')
+  async appTest() {
+    return 'Pong';
   }
 
   @Public()
@@ -84,4 +91,5 @@ export class AuthController {
   async adminWalletLogin(@Body() walletLogin: AuthWallet, @Request() req) {
     return this.authService.adminWalletLogin(req.user);
   }
+
 }

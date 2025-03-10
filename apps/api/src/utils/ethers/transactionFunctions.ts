@@ -12,7 +12,7 @@ interface ExtendedContract extends BaseContract {
   schoolIdToTokenId?: (
     schoolId: string | ContractTransactionResponse,
   ) => ContractTransactionResponse;
-  getArtScript?: (tokenId: string | ContractTransactionResponse) => ContractTransactionResponse;
+  getArtScriptByIndex?: (index: number) => ContractTransactionResponse;
   nftImageHash?: (tokenHash: string) => ContractTransactionResponse;
   getRandomImages?: (
     region: string,
@@ -98,10 +98,9 @@ export const getTokenIdSchool = async (
 export const getArtScript = async (
   contractName: string,
   contractAddress: string,
-  tokenId: string | ContractTransactionResponse,
 ): Promise<ContractTransactionResponse> => {
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
-  return await contract.getArtScript(tokenId);
+  return await contract.getArtScriptByIndex(0);
 };
 
 export const getSchoolData = async (
@@ -202,16 +201,16 @@ export const getScriptData = async (
   const image1 = await imagecontract.getImage(randomImages[0]);
   const image2 = await imagecontract.getImage(randomImages[1]);
   //converts image bytes  into base64 encoded image
-  const baseImage1 = await getEncodedImage(image1);
-  const baseImage2 = await getEncodedImage(image2);
+  // const baseImage1 = await getEncodedImage(image1);
+  // const baseImage2 = await getEncodedImage(image2);
   const data = {
     tokenId,
     nftcontents: formattedResponse,
-    baseImage1,
-    baseImage2,
+    baseImage1: image1,
+    baseImage2: image2,
     tokenHash,
   };
-  if (!baseImage1 || !baseImage2) throw new Error('Error in fetching images');
+  if (!image1 || !image1) throw new Error('Error in fetching images');
   return data;
 };
 
