@@ -13,7 +13,6 @@ export default {
     MINTBULK: '/schools/mintBulk',
     SCHOOLCOUNT: '/schools/schoolCount',
     UPLOAD: '/schools/uploadFile',
-    ACTIVATE: '/schools/activateSchool',
   },
   CONTRIBUTE: {
     GET: '/contribute',
@@ -41,5 +40,9 @@ export default {
   },
   REFRESH: {
     POST: '/auth/refresh',
+  },
+  LINK_ACTIVATION: {
+    POST: '/linkactivation',
+    GET: '/linkactivation',
   },
 };

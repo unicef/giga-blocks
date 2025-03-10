@@ -19,6 +19,7 @@ export default function ActiveDialog() {
 
   const { mutate, isLoading, isError, error, isSuccess } = useActivatePostSchools();
   const { data } = useActivateSchool();
+  console.log('data', data);
 
   const handleChange = (event: React.SyntheticEvent, newAlignment: string) => {
     setAlignment(newAlignment);
@@ -41,8 +42,8 @@ export default function ActiveDialog() {
     }
 
     const activationData = {
-      startDate: startDate.format('YYYY-MM-DD'),
-      endDate: endDate.format('YYYY-MM-DD'),
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
       status: alignment,
     };
 
@@ -79,8 +80,7 @@ export default function ActiveDialog() {
               aria-label="Activate"
               sx={{ mt: 2, mb: 2 }}
             >
-              <ToggleButton value="activate">Activate</ToggleButton>
-              <ToggleButton value="deactivate">Deactivate</ToggleButton>
+              <ToggleButton value="ACTIVE">Activate</ToggleButton>
             </ToggleButtonGroup>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker

@@ -83,7 +83,7 @@ export const useSchoolCount = (minted?: string) => {
 
 export const useActivateSchool = () => {
   return useQuery(['get-active-school'], async () => {
-    const { data } = await api.get(`${routes.SCHOOLS.ACTIVATE}`);
+    const { data } = await api.get(`${routes.LINK_ACTIVATION.GET}`);
     return data;
   });
 };
@@ -106,7 +106,7 @@ const mintSchool = async (data: any) => {
 };
 
 const activatePostSchool = async (data: any) => {
-  return await api.post(routes.SCHOOLS.ACTIVATE, data);
+  return await api.post(routes.LINK_ACTIVATION.POST, data);
 };
 
 const mintBulkSchool = async (data: any) => {
