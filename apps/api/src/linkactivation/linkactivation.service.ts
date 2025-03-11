@@ -6,13 +6,13 @@ import { ActivationLogDTO } from './dto/create-activation-log.dto';
 export class LinkactivationService {
   constructor(private readonly prisma: PrismaAppService) {}
 
-  async createLink(data: ActivationLogDTO,userId:string) {
-  
+  async createLink(data: ActivationLogDTO, userId: string) {
     const date = new Date();
 
     return this.prisma.activationLog.create({
       data: {
         status: data.status,
+        name: data.name,
         activatedBy: userId,
         startDate: data.startDate,
         endDate: data?.endDate || null,
@@ -48,8 +48,8 @@ export class LinkactivationService {
       where: {
         id: uuid,
       },
-    }); 
-    if(!data) throw new NotFoundException('Invalid Link');
+    });
+    if (!data) throw new NotFoundException('Invalid Link');
     if (data?.endDate >= date && data?.status == 'ACTIVE') return true;
     await this.prisma.activationLog.update({
       where: {
@@ -58,12 +58,11 @@ export class LinkactivationService {
       data: {
         status: 'EXPIRED',
       },
-    })
+    });
     return false;
   }
 
   async deactivateLink(uuid: string, userId: string) {
-
     return this.prisma.activationLog.update({
       where: {
         id: uuid,

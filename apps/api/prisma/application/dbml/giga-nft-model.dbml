@@ -234,6 +234,7 @@ Table giga_link_activation {
   id String [pk]
   status ActivationStatus [not null, default: 'INACTIVE']
   activatedBy String [not null]
+  name String [not null]
   activatedUser giga_users [not null]
   deActivatedBy String
   deActivatedUser giga_users
