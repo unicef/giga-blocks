@@ -11,6 +11,14 @@ export class ActivationLogDTO {
   status: ACTIVE_STATUS;
 
   @ApiProperty({
+    description: 'Name of the event',
+    example: 'Event Name',
+    required: true,
+  })
+  @IsString()
+  name: string;
+
+  @ApiProperty({
     description: 'Start date of activation in ISO format',
     example: '2025-02-24T00:00:00.000Z',
     required: true,
