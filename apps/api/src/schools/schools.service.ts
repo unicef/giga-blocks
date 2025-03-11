@@ -5,6 +5,7 @@ import {
   BadRequestException,
   ConflictException,
   NotFoundException,
+  Inject,
 } from '@nestjs/common';
 import { MintStatus, Prisma, Role } from '@prisma/application';
 import { PrismaAppService } from 'src/prisma/prisma.service';
@@ -24,33 +25,24 @@ import { getContractWithSigner } from 'src/utils/ethers/contractWithSigner';
 import { PAGINATION } from 'src/constants/pagination';
 import { paginator } from 'src/utils/paginator';
 import { NFTContent } from 'src/constants/contract';
-import { ActivationLogDTO } from '../linkactivation/dto/create-activation-log.dto';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { getCacheKey } from 'src/utils/cache/getCacheKey';
 @Injectable()
 export class SchoolService {
   constructor(
     private prisma: PrismaAppService,
     private readonly queueService: QueueService,
     private readonly configService: ConfigService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async findAll(query: ListSchoolDto) {
-    const {
-      page = PAGINATION.DEFAULT_PAGE,
-      perPage = PAGINATION.DEFAULT_PER_PAGE,
-      minted,
-      uploadId,
-      name,
-      country,
-      connectivityStatus,
-      orderBy = PAGINATION.DEFAULT_ORDERBY,
-      order = PAGINATION.DEFAULT_ORDER,
-    } = query;
-
-    if (+perPage > PAGINATION.MAX_PER_PAGE) {
-      throw new BadRequestException(
-        `Maximum number of items per page is ${PAGINATION.MAX_PER_PAGE}`,
-      );
-    }
+    const { page, perPage, minted, uploadId, name, country, connectivityStatus, orderBy, order } =
+      query;
+    const cacheKey = getCacheKey(name, country, page, perPage);
+    const cachedResult = await this.cacheManager.get<string>(cacheKey);
+    if (cachedResult) return cachedResult;
 
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
@@ -63,7 +55,20 @@ export class SchoolService {
 
     const paginate: PaginateFunction = paginator({ perPage });
 
-    return paginate(this.prisma.school, { where }, { page, perPage: +perPage, order, orderBy });
+    const result = await paginate(
+      this.prisma.school,
+      { where },
+      {
+        page,
+        perPage,
+        order,
+        orderBy,
+      },
+    );
+
+    await this.cacheManager.set(cacheKey, result);
+
+    return result;
   }
 
   async queueOnchainData(data: number) {
