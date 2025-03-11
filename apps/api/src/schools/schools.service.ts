@@ -5,6 +5,7 @@ import {
   BadRequestException,
   ConflictException,
   NotFoundException,
+  Inject,
 } from '@nestjs/common';
 import { MintStatus, Prisma, Role } from '@prisma/application';
 import { PrismaAppService } from 'src/prisma/prisma.service';
@@ -23,17 +24,25 @@ import { PaginateFunction, PaginateOptions } from 'src/utils/paginate';
 import { getContractWithSigner } from 'src/utils/ethers/contractWithSigner';
 import { NFTContent } from 'src/constants/contract';
 import { ActivationLogDTO } from './dto/create-activation-log.dto';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { getCacheKey } from 'src/utils/cache/getCacheKey';
 @Injectable()
 export class SchoolService {
   constructor(
     private prisma: PrismaAppService,
     private readonly queueService: QueueService,
     private readonly configService: ConfigService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async findAll(query: ListSchoolDto) {
     const { page, perPage, minted, uploadId, name, country, connectivityStatus, orderBy, order } =
       query;
+    const cacheKey = getCacheKey(name, country, page, perPage);
+    const cachedResult = await this.cacheManager.get<string>(cacheKey);
+    if (cachedResult) return cachedResult;
+
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
     };
@@ -127,7 +136,7 @@ export class SchoolService {
 
     const paginate: PaginateFunction = paginator({ perPage: 20 });
 
-    return paginate(
+    const result = await paginate(
       this.prisma.school,
       { where },
       {
@@ -137,6 +146,10 @@ export class SchoolService {
         orderBy,
       },
     );
+
+    await this.cacheManager.set(cacheKey, result);
+
+    return result;
   }
 
   async queueOnchainData(data: number) {
