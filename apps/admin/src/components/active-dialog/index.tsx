@@ -17,8 +17,6 @@ export default function ActiveDialog() {
   const [startDate, setStartDate] = React.useState<dayjs.Dayjs | null>(null);
   const [endDate, setEndDate] = React.useState<dayjs.Dayjs | null>(null);
   const [isActive, setIsActive] = React.useState(true);
-
-  // Snackbar State
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState('');
   const [snackbarSeverity, setSnackbarSeverity] = React.useState<'success' | 'error'>('success');
@@ -28,7 +26,7 @@ export default function ActiveDialog() {
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
-    resetForm(); // Reset form when closing
+    resetForm();
   };
 
   const resetForm = () => {

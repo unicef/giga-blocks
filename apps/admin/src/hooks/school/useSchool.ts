@@ -118,18 +118,32 @@ export const useActivatePostSchools = () => {
 };
 
 const activatePatchSchool = async (data: any) => {
-  return await api.put(routes.LINK_ACTIVATION.ACTIVATE, data);
+  return await api.patch(`${routes.LINK_ACTIVATION.ACTIVATE}/${data.id}`, data);
 };
 export const useActivatePatchSchool = () => {
-  return useMutation(activatePatchSchool);
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: activatePatchSchool,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['get-active-school']);
+    },
+  });
 };
 
 const deactivatePatchSchool = async (data: any) => {
-  return await api.put(routes.LINK_ACTIVATION.DEACTIVATE, data);
+  return await api.patch(`${routes.LINK_ACTIVATION.DEACTIVATE}/${data.id}`, data);
 };
 
 export const useDeactivatePatchSchool = () => {
-  return useMutation(deactivatePatchSchool);
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deactivatePatchSchool,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['get-active-school']);
+    },
+  });
 };
 
 const mintSchool = async (data: any) => {

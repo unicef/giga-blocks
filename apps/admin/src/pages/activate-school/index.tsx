@@ -2,11 +2,17 @@
 import ActiveDialog from '@components/active-dialog';
 import Scrollbar from '@components/scrollbar';
 import { TableHeadUsers, TableNoData, useTable } from '@components/table';
-import { useActivateSchool } from '@hooks/school/useSchool';
+import {
+  useActivatePatchSchool,
+  useActivateSchool,
+  useDeactivatePatchSchool,
+} from '@hooks/school/useSchool';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
 import {
+  Alert,
   Card,
   Divider,
+  Snackbar,
   Switch,
   Table,
   TableBody,
@@ -32,15 +38,34 @@ const ActivateSchool = () => {
 
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const { data, isFetching } = useActivateSchool();
+  const { mutate: activateSchool, isLoading: activating } = useActivatePatchSchool();
+  const { mutate: deactivateSchool, isLoading: deactivating } = useDeactivatePatchSchool();
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string }>({
+    open: false,
+    message: '',
+  });
   const tableData = Array.isArray(data) ? data : [];
   const BASE_URL = process.env.NEXT_PUBLIC_WEB_NAME;
 
-  // Function to handle switch toggle (Replace with API call if needed)
-  const handleStatusToggle = (id: string, currentStatus: string) => {
-    console.log(
-      `Toggled ID: ${id}, New Status: ${currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE'}`
+  const handleStatusToggle = (school: any) => {
+    const newStatus = school.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+    const updateFn = newStatus === 'ACTIVE' ? activateSchool : deactivateSchool;
+
+    updateFn(
+      { id: school.id },
+      {
+        onSuccess: () => {
+          setSnackbar({
+            open: true,
+            message: `School ${newStatus === 'ACTIVE' ? 'Activated' : 'Deactivated'}`,
+          });
+          // refetch();
+        },
+        onError: () => {
+          setSnackbar({ open: true, message: 'Action failed! Please try again.' });
+        },
+      }
     );
-    // Here you can call an API to update the status
   };
 
   return (
@@ -88,7 +113,8 @@ const ActivateSchool = () => {
                         <span style={{ display: 'flex', alignItems: 'center' }}>
                           <Switch
                             checked={row.status === 'ACTIVE'}
-                            onChange={() => handleStatusToggle(row.id, row.status)}
+                            onChange={() => handleStatusToggle(row)}
+                            disabled={activating || deactivating}
                             color="primary"
                           />
                           <p style={{ fontSize: '12px' }}>
@@ -106,6 +132,15 @@ const ActivateSchool = () => {
           </Scrollbar>
         </TableContainer>
       </Card>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={900}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+      >
+        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </DashboardLayout>
   );
 };
