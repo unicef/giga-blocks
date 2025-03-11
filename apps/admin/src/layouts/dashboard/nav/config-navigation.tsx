@@ -99,7 +99,7 @@ const navConfig = [
   {
     items: [
       {
-        title: 'Activate School',
+        title: 'Event Links',
         path: PATH_ACTIVATE.root,
         icon: ICONS.user,
       },
