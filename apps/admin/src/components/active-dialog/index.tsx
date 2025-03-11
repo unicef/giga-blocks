@@ -1,5 +1,5 @@
 import { useActivatePostSchools } from '@hooks/school/useSchool';
-import { TextField, ToggleButton, ToggleButtonGroup, Grid } from '@mui/material';
+import { TextField, FormControlLabel, Switch, Snackbar } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -16,32 +16,35 @@ export default function ActiveDialog() {
   const [name, setName] = React.useState('');
   const [startDate, setStartDate] = React.useState<dayjs.Dayjs | null>(null);
   const [endDate, setEndDate] = React.useState<dayjs.Dayjs | null>(null);
-  const [alignment, setAlignment] = React.useState('');
+  const [isActive, setIsActive] = React.useState(true);
 
-  const { mutate, isLoading, isError, error, isSuccess } = useActivatePostSchools();
+  // Snackbar State
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = React.useState<'success' | 'error'>('success');
 
-  const handleChange = (event: React.SyntheticEvent, newAlignment: string) => {
-    setAlignment(newAlignment);
-  };
+  const { mutate, isLoading } = useActivatePostSchools();
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
+  const handleClickOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
+    resetForm(); // Reset form when closing
+  };
+
+  const resetForm = () => {
+    setName('');
+    setStartDate(null);
+    setEndDate(null);
+    setIsActive(true);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!name.trim()) {
-      console.error('Name is required');
-      return;
-    }
-
-    if (!startDate || !endDate) {
-      console.error('Start and End Date are required');
+    if (!startDate || !endDate || !name.trim()) {
+      setSnackbarMessage('All fields are required');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
       return;
     }
 
@@ -49,18 +52,27 @@ export default function ActiveDialog() {
       name,
       startDate: startDate.toISOString(),
       endDate: endDate.toISOString(),
-      status: alignment,
+      status: isActive ? 'ACTIVE' : 'INACTIVE',
     };
 
     mutate(activationData, {
       onSuccess: () => {
-        console.log('School activated successfully');
+        setSnackbarMessage('School activated successfully!');
+        setSnackbarSeverity('success');
+        setSnackbarOpen(true);
+        resetForm();
         handleClose();
       },
       onError: (err) => {
-        console.error('Failed to activate school:', err);
+        setSnackbarMessage(`Failed to activate school: ${err.message}`);
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
       },
     });
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   return (
@@ -73,59 +85,44 @@ export default function ActiveDialog() {
           <DialogTitle>Generate event-specific links</DialogTitle>
           <DialogContent>
             <DialogContentText sx={{ mb: 2 }}>
-              Enter a name and select a start and end date for the event-specific link to define its
-              active period.
+              Enter details and select a start and end date for the event-specific link.
             </DialogContentText>
 
-            {/* Name Field */}
+            {/* Name Input Field */}
             <TextField
               label="Event Name"
+              fullWidth
               value={name}
               onChange={(e) => setName(e.target.value)}
-              fullWidth
-              required
               sx={{ mb: 2 }}
             />
 
-            {/* Start Date and End Date in a single row */}
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <Grid container spacing={2} sx={{ mb: 2 }}>
-                <Grid item xs={6}>
-                  <DatePicker
-                    label="Start Date"
-                    value={startDate}
-                    onChange={(newValue) => setStartDate(newValue)}
-                    renderInput={(params) => <TextField {...params} fullWidth />}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <DatePicker
-                    label="End Date"
-                    value={endDate}
-                    onChange={(newValue) => setEndDate(newValue)}
-                    renderInput={(params) => <TextField {...params} fullWidth />}
-                  />
-                </Grid>
-              </Grid>
-            </LocalizationProvider>
+            {/* Date Pickers in a Row */}
+            <div style={{ display: 'flex', gap: '16px' }}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Start Date"
+                  value={startDate}
+                  onChange={(newValue) => setStartDate(newValue)}
+                  renderInput={(params) => <TextField {...params} fullWidth />}
+                />
+                <DatePicker
+                  label="End Date"
+                  value={endDate}
+                  onChange={(newValue) => setEndDate(newValue)}
+                  renderInput={(params) => <TextField {...params} fullWidth />}
+                />
+              </LocalizationProvider>
+            </div>
 
-            {/* Toggle Button */}
-            <ToggleButtonGroup
-              color="primary"
-              size="small"
-              value={alignment}
-              exclusive
-              onChange={handleChange}
-              aria-label="Activate"
-              sx={{ mt: 2, mb: 2 }}
-            >
-              <ToggleButton value="ACTIVE">Activate</ToggleButton>
-            </ToggleButtonGroup>
-
-            {/* Error Handling */}
-            {isError && <p style={{ color: 'red' }}>Error: {error?.message}</p>}
-            {isSuccess && <p style={{ color: 'green' }}>School activated successfully!</p>}
+            {/* MUI Switch for Activation */}
+            <FormControlLabel
+              control={<Switch checked={isActive} onChange={() => setIsActive(!isActive)} />}
+              label={isActive ? 'Active' : 'Inactive'}
+              sx={{ mt: 2 }}
+            />
           </DialogContent>
+
           <DialogActions>
             <Button onClick={handleClose} disabled={isLoading}>
               Cancel
@@ -136,6 +133,14 @@ export default function ActiveDialog() {
           </DialogActions>
         </form>
       </Dialog>
+
+      {/* Snackbar Component */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+      />
     </React.Fragment>
   );
 }

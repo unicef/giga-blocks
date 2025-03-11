@@ -1,6 +1,6 @@
 'use client';
 import routes from '../../constants/api';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '@utils/apiCall';
 
 export const useSchoolGet = ({
@@ -101,24 +101,32 @@ export const useMintedSchoolCount = (minted?: string) => {
   );
 };
 
-const mintSchool = async (data: any) => {
-  return await api.post(routes.SCHOOLS.MINT, data);
-};
-
 const activatePostSchool = async (data: any) => {
   return await api.post(routes.LINK_ACTIVATION.POST, data);
 };
 
-const mintBulkSchool = async (data: any) => {
-  return await api.post(routes.SCHOOLS.MINTBULK, data);
+export const useActivatePostSchools = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: activatePostSchool,
+    // REFETCH SCHOOL DATA ON SUCCESSFUL FORM SUBMISSION
+    onSuccess: () => {
+      queryClient.invalidateQueries(['get-active-school']);
+    },
+  });
 };
 
-export const useActivatePostSchools = () => {
-  return useMutation(activatePostSchool);
+const mintSchool = async (data: any) => {
+  return await api.post(routes.SCHOOLS.MINT, data);
 };
 
 export const useMintSchools = () => {
   return useMutation(mintSchool);
+};
+
+const mintBulkSchool = async (data: any) => {
+  return await api.post(routes.SCHOOLS.MINTBULK, data);
 };
 
 export const useBulkMintSchools = () => {

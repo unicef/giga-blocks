@@ -73,4 +73,24 @@ export class LinkactivationService {
       },
     });
   }
+
+  async activateLink(uuid: string, userId: string) {
+    const date = new Date();
+    const data = await this.prisma.activationLog.findUnique({
+      where: {
+        id: uuid,
+      },
+    });
+    if (!data) throw new NotFoundException('Invalid Link');
+    if (data?.endDate < date) throw new Error('Link already expired.');
+    return this.prisma.activationLog.update({
+      where: {
+        id: uuid,
+      },
+      data: {
+        status: 'ACTIVE',
+        activatedBy: userId,
+      },
+    });
+  }
 }
