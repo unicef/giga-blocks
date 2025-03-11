@@ -7,6 +7,7 @@ import DashboardLayout from '@layouts/dashboard/DashboardLayout';
 import {
   Card,
   Divider,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -33,7 +34,14 @@ const ActivateSchool = () => {
   const { data, isFetching } = useActivateSchool();
   const tableData = Array.isArray(data) ? data : [];
   const BASE_URL = process.env.NEXT_PUBLIC_WEB_NAME;
-  console.log('tableData', tableData);
+
+  // Function to handle switch toggle (Replace with API call if needed)
+  const handleStatusToggle = (id: string, currentStatus: string) => {
+    console.log(
+      `Toggled ID: ${id}, New Status: ${currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE'}`
+    );
+    // Here you can call an API to update the status
+  };
 
   return (
     <DashboardLayout>
@@ -76,7 +84,18 @@ const ActivateSchool = () => {
                       <TableCell align="left">
                         {new Date(row.endDate).toLocaleDateString()}
                       </TableCell>
-                      <TableCell align="left">{row.status}</TableCell>
+                      <TableCell align="left">
+                        <span style={{ display: 'flex', alignItems: 'center' }}>
+                          <Switch
+                            checked={row.status === 'ACTIVE'}
+                            onChange={() => handleStatusToggle(row.id, row.status)}
+                            color="primary"
+                          />
+                          <p style={{ fontSize: '12px' }}>
+                            {row.status === 'ACTIVE' ? 'Active' : 'Inactive'}
+                          </p>
+                        </span>
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : (
