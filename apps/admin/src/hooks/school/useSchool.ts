@@ -117,6 +117,21 @@ export const useActivatePostSchools = () => {
   });
 };
 
+const activatePatchSchool = async (data: any) => {
+  return await api.put(routes.LINK_ACTIVATION.ACTIVATE, data);
+};
+export const useActivatePatchSchool = () => {
+  return useMutation(activatePatchSchool);
+};
+
+const deactivatePatchSchool = async (data: any) => {
+  return await api.put(routes.LINK_ACTIVATION.DEACTIVATE, data);
+};
+
+export const useDeactivatePatchSchool = () => {
+  return useMutation(deactivatePatchSchool);
+};
+
 const mintSchool = async (data: any) => {
   return await api.post(routes.SCHOOLS.MINT, data);
 };
