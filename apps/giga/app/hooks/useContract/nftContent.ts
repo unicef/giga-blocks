@@ -6,10 +6,10 @@ import {
 } from 'wagmi/codegen'
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// GigaProject
+// NftContent
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const gigaProjectAbi = [
+export const nftContentAbi = [
   {
     type: 'constructor',
     inputs: [{ name: '_gigaAdmin', internalType: 'address', type: 'address' }],
@@ -289,368 +289,366 @@ export const gigaProjectAbi = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftContentAbi}__
  */
-export const useReadGigaProject = /*#__PURE__*/ createUseReadContract({
-  abi: gigaProjectAbi,
+export const useReadNftContent = /*#__PURE__*/ createUseReadContract({
+  abi: nftContentAbi,
 })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"baseArtScript"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"baseArtScript"`
  */
-export const useReadGigaProjectBaseArtScript =
+export const useReadNftContentBaseArtScript =
   /*#__PURE__*/ createUseReadContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'baseArtScript',
   })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"currentTokenId"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"currentTokenId"`
  */
-export const useReadGigaProjectCurrentTokenId =
+export const useReadNftContentCurrentTokenId =
   /*#__PURE__*/ createUseReadContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'currentTokenId',
   })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"generateNftArtHash"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"generateNftArtHash"`
  */
-export const useReadGigaProjectGenerateNftArtHash =
+export const useReadNftContentGenerateNftArtHash =
   /*#__PURE__*/ createUseReadContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'generateNftArtHash',
   })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"generateTokenData"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"generateTokenData"`
  */
-export const useReadGigaProjectGenerateTokenData =
+export const useReadNftContentGenerateTokenData =
   /*#__PURE__*/ createUseReadContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'generateTokenData',
   })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"getArtScriptByIndex"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"getArtScriptByIndex"`
  */
-export const useReadGigaProjectGetArtScriptByIndex =
+export const useReadNftContentGetArtScriptByIndex =
   /*#__PURE__*/ createUseReadContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'getArtScriptByIndex',
   })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"getMetadataContent"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"getMetadataContent"`
  */
-export const useReadGigaProjectGetMetadataContent =
+export const useReadNftContentGetMetadataContent =
   /*#__PURE__*/ createUseReadContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'getMetadataContent',
   })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"isContentManager"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"isContentManager"`
  */
-export const useReadGigaProjectIsContentManager =
+export const useReadNftContentIsContentManager =
   /*#__PURE__*/ createUseReadContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'isContentManager',
   })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"keys"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"keys"`
  */
-export const useReadGigaProjectKeys = /*#__PURE__*/ createUseReadContract({
-  abi: gigaProjectAbi,
+export const useReadNftContentKeys = /*#__PURE__*/ createUseReadContract({
+  abi: nftContentAbi,
   functionName: 'keys',
 })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"nftArtScript"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"nftArtScript"`
  */
-export const useReadGigaProjectNftArtScript =
+export const useReadNftContentNftArtScript =
   /*#__PURE__*/ createUseReadContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'nftArtScript',
   })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"nftContentValues"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"nftContentValues"`
  */
-export const useReadGigaProjectNftContentValues =
+export const useReadNftContentNftContentValues =
   /*#__PURE__*/ createUseReadContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'nftContentValues',
   })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"nftImageHash"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"nftImageHash"`
  */
-export const useReadGigaProjectNftImageHash =
+export const useReadNftContentNftImageHash =
   /*#__PURE__*/ createUseReadContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'nftImageHash',
   })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"owner"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"owner"`
  */
-export const useReadGigaProjectOwner = /*#__PURE__*/ createUseReadContract({
-  abi: gigaProjectAbi,
+export const useReadNftContentOwner = /*#__PURE__*/ createUseReadContract({
+  abi: nftContentAbi,
   functionName: 'owner',
 })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"schoolIdToTokenId"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"schoolIdToTokenId"`
  */
-export const useReadGigaProjectSchoolIdToTokenId =
+export const useReadNftContentSchoolIdToTokenId =
   /*#__PURE__*/ createUseReadContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'schoolIdToTokenId',
   })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"tokenIdToSchoolId"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"tokenIdToSchoolId"`
  */
-export const useReadGigaProjectTokenIdToSchoolId =
+export const useReadNftContentTokenIdToSchoolId =
   /*#__PURE__*/ createUseReadContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'tokenIdToSchoolId',
   })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"tokenIdToTokenHash"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"tokenIdToTokenHash"`
  */
-export const useReadGigaProjectTokenIdToTokenHash =
+export const useReadNftContentTokenIdToTokenHash =
   /*#__PURE__*/ createUseReadContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'tokenIdToTokenHash',
   })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"totalArtScripts"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"totalArtScripts"`
  */
-export const useReadGigaProjectTotalArtScripts =
+export const useReadNftContentTotalArtScripts =
   /*#__PURE__*/ createUseReadContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'totalArtScripts',
   })
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link nftContentAbi}__
  */
-export const useWriteGigaProject = /*#__PURE__*/ createUseWriteContract({
-  abi: gigaProjectAbi,
+export const useWriteNftContent = /*#__PURE__*/ createUseWriteContract({
+  abi: nftContentAbi,
 })
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"generateTokenHash"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"generateTokenHash"`
  */
-export const useWriteGigaProjectGenerateTokenHash =
+export const useWriteNftContentGenerateTokenHash =
   /*#__PURE__*/ createUseWriteContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'generateTokenHash',
   })
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"generateTokenId"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"generateTokenId"`
  */
-export const useWriteGigaProjectGenerateTokenId =
+export const useWriteNftContentGenerateTokenId =
   /*#__PURE__*/ createUseWriteContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'generateTokenId',
   })
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"multicall"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"multicall"`
  */
-export const useWriteGigaProjectMulticall =
-  /*#__PURE__*/ createUseWriteContract({
-    abi: gigaProjectAbi,
-    functionName: 'multicall',
-  })
+export const useWriteNftContentMulticall = /*#__PURE__*/ createUseWriteContract(
+  { abi: nftContentAbi, functionName: 'multicall' },
+)
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"renounceOwnership"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"renounceOwnership"`
  */
-export const useWriteGigaProjectRenounceOwnership =
+export const useWriteNftContentRenounceOwnership =
   /*#__PURE__*/ createUseWriteContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'renounceOwnership',
   })
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"transferOwnership"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"transferOwnership"`
  */
-export const useWriteGigaProjectTransferOwnership =
+export const useWriteNftContentTransferOwnership =
   /*#__PURE__*/ createUseWriteContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'transferOwnership',
   })
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"updateBaseArtScript"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"updateBaseArtScript"`
  */
-export const useWriteGigaProjectUpdateBaseArtScript =
+export const useWriteNftContentUpdateBaseArtScript =
   /*#__PURE__*/ createUseWriteContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'updateBaseArtScript',
   })
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"updateContentManager"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"updateContentManager"`
  */
-export const useWriteGigaProjectUpdateContentManager =
+export const useWriteNftContentUpdateContentManager =
   /*#__PURE__*/ createUseWriteContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'updateContentManager',
   })
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"updateNftContent"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"updateNftContent"`
  */
-export const useWriteGigaProjectUpdateNftContent =
+export const useWriteNftContentUpdateNftContent =
   /*#__PURE__*/ createUseWriteContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'updateNftContent',
   })
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"updateNftImageHash"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"updateNftImageHash"`
  */
-export const useWriteGigaProjectUpdateNftImageHash =
+export const useWriteNftContentUpdateNftImageHash =
   /*#__PURE__*/ createUseWriteContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'updateNftImageHash',
   })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link nftContentAbi}__
  */
-export const useSimulateGigaProject = /*#__PURE__*/ createUseSimulateContract({
-  abi: gigaProjectAbi,
+export const useSimulateNftContent = /*#__PURE__*/ createUseSimulateContract({
+  abi: nftContentAbi,
 })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"generateTokenHash"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"generateTokenHash"`
  */
-export const useSimulateGigaProjectGenerateTokenHash =
+export const useSimulateNftContentGenerateTokenHash =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'generateTokenHash',
   })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"generateTokenId"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"generateTokenId"`
  */
-export const useSimulateGigaProjectGenerateTokenId =
+export const useSimulateNftContentGenerateTokenId =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'generateTokenId',
   })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"multicall"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"multicall"`
  */
-export const useSimulateGigaProjectMulticall =
+export const useSimulateNftContentMulticall =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'multicall',
   })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"renounceOwnership"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"renounceOwnership"`
  */
-export const useSimulateGigaProjectRenounceOwnership =
+export const useSimulateNftContentRenounceOwnership =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'renounceOwnership',
   })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"transferOwnership"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"transferOwnership"`
  */
-export const useSimulateGigaProjectTransferOwnership =
+export const useSimulateNftContentTransferOwnership =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'transferOwnership',
   })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"updateBaseArtScript"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"updateBaseArtScript"`
  */
-export const useSimulateGigaProjectUpdateBaseArtScript =
+export const useSimulateNftContentUpdateBaseArtScript =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'updateBaseArtScript',
   })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"updateContentManager"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"updateContentManager"`
  */
-export const useSimulateGigaProjectUpdateContentManager =
+export const useSimulateNftContentUpdateContentManager =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'updateContentManager',
   })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"updateNftContent"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"updateNftContent"`
  */
-export const useSimulateGigaProjectUpdateNftContent =
+export const useSimulateNftContentUpdateNftContent =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'updateNftContent',
   })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"updateNftImageHash"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"updateNftImageHash"`
  */
-export const useSimulateGigaProjectUpdateNftImageHash =
+export const useSimulateNftContentUpdateNftImageHash =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     functionName: 'updateNftImageHash',
   })
 
 /**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link gigaProjectAbi}__
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link nftContentAbi}__
  */
-export const useWatchGigaProjectEvent =
-  /*#__PURE__*/ createUseWatchContractEvent({ abi: gigaProjectAbi })
+export const useWatchNftContentEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({ abi: nftContentAbi })
 
 /**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link gigaProjectAbi}__ and `eventName` set to `"OwnershipTransferred"`
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link nftContentAbi}__ and `eventName` set to `"OwnershipTransferred"`
  */
-export const useWatchGigaProjectOwnershipTransferredEvent =
+export const useWatchNftContentOwnershipTransferredEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     eventName: 'OwnershipTransferred',
   })
 
 /**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link gigaProjectAbi}__ and `eventName` set to `"UpdatedBaseArtScript"`
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link nftContentAbi}__ and `eventName` set to `"UpdatedBaseArtScript"`
  */
-export const useWatchGigaProjectUpdatedBaseArtScriptEvent =
+export const useWatchNftContentUpdatedBaseArtScriptEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     eventName: 'UpdatedBaseArtScript',
   })
 
 /**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link gigaProjectAbi}__ and `eventName` set to `"UpdatedNftContent"`
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link nftContentAbi}__ and `eventName` set to `"UpdatedNftContent"`
  */
-export const useWatchGigaProjectUpdatedNftContentEvent =
+export const useWatchNftContentUpdatedNftContentEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     eventName: 'UpdatedNftContent',
   })
 
 /**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link gigaProjectAbi}__ and `eventName` set to `"UpdatedNftImage"`
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link nftContentAbi}__ and `eventName` set to `"UpdatedNftImage"`
  */
-export const useWatchGigaProjectUpdatedNftImageEvent =
+export const useWatchNftContentUpdatedNftImageEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
-    abi: gigaProjectAbi,
+    abi: nftContentAbi,
     eventName: 'UpdatedNftImage',
   })

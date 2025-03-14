@@ -3,13 +3,13 @@ import {
   createUseWriteContract,
   createUseSimulateContract,
   createUseWatchContractEvent,
-} from 'wagmi/codegen'
+} from 'wagmi/codegen';
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// GigaProject
+// GigaMinter
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const gigaProjectAbi = [
+export const gigaMinterAbi = [
   {
     type: 'constructor',
     inputs: [
@@ -273,309 +273,305 @@ export const gigaProjectAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
-] as const
+] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // React
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaMinterAbi}__
  */
-export const useReadGigaProject = /*#__PURE__*/ createUseReadContract({
-  abi: gigaProjectAbi,
-})
+export const useReadGigaMinter = /*#__PURE__*/ createUseReadContract({
+  abi: gigaMinterAbi,
+});
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"baseFee"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"baseFee"`
  */
-export const useReadGigaProjectBaseFee = /*#__PURE__*/ createUseReadContract({
-  abi: gigaProjectAbi,
+export const useReadGigaMinterBaseFee = /*#__PURE__*/ createUseReadContract({
+  abi: gigaMinterAbi,
   functionName: 'baseFee',
-})
+});
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"bulkMinters"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"bulkMinters"`
  */
-export const useReadGigaProjectBulkMinters =
-  /*#__PURE__*/ createUseReadContract({
-    abi: gigaProjectAbi,
-    functionName: 'bulkMinters',
-  })
+export const useReadGigaMinterBulkMinters = /*#__PURE__*/ createUseReadContract(
+  { abi: gigaMinterAbi, functionName: 'bulkMinters' }
+);
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"collectorNft"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"collectorNft"`
  */
-export const useReadGigaProjectCollectorNft =
+export const useReadGigaMinterCollectorNft =
   /*#__PURE__*/ createUseReadContract({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     functionName: 'collectorNft',
-  })
+  });
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"donationReceiver"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"donationReceiver"`
  */
-export const useReadGigaProjectDonationReceiver =
+export const useReadGigaMinterDonationReceiver =
   /*#__PURE__*/ createUseReadContract({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     functionName: 'donationReceiver',
-  })
+  });
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"owner"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"owner"`
  */
-export const useReadGigaProjectOwner = /*#__PURE__*/ createUseReadContract({
-  abi: gigaProjectAbi,
+export const useReadGigaMinterOwner = /*#__PURE__*/ createUseReadContract({
+  abi: gigaMinterAbi,
   functionName: 'owner',
-})
+});
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"schoolNft"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"schoolNft"`
  */
-export const useReadGigaProjectSchoolNft = /*#__PURE__*/ createUseReadContract({
-  abi: gigaProjectAbi,
+export const useReadGigaMinterSchoolNft = /*#__PURE__*/ createUseReadContract({
+  abi: gigaMinterAbi,
   functionName: 'schoolNft',
-})
+});
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"totalDonations"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"totalDonations"`
  */
-export const useReadGigaProjectTotalDonations =
+export const useReadGigaMinterTotalDonations =
   /*#__PURE__*/ createUseReadContract({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     functionName: 'totalDonations',
-  })
+  });
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaMinterAbi}__
  */
-export const useWriteGigaProject = /*#__PURE__*/ createUseWriteContract({
-  abi: gigaProjectAbi,
-})
+export const useWriteGigaMinter = /*#__PURE__*/ createUseWriteContract({
+  abi: gigaMinterAbi,
+});
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"batchBuyNft"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"batch t"`
  */
-export const useWriteGigaProjectBatchBuyNft =
+export const useWriteGigaMinterBatchBuyNft =
   /*#__PURE__*/ createUseWriteContract({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     functionName: 'batchBuyNft',
-  })
+  });
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"buyNft"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"buyNft"`
  */
-export const useWriteGigaProjectBuyNft = /*#__PURE__*/ createUseWriteContract({
-  abi: gigaProjectAbi,
+export const useWriteGigaMinterBuyNft = /*#__PURE__*/ createUseWriteContract({
+  abi: gigaMinterAbi,
   functionName: 'buyNft',
-})
+});
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"mintForDonor"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"mintForDonor"`
  */
-export const useWriteGigaProjectMintForDonor =
+export const useWriteGigaMinterMintForDonor =
   /*#__PURE__*/ createUseWriteContract({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     functionName: 'mintForDonor',
-  })
+  });
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"mintNft"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"mintNft"`
  */
-export const useWriteGigaProjectMintNft = /*#__PURE__*/ createUseWriteContract({
-  abi: gigaProjectAbi,
+export const useWriteGigaMinterMintNft = /*#__PURE__*/ createUseWriteContract({
+  abi: gigaMinterAbi,
   functionName: 'mintNft',
-})
+});
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"multicall"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"multicall"`
  */
-export const useWriteGigaProjectMulticall =
-  /*#__PURE__*/ createUseWriteContract({
-    abi: gigaProjectAbi,
-    functionName: 'multicall',
-  })
+export const useWriteGigaMinterMulticall = /*#__PURE__*/ createUseWriteContract(
+  { abi: gigaMinterAbi, functionName: 'multicall' }
+);
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"renounceOwnership"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"renounceOwnership"`
  */
-export const useWriteGigaProjectRenounceOwnership =
+export const useWriteGigaMinterRenounceOwnership =
   /*#__PURE__*/ createUseWriteContract({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     functionName: 'renounceOwnership',
-  })
+  });
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"sendDonation"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"sendDonation"`
  */
-export const useWriteGigaProjectSendDonation =
+export const useWriteGigaMinterSendDonation =
   /*#__PURE__*/ createUseWriteContract({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     functionName: 'sendDonation',
-  })
+  });
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"setBaseFee"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"setBaseFee"`
  */
-export const useWriteGigaProjectSetBaseFee =
+export const useWriteGigaMinterSetBaseFee =
   /*#__PURE__*/ createUseWriteContract({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     functionName: 'setBaseFee',
-  })
+  });
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"setDonationReceiver"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"setDonationReceiver"`
  */
-export const useWriteGigaProjectSetDonationReceiver =
+export const useWriteGigaMinterSetDonationReceiver =
   /*#__PURE__*/ createUseWriteContract({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     functionName: 'setDonationReceiver',
-  })
+  });
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"transferOwnership"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"transferOwnership"`
  */
-export const useWriteGigaProjectTransferOwnership =
+export const useWriteGigaMinterTransferOwnership =
   /*#__PURE__*/ createUseWriteContract({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     functionName: 'transferOwnership',
-  })
+  });
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaMinterAbi}__
  */
-export const useSimulateGigaProject = /*#__PURE__*/ createUseSimulateContract({
-  abi: gigaProjectAbi,
-})
+export const useSimulateGigaMinter = /*#__PURE__*/ createUseSimulateContract({
+  abi: gigaMinterAbi,
+});
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"batchBuyNft"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"batchBuyNft"`
  */
-export const useSimulateGigaProjectBatchBuyNft =
+export const useSimulateGigaMinterBatchBuyNft =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     functionName: 'batchBuyNft',
-  })
+  });
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"buyNft"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"buyNft"`
  */
-export const useSimulateGigaProjectBuyNft =
+export const useSimulateGigaMinterBuyNft =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     functionName: 'buyNft',
-  })
+  });
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"mintForDonor"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"mintForDonor"`
  */
-export const useSimulateGigaProjectMintForDonor =
+export const useSimulateGigaMinterMintForDonor =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     functionName: 'mintForDonor',
-  })
+  });
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"mintNft"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"mintNft"`
  */
-export const useSimulateGigaProjectMintNft =
+export const useSimulateGigaMinterMintNft =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     functionName: 'mintNft',
-  })
+  });
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"multicall"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"multicall"`
  */
-export const useSimulateGigaProjectMulticall =
+export const useSimulateGigaMinterMulticall =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     functionName: 'multicall',
-  })
+  });
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"renounceOwnership"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"renounceOwnership"`
  */
-export const useSimulateGigaProjectRenounceOwnership =
+export const useSimulateGigaMinterRenounceOwnership =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     functionName: 'renounceOwnership',
-  })
+  });
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"sendDonation"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"sendDonation"`
  */
-export const useSimulateGigaProjectSendDonation =
+export const useSimulateGigaMinterSendDonation =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     functionName: 'sendDonation',
-  })
+  });
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"setBaseFee"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"setBaseFee"`
  */
-export const useSimulateGigaProjectSetBaseFee =
+export const useSimulateGigaMinterSetBaseFee =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     functionName: 'setBaseFee',
-  })
+  });
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"setDonationReceiver"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"setDonationReceiver"`
  */
-export const useSimulateGigaProjectSetDonationReceiver =
+export const useSimulateGigaMinterSetDonationReceiver =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     functionName: 'setDonationReceiver',
-  })
+  });
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"transferOwnership"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"transferOwnership"`
  */
-export const useSimulateGigaProjectTransferOwnership =
+export const useSimulateGigaMinterTransferOwnership =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     functionName: 'transferOwnership',
-  })
+  });
 
 /**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link gigaProjectAbi}__
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link gigaMinterAbi}__
  */
-export const useWatchGigaProjectEvent =
-  /*#__PURE__*/ createUseWatchContractEvent({ abi: gigaProjectAbi })
+export const useWatchGigaMinterEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({ abi: gigaMinterAbi });
 
 /**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link gigaProjectAbi}__ and `eventName` set to `"BulkNftMinted"`
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link gigaMinterAbi}__ and `eventName` set to `"BulkNftMinted"`
  */
-export const useWatchGigaProjectBulkNftMintedEvent =
+export const useWatchGigaMinterBulkNftMintedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     eventName: 'BulkNftMinted',
-  })
+  });
 
 /**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link gigaProjectAbi}__ and `eventName` set to `"DonationTransferred"`
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link gigaMinterAbi}__ and `eventName` set to `"DonationTransferred"`
  */
-export const useWatchGigaProjectDonationTransferredEvent =
+export const useWatchGigaMinterDonationTransferredEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     eventName: 'DonationTransferred',
-  })
+  });
 
 /**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link gigaProjectAbi}__ and `eventName` set to `"NFTMinted"`
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link gigaMinterAbi}__ and `eventName` set to `"NFTMinted"`
  */
-export const useWatchGigaProjectNftMintedEvent =
+export const useWatchGigaMinterNftMintedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     eventName: 'NFTMinted',
-  })
+  });
 
 /**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link gigaProjectAbi}__ and `eventName` set to `"OwnershipTransferred"`
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link gigaMinterAbi}__ and `eventName` set to `"OwnershipTransferred"`
  */
-export const useWatchGigaProjectOwnershipTransferredEvent =
+export const useWatchGigaMinterOwnershipTransferredEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
-    abi: gigaProjectAbi,
+    abi: gigaMinterAbi,
     eventName: 'OwnershipTransferred',
-  })
+  });

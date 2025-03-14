@@ -6,10 +6,10 @@ import {
 } from 'wagmi/codegen'
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// GigaProject
+// Qos
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const gigaProjectAbi = [
+export const qosAbi = [
   { type: 'constructor', inputs: [], stateMutability: 'nonpayable' },
   {
     type: 'event',
@@ -121,133 +121,124 @@ export const gigaProjectAbi = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link qosAbi}__
  */
-export const useReadGigaProject = /*#__PURE__*/ createUseReadContract({
-  abi: gigaProjectAbi,
-})
+export const useReadQos = /*#__PURE__*/ createUseReadContract({ abi: qosAbi })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"day"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link qosAbi}__ and `functionName` set to `"day"`
  */
-export const useReadGigaProjectDay = /*#__PURE__*/ createUseReadContract({
-  abi: gigaProjectAbi,
+export const useReadQosDay = /*#__PURE__*/ createUseReadContract({
+  abi: qosAbi,
   functionName: 'day',
 })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"deployer"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link qosAbi}__ and `functionName` set to `"deployer"`
  */
-export const useReadGigaProjectDeployer = /*#__PURE__*/ createUseReadContract({
-  abi: gigaProjectAbi,
+export const useReadQosDeployer = /*#__PURE__*/ createUseReadContract({
+  abi: qosAbi,
   functionName: 'deployer',
 })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"getHash"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link qosAbi}__ and `functionName` set to `"getHash"`
  */
-export const useReadGigaProjectGetHash = /*#__PURE__*/ createUseReadContract({
-  abi: gigaProjectAbi,
+export const useReadQosGetHash = /*#__PURE__*/ createUseReadContract({
+  abi: qosAbi,
   functionName: 'getHash',
 })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"getTotalHashes"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link qosAbi}__ and `functionName` set to `"getTotalHashes"`
  */
-export const useReadGigaProjectGetTotalHashes =
-  /*#__PURE__*/ createUseReadContract({
-    abi: gigaProjectAbi,
-    functionName: 'getTotalHashes',
-  })
-
-/**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"oracleManagers"`
- */
-export const useReadGigaProjectOracleManagers =
-  /*#__PURE__*/ createUseReadContract({
-    abi: gigaProjectAbi,
-    functionName: 'oracleManagers',
-  })
-
-/**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__
- */
-export const useWriteGigaProject = /*#__PURE__*/ createUseWriteContract({
-  abi: gigaProjectAbi,
+export const useReadQosGetTotalHashes = /*#__PURE__*/ createUseReadContract({
+  abi: qosAbi,
+  functionName: 'getTotalHashes',
 })
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"addHashes"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link qosAbi}__ and `functionName` set to `"oracleManagers"`
  */
-export const useWriteGigaProjectAddHashes =
-  /*#__PURE__*/ createUseWriteContract({
-    abi: gigaProjectAbi,
-    functionName: 'addHashes',
-  })
+export const useReadQosOracleManagers = /*#__PURE__*/ createUseReadContract({
+  abi: qosAbi,
+  functionName: 'oracleManagers',
+})
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"setOracleManager"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link qosAbi}__
  */
-export const useWriteGigaProjectSetOracleManager =
-  /*#__PURE__*/ createUseWriteContract({
-    abi: gigaProjectAbi,
+export const useWriteQos = /*#__PURE__*/ createUseWriteContract({ abi: qosAbi })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link qosAbi}__ and `functionName` set to `"addHashes"`
+ */
+export const useWriteQosAddHashes = /*#__PURE__*/ createUseWriteContract({
+  abi: qosAbi,
+  functionName: 'addHashes',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link qosAbi}__ and `functionName` set to `"setOracleManager"`
+ */
+export const useWriteQosSetOracleManager = /*#__PURE__*/ createUseWriteContract(
+  { abi: qosAbi, functionName: 'setOracleManager' },
+)
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link qosAbi}__
+ */
+export const useSimulateQos = /*#__PURE__*/ createUseSimulateContract({
+  abi: qosAbi,
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link qosAbi}__ and `functionName` set to `"addHashes"`
+ */
+export const useSimulateQosAddHashes = /*#__PURE__*/ createUseSimulateContract({
+  abi: qosAbi,
+  functionName: 'addHashes',
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link qosAbi}__ and `functionName` set to `"setOracleManager"`
+ */
+export const useSimulateQosSetOracleManager =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: qosAbi,
     functionName: 'setOracleManager',
   })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link qosAbi}__
  */
-export const useSimulateGigaProject = /*#__PURE__*/ createUseSimulateContract({
-  abi: gigaProjectAbi,
+export const useWatchQosEvent = /*#__PURE__*/ createUseWatchContractEvent({
+  abi: qosAbi,
 })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"addHashes"`
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link qosAbi}__ and `eventName` set to `"HashesAdded"`
  */
-export const useSimulateGigaProjectAddHashes =
-  /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
-    functionName: 'addHashes',
-  })
-
-/**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaProjectAbi}__ and `functionName` set to `"setOracleManager"`
- */
-export const useSimulateGigaProjectSetOracleManager =
-  /*#__PURE__*/ createUseSimulateContract({
-    abi: gigaProjectAbi,
-    functionName: 'setOracleManager',
-  })
-
-/**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link gigaProjectAbi}__
- */
-export const useWatchGigaProjectEvent =
-  /*#__PURE__*/ createUseWatchContractEvent({ abi: gigaProjectAbi })
-
-/**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link gigaProjectAbi}__ and `eventName` set to `"HashesAdded"`
- */
-export const useWatchGigaProjectHashesAddedEvent =
+export const useWatchQosHashesAddedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
-    abi: gigaProjectAbi,
+    abi: qosAbi,
     eventName: 'HashesAdded',
   })
 
 /**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link gigaProjectAbi}__ and `eventName` set to `"NewDayAdded"`
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link qosAbi}__ and `eventName` set to `"NewDayAdded"`
  */
-export const useWatchGigaProjectNewDayAddedEvent =
+export const useWatchQosNewDayAddedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
-    abi: gigaProjectAbi,
+    abi: qosAbi,
     eventName: 'NewDayAdded',
   })
 
 /**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link gigaProjectAbi}__ and `eventName` set to `"OracleManagerUpdated"`
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link qosAbi}__ and `eventName` set to `"OracleManagerUpdated"`
  */
-export const useWatchGigaProjectOracleManagerUpdatedEvent =
+export const useWatchQosOracleManagerUpdatedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
-    abi: gigaProjectAbi,
+    abi: qosAbi,
     eventName: 'OracleManagerUpdated',
   })

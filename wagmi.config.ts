@@ -10,7 +10,7 @@ const GigaConfig = [
     out: 'apps/giga/app/hooks/useContract/gigaMinter.ts',
     contracts: [
       {
-        name: 'GigaProject',
+        name: 'GigaMinter',
         abi: GigaMinterAbi,
       },
     ],
@@ -20,7 +20,7 @@ const GigaConfig = [
     out: 'apps/giga/app/hooks/useContract/nftContent.ts',
     contracts: [
       {
-        name: 'GigaProject',
+        name: 'NftContent',
         abi: NftContentAbi,
       },
     ],
@@ -30,7 +30,7 @@ const GigaConfig = [
     out: 'apps/giga/app/hooks/useContract/qosGiga.ts',
     contracts: [
       {
-        name: 'GigaProject',
+        name: 'Qos',
         abi: QOSGigaAbi,
       },
     ],
