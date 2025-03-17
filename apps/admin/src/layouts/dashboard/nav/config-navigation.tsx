@@ -37,18 +37,18 @@ const navConfig = [
         title: 'School',
         path: PATH_SCHOOL.contributed,
         children: [
-          {
-            title: 'Unminted School',
-            path: PATH_SCHOOL.contributed,
-          },
+          // {
+          //   title: 'Unminted School',
+          //   path: PATH_SCHOOL.contributed,
+          // },
           {
             title: 'Import School',
             path: PATH_SCHOOL.import,
           },
-          {
-            title: 'Minting School',
-            path: PATH_SCHOOL.minting,
-          },
+          // {
+          //   title: 'Minting School',
+          //   path: PATH_SCHOOL.minting,
+          // },
           {
             title: 'Minted NFT',
             path: PATH_SCHOOL.verified,
@@ -58,24 +58,24 @@ const navConfig = [
       },
     ],
   },
-  {
-    items: [
-      {
-        title: 'Contributions',
-        path: PATH_CONTRIBUTE.root,
-        icon: ICONS.user,
-      },
-    ],
-  },
-  {
-    items: [
-      {
-        title: 'Valid Data',
-        path: PATH_VALID.root,
-        icon: ICONS.user,
-      },
-    ],
-  },
+  // {
+  //   items: [
+  //     {
+  //       title: 'Contributions',
+  //       path: PATH_CONTRIBUTE.root,
+  //       icon: ICONS.user,
+  //     },
+  //   ],
+  // },
+  // {
+  //   items: [
+  //     {
+  //       title: 'Valid Data',
+  //       path: PATH_VALID.root,
+  //       icon: ICONS.user,
+  //     },
+  //   ],
+  // },
 
   {
     items: [
