@@ -1,13 +1,17 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaAppService } from 'src/prisma/prisma.service';
-import { ActivationLogDTO } from './dto/create-activation-log.dto';
+import {
+  ActivationLogDTO,
+  UpdateSchoolThemeAndContributorDTO,
+} from './dto/create-activation-log.dto';
+import { hexStringToBuffer } from 'src/utils/string-format';
+import { QueueService } from 'src/mailer/queue.service';
 
 @Injectable()
 export class LinkactivationService {
-  constructor(private readonly prisma: PrismaAppService) {}
+  constructor(private readonly prisma: PrismaAppService, private queueService: QueueService) {}
 
-  async createLink(data: ActivationLogDTO,userId:string) {
-  
+  async createLink(data: ActivationLogDTO, userId: string) {
     const date = new Date();
 
     return this.prisma.activationLog.create({
@@ -48,8 +52,8 @@ export class LinkactivationService {
       where: {
         id: uuid,
       },
-    }); 
-    if(!data) throw new NotFoundException('Invalid Link');
+    });
+    if (!data) throw new NotFoundException('Invalid Link');
     if (data?.endDate >= date && data?.status == 'ACTIVE') return true;
     await this.prisma.activationLog.update({
       where: {
@@ -58,12 +62,11 @@ export class LinkactivationService {
       data: {
         status: 'EXPIRED',
       },
-    })
+    });
     return false;
   }
 
   async deactivateLink(uuid: string, userId: string) {
-
     return this.prisma.activationLog.update({
       where: {
         id: uuid,
@@ -73,5 +76,20 @@ export class LinkactivationService {
         deActivatedBy: userId,
       },
     });
+  }
+
+  async updateSchoolThemeAndContributor(data: UpdateSchoolThemeAndContributorDTO) {
+    await this.prisma.school.update({
+      where: {
+        id: data.id,
+      },
+      data: {
+        themeId: data.themeId,
+      },
+    });
+
+    if (data?.walletAddress) data.walletAddress = hexStringToBuffer(data.walletAddress);
+    this.queueService.processImage(data.id);
+    return this.prisma.contributor.create({ data });
   }
 }

@@ -42,6 +42,7 @@ export class SchoolService {
       query;
     const cacheKey = getCacheKey(name, country, page, perPage);
     const cachedResult = await this.cacheManager.get<string>(cacheKey);
+
     if (cachedResult) return cachedResult;
 
     const where: Prisma.SchoolWhereInput = {
@@ -66,7 +67,7 @@ export class SchoolService {
       },
     );
 
-    await this.cacheManager.set(cacheKey, result);
+    await this.cacheManager.set(cacheKey, result, 5000);
 
     return result;
   }
