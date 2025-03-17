@@ -171,6 +171,7 @@ export class SchoolService {
             },
           });
           uploadBatch = transaction;
+          await this.queueService.csvMintdata(transaction.id);
         } catch (err) {
           if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
             res
