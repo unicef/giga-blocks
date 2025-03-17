@@ -8,6 +8,7 @@ interface SchoolData {
   connectivity: boolean;
   coverage_availability: boolean;
   electricity_available: boolean;
+  region: string;
 }
 
 export async function handler(fileData: any): Promise<any> {
@@ -47,6 +48,7 @@ export async function handler(fileData: any): Promise<any> {
         connectivity,
         coverage_availabitlity,
         electricity_availability,
+        region
       ] = row.split(',');
 
       const longitude = parseFloat(longitudeStr);
@@ -62,6 +64,7 @@ export async function handler(fileData: any): Promise<any> {
         connectivity: connectivity.toLowerCase() === 'yes' && true,
         coverage_availability: coverage_availabitlity.toLowerCase() === 'yes' && true,
         electricity_available: electricity_availability.toLowerCase() === 'yes' && true,
+        region,
       };
 
       schoolArrays.push(schoolData);
