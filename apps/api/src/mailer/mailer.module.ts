@@ -21,6 +21,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { QueueService } from './queue.service';
 import { ContributeDataService } from 'src/contribute/contribute.service';
 import { SchoolService } from 'src/schools/schools.service';
+import { LinkactivationService } from 'src/linkactivation/linkactivation.service';
 
 @Module({
   imports: [
@@ -34,7 +35,7 @@ import { SchoolService } from 'src/schools/schools.service';
           port: +configService.get('SMTP_PORT'),
           secure: true,
           auth: {
-            user: configService.get('EMAIL_ADDRESS'),//need to ad EMAIL_USERNAME for using malijet service later
+            user: configService.get('EMAIL_ADDRESS'), //need to ad EMAIL_USERNAME for using malijet service later
             pass: configService.get('EMAIL_PASSWORD'),
           },
         },
@@ -72,6 +73,7 @@ import { SchoolService } from 'src/schools/schools.service';
     ContributeDataService,
     ContributeProcessor,
     SchoolService,
+    LinkactivationService,
   ],
   exports: [MailService, QueueService],
 })
