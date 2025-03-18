@@ -17,6 +17,7 @@ export class LinkactivationService {
     return this.prisma.activationLog.create({
       data: {
         status: data.status,
+        name: data.name,
         activatedBy: userId,
         startDate: data.startDate,
         endDate: data?.endDate || null,
@@ -90,6 +91,25 @@ export class LinkactivationService {
 
     if (data?.walletAddress) data.walletAddress = hexStringToBuffer(data.walletAddress);
     this.queueService.processImage(data.id);
-    return this.prisma.contributor.create({ data });
+    return this.prisma.contributor.create({ data });}
+  
+  async activateLink(uuid: string, userId: string) {
+    const date = new Date();
+    const data = await this.prisma.activationLog.findUnique({
+      where: {
+        id: uuid,
+      },
+    });
+    if (!data) throw new NotFoundException('Invalid Link');
+    if (data?.endDate < date) throw new Error('Link already expired.');
+    return this.prisma.activationLog.update({
+      where: {
+        id: uuid,
+      },
+      data: {
+        status: 'ACTIVE',
+        activatedBy: userId,
+      },
+    });
   }
 }

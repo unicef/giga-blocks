@@ -2,14 +2,29 @@
 import ActiveDialog from '@components/active-dialog';
 import Scrollbar from '@components/scrollbar';
 import { TableHeadUsers, TableNoData, useTable } from '@components/table';
-import { useActivateSchool } from '@hooks/school/useSchool';
+import {
+  useActivatePatchSchool,
+  useActivateSchool,
+  useDeactivatePatchSchool,
+} from '@hooks/school/useSchool';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
-import { Card, Divider, Table, TableBody, TableContainer } from '@mui/material';
-import SchoolTableRow from '@sections/user/list/SchoolTableRow';
-import { useEffect, useState } from 'react';
+import {
+  Alert,
+  Card,
+  Divider,
+  Snackbar,
+  Switch,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+} from '@mui/material';
+import { useState } from 'react';
 
 const TABLE_HEAD = [
   { id: 'link', label: 'Link', align: 'left' },
+  { id: 'name', label: 'Name', align: 'left' },
   { id: 'startDate', label: 'Start Date', align: 'left' },
   { id: 'endDate', label: 'End Date', align: 'left' },
   { id: 'status', label: 'Status', align: 'left' },
@@ -23,13 +38,40 @@ const ActivateSchool = () => {
 
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const { data, isFetching } = useActivateSchool();
+  const { mutate: activateSchool, isLoading: activating } = useActivatePatchSchool();
+  const { mutate: deactivateSchool, isLoading: deactivating } = useDeactivatePatchSchool();
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string }>({
+    open: false,
+    message: '',
+  });
   const tableData = Array.isArray(data) ? data : [];
   const BASE_URL = process.env.NEXT_PUBLIC_WEB_NAME;
+
+  const handleStatusToggle = (school: any) => {
+    const newStatus = school.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+    const updateFn = newStatus === 'ACTIVE' ? activateSchool : deactivateSchool;
+
+    updateFn(
+      { id: school.id },
+      {
+        onSuccess: () => {
+          setSnackbar({
+            open: true,
+            message: `School ${newStatus === 'ACTIVE' ? 'Activated' : 'Deactivated'}`,
+          });
+          // refetch();
+        },
+        onError: () => {
+          setSnackbar({ open: true, message: 'Action failed! Please try again.' });
+        },
+      }
+    );
+  };
 
   return (
     <DashboardLayout>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <span style={{ fontSize: '1.5em', fontWeight: '600' }}>Activate Schools</span>
+        <span style={{ fontSize: '1.5em', fontWeight: '600' }}>Manage Event Links</span>
         <div style={{ display: 'flex', gap: '15px' }}>
           <ActiveDialog />
         </div>
@@ -53,14 +95,34 @@ const ActivateSchool = () => {
               <TableBody>
                 {tableData.length > 0 ? (
                   tableData.map((row: any) => (
-                    <tr key={row.id}>
-                      <td style={{ padding: '12px' }}>
+                    <TableRow
+                      key={row.id}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                      <TableCell scope="row">
                         <a href={`${BASE_URL}${row.id}`}>{`${BASE_URL}${row.id}`}</a>
-                      </td>
-                      <td>{new Date(row.startDate).toLocaleDateString()}</td>
-                      <td>{new Date(row.endDate).toLocaleDateString()}</td>
-                      <td>{row.status}</td>
-                    </tr>
+                      </TableCell>
+                      <TableCell align="left">{row.name}</TableCell>
+                      <TableCell align="left">
+                        {new Date(row.startDate).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell align="left">
+                        {new Date(row.endDate).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell align="left">
+                        <span style={{ display: 'flex', alignItems: 'center' }}>
+                          <Switch
+                            checked={row.status === 'ACTIVE'}
+                            onChange={() => handleStatusToggle(row)}
+                            disabled={activating || deactivating}
+                            color="primary"
+                          />
+                          <p style={{ fontSize: '12px' }}>
+                            {row.status === 'ACTIVE' ? 'Active' : 'Inactive'}
+                          </p>
+                        </span>
+                      </TableCell>
+                    </TableRow>
                   ))
                 ) : (
                   <TableNoData isNotFound={true} isFetching={isFetching} />
@@ -70,6 +132,15 @@ const ActivateSchool = () => {
           </Scrollbar>
         </TableContainer>
       </Card>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={900}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+      >
+        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </DashboardLayout>
   );
 };

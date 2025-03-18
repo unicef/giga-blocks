@@ -339,6 +339,7 @@ model ActivationLog {
   id           String            @id @default(uuid())
   status       ActivationStatus  @default(INACTIVE)
   activatedBy  String
+  name         String 
   activatedUser User             @relation("ActivatedBy",fields:[activatedBy],references:[id])
   deActivatedBy  String?
   deActivatedUser User ?         @relation( "DeactivatedBy",fields:[deActivatedBy],references:[id])

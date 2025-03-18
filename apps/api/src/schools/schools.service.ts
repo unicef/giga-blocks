@@ -145,23 +145,23 @@ export class SchoolService {
                 in: schoolData.map(school => school.giga_school_id),
               },
             },
-          })
+          });
           // Check for missing schools
           const missingSchools = schoolData.filter(
             school => !schools.some(dbSchool => dbSchool.giga_school_id === school.giga_school_id),
           );
 
-          if (missingSchools.length > 0) {
-            throw new NotFoundException({
-              message: 'Some schools from the CSV file are not found in the database',
-              missingSchools: missingSchools.map(school => school.giga_school_id),
-            });
-          }
-          
-        // throw error in case of  missing schools or add the available schools 
-        // to the uploadBatch and ignore the missing ones.
-        // Still needs to inform the user about the missing schools
-        //Need to add to the queue after the uploadBatch is created.
+          // if (missingSchools.length > 0) {
+          //   throw new NotFoundException({
+          //     message: 'Some schools from the CSV file are not found in the database',
+          //     missingSchools: missingSchools.map(school => school.giga_school_id),
+          //   });
+          // }
+
+          // throw error in case of  missing schools or add the available schools
+          // to the uploadBatch and ignore the missing ones.
+          // Still needs to inform the user about the missing schools
+          //Need to add to the queue after the uploadBatch is created.
 
           const transaction = await this.prisma.cSVUpload.create({
             data: {

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { LinkactivationService } from './linkactivation.service';
 import { Public } from '../common/decorators/public.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
@@ -43,7 +43,7 @@ export class LinkactivationController {
 
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @Post('/deactivate/:uuid')
+  @Patch('/deactivate/:uuid')
   async deactivateLink(@Param('uuid') uuid: string, @Req() req: any) {
     return this.linkactivationService.deactivateLink(uuid, req.user.id);
   }
@@ -51,5 +51,12 @@ export class LinkactivationController {
   @Post('/createUserTheme')
   async createUserThemeImage(@Body() data: UpdateSchoolThemeAndContributorDTO) {
     return this.linkactivationService.updateSchoolThemeAndContributor(data);
+  }
+  
+  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Patch('/activate/:uuid')
+  async activateLink(@Param('uuid') uuid: string, @Req() req: any) {
+    return this.linkactivationService.activateLink(uuid, req.user.id);
   }
 }

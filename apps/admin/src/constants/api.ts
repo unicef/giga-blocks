@@ -44,5 +44,7 @@ export default {
   LINK_ACTIVATION: {
     POST: '/linkactivation',
     GET: '/linkactivation',
+    ACTIVATE: 'linkactivation/activate',
+    DEACTIVATE: 'linkactivation/deactivate',
   },
 };
