@@ -135,7 +135,6 @@ export default function HorizontalLinearStepper({
           // Handle successful upload
           if (response?.status === 200) {
             enqueueSnackbar('Schools are added in queue. Processing will take some time.');
-
             push(`/dashboard`);
           }
           if (response?.status === 500) {
