@@ -162,16 +162,40 @@ export class SchoolService {
           // to the uploadBatch and ignore the missing ones.
           // Still needs to inform the user about the missing schools
           //Need to add to the queue after the uploadBatch is created.
-
+         const txn =  await this.prisma.$transaction(async (prisma)=>{
+            const uploadBatch = await this.prisma.cSVUpload.create({
+              data: {
+                uploadedBy: user.id,
+                fileValue: dataArray.rowValue,
+                fileName: filename,
+      
+              }, 
+            });
+            await prisma.school.updateMany({
+              where: {
+                giga_school_id: {
+                  in: schoolData.map(school => school.giga_school_id),
+                },
+              },
+              data: {
+                uploadId: uploadBatch.id,
+              },
+            })
+            return uploadBatch;
+            // uploadBatch = transaction;
+            
+          })
           const transaction = await this.prisma.cSVUpload.create({
             data: {
               uploadedBy: user.id,
               fileValue: dataArray.rowValue,
               fileName: filename,
-            },
+            }, 
           });
-          uploadBatch = transaction;
-          await this.queueService.csvMintdata(transaction.id);
+          // uploadBatch = transaction;
+          await this.queueService.csvMintdata(txn.id);
+          // console.log(txn, "is transaction")
+
         } catch (err) {
           if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
             res

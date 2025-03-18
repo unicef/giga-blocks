@@ -210,9 +210,9 @@ export class MintQueueProcessor {
     if (txReceipt.status === 1) {
       try {
         await this._mintQueue.add(SET_THEME,{schoolids:job.data.giga_ids},jobOptions);
-        // for (let i = 0; i < job.data.giga_ids.length; i++) {
-        //   await this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_ids[i] }, jobOptions);
-        // }
+        for (let i = 0; i < job.data.giga_ids.length; i++) {
+          await this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_ids[i] }, jobOptions);
+        }
       } catch (error) {
         this._logger.log(`Error generating image: ${error}`);
       }
@@ -275,19 +275,21 @@ export class MintQueueProcessor {
   public async processTheme(job: Job<{schoolids:[]}>){
    const schoolIds = job.data.schoolids;
    const themes = await this._prismaService.theme.findMany({});
-   const school = await this._prismaService.school.updateMany({
-      where:{
-        id:{
-          in:schoolIds
-        }
+   for (const schoolId of schoolIds) {
+    const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+    try{const school = await this._prismaService.school.update({
+      where: {
+        giga_school_id: schoolId,
       },
-      data:{
-        themeId:themes[Math.floor(Math.random() * themes.length)].id
-      }
-   })
-   for(let i = 0; i < schoolIds.length; i++){
-    await this._imageQueue.add(SET_IMAGE_PROCESS, { id: schoolIds[i] }, jobOptions);
-   }
+      data: {
+        themeId: randomTheme.id,
+      },
+   });
+  }
+    catch(err){
+      console.log(err);
+    }
+  }
 
   }
 
