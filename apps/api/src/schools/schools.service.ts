@@ -126,19 +126,6 @@ export class SchoolService {
         try {
           const dataArray = await handler(fileData);
           const schoolData = dataArray.schoolArrays;
-          schoolData.map(school => {
-            if (isNaN(school.longitude) || isNaN(school.latitude)) {
-              throw new BadRequestException({ message: 'Invalid longitude or latitude' });
-            }
-            if (
-              school.latitude < -90 ||
-              school.latitude > 90 ||
-              school.longitude < -180 ||
-              school.longitude > 180
-            ) {
-              throw new BadRequestException({ message: 'Invalid longitude or latitude' });
-            }
-          });
           const schools = await this.prisma.school.findMany({
             where: {
               giga_school_id: {
@@ -151,12 +138,12 @@ export class SchoolService {
             school => !schools.some(dbSchool => dbSchool.giga_school_id === school.giga_school_id),
           );
 
-          // if (missingSchools.length > 0) {
-          //   throw new NotFoundException({
-          //     message: 'Some schools from the CSV file are not found in the database',
-          //     missingSchools: missingSchools.map(school => school.giga_school_id),
-          //   });
-          // }
+          if (missingSchools.length > 0) {
+            throw new NotFoundException({
+              message: 'Some schools from the CSV file are not found in the database',
+              missingSchools: missingSchools.map(school => school.giga_school_id),
+            });
+          }
 
           // throw error in case of  missing schools or add the available schools
           // to the uploadBatch and ignore the missing ones.
@@ -185,13 +172,6 @@ export class SchoolService {
             // uploadBatch = transaction;
             
           })
-          const transaction = await this.prisma.cSVUpload.create({
-            data: {
-              uploadedBy: user.id,
-              fileValue: dataArray.rowValue,
-              fileName: filename,
-            }, 
-          });
           // uploadBatch = transaction;
           await this.queueService.csvMintdata(txn.id);
           // console.log(txn, "is transaction")
