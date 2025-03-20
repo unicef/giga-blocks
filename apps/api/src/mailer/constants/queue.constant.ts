@@ -11,4 +11,6 @@ export const SET_APPROVE_QUEUE = 'SET_APPROVE_QUEUE';
 export const SET_IMAGE_PROCESS = 'SET_PROCESS_IMAGE';
 export const UPLOAD_QUEUE = 'UPLOAD_QUEUE';
 export const SET_UPLOAD_PROCESS = 'SET_UPLOAD_PROCESS';
+export const SET_CSV_MINT ='SET_CSV_MINT'
+export const SET_THEME = 'SET_THEME';
 

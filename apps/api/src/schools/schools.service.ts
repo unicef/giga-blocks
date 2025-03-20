@@ -42,6 +42,7 @@ export class SchoolService {
       query;
     const cacheKey = getCacheKey(name, country, page, perPage);
     const cachedResult = await this.cacheManager.get<string>(cacheKey);
+
     if (cachedResult) return cachedResult;
 
     const where: Prisma.SchoolWhereInput = {
@@ -66,7 +67,7 @@ export class SchoolService {
       },
     );
 
-    await this.cacheManager.set(cacheKey, result);
+    await this.cacheManager.set(cacheKey, result, 5000);
 
     return result;
   }
@@ -125,19 +126,6 @@ export class SchoolService {
         try {
           const dataArray = await handler(fileData);
           const schoolData = dataArray.schoolArrays;
-          schoolData.map(school => {
-            if (isNaN(school.longitude) || isNaN(school.latitude)) {
-              throw new BadRequestException({ message: 'Invalid longitude or latitude' });
-            }
-            if (
-              school.latitude < -90 ||
-              school.latitude > 90 ||
-              school.longitude < -180 ||
-              school.longitude > 180
-            ) {
-              throw new BadRequestException({ message: 'Invalid longitude or latitude' });
-            }
-          });
           const schools = await this.prisma.school.findMany({
             where: {
               giga_school_id: {
@@ -150,26 +138,44 @@ export class SchoolService {
             school => !schools.some(dbSchool => dbSchool.giga_school_id === school.giga_school_id),
           );
 
-          // if (missingSchools.length > 0) {
-          //   throw new NotFoundException({
-          //     message: 'Some schools from the CSV file are not found in the database',
-          //     missingSchools: missingSchools.map(school => school.giga_school_id),
-          //   });
-          // }
+          if (missingSchools.length > 0) {
+            throw new NotFoundException({
+              message: 'Some schools from the CSV file are not found in the database',
+              missingSchools: missingSchools.map(school => school.giga_school_id),
+            });
+          }
 
           // throw error in case of  missing schools or add the available schools
           // to the uploadBatch and ignore the missing ones.
           // Still needs to inform the user about the missing schools
           //Need to add to the queue after the uploadBatch is created.
+         const txn =  await this.prisma.$transaction(async (prisma)=>{
+            const uploadBatch = await this.prisma.cSVUpload.create({
+              data: {
+                uploadedBy: user.id,
+                fileValue: dataArray.rowValue,
+                fileName: filename,
+      
+              }, 
+            });
+            await prisma.school.updateMany({
+              where: {
+                giga_school_id: {
+                  in: schoolData.map(school => school.giga_school_id),
+                },
+              },
+              data: {
+                uploadId: uploadBatch.id,
+              },
+            })
+            return uploadBatch;
+            // uploadBatch = transaction;
+            
+          })
+          // uploadBatch = transaction;
+          await this.queueService.csvMintdata(txn.id);
+          // console.log(txn, "is transaction")
 
-          const transaction = await this.prisma.cSVUpload.create({
-            data: {
-              uploadedBy: user.id,
-              fileValue: dataArray.rowValue,
-              fileName: filename,
-            },
-          });
-          uploadBatch = transaction;
         } catch (err) {
           if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
             res

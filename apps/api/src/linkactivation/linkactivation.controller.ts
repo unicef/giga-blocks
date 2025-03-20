@@ -5,7 +5,10 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
 import { RoleGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { ActivationLogDTO } from './dto/create-activation-log.dto';
+import {
+  ActivationLogDTO,
+  UpdateSchoolThemeAndContributorDTO,
+} from './dto/create-activation-log.dto';
 
 @ApiBearerAuth('access-token')
 @Controller('linkactivation')
@@ -45,6 +48,11 @@ export class LinkactivationController {
     return this.linkactivationService.deactivateLink(uuid, req.user.id);
   }
 
+  @Post('/createUserTheme')
+  async createUserThemeImage(@Body() data: UpdateSchoolThemeAndContributorDTO) {
+    return this.linkactivationService.updateSchoolThemeAndContributor(data);
+  }
+  
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Patch('/activate/:uuid')

@@ -198,6 +198,7 @@ model School {
 
   @@index(fields: [name], type: Gist)
   @@index(fields: [minted], type: Hash)
+  @@index(fields:[country,region_name,id])
   @@map("giga_school")
 }
 

@@ -1,10 +1,15 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaAppService } from 'src/prisma/prisma.service';
-import { ActivationLogDTO } from './dto/create-activation-log.dto';
+import {
+  ActivationLogDTO,
+  UpdateSchoolThemeAndContributorDTO,
+} from './dto/create-activation-log.dto';
+import { hexStringToBuffer } from 'src/utils/string-format';
+import { QueueService } from 'src/mailer/queue.service';
 
 @Injectable()
 export class LinkactivationService {
-  constructor(private readonly prisma: PrismaAppService) {}
+  constructor(private readonly prisma: PrismaAppService, private queueService: QueueService) {}
 
   async createLink(data: ActivationLogDTO, userId: string) {
     const date = new Date();
@@ -74,6 +79,20 @@ export class LinkactivationService {
     });
   }
 
+  async updateSchoolThemeAndContributor(data: UpdateSchoolThemeAndContributorDTO) {
+    await this.prisma.school.update({
+      where: {
+        id: data.id,
+      },
+      data: {
+        themeId: data.themeId,
+      },
+    });
+
+    if (data?.walletAddress) data.walletAddress = hexStringToBuffer(data.walletAddress);
+    this.queueService.processImage(data.id);
+    return this.prisma.contributor.create({ data });}
+  
   async activateLink(uuid: string, userId: string) {
     const date = new Date();
     const data = await this.prisma.activationLog.findUnique({

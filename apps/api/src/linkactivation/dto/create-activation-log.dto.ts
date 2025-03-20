@@ -35,6 +35,80 @@ export class ActivationLogDTO {
   endDate: string;
 }
 
+export class UpdateSchoolThemeAndContributorDTO {
+  @ApiProperty({
+    description: 'ID of School',
+    example: 'uuid',
+    required: true,
+  })
+  @IsString()
+  id: string;
+
+  @ApiProperty({
+    description: 'ID of theme',
+    example: 'uuid',
+    required: false,
+  })
+  @IsDateString()
+  themeId: string;
+
+  @ApiProperty({
+    description: 'Wallet address of contributor',
+    example: '0xabcdef',
+    required: false,
+  })
+  @IsDateString()
+  walletAddress: any;
+
+  @ApiProperty({
+    description: 'Email of contirbutor',
+    example: 'example@example.com',
+    required: false,
+  })
+  @IsString()
+  email: string | null;
+
+  @ApiProperty({
+    description: 'Address of NFT',
+    example: '0xabcdef',
+    required: true,
+  })
+  @IsString()
+  nftAddress: string | null;
+
+  @ApiProperty({
+    description: 'Number of NFT minted',
+    example: '10',
+    required: false,
+  })
+  @IsString()
+  totalNftMinted: number | null;
+
+  @ApiProperty({
+    description: 'Is visible?',
+    example: 'true',
+    required: false,
+  })
+  @IsString()
+  isVisible: boolean;
+
+  @ApiProperty({
+    description: 'Is NFT reserved?',
+    example: 'true',
+    required: false,
+  })
+  @IsString()
+  nftReserved: boolean;
+
+  @ApiProperty({
+    description: 'Is NFT claimed',
+    example: 'false',
+    required: false,
+  })
+  @IsString()
+  nftClaimed: boolean;
+}
+
 enum ACTIVE_STATUS {
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
