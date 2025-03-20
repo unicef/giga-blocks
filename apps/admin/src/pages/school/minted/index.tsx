@@ -48,7 +48,7 @@ const MintedSchools = () => {
   const [tableData, setTableData] = useState<any>([]);
   const [paginatedData, setPaginatedData] = useState<any>([]);
   const [result] = useQuery({
-    query: Queries.nftListQuery,
+    query: Queries.allNftListQuery,
     variables: {},
   });
   const { data, fetching } = result;
@@ -56,18 +56,19 @@ const MintedSchools = () => {
   useEffect(() => {
     const startItem = (page + 1) * rowsPerPage - rowsPerPage;
     const endItem = page * rowsPerPage + rowsPerPage;
-    const newData = data?.schoolTokenUris.sort((a: any, b: any) => b.id - a.id);
+    const newData = data?.nftDatas.sort((a: any, b: any) => b.id - a.id);
     const paginatedDatas = newData?.slice(startItem, endItem);
     setPaginatedData(paginatedDatas);
   }, [rowsPerPage, data, page]);
 
   let filteredData: any = [];
+
   useEffect(() => {
     if (paginatedData) {
       const encodeddata = paginatedData;
       const decodedShooldata: any = [];
       encodeddata.map((data: any) => {
-        let decodedData = atob(data.tokenUri.substring(29));
+        let decodedData = atob(data?.tokenUri?.substring(29));
         const schoolData = {
           tokenId: data.id,
           mintedAt: data.mintedAt,
@@ -77,6 +78,7 @@ const MintedSchools = () => {
       });
       decodedShooldata &&
         decodedShooldata?.map((row: any) => {
+          const data = paginatedData.find((d: any) => d.id === row.tokenId);
           filteredData.push({
             id: row.tokenId,
             schoolName: row.schoolName,
@@ -89,12 +91,12 @@ const MintedSchools = () => {
             electricity_availabilty: row.electricity_availabitlity,
             mintedStatus: 'MINTED',
             mintedAt: row.mintedAt,
+            gasFee: data.mintingGasFee,
           });
         });
       setTableData(filteredData);
     }
   }, [data, paginatedData]);
-
   const sortedData = tableData?.slice().sort((a: any, b: any) => {
     const isAsc = order === 'asc';
     if (orderBy === 'longitude') {
@@ -156,7 +158,7 @@ const MintedSchools = () => {
               </Scrollbar>
             </TableContainer>
             <TablePaginationCustom
-              count={data?.schoolTokenUris.length || 0}
+              count={data?.nftDatas?.length || 0}
               setPage={setPage}
               page={page}
               rowsPerPage={rowsPerPage}
