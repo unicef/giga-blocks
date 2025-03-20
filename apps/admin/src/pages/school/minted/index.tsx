@@ -47,11 +47,25 @@ const MintedSchools = () => {
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
   const [paginatedData, setPaginatedData] = useState<any>([]);
+  const [selectedFilter, setSelectedFilter] = useState<String>('all');
+
   const [result] = useQuery({
     query: Queries.allNftListQuery,
     variables: {},
   });
   const { data, fetching } = result;
+
+  const [adminResult] = useQuery({
+    query: Queries.adminNftListQuery,
+    variables: { id: process.env.NEXT_PUBLIC_ADMIN_ADDRESS },
+  });
+  const { data: adminData } = adminResult;
+
+  const [otherResult] = useQuery({
+    query: Queries.othersNftListQuery,
+    variables: { id: process.env.NEXT_PUBLIC_ADMIN_ADDRESS },
+  });
+  const { data: otherData } = otherResult;
 
   useEffect(() => {
     const startItem = (page + 1) * rowsPerPage - rowsPerPage;
@@ -97,6 +111,39 @@ const MintedSchools = () => {
       setTableData(filteredData);
     }
   }, [data, paginatedData]);
+
+  useEffect(() => {
+    let selectedData;
+
+    if (selectedFilter === 'admin') {
+      selectedData = adminData?.nftDatas || [];
+    } else if (selectedFilter === 'others') {
+      selectedData = otherData?.nftDatas || [];
+    } else {
+      selectedData = data?.nftDatas || [];
+    }
+
+    // Sorting and pagination
+    const startItem = (page + 1) * rowsPerPage - rowsPerPage;
+    const endItem = page * rowsPerPage + rowsPerPage;
+    const sortedData = selectedData.sort((a: any, b: any) => b.id - a.id);
+    const paginatedDatas = sortedData.slice(startItem, endItem);
+
+    // Decoding tokenUri
+    const decodedShooldata: any = paginatedDatas.map((data: any) => {
+      let decodedData = atob(data?.tokenUri?.substring(29));
+      return {
+        tokenId: data.id,
+        mintedAt: data.mintedAt,
+        ...JSON.parse(decodedData),
+        mintedStatus: 'MINTED',
+        gasFee: data.mintingGasFee,
+      };
+    });
+
+    setTableData(decodedShooldata);
+  }, [selectedFilter, data, adminData, otherData, page, rowsPerPage]);
+
   const sortedData = tableData?.slice().sort((a: any, b: any) => {
     const isAsc = order === 'asc';
     if (orderBy === 'longitude') {
@@ -111,14 +158,14 @@ const MintedSchools = () => {
       <FormControl sx={{ width: '25%' }}>
         <InputLabel id="demo-simple-select-label">Minted By</InputLabel>
         <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          // value={age}
-          label="Age"
-          // onChange={handleChange}
+          labelId="minted-by-select-label"
+          id="minted-by-select"
+          value={selectedFilter}
+          onChange={(e) => setSelectedFilter(e.target.value)}
         >
-          <MenuItem value={10}>Admin</MenuItem>
-          <MenuItem value={20}>Others</MenuItem>
+          <MenuItem value="all">All</MenuItem>
+          <MenuItem value="admin">Admin</MenuItem>
+          <MenuItem value="others">Others</MenuItem>
         </Select>
       </FormControl>
       {fetching && (

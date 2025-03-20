@@ -41,6 +41,46 @@ const allNftListQuery = gql`
   }
 `;
 
+const adminNftListQuery = gql`
+  query MyQuery($id: String!) {
+    nftDatas(where: { minter: $id }) {
+      id
+      imageHash
+      location
+      mintedAt
+      minter
+      tokenId
+      schoolId
+      name
+      mintingTransactionHash
+      mintingGasFee
+      mintingBlockNumber
+      mintingAmount
+      tokenUri
+    }
+  }
+`;
+
+const othersNftListQuery = gql`
+  query MyQuery($id: String!) {
+    nftDatas(where: { minter_not: $id }) {
+      id
+      imageHash
+      location
+      mintedAt
+      minter
+      tokenId
+      schoolId
+      name
+      mintingTransactionHash
+      mintingGasFee
+      mintingBlockNumber
+      mintingAmount
+      tokenUri
+    }
+  }
+`;
+
 const nftDetailsQuery = gql`
   query schoolTokenUri($id: ID!) {
     schoolTokenUri(id: $id, subgraphError: allow) {
@@ -76,4 +116,6 @@ export const Queries = {
   nftListQuery,
   nftDetailsQuery,
   allNftListQuery,
+  adminNftListQuery,
+  othersNftListQuery,
 };
