@@ -1,9 +1,8 @@
+import { gql } from 'urql';
 
-import {gql} from "urql";
-
- const ownedNftsQuery = gql`
-
-   query  schoolOwnedNfts{schoolOwnedNfts(subgraphError: allow) {
+const ownedNftsQuery = gql`
+  query schoolOwnedNfts {
+    schoolOwnedNfts(subgraphError: allow) {
       id
       nfts {
         id
@@ -11,53 +10,70 @@ import {gql} from "urql";
       }
     }
   }
-  `
- const nftListQuery = gql`
-
-  query schoolTokenUris($skip:Int, $first:Int) {schoolTokenUris(subgraphError: allow,skip: $skip,first: $first) {
-    id
-    tokenUri
-    mintedAt
-  }
-}`
-
-const nftDetailsQuery = gql`
-
-query schoolTokenUri($id: ID!) {
-  schoolTokenUri(id: $id, subgraphError: allow) {
-    id
-    tokenUri
-    owner {
+`;
+const nftListQuery = gql`
+  query schoolTokenUris($skip: Int, $first: Int) {
+    schoolTokenUris(subgraphError: allow, skip: $skip, first: $first) {
       id
+      tokenUri
+      mintedAt
     }
   }
-  schoolTransfers(subgraphError: allow, where: {tokenId: $id}) {
-    blockNumber
-    blockTimestamp
-    from
-    id
-    to
-    tokenId
-    transactionHash
-  }
-  collectorTransfers(subgraphError: allow, where: {tokenId: $id}) {
-    blockNumber
-    blockTimestamp
-    from
-    id
-    to
-    tokenId
-    transactionHash
-  }
-}
-`
+`;
 
-export const Queries ={
+const allNftListQuery = gql`
+  query MyQuery {
+    nftDatas {
+      id
+      imageHash
+      location
+      mintedAt
+      minter
+      tokenId
+      schoolId
+      name
+      mintingTransactionHash
+      mintingGasFee
+      mintingBlockNumber
+      mintingAmount
+      tokenUri
+    }
+  }
+`;
+
+const nftDetailsQuery = gql`
+  query schoolTokenUri($id: ID!) {
+    schoolTokenUri(id: $id, subgraphError: allow) {
+      id
+      tokenUri
+      owner {
+        id
+      }
+    }
+    schoolTransfers(subgraphError: allow, where: { tokenId: $id }) {
+      blockNumber
+      blockTimestamp
+      from
+      id
+      to
+      tokenId
+      transactionHash
+    }
+    collectorTransfers(subgraphError: allow, where: { tokenId: $id }) {
+      blockNumber
+      blockTimestamp
+      from
+      id
+      to
+      tokenId
+      transactionHash
+    }
+  }
+`;
+
+export const Queries = {
   ownedNftsQuery,
   nftListQuery,
-  nftDetailsQuery
-}
-
-
-
- 
+  nftDetailsQuery,
+  allNftListQuery,
+};
