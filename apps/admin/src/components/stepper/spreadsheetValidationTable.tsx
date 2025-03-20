@@ -114,18 +114,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   }, [allSheetErrors, selectedSheetName]);
 
   useEffect(() => {
-    const allowedElements = [
-      'schoolName',
-      'giga_school_id',
-      'longitudeStr',
-      'latitudeStr',
-      'schoolType',
-      'country',
-      'connectivity',
-      'coverage_availabitlity',
-      'electricity_availability',
-      'region',
-    ];
+    const allowedElements = ['school_id_giga'];
 
     if (tableHeaders.length > 0) {
       const missingElements = allowedElements.filter((element) => !tableHeaders.includes(element));
