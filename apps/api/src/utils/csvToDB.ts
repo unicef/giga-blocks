@@ -1,5 +1,5 @@
 interface SchoolData {
-  giga_school_id: string;
+  school_id_giga: string;
 }
 
 export async function handler(fileData: any): Promise<any> {
@@ -30,14 +30,14 @@ export async function handler(fileData: any): Promise<any> {
 
     for (const row of cleanedRows) {
       const [
-        giga_school_id,
+        school_id_giga,
   
       ] = row.split(',');
 
       
 
     const schoolData: SchoolData = {
-      giga_school_id,
+      school_id_giga,
         
     };
 

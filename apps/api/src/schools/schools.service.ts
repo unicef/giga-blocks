@@ -129,19 +129,19 @@ export class SchoolService {
           const schools = await this.prisma.school.findMany({
             where: {
               giga_school_id: {
-                in: schoolData.map(school => school.giga_school_id),
+                in: schoolData.map(school => school.school_id_giga),
               },
             },
           });
           // Check for missing schools
           const missingSchools = schoolData.filter(
-            school => !schools.some(dbSchool => dbSchool.giga_school_id === school.giga_school_id),
+            school => !schools.some(dbSchool => dbSchool.giga_school_id === school.school_id_giga),
           );
 
           if (missingSchools.length > 0) {
             throw new NotFoundException({
               message: 'Some schools from the CSV file are not found in the database',
-              missingSchools: missingSchools.map(school => school.giga_school_id),
+              missingSchools: missingSchools.map(school => school.school_id_giga),
             });
           }
 
@@ -161,7 +161,7 @@ export class SchoolService {
             await prisma.school.updateMany({
               where: {
                 giga_school_id: {
-                  in: schoolData.map(school => school.giga_school_id),
+                  in: schoolData.map(school => school.school_id_giga),
                 },
               },
               data: {
