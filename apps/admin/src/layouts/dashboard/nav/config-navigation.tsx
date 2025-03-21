@@ -5,6 +5,7 @@ import {
   PATH_CONTRIBUTE,
   PATH_VALID,
   PATH_ACTIVATE,
+  PATH_TRANSACTION,
 } from '../../../routes/paths';
 import SvgColor from '../../../components/svg-color';
 
@@ -101,6 +102,15 @@ const navConfig = [
       {
         title: 'Event Links',
         path: PATH_ACTIVATE.root,
+        icon: ICONS.user,
+      },
+    ],
+  },
+  {
+    items: [
+      {
+        title: 'Transaction',
+        path: PATH_TRANSACTION.root,
         icon: ICONS.user,
       },
     ],

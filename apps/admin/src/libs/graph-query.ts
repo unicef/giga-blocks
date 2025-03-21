@@ -111,6 +111,29 @@ const nftDetailsQuery = gql`
   }
 `;
 
+const nftTransfer = gql`
+  query MyQuery {
+    schoolTransfers {
+      blockNumber
+      blockTimestamp
+      from
+      to
+      tokenId
+      transactionHash
+      id
+    }
+    collectorTransfers {
+      blockNumber
+      blockTimestamp
+      from
+      id
+      to
+      tokenId
+      transactionHash
+    }
+  }
+`;
+
 export const Queries = {
   ownedNftsQuery,
   nftListQuery,
@@ -118,4 +141,5 @@ export const Queries = {
   allNftListQuery,
   adminNftListQuery,
   othersNftListQuery,
+  nftTransfer,
 };

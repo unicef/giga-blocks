@@ -13,6 +13,7 @@ const ROOTS_SCHOOL = '/school';
 const ROOTS_CONTRIBUTE = '/contribute';
 const ROOTS_VALID = '/valid';
 const ROOTS_ACTIVATE_SCHOOL = '/activate-school';
+const ROOTS_TRANSACTION = '/transaction';
 
 // ----------------------------------------------------------------------
 
@@ -62,6 +63,9 @@ export const PATH_VALID = {
 
 export const PATH_ACTIVATE = {
   root: ROOTS_ACTIVATE_SCHOOL,
+};
+export const PATH_TRANSACTION = {
+  root: ROOTS_TRANSACTION,
 };
 
 export const PATH_SCHOOL = {
