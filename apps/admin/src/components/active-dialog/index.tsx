@@ -61,7 +61,7 @@ export default function ActiveDialog() {
         resetForm();
         handleClose();
       },
-      onError: (err) => {
+      onError: (err:any) => {
         setSnackbarMessage(`Failed to activate school: ${err.message}`);
         setSnackbarSeverity('error');
         setSnackbarOpen(true);

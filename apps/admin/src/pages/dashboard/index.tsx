@@ -8,7 +8,7 @@ import Card from '@mui/material/Card';
 Dashboard.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default function Dashboard() {
-  const { data = [] } = useAllSchool({});
+  const { data = [] } = useAllSchool();
   // const latitudeArray = Array.isArray(data) ? data.map((item) => item.latitude) : [];
   // const longitudeArray = data?.map((item: { longitude: any }) => item.longitude);
   return (

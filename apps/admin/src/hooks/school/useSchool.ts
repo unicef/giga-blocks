@@ -48,7 +48,7 @@ export const useSchoolGet = ({
   );
 };
 
-export const useAllSchool = (p0: {}) => {
+export const useAllSchool = () => {
   return useQuery(['get-all-school'], async () => {
     const { data } = await api.get(`${routes.SCHOOLS.GET}`);
     return data;
