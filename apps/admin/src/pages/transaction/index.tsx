@@ -98,9 +98,7 @@ const Transaction = () => {
                       <TableCell scope="row">
                         {row.from.slice(0, 4) + '...' + row.from.slice(-8)}
                       </TableCell>
-                      <TableCell scope="row" align="center">
-                        {row.tokenId}
-                      </TableCell>
+                      <TableCell scope="row">{row.tokenId}</TableCell>
                       <TableCell scope="row">
                         <Link
                           href={`${process.env.NEXT_PUBLIC_TRANSACTION_HASH}/tx/${row.transactionHash}`}
