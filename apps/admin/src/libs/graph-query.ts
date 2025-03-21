@@ -134,6 +134,15 @@ const nftTransfer = gql`
   }
 `;
 
+const totalGasFee = gql`
+  query MyQuery($id: ID!) {
+    totalGasFees(id: $id, subgraphError: allow) {
+      totalGasFee
+      id
+    }
+  }
+`;
+
 export const Queries = {
   ownedNftsQuery,
   nftListQuery,
@@ -142,4 +151,5 @@ export const Queries = {
   adminNftListQuery,
   othersNftListQuery,
   nftTransfer,
+  totalGasFee,
 };

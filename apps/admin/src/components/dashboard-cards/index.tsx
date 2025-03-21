@@ -3,25 +3,32 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
-import { useSchoolCount, useSchoolGet,useMintedSchoolCount } from '@hooks/school/useSchool';
+import { useSchoolCount, useSchoolGet, useMintedSchoolCount } from '@hooks/school/useSchool';
 import { useContributeGet } from '@hooks/contribute/useContribute';
 import { useUserGet } from '@hooks/user/useUser';
 import { useQuery } from 'urql';
 import { Queries } from 'src/libs/graph-query';
+import { ethers } from 'ethers';
 
 export default function OutlinedCard() {
   const { data: mintedCount } = useMintedSchoolCount('MINTED');
   const { data: schoolCount } = useSchoolCount();
-  const {data:contributionData} = useContributeGet({page: 0, perPage: 10})
-  const {data:userData} = useUserGet(1, 10, 'CONTRIBUTOR')
+  const { data: contributionData } = useContributeGet({ page: 0, perPage: 10 });
+  const { data: userData } = useUserGet(1, 10, 'CONTRIBUTOR');
 
   const [result] = useQuery({
     query: Queries.nftListQuery,
-    variables: {  },
+    variables: {},
   });
   const { data } = result;
 
-  const dataLength = data?.schoolTokenUris.length
+  const [totalGasFee] = useQuery({
+    query: Queries.totalGasFee,
+    variables: { id: process.env.NEXT_PUBLIC_ADMIN_ADDRESS },
+  });
+  const { data: gasFee } = totalGasFee;
+
+  const dataLength = data?.schoolTokenUris.length;
 
   return (
     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
@@ -40,7 +47,7 @@ export default function OutlinedCard() {
           <CardContent>
             <Typography variant="body2">NFTs Minted</Typography>
             <Typography variant="h5" component="div">
-              {dataLength|| 'N/A'}
+              {dataLength || 'N/A'}
             </Typography>
           </CardContent>
         </Card>
@@ -50,7 +57,7 @@ export default function OutlinedCard() {
           <CardContent>
             <Typography variant="body2">Total Contributors</Typography>
             <Typography variant="h5" component="div">
-            {userData?.meta?.total || 'N/A'}
+              {userData?.meta?.total || 'N/A'}
             </Typography>
           </CardContent>
         </Card>
@@ -60,7 +67,19 @@ export default function OutlinedCard() {
           <CardContent>
             <Typography variant="body2">Total Contributions</Typography>
             <Typography variant="h5" component="div">
-            {contributionData?.meta?.total || 'N/A'}
+              {contributionData?.meta?.total || 'N/A'}
+            </Typography>
+          </CardContent>
+        </Card>
+      </Grid>
+      <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="body2">Total Gas Fee</Typography>
+            <Typography variant="h5" component="div">
+              {Number(ethers.formatEther(gasFee?.totalGasFees?.[0]?.totalGasFee)).toExponential(2) +
+                ' ' +
+                'ETH' || 'N/A'}
             </Typography>
           </CardContent>
         </Card>
