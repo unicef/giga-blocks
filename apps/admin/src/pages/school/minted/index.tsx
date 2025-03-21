@@ -106,7 +106,7 @@ const MintedSchools = () => {
             electricity_availabilty: row.electricity_availabitlity,
             mintedStatus: 'MINTED',
             mintedAt: row.mintedAt,
-            gasFee: ethers.formatEther(data.mintingGasFee),
+            gasFee: ethers.formatEther(data?.mintingGasFee || '0'),
           });
         });
       setTableData(filteredData);
@@ -138,9 +138,9 @@ const MintedSchools = () => {
         mintedAt: data.mintedAt,
         ...JSON.parse(decodedData),
         mintedStatus: 'MINTED',
-        gasFee: data.mintingGasFee,
+        gasFee: ethers.formatEther(data.mintingGasFee),
       };
-    });
+    }, []);
 
     setTableData(decodedShooldata);
   }, [selectedFilter, data, adminData, otherData, page, rowsPerPage]);
