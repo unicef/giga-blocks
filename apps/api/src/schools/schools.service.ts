@@ -3,6 +3,9 @@ import {
   UnauthorizedException,
   HttpException,
   BadRequestException,
+  ConflictException,
+  NotFoundException,
+  Inject,
 } from '@nestjs/common';
 import { MintStatus, Prisma, Role } from '@prisma/application';
 import { PrismaAppService } from 'src/prisma/prisma.service';
@@ -19,112 +22,41 @@ import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-
 import { getTokenId } from 'src/utils/web3/subgraph';
 import { PaginateFunction, PaginateOptions } from 'src/utils/paginate';
 import { getContractWithSigner } from 'src/utils/ethers/contractWithSigner';
+import { PAGINATION } from 'src/constants/pagination';
+import { paginator } from 'src/utils/paginator';
 import { NFTContent } from 'src/constants/contract';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { getCacheKey } from 'src/utils/cache/getCacheKey';
 @Injectable()
 export class SchoolService {
   constructor(
     private prisma: PrismaAppService,
     private readonly queueService: QueueService,
     private readonly configService: ConfigService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async findAll(query: ListSchoolDto) {
     const { page, perPage, minted, uploadId, name, country, connectivityStatus, orderBy, order } =
       query;
+    const cacheKey = getCacheKey(name, country, page, perPage);
+    const cachedResult = await this.cacheManager.get<string>(cacheKey);
+
+    if (cachedResult) return cachedResult;
+
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
-    };
-    if (minted) {
-      where.minted = minted;
-    }
-
-    if (uploadId) {
-      where.uploadId = uploadId;
-    }
-    if (name) {
-      where.name = {
-        contains: name,
-        mode: 'insensitive',
-      };
-    }
-    if (country) {
-      where.country = {
-        contains: country,
-        mode: 'insensitive',
-      };
-    }
-    if (connectivityStatus) {
-      let status: boolean;
-      if (connectivityStatus === 'true') {
-        status = true;
-      } else {
-        status = false;
-      }
-      where.connectivity = status;
-    }
-
-    if (!perPage) {
-      const data = await this.prisma.school.findMany({ where });
-      return data;
-    }
-
-    const paginator = (defaultOptions: PaginateOptions): PaginateFunction => {
-      return async (model, args: any = { where: undefined, include: undefined }, options) => {
-        const page = Number(options?.page || defaultOptions?.page) || 0;
-        const perPage = Number(options?.perPage || defaultOptions?.perPage) || 10;
-        const order = options?.order || defaultOptions?.order || 'desc';
-        const orderBy = options?.orderBy || defaultOptions?.orderBy || 'createdAt';
-        const skip = perPage * page;
-        const [total, rows] = await Promise.all([
-          model.count({ where: args.where }),
-
-          orderBy === 'school'
-            ? model.findMany({
-                ...args,
-                orderBy: [
-                  {
-                    school: {
-                      name: order,
-                    },
-                  },
-                ],
-                take: perPage,
-                skip,
-              })
-            : model.findMany({
-                ...args,
-                orderBy: {
-                  [orderBy]: order,
-                },
-                take: perPage,
-                skip,
-              }),
-        ]);
-        const lastPage = Math.ceil(total / perPage);
-        const meta = {
-          total,
-          lastPage,
-          currentPage: page,
-          perPage,
-        };
-
-        if (options?.transformRows) {
-          return {
-            rows: options.transformRows(rows),
-            meta,
-          };
-        }
-
-        return {
-          rows,
-          meta,
-        };
-      };
+      ...(minted !== undefined && { minted }),
+      ...(uploadId && { uploadId }),
+      ...(name && { name: { contains: name, mode: 'insensitive' } }),
+      ...(country && { country: { contains: country, mode: 'insensitive' } }),
+      ...(connectivityStatus !== undefined && { connectivity: connectivityStatus === 'true' }),
     };
 
-    const paginate: PaginateFunction = paginator({ perPage: 20 });
+    const paginate: PaginateFunction = paginator({ perPage });
 
-    return paginate(
+    const result = await paginate(
       this.prisma.school,
       { where },
       {
@@ -134,6 +66,10 @@ export class SchoolService {
         orderBy,
       },
     );
+
+    await this.cacheManager.set(cacheKey, result, 5000);
+
+    return result;
   }
 
   async queueOnchainData(data: number) {
@@ -141,8 +77,11 @@ export class SchoolService {
   }
 
   async findContract(tokenId) {
-      const contract: any = getContractWithSigner(NFTContent, '0x38AB410c1C650d251a83F884BB76709d1791Ab07');
-      return await contract.generateTokenData(tokenId);
+    const contract: any = getContractWithSigner(
+      NFTContent,
+      '0x38AB410c1C650d251a83F884BB76709d1791Ab07',
+    );
+    return await contract.generateTokenData(tokenId);
   }
 
   async checkAdmin(address: string) {
@@ -187,35 +126,56 @@ export class SchoolService {
         try {
           const dataArray = await handler(fileData);
           const schoolData = dataArray.schoolArrays;
-          schoolData.map(school => {
-            if (isNaN(school.longitude) || isNaN(school.latitude)) {
-              throw new BadRequestException({ message: 'Invalid longitude or latitude' });
-            }
-            if (
-              school.latitude < -90 ||
-              school.latitude > 90 ||
-              school.longitude < -180 ||
-              school.longitude > 180
-            ) {
-              throw new BadRequestException({ message: 'Invalid longitude or latitude' });
-            }
-          });
-          const transaction = await this.prisma.cSVUpload.create({
-            data: {
-              uploadedBy: user.id,
-              fileValue: dataArray.rowValue,
-              fileName: filename,
-              school: {
-                createMany: {
-                  data: dataArray.schoolArrays.map(school => ({
-                    ...school,
-                    createdById: user.id,
-                  })),
-                },
+          const schools = await this.prisma.school.findMany({
+            where: {
+              giga_school_id: {
+                in: schoolData.map(school => school.school_id_giga),
               },
             },
           });
-          uploadBatch = transaction;
+          // Check for missing schools
+          const missingSchools = schoolData.filter(
+            school => !schools.some(dbSchool => dbSchool.giga_school_id === school.school_id_giga),
+          );
+
+          if (missingSchools.length > 0) {
+            throw new NotFoundException({
+              message: 'Some schools from the CSV file are not found in the database',
+              missingSchools: missingSchools.map(school => school.school_id_giga),
+            });
+          }
+
+          // throw error in case of  missing schools or add the available schools
+          // to the uploadBatch and ignore the missing ones.
+          // Still needs to inform the user about the missing schools
+          //Need to add to the queue after the uploadBatch is created.
+         const txn =  await this.prisma.$transaction(async (prisma)=>{
+            const uploadBatch = await this.prisma.cSVUpload.create({
+              data: {
+                uploadedBy: user.id,
+                fileValue: dataArray.rowValue,
+                fileName: filename,
+      
+              }, 
+            });
+            await prisma.school.updateMany({
+              where: {
+                giga_school_id: {
+                  in: schoolData.map(school => school.school_id_giga),
+                },
+              },
+              data: {
+                uploadId: uploadBatch.id,
+              },
+            })
+            return uploadBatch;
+            // uploadBatch = transaction;
+            
+          })
+          // uploadBatch = transaction;
+          await this.queueService.csvMintdata(txn.id);
+          // console.log(txn, "is transaction")
+
         } catch (err) {
           if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
             res
@@ -241,6 +201,7 @@ export class SchoolService {
       res.code(200).send(new AppResponseDto(200, data, 'Data uploaded successfully'));
     }
   }
+
   async findOne(id: string) {
     return await this.prisma.school.findUnique({
       where: {
@@ -263,6 +224,29 @@ export class SchoolService {
     } catch {
       throw new HttpException('Internal server error', 500);
     }
+  }
+
+  async getAllTheme() {
+    return await this.prisma.theme.findMany({});
+  }
+
+  async getSingleTheme(name: string) {
+    return await this.prisma.theme.findUnique({
+      where: {
+        name,
+      },
+    });
+  }
+
+  async updateTheme(id: string, themeId: string) {
+    return await this.prisma.school.update({
+      where: {
+        id,
+      },
+      data: {
+        themeId,
+      },
+    });
   }
 
   async byCountry(country: string) {
@@ -359,9 +343,9 @@ export class SchoolService {
       schooldata,
     );
     const txReceipt = await tx.wait();
-    if (txReceipt.status === 1){
+    if (txReceipt.status === 1) {
       this.queueService.processImage(id);
-      }
+    }
     return txReceipt;
   }
 

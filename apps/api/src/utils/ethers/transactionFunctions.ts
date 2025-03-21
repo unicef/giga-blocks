@@ -14,10 +14,14 @@ interface ExtendedContract extends BaseContract {
   ) => ContractTransactionResponse;
   getArtScriptByIndex?: (index: number) => ContractTransactionResponse;
   nftImageHash?: (tokenHash: string) => ContractTransactionResponse;
-  getRandomImages?: (region:string,tokenId: string | ContractTransactionResponse) => ContractTransactionResponse;
+  getRandomImages?: (
+    region: string,
+    tokenId: string | ContractTransactionResponse,
+  ) => ContractTransactionResponse;
   getImage?: (imageName: string | ContractTransactionResponse) => ContractTransactionResponse;
-  getMetadataContent?:(tokenId: string | ContractTransactionResponse) => any;
-  tokenIdToTokenHash?:(tokenId: string | ContractTransactionResponse) => any;
+  getMetadataContent?: (tokenId: string | ContractTransactionResponse) => any;
+  tokenIdToTokenHash?: (tokenId: string | ContractTransactionResponse) => any;
+  addHashes?: (date: string, hashes: string[]) => ContractTransactionResponse;
 }
 
 export const mintNFT = async (
@@ -27,6 +31,7 @@ export const mintNFT = async (
   giga_ids: string[],
 ): Promise<ContractTransactionResponse> => {
   const config = new ConfigService();
+  console.log(schoolDataArray);
   // const weiEthers = await getProposedGasPrice();
   const escrowAddress = config.get('NEXT_PUBLIC_GIGA_ESCROW_ADDRESS');
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
@@ -34,9 +39,11 @@ export const mintNFT = async (
     giga_ids[i],
     escrowAddress,
     escrowAddress,
-    [...el, 'Nepal']
+    [...el, 'Nepal'],
   ]);
+
   const multicalldata = generateMultiCallData(contractName, 'mintNft', schoolArgs);
+  console.log(multicalldata, 'is multicall data');
   return await contract.multicall(multicalldata);
 
   // return await contract.multicall(multicalldata, { gasPrice: weiEthers });
@@ -49,7 +56,7 @@ export const mintSingleNFT = async (
   giga_id: string,
 ): Promise<ContractTransactionResponse> => {
   const config = new ConfigService();
-  const escrowAddress = config.get('NEXT_PUBLIC_GIGA_ESCROW_ADDRESS'); 
+  const escrowAddress = config.get('NEXT_PUBLIC_GIGA_ESCROW_ADDRESS');
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
   return await contract.mintNft(giga_id, escrowAddress, escrowAddress, schoolDataArray);
 };
@@ -96,16 +103,14 @@ export const getArtScript = async (
   return await contract.getArtScriptByIndex(0);
 };
 
-
-export const getSchoolData = async(
+export const getSchoolData = async (
   contractName: string,
   contractAddress: string,
   tokenId: string | ContractTransactionResponse,
 ): Promise<ContractTransactionResponse> => {
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
   return await contract.getMetadataContent(tokenId);
-}
-
+};
 
 export const getRandomImages = async (
   contractName: string,
@@ -114,19 +119,17 @@ export const getRandomImages = async (
   tokenId: string | ContractTransactionResponse,
 ): Promise<ContractTransactionResponse> => {
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
-  return await contract.getRandomImages(region,tokenId);
-}
+  return await contract.getRandomImages(region, tokenId);
+};
 
-export const getImage = async(
+export const getImage = async (
   contractName: string,
   contractAddress: string,
   imageName: string | ContractTransactionResponse,
 ): Promise<ContractTransactionResponse> => {
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
   return await contract.getImage(imageName);
-}
-
-
+};
 
 export const updateImageHash = async (
   contractName: string,
@@ -159,12 +162,13 @@ export const updateBulkData = async (
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
 
   const schoolTokenIds = await getTokensId(
-    process.env.NEXT_PUBLIC_GRAPH_URL || 'https://api.studio.thegraph.com/query/74692/giga-research/version/latest/',
-        tokenId
-  )
-  const schoolDatas = await processSchoolData(schoolDataArray, schoolTokenIds.data.schoolTokenIds)
+    process.env.NEXT_PUBLIC_GRAPH_URL ||
+      'https://api.studio.thegraph.com/query/74692/giga-research/version/latest/',
+    tokenId,
+  );
+  const schoolDatas = await processSchoolData(schoolDataArray, schoolTokenIds.data.schoolTokenIds);
   const schoolArgs = schoolDatas.tokenId.map((ti, i) => [ti, schoolDatas.schoolData[i]]);
-  console.log(schoolArgs)
+
   const multicalldata = generateMultiCallData(contractName, 'updateNftContent', schoolArgs);
   return contract.multicall(multicalldata);
   // return await contract.multicall(multicalldata, { gasPrice: weiEthers });
@@ -173,10 +177,16 @@ export const updateBulkData = async (
 export const getScriptData = async (
   contentcontractAddress: string,
   imagecontractAddress: string,
-  schoolId:string,
-):Promise<any> => {
-  const contentcontract: ExtendedContract = getContractWithSigner("NFTContent", contentcontractAddress);
-  const imagecontract: ExtendedContract = getContractWithSigner("ImageContent", imagecontractAddress);
+  schoolId: string,
+): Promise<any> => {
+  const contentcontract: ExtendedContract = getContractWithSigner(
+    'NFTContent',
+    contentcontractAddress,
+  );
+  const imagecontract: ExtendedContract = getContractWithSigner(
+    'ImageContent',
+    imagecontractAddress,
+  );
   //get tokenId from schoolId
   const tokenId = await contentcontract.schoolIdToTokenId(schoolId);
   //get nft contents from tokenId
@@ -186,39 +196,46 @@ export const getScriptData = async (
   const formattedResponse = JSON.parse(sanitizedResponse);
   const tokenHash = await contentcontract.tokenIdToTokenHash(tokenId);
   //get random images from region and tokenId
-  const randomImages = await imagecontract.getRandomImages(formattedResponse?.region,tokenHash);
+  const randomImages = await imagecontract.getRandomImages(formattedResponse?.region, tokenHash);
   //get image data from image name
   const image1 = await imagecontract.getImage(randomImages[0]);
   const image2 = await imagecontract.getImage(randomImages[1]);
   //converts image bytes  into base64 encoded image
   // const baseImage1 = await getEncodedImage(image1);
   // const baseImage2 = await getEncodedImage(image2);
-     const data = {
-      tokenId,
-      nftcontents:formattedResponse,
-      baseImage1:image1,
-      baseImage2:image2,
-      tokenHash
-   }
-   if(!image1 || !image1)throw new Error("Error in fetching images");
-   return data;
-}
+  const data = {
+    tokenId,
+    nftcontents: formattedResponse,
+    baseImage1: image1,
+    baseImage2: image2,
+    tokenHash,
+  };
+  if (!image1 || !image1) throw new Error('Error in fetching images');
+  return data;
+};
 
-const getEncodedImage = async (imageData:any) =>{
+export const addArweaveHash = async (contractName, contractAddress, hashes) => {
+  const qosContract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
+
+  const date = new Date();
+
+  return qosContract.addHashes(date.toString(), hashes);
+};
+
+const getEncodedImage = async (imageData: any) => {
   const base64 = `${ethers.encodeBase64(imageData)}`;
   return base64;
-}
+};
 
-
-const processSchoolData = async (schoolDataArray: any[], tokenIds: any[]) => 
+const processSchoolData = async (schoolDataArray: any[], tokenIds: any[]) =>
   schoolDataArray.reduce(
-   (acc, school) => {
-     const matchingToken = tokenIds.find((token) => token.schoolId === school[0]);
-     if (matchingToken) {
-       acc.schoolData.push(Object.values(school).slice(1));
-       acc.tokenId.push(matchingToken.tokenId);
-     }
-     return acc;
-   },
-   { schoolData: [], tokenId: [] }
- )
+    (acc, school) => {
+      const matchingToken = tokenIds.find(token => token.schoolId === school[0]);
+      if (matchingToken) {
+        acc.schoolData.push(Object.values(school).slice(1));
+        acc.tokenId.push(matchingToken.tokenId);
+      }
+      return acc;
+    },
+    { schoolData: [], tokenId: [] },
+  );

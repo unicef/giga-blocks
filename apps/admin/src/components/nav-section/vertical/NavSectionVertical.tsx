@@ -13,8 +13,8 @@ export default function NavSectionVertical({ data, sx, ...other }: NavSectionPro
   const { translate } = useLocales();
 
   return (
-    <Stack sx={sx} {...other}>
-      {data?.map((group:any) => {
+    <Stack sx={{}} {...other}>
+      {data?.map((group: any) => {
         const key = group.subheader || group.items[0].title;
 
         return (
@@ -23,7 +23,7 @@ export default function NavSectionVertical({ data, sx, ...other }: NavSectionPro
               <StyledSubheader disableSticky>{`${translate(group.subheader)}`}</StyledSubheader>
             )}
 
-            {group.items?.map((list:any) => (
+            {group.items?.map((list: any) => (
               <NavList
                 key={list.title + list.path}
                 data={list}

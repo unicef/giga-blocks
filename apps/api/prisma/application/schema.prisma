@@ -77,6 +77,12 @@ enum MintStatus {
   ISMINTING
 }
 
+enum ActivationStatus {
+  ACTIVE
+  INACTIVE
+  EXPIRED
+}
+
 model Auth {
   id           String    @id @default(uuid())
   otp          String    @unique
@@ -138,6 +144,8 @@ model User {
   isArchived      Boolean           @default(false)
   validatedBy     validatedData[]   @relation("ApprovedBy")
   OTP             OTP[]
+  linkActivatedBy  ActivationLog[]  @relation("ActivatedBy")
+  linkDeactivatedBy ActivationLog[]  @relation("DeactivatedBy")
 
   @@map("giga_users")
 }
@@ -190,6 +198,7 @@ model School {
 
   @@index(fields: [name], type: Gist)
   @@index(fields: [minted], type: Hash)
+  @@index(fields:[country,region_name,id])
   @@map("giga_school")
 }
 
@@ -262,6 +271,20 @@ model OTP {
   @@map("giga_otp")
 }
 
+model magicLinkOtp {
+  id             String   @id @default(uuid())
+  otp            String   @unique
+  email          String   @unique
+  validated      Boolean   @default(false)
+  expirationTime DateTime  
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+
+  @@map("giga_magic_link_otp")
+}
+
+
 model Theme {
   id           String    @id @default(uuid())
   colorScheme  Json
@@ -273,4 +296,74 @@ model Theme {
   isArchived   Boolean   @default(false)
 
   @@map("giga_themes")
+}
+
+model Qos {
+  id                   String   @id @default(uuid())
+  timestamp            DateTime
+  country_id           String
+  giga_school_id       String
+  speed_download_probe String
+  speed_upload_probe   String
+  latency_probe        String
+  ce_ingress           String
+  ce_egress            String
+  pe_ingress           String
+  pe_egress            String
+  provider             String
+  speed_download       String
+  speed_upload         String
+  latency              String
+  signature            String
+  gigasync_id          String
+  date                 DateTime?
+  dynamicData          Json
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  deletedAt            DateTime?
+
+  @@map("giga_qos")
+}
+
+model ArweaveHash {
+  id           String   @id @default(uuid())
+  date         DateTime @unique
+  arweaveHash  String[] 
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  deletedAt    DateTime?
+
+  @@map("giga_arweave_data")
+}
+
+model ActivationLog {
+  id           String            @id @default(uuid())
+  status       ActivationStatus  @default(INACTIVE)
+  activatedBy  String
+  name         String 
+  activatedUser User             @relation("ActivatedBy",fields:[activatedBy],references:[id])
+  deActivatedBy  String?
+  deActivatedUser User ?         @relation( "DeactivatedBy",fields:[deActivatedBy],references:[id])
+  startDate    DateTime          
+  endDate      DateTime?         
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  @@map("giga_link_activation")
+}
+
+model Contributor {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  walletAddress Bytes?
+  username      String?
+  nftAddress    String?
+  totalNftMinted Int
+  isVisible     Boolean  @default(false)
+  nftReserved   Boolean  @default(false)
+  nftClaimed    Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("giga_contributor")
 }

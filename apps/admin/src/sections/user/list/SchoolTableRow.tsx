@@ -1,12 +1,6 @@
 // @mui
-import {
-  Stack,
-  TableRow,
-  TableCell,
-  Typography,
-  Checkbox,
-} from '@mui/material';
-import { TESTNET_CHAINS,DEFAULT_CHAIN_ID } from '@components/web3/chains';
+import { Stack, TableRow, TableCell, Typography, Checkbox } from '@mui/material';
+import { TESTNET_CHAINS, DEFAULT_CHAIN_ID } from '@components/web3/chains';
 
 // components
 import { useRouter } from 'next/router';
@@ -26,22 +20,14 @@ export default function SchoolTableRow({
   rowData,
   checkbox,
 }: Props) {
-  const {
-    id,
-    schoolName,
-    country,
-    longitude,
-    latitude,
-    mintedStatus,
-    mintedAt
-  } = row;
+  const { id, schoolName, country, longitude, latitude, mintedStatus, mintedAt, gasFee } = row;
 
   const { push } = useRouter();
   const schoolNft = process.env.NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS;
-  const explorer = TESTNET_CHAINS[DEFAULT_CHAIN_ID]?.blockExplorerUrls[0]
+  const explorer = TESTNET_CHAINS[DEFAULT_CHAIN_ID]?.blockExplorerUrls[0];
 
   const handleEditRow = (row: string) => {
-    if (mintedStatus == 'MINTED') push(`/nft/${row}`)
+    if (mintedStatus == 'MINTED') push(`/nft/${row}`);
     else push(`/school/${row}`);
   };
 
@@ -67,7 +53,7 @@ export default function SchoolTableRow({
     }
   };
 
-  const date = new Date(mintedAt*1000)
+  const date = new Date(mintedAt * 1000);
 
   var year = date.getFullYear();
   var month = date.getMonth() + 1;
@@ -77,14 +63,16 @@ export default function SchoolTableRow({
   var seconds = date.getSeconds();
 
   // Format the date as a string
-  var formattedDate = `${year}/${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day} ${hours}:${minutes}:${seconds}`;
+  var formattedDate = `${year}/${month < 10 ? '0' + month : month}/${
+    day < 10 ? '0' + day : day
+  } ${hours}:${minutes}:${seconds}`;
 
   return (
     <>
       <TableRow
         hover
         // selected={selected}
-        sx={{cursor: 'pointer'}}
+        sx={{ cursor: 'pointer' }}
       >
         {checkbox && (
           <TableCell padding="checkbox">
@@ -128,29 +116,33 @@ export default function SchoolTableRow({
           sx={{ textTransform: 'capitalize' }}
           onClick={() => handleEditRow(id)}
         >
-          {mintedStatus =='NOTMINTED'&& 'Pending'}
-          {mintedStatus =='ISMINTING'&& 'In Progress'}
-          {mintedStatus =='MINTED'&& mintedStatus}
+          {mintedStatus == 'NOTMINTED' && 'Pending'}
+          {mintedStatus == 'ISMINTING' && 'In Progress'}
+          {mintedStatus == 'MINTED' && mintedStatus}
         </TableCell>
-        {mintedStatus =='MINTED' && 
+        {mintedStatus == 'MINTED' && (
+          <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+            <a href={`${explorer}/token/${schoolNft}?a=${id}`} target="_blank" rel="noreferrer">
+              {id}
+            </a>
+          </TableCell>
+        )}
+        {mintedStatus == 'MINTED' && (
+          <TableCell
+            align="left"
+            sx={{ textTransform: 'capitalize' }}
+            onClick={() => handleEditRow(id)}
+          >
+            {formattedDate}
+          </TableCell>
+        )}
         <TableCell
           align="left"
           sx={{ textTransform: 'capitalize' }}
+          onClick={() => handleEditRow(id)}
         >
-          <a href ={`${explorer}/token/${schoolNft}?a=${id}`} target="_blank" rel="noreferrer">
-          {id}
-          </a>
+          {gasFee}
         </TableCell>
-        }
-        {mintedStatus =='MINTED' && 
-        <TableCell
-        align="left"
-        sx={{ textTransform: 'capitalize' }}
-        onClick={() => handleEditRow(id)}
-        >
-        {formattedDate}
-        </TableCell>
-        }
       </TableRow>
     </>
   );

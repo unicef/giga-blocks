@@ -5,23 +5,19 @@ import { MapView } from '../../components/maps';
 import CardData from '../../components/dashboard-cards';
 import Card from '@mui/material/Card';
 
-Dashboard.getLayout = (page: React.ReactElement) => (
-  <DashboardLayout>
-    {page}
-  </DashboardLayout>
-);
+Dashboard.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default function Dashboard() {
-  const {data} = useAllSchool();
-  const latitudeArray = data?.map((item: { latitude: any }) => item.latitude);
-  const longitudeArray = data?.map((item: { longitude: any }) => item.longitude);
+  const { data = [] } = useAllSchool({});
+  // const latitudeArray = Array.isArray(data) ? data.map((item) => item.latitude) : [];
+  // const longitudeArray = data?.map((item: { longitude: any }) => item.longitude);
   return (
     <>
       <Container>
         <h1>Dashboard</h1>
         <CardData />
-        <Card sx={{mt: 10}}>
-          <MapView
+        <Card sx={{ mt: 10 }}>
+          {/* <MapView
             mapData={
               latitudeArray && longitudeArray
                 ? latitudeArray?.map((latitude: any, index: number) => ({
@@ -30,7 +26,7 @@ export default function Dashboard() {
                   }))
                 : []
             }
-          />
+          /> */}
         </Card>
       </Container>
     </>

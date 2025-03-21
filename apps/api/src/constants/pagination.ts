@@ -1,0 +1,7 @@
+export const PAGINATION = {
+    MAX_PER_PAGE: 100,
+    DEFAULT_PER_PAGE: 20,
+    DEFAULT_PAGE: 1,
+    DEFAULT_ORDERBY: 'id',
+    DEFAULT_ORDER: 'asc'
+}

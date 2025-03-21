@@ -1,5 +1,8 @@
 export const AMQP_CONNECTION = 'AMQP_CONNECTION';
 
-export const SCHOOL_QUEUE = 'SCHOOL_QUEUE';
-
-export const UPDATE_ONCHAIN = 'etl_queue'
+export const QUEUES = {
+    SCHOOL_QUEUE: 'SCHOOL_QUEUE',
+    UPDATE_ONCHAIN: 'UPDATE_ONCHAIN_QUEUE',
+    QOS_QUEUE: 'QOS_QUEUE',
+    QOS_FETCH_QUEUE: 'QOS_FETCH_QUEUE',
+} 

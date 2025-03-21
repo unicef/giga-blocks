@@ -3,7 +3,7 @@ import { totp } from 'otplib';
 
 import { AuthService } from './auth.service';
 
-import { AuthSendOtp, AuthWallet, RefreshToken, WalletRegister } from './dto';
+import { AuthDto, AuthSendOtp, AuthWallet, RefreshToken, WalletRegister } from './dto';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from '../users/dto/user.dto';
 
@@ -91,4 +91,5 @@ export class AuthController {
   async adminWalletLogin(@Body() walletLogin: AuthWallet, @Request() req) {
     return this.authService.adminWalletLogin(req.user);
   }
+
 }

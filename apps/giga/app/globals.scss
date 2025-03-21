@@ -1,0 +1,32 @@
+@use '@carbon/react';
+@use '@carbon/react/scss/breakpoint' as *;
+
+@use '../components/Navbar/navbar';
+
+@use '../app/home/landing-page';
+
+@use '../components/Info/info';
+
+:root {
+  --font-color: #e10000;
+  --bg-color: #fff;
+}
+
+.dynamic-theme {
+  color: var(--font-color);
+  background-color: var(--bg-color);
+}
+
+@media (min-width: 42rem) {
+  .cds--grid--no-gutter {
+    padding-left: -1rem;
+    padding-right: -1rem;
+  }
+}
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+.cds--content {
+  margin-top: 3rem;
+  padding: 0;
+}
