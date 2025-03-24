@@ -131,6 +131,7 @@ export class SchoolService {
               giga_school_id: {
                 in: schoolData.map(school => school.school_id_giga),
               },
+              minted: MintStatus.NOTMINTED,
             },
           });
           // Check for missing schools
@@ -138,12 +139,17 @@ export class SchoolService {
             school => !schools.some(dbSchool => dbSchool.giga_school_id === school.school_id_giga),
           );
 
-          if (missingSchools.length > 0) {
-            throw new NotFoundException({
-              message: 'Some schools from the CSV file are not found in the database',
-              missingSchools: missingSchools.map(school => school.school_id_giga),
-            });
-          }
+          const school_to_be_updated = schoolData.filter(school =>
+            schools.some(dbSchool => dbSchool.giga_school_id === school.school_id_giga),
+          ).map(school =>school.school_id_giga);
+
+
+          // if (missingSchools.length > 0) {
+          //   throw new NotFoundException({
+          //     message: 'Some schools from the CSV file are not found in the database',
+          //     missingSchools: missingSchools.map(school => school.school_id_giga),
+          //   });
+          // }
 
           // throw error in case of  missing schools or add the available schools
           // to the uploadBatch and ignore the missing ones.
@@ -153,7 +159,7 @@ export class SchoolService {
             const uploadBatch = await this.prisma.cSVUpload.create({
               data: {
                 uploadedBy: user.id,
-                fileValue: dataArray.rowValue,
+                fileValue: school_to_be_updated,
                 fileName: filename,
       
               }, 
@@ -161,7 +167,7 @@ export class SchoolService {
             await prisma.school.updateMany({
               where: {
                 giga_school_id: {
-                  in: schoolData.map(school => school.school_id_giga),
+                  in: school_to_be_updated.map(school => school),
                 },
               },
               data: {
@@ -169,12 +175,9 @@ export class SchoolService {
               },
             })
             return uploadBatch;
-            // uploadBatch = transaction;
             
           })
-          // uploadBatch = transaction;
           await this.queueService.csvMintdata(txn.id);
-          // console.log(txn, "is transaction")
 
         } catch (err) {
           if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
