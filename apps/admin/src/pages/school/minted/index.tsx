@@ -18,6 +18,7 @@ import SchoolTableRow from '@sections/user/list/SchoolTableRow';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { Queries } from 'src/libs/graph-query';
+import { ethers } from 'ethers';
 
 const MintedSchools = () => {
   const TABLE_HEAD = [
@@ -28,7 +29,7 @@ const MintedSchools = () => {
     { id: 'mintedStatus', label: 'Status', align: 'left' },
     { id: 'tokenId', label: 'TokenId', align: 'left' },
     { id: 'mintedAt', label: 'Minted At', align: 'left' },
-    { id: 'gasFee', label: 'Gas Fee', align: 'left' },
+    { id: 'gasFee', label: 'Gas Fee (ETH)', align: 'left' },
   ];
 
   const {
@@ -105,7 +106,7 @@ const MintedSchools = () => {
             electricity_availabilty: row.electricity_availabitlity,
             mintedStatus: 'MINTED',
             mintedAt: row.mintedAt,
-            gasFee: data.mintingGasFee,
+            gasFee: ethers.formatEther(data?.mintingGasFee || '0'),
           });
         });
       setTableData(filteredData);
@@ -137,9 +138,9 @@ const MintedSchools = () => {
         mintedAt: data.mintedAt,
         ...JSON.parse(decodedData),
         mintedStatus: 'MINTED',
-        gasFee: data.mintingGasFee,
+        gasFee: ethers.formatEther(data.mintingGasFee),
       };
-    });
+    }, []);
 
     setTableData(decodedShooldata);
   }, [selectedFilter, data, adminData, otherData, page, rowsPerPage]);

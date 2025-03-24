@@ -111,6 +111,38 @@ const nftDetailsQuery = gql`
   }
 `;
 
+const nftTransfer = gql`
+  query MyQuery {
+    schoolTransfers {
+      blockNumber
+      blockTimestamp
+      from
+      to
+      tokenId
+      transactionHash
+      id
+    }
+    collectorTransfers {
+      blockNumber
+      blockTimestamp
+      from
+      id
+      to
+      tokenId
+      transactionHash
+    }
+  }
+`;
+
+const totalGasFee = gql`
+  query MyQuery($id: ID!) {
+    totalGasFees(id: $id, subgraphError: allow) {
+      totalGasFee
+      id
+    }
+  }
+`;
+
 export const Queries = {
   ownedNftsQuery,
   nftListQuery,
@@ -118,4 +150,6 @@ export const Queries = {
   allNftListQuery,
   adminNftListQuery,
   othersNftListQuery,
+  nftTransfer,
+  totalGasFee,
 };
