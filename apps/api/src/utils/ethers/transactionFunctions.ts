@@ -33,12 +33,14 @@ export const mintNFT = async (
   const config = new ConfigService();
   console.log(schoolDataArray);
   // const weiEthers = await getProposedGasPrice();
-  const escrowAddress = config.get('NEXT_PUBLIC_GIGA_ESCROW_ADDRESS');
+  const collectorescrowAddress = config.get('NEXT_PUBLIC_GIGA_COLLECTOR_ESCROW_ADDRESS');
+  const schoolescrowAddress = config.get('NEXT_PUBLIC_GIGA_SCHOOL_ESCROW_ADDRESS');
+
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
   const schoolArgs = schoolDataArray.map((el, i) => [
     giga_ids[i],
-    escrowAddress,
-    escrowAddress,
+    schoolescrowAddress,
+    collectorescrowAddress,
     [...el, 'Nepal'],
   ]);
 
@@ -56,9 +58,10 @@ export const mintSingleNFT = async (
   giga_id: string,
 ): Promise<ContractTransactionResponse> => {
   const config = new ConfigService();
-  const escrowAddress = config.get('NEXT_PUBLIC_GIGA_ESCROW_ADDRESS');
+  const collectorescrowAddress = config.get('NEXT_PUBLIC_GIGA_COLLECTOR_ESCROW_ADDRESS');
+  const schoolescrowAddress = config.get('NEXT_PUBLIC_GIGA_SCHOOL_ESCROW_ADDRESS');
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
-  return await contract.mintNft(giga_id, escrowAddress, escrowAddress, schoolDataArray);
+  return await contract.mintNft(giga_id, schoolescrowAddress, collectorescrowAddress, schoolDataArray);
 };
 
 const generateMultiCallData = (contractName, functionName, callData) => {
