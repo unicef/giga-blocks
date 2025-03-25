@@ -77,9 +77,13 @@ export default function OutlinedCard() {
           <CardContent>
             <Typography variant="body2">Total Gas Fee</Typography>
             <Typography variant="h5" component="div">
-              {Number(ethers.formatEther(gasFee?.totalGasFees?.[0]?.totalGasFee)).toExponential(2) +
-                ' ' +
-                'ETH' || 'N/A'}
+              {gasFee?.totalGasFees?.[0]?.totalGasFee
+                ? Number(ethers?.formatEther(gasFee?.totalGasFees?.[0]?.totalGasFee)).toExponential(
+                    2
+                  ) +
+                  ' ' +
+                  'ETH'
+                : 'N/A'}
             </Typography>
           </CardContent>
         </Card>

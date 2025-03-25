@@ -41,7 +41,6 @@ const Transaction = () => {
     defaultOrderBy: 'createdAt',
     defaultOrder: 'desc',
   });
-  const [tableData, setTableData] = useState<any>([]);
   const [paginatedData, setPaginatedData] = useState<any>([]);
 
   const [result] = useQuery({
@@ -50,10 +49,6 @@ const Transaction = () => {
   });
   const { data, fetching } = result;
   const combinedTransfers = [...(data?.schoolTransfers || []), ...(data?.collectorTransfers || [])];
-
-  useEffect(() => {
-    setTableData(combinedTransfers || []);
-  }, [combinedTransfers]);
 
   useEffect(() => {
     const startItem = (page + 1) * rowsPerPage - rowsPerPage;
@@ -78,7 +73,6 @@ const Transaction = () => {
                 order={order}
                 orderBy={orderBy}
                 headLabel={TABLE_HEAD}
-                rowCount={tableData.length}
                 onSort={onSort}
                 showCheckBox={true}
               />
