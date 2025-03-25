@@ -13,9 +13,6 @@
   flex-direction: column;
   width: 100%;
   height: 422px;
-  @media (max-width: 768px) {
-    width: 328px;
-  }
 
   &__content {
     padding: $spacing-05;
@@ -71,12 +68,27 @@
 
   &__image {
     width: 100%;
-    height: 220px; // Adjusted to fit within the 422px total height
+    height: 220px;
 
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+  }
+
+  &__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $gray-10;
+
+    img {
+      width: auto;
+      height: auto;
+      object-fit: contain;
     }
   }
 }

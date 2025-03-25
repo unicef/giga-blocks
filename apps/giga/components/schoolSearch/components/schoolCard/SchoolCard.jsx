@@ -34,16 +34,16 @@ export default function SchoolCard({
           <Image
             src="/images/school-image.png"
             alt={`Image of ${schoolName}`}
-            width={400}
-            height={300}
+            width={200}
+            height={200}
           />
         ) : (
-          <div className="flex items-center justify-center">
+          <div className="school-card__placeholder">
             <Image
               src="/images/no-img.png"
-              alt={`Image of ${schoolName}`}
-              width={200}
-              height={200}
+              alt={`No image available`}
+              width={150}
+              height={120}
             />
           </div>
         )}
