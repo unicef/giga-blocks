@@ -19,8 +19,9 @@
   &__filters {
     display: flex;
     gap: $spacing-03;
-    margin-bottom: $spacing-06;
+    margin-bottom: $spacing-03; // Reduced to accommodate accordion
     flex-wrap: wrap;
+    align-items: flex-end; /* Align items at the bottom */
 
     .search-input {
       flex: 1;
@@ -44,6 +45,9 @@
       border-radius: 4px;
       padding: 0 $spacing-04;
       cursor: pointer;
+      height: 40px; /* Match the height of Carbon UI inputs */
+      margin-bottom: 1px; /* Slight adjustment to align with inputs */
+      align-self: flex-end; /* Align at the bottom of the flex container */
 
       &:hover {
         background-color: $gray-10;
@@ -97,6 +101,84 @@
       &:disabled {
         opacity: 0.5;
         cursor: not-allowed;
+      }
+    }
+  }
+}
+
+// Filter Accordion Styles
+.filter-accordion {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  margin-bottom: $spacing-05;
+  border: 1px solid transparent;
+
+  &.open {
+    max-height: 1000px;
+    border: 1px solid $gray-20;
+    border-radius: 8px;
+    margin-bottom: $spacing-06;
+  }
+
+  &__content {
+    padding: $spacing-05;
+  }
+
+  &__sliders {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: $spacing-05;
+    margin-bottom: $spacing-06;
+  }
+
+  &__slider {
+    width: 100%;
+  }
+
+  &__label {
+    @include type-style('body-01');
+    font-weight: 600;
+    margin-bottom: $spacing-03;
+  }
+
+  &__slider-container {
+    display: flex;
+    align-items: center;
+    gap: $spacing-03;
+
+    .cds--slider {
+      flex: 1;
+    }
+  }
+
+  &__slider-value {
+    @include type-style('body-01');
+    color: $gray-70;
+    min-width: 30px;
+  }
+
+  &__radio-groups {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: $spacing-05;
+    margin-bottom: $spacing-06;
+  }
+
+  &__radio-group {
+    width: 100%;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: $spacing-03;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+
+      button {
+        width: 100%;
       }
     }
   }

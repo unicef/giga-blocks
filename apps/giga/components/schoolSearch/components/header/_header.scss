@@ -29,14 +29,16 @@
 
   &__title {
     margin-bottom: $spacing-05;
-    font-size: 3rem;
-    line-height: 1.2;
+    font-weight: 700;
+    font-size: 3.625rem;
+    line-height: 80px;
   }
 
   &__subtitle {
     margin-bottom: $spacing-07;
-    font-size: 2.5rem;
-    line-height: 1.2;
+    font-weight: 700;
+    font-size: 3.625rem;
+    line-height: 80px;
   }
 
   &__description {
