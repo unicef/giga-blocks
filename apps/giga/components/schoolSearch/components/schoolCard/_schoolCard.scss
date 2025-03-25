@@ -1,0 +1,82 @@
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/type' as *;
+@use '@carbon/styles/scss/colors' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/breakpoint' as *;
+
+.school-card {
+  border-radius: 8px;
+  border: 1px solid $gray-20;
+  overflow: hidden;
+  background-color: $white-0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 422px;
+  @media (max-width: 768px) {
+    width: 328px;
+  }
+
+  &__content {
+    padding: $spacing-05;
+    flex: 1;
+  }
+
+  &__title {
+    @include type-style('heading-03');
+    margin-bottom: $spacing-05;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 48px;
+  }
+
+  &__location {
+    display: flex;
+    align-items: center;
+    margin-bottom: $spacing-05;
+
+    svg {
+      margin-right: $spacing-03;
+      fill: $gray-70;
+    }
+
+    span {
+      @include type-style('body-01');
+      color: $gray-70;
+    }
+  }
+
+  &__status {
+    display: inline-flex;
+    align-items: center;
+    background-color: #2662ff;
+    color: white;
+    padding: $spacing-03 $spacing-05;
+    border-radius: 50px;
+    margin-bottom: $spacing-05;
+
+    svg {
+      margin-right: $spacing-03;
+      fill: white;
+    }
+
+    span {
+      @include type-style('body-01');
+      font-weight: 600;
+    }
+  }
+
+  &__image {
+    width: 100%;
+    height: 220px; // Adjusted to fit within the 422px total height
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}

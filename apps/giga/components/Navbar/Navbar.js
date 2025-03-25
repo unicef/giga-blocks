@@ -72,9 +72,7 @@ const Navbar = () => (
             <Notification size={20} />
           </HeaderGlobalAction> */}
         </HeaderGlobalBar>
-        <div>
-          <ConnectKitButton />
-        </div>
+        <div>{/* <ConnectKitButton /> */}</div>
       </Header>
     )}
   />
