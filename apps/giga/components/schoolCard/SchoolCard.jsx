@@ -1,8 +1,10 @@
 import Image from 'next/image';
 import { Location, DataEnrichment } from '@carbon/icons-react';
 import './_schoolCard.scss';
+import Link from 'next/link';
 
 export default function SchoolCard({
+  id = 1,
   schoolName = 'Evergreen Academy for Advanced Scientific and Holistic Learning Experience',
   location = 'South Africa',
   isActivated = true,
@@ -12,7 +14,7 @@ export default function SchoolCard({
     schoolName.length > 60 ? `${schoolName.substring(0, 60)}...` : schoolName;
 
   return (
-    <div className="school-card">
+    <Link href={`/schools/${id}`} className="school-card">
       <div className="school-card__content">
         <h3 className="school-card__title">{displayName}</h3>
 
@@ -48,6 +50,6 @@ export default function SchoolCard({
           </div>
         )}
       </div>
-    </div>
+    </Link>
   );
 }

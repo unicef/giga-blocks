@@ -17,7 +17,7 @@ import {
   RadioButton,
 } from '@carbon/react';
 import { useState } from 'react';
-import SchoolCard from '../schoolCard/SchoolCard';
+import SchoolCard from '../../schoolCard/SchoolCard';
 import './_schoolSearch.scss';
 
 export default function SchoolSearch() {

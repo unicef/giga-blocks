@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
-import SchoolHeader from '../../components/schoolSearch/components/header/header';
-import SchoolSearch from '../../components/schoolSearch/components/schoolSearch/SchoolSearch';
+import SchoolHeader from '../../components/schoolSearch/header/header';
+import SchoolSearch from '../../components/schoolSearch/schoolSearch/SchoolSearch';
 import { useContributionList } from '../hooks/useContributorList';
 import { Loading } from '@carbon/react';
 

@@ -13,6 +13,15 @@
   flex-direction: column;
   width: 100%;
   height: 422px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+  }
 
   &__content {
     padding: $spacing-05;
@@ -28,6 +37,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
     min-height: 48px;
+    color: $gray-100; // Explicitly set title color
+    transition: color 0.2s ease;
   }
 
   &__location {
