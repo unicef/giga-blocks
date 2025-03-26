@@ -24,6 +24,7 @@ import { LinkactivationModule } from './linkactivation/linkactivation.module';
 import { Keyv } from 'keyv';
 import { CacheableMemory } from 'cacheable';
 import { createKeyv } from '@keyv/redis';
+import { FeaturedModule } from './featured/featured.module';
 
 @Module({
   imports: [
@@ -103,7 +104,8 @@ import { createKeyv } from '@keyv/redis';
     CronModule,
     MagicLinkModule,
     ContributorModule,
-    LinkactivationModule
+    LinkactivationModule,
+    FeaturedModule
   ],
   providers: [],
 })

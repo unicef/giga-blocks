@@ -142,6 +142,7 @@ export class SchoolService {
           const school_to_be_updated = schoolData.filter(school =>
             schools.some(dbSchool => dbSchool.giga_school_id === school.school_id_giga),
           ).map(school =>school.school_id_giga);
+          if(school_to_be_updated.length === 0) return res.code(400).send({message:"No school to be minted"})
 
 
           // if (missingSchools.length > 0) {
@@ -177,7 +178,8 @@ export class SchoolService {
             return uploadBatch;
             
           })
-          await this.queueService.csvMintdata(txn.id);
+           this.queueService.csvMintdata(txn.id).catch(err=>console.log(err));
+           return res.code(200).send({message:"Batch processing started"});
 
         } catch (err) {
           if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
@@ -210,6 +212,9 @@ export class SchoolService {
       where: {
         id,
       },
+      include:{
+        theme:true
+      }
     });
   }
 
