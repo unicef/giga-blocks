@@ -160,27 +160,39 @@ export class QueueService {
   }
 
   public async csvMintdata(batchId: string){
-    try{
-      const schools = await this._prismaService.school.findMany({
-        where:{
-          uploadId: batchId
+    try {
+      (async () => {
+        const schools = await this._prismaService.school.findMany({
+          where: {
+            uploadId: batchId,
+          },
+        });
+  
+        const schoolData: SchoolData[] = schools.map((school) => {
+          return {
+            id: school.id,
+            giga_school_id: school.giga_school_id,
+            schoolName: school.name,
+            schoolType: school.school_type,
+            country: school.country,
+            latitude: school.latitude,
+            longitude: school.longitude,
+            connectivity: school.connectivity.toString(),
+            electricity_availabilty: school.electricity_available,
+            coverage_availabitlity: school.coverage_availability.toString(),
+            region: school.region_name,
+          };
+        });
+  
+        if (schoolData.length === 0) {
+          this._logger.warn(`No schools found for batch ${batchId}`);
+          return;
         }
+  
+        this.sendMintNFT({ data: schoolData }).catch((error) => {
+        this._logger.error(`Error in csvMintdata for batch ${batchId}:`, error);
       })
-      const schoolData: SchoolData[] = schools.map(school => {
-        return {
-          id: school.id,
-          giga_school_id: school.giga_school_id,
-          schoolName: school.name,
-          schoolType: school.school_type,
-          country: school.country,
-          latitude: school.latitude,
-          longitude: school.longitude,
-          connectivity: (school.connectivity).toString(),
-          electricity_availabilty: school.electricity_available,
-          coverage_availabitlity: (school.coverage_availability).toString(),
-          region: school.region_name
-        }})
-        this.sendMintNFT({data: schoolData})
+      });
 
     }
     catch(error){
