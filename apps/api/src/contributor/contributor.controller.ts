@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ContributorService } from './contributor.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
@@ -27,8 +27,8 @@ export class ContributorController {
 
     @Public()
     @Get('get/:id')
-    getContributor(@Param('id') id: string) {
-        return this.contributorService.getContributor(id);
+    getContributor(@Param('id') userId: string) {
+        return this.contributorService.getContributor(userId);
         
     }
 
@@ -36,8 +36,12 @@ export class ContributorController {
     @Post('/claimNft/:id')
     claimNft(@Param('id')id: string, @Body() data:any) {
         return this.contributorService.claimNft(id,data);
+    }
 
-
+    @Public()
+    @Patch('/update/:userId')
+    updateContributor(@Param('userId')userId: string, @Body() data:any) {
+        return this.contributorService.updateContributor(userId,data);
     }
 
     

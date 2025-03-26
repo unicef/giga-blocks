@@ -147,6 +147,7 @@ model User {
   linkActivatedBy   ActivationLog[]   @relation("ActivatedBy")
   linkDeactivatedBy ActivationLog[]   @relation("DeactivatedBy")
   FeatureCountry    FeatureCountry[]
+  User              Contributor[]
 
   @@map("giga_users")
 }
@@ -352,12 +353,13 @@ model ActivationLog {
   @@map("giga_link_activation")
 }
 
+/// userId map 
+/// add the nft related data only in this
 model Contributor {
   id             String   @id @default(uuid())
-  email          String   @unique
-  walletAddress  Bytes?
-  username       String?
-  nftAddress     String?
+  userId         String   @unique
+  user           User?    @relation(fields:[userId], references:[id])
+  schoolreserved String[]
   totalNftMinted Int
   isVisible      Boolean  @default(false)
   nftReserved    Boolean  @default(false)
