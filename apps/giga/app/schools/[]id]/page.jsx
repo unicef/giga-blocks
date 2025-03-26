@@ -87,18 +87,20 @@ export default function SchoolDetails({ params }) {
     { id: '7', key: 'Female Students', value: schoolData.femaleStudents },
   ];
 
-  const themeColor =
+  const fontColor =
     themeOptions.find((theme) => theme.id === selectedTheme)?.colors[2] ||
     '#000';
+
+  const bgColor =
+    themeOptions.find((theme) => theme.id === selectedTheme)?.colors[0] ||
+    '#fff';
 
   return (
     <div className="school-details">
       <div
         className="school-details__container"
         style={{
-          background:
-            themeOptions.find((theme) => theme.id === selectedTheme)
-              ?.colors[0] || '#fff',
+          background: bgColor,
         }}
       >
         <Link href="/schools" className="school-details__back">
@@ -116,7 +118,7 @@ export default function SchoolDetails({ params }) {
                   <a
                     href="#"
                     className="school-details__map-link"
-                    style={{ color: themeColor }}
+                    style={{ color: fontColor }}
                   >
                     Locate on map <ArrowUpRight size={16} />
                   </a>
@@ -177,7 +179,7 @@ export default function SchoolDetails({ params }) {
                       Connectivity Status
                     </h4>
                     <div className="school-details__stat-icon connectivity">
-                      <CheckmarkFilled color={themeColor} size={24} />
+                      <CheckmarkFilled color={fontColor} size={24} />
                     </div>
                   </div>
                 </div>
@@ -194,7 +196,7 @@ export default function SchoolDetails({ params }) {
                   <div className="school-details__stat-value">
                     <span
                       className="school-details__stat-number"
-                      style={{ color: themeColor }}
+                      style={{ color: fontColor }}
                     >
                       {schoolData.downloadSpeed} Mbps
                     </span>
@@ -284,7 +286,7 @@ export default function SchoolDetails({ params }) {
                   </div>
                   <div
                     className="school-details__overview-value"
-                    style={{ color: themeColor }}
+                    style={{ color: fontColor }}
                   >
                     {schoolData.students.toLocaleString()}
                   </div>
@@ -297,7 +299,7 @@ export default function SchoolDetails({ params }) {
                   </div>
                   <div
                     className="school-details__overview-value"
-                    style={{ color: themeColor }}
+                    style={{ color: fontColor }}
                   >
                     {schoolData.teachers}
                   </div>
@@ -310,7 +312,7 @@ export default function SchoolDetails({ params }) {
                   </div>
                   <div
                     className="school-details__overview-value"
-                    style={{ color: themeColor }}
+                    style={{ color: fontColor }}
                   >
                     {schoolData.computers}
                   </div>
@@ -323,7 +325,7 @@ export default function SchoolDetails({ params }) {
                   </div>
                   <div
                     className="school-details__overview-value checkmark"
-                    style={{ color: themeColor }}
+                    style={{ color: fontColor }}
                   >
                     {schoolData.hasWater && <CheckmarkFilled size={24} />}
                   </div>
@@ -336,7 +338,7 @@ export default function SchoolDetails({ params }) {
                   </div>
                   <div
                     className="school-details__overview-value checkmark"
-                    style={{ color: themeColor }}
+                    style={{ color: fontColor }}
                   >
                     {schoolData.hasElectricity && <CheckmarkFilled size={24} />}
                   </div>
@@ -349,7 +351,7 @@ export default function SchoolDetails({ params }) {
                   </div>
                   <div
                     className="school-details__overview-value checkmark"
-                    style={{ color: themeColor }}
+                    style={{ color: fontColor }}
                   >
                     {schoolData.hasComputerLab && <CheckmarkFilled size={24} />}
                   </div>
