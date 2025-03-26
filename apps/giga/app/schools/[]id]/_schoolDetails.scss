@@ -9,9 +9,7 @@
   min-height: 100vh;
 
   &__container {
-    margin: 0 auto;
     background-color: $white-0;
-    border-radius: 8px;
     padding: $spacing-06;
   }
 
@@ -99,7 +97,7 @@
   &__image-placeholder {
     background-color: $gray-80;
     border-radius: 4px;
-    min-height: 600px;
+    min-height: 420px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -115,8 +113,9 @@
   }
 
   &__section-title {
-    @include type-style('heading-03');
-    margin-bottom: $spacing-03;
+    font-weight: 600;
+    font-size: 20px;
+    margin-bottom: 4px;
   }
 
   &__section-description {
@@ -179,22 +178,32 @@
 
   &__stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: 300px 1fr;
     gap: $spacing-05;
     margin-bottom: $spacing-06;
+
+    @include breakpoint-down(md) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__stat-cards {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-05;
   }
 
   &__stat-card {
-    border: 1px solid $gray-20;
     border-radius: 4px;
     padding: $spacing-05;
+    background-color: $white-0;
   }
 
   &__stat-header {
     display: flex;
-    align-items: center;
-    gap: $spacing-03;
-    margin-bottom: $spacing-05;
+    flex-direction: column;
+    margin-bottom: 8px;
+    justify-content: space-between;
   }
 
   &__stat-icon {
@@ -205,14 +214,8 @@
     height: 24px;
     border-radius: 50%;
 
-    &.connectivity {
-      background-color: $green-50;
-      color: $white-0;
-    }
-
     &.download {
-      background-color: $blue-50;
-      color: $white-0;
+      color: #666666;
     }
   }
 
@@ -246,9 +249,14 @@
 
   &__stat-detail {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     @include type-style('body-01');
     margin-bottom: $spacing-03;
+    color: #334155;
+    p {
+      color: #666666;
+    }
 
     &:last-child {
       margin-bottom: 0;
@@ -256,10 +264,10 @@
   }
 
   &__chart-card {
-    border: 1px solid $gray-20;
     border-radius: 4px;
     padding: $spacing-05;
-    grid-column: 1 / -1;
+    background-color: $white-0;
+    height: 100%;
   }
 
   &__chart-tabs {
@@ -366,43 +374,59 @@
   }
 
   &__last-updated {
-    display: flex;
-    align-items: center;
-    gap: $spacing-03;
     @include type-style('body-01');
     color: $gray-70;
+    margin-bottom: $spacing-05;
   }
 
   &__overview-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
     gap: $spacing-05;
     margin-bottom: $spacing-06;
+
+    @include breakpoint-down(md) {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: auto;
+    }
+
+    @include breakpoint-down(sm) {
+      grid-template-columns: 1fr;
+    }
   }
 
   &__overview-card {
-    border: 1px solid $gray-20;
-    border-radius: 4px;
+    border-radius: 8px;
     padding: $spacing-05;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
+    background-color: $white-0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
   &__overview-label {
-    @include type-style('heading-01');
-    margin: $spacing-03 0;
+    display: flex;
+    align-items: center;
+    gap: $spacing-03;
+    color: $gray-70;
+    font-size: 16px;
+    margin-bottom: $spacing-04;
+
+    svg {
+      color: $gray-70;
+    }
   }
 
   &__overview-value {
-    @include type-style('heading-04');
-    color: $gray-100;
-  }
+    font-size: 32px;
+    font-weight: 600;
+    color: #c400ff;
 
-  &__overview-check {
-    color: $green-50;
-    margin-top: $spacing-03;
+    &.checkmark {
+      font-size: 24px;
+      color: #c400ff;
+    }
   }
 
   &__additional {

@@ -4,16 +4,17 @@ import { useState } from 'react';
 import Link from 'next/link';
 import {
   ArrowLeft,
+  ArrowUpRight,
   Location,
   CheckmarkFilled,
   Information,
-  Download,
   User,
   UserFollow,
   Laptop,
   WatsonHealthCrossReference,
   Flash,
   Education,
+  MeterAlt,
 } from '@carbon/icons-react';
 import { Button, Table, TableRow, TableBody, TableCell } from '@carbon/react';
 import './_schoolDetails.scss';
@@ -62,9 +63,9 @@ export default function SchoolDetails({ params }) {
 
   // Theme options
   const themeOptions = [
-    { id: 'purple', colors: ['#f8c8ff', '#e56cff', '#c400ff', '#8400b3'] },
-    { id: 'blue', colors: ['#c8e4ff', '#6cb6ff', '#0078ff', '#0046b3'] },
-    { id: 'green', colors: ['#c8ffdc', '#6cffad', '#00ff73', '#00b351'] },
+    { id: 'purple', colors: ['#FBECFE', '#e56cff', '#c400ff'] },
+    { id: 'blue', colors: ['#c8e4ff', '#6cb6ff', '#0078ff'] },
+    { id: 'green', colors: ['#c8ffdc', '#6cffad', '#00ff73'] },
   ];
 
   // Additional details table rows
@@ -86,28 +87,44 @@ export default function SchoolDetails({ params }) {
     { id: '7', key: 'Female Students', value: schoolData.femaleStudents },
   ];
 
+  // Get the current theme color
+  const themeColor =
+    themeOptions.find((theme) => theme.id === selectedTheme)?.colors[2] ||
+    '#c400ff';
+
   return (
     <div className="school-details">
-      <div className="school-details__container">
+      <div
+        className="school-details__container"
+        style={{
+          background:
+            themeOptions.find((theme) => theme.id === selectedTheme)
+              ?.colors[0] || '#fff',
+        }}
+      >
         <Link href="/schools" className="school-details__back">
           <ArrowLeft size={20} /> Back
         </Link>
 
-        <div className="school-details__header">
-          <div className="school-details__info">
-            <h1 className="school-details__title">{schoolData.name}</h1>
-            <p className="school-details__level">{schoolData.level}</p>
-            <div className="school-details__location">
-              <Location size={16} /> {schoolData.location}
-              <a href="#" className="school-details__map-link">
-                Locate on map <ArrowLeft className="rotate-45" size={16} />
-              </a>
-            </div>
-          </div>
-        </div>
-
         <div className="school-details__content">
           <div className="school-details__main">
+            <div className="school-details__header">
+              <div className="school-details__info">
+                <h1 className="school-details__title">{schoolData.name}</h1>
+                <p className="school-details__level">{schoolData.level}</p>
+                <div className="school-details__location">
+                  <Location size={16} /> {schoolData.location}
+                  <a
+                    href="#"
+                    className="school-details__map-link"
+                    style={{ color: themeColor }}
+                  >
+                    Locate on map <ArrowUpRight size={16} />
+                  </a>
+                </div>
+              </div>
+            </div>
+
             <div className="school-details__theme-selector">
               <h3 className="school-details__section-title">Select Theme</h3>
               <p className="school-details__section-description">
@@ -148,39 +165,52 @@ export default function SchoolDetails({ params }) {
             </div>
 
             <div className="school-details__stats">
-              <div className="school-details__stat-card">
-                <div className="school-details__stat-header">
-                  <div className="school-details__stat-icon connectivity">
-                    <CheckmarkFilled size={16} />
+              <div className="school-details__stat-cards">
+                <div className="school-details__stat-card">
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <h4 className="school-details__stat-title">
+                      Connectivity Status
+                    </h4>
+                    <div className="school-details__stat-icon connectivity">
+                      <CheckmarkFilled
+                        style={{ color: themeColor }}
+                        size={24}
+                      />
+                    </div>
                   </div>
-                  <h4 className="school-details__stat-title">
-                    Connectivity Status
-                  </h4>
                 </div>
-              </div>
 
-              <div className="school-details__stat-card">
-                <div className="school-details__stat-header">
-                  <div className="school-details__stat-icon download">
-                    <Download size={16} />
+                <div className="school-details__stat-card">
+                  <div className="school-details__stat-header">
+                    <div className="school-details__stat-icon download">
+                      <MeterAlt size={16} />
+                    </div>
+                    <h4 className="school-details__stat-title">
+                      Average Download Speed
+                    </h4>
                   </div>
-                  <h4 className="school-details__stat-title">
-                    Average Download Speed
-                  </h4>
-                </div>
-                <div className="school-details__stat-value">
-                  <span className="school-details__stat-number">
-                    {schoolData.downloadSpeed} Mbps
-                  </span>
-                  <span className="school-details__stat-badge good">Good</span>
-                </div>
-                <div className="school-details__stat-detail">
-                  <p>Connection Type</p>
-                  <p>{schoolData.connectionType}</p>
-                </div>
-                <div className="school-details__stat-detail">
-                  <p>Global Benchmark</p>
-                  <p>{schoolData.globalBenchmark} Mbps</p>
+                  <div className="school-details__stat-value">
+                    <span
+                      className="school-details__stat-number"
+                      style={{ color: themeColor }}
+                    >
+                      {schoolData.downloadSpeed} Mbps
+                    </span>
+                  </div>
+                  <div className="school-details__stat-detail">
+                    <p>Connection Type</p>
+                    <p>{schoolData.connectionType}</p>
+                  </div>
+                  <div className="school-details__stat-detail">
+                    <p>Global Benchmark</p>
+                    <p>{schoolData.globalBenchmark} Mbps</p>
+                  </div>
                 </div>
               </div>
 
@@ -242,64 +272,89 @@ export default function SchoolDetails({ params }) {
                 <h3 className="school-details__section-title">
                   School Overview
                 </h3>
-                <p className="school-details__data-source">
-                  Data Source: NIC.br, Government
-                </p>
-                <div className="school-details__last-updated">
-                  <WatsonHealthCrossReference size={16} /> Last Updated:{' '}
-                  {schoolData.lastUpdated}
+                <div className="school-details__data-source">
+                  Last Updated: {schoolData.lastUpdated}
                 </div>
               </div>
+              <p className="school-details__last-updated">
+                Data Source: NIC.br, Government
+              </p>
 
               <div className="school-details__overview-cards">
+                {/* Students Card */}
                 <div className="school-details__overview-card">
-                  <User size={24} />
-                  <h4 className="school-details__overview-label">Students</h4>
-                  <p className="school-details__overview-value">
+                  <div className="school-details__overview-label">
+                    <User size={20} /> Students
+                  </div>
+                  <div
+                    className="school-details__overview-value"
+                    style={{ color: themeColor }}
+                  >
                     {schoolData.students.toLocaleString()}
-                  </p>
+                  </div>
                 </div>
 
+                {/* Teachers Card */}
                 <div className="school-details__overview-card">
-                  <UserFollow size={24} />
-                  <h4 className="school-details__overview-label">Teachers</h4>
-                  <p className="school-details__overview-value">
+                  <div className="school-details__overview-label">
+                    <UserFollow size={20} /> Teachers
+                  </div>
+                  <div
+                    className="school-details__overview-value"
+                    style={{ color: themeColor }}
+                  >
                     {schoolData.teachers}
-                  </p>
+                  </div>
                 </div>
 
+                {/* Computers Card */}
                 <div className="school-details__overview-card">
-                  <Laptop size={24} />
-                  <h4 className="school-details__overview-label">Computers</h4>
-                  <p className="school-details__overview-value">
+                  <div className="school-details__overview-label">
+                    <Laptop size={20} /> Computers
+                  </div>
+                  <div
+                    className="school-details__overview-value"
+                    style={{ color: themeColor }}
+                  >
                     {schoolData.computers}
-                  </p>
+                  </div>
                 </div>
 
+                {/* Water Card */}
                 <div className="school-details__overview-card">
-                  <WatsonHealthCrossReference size={24} />
-                  <h4 className="school-details__overview-label">Water</h4>
-                  <div className="school-details__overview-check">
+                  <div className="school-details__overview-label">
+                    <WatsonHealthCrossReference size={20} /> Water
+                  </div>
+                  <div
+                    className="school-details__overview-value checkmark"
+                    style={{ color: themeColor }}
+                  >
                     {schoolData.hasWater && <CheckmarkFilled size={24} />}
                   </div>
                 </div>
 
+                {/* Electricity Card */}
                 <div className="school-details__overview-card">
-                  <Flash size={24} />
-                  <h4 className="school-details__overview-label">
-                    Electricity
-                  </h4>
-                  <div className="school-details__overview-check">
+                  <div className="school-details__overview-label">
+                    <Flash size={20} /> Electricity
+                  </div>
+                  <div
+                    className="school-details__overview-value checkmark"
+                    style={{ color: themeColor }}
+                  >
                     {schoolData.hasElectricity && <CheckmarkFilled size={24} />}
                   </div>
                 </div>
 
+                {/* Computer Lab Card */}
                 <div className="school-details__overview-card">
-                  <Education size={24} />
-                  <h4 className="school-details__overview-label">
-                    Computer Lab
-                  </h4>
-                  <div className="school-details__overview-check">
+                  <div className="school-details__overview-label">
+                    <Education size={20} /> Computer Lab
+                  </div>
+                  <div
+                    className="school-details__overview-value checkmark"
+                    style={{ color: themeColor }}
+                  >
                     {schoolData.hasComputerLab && <CheckmarkFilled size={24} />}
                   </div>
                 </div>
