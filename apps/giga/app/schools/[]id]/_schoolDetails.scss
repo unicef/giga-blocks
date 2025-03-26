@@ -11,6 +11,9 @@
   &__container {
     background-color: $white-0;
     padding: 48px 80px;
+    @media (max-width: 768px) {
+      padding: 48px 24px;
+    }
   }
 
   &__back {
@@ -76,7 +79,7 @@
 
   &__main {
     flex: 1;
-    max-width: 50%;
+    max-width: 60%;
     padding-right: $spacing-06;
 
     @include breakpoint-down(md) {
@@ -87,7 +90,7 @@
   }
 
   &__sidebar {
-    width: 50%;
+    width: 40%;
 
     @include breakpoint-down(md) {
       width: 100%;
