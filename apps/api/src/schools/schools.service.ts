@@ -210,6 +210,9 @@ export class SchoolService {
       where: {
         id,
       },
+      include:{
+        theme:true
+      }
     });
   }
 
