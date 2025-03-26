@@ -22,7 +22,7 @@ import './_schoolDetails.scss';
 export default function SchoolDetails({ params }) {
   const { id } = params;
   const [selectedTab, setSelectedTab] = useState('weekly');
-  const [selectedTheme, setSelectedTheme] = useState('purple');
+  const [selectedTheme, setSelectedTheme] = useState('white');
 
   // Mock data for the school
   const schoolData = {
@@ -87,10 +87,9 @@ export default function SchoolDetails({ params }) {
     { id: '7', key: 'Female Students', value: schoolData.femaleStudents },
   ];
 
-  // Get the current theme color
   const themeColor =
     themeOptions.find((theme) => theme.id === selectedTheme)?.colors[2] ||
-    '#c400ff';
+    '#000';
 
   return (
     <div className="school-details">
@@ -178,10 +177,7 @@ export default function SchoolDetails({ params }) {
                       Connectivity Status
                     </h4>
                     <div className="school-details__stat-icon connectivity">
-                      <CheckmarkFilled
-                        style={{ color: themeColor }}
-                        size={24}
-                      />
+                      <CheckmarkFilled color={themeColor} size={24} />
                     </div>
                   </div>
                 </div>

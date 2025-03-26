@@ -10,7 +10,7 @@
 
   &__container {
     background-color: $white-0;
-    padding: $spacing-06;
+    padding: 48px 80px;
   }
 
   &__back {
@@ -195,6 +195,7 @@
 
   &__stat-card {
     border-radius: 4px;
+    border: 1px solid $gray-20;
     padding: $spacing-05;
     background-color: $white-0;
   }
@@ -265,6 +266,7 @@
 
   &__chart-card {
     border-radius: 4px;
+    border: 1px solid $gray-20;
     padding: $spacing-05;
     background-color: $white-0;
     height: 100%;
@@ -398,11 +400,11 @@
 
   &__overview-card {
     border-radius: 8px;
+    border: 1px solid $gray-20;
     padding: $spacing-05;
     display: flex;
     flex-direction: column;
     background-color: $white-0;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
   &__overview-label {

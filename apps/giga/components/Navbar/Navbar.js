@@ -27,17 +27,17 @@ const Navbar = () => (
           isActive={isSideNavExpanded}
         />
         <Link href="/" passHref legacyBehavior>
-          <HeaderName prefix="">PROJECT CONNECT</HeaderName>
+          <HeaderName prefix="">Giga Blocks</HeaderName>
         </Link>
         <HeaderNavigation aria-label="Giga">
           <Link href="/schools" passHref legacyBehavior>
             <HeaderMenuItem>Schools</HeaderMenuItem>
           </Link>
           <Link href="/schools" passHref legacyBehavior>
-            <HeaderMenuItem>Data Sharing</HeaderMenuItem>
+            <HeaderMenuItem>About Us</HeaderMenuItem>
           </Link>
           <Link href="/schools" passHref legacyBehavior>
-            <HeaderMenuItem>Media</HeaderMenuItem>
+            <HeaderMenuItem>Blogs</HeaderMenuItem>
           </Link>
           <Link href="/schools" passHref legacyBehavior>
             <HeaderMenuItem>Join Us</HeaderMenuItem>
@@ -72,7 +72,7 @@ const Navbar = () => (
             <Notification size={20} />
           </HeaderGlobalAction> */}
         </HeaderGlobalBar>
-        <div>{/* <ConnectKitButton /> */}</div>
+        <div>{<ConnectKitButton />}</div>
       </Header>
     )}
   />
