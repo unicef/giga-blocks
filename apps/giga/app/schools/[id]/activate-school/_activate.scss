@@ -1,0 +1,227 @@
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/type' as *;
+@use '@carbon/styles/scss/colors' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/breakpoint' as *;
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.backButton {
+  margin-bottom: 1.5rem;
+}
+
+.backLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: #161616;
+  font-size: 1rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+
+  @include breakpoint(md) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.formSection {
+  max-width: 100%;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+  color: #161616;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #525252;
+  margin-bottom: 2rem;
+}
+
+.formGroup {
+  margin-bottom: 2rem;
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+
+.inputWithClear {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  input {
+    padding-right: 2.5rem;
+  }
+}
+
+.ethLabel {
+  position: absolute;
+  right: 2.5rem;
+  color: #525252;
+}
+
+.clearButton {
+  position: absolute;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #525252;
+
+  &:hover {
+    color: #161616;
+  }
+}
+
+.helperText {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: #525252;
+}
+
+.donationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.optional {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: #525252;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+
+  button {
+    min-width: 10rem;
+  }
+}
+
+.previewSection {
+  display: flex;
+  justify-content: flex-start;
+
+  @include breakpoint(md) {
+    justify-content: center;
+  }
+}
+
+.previewCard {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.schoolName {
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+  color: #161616;
+}
+
+.schoolLevel {
+  font-size: 1rem;
+  color: #525252;
+  margin-bottom: 0.5rem;
+}
+
+.locationRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  color: #525252;
+}
+
+.locationIcon {
+  display: flex;
+  align-items: center;
+}
+
+.themeRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.themeLabel {
+  font-size: 0.875rem;
+  color: #525252;
+}
+
+.themeBox {
+  width: 3rem;
+  height: 1.5rem;
+  background-color: #0f62fe;
+  border-radius: 2px;
+}
+
+.totalSection {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.totalLabel {
+  font-size: 0.875rem;
+  color: #525252;
+  margin-bottom: 0.5rem;
+}
+
+.totalAmount {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #161616;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+
+  .previewSection {
+    order: -1;
+    margin-bottom: 2rem;
+  }
+
+  .actionButtons {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}
