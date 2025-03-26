@@ -11,7 +11,7 @@
   &__container {
     background-color: $white-0;
     padding: 48px 80px;
-    @media (max-width: 768px) {
+    @include breakpoint-down(lg) {
       padding: 48px 24px;
     }
   }
@@ -185,7 +185,7 @@
     gap: $spacing-05;
     margin-bottom: $spacing-06;
 
-    @include breakpoint-down(md) {
+    @include breakpoint-down(lg) {
       grid-template-columns: 1fr;
     }
   }
