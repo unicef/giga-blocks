@@ -1,0 +1,224 @@
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/type' as *;
+@use '@carbon/styles/scss/colors' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/breakpoint' as *;
+
+.container {
+  background-color: $white-0;
+  padding: 48px 80px;
+  @include breakpoint-down(lg) {
+    padding: 48px 24px;
+  }
+}
+
+.backButton {
+  margin-bottom: $spacing-05;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-03;
+  color: $gray-70;
+  text-decoration: none;
+  @include type-style('body-01');
+
+  &:hover {
+    color: $gray-100;
+    text-decoration: underline;
+  }
+}
+
+.content {
+  display: flex;
+  gap: $spacing-07;
+
+  @include breakpoint-down(md) {
+    flex-direction: column;
+  }
+}
+
+.formSection {
+  flex: 1;
+  width: 50%;
+
+  @include breakpoint-down(md) {
+    width: 100%;
+  }
+}
+
+.title {
+  @include type-style('heading-05');
+  margin-bottom: $spacing-03;
+  color: $gray-100;
+}
+
+.subtitle {
+  @include type-style('body-01');
+  color: $gray-70;
+  margin-bottom: $spacing-07;
+}
+
+.formGroup {
+  margin-bottom: $spacing-07;
+}
+
+.label {
+  display: block;
+  @include type-style('label-01');
+  margin-bottom: $spacing-03;
+}
+
+.inputWithClear {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  input {
+    padding-right: $spacing-09;
+  }
+}
+
+.ethLabel {
+  position: absolute;
+  right: $spacing-09;
+  color: $gray-70;
+  @include type-style('body-01');
+}
+
+.clearButton {
+  position: absolute;
+  right: $spacing-03;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $gray-70;
+
+  &:hover {
+    color: $gray-100;
+  }
+}
+
+.helperText {
+  margin-top: $spacing-03;
+  @include type-style('helper-text-01');
+  color: $gray-70;
+}
+
+.donationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-03;
+}
+
+.optional {
+  display: flex;
+  align-items: center;
+  gap: $spacing-02;
+  @include type-style('helper-text-01');
+  color: $gray-70;
+}
+
+.actionButtons {
+  display: flex;
+  gap: $spacing-05;
+
+  button {
+    min-width: 10rem;
+  }
+
+  @include breakpoint-down(sm) {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+.previewSection {
+  width: 50%;
+  display: flex;
+  justify-content: flex-start;
+
+  @include breakpoint-down(md) {
+    width: 100%;
+    order: -1;
+    margin-bottom: $spacing-07;
+  }
+}
+
+.previewCard {
+  border: 1px solid $gray-20;
+  border-radius: 4px;
+  padding: $spacing-07;
+  width: 100%;
+  background-color: $white-0;
+}
+
+.schoolName {
+  @include type-style('heading-03');
+  margin-bottom: $spacing-05;
+  color: $gray-100;
+}
+
+.schoolLevel {
+  @include type-style('body-01');
+  color: $gray-70;
+  margin-bottom: $spacing-03;
+}
+
+.locationRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-03;
+  margin-bottom: $spacing-07;
+  color: $gray-70;
+  @include type-style('body-01');
+}
+
+.locationIcon {
+  display: flex;
+  align-items: center;
+}
+
+.themeRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-05;
+  margin-bottom: $spacing-07;
+}
+
+.themeLabel {
+  @include type-style('body-01');
+  color: $gray-70;
+}
+
+.themeBox {
+  width: $spacing-08;
+  height: $spacing-05;
+  background-color: $blue-60;
+  border-radius: 2px;
+}
+
+.totalSection {
+  margin-top: $spacing-07;
+  padding-top: $spacing-05;
+  border-top: 1px solid $gray-20;
+}
+
+.totalLabel {
+  @include type-style('label-01');
+  color: $gray-70;
+  margin-bottom: $spacing-03;
+}
+
+.totalAmount {
+  @include type-style('heading-03');
+  color: $gray-100;
+}

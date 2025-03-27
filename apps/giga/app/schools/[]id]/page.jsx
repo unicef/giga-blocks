@@ -160,7 +160,10 @@ export default function SchoolDetails({ params }) {
                 nostra, per inceptos himenaeos.
               </p>
 
-              <Button className="school-details__activate-btn">
+              <Button
+                href={`${id}/activate-school`}
+                className="school-details__activate-btn"
+              >
                 Activate <ArrowLeft className="rotate-180" size={16} />
               </Button>
             </div>

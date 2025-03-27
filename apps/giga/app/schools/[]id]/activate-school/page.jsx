@@ -51,6 +51,7 @@ export default function ActivateSchool() {
                 id="base-fee"
                 labelText=""
                 hideLabel
+                disabled
                 value={baseFee}
                 onChange={(e) => setBaseFee(e.target.value)}
               />
@@ -72,6 +73,7 @@ export default function ActivateSchool() {
                 id="gas-fee"
                 labelText=""
                 hideLabel
+                disabled
                 value={gasFee}
                 onChange={(e) => setGasFee(e.target.value)}
               />
