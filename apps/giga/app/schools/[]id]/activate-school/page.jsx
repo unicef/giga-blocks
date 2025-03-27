@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { TextInput, Button, Tooltip } from '@carbon/react';
 import { ArrowLeft, Information, Close } from '@carbon/icons-react';
+import ActivationModal from '../../../../components/schoolActivate/ActivationModal';
 import './_activate.scss';
 
 export default function ActivateSchool() {
@@ -11,6 +12,7 @@ export default function ActivateSchool() {
   const [gasFee, setGasFee] = useState('00');
   const [donation, setDonation] = useState('');
   const [selectedTheme, setSelectedTheme] = useState('blue');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleClearBaseFee = () => {
     setBaseFee('');
@@ -19,7 +21,13 @@ export default function ActivateSchool() {
   const handleClearGasFee = () => {
     setGasFee('');
   };
+  const handleActivate = () => {
+    setIsModalOpen(true);
+  };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   const calculateTotal = () => {
     const base = Number.parseFloat(baseFee) || 0;
     const gas = Number.parseFloat(gasFee) || 0;
@@ -113,7 +121,7 @@ export default function ActivateSchool() {
 
           <div className="actionButtons">
             <Button kind="secondary">Cancel</Button>
-            <Button>Activate</Button>
+            <Button onClick={handleActivate}>Activate</Button>
           </div>
         </div>
 
@@ -161,6 +169,7 @@ export default function ActivateSchool() {
           </div>
         </div>
       </div>
+      <ActivationModal isOpen={isModalOpen} onClose={closeModal} />
     </div>
   );
 }
