@@ -1,12 +1,12 @@
 'use client';
 
 import { ArrowLeft, CheckmarkFilled } from '@carbon/icons-react';
-import { Button } from '@carbon/react';
 import Link from 'next/link';
 import { useState } from 'react';
 import Header from '../../../components/schoolDetails/SchoolHeader';
 import SchoolOverview from '../../../components/schoolDetails/SchoolOverview';
 import SchoolStats from '../../../components/schoolDetails/SchoolStats';
+import ThemeSelector from '../../../components/schoolDetails/SchoolThemes';
 import Sidebar from '../../../components/schoolDetails/Sidebar';
 import './_schoolDetails.scss';
 
@@ -101,47 +101,12 @@ export default function SchoolDetails({ params }) {
           <div className="school-details__main">
             <Header schoolData={schoolData} />
 
-            <div className="school-details__theme-selector">
-              <h3 className="school-details__section-title">Select Theme</h3>
-              <p className="school-details__section-description">
-                Click a theme below to preview and select it for the activated
-                school view.
-              </p>
-
-              <div className="school-details__themes">
-                {themeOptions.map((theme) => (
-                  <button
-                    key={theme.id}
-                    className={`school-details__theme-option ${
-                      selectedTheme === theme.id ? 'selected' : ''
-                    }`}
-                    onClick={() => setSelectedTheme(theme.id)}
-                  >
-                    {theme.colors.map((color, index) => (
-                      <div
-                        key={index}
-                        className="school-details__theme-color"
-                        style={{ backgroundColor: color }}
-                      />
-                    ))}
-                  </button>
-                ))}
-              </div>
-
-              <p className="school-details__lorem">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-                vulputate libero et velit interdum, ac aliquet odio mattis.
-                Class aptent taciti sociosqu ad litora torquent per conubia
-                nostra, per inceptos himenaeos.
-              </p>
-
-              <Button
-                href={`${id}/activate-school`}
-                className="school-details__activate-btn"
-              >
-                Activate <ArrowLeft className="rotate-180" size={16} />
-              </Button>
-            </div>
+            <ThemeSelector
+              themeOptions={themeOptions}
+              selectedTheme={selectedTheme}
+              setSelectedTheme={setSelectedTheme}
+              id={id}
+            />
 
             <SchoolStats
               schoolData={schoolData}
