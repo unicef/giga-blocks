@@ -52,13 +52,11 @@ export default function ActivateSchool() {
                 labelText=""
                 hideLabel
                 disabled
+                aria-label="Base fee amount, read only"
                 value={baseFee}
-                onChange={(e) => setBaseFee(e.target.value)}
+                onChange={() => {}} // Empty function since input is disabled
               />
               <span className="ethLabel">Eth</span>
-              <button className="clearButton" onClick={handleClearBaseFee}>
-                <Close size={16} />
-              </button>
             </div>
             <p className="helperText">
               Porem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
@@ -74,12 +72,10 @@ export default function ActivateSchool() {
                 labelText=""
                 hideLabel
                 disabled
+                aria-label="Gas fee amount, read only"
                 value={gasFee}
-                onChange={(e) => setGasFee(e.target.value)}
+                onChange={() => {}} // Empty function since input is disabled
               />
-              <button className="clearButton" onClick={handleClearGasFee}>
-                <Close size={16} />
-              </button>
             </div>
             <p className="helperText">
               Jorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc

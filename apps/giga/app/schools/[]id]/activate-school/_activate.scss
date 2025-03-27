@@ -51,7 +51,9 @@
 .title {
   @include type-style('heading-05');
   margin-bottom: $spacing-03;
-  color: $gray-100;
+  color: #000000;
+  font-weight: 700;
+  font-size: 34px;
 }
 
 .subtitle {
@@ -78,6 +80,14 @@
   input {
     padding-right: $spacing-09;
   }
+
+  // Add specific styling for disabled inputs
+  input:disabled {
+    background-color: $gray-10;
+    color: $gray-70;
+    cursor: not-allowed;
+    opacity: 1; // Override default opacity to make text more readable
+  }
 }
 
 .ethLabel {
@@ -97,6 +107,7 @@
   align-items: center;
   justify-content: center;
   color: $gray-70;
+  z-index: 1; // Ensure button is clickable even when input is disabled
 
   &:hover {
     color: $gray-100;
@@ -159,6 +170,9 @@
   padding: $spacing-07;
   width: 100%;
   background-color: $white-0;
+  display: flex;
+  flex-direction: column;
+  min-height: 400px; // Add minimum height to ensure card has enough space
 }
 
 .schoolName {
@@ -207,7 +221,7 @@
 }
 
 .totalSection {
-  margin-top: $spacing-07;
+  margin-top: auto;
   padding-top: $spacing-05;
   border-top: 1px solid $gray-20;
 }
