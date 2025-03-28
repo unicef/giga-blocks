@@ -160,13 +160,14 @@ export class QueueService {
   }
 
   public async csvMintdata(batchId: string){
+    console.log(batchId, "is batch id")
     try {
-      (async () => {
         const schools = await this._prismaService.school.findMany({
           where: {
             uploadId: batchId,
           },
         });
+        console.log(schools, "is schools")
   
         const schoolData: SchoolData[] = schools.map((school) => {
           return {
@@ -183,6 +184,8 @@ export class QueueService {
             region: school.region_name,
           };
         });
+
+        console.log(schoolData, "is school data")
   
         if (schoolData.length === 0) {
           this._logger.warn(`No schools found for batch ${batchId}`);
@@ -192,7 +195,7 @@ export class QueueService {
         this.sendMintNFT({ data: schoolData }).catch((error) => {
         this._logger.error(`Error in csvMintdata for batch ${batchId}:`, error);
       })
-      });
+    
 
     }
     catch(error){
