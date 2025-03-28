@@ -111,6 +111,7 @@ Table giga_school {
   ContributedData giga_contributed_data [not null]
   version_id String [not null]
   School_Version school_version [not null]
+  contributors giga_contributor [not null]
   themeId String
   theme giga_themes
 }
@@ -248,7 +249,8 @@ Table giga_contributor {
   email String [unique, not null]
   walletAddress Bytes
   username String
-  nftAddress String
+  schoolId String[] [not null]
+  school giga_school
   totalNftMinted Int [not null]
   isVisible Boolean [not null, default: false]
   nftReserved Boolean [not null, default: false]
@@ -346,3 +348,5 @@ Ref: giga_otp.userId > giga_users.id
 Ref: giga_link_activation.activatedBy > giga_users.id
 
 Ref: giga_link_activation.deActivatedBy > giga_users.id
+
+Ref: giga_contributor.schoolId > giga_school.id

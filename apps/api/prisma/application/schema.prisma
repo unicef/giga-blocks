@@ -192,6 +192,7 @@ model School {
   ContributedData       ContributedData[]
   version_id            String
   School_Version        SchoolVersion[]
+  contributors          Contributor[]
 
   themeId      String?
   theme        Theme?    @relation(fields: [themeId], references: [id])
@@ -355,7 +356,8 @@ model Contributor {
   email         String   @unique
   walletAddress Bytes?
   username      String?
-  nftAddress    String?
+  schoolId      String[]
+  school        School?    @relation(fields: [schoolId], references: [id])
   totalNftMinted Int
   isVisible     Boolean  @default(false)
   nftReserved   Boolean  @default(false)
