@@ -194,7 +194,6 @@ model School {
   ContributedData       ContributedData[]
   version_id            String
   School_Version        SchoolVersion[]
-
   themeId String?
   theme   Theme?  @relation(fields: [themeId], references: [id])
 
