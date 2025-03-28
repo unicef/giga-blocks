@@ -16,13 +16,20 @@ import {
   RadioButtonGroup,
   RadioButton,
 } from '@carbon/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SchoolCard from '../../schoolCard/SchoolCard';
 import './_schoolSearch.scss';
+import { useSchoolGet } from '../../../app/hooks/useSchool';
+import { useSchoolDetails } from '../../../app/hooks/useSchool';
 
 export default function SchoolSearch() {
+  const page = 1; // Ensure this is always defined
+  const perPage = 10; // Ensure this is always defined
+
   const [searchTerm, setSearchTerm] = useState('Evergreen');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const { data } = useSchoolGet(page, perPage);
+  console.log('data', data);
 
   // Filter state
   const [numStudents, setNumStudents] = useState([0, 1000]);
