@@ -22,6 +22,8 @@ import {
   IMAGE_QUEUE,
   UPLOAD_QUEUE,
   SET_UPLOAD_PROCESS,
+  SET_CSV_MINT,
+  SET_THEME
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
@@ -239,6 +241,7 @@ export class MintQueueProcessor {
 
     if (txReceipt.status === 1) {
       try {
+        await this._mintQueue.add(SET_THEME,{schoolids:job.data.giga_ids},jobOptions);
         for (let i = 0; i < job.data.giga_ids.length; i++) {
           await this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_ids[i] }, jobOptions);
         }
@@ -324,6 +327,51 @@ export class MintQueueProcessor {
       throw new Error('NFTs minted transaction failed');
     }
   }
+
+  @Process(SET_THEME)
+  public async processTheme(job: Job<{schoolids:[]}>){
+   const schoolIds = job.data.schoolids;
+   const themes = await this._prismaService.theme.findMany({});
+   for (const schoolId of schoolIds) {
+    const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+    try{const school = await this._prismaService.school.update({
+      where: {
+        giga_school_id: schoolId,
+      },
+      data: {
+        themeId: randomTheme.id,
+      },
+   });
+  }
+    catch(err){
+      console.log(err);
+    }
+  }
+
+  }
+
+  // @Process(SET_CSV_MINT)
+  // public async processCSV(job: Job<{batchId:string}>){
+  //   const batchId = job.data.batchId;
+  //   const schools = await this._prismaService.school.findMany({
+  //     where:{
+  //       uploadId:batchId
+  //     }
+  //   });
+  //   let mintData = [];
+  //   let ids = [];
+  //   let giga_ids = [];
+  //   for(const school of schools){
+  //     mintData.push({
+        
+  //     })
+      
+  //     ids.push(school.id);
+  //     giga_ids.push(school.giga_school_id);
+  //   }
+  //   await this._mintQueue.add(SET_MINT_NFT,{mintData,ids,giga_ids},jobOptions);
+
+  // }
 }
 
 @Injectable()

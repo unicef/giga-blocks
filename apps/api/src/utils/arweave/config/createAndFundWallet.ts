@@ -4,7 +4,7 @@ import { arweave } from './arweaveNetwork';
 // Generate wallet key
 (async () => {
   const key = await arweave.wallets.generate();
-  fs.writeFileSync(`${__dirname}/wallet.json`, JSON.stringify(key));
+  fs.writeFileSync('./wallet.json', JSON.stringify(key));
 
   const walletAddress = await arweave.wallets.jwkToAddress(key);
 

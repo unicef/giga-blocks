@@ -23,6 +23,7 @@ import { ContributeDataService } from 'src/contribute/contribute.service';
 import { SchoolService } from 'src/schools/schools.service';
 import { MagicLinkService } from 'src/magic-link/magic-link.service';
 import { JwtModule } from '@nestjs/jwt';
+import { LinkactivationService } from 'src/linkactivation/linkactivation.service';
 
 @Module({
   imports: [
@@ -75,6 +76,7 @@ import { JwtModule } from '@nestjs/jwt';
     ContributeProcessor,
     MagicLinkService,
     SchoolService,
+    LinkactivationService,
   ],
   exports: [MailService, QueueService],
 })

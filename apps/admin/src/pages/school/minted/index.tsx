@@ -1,18 +1,17 @@
 'use client';
 import Scrollbar from '@components/scrollbar';
-import {
-  TableHeadUsers,
-  TableNoData,
-  TablePaginationCustom,
-  useTable,
-} from '@components/table';
+import { TableHeadUsers, TableNoData, TablePaginationCustom, useTable } from '@components/table';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
 import {
   Card,
   Divider,
   TableContainer,
   Table,
-  TableBody
+  TableBody,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
@@ -29,6 +28,7 @@ const MintedSchools = () => {
     { id: 'mintedStatus', label: 'Status', align: 'left' },
     { id: 'tokenId', label: 'TokenId', align: 'left' },
     { id: 'mintedAt', label: 'Minted At', align: 'left' },
+    { id: 'gasFee', label: 'Gas Fee', align: 'left' },
   ];
 
   const {
@@ -46,59 +46,108 @@ const MintedSchools = () => {
 
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
-  const [paginatedData, setPaginatedData] = useState<any>([])
+  const [paginatedData, setPaginatedData] = useState<any>([]);
+  const [selectedFilter, setSelectedFilter] = useState<String>('all');
+
   const [result] = useQuery({
-    query: Queries.nftListQuery,
-    variables: {  },
+    query: Queries.allNftListQuery,
+    variables: {},
   });
   const { data, fetching } = result;
 
+  const [adminResult] = useQuery({
+    query: Queries.adminNftListQuery,
+    variables: { id: process.env.NEXT_PUBLIC_ADMIN_ADDRESS },
+  });
+  const { data: adminData } = adminResult;
+
+  const [otherResult] = useQuery({
+    query: Queries.othersNftListQuery,
+    variables: { id: process.env.NEXT_PUBLIC_ADMIN_ADDRESS },
+  });
+  const { data: otherData } = otherResult;
+
   useEffect(() => {
-    const startItem = (page+1)*rowsPerPage - rowsPerPage;
-    const endItem = page*rowsPerPage + rowsPerPage
-    const newData = data?.schoolTokenUris.sort((a:any, b:any) => b.id - a.id);
-    const paginatedDatas = newData?.slice(startItem , endItem);
-    setPaginatedData(paginatedDatas)
-  }, [rowsPerPage, data, page])
+    const startItem = (page + 1) * rowsPerPage - rowsPerPage;
+    const endItem = page * rowsPerPage + rowsPerPage;
+    const newData = data?.nftDatas.sort((a: any, b: any) => b.id - a.id);
+    const paginatedDatas = newData?.slice(startItem, endItem);
+    setPaginatedData(paginatedDatas);
+  }, [rowsPerPage, data, page]);
 
   let filteredData: any = [];
+
   useEffect(() => {
     if (paginatedData) {
-    const encodeddata = paginatedData;  
-    const decodedShooldata:any = [];
-    encodeddata.map((data:any) => {
-      let decodedData = atob(data.tokenUri.substring(29));
-      const schoolData = {
+      const encodeddata = paginatedData;
+      const decodedShooldata: any = [];
+      encodeddata.map((data: any) => {
+        let decodedData = atob(data?.tokenUri?.substring(29));
+        const schoolData = {
+          tokenId: data.id,
+          mintedAt: data.mintedAt,
+          ...JSON.parse(decodedData),
+        };
+        decodedShooldata.push(schoolData);
+      });
+      decodedShooldata &&
+        decodedShooldata?.map((row: any) => {
+          const data = paginatedData.find((d: any) => d.id === row.tokenId);
+          filteredData.push({
+            id: row.tokenId,
+            schoolName: row.schoolName,
+            longitude: row.longitude,
+            latitude: row.latitude,
+            schoolType: row.schoolType,
+            country: row.country,
+            connectivity: row.connectivity,
+            coverage_availabitlity: row.coverage_availabitlity,
+            electricity_availabilty: row.electricity_availabitlity,
+            mintedStatus: 'MINTED',
+            mintedAt: row.mintedAt,
+            gasFee: data.mintingGasFee,
+          });
+        });
+      setTableData(filteredData);
+    }
+  }, [data, paginatedData]);
+
+  useEffect(() => {
+    let selectedData;
+
+    if (selectedFilter === 'admin') {
+      selectedData = adminData?.nftDatas || [];
+    } else if (selectedFilter === 'others') {
+      selectedData = otherData?.nftDatas || [];
+    } else {
+      selectedData = data?.nftDatas || [];
+    }
+
+    // Sorting and pagination
+    const startItem = (page + 1) * rowsPerPage - rowsPerPage;
+    const endItem = page * rowsPerPage + rowsPerPage;
+    const sortedData = selectedData.sort((a: any, b: any) => b.id - a.id);
+    const paginatedDatas = sortedData.slice(startItem, endItem);
+
+    // Decoding tokenUri
+    const decodedShooldata: any = paginatedDatas.map((data: any) => {
+      let decodedData = atob(data?.tokenUri?.substring(29));
+      return {
         tokenId: data.id,
         mintedAt: data.mintedAt,
         ...JSON.parse(decodedData),
+        mintedStatus: 'MINTED',
+        gasFee: data.mintingGasFee,
       };
-      decodedShooldata.push(schoolData);
-    })
-    decodedShooldata &&
-      decodedShooldata?.map((row: any) => {
-        filteredData.push({
-          id: row.tokenId,
-          schoolName: row.schoolName,
-          longitude: row.longitude,
-          latitude: row.latitude,
-          schoolType: row.schoolType,
-          country: row.country,
-          connectivity: row.connectivity,
-          coverage_availabitlity: row.coverage_availabitlity,
-          electricity_availabilty: row.electricity_availabitlity,
-          mintedStatus: 'MINTED',
-          mintedAt: row.mintedAt
-        });
-      });
-    setTableData(filteredData);
-    };
-  }, [data, paginatedData]);
+    });
 
-  const sortedData = tableData?.slice().sort((a:any, b:any) => {
+    setTableData(decodedShooldata);
+  }, [selectedFilter, data, adminData, otherData, page, rowsPerPage]);
+
+  const sortedData = tableData?.slice().sort((a: any, b: any) => {
     const isAsc = order === 'asc';
-    if(orderBy === 'longitude'){
-    return (parseFloat(a[orderBy]) < parseFloat(b[orderBy]) ? -1 : 1) * (isAsc ? 1 : -1);
+    if (orderBy === 'longitude') {
+      return (parseFloat(a[orderBy]) < parseFloat(b[orderBy]) ? -1 : 1) * (isAsc ? 1 : -1);
     }
     return (a[orderBy] < b[orderBy] ? -1 : 1) * (isAsc ? 1 : -1);
   });
@@ -106,6 +155,19 @@ const MintedSchools = () => {
   return (
     <DashboardLayout>
       <h2>Minted School</h2>
+      <FormControl sx={{ width: '25%' }}>
+        <InputLabel id="demo-simple-select-label">Minted By</InputLabel>
+        <Select
+          labelId="minted-by-select-label"
+          id="minted-by-select"
+          value={selectedFilter}
+          onChange={(e) => setSelectedFilter(e.target.value)}
+        >
+          <MenuItem value="all">All</MenuItem>
+          <MenuItem value="admin">Admin</MenuItem>
+          <MenuItem value="others">Others</MenuItem>
+        </Select>
+      </FormControl>
       {fetching && (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <CircularProgress />
@@ -113,46 +175,46 @@ const MintedSchools = () => {
       )}
       {!fetching && (
         <>
-        <Card style={{marginTop: '20px'}}>
-          <Divider />
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
-                <TableHeadUsers
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={tableData?.length}
-                  onSort={onSort}
-                />
-                <TableBody>
-                  {sortedData &&
-                    sortedData?.map((row: any) => (
-                      <SchoolTableRow
-                        key={row.id}
-                        row={row}
-                        selectedValues={selectedValues}
-                        setSelectedValues={setSelectedValues}
-                        rowData={row}
-                        checkbox={false}
-                      />
-                    ))}
-                  <TableNoData isNotFound={tableData.length === 0} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
-          <TablePaginationCustom
-            count={data?.schoolTokenUris.length || 0}
-            setPage={setPage}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-            dense={dense}
-            onChangeDense={onChangeDense}
-          />
-        </Card>
+          <Card style={{ marginTop: '20px' }}>
+            <Divider />
+            <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+              <Scrollbar>
+                <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+                  <TableHeadUsers
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={TABLE_HEAD}
+                    rowCount={tableData?.length}
+                    onSort={onSort}
+                  />
+                  <TableBody>
+                    {sortedData &&
+                      sortedData?.map((row: any) => (
+                        <SchoolTableRow
+                          key={row.id}
+                          row={row}
+                          selectedValues={selectedValues}
+                          setSelectedValues={setSelectedValues}
+                          rowData={row}
+                          checkbox={false}
+                        />
+                      ))}
+                    <TableNoData isNotFound={tableData.length === 0} />
+                  </TableBody>
+                </Table>
+              </Scrollbar>
+            </TableContainer>
+            <TablePaginationCustom
+              count={data?.nftDatas?.length || 0}
+              setPage={setPage}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+              dense={dense}
+              onChangeDense={onChangeDense}
+            />
+          </Card>
         </>
       )}
     </DashboardLayout>
