@@ -26,9 +26,11 @@ const Navbar = () => (
           onClick={onClickSideNavExpand}
           isActive={isSideNavExpanded}
         />
-        <Link href="/" passHref legacyBehavior>
-          <HeaderName prefix="">Giga Blocks</HeaderName>
-        </Link>
+
+        <HeaderName href="/" prefix="">
+          Giga Blocks
+        </HeaderName>
+
         <HeaderNavigation aria-label="Giga">
           <Link href="/schools" passHref legacyBehavior>
             <HeaderMenuItem>Schools</HeaderMenuItem>
