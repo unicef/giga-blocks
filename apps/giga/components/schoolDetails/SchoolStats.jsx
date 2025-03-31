@@ -2,12 +2,7 @@
 import { CheckmarkFilled, MeterAlt, NotAvailable } from '@carbon/icons-react';
 import { useState } from 'react';
 
-export default function SchoolStats({
-  schoolData,
-  fontColor,
-  weeklyData,
-  connectivity,
-}) {
+export default function SchoolStats({ fontColor, weeklyData, connectivity }) {
   const [selectedTab, setSelectedTab] = useState('weekly');
 
   return (
@@ -46,16 +41,16 @@ export default function SchoolStats({
               className="school-details__stat-number"
               style={{ color: fontColor }}
             >
-              {schoolData.downloadSpeed} Mbps
+              {290} Mbps
             </span>
           </div>
           <div className="school-details__stat-detail">
             <p>Connection Type</p>
-            <p>{schoolData.connectionType}</p>
+            <p>{'adsl'}</p>
           </div>
           <div className="school-details__stat-detail">
             <p>Global Benchmark</p>
-            <p>{schoolData.globalBenchmark} Mbps</p>
+            <p>{10} Mbps</p>
           </div>
         </div>
       </div>

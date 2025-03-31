@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowLeft, CheckmarkFilled } from '@carbon/icons-react';
+import { ArrowLeft } from '@carbon/icons-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import Header from '../../../components/schoolDetails/SchoolHeader';
@@ -14,20 +14,9 @@ import './_schoolDetails.scss';
 export default function SchoolDetails({ params }) {
   const { id } = params;
   const { data, isLoading } = useSchoolDetails(id);
-  console.log('data', data);
   const { giga_maps_data } = data || {};
 
   const [selectedTheme, setSelectedTheme] = useState('white');
-
-  // Mock data for the school
-  const schoolData = {
-    isActivated: false,
-    connectivityStatus: true,
-    downloadSpeed: 150,
-    connectionType: 'ADSL',
-    globalBenchmark: 20,
-  };
-
   // Mock data for the weekly chart
   const weeklyData = [
     { day: 'S', value: 120 },
@@ -44,25 +33,6 @@ export default function SchoolDetails({ params }) {
     { id: 'purple', colors: ['#FBECFE', '#e56cff', '#c400ff'] },
     { id: 'blue', colors: ['#c8e4ff', '#6cb6ff', '#0078ff'] },
     { id: 'green', colors: ['#c8ffdc', '#6cffad', '#00ff73'] },
-  ];
-
-  // Additional details table rows
-  const additionalDetails = [
-    {
-      id: '1',
-      key: 'School Established Year',
-      value: schoolData.establishedYear,
-    },
-    {
-      id: '2',
-      key: 'Electricity Availability',
-      value: schoolData.hasElectricity ? <CheckmarkFilled /> : 'No',
-    },
-    { id: '3', key: 'School Funding Type', value: schoolData.fundingType },
-    { id: '4', key: 'Male Teachers', value: schoolData.maleTeachers },
-    { id: '5', key: 'Female Teachers', value: schoolData.femaleTeachers },
-    { id: '6', key: 'Male Students', value: schoolData.maleStudents },
-    { id: '7', key: 'Female Students', value: schoolData.femaleStudents },
   ];
 
   const fontColor =
@@ -103,11 +73,7 @@ export default function SchoolDetails({ params }) {
               id={id}
             />
 
-            <SchoolStats
-              schoolData={schoolData}
-              fontColor={fontColor}
-              weeklyData={weeklyData}
-            />
+            <SchoolStats fontColor={fontColor} weeklyData={weeklyData} />
             <SchoolOverview
               updatedAt={data.updatedAt}
               connectivity={data.connectivity}
@@ -117,7 +83,6 @@ export default function SchoolDetails({ params }) {
               longitude={data.longitude}
               latitude={data.latitude}
               gigaMapsData={giga_maps_data}
-              additionalDetails={additionalDetails}
               fontColor={fontColor}
             />
           </div>
