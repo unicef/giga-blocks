@@ -8,28 +8,27 @@ import {
   PageLast,
 } from '@carbon/icons-react';
 import {
+  Button,
+  RadioButton,
+  RadioButtonGroup,
   Search,
   Select,
   SelectItem,
-  Button,
   Slider,
-  RadioButtonGroup,
-  RadioButton,
 } from '@carbon/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useSchoolGet } from '../../../app/hooks/useSchool';
 import SchoolCard from '../../schoolCard/SchoolCard';
 import './_schoolSearch.scss';
-import { useSchoolGet } from '../../../app/hooks/useSchool';
-import { useSchoolDetails } from '../../../app/hooks/useSchool';
 
 export default function SchoolSearch() {
-  const page = 1; // Ensure this is always defined
-  const perPage = 10; // Ensure this is always defined
-
+  const page = 1;
+  const perPage = 8;
   const [searchTerm, setSearchTerm] = useState('Evergreen');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const { data } = useSchoolGet(page, perPage);
-  console.log('data', data);
+
+  const { data: schools, isLoading } = useSchoolGet(page, perPage);
+  console.log('schools', schools);
 
   // Filter state
   const [numStudents, setNumStudents] = useState([0, 1000]);
@@ -76,65 +75,7 @@ export default function SchoolSearch() {
     setIsFilterOpen(false);
   };
 
-  // sample data
-  const schools = [
-    {
-      id: 1,
-      name: 'Evergreen Academy for Advanced Scientific and Holistic Learning Experience',
-      location: 'South Africa',
-      activated: true,
-      hasImage: true,
-    },
-    {
-      id: 2,
-      name: 'Evergreen Academy for Advanced Scientific and Holistic Learning Experience',
-      location: 'South Africa',
-      activated: false,
-      hasImage: false,
-    },
-    {
-      id: 3,
-      name: 'Evergreen Academy for Advanced Scientific and Holistic Learning Experience',
-      location: 'South Africa',
-      activated: true,
-      hasImage: true,
-    },
-    {
-      id: 4,
-      name: 'Evergreen Academy for Advanced Scientific and Holistic Learning Experience',
-      location: 'South Africa',
-      activated: true,
-      hasImage: true,
-    },
-    {
-      id: 5,
-      name: 'Evergreen Academy for Advanced Scientific and Holistic Learning Experience',
-      location: 'South Africa',
-      activated: false,
-      hasImage: false,
-    },
-    {
-      id: 6,
-      name: 'Evergreen Academy for Advanced Scientific and Holistic Learning Experience',
-      location: 'South Africa',
-      activated: false,
-      hasImage: false,
-    },
-    {
-      id: 7,
-      name: 'Evergreen Academy for Advanced Scientific and Holistic Learning Experience',
-      location: 'South Africa',
-      activated: true,
-      hasImage: true,
-    },
-    {
-      id: 8,
-      name: 'Evergreen Academy for Advanced Scientific and Holistic Learning Experience',
-      location: 'South Africa',
-      activated: true,
-      hasImage: true,
-    },
-  ];
+  if (isLoading) return <h1>Loading</h1>;
 
   return (
     <div className="search-page">
@@ -401,16 +342,16 @@ export default function SchoolSearch() {
         </div>
 
         <div className="search-page__results-count">
-          {schools.length} Schools found
+          {schools?.rows?.length} Schools found
         </div>
 
         <div className="search-page__grid">
-          {schools.map((school) => (
+          {schools?.rows?.map((school) => (
             <SchoolCard
               key={school.id}
               schoolName={school.name}
-              location={school.location}
-              isActivated={school.activated}
+              location={school.region_name}
+              minted={school.minted}
               hasImage={school.hasImage}
             />
           ))}

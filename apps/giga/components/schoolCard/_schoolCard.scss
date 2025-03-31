@@ -57,10 +57,29 @@
     }
   }
 
-  &__status {
+  &__minted {
     display: inline-flex;
     align-items: center;
     background-color: #2662ff;
+    color: white;
+    padding: $spacing-03 $spacing-05;
+    border-radius: 50px;
+    margin-bottom: $spacing-05;
+
+    svg {
+      margin-right: $spacing-03;
+      fill: white;
+    }
+
+    span {
+      @include type-style('body-01');
+      font-weight: 600;
+    }
+  }
+  &__unminted {
+    display: inline-flex;
+    align-items: center;
+    background-color: #a2a2a2;
     color: white;
     padding: $spacing-03 $spacing-05;
     border-radius: 50px;

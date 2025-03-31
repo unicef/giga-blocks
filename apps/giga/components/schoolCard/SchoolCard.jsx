@@ -5,9 +5,9 @@ import Link from 'next/link';
 
 export default function SchoolCard({
   id = 1,
-  schoolName = 'Evergreen Academy for Advanced Scientific and Holistic Learning Experience',
-  location = 'South Africa',
-  isActivated = true,
+  schoolName,
+  location,
+  minted,
   hasImage = true,
 }) {
   const displayName =
@@ -23,10 +23,17 @@ export default function SchoolCard({
           <span>{location}</span>
         </div>
 
-        {isActivated && (
-          <div className="school-card__status">
+        {minted === 'MINTED' ? (
+          <div className="school-card__minted">
             <DataEnrichment />
-            <span>Activated</span>
+            <span>{minted}</span>
+          </div>
+        ) : (
+          <div className="school-card__unminted">
+            {/* <DataEnrichment /> */}
+            <span>
+              {minted === 'MINTED' ? 'Activated' : 'Ready to Activate'}
+            </span>
           </div>
         )}
       </div>
