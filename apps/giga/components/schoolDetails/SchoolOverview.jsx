@@ -72,12 +72,12 @@ const SchoolOverview = ({
           {
             label: 'Longitude',
             icon: <Map size={20} />,
-            value: longitude,
+            value: longitude.toFixed(10),
           },
           {
             label: 'Latitude',
             icon: <Map size={20} />,
-            value: latitude,
+            value: latitude.toFixed(10),
           },
         ].map(({ label, icon, value }) => (
           <div key={label} className="school-details__overview-card">
