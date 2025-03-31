@@ -359,6 +359,7 @@ export default function SchoolSearch() {
           {filteredSchools.map((school) => (
             <SchoolCard
               key={school.id}
+              id={school.id}
               schoolName={school.name}
               location={school.region_name}
               minted={school.minted}

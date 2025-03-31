@@ -7,11 +7,10 @@ export const useSchoolGet = (page = 1, perPage = 10) => {
   return useQuery(
     ['get-school-list', page, perPage],
     async () => {
-      console.log('Query function executed!');
       const { data } = await apiGuest.get(
         `${SCHOOLS.GET}?page=${page}&perPage=${perPage}`
       );
-      console.log('Data received:', data);
+
       return data;
     },
     {

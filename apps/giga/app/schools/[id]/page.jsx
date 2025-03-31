@@ -8,18 +8,17 @@ import SchoolOverview from '../../../components/schoolDetails/SchoolOverview';
 import SchoolStats from '../../../components/schoolDetails/SchoolStats';
 import ThemeSelector from '../../../components/schoolDetails/SchoolThemes';
 import Sidebar from '../../../components/schoolDetails/Sidebar';
+import { useSchoolDetails } from '../../hooks/useSchool';
 import './_schoolDetails.scss';
 
 export default function SchoolDetails({ params }) {
   const { id } = params;
+  const { data, isLoading } = useSchoolDetails(id);
+  console.log('data', data);
   const [selectedTheme, setSelectedTheme] = useState('white');
 
   // Mock data for the school
   const schoolData = {
-    id: id,
-    name: 'Evergreen Academy for Advanced Scientific and Holistic Learning',
-    level: 'Higher Secondary',
-    location: 'USA',
     isActivated: false,
     connectivityStatus: true,
     downloadSpeed: 150,
@@ -85,6 +84,8 @@ export default function SchoolDetails({ params }) {
     themeOptions.find((theme) => theme.id === selectedTheme)?.colors[0] ||
     '#fff';
 
+  if (isLoading) return <h1>Loading....</h1>;
+
   return (
     <div className="school-details">
       <div
@@ -99,7 +100,12 @@ export default function SchoolDetails({ params }) {
 
         <div className="school-details__content">
           <div className="school-details__main">
-            <Header schoolData={schoolData} />
+            <Header
+              name={data.name}
+              school_type={data.school_type}
+              region_name={data.region_name}
+              fontColor={fontColor}
+            />
 
             <ThemeSelector
               themeOptions={themeOptions}
@@ -114,6 +120,13 @@ export default function SchoolDetails({ params }) {
               weeklyData={weeklyData}
             />
             <SchoolOverview
+              updatedAt={data.updatedAt}
+              connectivity={data.connectivity}
+              coverage_availability={data.coverage_availability}
+              electricity_available={data.electricity_available}
+              region_name={data.region_name}
+              longitude={data.longitude}
+              latitude={data.latitude}
               schoolData={schoolData}
               additionalDetails={additionalDetails}
               fontColor={fontColor}

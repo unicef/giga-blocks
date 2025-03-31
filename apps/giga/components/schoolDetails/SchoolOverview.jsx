@@ -2,20 +2,29 @@ import {
   CheckmarkFilled,
   Education,
   Flash,
-  Laptop,
-  User,
-  UserFollow,
-  WatsonHealthCrossReference,
+  Flag,
+  ScisControlTower,
+  Map,
 } from '@carbon/icons-react';
 import { Table, TableBody, TableCell, TableRow } from '@carbon/react';
 
-const SchoolOverview = ({ schoolData, additionalDetails, fontColor }) => {
+const SchoolOverview = ({
+  schoolData,
+  updatedAt,
+  additionalDetails,
+  fontColor,
+  coverage_availability,
+  electricity_available,
+  region_name,
+  longitude,
+  latitude,
+}) => {
   return (
     <div className="school-details__overview">
       <div className="school-details__overview-header">
         <h3 className="school-details__section-title">School Overview</h3>
         <div className="school-details__data-source">
-          Last Updated: {schoolData.lastUpdated}
+          Last Updated: {new Date(updatedAt).toISOString().split('T')[0]}
         </div>
       </div>
       <p className="school-details__last-updated">
@@ -25,34 +34,29 @@ const SchoolOverview = ({ schoolData, additionalDetails, fontColor }) => {
       <div className="school-details__overview-cards">
         {[
           {
-            label: 'Students',
-            icon: <User size={20} />,
-            value: schoolData.students.toLocaleString(),
-          },
-          {
-            label: 'Teachers',
-            icon: <UserFollow size={20} />,
-            value: schoolData.teachers,
-          },
-          {
-            label: 'Computers',
-            icon: <Laptop size={20} />,
-            value: schoolData.computers,
-          },
-          {
-            label: 'Water',
-            icon: <WatsonHealthCrossReference size={20} />,
-            value: schoolData.hasWater && <CheckmarkFilled size={24} />,
+            label: 'Coverage Availability',
+            icon: <ScisControlTower size={20} />,
+            value: coverage_availability ? coverage_availability : 'N/A',
           },
           {
             label: 'Electricity',
             icon: <Flash size={20} />,
-            value: schoolData.hasElectricity && <CheckmarkFilled size={24} />,
+            value: electricity_available ? electricity_available : 'N/A',
           },
           {
-            label: 'Computer Lab',
-            icon: <Education size={20} />,
-            value: schoolData.hasComputerLab && <CheckmarkFilled size={24} />,
+            label: 'Country',
+            icon: <Flag size={20} />,
+            value: region_name,
+          },
+          {
+            label: 'Longitude',
+            icon: <Map size={20} />,
+            value: longitude,
+          },
+          {
+            label: 'Latitude',
+            icon: <Map size={20} />,
+            value: latitude,
           },
         ].map(({ label, icon, value }) => (
           <div key={label} className="school-details__overview-card">

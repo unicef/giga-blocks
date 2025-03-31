@@ -1,8 +1,13 @@
 // components/schoolDetails/SchoolStats.js
-import { CheckmarkFilled, MeterAlt } from '@carbon/icons-react';
+import { CheckmarkFilled, MeterAlt, NotAvailable } from '@carbon/icons-react';
 import { useState } from 'react';
 
-export default function SchoolStats({ schoolData, fontColor, weeklyData }) {
+export default function SchoolStats({
+  schoolData,
+  fontColor,
+  weeklyData,
+  connectivity,
+}) {
   const [selectedTab, setSelectedTab] = useState('weekly');
 
   return (
@@ -18,7 +23,11 @@ export default function SchoolStats({ schoolData, fontColor, weeklyData }) {
           >
             <h4 className="school-details__stat-title">Connectivity Status</h4>
             <div className="school-details__stat-icon connectivity">
-              <CheckmarkFilled color={fontColor} size={24} />
+              {connectivity ? (
+                <CheckmarkFilled color={fontColor} size={24} />
+              ) : (
+                <NotAvailable color={fontColor} size={24} />
+              )}
             </div>
           </div>
         </div>

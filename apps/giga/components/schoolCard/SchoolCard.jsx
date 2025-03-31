@@ -4,7 +4,7 @@ import './_schoolCard.scss';
 import Link from 'next/link';
 
 export default function SchoolCard({
-  id = 1,
+  id,
   schoolName,
   location,
   minted,
