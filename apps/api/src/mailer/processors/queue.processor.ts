@@ -201,21 +201,21 @@ export class MintQueueProcessor {
       },
     });
     // Create or update contributor
-    await this._prismaService.contributor.upsert({
-      where: { email: job.data.email },
-      create: {
-        email: job.data.email,
-        totalNftMinted: 1,
-        walletAddress: hexStringToBuffer(job.data.walletAddress),
-        schoolId: job.data.ids,
-      },
-      update: { totalNftMinted: { increment: 1 }, schoolId: { push: job.data.ids } },
-    });
+    // await this._prismaService.contributor.upsert({
+    //   where: { email: job.data.email },
+    //   create: {
+    //     email: job.data.email,
+    //     totalNftMinted: 1,
+    //     walletAddress: hexStringToBuffer(job.data.walletAddress),
+    //     schoolId: job.data.ids,
+    //   },
+    //   update: { totalNftMinted: { increment: 1 }, schoolId: { push: job.data.ids } },
+    // });
 
-    await this._magicLinkService.sendMagicLink({
-      email: job.data.email,
-      redirectlink: 'https://www.google.com',
-    });
+    // await this._magicLinkService.sendMagicLink({
+    //   email: job.data.email,
+    //   redirectlink: 'https://www.google.com',
+    // });
 
     if (schools.count !== job.data.ids.length) {
       throw new Error(`No. of schools updated in database is not equal to no of schools minted`);

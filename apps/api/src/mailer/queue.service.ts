@@ -193,7 +193,7 @@ export class QueueService {
             connectivity: school.connectivity.toString(),
             electricity_availabilty: school.electricity_available,
             coverage_availabitlity: school.coverage_availability.toString(),
-            region: school.region_name,
+            region_name: school.region_name,
           };
         });
 
