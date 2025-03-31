@@ -123,38 +123,40 @@ model Permission {
 }
 
 model User {
-  id              String            @id @default(uuid())
-  name            String
-  email           String?           @unique
-  walletAddress   Bytes?            @unique
-  profileImage    String?
-  isActive        Boolean           @default(true)
-  isBlocked       Boolean           @default(false)
-  lastLoggedIn    DateTime?         @default(now())
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  deletedAt       DateTime?
-  ContributedData ContributedData[]
-  ValidatedUser   ContributedData[] @relation("ValidatedBy")
-  ApprovedBy      ContributedData[] @relation("ApprovedBy")
-  Auth            Auth[]
-  roles           Role[]
-  schools         School[]
-  schoolUpdatedBy School[]          @relation("UpdatedBy")
-  isArchived      Boolean           @default(false)
-  validatedBy     validatedData[]   @relation("ApprovedBy")
-  OTP             OTP[]
-  linkActivatedBy  ActivationLog[]  @relation("ActivatedBy")
-  linkDeactivatedBy ActivationLog[]  @relation("DeactivatedBy")
+  id                String            @id @default(uuid())
+  name              String
+  email             String?           @unique
+  walletAddress     Bytes?            @unique
+  profileImage      String?
+  isActive          Boolean           @default(true)
+  isBlocked         Boolean           @default(false)
+  lastLoggedIn      DateTime?         @default(now())
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  deletedAt         DateTime?
+  ContributedData   ContributedData[]
+  ValidatedUser     ContributedData[] @relation("ValidatedBy")
+  ApprovedBy        ContributedData[] @relation("ApprovedBy")
+  Auth              Auth[]
+  roles             Role[]
+  schools           School[]
+  schoolUpdatedBy   School[]          @relation("UpdatedBy")
+  isArchived        Boolean           @default(false)
+  validatedBy       validatedData[]   @relation("ApprovedBy")
+  OTP               OTP[]
+  linkActivatedBy   ActivationLog[]   @relation("ActivatedBy")
+  linkDeactivatedBy ActivationLog[]   @relation("DeactivatedBy")
+  FeatureCountry    FeatureCountry[]
+  User              Contributor[]
 
   @@map("giga_users")
 }
 
 model SchoolVersion {
-  id           String     @id @default(uuid())
+  id           String   @id @default(uuid())
   country_code String   @db.VarChar(3)
-  version      Int      
-  last_updated  DateTime @default(now())
+  version      Int
+  last_updated DateTime @default(now())
   School       School?  @relation(fields: [schoolId], references: [id])
   schoolId     String?
 
@@ -176,7 +178,7 @@ model School {
   latitude              Float
   minted                MintStatus        @default(NOTMINTED)
   coverage_availability Boolean           @default(false)
-  giga_maps_data        Json ?
+  giga_maps_data        Json?
   imageHash             String?
   createdAt             DateTime          @default(now())
   updatedAt             DateTime          @updatedAt
@@ -192,13 +194,12 @@ model School {
   ContributedData       ContributedData[]
   version_id            String
   School_Version        SchoolVersion[]
-
-  themeId      String?
-  theme        Theme?    @relation(fields: [themeId], references: [id])
+  themeId String?
+  theme   Theme?  @relation(fields: [themeId], references: [id])
 
   @@index(fields: [name], type: Gist)
   @@index(fields: [minted], type: Hash)
-  @@index(fields:[country,region_name,id])
+  @@index(fields: [country, region_name, id])
   @@map("giga_school")
 }
 
@@ -272,11 +273,11 @@ model OTP {
 }
 
 model magicLinkOtp {
-  id             String   @id @default(uuid())
-  otp            String   @unique
-  email          String   @unique
+  id             String    @id @default(uuid())
+  otp            String    @unique
+  email          String    @unique
   validated      Boolean   @default(false)
-  expirationTime DateTime  
+  expirationTime DateTime
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime?
@@ -284,22 +285,21 @@ model magicLinkOtp {
   @@map("giga_magic_link_otp")
 }
 
-
 model Theme {
-  id           String    @id @default(uuid())
-  colorScheme  Json
-  name         String    @unique
-  schools      School[]
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  deletedAt    DateTime?
-  isArchived   Boolean   @default(false)
+  id          String    @id @default(uuid())
+  colorScheme Json
+  name        String    @unique
+  schools     School[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  isArchived  Boolean   @default(false)
 
   @@map("giga_themes")
 }
 
 model Qos {
-  id                   String   @id @default(uuid())
+  id                   String    @id @default(uuid())
   timestamp            DateTime
   country_id           String
   giga_school_id       String
@@ -318,52 +318,65 @@ model Qos {
   gigasync_id          String
   date                 DateTime?
   dynamicData          Json
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
   deletedAt            DateTime?
 
   @@map("giga_qos")
 }
 
 model ArweaveHash {
-  id           String   @id @default(uuid())
-  date         DateTime @unique
-  arweaveHash  String[] 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  deletedAt    DateTime?
+  id          String    @id @default(uuid())
+  date        DateTime  @unique
+  arweaveHash String[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
 
   @@map("giga_arweave_data")
 }
 
 model ActivationLog {
-  id           String            @id @default(uuid())
-  status       ActivationStatus  @default(INACTIVE)
-  activatedBy  String
-  name         String 
-  activatedUser User             @relation("ActivatedBy",fields:[activatedBy],references:[id])
-  deActivatedBy  String?
-  deActivatedUser User ?         @relation( "DeactivatedBy",fields:[deActivatedBy],references:[id])
-  startDate    DateTime          
-  endDate      DateTime?         
-  createdAt    DateTime          @default(now())
-  updatedAt    DateTime          @updatedAt
+  id              String           @id @default(uuid())
+  status          ActivationStatus @default(INACTIVE)
+  activatedBy     String
+  name            String
+  activatedUser   User             @relation("ActivatedBy", fields: [activatedBy], references: [id])
+  deActivatedBy   String?
+  deActivatedUser User?            @relation("DeactivatedBy", fields: [deActivatedBy], references: [id])
+  startDate       DateTime
+  endDate         DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 
   @@map("giga_link_activation")
 }
 
+/// userId map 
+/// add the nft related data only in this
 model Contributor {
-  id            String   @id @default(uuid())
-  email         String   @unique
-  walletAddress Bytes?
-  username      String?
-  nftAddress    String?
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  user           User?    @relation(fields:[userId], references:[id])
+  schoolreserved String[]
   totalNftMinted Int
-  isVisible     Boolean  @default(false)
-  nftReserved   Boolean  @default(false)
-  nftClaimed    Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  isVisible      Boolean  @default(false)
+  nftReserved    Boolean  @default(false)
+  nftClaimed     Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   @@map("giga_contributor")
+}
+
+model FeatureCountry {
+  id            String   @id @default(uuid())
+  country_code  String   @unique
+  isFeatured    Boolean
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  createdBy     String
+  createdByUser User     @relation(fields: [createdBy], references: [id])
+
+  @@map("giga_featured")
 }

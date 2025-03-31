@@ -31,7 +31,6 @@ export const mintNFT = async (
   giga_ids: string[],
 ): Promise<ContractTransactionResponse> => {
   const config = new ConfigService();
-  console.log(schoolDataArray);
   // const weiEthers = await getProposedGasPrice();
   const collectorescrowAddress = config.get('NEXT_PUBLIC_GIGA_COLLECTOR_ESCROW_ADDRESS');
   const schoolescrowAddress = config.get('NEXT_PUBLIC_GIGA_SCHOOL_ESCROW_ADDRESS');
@@ -45,7 +44,6 @@ export const mintNFT = async (
   ]);
 
   const multicalldata = generateMultiCallData(contractName, 'mintNft', schoolArgs);
-  console.log(multicalldata, 'is multicall data');
   return await contract.multicall(multicalldata);
 
   // return await contract.multicall(multicalldata, { gasPrice: weiEthers });

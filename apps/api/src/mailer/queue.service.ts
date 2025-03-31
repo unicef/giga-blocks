@@ -72,6 +72,7 @@ export class QueueService {
       school.connectivity.toString(),
       school.coverage_availabitlity.toString(),
       school.electricity_availabilty.toString(),
+      school.region_name,
     ];
   }
 
@@ -86,7 +87,7 @@ export class QueueService {
         ids = MintData.data.map(school => school.id);
         giga_ids = MintData.data.map(school => school.giga_school_id);
         schools = await this.updateSchools(ids);
-        console.log(mintData, "is mint data with batch size")
+        console.log(mintData, 'is mint data with batch size');
         await this._mintQueue.add(SET_MINT_NFT, { mintData, ids, giga_ids }, jobOptions);
       } else {
         let mintDatum;
@@ -94,7 +95,7 @@ export class QueueService {
           mintDatum = mintData.slice(i, i + batchSize);
           ids = MintData.data.slice(i, i + batchSize).map(school => school.id);
           schools = await this.updateSchools(ids);
-          console.log(mintDatum, "is mint datum")
+          console.log(mintDatum, 'is mint datum');
           await this._mintQueue.add(
             SET_MINT_NFT,
             { mintData: mintDatum, ids, giga_ids },
@@ -105,7 +106,7 @@ export class QueueService {
       return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
       this._logger.error(`Error queueing bulk transaction to blockchain `);
-      console.log(error)
+      console.log(error);
       throw error;
     }
   }
@@ -116,7 +117,18 @@ export class QueueService {
       const ids = [MintData.data.id];
       const giga_id = MintData.data.giga_school_id;
       await this.updateSchools(ids);
-      await this._mintQueue.add(SET_MINT_SINGLE_NFT, { mintData, ids, giga_id }, jobOptions);
+      await this._mintQueue.add(
+        SET_MINT_SINGLE_NFT,
+        {
+          mintData,
+          ids,
+          giga_id,
+          email: MintData.email,
+          walletAddress: MintData.walletAddress,
+          themeId: MintData.themeId,
+        },
+        jobOptions,
+      );
       return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
       this._logger.error(`Error queueing transaction to blockchain `);
@@ -160,27 +172,42 @@ export class QueueService {
   }
 
   public async csvMintdata(batchId: string){
-    try{
-      const schools = await this._prismaService.school.findMany({
-        where:{
-          uploadId: batchId
+    console.log(batchId, "is batch id")
+    try {
+        const schools = await this._prismaService.school.findMany({
+          where: {
+            uploadId: batchId,
+          },
+        });
+        console.log(schools, "is schools")
+  
+        const schoolData: SchoolData[] = schools.map((school) => {
+          return {
+            id: school.id,
+            giga_school_id: school.giga_school_id,
+            schoolName: school.name,
+            schoolType: school.school_type,
+            country: school.country,
+            latitude: school.latitude,
+            longitude: school.longitude,
+            connectivity: school.connectivity.toString(),
+            electricity_availabilty: school.electricity_available,
+            coverage_availabitlity: school.coverage_availability.toString(),
+            region: school.region_name,
+          };
+        });
+
+        console.log(schoolData, "is school data")
+  
+        if (schoolData.length === 0) {
+          this._logger.warn(`No schools found for batch ${batchId}`);
+          return;
         }
+  
+        this.sendMintNFT({ data: schoolData }).catch((error) => {
+        this._logger.error(`Error in csvMintdata for batch ${batchId}:`, error);
       })
-      const schoolData: SchoolData[] = schools.map(school => {
-        return {
-          id: school.id,
-          giga_school_id: school.giga_school_id,
-          schoolName: school.name,
-          schoolType: school.school_type,
-          country: school.country,
-          latitude: school.latitude,
-          longitude: school.longitude,
-          connectivity: (school.connectivity).toString(),
-          electricity_availabilty: school.electricity_available,
-          coverage_availabitlity: (school.coverage_availability).toString(),
-          region: school.region_name
-        }})
-        this.sendMintNFT({data: schoolData})
+    
 
     }
     catch(error){
