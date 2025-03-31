@@ -15,6 +15,8 @@ export default function SchoolDetails({ params }) {
   const { id } = params;
   const { data, isLoading } = useSchoolDetails(id);
   console.log('data', data);
+  const { giga_maps_data } = data || {};
+
   const [selectedTheme, setSelectedTheme] = useState('white');
 
   // Mock data for the school
@@ -24,19 +26,6 @@ export default function SchoolDetails({ params }) {
     downloadSpeed: 150,
     connectionType: 'ADSL',
     globalBenchmark: 20,
-    students: 1000,
-    teachers: 40,
-    computers: 120,
-    hasWater: true,
-    hasElectricity: true,
-    hasComputerLab: true,
-    establishedYear: '2025 AD',
-    fundingType: 'Private',
-    maleTeachers: 50,
-    femaleTeachers: 40,
-    maleStudents: 1200,
-    femaleStudents: 500,
-    lastUpdated: '21 July, 2025',
   };
 
   // Mock data for the weekly chart
@@ -127,6 +116,7 @@ export default function SchoolDetails({ params }) {
               region_name={data.region_name}
               longitude={data.longitude}
               latitude={data.latitude}
+              gigaMapsData={giga_maps_data}
               additionalDetails={additionalDetails}
               fontColor={fontColor}
             />

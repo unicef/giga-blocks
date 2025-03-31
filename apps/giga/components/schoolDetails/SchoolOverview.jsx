@@ -3,14 +3,43 @@ import { Table, TableBody, TableCell, TableRow } from '@carbon/react';
 
 const SchoolOverview = ({
   updatedAt,
-  additionalDetails,
   fontColor,
   coverage_availability,
   electricity_available,
   region_name,
   longitude,
   latitude,
+  gigaMapsData,
 }) => {
+  const formatKey = (key) => {
+    return key
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+  };
+
+  const excludedKeys = new Set([
+    'admin1',
+    'admin1_id_giga',
+    'admin2',
+    'admin2_id_giga',
+    'education_level',
+    'electricity_availability',
+    'school_id_giga',
+    'school_id_govt',
+    'school_location_ingestion_timestamp',
+    'school_name',
+    'signature',
+  ]);
+
+  const additionalDetails = Object.entries(gigaMapsData || {})
+    .filter(([key]) => !excludedKeys.has(key))
+    .map(([key, value]) => ({
+      id: key,
+      key: formatKey(key),
+      value: value !== null && value !== undefined ? value : 'N/A',
+    }));
+
+  console.log('Giga Maps Data:', gigaMapsData);
   return (
     <div className="school-details__overview">
       <div className="school-details__overview-header">
