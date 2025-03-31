@@ -12,6 +12,7 @@ export interface SchoolData {
   connectivity: string;
   electricity_availabilty: boolean;
   coverage_availabitlity: string;
+  region_name: string;
 }
 
 export class MintQueueDto {
