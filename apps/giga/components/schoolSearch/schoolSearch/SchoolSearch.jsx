@@ -28,7 +28,6 @@ export default function SchoolSearch() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const { data: schools, isLoading } = useSchoolGet(page, perPage);
-  console.log('schools', schools);
 
   const totalPages = schools?.meta?.lastPage || 1;
 
@@ -36,6 +35,10 @@ export default function SchoolSearch() {
     setPage(newPage);
     window.scrollTo({ top: 750, behavior: 'smooth' });
   };
+
+  const filteredSchools = schools?.rows?.filter((school) =>
+    school.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   // Filter state
   const [numStudents, setNumStudents] = useState([0, 1000]);
@@ -353,7 +356,7 @@ export default function SchoolSearch() {
         </div>
 
         <div className="search-page__grid">
-          {schools?.rows?.map((school) => (
+          {filteredSchools.map((school) => (
             <SchoolCard
               key={school.id}
               schoolName={school.name}
