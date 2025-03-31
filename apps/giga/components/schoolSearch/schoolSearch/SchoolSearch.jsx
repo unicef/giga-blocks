@@ -22,13 +22,20 @@ import SchoolCard from '../../schoolCard/SchoolCard';
 import './_schoolSearch.scss';
 
 export default function SchoolSearch() {
-  const page = 1;
+  const [page, setPage] = useState(1);
   const perPage = 8;
-  const [searchTerm, setSearchTerm] = useState('Evergreen');
+  const [searchTerm, setSearchTerm] = useState('');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const { data: schools, isLoading } = useSchoolGet(page, perPage);
   console.log('schools', schools);
+
+  const totalPages = schools?.meta?.lastPage || 1;
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    window.scrollTo({ top: 750, behavior: 'smooth' });
+  };
 
   // Filter state
   const [numStudents, setNumStudents] = useState([0, 1000]);
@@ -358,19 +365,39 @@ export default function SchoolSearch() {
         </div>
 
         <div className="search-page__pagination">
-          <button className="search-page__pagination-button" disabled>
+          <button
+            className="search-page__pagination-button"
+            onClick={() => handlePageChange(1)}
+            disabled={page === 1}
+          >
             <PageFirst />
           </button>
-          <button className="search-page__pagination-button" disabled>
+
+          <button
+            className="search-page__pagination-button"
+            onClick={() => handlePageChange(page - 1)}
+            disabled={page === 1}
+          >
             <ChevronLeft />
           </button>
 
-          <span className="search-page__pagination-info">Page 1 of 1</span>
+          <span className="search-page__pagination-info">
+            Page {page} of {totalPages}
+          </span>
 
-          <button className="search-page__pagination-button" disabled>
+          <button
+            className="search-page__pagination-button"
+            onClick={() => handlePageChange(page + 1)}
+            disabled={page === totalPages}
+          >
             <ChevronRight />
           </button>
-          <button className="search-page__pagination-button" disabled>
+
+          <button
+            className="search-page__pagination-button"
+            onClick={() => handlePageChange(totalPages)}
+            disabled={page === totalPages}
+          >
             <PageLast />
           </button>
         </div>
