@@ -1,15 +1,7 @@
-import {
-  CheckmarkFilled,
-  Education,
-  Flash,
-  Flag,
-  ScisControlTower,
-  Map,
-} from '@carbon/icons-react';
+import { Flag, Flash, Map, ScisControlTower } from '@carbon/icons-react';
 import { Table, TableBody, TableCell, TableRow } from '@carbon/react';
 
 const SchoolOverview = ({
-  schoolData,
   updatedAt,
   additionalDetails,
   fontColor,
