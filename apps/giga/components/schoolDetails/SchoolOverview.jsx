@@ -55,6 +55,11 @@ const SchoolOverview = ({
       <div className="school-details__overview-cards">
         {[
           {
+            label: 'Country',
+            icon: <Flag size={20} />,
+            value: region_name,
+          },
+          {
             label: 'Coverage Availability',
             icon: <ScisControlTower size={20} />,
             value: coverage_availability ? coverage_availability : 'N/A',
@@ -63,11 +68,6 @@ const SchoolOverview = ({
             label: 'Electricity',
             icon: <Flash size={20} />,
             value: electricity_available ? electricity_available : 'N/A',
-          },
-          {
-            label: 'Country',
-            icon: <Flag size={20} />,
-            value: region_name,
           },
           {
             label: 'Longitude',
