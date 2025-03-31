@@ -23,7 +23,7 @@ import './_schoolSearch.scss';
 
 export default function SchoolSearch() {
   const [page, setPage] = useState(1);
-  const perPage = 8;
+  const perPage = 10;
   const [searchTerm, setSearchTerm] = useState('');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
@@ -352,7 +352,7 @@ export default function SchoolSearch() {
         </div>
 
         <div className="search-page__results-count">
-          {schools?.rows?.length} Schools found
+          {filteredSchools.length} Schools found
         </div>
 
         <div className="search-page__grid">
