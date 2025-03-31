@@ -38,8 +38,6 @@ const SchoolOverview = ({
       key: formatKey(key),
       value: value !== null && value !== undefined ? value : 'N/A',
     }));
-
-  console.log('Giga Maps Data:', gigaMapsData);
   return (
     <div className="school-details__overview">
       <div className="school-details__overview-header">
