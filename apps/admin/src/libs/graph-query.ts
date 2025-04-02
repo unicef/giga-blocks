@@ -143,6 +143,15 @@ const totalGasFee = gql`
   }
 `;
 
+const totalNftCount = gql`
+  query totalnft {
+    totalNfts(subgraphError: allow) {
+    id
+    totalNft
+   }
+
+}`;
+
 export const Queries = {
   ownedNftsQuery,
   nftListQuery,
@@ -152,4 +161,5 @@ export const Queries = {
   othersNftListQuery,
   nftTransfer,
   totalGasFee,
+  totalNftCount 
 };
