@@ -54,29 +54,31 @@ const MintedSchools = () => {
 
   const [result] = useQuery({
     query: Queries.allNftListQuery,
-    variables: { first: rowsPerPage, skip: page * rowsPerPage },
+    variables: { first: rowsPerPage+rowsPerPage*page, skip: rowsPerPage*page },
   });
   const { data, fetching } = result;
 
   const [adminResult] = useQuery({
     query: Queries.adminNftListQuery,
-    variables: { id: process.env.NEXT_PUBLIC_ADMIN_ADDRESS,first: rowsPerPage, skip: page * rowsPerPage },
+    variables: { id: process.env.NEXT_PUBLIC_ADMIN_ADDRESS,first: rowsPerPage+rowsPerPage*page, skip: rowsPerPage*page },
   });
   const { data: adminData } = adminResult;
 
   const [otherResult] = useQuery({
     query: Queries.othersNftListQuery,
-    variables: { id: process.env.NEXT_PUBLIC_ADMIN_ADDRESS,first: rowsPerPage, skip: page * rowsPerPage },
+    variables: { id: process.env.NEXT_PUBLIC_ADMIN_ADDRESS,first: rowsPerPage+rowsPerPage*page, skip: rowsPerPage*page },
   });
   const { data: otherData } = otherResult;
 
-  useEffect(() => {
-    // const startItem = (page + 1) * rowsPerPage - rowsPerPage;
-    // const endItem = page * rowsPerPage + rowsPerPage;
-    const newData = data?.nftDatas.sort((a: any, b: any) => b.id - a.id);
-    // const paginatedDatas = newData?.slice(startItem, endItem);
-    // setPaginatedData(paginatedDatas);
-  }, [rowsPerPage, data, page]);
+
+
+  // useEffect(() => {
+  //   // const startItem = (page + 1) * rowsPerPage - rowsPerPage;
+  //   // const endItem = page * rowsPerPage + rowsPerPage;
+  //   const newData = data?.nftDatas.sort((a: any, b: any) => b.id - a.id);
+  //   // const paginatedDatas = newData?.slice(startItem, endItem);
+  //   // setPaginatedData(paginatedDatas);
+  // }, [rowsPerPage, data, page]);
 
   let filteredData: any = [];
 
