@@ -22,8 +22,8 @@ const nftListQuery = gql`
 `;
 
 const allNftListQuery = gql`
-  query MyQuery {
-    nftDatas {
+  query nftdata($first: Int, $skip: Int) {
+    nftDatas(first: $first, skip: $skip,orderBy:mintedAt) {
       id
       imageHash
       location
@@ -42,8 +42,8 @@ const allNftListQuery = gql`
 `;
 
 const adminNftListQuery = gql`
-  query MyQuery($id: String!) {
-    nftDatas(where: { minter: $id }) {
+  query adminNftData($id: String!, $first: Int, $skip: Int) {
+    nftDatas(where: { minter: $id },first: $first, skip: $skip,orderBy:mintedAt) {
       id
       imageHash
       location
@@ -62,8 +62,8 @@ const adminNftListQuery = gql`
 `;
 
 const othersNftListQuery = gql`
-  query MyQuery($id: String!) {
-    nftDatas(where: { minter_not: $id }) {
+  query otherNftData($id: String!) {
+    nftDatas(where: { minter_not: $id },orderBy:mintedAt) {
       id
       imageHash
       location
