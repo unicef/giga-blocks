@@ -32,12 +32,41 @@ const SchoolOverview = ({
   ]);
 
   const additionalDetails = Object.entries(gigaMapsData || {})
-    .filter(([key]) => !excludedKeys.has(key))
+    .filter(([key, value]) => !excludedKeys.has(key) && value !== null)
     .map(([key, value]) => ({
       id: key,
       key: formatKey(key),
       value: value !== null && value !== undefined ? value : 'N/A',
     }));
+
+  const overviewData = [
+    {
+      label: 'Country',
+      icon: <Flag size={20} />,
+      value: region_name,
+    },
+    {
+      label: 'Coverage Availability',
+      icon: <ScisControlTower size={20} />,
+      value: coverage_availability ? coverage_availability : 'N/A',
+    },
+    {
+      label: 'Electricity',
+      icon: <Flash size={20} />,
+      value: electricity_available ? electricity_available : 'N/A',
+    },
+    {
+      label: 'Longitude',
+      icon: <Map size={20} />,
+      value: longitude?.toFixed(10),
+    },
+    {
+      label: 'Latitude',
+      icon: <Map size={20} />,
+      value: latitude?.toFixed(10),
+    },
+  ].filter(({ value }) => value !== 'N/A'); // Exclude "N/A" from overview
+
   return (
     <div className="school-details__overview">
       <div className="school-details__overview-header">
@@ -50,60 +79,40 @@ const SchoolOverview = ({
         Data Source: NIC.br, Government
       </p>
 
-      <div className="school-details__overview-cards">
-        {[
-          {
-            label: 'Country',
-            icon: <Flag size={20} />,
-            value: region_name,
-          },
-          {
-            label: 'Coverage Availability',
-            icon: <ScisControlTower size={20} />,
-            value: coverage_availability ? coverage_availability : 'N/A',
-          },
-          {
-            label: 'Electricity',
-            icon: <Flash size={20} />,
-            value: electricity_available ? electricity_available : 'N/A',
-          },
-          {
-            label: 'Longitude',
-            icon: <Map size={20} />,
-            value: longitude.toFixed(10),
-          },
-          {
-            label: 'Latitude',
-            icon: <Map size={20} />,
-            value: latitude.toFixed(10),
-          },
-        ].map(({ label, icon, value }) => (
-          <div key={label} className="school-details__overview-card">
-            <div className="school-details__overview-label">
-              {icon} {label}
+      {/* Render only if there's valid data */}
+      {overviewData.length > 0 && (
+        <div className="school-details__overview-cards">
+          {overviewData.map(({ label, icon, value }) => (
+            <div key={label} className="school-details__overview-card">
+              <div className="school-details__overview-label">
+                {icon} {label}
+              </div>
+              <div
+                className="school-details__overview-value"
+                style={{ color: fontColor }}
+              >
+                {value}
+              </div>
             </div>
-            <div
-              className="school-details__overview-value"
-              style={{ color: fontColor }}
-            >
-              {value}
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
-      <div className="school-details__additional">
-        <Table>
-          <TableBody>
-            {additionalDetails.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{row.key}</TableCell>
-                <TableCell>{row.value}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+      {/* Render additional details only if available */}
+      {additionalDetails.length > 0 && (
+        <div className="school-details__additional">
+          <Table>
+            <TableBody>
+              {additionalDetails.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell>{row.key}</TableCell>
+                  <TableCell>{row.value}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </div>
   );
 };

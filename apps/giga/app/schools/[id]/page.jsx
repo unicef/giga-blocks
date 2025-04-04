@@ -14,9 +14,13 @@ import './_schoolDetails.scss';
 export default function SchoolDetails({ params }) {
   const { id } = params;
   const { data, isLoading } = useSchoolDetails(id);
-  const { giga_maps_data } = data || {};
+  console.log('data', data);
+
+  const { giga_maps_data, theme, minted } = data || {};
+  const isMinted = minted === 'MINTED';
 
   const [selectedTheme, setSelectedTheme] = useState('white');
+
   // Mock data for the weekly chart
   const weeklyData = [
     { day: 'S', value: 120 },
@@ -28,20 +32,26 @@ export default function SchoolDetails({ params }) {
     { day: 'S', value: 120 },
   ];
 
-  // Theme options
+  // Theme options for non-minted schools
   const themeOptions = [
-    { id: 'purple', colors: ['#FBECFE', '#e56cff', '#c400ff'] },
-    { id: 'blue', colors: ['#c8e4ff', '#6cb6ff', '#0078ff'] },
-    { id: 'green', colors: ['#c8ffdc', '#6cffad', '#00ff73'] },
+    { id: 'purple', colors: ['#FBECFE', '#c400ff'] },
+    { id: 'blue', colors: ['#c8e4ff', '#0078ff'] },
+    { id: 'green', colors: ['#c8ffdc', '#00ff73'] },
   ];
 
-  const fontColor =
-    themeOptions.find((theme) => theme.id === selectedTheme)?.colors[2] ||
-    '#000';
+  // Determine bgColor and fontColor
+  const defaultFontColor = '#000';
+  const defaultBgColor = '#fff';
 
-  const bgColor =
-    themeOptions.find((theme) => theme.id === selectedTheme)?.colors[0] ||
-    '#fff';
+  const fontColor = isMinted
+    ? theme?.colorScheme?.fontColor || defaultFontColor
+    : themeOptions.find((theme) => theme.id === selectedTheme)?.colors[1] ||
+      defaultFontColor;
+
+  const bgColor = isMinted
+    ? theme?.colorScheme?.bgColor || defaultBgColor
+    : themeOptions.find((theme) => theme.id === selectedTheme)?.colors[0] ||
+      defaultBgColor;
 
   if (isLoading) return <h1>Loading....</h1>;
 
@@ -68,12 +78,14 @@ export default function SchoolDetails({ params }) {
               fontColor={fontColor}
             />
 
-            <ThemeSelector
-              themeOptions={themeOptions}
-              selectedTheme={selectedTheme}
-              setSelectedTheme={setSelectedTheme}
-              id={id}
-            />
+            {!isMinted && (
+              <ThemeSelector
+                themeOptions={themeOptions}
+                selectedTheme={selectedTheme}
+                setSelectedTheme={setSelectedTheme}
+                id={id}
+              />
+            )}
 
             <SchoolStats fontColor={fontColor} weeklyData={weeklyData} />
             <SchoolOverview

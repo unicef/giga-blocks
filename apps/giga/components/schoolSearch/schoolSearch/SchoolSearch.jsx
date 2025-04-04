@@ -28,7 +28,7 @@ export default function SchoolSearch() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const { data: schools, isLoading } = useSchoolGet(page, perPage);
-
+  console.log('schools', schools);
   const totalPages = schools?.meta?.lastPage || 1;
 
   const handlePageChange = (newPage) => {
