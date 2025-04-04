@@ -424,9 +424,7 @@ export class SchoolService {
 
     const schoolMinted = await this.queueService.sendSingleMintNFT(data);
 
-    console.log('This is minted school', schoolMinted);
-
-    return 'NFT reserved';
+    return schoolMinted;
   }
 
   formatSchoolData(
