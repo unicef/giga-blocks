@@ -124,6 +124,9 @@ export class QueueService {
           mintData,
           ids,
           giga_id,
+          email: MintData.email,
+          walletAddress: MintData.walletAddress,
+          themeId: MintData.themeId,
         },
         jobOptions,
       );

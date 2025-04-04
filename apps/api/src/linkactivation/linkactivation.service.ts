@@ -17,7 +17,7 @@ export class LinkactivationService {
     return this.prisma.activationLog.create({
       data: {
         status: data.status,
-        name: data.name,
+        // name: data.name,
         activatedBy: userId,
         startDate: data.startDate,
         endDate: data?.endDate || null,
@@ -91,8 +91,9 @@ export class LinkactivationService {
 
     if (data?.walletAddress) data.walletAddress = hexStringToBuffer(data.walletAddress);
     this.queueService.processImage(data.id);
-    return this.prisma.contributor.create({ data });}
-  
+    return this.prisma.contributor.create({ data });
+  }
+
   async activateLink(uuid: string, userId: string) {
     const date = new Date();
     const data = await this.prisma.activationLog.findUnique({

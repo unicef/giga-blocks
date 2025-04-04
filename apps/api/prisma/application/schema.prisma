@@ -358,7 +358,7 @@ model ActivationLog {
 model Contributor {
   id             String   @id @default(uuid())
   userId         String   @unique
-  user           User?    @relation(fields:[userId], references:[id])
+  user           User?    @relation(fields: [userId], references: [id])
   schoolreserved String[]
   totalNftMinted Int
   isVisible      Boolean  @default(false)
