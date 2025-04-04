@@ -44,7 +44,7 @@ import generateP5Image from 'src/p5/generateP5';
 import decodeBase64Image from 'src/utils/ipfs/decodeImage';
 import uploadFile from 'src/utils/ipfs/ipfsAdd';
 import { hexStringToBuffer } from 'src/utils/string-format';
-import { MagicLinkService } from 'src/magic-link/magic-link.service';
+import { ContributorService } from 'src/contributor/contributor.service';
 
 @Injectable()
 @Processor(ONCHAIN_DATA_QUEUE)
@@ -108,7 +108,7 @@ export class MintQueueProcessor {
     private readonly _mailerService: MailerService,
     private readonly _configService: ConfigService,
     private readonly _prismaService: PrismaAppService,
-    private readonly _magicLinkService: MagicLinkService,
+    private contributorService: ContributorService,
     @InjectQueue(MINT_QUEUE) private readonly _mintQueue: Queue,
     @InjectQueue(IMAGE_QUEUE) private readonly _imageQueue: Queue,
   ) {}
@@ -184,10 +184,6 @@ export class MintQueueProcessor {
   ) {
     this._logger.log(`Updating database`);
     console.log(job.data.email);
-    await this._magicLinkService.sendMagicLink({
-      email: job.data.email,
-      redirectlink: 'https://www.google.com',
-    });
     // Update theme ID and school to minted
     const schools = await this._prismaService.school.updateMany({
       where: {
@@ -200,22 +196,16 @@ export class MintQueueProcessor {
         themeId: job.data.themeId,
       },
     });
-    // Create or update contributor
-    await this._prismaService.contributor.upsert({
-      where: { email: job.data.email },
-      create: {
+
+    if(job?.data?.email){
+      this.contributorService.addContributor({
         email: job.data.email,
         totalNftMinted: 1,
         walletAddress: hexStringToBuffer(job.data.walletAddress),
         schoolId: job.data.ids,
-      },
-      update: { totalNftMinted: { increment: 1 }, schoolId: { push: job.data.ids } },
-    });
+      })
 
-    await this._magicLinkService.sendMagicLink({
-      email: job.data.email,
-      redirectlink: 'https://www.google.com',
-    });
+    }
 
     if (schools.count !== job.data.ids.length) {
       throw new Error(`No. of schools updated in database is not equal to no of schools minted`);
@@ -279,7 +269,6 @@ export class MintQueueProcessor {
       }
       if (txReceipt.status === 1) {
         try {
-           this._mintQueue.add(SET_THEME,{schoolids:[job.data.giga_id]},jobOptions);
            this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_id }, jobOptions);
         } catch (error) {
           this._logger.log(`Error generating image: ${error}`);

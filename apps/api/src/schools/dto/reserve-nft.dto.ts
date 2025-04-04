@@ -22,7 +22,7 @@ export class ReserveNFTDto {
   @ApiProperty({
     description: 'Wallet address of reserver',
     example: '0x1f2f6f7952550D4388f9A3fd91A8CdcFbC439978',
-    required: true,
+    required: false,
   })
   @IsString()
   walletAddress: string;
