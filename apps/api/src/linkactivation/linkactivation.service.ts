@@ -17,7 +17,7 @@ export class LinkactivationService {
     return this.prisma.activationLog.create({
       data: {
         status: data.status,
-        // name: data.name,
+        name: data.name,
         activatedBy: userId,
         startDate: data.startDate,
         endDate: data?.endDate || null,

@@ -2,8 +2,7 @@ import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/co
 import { ContributorService } from './contributor.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
-import { ActivationGuard } from 'src/auth/guards/activation.guard';
-import { id } from 'ethers';
+// import { CreateContributor } from './contributor.dto';
 
 @Controller('contributor')
 @ApiTags('Contributor')
@@ -13,8 +12,7 @@ export class ContributorController {
     
 //    @Public()
 //    @Post('add')
-//    @UseGuards(ActivationGuard)
-//     addContributor(data) {
+//     addContributor(@Body()data:CreateContributor) {
 //       return this.contributorService.addContributor(data);
 //     }
 
