@@ -1,5 +1,6 @@
 import { ArrowLeft } from '@carbon/icons-react';
 import { Button } from '@carbon/react';
+import { useThemeToggleStore } from '../../app/store/themeToggleStore';
 
 const ThemeSelector = ({
   themeOptions,
@@ -7,6 +8,10 @@ const ThemeSelector = ({
   setSelectedTheme,
   id,
 }) => {
+  const isVisibleForMinted = useThemeToggleStore(
+    (state) => state.isVisibleForMinted
+  );
+  console.log('isVisibleForMinted', isVisibleForMinted);
   return (
     <div className="school-details__theme-selector">
       <h3 className="school-details__section-title">Select Theme</h3>
@@ -45,7 +50,8 @@ const ThemeSelector = ({
         href={`${id}/activate-school`}
         className="school-details__activate-btn"
       >
-        Activate <ArrowLeft className="rotate-180" size={16} />
+        {isVisibleForMinted ? 'Update' : 'Activate'}{' '}
+        <ArrowLeft className="rotate-180" size={16} />
       </Button>
     </div>
   );
