@@ -23,15 +23,19 @@ import {
   UPLOAD_QUEUE,
   SET_UPLOAD_PROCESS,
   SET_CSV_MINT,
-  SET_THEME
+  SET_THEME,
+  RESERVE_NFT,
+  CLAIM_NFT
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 import {
+  claimNft,
   getArtScript,
   getScriptData,
   mintNFT,
   mintSingleNFT,
+  reserveNft,
   updateImageHash,
 } from 'src/utils/ethers/transactionFunctions';
 import { PrismaAppService } from 'src/prisma/prisma.service';
@@ -54,6 +58,7 @@ export class QueueProcessor {
   constructor(
     private readonly _mailerService: MailerService,
     private readonly _configService: ConfigService,
+    private contributorService: ContributorService,
   ) {}
 
   @OnQueueActive()
@@ -94,6 +99,25 @@ export class QueueProcessor {
         this._logger.log(`Transaction completed ${job.data.h}`);
       }, 10000);
     } catch {
+      this._logger.error(`Failed to send transactions to blockchain`);
+    }
+  }
+
+  @Process(CLAIM_NFT)
+  public async claimNft(
+    job: Job<{  email: string; walletAddress: string }>,
+  ) {
+    this._logger.log(`Sending transaction to blockchain`);
+    const email = job.data.email;
+    const walletAddress = job.data.walletAddress;
+    try {
+      const tx = await claimNft(walletAddress, email);
+      if(tx){
+        this.contributorService.claimNft(
+          job.data.email,
+          job.data.walletAddress)
+      }
+    } catch (error) {
       this._logger.error(`Failed to send transactions to blockchain`);
     }
   }
@@ -175,7 +199,7 @@ export class MintQueueProcessor {
   public async sendDBUpdate(
     job: Job<{
       status: MintStatus;
-      ids: string[];
+      ids: string[] ;
       themeId?: string;
       email?: string;
       walletAddress?: string;
@@ -183,7 +207,6 @@ export class MintQueueProcessor {
     }>,
   ) {
     this._logger.log(`Updating database`);
-    console.log(job.data.email);
     // Update theme ID and school to minted
     const schools = await this._prismaService.school.updateMany({
       where: {
@@ -196,16 +219,6 @@ export class MintQueueProcessor {
         themeId: job.data.themeId,
       },
     });
-
-    if(job?.data?.email){
-      this.contributorService.addContributor({
-        email: job.data.email,
-        totalNftMinted: 1,
-        walletAddress: hexStringToBuffer(job.data.walletAddress),
-        schoolId: job.data.ids,
-      })
-
-    }
 
     if (schools.count !== job.data.ids.length) {
       throw new Error(`No. of schools updated in database is not equal to no of schools minted`);
@@ -247,7 +260,7 @@ export class MintQueueProcessor {
   public async sendSingleMintNFT(
     job: Job<{
       mintData: SchoolData;
-      ids: string[];
+      id: string;
       giga_id: string;
       email?: string;
       themeId?: string;
@@ -269,6 +282,8 @@ export class MintQueueProcessor {
       }
       if (txReceipt.status === 1) {
         try {
+          // function to reserve the NFT
+          this._mintQueue.add(RESERVE_NFT, { giga_school_id: job.data.giga_id, email: job.data.email,schoolId:job?.data?.id }, jobOptions);
            this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_id }, jobOptions);
         } catch (error) {
           this._logger.log(`Error generating image: ${error}`);
@@ -277,10 +292,9 @@ export class MintQueueProcessor {
     } catch (error) {
       console.log(error);
     }
-
     return this.statusCheckandDBUpdate(
       status,
-      job.data.ids,
+      [job.data.id],
       job.data.themeId,
       job.data.email,
       txReceipt.hash,
@@ -341,28 +355,31 @@ export class MintQueueProcessor {
 
   }
 
-  // @Process(SET_CSV_MINT)
-  // public async processCSV(job: Job<{batchId:string}>){
-  //   const batchId = job.data.batchId;
-  //   const schools = await this._prismaService.school.findMany({
-  //     where:{
-  //       uploadId:batchId
-  //     }
-  //   });
-  //   let mintData = [];
-  //   let ids = [];
-  //   let giga_ids = [];
-  //   for(const school of schools){
-  //     mintData.push({
-        
-  //     })
-      
-  //     ids.push(school.id);
-  //     giga_ids.push(school.giga_school_id);
-  //   }
-  //   await this._mintQueue.add(SET_MINT_NFT,{mintData,ids,giga_ids},jobOptions);
+  @Process(RESERVE_NFT)
+  public async reserveNft(job: Job<{ giga_school_id: string; email: string ,schoolId:string,walletAddress?: string}>) {
+    const schoolId = job.data.schoolId;
+    const email = job.data.email;
+    const giga_school_id = job.data.giga_school_id;
+    try {
+      const tx =  await reserveNft(
+        giga_school_id,
+        email
+       )
+       const txReceipt = await tx.wait();
 
-  // }
+       if(txReceipt.status === 1){
+        this.contributorService.addContributor({
+          email: job.data.email,
+          walletAddress: job.data.walletAddress,
+          schoolReserved: schoolId
+        })
+       }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  
 }
 
 @Injectable()
