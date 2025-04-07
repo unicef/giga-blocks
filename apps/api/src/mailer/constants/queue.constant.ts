@@ -13,4 +13,6 @@ export const UPLOAD_QUEUE = 'UPLOAD_QUEUE';
 export const SET_UPLOAD_PROCESS = 'SET_UPLOAD_PROCESS';
 export const SET_CSV_MINT ='SET_CSV_MINT'
 export const SET_THEME = 'SET_THEME';
+export const RESERVE_NFT = 'RESERVE_NFT';
+export const CLAIM_NFT = 'CLAIM_NFT';
 

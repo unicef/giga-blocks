@@ -3,12 +3,16 @@ import { PrismaAppService } from 'src/prisma/prisma.service';
 import { hexStringToBuffer } from 'src/utils/string-format';
 import { Role } from '@prisma/application';
 import { MailService } from 'src/mailer/mailer.service';
+import { QueueService } from 'src/mailer/queue.service';
 const Link = process.env.NEXT_PUBLIC_WEB_NAME;
 
 @Injectable()
 export class ContributorService {
   private readonly _logger = new Logger('Contributor Services');
-  constructor(private prisma: PrismaAppService, private mailService: MailService) {}
+  constructor(
+    private prisma: PrismaAppService, private mailService: MailService,
+    private queueService: QueueService,
+  ) {}
 
   async addContributor(data: any) {
     const { name, walletAddress, email } = data;
@@ -39,6 +43,7 @@ export class ContributorService {
     }
     const school = await this.prisma.school.findFirst({ where: { id: data?.nftReserved } });
     const schoolLink = `${Link}/school/${school?.id}`;
+
     await this.mailService.sendThankYouMail({ email, school: school.name, link: schoolLink });
   }
 
@@ -53,13 +58,14 @@ export class ContributorService {
     return this.prisma.contributor.findUnique({ where: { userId }, include: { user: true } });
   }
 
-  async claimNft(id: string, data: any) {
-    const walletAddress = hexStringToBuffer(data?.walletAddress);
-    const contributor = await this.prisma.contributor.findUnique({ where: { id } });
+  async claimNft(email: string, wallet: any) {
+    const walletAddress = hexStringToBuffer(wallet);
+    const user = await this.prisma.user.update({ where: { email },data: { walletAddress } });
+    const contributor = await this.prisma.contributor.findUnique({ where: { userId:user?.id } });
 
     if (contributor.nftReserved) {
-      await this.prisma.user.update({ where: { id: contributor.userId }, data: { walletAddress } });
-      return this.prisma.contributor.update({ where: { id }, data: { nftClaimed: true } });
+      await this.prisma.contributor.update({ where: { userId:user?.id }, data: { nftClaimed: true } });
+
     } else return { message: 'NFT not reserved' };
   }
 

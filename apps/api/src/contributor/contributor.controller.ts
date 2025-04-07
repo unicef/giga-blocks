@@ -11,12 +11,12 @@ export class ContributorController {
 
     constructor(private readonly contributorService: ContributorService) {}
     
-   @Public()
-   @Post('add')
-   @UseGuards(ActivationGuard)
-    addContributor(data) {
-      return this.contributorService.addContributor(data);
-    }
+//    @Public()
+//    @Post('add')
+//    @UseGuards(ActivationGuard)
+//     addContributor(data) {
+//       return this.contributorService.addContributor(data);
+//     }
 
     @Public()
     @Get('list')
@@ -32,17 +32,17 @@ export class ContributorController {
         
     }
 
-    @Public()
-    @Post('/claimNft/:id')
-    claimNft(@Param('id')id: string, @Body() data:any) {
-        return this.contributorService.claimNft(id,data);
-    }
+    // @Public()
+    // @Post('/claimNft/:id')
+    // claimNft(@Param('id')id: string, @Body() data:any) {
+    //     return this.contributorService.claimNft(id,data);
+    // }
 
-    @Public()
-    @Patch('/update/:userId')
-    updateContributor(@Param('userId')userId: string, @Body() data:any) {
-        return this.contributorService.updateContributor(userId,data);
-    }
+    // @Public()
+    // @Patch('/update/:userId')
+    // updateContributor(@Param('userId')userId: string, @Body() data:any) {
+    //     return this.contributorService.updateContributor(userId,data);
+    // }
 
     
 

@@ -159,6 +159,12 @@ export class SchoolController {
     return this.schoolService.reserveNft(reserveData);
   }
 
+  @Public()
+  @Post('/claimSchool')
+  async claimSchool(@Body() claimData: any) {
+    return this.schoolService.claimSchool(claimData);
+  }
+
   //arewave
   @Public()
   @Post('getFile')

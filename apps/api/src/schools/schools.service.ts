@@ -462,4 +462,14 @@ export class SchoolService {
       themeId,
     };
   }
+
+  async claimSchool(claimData:any)  {
+    const { email, walletAddress } = claimData;
+    this.queueService.claimReservedNFT(email, walletAddress).catch(err => {
+      console.log(err);
+    }
+    );
+    return { message: 'queue added successfully', statusCode: 200 };
+
+  }
 }

@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import {
+  CLAIM_NFT,
   CONTRIBUTE_QUEUE,
   IMAGE_QUEUE,
   MINT_QUEUE,
@@ -211,6 +212,16 @@ export class QueueService {
     }
     catch(error){
       this._logger.error(`Error queueing `);
+      throw error;
+    }
+  }
+
+  public async claimReservedNFT(email: string, walletAddress: string) {
+    try {
+      await this._onchainQueue.add(CLAIM_NFT, { email, walletAddress }, jobOptions);
+      return { message: 'queue added successfully', statusCode: 200 };
+    } catch (error) {
+      this._logger.error(`Error queueing transaction to blockchain `);
       throw error;
     }
   }
