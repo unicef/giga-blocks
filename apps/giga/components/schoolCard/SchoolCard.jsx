@@ -8,7 +8,7 @@ export default function SchoolCard({
   schoolName,
   location,
   minted,
-  hasImage = true,
+  imageHash,
 }) {
   const displayName =
     schoolName.length > 60 ? `${schoolName.substring(0, 60)}...` : schoolName;
@@ -39,9 +39,9 @@ export default function SchoolCard({
       </div>
 
       <div className="school-card__image">
-        {hasImage ? (
+        {minted === 'MINTED' ? (
           <Image
-            src="/images/school-image.png"
+            src={`https://ipfs.io/ipfs/${imageHash}`}
             alt={`Image of ${schoolName}`}
             width={200}
             height={200}

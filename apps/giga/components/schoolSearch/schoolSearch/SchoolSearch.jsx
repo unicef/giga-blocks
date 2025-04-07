@@ -364,6 +364,7 @@ export default function SchoolSearch() {
               location={school.region_name}
               minted={school.minted}
               hasImage={school.hasImage}
+              imageHash={school.imageHash}
             />
           ))}
         </div>
