@@ -115,6 +115,58 @@
     }
   }
 
+  /* New styles for minted school display */
+  &__minted-container {
+    border-radius: 8px;
+    padding: 0 0 $spacing-05 0;
+    overflow: hidden;
+  }
+
+  &__minted-image-wrapper {
+    width: 100%;
+    position: relative;
+    aspect-ratio: 1/1;
+  }
+
+  &__minted-content {
+    padding: $spacing-05;
+  }
+
+  &__minted-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: $spacing-03;
+  }
+
+  &__minted-description {
+    font-size: 14px;
+    color: $gray-70;
+    margin-bottom: $spacing-05;
+    line-height: 1.5;
+  }
+
+  &__minted-link {
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__social-label {
+    font-size: 14px;
+    color: $gray-70;
+    margin-bottom: $spacing-04;
+  }
+
+  &__social-icons {
+    display: flex;
+    gap: $spacing-05;
+  }
+
+  &__social-icon {
+  }
+
   &__section-title {
     font-weight: 600;
     font-size: 20px;
@@ -392,12 +444,8 @@
     margin-bottom: $spacing-06;
 
     @include breakpoint-down(md) {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(1, 1fr);
       grid-template-rows: auto;
-    }
-
-    @include breakpoint-down(sm) {
-      grid-template-columns: 1fr;
     }
   }
 
@@ -426,11 +474,9 @@
   &__overview-value {
     font-size: 32px;
     font-weight: 600;
-    color: #c400ff;
 
     &.checkmark {
       font-size: 24px;
-      color: #c400ff;
     }
   }
 

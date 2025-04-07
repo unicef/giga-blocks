@@ -100,7 +100,11 @@ export default function SchoolDetails({ params }) {
               fontColor={fontColor}
             />
           </div>
-          <Sidebar />
+          <Sidebar
+            fontColor={fontColor}
+            minted={minted}
+            imageHash={data.imageHash}
+          />
         </div>
       </div>
     </div>
