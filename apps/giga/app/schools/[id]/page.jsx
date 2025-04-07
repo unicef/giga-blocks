@@ -10,15 +10,16 @@ import ThemeSelector from '../../../components/schoolDetails/SchoolThemes';
 import Sidebar from '../../../components/schoolDetails/Sidebar';
 import { useSchoolDetails } from '../../hooks/useSchool';
 import './_schoolDetails.scss';
+import { useThemeToggleStore } from '../../store/themeToggleStore';
 
 export default function SchoolDetails({ params }) {
   const { id } = params;
   const { data, isLoading } = useSchoolDetails(id);
-  console.log('data', data);
-
   const { giga_maps_data, theme, minted } = data || {};
   const isMinted = minted === 'MINTED';
-
+  const isVisibleForMinted = useThemeToggleStore(
+    (state) => state.isVisibleForMinted
+  );
   const [selectedTheme, setSelectedTheme] = useState('white');
 
   // Mock data for the weekly chart
@@ -78,7 +79,7 @@ export default function SchoolDetails({ params }) {
               fontColor={fontColor}
             />
 
-            {!isMinted && (
+            {(minted === 'NOTMINTED' || isVisibleForMinted) && (
               <ThemeSelector
                 themeOptions={themeOptions}
                 selectedTheme={selectedTheme}

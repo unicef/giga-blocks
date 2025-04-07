@@ -3,14 +3,29 @@
 import { Information } from '@carbon/icons-react';
 import Image from 'next/image';
 import { useState } from 'react';
+import { useThemeToggleStore } from '../../app/store/themeToggleStore';
 
 const Sidebar = ({ imageHash, minted, fontColor }) => {
   const [imageError, setImageError] = useState(false);
-  console.log('fontColor', fontColor);
+  const toggleVisibilityForMinted = useThemeToggleStore(
+    (state) => state.toggleVisibilityForMinted
+  );
   return (
     <div className="school-details__sidebar">
       {minted === 'MINTED' ? (
         <div className="school-details__minted-container">
+          <p
+            onClick={toggleVisibilityForMinted}
+            style={{
+              display: 'flex',
+              justifyContent: 'end',
+              marginBottom: '12px',
+              color: fontColor,
+              cursor: 'pointer',
+            }}
+          >
+            Change Template
+          </p>
           <div className="school-details__minted-image-wrapper">
             {!imageError ? (
               <Image
