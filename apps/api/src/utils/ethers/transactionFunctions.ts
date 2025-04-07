@@ -229,11 +229,11 @@ export const addArweaveHash = async (contractName, contractAddress, hashes) => {
 
 export const reserveNft = async(schoolId:string,email:string) =>{
   const config = new ConfigService();
-  const contractAddress = config.get('NEXT_PUBLIC_GIGA_SCHOOL_ESCROW_ADDRESS');
+  const contractAddress = config.get('NEXT_PUBLIC_GIGA_COLLECTOR_ESCROW_ADDRESS');
   const contract: ExtendedContract = getContractWithSigner('Escrow', contractAddress);
   const res = await getTokenIdSchool(
     'NFTContent',
-    config.get('NEXT_PUBLIC_GIGA_CONTENT_CONTRACT_ADDRESS'),
+    config.get('GIGA_NFT_CONTENT_ADDRESS'),
     schoolId,
   );
   const tokenId = res.toString();

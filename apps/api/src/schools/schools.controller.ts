@@ -27,7 +27,7 @@ import { QUEUES } from 'src/constants';
 import { getFileData } from 'src/utils/arweave/get';
 import { ActivationGuard } from 'src/auth/guards/activation.guard';
 import { ThemeActivationDto } from './dto/theme-activation.dto';
-import { ReserveNFTDto } from './dto/reserve-nft.dto';
+import { claimReservedNFT, ReserveNFTDto } from './dto/reserve-nft.dto';
 @Controller('schools')
 @ApiTags('School')
 export class SchoolController {
@@ -161,7 +161,7 @@ export class SchoolController {
 
   @Public()
   @Post('/claimSchool')
-  async claimSchool(@Body() claimData: any) {
+  async claimSchool(@Body() claimData: claimReservedNFT) {
     return this.schoolService.claimSchool(claimData);
   }
 

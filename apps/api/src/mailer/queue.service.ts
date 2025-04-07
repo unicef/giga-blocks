@@ -116,14 +116,14 @@ export class QueueService {
   public async sendSingleMintNFT(MintData: MintQueueSingleDto) {
     try {
       const mintData = this.schoolToArrayMapper(MintData.data);
-      const ids = [MintData.data.id];
+      const id = MintData.data.id;
       const giga_id = MintData.data.giga_school_id;
-      await this.updateSchools(ids);
+      await this.updateSchools([id]);
       await this._mintQueue.add(
         SET_MINT_SINGLE_NFT,
         {
           mintData,
-          ids,
+          id,
           giga_id,
           email: MintData.email,
           walletAddress: MintData.walletAddress,

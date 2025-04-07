@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString } from 'class-validator';
-import { MintQueueSingleDto } from './mint-queue.dto';
+import { IsBoolean, IsEmail, IsOptional, IsString } from 'class-validator';
 
 export class ReserveNFTDto {
   @ApiProperty({
@@ -24,8 +23,18 @@ export class ReserveNFTDto {
     example: '0x1f2f6f7952550D4388f9A3fd91A8CdcFbC439978',
     required: false,
   })
+  @IsOptional()
   @IsString()
   walletAddress: string;
+
+  @ApiProperty({
+    description: 'name  of reserver',
+    example: 'joe',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  name: string;
 
   @ApiProperty({
     description: 'ID of theme',
@@ -34,4 +43,29 @@ export class ReserveNFTDto {
   })
   @IsString()
   themeId: string;
+
+  @ApiProperty({
+    example: true,
+    description: 'isVisible',
+  })
+  @IsBoolean()
+  isVisible?: boolean;
+}
+
+export class claimReservedNFT {
+  @ApiProperty({
+    description: 'Email of reserver',
+    example: 'abcd@example.com',
+    required: true,
+  })
+  @IsEmail()
+  email: string;
+
+  @ApiProperty({
+    description: 'Wallet address of reserver',
+    example: '0x1f2f6f7952550D4388f9A3fd91A8CdcFbC439978',
+    required: true,
+  })
+  @IsString()
+  walletAddress: string;
 }
