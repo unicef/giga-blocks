@@ -11,7 +11,7 @@ const ThemeSelector = ({
   const isVisibleForMinted = useThemeToggleStore(
     (state) => state.isVisibleForMinted
   );
-  console.log('isVisibleForMinted', isVisibleForMinted);
+
   return (
     <div className="school-details__theme-selector">
       <h3 className="school-details__section-title">Select Theme</h3>
