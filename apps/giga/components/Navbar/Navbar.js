@@ -16,9 +16,11 @@ import {
 } from '@carbon/react';
 import { ConnectKitButton } from 'connectkit';
 import Link from 'next/link';
+import { useAccount } from 'wagmi';
 
 const Navbar = () => {
   const [isClient, setIsClient] = useState(false);
+  const { isConnected } = useAccount();
 
   useEffect(() => {
     setIsClient(true);
@@ -52,6 +54,11 @@ const Navbar = () => {
             <Link href="/schools" passHref legacyBehavior>
               <HeaderMenuItem>Join Us</HeaderMenuItem>
             </Link>
+            {isConnected && (
+              <Link href={'#'} passHref legacyBehavior>
+                <HeaderMenuItem>Dashboard</HeaderMenuItem>
+              </Link>
+            )}
           </HeaderNavigation>
 
           {/* SIDENAV STARTS HERE */}
