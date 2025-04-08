@@ -82,6 +82,11 @@ const Navbar = () => {
                   <Link href="/schools" passHref legacyBehavior>
                     <HeaderMenuItem>Join Us</HeaderMenuItem>
                   </Link>
+                  {isConnected && (
+                    <Link href={'#'} passHref legacyBehavior>
+                      <HeaderMenuItem>Dashboard</HeaderMenuItem>
+                    </Link>
+                  )}
                 </HeaderSideNavItems>
               </SideNavItems>
             </SideNav>
