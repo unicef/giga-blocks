@@ -2,7 +2,7 @@
 
 import { ArrowLeft } from '@carbon/icons-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from '../../../components/schoolDetails/SchoolHeader';
 import SchoolOverview from '../../../components/schoolDetails/SchoolOverview';
 import SchoolStats from '../../../components/schoolDetails/SchoolStats';
@@ -11,6 +11,7 @@ import Sidebar from '../../../components/schoolDetails/Sidebar';
 import { useSchoolDetails } from '../../hooks/useSchool';
 import './_schoolDetails.scss';
 import { useThemeToggleStore } from '../../store/themeToggleStore';
+import { useThemeStore } from '../../store/themeStore';
 
 export default function SchoolDetails({ params }) {
   const { id } = params;
@@ -21,6 +22,12 @@ export default function SchoolDetails({ params }) {
     (state) => state.isVisibleForMinted
   );
   const [selectedTheme, setSelectedTheme] = useState('white');
+  useEffect(() => {
+    useThemeStore.getState().resetTheme();
+  }, []);
+
+  const themeStore = useThemeStore();
+  const hasCustomTheme = !!themeStore.fontColor && !!themeStore.bgColor;
 
   // Mock data for the weekly chart
   const weeklyData = [
@@ -39,19 +46,22 @@ export default function SchoolDetails({ params }) {
     { id: 'blue', colors: ['#c8e4ff', '#0078ff'] },
     { id: 'green', colors: ['#c8ffdc', '#00ff73'] },
   ];
-
   // Determine bgColor and fontColor
   const defaultFontColor = '#000';
   const defaultBgColor = '#fff';
 
-  const fontColor = isMinted
+  const fontColor = hasCustomTheme
+    ? themeStore.fontColor
+    : isMinted
     ? theme?.colorScheme?.fontColor || defaultFontColor
-    : themeOptions.find((theme) => theme.id === selectedTheme)?.colors[1] ||
+    : themeOptions.find((t) => t.id === selectedTheme)?.colors[1] ||
       defaultFontColor;
 
-  const bgColor = isMinted
+  const bgColor = hasCustomTheme
+    ? themeStore.bgColor
+    : isMinted
     ? theme?.colorScheme?.bgColor || defaultBgColor
-    : themeOptions.find((theme) => theme.id === selectedTheme)?.colors[0] ||
+    : themeOptions.find((t) => t.id === selectedTheme)?.colors[0] ||
       defaultBgColor;
 
   if (isLoading) return <h1>Loading....</h1>;

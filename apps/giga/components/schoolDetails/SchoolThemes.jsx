@@ -1,6 +1,7 @@
 import { ArrowLeft } from '@carbon/icons-react';
 import { Button } from '@carbon/react';
 import { useThemeToggleStore } from '../../app/store/themeToggleStore';
+import { useThemeStore } from '../../app/store/themeStore';
 
 const ThemeSelector = ({
   themeOptions,
@@ -11,6 +12,16 @@ const ThemeSelector = ({
   const isVisibleForMinted = useThemeToggleStore(
     (state) => state.isVisibleForMinted
   );
+  const setTheme = useThemeStore((state) => state.setTheme);
+
+  const handleThemeChange = (themeId) => {
+    setSelectedTheme(themeId);
+    const selected = themeOptions.find((t) => t.id === themeId);
+    if (selected) {
+      const [bgColor, fontColor] = selected.colors;
+      setTheme(fontColor, bgColor);
+    }
+  };
 
   return (
     <div className="school-details__theme-selector">
@@ -27,7 +38,7 @@ const ThemeSelector = ({
             className={`school-details__theme-option ${
               selectedTheme === theme.id ? 'selected' : ''
             }`}
-            onClick={() => setSelectedTheme(theme.id)}
+            onClick={() => handleThemeChange(theme.id)}
           >
             {theme.colors.map((color, index) => (
               <div

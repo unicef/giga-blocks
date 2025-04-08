@@ -1,4 +1,10 @@
-import { Flag, Flash, Map, ScisControlTower } from '@carbon/icons-react';
+import {
+  Flag,
+  Flash,
+  Map,
+  ScisControlTower,
+  Misuse,
+} from '@carbon/icons-react';
 import { Table, TableBody, TableCell, TableRow } from '@carbon/react';
 
 const SchoolOverview = ({
@@ -48,12 +54,12 @@ const SchoolOverview = ({
     {
       label: 'Coverage Availability',
       icon: <ScisControlTower size={20} />,
-      value: coverage_availability ? coverage_availability : 'N/A',
+      value: coverage_availability ? coverage_availability : <Misuse />,
     },
     {
       label: 'Electricity',
       icon: <Flash size={20} />,
-      value: electricity_available ? electricity_available : 'N/A',
+      value: electricity_available ? electricity_available : <Misuse />,
     },
     {
       label: 'Longitude',
