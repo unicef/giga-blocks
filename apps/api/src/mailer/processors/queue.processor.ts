@@ -190,7 +190,7 @@ export class MintQueueProcessor {
     }
   }
 
-  @Process(SET_MINT_NFT)
+  @Process({name:SET_MINT_NFT,concurrency:1})
   public async sendMintNFT(
     job: Job<{ mintData: SchoolData[]; ids: string[]; giga_ids: string[] }>,
   ) {
@@ -272,28 +272,6 @@ export class MintQueueProcessor {
     }
   }
 
-  @Process(SET_THEME)
-  public async processTheme(job: Job<{schoolids:[]}>){
-   const schoolIds = job.data.schoolids;
-   const themes = await this._prismaService.theme.findMany({});
-   for (const schoolId of schoolIds) {
-    const randomTheme = themes[Math.floor(Math.random() * themes.length)];
-    try{
-      const school = await this._prismaService.school.update({
-      where: {
-        giga_school_id: schoolId,
-      },
-      data: {
-        themeId: randomTheme.id,
-      },
-   });
-  }
-    catch(err){
-      console.log(err);
-    }
-  }
-
-  }
 
   // @Process(SET_CSV_MINT)
   // public async processCSV(job: Job<{batchId:string}>){
@@ -395,6 +373,29 @@ export class ImageProcessor {
           console.log(err);
         });
     }
+  }
+
+  @Process(SET_THEME)
+  public async processTheme(job: Job<{schoolids:[]}>){
+   const schoolIds = job.data.schoolids;
+   const themes = await this._prismaService.theme.findMany({});
+   for (const schoolId of schoolIds) {
+    const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+    try{
+      const school = await this._prismaService.school.update({
+      where: {
+        giga_school_id: schoolId,
+      },
+      data: {
+        themeId: randomTheme.id,
+      },
+   });
+  }
+    catch(err){
+      console.log(err);
+    }
+  }
+
   }
 }
 
