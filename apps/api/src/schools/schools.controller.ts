@@ -165,6 +165,12 @@ export class SchoolController {
     return this.schoolService.claimSchool(claimData);
   }
 
+  @Public()
+  @Get('gigaSchoolId/:gigaSchoolId')
+  async getGigaSchoolId(@Param('gigaSchoolId')gigaSchoolId: string) {
+    return await this.schoolService.getGigaSchoolId(gigaSchoolId);
+  }
+
   //arewave
   @Public()
   @Post('getFile')
