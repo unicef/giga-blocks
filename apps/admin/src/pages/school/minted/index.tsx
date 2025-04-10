@@ -54,68 +54,24 @@ const MintedSchools = () => {
 
   const [result] = useQuery({
     query: Queries.allNftListQuery,
-    variables: { first: rowsPerPage+rowsPerPage*page, skip: rowsPerPage*page },
+    variables: { first: rowsPerPage, skip: rowsPerPage*page },
+    pause: selectedFilter !== 'all',
   });
   const { data, fetching } = result;
 
   const [adminResult] = useQuery({
     query: Queries.adminNftListQuery,
-    variables: { id: process.env.NEXT_PUBLIC_ADMIN_ADDRESS,first: rowsPerPage+rowsPerPage*page, skip: rowsPerPage*page },
+    variables: { id: process.env.NEXT_PUBLIC_ADMIN_ADDRESS,first: rowsPerPage, skip: rowsPerPage*page },
+    pause: selectedFilter !== 'admin',
   });
   const { data: adminData } = adminResult;
 
   const [otherResult] = useQuery({
     query: Queries.othersNftListQuery,
-    variables: { id: process.env.NEXT_PUBLIC_ADMIN_ADDRESS,first: rowsPerPage+rowsPerPage*page, skip: rowsPerPage*page },
+    variables: { id: process.env.NEXT_PUBLIC_ADMIN_ADDRESS,first: rowsPerPage, skip: rowsPerPage*page },
+    pause: selectedFilter !== 'others',
   });
   const { data: otherData } = otherResult;
-
-
-
-  // useEffect(() => {
-  //   // const startItem = (page + 1) * rowsPerPage - rowsPerPage;
-  //   // const endItem = page * rowsPerPage + rowsPerPage;
-  //   const newData = data?.nftDatas.sort((a: any, b: any) => b.id - a.id);
-  //   // const paginatedDatas = newData?.slice(startItem, endItem);
-  //   // setPaginatedData(paginatedDatas);
-  // }, [rowsPerPage, data, page]);
-
-  let filteredData: any = [];
-
-  useEffect(() => {
-    if (paginatedData) {
-      const encodeddata = paginatedData;
-      const decodedShooldata: any = [];
-      encodeddata.map((data: any) => {
-        let decodedData = atob(data?.tokenUri?.substring(29));
-        const schoolData = {
-          tokenId: data.id,
-          mintedAt: data.mintedAt,
-          ...JSON.parse(decodedData),
-        };
-        decodedShooldata.push(schoolData);
-      });
-      decodedShooldata &&
-        decodedShooldata?.map((row: any) => {
-          const data = paginatedData.find((d: any) => d.id === row.tokenId);
-          filteredData.push({
-            id: row.tokenId,
-            schoolName: row.schoolName,
-            longitude: row.longitude,
-            latitude: row.latitude,
-            schoolType: row.schoolType,
-            country: row.country,
-            connectivity: row.connectivity,
-            coverage_availabitlity: row.coverage_availabitlity,
-            electricity_availabilty: row.electricity_availabitlity,
-            mintedStatus: 'MINTED',
-            mintedAt: row.mintedAt,
-            gasFee: ethers.formatEther(data?.mintingGasFee || '0'),
-          });
-        });
-      setTableData(filteredData);
-    }
-  }, [data, paginatedData]);
 
   useEffect(() => {
     let selectedData;
@@ -128,14 +84,8 @@ const MintedSchools = () => {
       selectedData = data?.nftDatas || [];
     }
 
-    // Sorting and pagination
-    const startItem = (page + 1) * rowsPerPage - rowsPerPage;
-    const endItem = page * rowsPerPage + rowsPerPage;
-    const sortedData = selectedData.sort((a: any, b: any) => b.id - a.id);
-    const paginatedDatas = sortedData.slice(startItem, endItem);
 
-    // Decoding tokenUri
-    const decodedShooldata: any = paginatedDatas.map((data: any) => {
+    const decodedShooldata: any = selectedData.map((data: any) => {
       let decodedData = atob(data?.tokenUri?.substring(29));
       return {
         id: Number(data.tokenId),
