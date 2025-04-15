@@ -33,6 +33,9 @@ module.exports = {
   CONTRIBUTOR: {
     GET: '/users/contributor',
   },
+  LINKACTIVATION: {
+    GET: '/linkactivation/validateLink',
+  },
   CONTRIBUTE: {
     GET: '/contribute',
     POST: '/contribute',
