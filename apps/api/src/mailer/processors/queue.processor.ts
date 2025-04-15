@@ -194,6 +194,7 @@ export class MintQueueProcessor {
   public async sendMintNFT(
     job: Job<{ mintData: SchoolData[]; ids: string[]; giga_ids: string[] }>,
   ) {
+    await new Promise((resolve) => setTimeout(resolve, 5000))
     this._logger.log(`Sending mint nft to blockchain`);
     let status = true;
     const tx = await mintNFT(
@@ -209,7 +210,7 @@ export class MintQueueProcessor {
 
     if (txReceipt.status === 1) {
       try {
-         this._mintQueue.add(SET_THEME,{schoolids:job.data.giga_ids},jobOptions);
+         this._imageQueue.add(SET_THEME,{schoolids:job.data.giga_ids},jobOptions);
         for (let i = 0; i < job.data.giga_ids.length; i++) {
            this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_ids[i] }, jobOptions);
         }
@@ -240,7 +241,7 @@ export class MintQueueProcessor {
       }
       if (txReceipt.status === 1) {
         try {
-           this._mintQueue.add(SET_THEME,{schoolids:[job.data.giga_id]},jobOptions);
+           this._imageQueue.add(SET_THEME,{schoolids:[job.data.giga_id]},jobOptions);
            this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_id }, jobOptions);
         } catch (error) {
           this._logger.log(`Error generating image: ${error}`);
