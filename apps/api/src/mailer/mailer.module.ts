@@ -59,6 +59,10 @@ import { LinkactivationService } from 'src/linkactivation/linkactivation.service
     }),
     BullModule.registerQueue({
       name: IMAGE_QUEUE,
+      limiter:{
+        max: 1,
+        duration: 5000,
+      }
     }),
     BullModule.registerQueue({
       name: ONCHAIN_DATA_QUEUE,
