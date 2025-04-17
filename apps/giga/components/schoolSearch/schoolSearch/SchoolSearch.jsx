@@ -28,7 +28,6 @@ export default function SchoolSearch() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const { data: schools, isLoading } = useSchoolGet(page, perPage);
-  console.log('schools', schools);
   const totalPages = schools?.meta?.lastPage || 1;
 
   const handlePageChange = (newPage) => {
@@ -352,11 +351,11 @@ export default function SchoolSearch() {
         </div>
 
         <div className="search-page__results-count">
-          {filteredSchools.length} Schools found
+          {filteredSchools?.length} Schools found
         </div>
 
         <div className="search-page__grid">
-          {filteredSchools.map((school) => (
+          {filteredSchools?.map((school) => (
             <SchoolCard
               key={school.id}
               id={school.id}
