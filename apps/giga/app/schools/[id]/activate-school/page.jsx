@@ -3,24 +3,22 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { TextInput, Button, Tooltip } from '@carbon/react';
-import { ArrowLeft, Information, Close } from '@carbon/icons-react';
+import { ArrowLeft, Information } from '@carbon/icons-react';
 import ActivationModal from '../../../../components/schoolActivate/ActivationModal';
 import './_activate.scss';
+import { useSearchParams } from 'next/navigation';
 
 export default function ActivateSchool() {
   const [baseFee, setBaseFee] = useState('0.01');
   const [gasFee, setGasFee] = useState('00');
   const [donation, setDonation] = useState('');
+  const [email, setEmail] = useState('');
   const [selectedTheme, setSelectedTheme] = useState('blue');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const searchParams = useSearchParams();
 
-  const handleClearBaseFee = () => {
-    setBaseFee('');
-  };
+  const linkActivation = searchParams.get('linkActivation');
 
-  const handleClearGasFee = () => {
-    setGasFee('');
-  };
   const handleActivate = () => {
     setIsModalOpen(true);
   };
@@ -28,6 +26,7 @@ export default function ActivateSchool() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
   const calculateTotal = () => {
     const base = Number.parseFloat(baseFee) || 0;
     const gas = Number.parseFloat(gasFee) || 0;
@@ -52,72 +51,88 @@ export default function ActivateSchool() {
             school view.
           </p>
 
-          <div className="formGroup">
-            <label className="label">Base Fee</label>
-            <div className="inputWithClear">
+          {linkActivation ? (
+            <div className="formGroup">
+              <label className="label">Email</label>
               <TextInput
-                id="base-fee"
+                id="email"
                 labelText=""
                 hideLabel
-                disabled
-                aria-label="Base fee amount, read only"
-                value={baseFee}
-                onChange={() => {}} // Empty function since input is disabled
-              />
-              <span className="ethLabel">Eth</span>
-            </div>
-            <p className="helperText">
-              Porem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-              vulputate libero et velit interdum, ac aliquet odio mattis.
-            </p>
-          </div>
-
-          <div className="formGroup">
-            <label className="label">Gas Fee</label>
-            <div className="inputWithClear">
-              <TextInput
-                id="gas-fee"
-                labelText=""
-                hideLabel
-                disabled
-                aria-label="Gas fee amount, read only"
-                value={gasFee}
-                onChange={() => {}} // Empty function since input is disabled
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <p className="helperText">
-              Jorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-              vulputate libero et velit interdum, ac aliquet odio mattis.
-            </p>
-          </div>
-
-          <div className="formGroup">
-            <div className="donationHeader">
-              <label className="label">Donation</label>
-              <div className="optional">
-                Optional
-                <Tooltip
-                  align="center"
-                  direction="right"
-                  tooltipText="Optional donation amount"
-                >
-                  <Information size={16} />
-                </Tooltip>
+          ) : (
+            <>
+              <div className="formGroup">
+                <label className="label">Base Fee</label>
+                <div className="inputWithClear">
+                  <TextInput
+                    id="base-fee"
+                    labelText=""
+                    hideLabel
+                    disabled
+                    aria-label="Base fee amount, read only"
+                    value={baseFee}
+                    onChange={() => {}}
+                  />
+                  <span className="ethLabel">Eth</span>
+                </div>
+                <p className="helperText">
+                  Porem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
+                  vulputate libero et velit interdum, ac aliquet odio mattis.
+                </p>
               </div>
-            </div>
-            <TextInput
-              id="donation"
-              labelText=""
-              hideLabel
-              placeholder="Enter donation amount"
-              value={donation}
-              onChange={(e) => setDonation(e.target.value)}
-            />
-            <p className="helperText">
-              Morem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-              vulputate libero et velit interdum, ac aliquet odio mattis.
-            </p>
-          </div>
+
+              <div className="formGroup">
+                <label className="label">Gas Fee</label>
+                <div className="inputWithClear">
+                  <TextInput
+                    id="gas-fee"
+                    labelText=""
+                    hideLabel
+                    disabled
+                    aria-label="Gas fee amount, read only"
+                    value={gasFee}
+                    onChange={() => {}}
+                  />
+                </div>
+                <p className="helperText">
+                  Jorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
+                  vulputate libero et velit interdum, ac aliquet odio mattis.
+                </p>
+              </div>
+
+              <div className="formGroup">
+                <div className="donationHeader">
+                  <label className="label">Donation</label>
+                  <div className="optional">
+                    Optional
+                    <Tooltip
+                      align="center"
+                      direction="right"
+                      tooltipText="Optional donation amount"
+                    >
+                      <Information size={16} />
+                    </Tooltip>
+                  </div>
+                </div>
+                <TextInput
+                  id="donation"
+                  labelText=""
+                  hideLabel
+                  placeholder="Enter donation amount"
+                  value={donation}
+                  onChange={(e) => setDonation(e.target.value)}
+                />
+                <p className="helperText">
+                  Morem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
+                  vulputate libero et velit interdum, ac aliquet odio mattis.
+                </p>
+              </div>
+            </>
+          )}
 
           <div className="actionButtons">
             <Button kind="secondary">Cancel</Button>
@@ -162,13 +177,16 @@ export default function ActivateSchool() {
               <div className="themeBox"></div>
             </div>
 
-            <div className="totalSection">
-              <div className="totalLabel">Grand Total</div>
-              <div className="totalAmount">{calculateTotal()} Eth</div>
-            </div>
+            {!linkActivation && (
+              <div className="totalSection">
+                <div className="totalLabel">Grand Total</div>
+                <div className="totalAmount">{calculateTotal()} Eth</div>
+              </div>
+            )}
           </div>
         </div>
       </div>
+
       <ActivationModal isOpen={isModalOpen} onClose={closeModal} />
     </div>
   );

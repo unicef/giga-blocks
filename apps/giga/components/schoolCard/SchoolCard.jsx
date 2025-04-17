@@ -9,12 +9,20 @@ export default function SchoolCard({
   location,
   minted,
   imageHash,
+  linkActivation,
 }) {
   const displayName =
     schoolName.length > 60 ? `${schoolName.substring(0, 60)}...` : schoolName;
 
   return (
-    <Link href={`/schools/${id}`} className="school-card">
+    <Link
+      href={
+        linkActivation
+          ? `/schools/${id}?linkActivation=${linkActivation}`
+          : `/schools/${id}`
+      }
+      className="school-card"
+    >
       <div className="school-card__content">
         <h3 className="school-card__title">{displayName}</h3>
 

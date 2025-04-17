@@ -21,7 +21,7 @@ import { useSchoolGet } from '../../../app/hooks/useSchool';
 import SchoolCard from '../../schoolCard/SchoolCard';
 import './_schoolSearch.scss';
 
-export default function SchoolSearch() {
+export default function SchoolSearch({ linkActivation }) {
   const [page, setPage] = useState(1);
   const perPage = 10;
   const [searchTerm, setSearchTerm] = useState('');
@@ -364,6 +364,7 @@ export default function SchoolSearch() {
               minted={school.minted}
               hasImage={school.hasImage}
               imageHash={school.imageHash}
+              linkActivation={linkActivation}
             />
           ))}
         </div>

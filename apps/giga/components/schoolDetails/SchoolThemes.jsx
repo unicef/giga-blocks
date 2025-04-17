@@ -7,6 +7,7 @@ const ThemeSelector = ({
   themeOptions,
   selectedTheme,
   setSelectedTheme,
+  linkActivation,
   id,
 }) => {
   const isVisibleForMinted = useThemeToggleStore(
@@ -58,7 +59,11 @@ const ThemeSelector = ({
       </p>
 
       <Button
-        href={`${id}/activate-school`}
+        href={
+          linkActivation
+            ? `${id}/activate-school?linkActivation=${linkActivation}`
+            : `${id}/activate-school`
+        }
         className="school-details__activate-btn"
       >
         {isVisibleForMinted ? 'Update' : 'Activate'}{' '}

@@ -12,9 +12,11 @@ import { useSchoolDetails } from '../../hooks/useSchool';
 import './_schoolDetails.scss';
 import { useThemeToggleStore } from '../../store/themeToggleStore';
 import { useThemeStore } from '../../store/themeStore';
+import { useSearchParams } from 'next/navigation';
 
 export default function SchoolDetails({ params }) {
   const { id } = params;
+  const searchParams = useSearchParams();
   const { data, isLoading } = useSchoolDetails(id);
   const { giga_maps_data, theme, minted } = data || {};
   const isMinted = minted === 'MINTED';
@@ -28,6 +30,7 @@ export default function SchoolDetails({ params }) {
 
   const themeStore = useThemeStore();
   const hasCustomTheme = !!themeStore.fontColor && !!themeStore.bgColor;
+  const linkActivation = searchParams.get('linkActivation');
 
   // Mock data for the weekly chart
   const weeklyData = [
@@ -95,6 +98,7 @@ export default function SchoolDetails({ params }) {
                 selectedTheme={selectedTheme}
                 setSelectedTheme={setSelectedTheme}
                 id={id}
+                linkActivation={linkActivation}
               />
             )}
 
