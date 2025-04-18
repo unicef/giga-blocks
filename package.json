@@ -18,6 +18,7 @@
     "serve:admin": "nx serve admin",
     "serve:api": "nx serve api",
     "serve:web": "nx serve web",
+    "serve:giga": "nx serve apps/giga",
     "api:prisma:migrate": "prisma migrate dev",
     "api:prisma:generate": "prisma generate",
     "clean": "rm -rf dist libs/shared-ui/node_modules node_modules tmp",
