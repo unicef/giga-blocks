@@ -6,7 +6,7 @@ export const paginator = (defaultOptions: PaginateOptions): PaginateFunction => 
         const perPage = Number(options?.perPage || defaultOptions?.perPage) || 10;
         const order = options?.order || defaultOptions?.order || 'desc';
         const orderBy = options?.orderBy || defaultOptions?.orderBy || 'createdAt';
-        const skip = perPage * page;
+        const skip = perPage * (page-1);
         const [total, rows] = await Promise.all([
           model.count({ where: args.where }),
 

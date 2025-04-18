@@ -17,7 +17,7 @@ export default function OutlinedCard() {
   const { data: userData } = useUserGet(1, 10, 'CONTRIBUTOR');
 
   const [result] = useQuery({
-    query: Queries.nftListQuery,
+    query: Queries.totalNftCount,
     variables: {},
   });
   const { data } = result;
@@ -28,7 +28,7 @@ export default function OutlinedCard() {
   });
   const { data: gasFee } = totalGasFee;
 
-  const dataLength = data?.schoolTokenUris.length;
+  const dataLength = data?.totalNfts[0]?.totalNft;
 
   return (
     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>

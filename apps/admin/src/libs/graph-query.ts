@@ -22,8 +22,8 @@ const nftListQuery = gql`
 `;
 
 const allNftListQuery = gql`
-  query MyQuery {
-    nftDatas {
+  query nftdata($first: Int, $skip: Int) {
+    nftDatas(first: $first, skip: $skip,orderBy:mintedAt,orderDirection:desc) {
       id
       imageHash
       location
@@ -42,8 +42,8 @@ const allNftListQuery = gql`
 `;
 
 const adminNftListQuery = gql`
-  query MyQuery($id: String!) {
-    nftDatas(where: { minter: $id }) {
+  query adminNftData($id: String!, $first: Int, $skip: Int) {
+    nftDatas(where: { minter: $id },first: $first, skip: $skip,orderBy:mintedAt,orderDirection:desc) {
       id
       imageHash
       location
@@ -62,8 +62,8 @@ const adminNftListQuery = gql`
 `;
 
 const othersNftListQuery = gql`
-  query MyQuery($id: String!) {
-    nftDatas(where: { minter_not: $id }) {
+  query otherNftData($id: String!) {
+    nftDatas(where: { minter_not: $id },orderBy:mintedAt,orderDirection:desc) {
       id
       imageHash
       location
@@ -112,8 +112,8 @@ const nftDetailsQuery = gql`
 `;
 
 const nftTransfer = gql`
-  query MyQuery {
-    schoolTransfers {
+  query MyQuery($first: Int, $skip: Int) {
+    schoolTransfers(first: $first, skip: $skip, subgraphError: allow) {
       blockNumber
       blockTimestamp
       from
@@ -122,7 +122,7 @@ const nftTransfer = gql`
       transactionHash
       id
     }
-    collectorTransfers {
+    collectorTransfers(first: $first, skip: $skip, subgraphError: allow) {
       blockNumber
       blockTimestamp
       from
@@ -143,6 +143,15 @@ const totalGasFee = gql`
   }
 `;
 
+const totalNftCount = gql`
+  query totalnft {
+    totalNfts(subgraphError: allow) {
+    id
+    totalNft
+   }
+
+}`;
+
 export const Queries = {
   ownedNftsQuery,
   nftListQuery,
@@ -152,4 +161,5 @@ export const Queries = {
   othersNftListQuery,
   nftTransfer,
   totalGasFee,
+  totalNftCount 
 };

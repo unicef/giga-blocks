@@ -37,10 +37,10 @@ async function generateP5Image(
   //     `${message.type().substr(0, 3).toUpperCase()} ${message.text()}`
   //   )
   // )
-  .on("pageerror", ({ message }) => console.log(message))
-  .on("response", (response) =>
-    console.log(`${response.status()} ${response.url()}`)
-  )
+  // .on("pageerror", ({ message }) => console.log(message))
+  // .on("response", (response) =>
+  //   console.log(`${response.status()} ${response.url()}`)
+  // )
   .on("requestfailed", (request:any) =>
     console.log(`${request.failure().errorText} ${request.url()}`)
   );
@@ -79,17 +79,16 @@ async function generateP5Image(
   //     `${message.type().substr(0, 3).toUpperCase()} ${message.text()}`
   //   )
   // )
-  page.on("pageerror", ({ message }) => console.log(message))
-  .on("response", (response) =>
-    console.log(`${response.status()} ${response.url()}`)
-  )
-  .on("requestfailed", (request:any) =>
+  // page.on("pageerror", ({ message }) => console.log(message))
+  // .on("response", (response) =>
+  //   console.log(`${response.status()} ${response.url()}`)
+  // )
+  page.on("requestfailed", (request:any) =>
     console.log(`${request.failure().errorText} ${request.url()}`)
   );
 
 
-  await page.setViewport({ width: 400, height: 400 });
-
+  await page.setViewport({ width: 680, height: 800 });
   const screenshot = await page.screenshot({ encoding: 'base64' });
 
   await browser.close();

@@ -82,20 +82,23 @@ export class QueueService {
       let ids: string[];
       let giga_ids: string[];
       let schools;
-      const batchSize = this._configService.get<number>('BATCH_SIZE');
+      const batchSize = Number(this._configService.get<number>('BATCH_SIZE'));
       if (mintData.length <= batchSize) {
         ids = MintData.data.map(school => school.id);
         giga_ids = MintData.data.map(school => school.giga_school_id);
         schools = await this.updateSchools(ids);
-        console.log(mintData, 'is mint data with batch size');
+        this._logger.log(mintData.length, 'is mint data with batch size', batchSize);
         await this._mintQueue.add(SET_MINT_NFT, { mintData, ids, giga_ids }, jobOptions);
       } else {
         let mintDatum;
         for (let i = 0; i < mintData.length; i += batchSize) {
-          mintDatum = mintData.slice(i, i + batchSize);
-          ids = MintData.data.slice(i, i + batchSize).map(school => school.id);
+          const mintDatum = mintData.slice(i, i + batchSize);
+          const ids = MintData.data.slice(i, i + batchSize).map(school => school.id);
+          const giga_ids = MintData.data
+            .slice(i, i + batchSize)
+            .map(school => school.giga_school_id);
+          this._logger.log('inside batch processing', ids.length);
           schools = await this.updateSchools(ids);
-          console.log(mintDatum, 'is mint datum');
           await this._mintQueue.add(
             SET_MINT_NFT,
             { mintData: mintDatum, ids, giga_ids },
@@ -123,9 +126,6 @@ export class QueueService {
           mintData,
           ids,
           giga_id,
-          email: MintData.email,
-          walletAddress: MintData.walletAddress,
-          themeId: MintData.themeId,
         },
         jobOptions,
       );
@@ -171,46 +171,40 @@ export class QueueService {
     }
   }
 
-  public async csvMintdata(batchId: string){
-    console.log(batchId, "is batch id")
+  public async csvMintdata(batchId: string) {
+    this._logger.log(batchId, 'is batch id');
     try {
-        const schools = await this._prismaService.school.findMany({
-          where: {
-            uploadId: batchId,
-          },
-        });
-        console.log(schools, "is schools")
-  
-        const schoolData: SchoolData[] = schools.map((school) => {
-          return {
-            id: school.id,
-            giga_school_id: school.giga_school_id,
-            schoolName: school.name,
-            schoolType: school.school_type,
-            country: school.country,
-            latitude: school.latitude,
-            longitude: school.longitude,
-            connectivity: school.connectivity.toString(),
-            electricity_availabilty: school.electricity_available,
-            coverage_availabitlity: school.coverage_availability.toString(),
-            region_name: school.region_name,
-          };
-        });
+      const schools = await this._prismaService.school.findMany({
+        where: {
+          uploadId: batchId,
+        },
+      });
 
-        console.log(schoolData, "is school data")
-  
-        if (schoolData.length === 0) {
-          this._logger.warn(`No schools found for batch ${batchId}`);
-          return;
-        }
-  
-        this.sendMintNFT({ data: schoolData }).catch((error) => {
+      const schoolData: SchoolData[] = schools.map(school => {
+        return {
+          id: school.id,
+          giga_school_id: school.giga_school_id,
+          schoolName: school.name,
+          schoolType: school.school_type,
+          country: school.country,
+          latitude: school.latitude,
+          longitude: school.longitude,
+          connectivity: school.connectivity.toString(),
+          electricity_availabilty: school.electricity_available,
+          coverage_availabitlity: school.coverage_availability.toString(),
+          region_name: school.region_name,
+        };
+      });
+
+      if (schoolData.length === 0) {
+        this._logger.warn(`No schools found for batch ${batchId}`);
+        return;
+      }
+
+      this.sendMintNFT({ data: schoolData }).catch(error => {
         this._logger.error(`Error in csvMintdata for batch ${batchId}:`, error);
-      })
-    
-
-    }
-    catch(error){
+      });
+    } catch (error) {
       this._logger.error(`Error queueing `);
       throw error;
     }

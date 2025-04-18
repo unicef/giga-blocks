@@ -53,11 +53,10 @@ jobs:
       - name: build && push api
         id: build-push-api
         uses: docker/build-push-action@v3
-        if: github.event_name == 'push'
         with:
           context: .
           file: Dockerfile.api
-          push: true
+          push: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
           tags: rumsan/giga-mono-ntf2-api:stage
 
       - name: Build Docker image
@@ -68,11 +67,10 @@ jobs:
       - name: build && push admin
         id: build-push-admin
         uses: docker/build-push-action@v3
-        if: github.event_name == 'push'
         with:
           context: .
           file: Dockerfile.admin
-          push: true
+          push: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
           tags: rumsan/giga-mono-ntf2-admin:stage
 
       - name: Build Docker image
@@ -83,11 +81,10 @@ jobs:
       - name: build && push web
         id: build-push-web
         uses: docker/build-push-action@v3
-        if: github.event_name == 'push'
         with:
           context: .
           file: Dockerfile.web
-          push: true
+          push: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
           tags: rumsan/giga-mono-ntf2-web:stage
 
       - name: Build Docker image

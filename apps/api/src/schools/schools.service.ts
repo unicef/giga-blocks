@@ -48,7 +48,7 @@ export class SchoolService {
 
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
-      ...(minted !== undefined && { minted }),
+      ...((minted !==undefined && 'undefined')&& { minted }),
       ...(uploadId && { uploadId }),
       ...(name && { name: { contains: name, mode: 'insensitive' } }),
       ...(country && { country: { contains: country, mode: 'insensitive' } }),
