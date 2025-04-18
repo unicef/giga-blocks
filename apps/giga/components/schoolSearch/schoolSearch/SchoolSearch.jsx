@@ -9,6 +9,7 @@ import {
 } from '@carbon/icons-react';
 import {
   Button,
+  ComboBox,
   RadioButton,
   RadioButtonGroup,
   Search,
@@ -21,6 +22,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useSchoolGet } from '../../../app/hooks/useSchool';
 import SchoolCard from '../../schoolCard/SchoolCard';
 import './_schoolSearch.scss';
+import countryList from '../../../app/data/country.json';
 
 export default function SchoolSearch({ linkActivation }) {
   const router = useRouter();
@@ -29,10 +31,13 @@ export default function SchoolSearch({ linkActivation }) {
   const page = parseInt(searchParams.get('page') || '1', 10);
   const perPage = parseInt(searchParams.get('perPage') || '10', 10);
   const searchTerm = searchParams.get('name') || '';
+  const country = searchParams.get('country') || '';
 
-  const { data: schools, isLoading } = useSchoolGet(page, perPage, searchTerm);
+  const { data: schools } = useSchoolGet(page, perPage, searchTerm, country);
+
   const totalPages = schools?.meta?.lastPage || 1;
   const filteredSchools = schools?.rows || [];
+  const items = countryList;
 
   const handlePageChange = (newPage) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -58,6 +63,7 @@ export default function SchoolSearch({ linkActivation }) {
 
   // Filters (you can later sync these with URL too)
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState(null);
   const [numStudents, setNumStudents] = useState([0, 1000]);
   const [numTeachers, setNumTeachers] = useState([0, 1000]);
   const [numComputers, setNumComputers] = useState([0, 1000]);
@@ -97,8 +103,6 @@ export default function SchoolSearch({ linkActivation }) {
     setIsFilterOpen(false);
   };
 
-  // if (isLoading) return <h1>Loading</h1>;
-
   return (
     <div className="search-page">
       <div className="search-page__container">
@@ -109,33 +113,36 @@ export default function SchoolSearch({ linkActivation }) {
             placeholder="Search"
             value={searchTerm}
             onChange={handleSearchChange}
-            size="md"
           />
 
-          <Select
-            className="filter-select"
-            id="country-select"
-            labelText="Select Country"
-            defaultValue="placeholder-item"
-            size="md"
-          >
-            <SelectItem
-              disabled
-              hidden
-              value="placeholder-item"
-              text="Select Country"
-            />
-            <SelectItem value="south-africa" text="South Africa" />
-            <SelectItem value="kenya" text="Kenya" />
-            <SelectItem value="nigeria" text="Nigeria" />
-          </Select>
+          <ComboBox
+            id="carbon-combobox"
+            items={items}
+            itemToString={(item) => (item ? item.country : '')}
+            titleText="Country"
+            selectedItem={selectedCountry}
+            onChange={({ selectedItem }) => {
+              setSelectedCountry(selectedItem);
+              const params = new URLSearchParams(searchParams.toString());
+              params.set('page', '1');
+              params.set('perPage', perPage.toString());
+              if (selectedItem?.code) {
+                params.set('country', selectedItem.code);
+              } else {
+                params.delete('country');
+              }
+              router.push(`/schools?${params.toString()}`, {
+                scroll: false,
+                shallow: true,
+              });
+            }}
+          />
 
           <Select
             className="filter-select"
             id="education-select"
             labelText="Select Education Level"
             defaultValue="placeholder-item"
-            size="md"
           >
             <SelectItem
               disabled
@@ -201,11 +208,8 @@ export default function SchoolSearch({ linkActivation }) {
                 </div>
               ))}
             </div>
-
-            {/* Radio groups (shortened for brevity) */}
             <div className="filter-accordion__radio-groups">
-              {/* Same radio groups as before (connectivity, activation, etc.) */}
-              {/* Keep the original ones unchanged here */}
+              {/* RADIO GROUPS.) */}
             </div>
 
             <div className="filter-accordion__actions">
