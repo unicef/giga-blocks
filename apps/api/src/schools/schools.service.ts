@@ -37,7 +37,7 @@ export class SchoolService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  async findAll(query: ListSchoolDto) {
+  async findAll(query: any) {
     const { page, perPage, minted, uploadId, name, country, connectivityStatus, orderBy, order } =
       query;
     const cacheKey = getCacheKey(name, country, page, perPage);
