@@ -2,6 +2,7 @@ import { ArrowLeft } from '@carbon/icons-react';
 import { Button } from '@carbon/react';
 import { useThemeToggleStore } from '../../app/store/themeToggleStore';
 import { useThemeStore } from '../../app/store/themeStore';
+import { useRouter } from 'next/navigation';
 
 const ThemeSelector = ({
   themeOptions,
@@ -10,6 +11,14 @@ const ThemeSelector = ({
   linkActivation,
   id,
 }) => {
+  const router = useRouter();
+
+  const handleActivateClick = () => {
+    const url = linkActivation
+      ? `${id}/activate-school?linkActivation=${linkActivation}`
+      : `${id}/activate-school`;
+    router.push(url);
+  };
   const isVisibleForMinted = useThemeToggleStore(
     (state) => state.isVisibleForMinted
   );
@@ -23,7 +32,6 @@ const ThemeSelector = ({
       setTheme(fontColor, bgColor);
     }
   };
-
   return (
     <div className="school-details__theme-selector">
       <h3 className="school-details__section-title">Select Theme</h3>
@@ -59,11 +67,7 @@ const ThemeSelector = ({
       </p>
 
       <Button
-        href={
-          linkActivation
-            ? `${id}/activate-school?linkActivation=${linkActivation}`
-            : `${id}/activate-school`
-        }
+        onClick={handleActivateClick}
         className="school-details__activate-btn"
       >
         {isVisibleForMinted ? 'Update' : 'Activate'}{' '}

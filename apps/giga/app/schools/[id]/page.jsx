@@ -24,9 +24,20 @@ export default function SchoolDetails({ params }) {
     (state) => state.isVisibleForMinted
   );
   const [selectedTheme, setSelectedTheme] = useState('white');
+
   useEffect(() => {
     useThemeStore.getState().resetTheme();
   }, []);
+
+  useEffect(() => {
+    if (!data) return;
+
+    const { colorScheme } = data.theme || {};
+    const fontColor = colorScheme?.fontColor || defaultFontColor;
+    const bgColor = colorScheme?.bgColor || defaultBgColor;
+
+    useThemeStore.getState().setTheme(fontColor, bgColor);
+  }, [data]);
 
   const themeStore = useThemeStore();
   const hasCustomTheme = !!themeStore.fontColor && !!themeStore.bgColor;

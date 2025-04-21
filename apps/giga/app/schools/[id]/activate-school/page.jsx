@@ -6,7 +6,9 @@ import { TextInput, Button, Tooltip } from '@carbon/react';
 import { ArrowLeft, Information } from '@carbon/icons-react';
 import ActivationModal from '../../../../components/schoolActivate/ActivationModal';
 import './_activate.scss';
+import '../_schoolDetails.scss';
 import { useSearchParams } from 'next/navigation';
+import { useThemeStore } from '../../../store/themeStore';
 
 export default function ActivateSchool() {
   const [baseFee, setBaseFee] = useState('0.01');
@@ -16,6 +18,8 @@ export default function ActivateSchool() {
   const [selectedTheme, setSelectedTheme] = useState('blue');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const searchParams = useSearchParams();
+  const { fontColor, bgColor } = useThemeStore();
+  console.log('Theme:', fontColor, bgColor);
 
   const linkActivation = searchParams.get('linkActivation');
 
@@ -174,7 +178,18 @@ export default function ActivateSchool() {
 
             <div className="themeRow">
               <span className="themeLabel">Selected Theme:</span>
-              <div className="themeBox"></div>
+              <div className="school-details__themes">
+                <button className={`school-details__theme-option`}>
+                  <div
+                    className="school-details__theme-color"
+                    style={{ backgroundColor: bgColor }}
+                  />
+                  <div
+                    className="school-details__theme-color"
+                    style={{ backgroundColor: fontColor }}
+                  />
+                </button>
+              </div>
             </div>
 
             {!linkActivation && (
