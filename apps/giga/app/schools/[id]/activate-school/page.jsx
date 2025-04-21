@@ -7,22 +7,23 @@ import { ArrowLeft, Information } from '@carbon/icons-react';
 import ActivationModal from '../../../../components/schoolActivate/ActivationModal';
 import './_activate.scss';
 import '../_schoolDetails.scss';
-import { useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { useThemeStore } from '../../../store/themeStore';
+import { useSchoolDetails } from '../../../hooks/useSchool';
 
 export default function ActivateSchool() {
+  const { id } = useParams();
   const [baseFee, setBaseFee] = useState('0.01');
   const [gasFee, setGasFee] = useState('00');
   const [donation, setDonation] = useState('');
   const [email, setEmail] = useState('');
-  const [selectedTheme, setSelectedTheme] = useState('blue');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const searchParams = useSearchParams();
   const { fontColor, bgColor } = useThemeStore();
-  console.log('Theme:', fontColor, bgColor);
 
   const linkActivation = searchParams.get('linkActivation');
-
+  const { data } = useSchoolDetails(id);
+  console.log('data', data);
   const handleActivate = () => {
     setIsModalOpen(true);
   };
@@ -146,10 +147,8 @@ export default function ActivateSchool() {
 
         <div className="previewSection">
           <div className="previewCard">
-            <h2 className="schoolName">
-              Evergreen Academy for Advanced Scientific and Holistic Learning
-            </h2>
-            <p className="schoolLevel">Higher Secondary</p>
+            <h2 className="schoolName">{data.name}</h2>
+            <p className="schoolLevel">{data?.school_type}</p>
             <div className="locationRow">
               <span className="locationIcon">
                 <svg
@@ -173,13 +172,13 @@ export default function ActivateSchool() {
                   />
                 </svg>
               </span>
-              <span>USA</span>
+              <span>{data?.region_name}</span>
             </div>
 
             <div className="themeRow">
               <span className="themeLabel">Selected Theme:</span>
               <div className="school-details__themes">
-                <button className={`school-details__theme-option`}>
+                <div className={`school-details__theme-option`}>
                   <div
                     className="school-details__theme-color"
                     style={{ backgroundColor: bgColor }}
@@ -188,7 +187,7 @@ export default function ActivateSchool() {
                     className="school-details__theme-color"
                     style={{ backgroundColor: fontColor }}
                   />
-                </button>
+                </div>
               </div>
             </div>
 

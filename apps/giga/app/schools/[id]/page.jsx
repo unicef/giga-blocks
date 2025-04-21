@@ -25,6 +25,10 @@ export default function SchoolDetails({ params }) {
   );
   const [selectedTheme, setSelectedTheme] = useState('white');
 
+  // Determine bgColor and fontColor
+  const defaultFontColor = '#000';
+  const defaultBgColor = '#fff';
+
   useEffect(() => {
     useThemeStore.getState().resetTheme();
   }, []);
@@ -60,9 +64,6 @@ export default function SchoolDetails({ params }) {
     { id: 'blue', colors: ['#c8e4ff', '#0078ff'] },
     { id: 'green', colors: ['#c8ffdc', '#00ff73'] },
   ];
-  // Determine bgColor and fontColor
-  const defaultFontColor = '#000';
-  const defaultBgColor = '#fff';
 
   const fontColor = hasCustomTheme
     ? themeStore.fontColor
