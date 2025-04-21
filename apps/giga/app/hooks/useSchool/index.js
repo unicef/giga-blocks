@@ -3,12 +3,12 @@ import { SCHOOLS } from '../../constants/api';
 import { useQuery } from '@tanstack/react-query';
 import { apiGuest } from '../../utils/api';
 
-export const useSchoolGet = (page, perPage, name, country) => {
+export const useSchoolGet = (page, perPage, name, country, minted) => {
   return useQuery(
-    ['get-school-list', page, perPage, name, country],
+    ['get-school-list', page, perPage, name, country, minted],
     async () => {
       const { data } = await apiGuest.get(
-        `${SCHOOLS.GET}?page=${page}&perPage=${perPage}&name=${name}&country=${country}`
+        `${SCHOOLS.GET}?page=${page}&perPage=${perPage}&name=${name}&country=${country}&minted=${minted}`
       );
 
       return data;

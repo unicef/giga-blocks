@@ -17,7 +17,7 @@ import {
   SelectItem,
   Slider,
 } from '@carbon/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSchoolGet } from '../../../app/hooks/useSchool';
 import SchoolCard from '../../schoolCard/SchoolCard';
@@ -28,12 +28,33 @@ export default function SchoolSearch({ linkActivation }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const page = parseInt(searchParams.get('page') || '1', 10);
-  const perPage = parseInt(searchParams.get('perPage') || '10', 10);
-  const searchTerm = searchParams.get('name') || '';
-  const country = searchParams.get('country') || '';
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [country, setCountry] = useState('');
+  const [minted, setMinted] = useState(undefined);
 
-  const { data: schools } = useSchoolGet(page, perPage, searchTerm, country);
+  useEffect(() => {
+    const pageParam = parseInt(searchParams.get('page') || '1', 10);
+    const perPageParam = parseInt(searchParams.get('perPage') || '10', 10);
+    const nameParam = searchParams.get('name') || '';
+    const countryParam = searchParams.get('country') || '';
+    const mintedParam = searchParams.get('minted') || undefined;
+
+    setPage(pageParam);
+    setPerPage(perPageParam);
+    setSearchTerm(nameParam);
+    setCountry(countryParam);
+    setMinted(mintedParam);
+  }, [searchParams]);
+
+  const { data: schools, isLoading } = useSchoolGet(
+    page,
+    perPage,
+    searchTerm,
+    country,
+    minted
+  );
 
   const totalPages = schools?.meta?.lastPage || 1;
   const filteredSchools = schools?.rows || [];
@@ -43,10 +64,7 @@ export default function SchoolSearch({ linkActivation }) {
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', newPage.toString());
     params.set('perPage', perPage.toString());
-    router.push(`/schools?${params.toString()}`, {
-      scroll: false,
-      shallow: true,
-    });
+    router.push(`/schools?${params.toString()}`, { scroll: false });
   };
 
   const handleSearchChange = (e) => {
@@ -57,13 +75,14 @@ export default function SchoolSearch({ linkActivation }) {
     params.set('name', value);
     router.push(`/schools?${params.toString()}`, {
       scroll: false,
-      shallow: true,
+      // shallow: true,
     });
   };
 
   // Filters (you can later sync these with URL too)
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(null);
+
   const [numStudents, setNumStudents] = useState([0, 1000]);
   const [numTeachers, setNumTeachers] = useState([0, 1000]);
   const [numComputers, setNumComputers] = useState([0, 1000]);
@@ -73,6 +92,7 @@ export default function SchoolSearch({ linkActivation }) {
   const [connectionType, setConnectionType] = useState('all');
   const [electricityAvailability, setElectricityAvailability] = useState('all');
   const [waterAvailability, setWaterAvailability] = useState('all');
+  const mintedStatus = searchParams.get('minted') || 'ALL';
 
   const toggleFilter = () => setIsFilterOpen(!isFilterOpen);
   const resetFilters = () => {
@@ -140,19 +160,31 @@ export default function SchoolSearch({ linkActivation }) {
 
           <Select
             className="filter-select"
-            id="education-select"
-            labelText="Select Education Level"
-            defaultValue="placeholder-item"
+            id="minted-select"
+            labelText="Select Minted Status"
+            defaultValue="ALL"
+            value={mintedStatus}
+            onChange={(e) => {
+              const value = e.target.value;
+              const params = new URLSearchParams(searchParams.toString());
+              params.set('page', '1');
+              params.set('perPage', perPage.toString());
+
+              if (value === 'MINTED' || value === 'NOTMINTED') {
+                params.set('minted', value);
+              } else {
+                params.delete('minted'); // if "ALL" selected
+              }
+
+              router.push(`/schools?${params.toString()}`, {
+                scroll: false,
+                shallow: true,
+              });
+            }}
           >
-            <SelectItem
-              disabled
-              hidden
-              value="placeholder-item"
-              text="Select Education Level"
-            />
-            <SelectItem value="primary" text="Primary" />
-            <SelectItem value="secondary" text="Secondary" />
-            <SelectItem value="tertiary" text="Tertiary" />
+            <SelectItem value="ALL" text="All" />
+            <SelectItem value="MINTED" text="Minted" />
+            <SelectItem value="NOTMINTED" text="Notminted" />
           </Select>
 
           <Button
@@ -228,20 +260,24 @@ export default function SchoolSearch({ linkActivation }) {
           {schools?.meta?.total} Schools found
         </div>
 
-        <div className="search-page__grid">
-          {filteredSchools?.map((school) => (
-            <SchoolCard
-              key={school.id}
-              id={school.id}
-              schoolName={school.name}
-              location={school.region_name}
-              minted={school.minted}
-              hasImage={school.hasImage}
-              imageHash={school.imageHash}
-              linkActivation={linkActivation}
-            />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="search-page__loading">Loading...</div>
+        ) : (
+          <div className="search-page__grid">
+            {filteredSchools?.map((school) => (
+              <SchoolCard
+                key={school.id}
+                id={school.id}
+                schoolName={school.name}
+                location={school.region_name}
+                minted={school.minted}
+                hasImage={school.hasImage}
+                imageHash={school.imageHash}
+                linkActivation={linkActivation}
+              />
+            ))}
+          </div>
+        )}
 
         <div className="search-page__pagination">
           <button
