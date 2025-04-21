@@ -40,7 +40,7 @@ export class SchoolService {
   async findAll(query: any) {
     const { page, perPage, minted, uploadId, name, country, connectivityStatus, orderBy, order } =
       query;
-    const cacheKey = getCacheKey(name, country, page, perPage);
+    const cacheKey = getCacheKey(name, country, page, perPage,minted);
     const cachedResult = await this.cacheManager.get<string>(cacheKey);
 
     if (cachedResult) return cachedResult;
