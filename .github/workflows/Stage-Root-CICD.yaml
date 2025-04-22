@@ -124,9 +124,9 @@ jobs:
       # Update the image tag in the manifest
       - name: Update Image Tag in Manifest
         run: |
-          sed -i "s|image: rumsan/giga-mono-ntf2-admin:.*|image: rumsan/giga-mono-ntf2-admin:stage-${{ steps.vars.outputs.sha_short }}|" ${{ env.ADMIN_MANIFEST_FILE }}
-          sed -i "s|image: rumsan/giga-mono-ntf2-api:.*|image: rumsan/giga-mono-ntf2-api:stage-${{ steps.vars.outputs.sha_short }}|" ${{ env.API_MANIFEST_FILE }}
-          sed -i "s|image: rumsan/giga-mono-ntf2-web:.*|image: rumsan/giga-mono-ntf2-web:stage-${{ steps.vars.outputs.sha_short }}|" ${{ env.WEB_MANIFEST_FILE }}
+          sed -i "s|image: rumsan/giga-mono-ntf2-admin:.*|image: rumsan/giga-mono-ntf2-admin:stage-${{ needs.deploy.outputs.sha_short }}|" ${{ env.ADMIN_MANIFEST_FILE }}
+          sed -i "s|image: rumsan/giga-mono-ntf2-api:.*|image: rumsan/giga-mono-ntf2-api:stage-${{ needs.deploy.outputs.sha_short }}|" ${{ env.API_MANIFEST_FILE }}
+          sed -i "s|image: rumsan/giga-mono-ntf2-web:.*|image: rumsan/giga-mono-ntf2-web:stage-${{ needs.deploy.outputs.sha_short }}|" ${{ env.WEB_MANIFEST_FILE }}
 
       # Commit and push changes using SSH
       - name: Commit and Push Changes
