@@ -1,15 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import { Location } from '@carbon/icons-react';
 import Link from 'next/link';
-import { TextInput, Button, Tooltip } from '@carbon/react';
-import { ArrowLeft, Information } from '@carbon/icons-react';
+import { ArrowLeft } from '@carbon/icons-react';
+import NonPayingUser from '../../../../components/schoolActivate/NonPayingUser';
+import PayingUser from '../../../../components/schoolActivate/PayingUser';
 import ActivationModal from '../../../../components/schoolActivate/ActivationModal';
 import './_activate.scss';
 import '../_schoolDetails.scss';
 import { useParams, useSearchParams } from 'next/navigation';
-import { useThemeStore } from '../../../store/themeStore';
 import { useSchoolDetails } from '../../../hooks/useSchool';
+import { useThemeStore } from '../../../store/themeStore';
 
 export default function ActivateSchool() {
   const { id } = useParams();
@@ -23,7 +25,7 @@ export default function ActivateSchool() {
 
   const linkActivation = searchParams.get('linkActivation');
   const { data } = useSchoolDetails(id);
-  console.log('data', data);
+
   const handleActivate = () => {
     setIsModalOpen(true);
   };
@@ -57,120 +59,29 @@ export default function ActivateSchool() {
           </p>
 
           {linkActivation ? (
-            <div className="formGroup">
-              <label className="label">Email</label>
-              <TextInput
-                id="email"
-                labelText=""
-                hideLabel
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
+            <NonPayingUser
+              email={email}
+              setEmail={setEmail}
+              linkActivation={linkActivation}
+            />
           ) : (
-            <>
-              <div className="formGroup">
-                <label className="label">Base Fee</label>
-                <div className="inputWithClear">
-                  <TextInput
-                    id="base-fee"
-                    labelText=""
-                    hideLabel
-                    disabled
-                    aria-label="Base fee amount, read only"
-                    value={baseFee}
-                    onChange={() => {}}
-                  />
-                  <span className="ethLabel">Eth</span>
-                </div>
-                <p className="helperText">
-                  Porem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-                  vulputate libero et velit interdum, ac aliquet odio mattis.
-                </p>
-              </div>
-
-              <div className="formGroup">
-                <label className="label">Gas Fee</label>
-                <div className="inputWithClear">
-                  <TextInput
-                    id="gas-fee"
-                    labelText=""
-                    hideLabel
-                    disabled
-                    aria-label="Gas fee amount, read only"
-                    value={gasFee}
-                    onChange={() => {}}
-                  />
-                </div>
-                <p className="helperText">
-                  Jorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-                  vulputate libero et velit interdum, ac aliquet odio mattis.
-                </p>
-              </div>
-
-              <div className="formGroup">
-                <div className="donationHeader">
-                  <label className="label">Donation</label>
-                  <div className="optional">
-                    Optional
-                    <Tooltip
-                      align="center"
-                      direction="right"
-                      tooltipText="Optional donation amount"
-                    >
-                      <Information size={16} />
-                    </Tooltip>
-                  </div>
-                </div>
-                <TextInput
-                  id="donation"
-                  labelText=""
-                  hideLabel
-                  placeholder="Enter donation amount"
-                  value={donation}
-                  onChange={(e) => setDonation(e.target.value)}
-                />
-                <p className="helperText">
-                  Morem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-                  vulputate libero et velit interdum, ac aliquet odio mattis.
-                </p>
-              </div>
-            </>
+            <PayingUser
+              baseFee={baseFee}
+              gasFee={gasFee}
+              donation={donation}
+              setDonation={setDonation}
+              handleActivate={handleActivate}
+            />
           )}
-
-          <div className="actionButtons">
-            <Button kind="secondary">Cancel</Button>
-            <Button onClick={handleActivate}>Activate</Button>
-          </div>
         </div>
 
         <div className="previewSection">
           <div className="previewCard">
-            <h2 className="schoolName">{data.name}</h2>
+            <h2 className="schoolName">{data?.name}</h2>
             <p className="schoolLevel">{data?.school_type}</p>
             <div className="locationRow">
               <span className="locationIcon">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 8.5C9.10457 8.5 10 7.60457 10 6.5C10 5.39543 9.10457 4.5 8 4.5C6.89543 4.5 6 5.39543 6 6.5C6 7.60457 6.89543 8.5 8 8.5Z"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M8 14.5C10.5 12 13 9.36396 13 6.5C13 3.73858 10.7614 1.5 8 1.5C5.23858 1.5 3 3.73858 3 6.5C3 9.36396 5.5 12 8 14.5Z"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <Location />
               </span>
               <span>{data?.region_name}</span>
             </div>
