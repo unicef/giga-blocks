@@ -39,6 +39,24 @@ jobs:
         run: |
           tee ./.env <<<"$ENV"
 
+      - name: Get short SHA
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Import Secrets
+        uses: hashicorp/vault-action@v2.4.0
+        with:
+          url: ${{ secrets.VAULT_URL }}
+          token: ${{ secrets.VAULT_TOKEN }}
+          secrets: |
+            github/data/general/docker/rumsan username | DOCKERHUB_USERNAME ;
+            github/data/general/docker/rumsan password | DOCKERHUB_TOKEN ;
+            github/data/giga/stage env | ENV ;
+
+      - name: create environment file
+        run: |
+          tee ./.env <<<"$ENV"
+
       - uses: actions/setup-node@v3
         with:
           node-version: 20.13.1
@@ -95,10 +113,17 @@ jobs:
           tags: |
             rumsan/giga-mono-ntf2-web:stage
             rumsan/giga-mono-ntf2-web:stage-${{ steps.vars.outputs.sha_short }}
+<<<<<<< Updated upstream
 
     outputs:
       sha_short: ${{ steps.vars.outputs.sha_short }}
 
+=======
+
+    outputs:
+      sha_short: ${{ steps.vars.outputs.sha_short }}
+
+>>>>>>> Stashed changes
   update-manifest:
     name: Update Kubernetes Manifest
     needs: deploy
