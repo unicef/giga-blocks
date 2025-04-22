@@ -40,4 +40,7 @@ module.exports = {
     GET: '/contribute',
     POST: '/contribute',
   },
+  MAGICLINK: {
+    SEND: '/magic-link/send',
+  },
 };
