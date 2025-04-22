@@ -2,13 +2,19 @@
 
 import { TextInput, Button } from '@carbon/react';
 import { useActivateSchool } from '../../app/hooks/useSendMagicLink';
-import { redirect } from 'next/dist/server/api-utils';
+import { InlineNotification } from '@carbon/react';
 import { useParams } from 'next/navigation';
+import { useState } from 'react';
 
 export default function NonPayingUser({ email, setEmail, linkActivation }) {
   const { id } = useParams();
 
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
   const { mutate, isPending, isSuccess, isError, error } = useActivateSchool();
+
   const handleSubmit = () => {
     if (!email) return;
     mutate(
@@ -18,11 +24,20 @@ export default function NonPayingUser({ email, setEmail, linkActivation }) {
       },
       {
         onSuccess: () => {
-          console.log('Submitted');
+          setShowSuccess(true);
+        },
+        onError: (err) => {
+          const message =
+            err?.response?.data?.message ||
+            'Something went wrong. Please try again.';
+          setErrorMessage(message);
+          setShowError(true);
+          setShowSuccess(false);
         },
       }
     );
   };
+
   return (
     <div className="formGroup">
       <label className="label">Email</label>
@@ -35,10 +50,28 @@ export default function NonPayingUser({ email, setEmail, linkActivation }) {
         onChange={(e) => setEmail(e.target.value)}
         disabled={isPending}
       />
-      {isError && (
-        <p style={{ color: 'red', marginTop: '8px' }}>
-          {error?.response?.data?.message || 'Something went wrong'}
-        </p>
+
+      {showSuccess && (
+        <InlineNotification
+          kind="success"
+          title="Success"
+          subtitle="Magic link has been sent to your email."
+          caption=""
+          onCloseButtonClick={() => setShowSuccess(false)}
+          timeout={3000}
+          style={{ marginTop: '16px' }}
+        />
+      )}
+
+      {showError && (
+        <InlineNotification
+          kind="error"
+          title="Error"
+          subtitle={errorMessage}
+          onClose={() => setShowError(false)}
+          lowContrast
+          style={{ marginTop: '12px' }}
+        />
       )}
 
       <div className="actionButtons" style={{ marginTop: '12px' }}>
