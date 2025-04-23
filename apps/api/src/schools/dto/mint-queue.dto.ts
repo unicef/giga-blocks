@@ -25,4 +25,15 @@ export class MintQueueSingleDto {
   @ApiProperty()
   @IsObject()
   data: SchoolData;
+  email: string;
+  walletAddress: string;
+  themeId: string;
+}
+
+export class MintSingleSchool {
+  @ApiProperty({
+    example: 'uuid',
+  })
+  @IsString()
+  id: string;
 }

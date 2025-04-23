@@ -14,7 +14,6 @@ export default function LandingPage() {
   useEffect(() => {
     setThemeData({});
   }, []);
-  console.log('themeData', themeData);
 
   return (
     <Grid className="landing-page" fullWidth>

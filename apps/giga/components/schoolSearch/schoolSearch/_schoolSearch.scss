@@ -1,0 +1,185 @@
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/type' as *;
+@use '@carbon/styles/scss/colors' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/breakpoint' as *;
+
+.search-page {
+  padding: $spacing-05;
+  background-color: #f3f3f3;
+  min-height: 100vh;
+
+  &__container {
+    margin: 0 auto;
+    background-color: $white-0;
+    border-radius: 8px;
+    padding: $spacing-05;
+  }
+
+  &__filters {
+    display: flex;
+    gap: $spacing-03;
+    margin-bottom: $spacing-03; // Reduced to accommodate accordion
+    flex-wrap: wrap;
+    align-items: flex-end; /* Align items at the bottom */
+
+    .search-input {
+      flex: 1;
+      min-width: 300px;
+      margin-top: 24px;
+      @media (max-width: 768px) {
+        margin-top: 0;
+      }
+    }
+
+    .filter-select {
+      min-width: 200px;
+    }
+
+    .filter-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $white-0;
+      border: 1px solid $gray-20;
+      border-radius: 4px;
+      padding: 0 $spacing-04;
+      cursor: pointer;
+      height: 40px; /* Match the height of Carbon UI inputs */
+      margin-bottom: 1px; /* Slight adjustment to align with inputs */
+      align-self: flex-end; /* Align at the bottom of the flex container */
+
+      &:hover {
+        background-color: $gray-10;
+      }
+    }
+  }
+
+  &__results-count {
+    margin-bottom: $spacing-05;
+    @include type-style('heading-01');
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: $spacing-05;
+    margin-bottom: $spacing-07;
+    @media (max-width: 768px) {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  &__pagination {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: $spacing-03;
+
+    &-info {
+      margin: 0 $spacing-05;
+      @include type-style('body-01');
+    }
+
+    &-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 10%;
+      border: 1px solid $gray-20;
+      background-color: $white-0;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $gray-10;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+// Filter Accordion Styles
+.filter-accordion {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  margin-bottom: $spacing-05;
+  border: 1px solid transparent;
+
+  &.open {
+    max-height: 1000px;
+    border: 1px solid $gray-20;
+    border-radius: 8px;
+    margin-bottom: $spacing-06;
+  }
+
+  &__content {
+    padding: $spacing-05;
+  }
+
+  &__sliders {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: $spacing-05;
+    margin-bottom: $spacing-06;
+  }
+
+  &__slider {
+    width: 100%;
+  }
+
+  &__label {
+    @include type-style('body-01');
+    font-weight: 600;
+    margin-bottom: $spacing-03;
+  }
+
+  &__slider-container {
+    display: flex;
+    align-items: center;
+    gap: $spacing-03;
+
+    .cds--slider {
+      flex: 1;
+    }
+  }
+
+  &__slider-value {
+    @include type-style('body-01');
+    color: $gray-70;
+    min-width: 30px;
+  }
+
+  &__radio-groups {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: $spacing-05;
+    margin-bottom: $spacing-06;
+  }
+
+  &__radio-group {
+    width: 100%;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: $spacing-03;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}

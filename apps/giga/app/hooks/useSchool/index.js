@@ -1,19 +1,22 @@
 'use client';
 import { SCHOOLS } from '../../constants/api';
 import { useQuery } from '@tanstack/react-query';
-import {apiGuest} from '../../utils/api'
+import { apiGuest } from '../../utils/api';
 
-export const useSchoolGet = (page, perPage, searchText) => {
+export const useSchoolGet = (page, perPage, name, country, minted) => {
   return useQuery(
-    ['get-school-data', page, perPage, searchText],
+    ['get-school-list', page, perPage, name, country, minted],
     async () => {
       const { data } = await apiGuest.get(
-        `${SCHOOLS.GET}?page=${page}&perPage=${perPage}&name=${searchText}`
+        `${SCHOOLS.GET}?page=${page}&perPage=${perPage}&name=${name}&country=${country}&minted=${minted}`
       );
+
       return data;
     },
     {
-      keepPreviousData: true,
+      enabled: !!page && !!perPage, // Only run if both are valid
+      keepPreviousData: false,
+      cacheTime: 0,
     }
   );
 };
