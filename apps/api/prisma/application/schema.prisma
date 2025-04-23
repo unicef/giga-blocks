@@ -194,6 +194,7 @@ model School {
   ContributedData       ContributedData[]
   version_id            String
   School_Version        SchoolVersion[]
+  verifiedCIW           Boolean      @default(false)
 
   themeId String?
   theme   Theme?  @relation(fields: [themeId], references: [id])
@@ -380,4 +381,16 @@ model FeatureCountry {
   createdByUser User     @relation(fields: [createdBy], references: [id])
 
   @@map("giga_featured")
+}
+
+
+model SessionId{
+  id          String   @id @default(uuid())
+  schoolId    String
+  status      Boolean @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  requestDetails Json
+
+  @@map("giga_id_session_id") 
 }

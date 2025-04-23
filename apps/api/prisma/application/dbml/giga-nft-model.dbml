@@ -113,6 +113,7 @@ Table giga_school {
   ContributedData giga_contributed_data [not null]
   version_id String [not null]
   School_Version school_version [not null]
+  verifiedCIW Boolean [not null, default: false]
   themeId String
   theme giga_themes
 }
@@ -270,6 +271,15 @@ Table giga_featured {
   updatedAt DateTime [not null]
   createdBy String [not null]
   createdByUser giga_users [not null]
+}
+
+Table giga_id_session_id {
+  id String [pk]
+  schoolId String [not null]
+  status Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  requestDetails Json [not null]
 }
 
 Enum Role {
