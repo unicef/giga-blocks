@@ -100,7 +100,10 @@ const ActivateSchool = () => {
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
                       <TableCell scope="row">
-                        <a href={`${BASE_URL}${row.id}`}>{`${BASE_URL}${row.id}`}</a>
+                        <a
+                          target="_blank"
+                          href={`${BASE_URL}${row.id}`}
+                        >{`${BASE_URL}${row.id}`}</a>
                       </TableCell>
                       <TableCell align="left">{row.name}</TableCell>
                       <TableCell align="left">

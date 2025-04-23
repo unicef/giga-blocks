@@ -90,7 +90,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: Dockerfile.web
+          file: Dockerfile.giga
           push: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
           tags: |
             rumsan/giga-mono-ntf2-web:stage
