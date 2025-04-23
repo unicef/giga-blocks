@@ -46,6 +46,7 @@ module.exports = {
   },
   THEME: {
     GET: '/schools/themes',
+    SCHOOL: '/schools/theme',
     POST: '/schools/themes',
   },
 };

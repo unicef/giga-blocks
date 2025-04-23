@@ -9,4 +9,11 @@ export const useThemeGet = () => {
   });
 };
 
+export const useSchoolThemeGet = (name) => {
+  return useQuery(['get-school-theme', name], async () => {
+    const { data } = await apiGuest(`${THEME.SCHOOL}/${name}`);
+    return data;
+  });
+};
+
 export const useThemePost = () => {};

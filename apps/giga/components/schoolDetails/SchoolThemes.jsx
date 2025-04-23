@@ -28,10 +28,10 @@ const ThemeSelector = ({
   const handleThemeChange = (themeId) => {
     setSelectedTheme(themeId);
     const selected = themeOptions.find((t) => t.id === themeId);
-    if (selected) {
+    if (selected?.colorScheme) {
       const { bgColor, fontColor } = selected.colorScheme || {};
       if (fontColor && bgColor) {
-        setTheme(fontColor, bgColor);
+        setTheme(fontColor, bgColor, selected.name);
       }
     }
   };

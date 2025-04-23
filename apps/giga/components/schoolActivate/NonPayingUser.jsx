@@ -8,7 +8,12 @@ import {
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-export default function NonPayingUser({ email, setEmail, linkActivation }) {
+export default function NonPayingUser({
+  email,
+  setEmail,
+  linkActivation,
+  themeName,
+}) {
   const { id } = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -38,7 +43,7 @@ export default function NonPayingUser({ email, setEmail, linkActivation }) {
         { otp: token, email: emailFromUrl },
         {
           onSuccess: () => {
-            router.replace(redirect);
+            router.push(redirect);
           },
           onError: (err) => {
             const message =
@@ -56,7 +61,7 @@ export default function NonPayingUser({ email, setEmail, linkActivation }) {
     mutate(
       {
         email,
-        redirectlink: `http://localhost:4200/schools/${id}/activate-school?linkActivation=${linkActivation}&email=${email}`,
+        redirectlink: `http://localhost:4200/schools/${id}/activate-school?linkActivation=${linkActivation}&email=${email}&themeName=${themeName}`,
       },
       {
         onSuccess: () => {

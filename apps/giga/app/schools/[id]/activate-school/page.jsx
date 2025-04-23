@@ -1,9 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { Location } from '@carbon/icons-react';
+import { useEffect, useState } from 'react';
+import { Location, ArrowLeft } from '@carbon/icons-react';
 import Link from 'next/link';
-import { ArrowLeft } from '@carbon/icons-react';
 import NonPayingUser from '../../../../components/schoolActivate/NonPayingUser';
 import PayingUser from '../../../../components/schoolActivate/PayingUser';
 import ActivationModal from '../../../../components/schoolActivate/ActivationModal';
@@ -11,20 +10,35 @@ import './_activate.scss';
 import '../_schoolDetails.scss';
 import { useParams, useSearchParams } from 'next/navigation';
 import { useSchoolDetails } from '../../../hooks/useSchool';
+import { useSchoolThemeGet } from '../../../hooks/useTheme';
 import { useThemeStore } from '../../../store/themeStore';
 
 export default function ActivateSchool() {
   const { id } = useParams();
+  const searchParams = useSearchParams();
+
+  const themeFromParams = searchParams.get('themeName');
+  const linkActivation = searchParams.get('linkActivation');
+
   const [baseFee, setBaseFee] = useState('0.01');
   const [gasFee, setGasFee] = useState('00');
   const [donation, setDonation] = useState('');
   const [email, setEmail] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const searchParams = useSearchParams();
-  const { fontColor, bgColor } = useThemeStore();
 
-  const linkActivation = searchParams.get('linkActivation');
+  const { fontColor, bgColor, selectedThemeName, setTheme } = useThemeStore();
   const { data } = useSchoolDetails(id);
+  const { data: themeData, isLoading: themeLoading } =
+    useSchoolThemeGet(themeFromParams);
+
+  // Set theme colors if we have themeFromParams and the theme data loaded
+  useEffect(() => {
+    if (themeFromParams && themeData?.colorScheme) {
+      const { fontColor, bgColor } = themeData.colorScheme;
+      useThemeStore.getState().setTheme(fontColor, bgColor, themeFromParams);
+    }
+  }, [themeFromParams, themeData]);
+  console.log('themeData', themeData);
 
   const handleActivate = () => {
     setIsModalOpen(true);
@@ -33,14 +47,13 @@ export default function ActivateSchool() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
   const calculateTotal = () => {
-    const base = Number.parseFloat(baseFee) || 0;
-    const gas = Number.parseFloat(gasFee) || 0;
-    const donate = Number.parseFloat(donation) || 0;
+    const base = parseFloat(baseFee) || 0;
+    const gas = parseFloat(gasFee) || 0;
+    const donate = parseFloat(donation) || 0;
     return (base + gas + donate).toFixed(2);
   };
-
+  // https://beta-giga.rumsan.net/api/v1/schools/theme/green
   return (
     <div className="container">
       <div className="backButton">
@@ -63,6 +76,7 @@ export default function ActivateSchool() {
               email={email}
               setEmail={setEmail}
               linkActivation={linkActivation}
+              themeName={selectedThemeName}
             />
           ) : (
             <PayingUser
@@ -89,7 +103,7 @@ export default function ActivateSchool() {
             <div className="themeRow">
               <span className="themeLabel">Selected Theme:</span>
               <div className="school-details__themes">
-                <div className={`school-details__theme-option`}>
+                <div className="school-details__theme-option">
                   <div
                     className="school-details__theme-color"
                     style={{ backgroundColor: bgColor }}
