@@ -1,21 +1,18 @@
-name: Stage Root CD/CD
+name: Stage Root CI/CD
 on:
   push:
     branches:
       - 'stage'
-    paths-ignore:
-      - 'apps/**'
   pull_request:
     branches:
       - 'stage'
-    paths-ignore:
-      - 'apps/**'
   workflow_dispatch:
-  
 
 env:
   CI: false
-  env_stage: ${{ secrets.ENV_STAGE }}
+  ADMIN_MANIFEST_FILE: 'K8s-Manifest/Giga/Stage/Argo-Rollout/admin.yaml'
+  WEB_MANIFEST_FILE: 'K8s-Manifest/Giga/Stage/Argo-Rollout/web.yaml'
+  API_MANIFEST_FILE: 'K8s-Manifest/Giga/Stage/Argo-Rollout/api.yaml'
 
 jobs:
   deploy:
@@ -24,9 +21,23 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: import env file
+      - name: Get short SHA
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Import Secrets
+        uses: hashicorp/vault-action@v2.4.0
+        with:
+          url: ${{ secrets.VAULT_URL }}
+          token: ${{ secrets.VAULT_TOKEN }}
+          secrets: |
+            github/data/general/docker/rumsan username | DOCKERHUB_USERNAME ;
+            github/data/general/docker/rumsan password | DOCKERHUB_TOKEN ;
+            github/data/giga/stage env | ENV ;
+
+      - name: create environment file
         run: |
-          touch ./.env && echo "$env_stage" >> ./.env
+          tee ./.env <<<"$ENV"
 
       - uses: actions/setup-node@v3
         with:
@@ -46,8 +57,8 @@ jobs:
       - name: docker login
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ env.DOCKERHUB_USERNAME }}
+          password: ${{ env.DOCKERHUB_TOKEN }}
 
       # API Image
       - name: build && push api
@@ -57,11 +68,9 @@ jobs:
           context: .
           file: Dockerfile.api
           push: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
-          tags: rumsan/giga-mono-ntf2-api:stage
-
-      - name: Build Docker image
-        if: github.event_name == 'pull_request'
-        run: docker build -f Dockerfile.api -t myimage:${{ github.sha }} .
+          tags: |
+            rumsan/giga-mono-ntf2-api:stage
+            rumsan/giga-mono-ntf2-api:stage-${{ steps.vars.outputs.sha_short }}
 
       # Admin Image
       - name: build && push admin
@@ -71,11 +80,9 @@ jobs:
           context: .
           file: Dockerfile.admin
           push: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
-          tags: rumsan/giga-mono-ntf2-admin:stage
-
-      - name: Build Docker image
-        if: github.event_name == 'pull_request'
-        run: docker build -f Dockerfile.admin -t myimage:${{ github.sha }} .
+          tags: |
+            rumsan/giga-mono-ntf2-admin:stage
+            rumsan/giga-mono-ntf2-admin:stage-${{ steps.vars.outputs.sha_short }}
 
       #  Web Image
       - name: build && push web
@@ -85,8 +92,49 @@ jobs:
           context: .
           file: Dockerfile.web
           push: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
-          tags: rumsan/giga-mono-ntf2-web:stage
+          tags: |
+            rumsan/giga-mono-ntf2-web:stage
+            rumsan/giga-mono-ntf2-web:stage-${{ steps.vars.outputs.sha_short }}
 
-      - name: Build Docker image
-        if: github.event_name == 'pull_request'
-        run: docker build -f Dockerfile.web -t myimage:${{ github.sha }} .
+    outputs:
+      sha_short: ${{ steps.vars.outputs.sha_short }}
+
+  update-manifest:
+    name: Update Kubernetes Manifest
+    needs: deploy
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Import Secrets
+        uses: hashicorp/vault-action@v2.4.0
+        with:
+          url: ${{ secrets.VAULT_URL }}
+          token: ${{ secrets.VAULT_TOKEN }}
+          secrets: |
+            github/data/general/Stage-Manifest repo | MANIFEST_REPO ;
+            github/data/general/Stage-Manifest ssh-key | SSH_KEY ;
+
+      # Checkout the manifest repository using SSH
+      - name: Checkout Stage Manifest Repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.MANIFEST_REPO }}
+          ssh-key: ${{ env.SSH_KEY }}
+
+      # Update the image tag in the manifest
+      - name: Update Image Tag in Manifest
+        run: |
+          sed -i "s|image: rumsan/giga-mono-ntf2-admin:.*|image: rumsan/giga-mono-ntf2-admin:stage-${{ needs.deploy.outputs.sha_short }}|" ${{ env.ADMIN_MANIFEST_FILE }}
+          sed -i "s|image: rumsan/giga-mono-ntf2-api:.*|image: rumsan/giga-mono-ntf2-api:stage-${{ needs.deploy.outputs.sha_short }}|" ${{ env.API_MANIFEST_FILE }}
+          sed -i "s|image: rumsan/giga-mono-ntf2-web:.*|image: rumsan/giga-mono-ntf2-web:stage-${{ needs.deploy.outputs.sha_short }}|" ${{ env.WEB_MANIFEST_FILE }}
+
+      # Commit and push changes using SSH
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "sandab-rumsan"
+          git config user.email "sandab@rumsan.net"
+          git add ${{ env.ADMIN_MANIFEST_FILE }}
+          git add ${{ env.API_MANIFEST_FILE }}
+          git add ${{ env.WEB_MANIFEST_FILE }}
+          git commit -m "runner: Update Giga Stage image tag to stage-${{ needs.deploy.outputs.sha_short }}"
+          git push origin main

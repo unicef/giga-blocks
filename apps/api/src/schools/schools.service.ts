@@ -38,17 +38,17 @@ export class SchoolService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  async findAll(query: ListSchoolDto) {
+  async findAll(query: any) {
     const { page, perPage, minted, uploadId, name, country, connectivityStatus, orderBy, order } =
       query;
-    const cacheKey = getCacheKey(name, country, page, perPage);
+    const cacheKey = getCacheKey(name, country, page, perPage,minted);
     const cachedResult = await this.cacheManager.get<string>(cacheKey);
 
     if (cachedResult) return cachedResult;
 
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
-      ...((minted !==undefined && 'undefined')&& { minted }),
+      ...((minted !== 'undefined')&& { minted }),
       ...(uploadId && { uploadId }),
       ...(name && { name: { contains: name, mode: 'insensitive' } }),
       ...(country && { country: { contains: country, mode: 'insensitive' } }),
