@@ -17,7 +17,7 @@ Command to install dependencies:
 `pnpm install`
 
 Need pnpm for package management.
-
+    
 Installing packages in root of repo
 
 ```
