@@ -31,7 +31,6 @@ export default function ActivateSchool() {
   const { data: themeData, isLoading: themeLoading } =
     useSchoolThemeGet(themeFromParams);
 
-  // Set theme colors if we have themeFromParams and the theme data loaded
   useEffect(() => {
     if (themeFromParams && themeData?.colorScheme) {
       const { fontColor, bgColor } = themeData.colorScheme;
@@ -53,7 +52,7 @@ export default function ActivateSchool() {
     const donate = parseFloat(donation) || 0;
     return (base + gas + donate).toFixed(2);
   };
-  // https://beta-giga.rumsan.net/api/v1/schools/theme/green
+
   return (
     <div className="container">
       <div className="backButton">

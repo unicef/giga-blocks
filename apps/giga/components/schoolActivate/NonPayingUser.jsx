@@ -29,14 +29,12 @@ export default function NonPayingUser({
   const emailFromUrl = searchParams.get('email');
   const redirect = searchParams.get('redirect');
 
-  // Prefill email if present in URL
   useEffect(() => {
     if (emailFromUrl) {
       setEmail(emailFromUrl);
     }
   }, [emailFromUrl, setEmail]);
 
-  // Verify magic link if token/email/redirect are in URL
   useEffect(() => {
     if (token && emailFromUrl && redirect) {
       verifyMagicLink(
