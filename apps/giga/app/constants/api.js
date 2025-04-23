@@ -44,4 +44,8 @@ module.exports = {
     SEND: '/magic-link/send',
     VERIFY: 'magic-link/verify',
   },
+  THEME: {
+    GET: '/schools/themes',
+    POST: '/schools/themes',
+  },
 };

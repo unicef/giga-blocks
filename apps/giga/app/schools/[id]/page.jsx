@@ -13,19 +13,19 @@ import './_schoolDetails.scss';
 import { useThemeToggleStore } from '../../store/themeToggleStore';
 import { useThemeStore } from '../../store/themeStore';
 import { useSearchParams } from 'next/navigation';
+import { useThemeGet } from '../../hooks/useTheme';
 
 export default function SchoolDetails({ params }) {
   const { id } = params;
   const searchParams = useSearchParams();
   const { data, isLoading } = useSchoolDetails(id);
   const { giga_maps_data, theme, minted } = data || {};
+  const { data: themeOptions, isLoading: themeLoading } = useThemeGet();
   const isMinted = minted === 'MINTED';
   const isVisibleForMinted = useThemeToggleStore(
     (state) => state.isVisibleForMinted
   );
   const [selectedTheme, setSelectedTheme] = useState('white');
-
-  // Determine bgColor and fontColor
   const defaultFontColor = '#000';
   const defaultBgColor = '#fff';
 
@@ -58,26 +58,19 @@ export default function SchoolDetails({ params }) {
     { day: 'S', value: 120 },
   ];
 
-  // Theme options for non-minted schools
-  const themeOptions = [
-    { id: 'purple', colors: ['#FBECFE', '#c400ff'] },
-    { id: 'blue', colors: ['#c8e4ff', '#0078ff'] },
-    { id: 'green', colors: ['#c8ffdc', '#00ff73'] },
-  ];
-
   const fontColor = hasCustomTheme
     ? themeStore.fontColor
     : isMinted
-    ? theme?.colorScheme?.fontColor || defaultFontColor
-    : themeOptions.find((t) => t.id === selectedTheme)?.colors[1] ||
-      defaultFontColor;
+    ? theme?.colorScheme?.fontColor || '#000'
+    : themeOptions?.find((t) => t.name === selectedTheme)?.colorScheme
+        .fontColor || '#000';
 
   const bgColor = hasCustomTheme
     ? themeStore.bgColor
     : isMinted
-    ? theme?.colorScheme?.bgColor || defaultBgColor
-    : themeOptions.find((t) => t.id === selectedTheme)?.colors[0] ||
-      defaultBgColor;
+    ? theme?.colorScheme?.bgColor || '#fff'
+    : themeOptions?.find((t) => t.name === selectedTheme)?.colorScheme
+        .bgColor || '#fff';
 
   if (isLoading) return <h1>Loading....</h1>;
 
@@ -111,6 +104,7 @@ export default function SchoolDetails({ params }) {
                 setSelectedTheme={setSelectedTheme}
                 id={id}
                 linkActivation={linkActivation}
+                loading={themeLoading}
               />
             )}
 
