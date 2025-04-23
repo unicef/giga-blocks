@@ -42,7 +42,7 @@ export class MagicLinkService {
     console.log('Encoded Token:', encodedToken);
     if (otp) {
       if (redirectlink) WEB_LINK = redirectlink;
-      const link = `${WEB_LINK}?token=${encodedToken}&redirect=${WEB_LINK}`;
+      const link = `${WEB_LINK}&token=${encodedToken}&redirect=${WEB_LINK}`;
       this.mailService.sendMagicLink({ email: email, link });
       this.saveOtp(email, otp);
       return { success: true, msg: link };
