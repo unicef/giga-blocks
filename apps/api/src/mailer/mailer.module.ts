@@ -21,7 +21,10 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { QueueService } from './queue.service';
 import { ContributeDataService } from 'src/contribute/contribute.service';
 import { SchoolService } from 'src/schools/schools.service';
+import { MagicLinkService } from 'src/magic-link/magic-link.service';
+import { JwtModule } from '@nestjs/jwt';
 import { LinkactivationService } from 'src/linkactivation/linkactivation.service';
+import { ContributorService } from 'src/contributor/contributor.service';
 
 @Module({
   imports: [
@@ -80,8 +83,10 @@ import { LinkactivationService } from 'src/linkactivation/linkactivation.service
     ImageProcessor,
     ContributeDataService,
     ContributeProcessor,
+    MagicLinkService,
     SchoolService,
     LinkactivationService,
+    ContributorService
   ],
   exports: [MailService, QueueService],
 })
