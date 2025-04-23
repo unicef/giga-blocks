@@ -396,6 +396,7 @@ export class ImageProcessor {
   public async processImages(job: Job<any>) {
     const id = job.data.id;
     jobOptions.delay = 1000;
+    jobOptions.attempts = 6;
     this._logger.log(`Updating image of school: ${id}`);
 
     try {
