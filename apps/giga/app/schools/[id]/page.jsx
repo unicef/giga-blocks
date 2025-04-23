@@ -96,11 +96,11 @@ export default function SchoolDetails({ params }) {
         <div className="school-details__content">
           <div className="school-details__main">
             <Header
-              name={data.name}
-              school_type={data.school_type}
-              region_name={data.region_name}
-              longitude={data.longitude}
-              latitude={data.latitude}
+              name={data?.name}
+              school_type={data?.school_type}
+              region_name={data?.region_name}
+              longitude={data?.longitude}
+              latitude={data?.latitude}
               fontColor={fontColor}
             />
 
@@ -116,13 +116,13 @@ export default function SchoolDetails({ params }) {
 
             <SchoolStats fontColor={fontColor} weeklyData={weeklyData} />
             <SchoolOverview
-              updatedAt={data.updatedAt}
-              connectivity={data.connectivity}
-              coverage_availability={data.coverage_availability}
-              electricity_available={data.electricity_available}
-              region_name={data.region_name}
-              longitude={data.longitude}
-              latitude={data.latitude}
+              updatedAt={data?.updatedAt}
+              connectivity={data?.connectivity}
+              coverage_availability={data?.coverage_availability}
+              electricity_available={data?.electricity_available}
+              region_name={data?.region_name}
+              longitude={data?.longitude}
+              latitude={data?.latitude}
               gigaMapsData={giga_maps_data}
               fontColor={fontColor}
             />
@@ -130,7 +130,7 @@ export default function SchoolDetails({ params }) {
           <Sidebar
             fontColor={fontColor}
             minted={minted}
-            imageHash={data.imageHash}
+            imageHash={data?.imageHash}
           />
         </div>
       </div>

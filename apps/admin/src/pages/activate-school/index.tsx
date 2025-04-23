@@ -102,8 +102,8 @@ const ActivateSchool = () => {
                       <TableCell scope="row">
                         <a
                           target="_blank"
-                          href={`${BASE_URL}${row.id}`}
-                        >{`${BASE_URL}${row.id}`}</a>
+                          href={`${BASE_URL}/schools?linkActivation=${row.id}`}
+                        >{`${BASE_URL}/schools?linkActivation=${row.id}`}</a>
                       </TableCell>
                       <TableCell align="left">{row.name}</TableCell>
                       <TableCell align="left">

@@ -1,30 +1,67 @@
 'use client';
 
-import { TextInput, Button } from '@carbon/react';
-import { useActivateSchool } from '../../app/hooks/useSendMagicLink';
-import { InlineNotification } from '@carbon/react';
-import { useParams } from 'next/navigation';
-import { useState } from 'react';
+import { TextInput, Button, InlineNotification } from '@carbon/react';
+import {
+  useSendMagicLink,
+  useVerifyMagicLink,
+} from '../../app/hooks/useSendMagicLink';
+import { useParams, useSearchParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function NonPayingUser({ email, setEmail, linkActivation }) {
   const { id } = useParams();
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const { mutate, isPending, isSuccess, isError, error } = useActivateSchool();
+  const { mutate, isPending } = useSendMagicLink();
+  const { mutate: verifyMagicLink } = useVerifyMagicLink();
+
+  const token = searchParams.get('token');
+  const emailFromUrl = searchParams.get('email');
+  const redirect = searchParams.get('redirect');
+
+  // Prefill email if present in URL
+  useEffect(() => {
+    if (emailFromUrl) {
+      setEmail(emailFromUrl);
+    }
+  }, [emailFromUrl, setEmail]);
+
+  // Verify magic link if token/email/redirect are in URL
+  useEffect(() => {
+    if (token && emailFromUrl && redirect) {
+      verifyMagicLink(
+        { otp: token, email: emailFromUrl },
+        {
+          onSuccess: () => {
+            router.replace(redirect);
+          },
+          onError: (err) => {
+            const message =
+              err?.response?.data?.message || 'Link verification failed.';
+            setErrorMessage(message);
+            setShowError(true);
+          },
+        }
+      );
+    }
+  }, [token, emailFromUrl, redirect, verifyMagicLink, router]);
 
   const handleSubmit = () => {
     if (!email) return;
     mutate(
       {
         email,
-        redirectlink: `http://localhost:4200/schools/${id}/activate-school?linkActivation=${linkActivation}`,
+        redirectlink: `http://localhost:4200/schools/${id}/activate-school?linkActivation=${linkActivation}&email=${email}`,
       },
       {
         onSuccess: () => {
           setShowSuccess(true);
+          setShowError(false);
         },
         onError: (err) => {
           const message =
@@ -54,11 +91,10 @@ export default function NonPayingUser({ email, setEmail, linkActivation }) {
       {showSuccess && (
         <InlineNotification
           kind="success"
-          title="Success"
           subtitle="Magic link has been sent to your email."
-          caption=""
+          lowContrast
           onCloseButtonClick={() => setShowSuccess(false)}
-          timeout={3000}
+          timeout={5000}
           style={{ marginTop: '16px' }}
         />
       )}
@@ -68,8 +104,9 @@ export default function NonPayingUser({ email, setEmail, linkActivation }) {
           kind="error"
           title="Error"
           subtitle={errorMessage}
-          onClose={() => setShowError(false)}
           lowContrast
+          onCloseButtonClick={() => setShowError(false)}
+          timeout={5000}
           style={{ marginTop: '12px' }}
         />
       )}

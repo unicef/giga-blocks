@@ -42,5 +42,6 @@ module.exports = {
   },
   MAGICLINK: {
     SEND: '/magic-link/send',
+    VERIFY: 'magic-link/verify',
   },
 };
