@@ -162,7 +162,6 @@ export default function SchoolSearch({ linkActivation }) {
             className="filter-select"
             id="minted-select"
             labelText="Select Minted Status"
-            defaultValue="ALL"
             value={mintedStatus}
             onChange={(e) => {
               const value = e.target.value;
@@ -173,7 +172,7 @@ export default function SchoolSearch({ linkActivation }) {
               if (value === 'MINTED' || value === 'NOTMINTED') {
                 params.set('minted', value);
               } else {
-                params.delete('minted'); // if "ALL" selected
+                params.delete('minted');
               }
 
               router.push(`/schools?${params.toString()}`, {

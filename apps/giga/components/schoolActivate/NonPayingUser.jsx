@@ -5,8 +5,10 @@ import {
   useSendMagicLink,
   useVerifyMagicLink,
 } from '../../app/hooks/useSendMagicLink';
+import { useSchoolActivate } from '../../app/hooks/useSchool';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
 
 export default function NonPayingUser({
   email,
@@ -17,13 +19,16 @@ export default function NonPayingUser({
   const { id } = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
-
+  const { address: walletAddress } = useAccount();
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showActivateSuccess, setShowActivateSuccess] = useState(false);
+  const [showEmailVerify, setShowEmailVerify] = useState(false);
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const { mutate, isPending } = useSendMagicLink();
   const { mutate: verifyMagicLink } = useVerifyMagicLink();
+  const { mutate: activateSchool } = useSchoolActivate();
 
   const token = searchParams.get('token');
   const emailFromUrl = searchParams.get('email');
@@ -42,6 +47,7 @@ export default function NonPayingUser({
         {
           onSuccess: () => {
             router.push(redirect);
+            setShowEmailVerify(true);
           },
           onError: (err) => {
             const message =
@@ -78,6 +84,31 @@ export default function NonPayingUser({
     );
   };
 
+  const handleActivate = () => {
+    if (!email) return;
+    activateSchool(
+      {
+        email,
+        schoolId: id,
+        walletAddress,
+        themeId,
+      },
+      {
+        onSuccess: () => {
+          setShowActivateSuccess(true);
+        },
+        onError: () => {
+          const message =
+            err?.response?.data?.message ||
+            'Something went wrong. Please try again.';
+          setErrorMessage(message);
+          setShowError(true);
+          setShowSuccess(false);
+        },
+      }
+    );
+  };
+
   return (
     <div className="formGroup">
       <label className="label">Email</label>
@@ -101,6 +132,26 @@ export default function NonPayingUser({
           style={{ marginTop: '16px' }}
         />
       )}
+      {showEmailVerify && (
+        <InlineNotification
+          kind="success"
+          subtitle="Email verified successfully. You can activate the school now."
+          lowContrast
+          onCloseButtonClick={() => setShowSuccess(false)}
+          timeout={5000}
+          style={{ marginTop: '16px' }}
+        />
+      )}
+      {showActivateSuccess && (
+        <InlineNotification
+          kind="success"
+          subtitle="School has been activated successfully."
+          lowContrast
+          onCloseButtonClick={() => setShowSuccess(false)}
+          timeout={5000}
+          style={{ marginTop: '16px' }}
+        />
+      )}
 
       {showError && (
         <InlineNotification
@@ -114,14 +165,25 @@ export default function NonPayingUser({
         />
       )}
 
-      <div className="actionButtons" style={{ marginTop: '12px' }}>
-        <Button kind="secondary" disabled={isPending}>
-          Cancel
-        </Button>
-        <Button onClick={handleSubmit} disabled={isPending || !email}>
-          {isPending ? 'Verifying' : 'Verify'}
-        </Button>
-      </div>
+      {showEmailVerify ? (
+        <div className="actionButtons" style={{ marginTop: '12px' }}>
+          <Button kind="secondary" disabled={isPending}>
+            Cancel
+          </Button>
+          <Button onClick={handleActivate} disabled={isPending}>
+            {isPending ? 'Activating' : 'Activate'}
+          </Button>
+        </div>
+      ) : (
+        <div className="actionButtons" style={{ marginTop: '12px' }}>
+          <Button kind="secondary" disabled={isPending}>
+            Cancel
+          </Button>
+          <Button onClick={handleSubmit} disabled={isPending || !email}>
+            {isPending ? 'Verifying' : 'Verify'}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

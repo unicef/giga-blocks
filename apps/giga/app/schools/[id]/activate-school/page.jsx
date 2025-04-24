@@ -26,7 +26,7 @@ export default function ActivateSchool() {
   const [email, setEmail] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { fontColor, bgColor, selectedThemeName, setTheme } = useThemeStore();
+  const { fontColor, bgColor, selectedThemeId } = useThemeStore();
   const { data } = useSchoolDetails(id);
   const { data: themeData, isLoading: themeLoading } =
     useSchoolThemeGet(themeFromParams);
@@ -37,7 +37,6 @@ export default function ActivateSchool() {
       useThemeStore.getState().setTheme(fontColor, bgColor, themeFromParams);
     }
   }, [themeFromParams, themeData]);
-  console.log('themeData', themeData);
 
   const handleActivate = () => {
     setIsModalOpen(true);
