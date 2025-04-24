@@ -81,18 +81,51 @@ export class ContributorService {
       throw new Error('Contributor not found');
     }
 
-    const updatedNftReserved = Array.isArray(contributor.schoolreserved)
-      ? [...contributor.schoolreserved, data.schoolReserved].flat()
-      : [contributor.schoolreserved, data.schoolReserved].flat();
-
-    return this.prisma.contributor.update({
+    const updatedNftReserved =  Array.isArray(contributor.schoolreserved)
+      ? [...contributor.schoolreserved, data.schoolReserved].flat().filter(Boolean)
+      : [contributor.schoolreserved, data.schoolReserved].flat().filter(Boolean);
+    const updatedcontributor = await this.prisma.contributor.update({
       where: { userId },
       data: {
         nftReserved:true,
-        schoolreserved: updatedNftReserved,
-        totalNftMinted: +1,
+        schoolreserved: updatedNftReserved || [],
+        totalNftMinted: {increment:1},
         isVisible: data.isVisible,
       },
     });
+    return updatedcontributor;
+  }
+
+  async addPayingContributor(data:CreateContributor){
+    let walletAddress
+    let name = data?.name;
+    if (!data?.name) name = data?.walletAddress || data?.email;
+    if (data?.walletAddress)  walletAddress = hexStringToBuffer(data.walletAddress);
+    const existinguser = await this.prisma.user.findUnique({ where: { walletAddress: walletAddress } });
+    if(!existinguser){
+      const user = await this.prisma.user.create({
+        data: {
+          name,
+          email: data?.email,
+          walletAddress,
+          roles: [Role.CONTRIBUTOR],
+        },
+      });
+      if (user)
+        await this.prisma.contributor.create({
+          data: {
+            userId: user?.id,
+            isVisible: data.isVisible,
+            nftReserved: false,
+            nftClaimed: true,
+            totalNftMinted: +1,
+          },
+        });
+    }
+    else  await this.updateContributor(existinguser.id, data);
+    return {
+      message: 'Contributor added successfully',
+    }
+
   }
 }

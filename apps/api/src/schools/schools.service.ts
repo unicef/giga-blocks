@@ -28,11 +28,13 @@ import { NFTContent } from 'src/constants/contract';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { getCacheKey } from 'src/utils/cache/getCacheKey';
-import { ReserveNFTDto } from './dto/reserve-nft.dto';
+import { ReserveNFTDto, SchoolActivation } from './dto/reserve-nft.dto';
+import { ContributorService } from 'src/contributor/contributor.service';
 @Injectable()
 export class SchoolService {
   constructor(
     private prisma: PrismaAppService,
+    private contrubutorService: ContributorService,
     private readonly queueService: QueueService,
     private readonly configService: ConfigService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
@@ -435,6 +437,19 @@ export class SchoolService {
     const schoolMinted = await this.queueService.sendSingleMintNFT(data);
 
     return schoolMinted;
+  }
+
+  async activateSchool(data:SchoolActivation) {
+    const { schoolId, themeId, contributorData } = data;
+    await this.prisma.school.update({
+      where:{
+        id:schoolId
+      },
+      data:{
+        themeId:themeId
+      }
+    })
+    await this.contrubutorService.addPayingContributor(contributorData);
   }
 
   formatSchoolData(
