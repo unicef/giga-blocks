@@ -30,7 +30,7 @@ export default function ActivateSchool() {
   );
   const [email, setEmail] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { address,isConnected } = useAccount();
+  const { address, isConnected } = useAccount();
 
   const { fontColor, bgColor, selectedThemeName, themeId } = useThemeStore();
 
@@ -62,20 +62,18 @@ export default function ActivateSchool() {
   const mintSchool = useGigaBuyNft();
 
   const handleActivate = async () => {
-
     const args = [data?.giga_school_id, address, address, schoolData];
     const activationDetails = {
       schoolId: data?.id,
       themeId,
-      contributorData:{
-        walletAddress:address
-      }
-    }
+      contributorData: {
+        walletAddress: address,
+      },
+    };
     await mintSchool.mutateAsync({
       args,
       totalValue: total,
-      activationDetails
-
+      activationDetails,
     });
     // setIsModalOpen(true);
   };
@@ -129,7 +127,8 @@ export default function ActivateSchool() {
               donation={donation}
               setDonation={setDonation}
               handleActivate={handleActivate}
-              isConnected = {isConnected}
+              isConnected={isConnected}
+              selectedThemeName={selectedThemeName}
             />
           )}
         </div>
@@ -149,14 +148,20 @@ export default function ActivateSchool() {
               <span className="themeLabel">Selected Theme:</span>
               <div className="school-details__themes">
                 <div className="school-details__theme-option">
-                  <div
-                    className="school-details__theme-color"
-                    style={{ backgroundColor: bgColor }}
-                  />
-                  <div
-                    className="school-details__theme-color"
-                    style={{ backgroundColor: fontColor }}
-                  />
+                  {selectedThemeName ? (
+                    <>
+                      <div
+                        className="school-details__theme-color"
+                        style={{ backgroundColor: bgColor }}
+                      />
+                      <div
+                        className="school-details__theme-color"
+                        style={{ backgroundColor: fontColor }}
+                      />
+                    </>
+                  ) : (
+                    <p>Theme Not Selected</p>
+                  )}
                 </div>
               </div>
             </div>

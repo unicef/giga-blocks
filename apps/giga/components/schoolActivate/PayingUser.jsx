@@ -11,6 +11,7 @@ export default function StandardActivationForm({
   setDonation,
   handleActivate,
   isConnected,
+  selectedThemeName,
 }) {
   return (
     <>
@@ -84,7 +85,9 @@ export default function StandardActivationForm({
       <div className="actionButtons">
         <Button kind="secondary">Cancel</Button>
         {isConnected ? (
-          <Button onClick={handleActivate}>Activate</Button>
+          <Button onClick={handleActivate} disabled={!selectedThemeName}>
+            Activate
+          </Button>
         ) : (
           <div>
             <ConnectKitButton.Custom>
