@@ -8,6 +8,7 @@ import SchoolOverview from '../../../../components/schoolDetails/SchoolOverview'
 import SchoolStats from '../../../../components/schoolDetails/SchoolStats';
 import ThemeSelector from '../../../../components/schoolDetails/SchoolThemes';
 import Sidebar from '../../../../components/schoolDetails/Sidebar';
+import ClaimNft from '../../../../components/ClaimNFT/ClaimNft';
 import { useSchoolDetails } from '../../../hooks/useSchool';
 import './_schoolDetails.scss';
 import { useThemeToggleStore } from '../../../store/themeToggleStore';
@@ -86,6 +87,7 @@ export default function SchoolDetails({ params }) {
           <ArrowLeft size={20} /> Back
         </Link>
 
+        <ClaimNft />
         <div className="school-details__content">
           <div className="school-details__main">
             <Header
