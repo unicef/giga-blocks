@@ -449,7 +449,7 @@ export class SchoolService {
         themeId:themeId
       }
     })
-    await this.contrubutorService.addPayingContributor(contributorData);
+    return this.contrubutorService.addPayingContributor(contributorData);
   }
 
   formatSchoolData(

@@ -11,17 +11,18 @@ const Link = process.env.NEXT_PUBLIC_WEB_NAME;
 export class ContributorService {
   private readonly _logger = new Logger('Contributor Services');
   constructor(
-    private prisma: PrismaAppService, private mailService: MailService,
+    private prisma: PrismaAppService,
+    private mailService: MailService,
     private queueService: QueueService,
   ) {}
 
   async addContributor(data: CreateContributor) {
-    const {  email } = data;
-    let walletAddress
+    const { email } = data;
+    let walletAddress;
     let name = data?.name;
 
-    if (!data?.name) name =data?.walletAddress || email;
-    if (data?.walletAddress)  walletAddress = hexStringToBuffer(data.walletAddress);
+    if (!data?.name) name = data?.walletAddress || email;
+    if (data?.walletAddress) walletAddress = hexStringToBuffer(data.walletAddress);
     const existinguser = await this.prisma.user.findUnique({ where: { email } });
     if (existinguser) await this.updateContributor(existinguser.id, data);
     else {
@@ -65,12 +66,14 @@ export class ContributorService {
   async claimNft(email: string, wallet: any) {
     const walletAddress = hexStringToBuffer(wallet);
 
-    const user = await this.prisma.user.update({ where: { email },data: { walletAddress } });
-    const contributor = await this.prisma.contributor.findUnique({ where: { userId:user?.id } });
+    const user = await this.prisma.user.update({ where: { email }, data: { walletAddress } });
+    const contributor = await this.prisma.contributor.findUnique({ where: { userId: user?.id } });
 
     if (contributor.nftReserved) {
-      await this.prisma.contributor.update({ where: { userId:user?.id }, data: { nftClaimed: true } });
-
+      await this.prisma.contributor.update({
+        where: { userId: user?.id },
+        data: { nftClaimed: true },
+      });
     } else return { message: 'NFT not reserved' };
   }
 
@@ -81,28 +84,30 @@ export class ContributorService {
       throw new Error('Contributor not found');
     }
 
-    const updatedNftReserved =  Array.isArray(contributor.schoolreserved)
+    const updatedNftReserved = Array.isArray(contributor.schoolreserved)
       ? [...contributor.schoolreserved, data.schoolReserved].flat().filter(Boolean)
       : [contributor.schoolreserved, data.schoolReserved].flat().filter(Boolean);
     const updatedcontributor = await this.prisma.contributor.update({
       where: { userId },
       data: {
-        nftReserved:true,
+        nftReserved: true,
         schoolreserved: updatedNftReserved || [],
-        totalNftMinted: {increment:1},
+        totalNftMinted: { increment: 1 },
         isVisible: data.isVisible,
       },
     });
     return updatedcontributor;
   }
 
-  async addPayingContributor(data:CreateContributor){
-    let walletAddress
+  async addPayingContributor(data: CreateContributor) {
+    let walletAddress;
     let name = data?.name;
     if (!data?.name) name = data?.walletAddress || data?.email;
-    if (data?.walletAddress)  walletAddress = hexStringToBuffer(data.walletAddress);
-    const existinguser = await this.prisma.user.findUnique({ where: { walletAddress: walletAddress } });
-    if(!existinguser){
+    if (data?.walletAddress) walletAddress = hexStringToBuffer(data.walletAddress);
+    const existinguser = await this.prisma.user.findUnique({
+      where: { walletAddress: walletAddress },
+    });
+    if (!existinguser) {
       const user = await this.prisma.user.create({
         data: {
           name,
@@ -111,7 +116,7 @@ export class ContributorService {
           roles: [Role.CONTRIBUTOR],
         },
       });
-      if (user)
+      if (user) {
         await this.prisma.contributor.create({
           data: {
             userId: user?.id,
@@ -121,11 +126,8 @@ export class ContributorService {
             totalNftMinted: +1,
           },
         });
-    }
-    else  await this.updateContributor(existinguser.id, data);
-    return {
-      message: 'Contributor added successfully',
-    }
-
+      }
+    } else await this.updateContributor(existinguser.id, data);
+    return {sucess:true, message: 'Contributor added successfully' };
   }
 }

@@ -32,10 +32,9 @@ export const useGigaBuyNft = () => {
       });
     },
     onSuccess: async (result, variables) => {
-      console.log('activationData', variables.activationDetails);
       await activateSchool.mutateAsync(variables.activationDetails);
     },
-    onError: (error) => {
+    onError: async (error) => {
       console.error('Error in transaction:', error);
       toast.error('NFT Purchase Failed !!');
     },
