@@ -12,6 +12,7 @@ module.exports = {
   SCHOOLS: {
     GET: '/schools',
     ACTIVATE: '/schools/reserveNft',
+    PAIDACTIVATION:'/schools/activateSchool'
   },
   OTP: {
     REGISTER: '/auth/send-otp',

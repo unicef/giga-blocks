@@ -12,6 +12,8 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { useSchoolDetails } from '../../../hooks/useSchool';
 import { useSchoolThemeGet } from '../../../hooks/useTheme';
 import { useThemeStore } from '../../../store/themeStore';
+import { useGigaBuyNft } from '../../../hooks/useContract/giga-contracts';
+import { useAccount } from 'wagmi';
 
 export default function ActivateSchool() {
   const { id } = useParams();
@@ -23,8 +25,12 @@ export default function ActivateSchool() {
   const [baseFee, setBaseFee] = useState('0.01');
   const [gasFee, setGasFee] = useState('00');
   const [donation, setDonation] = useState('');
+  const [total, setTotal] = useState(
+    Number.parseFloat(baseFee) + Number.parseFloat(gasFee)
+  );
   const [email, setEmail] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { address } = useAccount();
 
   const { fontColor, bgColor, selectedThemeName, themeId } = useThemeStore();
 
@@ -41,19 +47,55 @@ export default function ActivateSchool() {
     }
   }, [themeFromParams, themeData]);
 
-  const handleActivate = () => {
-    setIsModalOpen(true);
+  const schoolData = [
+    data?.name,
+    data?.school_type,
+    data?.country,
+    data?.longitude,
+    data?.latitude,
+    data?.connectivity,
+    data?.coverage_availabitlity,
+    data?.electricity_availabilty,
+    data?.region_name,
+  ];
+
+  const mintSchool = useGigaBuyNft();
+
+  const handleActivate = async () => {
+
+    const args = [data?.giga_school_id, address, address, schoolData];
+    const activationDetails = {
+      schoolId: data?.id,
+      themeId,
+      contributorData:{
+        walletAddress:address
+      }
+    }
+    await mintSchool.mutateAsync({
+      args,
+      totalValue: total,
+      activationDetails
+
+    });
+    // setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
   const calculateTotal = () => {
     const base = parseFloat(baseFee) || 0;
     const gas = parseFloat(gasFee) || 0;
     const donate = parseFloat(donation) || 0;
-    return (base + gas + donate).toFixed(2);
+    const totalValue = (base + gas + donate).toFixed(2);
+    setTotal(totalValue);
+    return total;
   };
+
+  useEffect(() => {
+    calculateTotal();
+  }, [baseFee, gasFee, donation]);
 
   return (
     <div className="container">
@@ -121,7 +163,7 @@ export default function ActivateSchool() {
             {!linkActivation && (
               <div className="totalSection">
                 <div className="totalLabel">Grand Total</div>
-                <div className="totalAmount">{calculateTotal()} Eth</div>
+                <div className="totalAmount">{total} Eth</div>
               </div>
             )}
           </div>
