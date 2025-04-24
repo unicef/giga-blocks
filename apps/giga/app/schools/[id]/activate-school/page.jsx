@@ -30,7 +30,7 @@ export default function ActivateSchool() {
   );
   const [email, setEmail] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { address } = useAccount();
+  const { address,isConnected } = useAccount();
 
   const { fontColor, bgColor, selectedThemeName, themeId } = useThemeStore();
 
@@ -129,6 +129,7 @@ export default function ActivateSchool() {
               donation={donation}
               setDonation={setDonation}
               handleActivate={handleActivate}
+              isConnected = {isConnected}
             />
           )}
         </div>
