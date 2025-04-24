@@ -31,7 +31,7 @@ const ThemeSelector = ({
     if (selected?.colorScheme) {
       const { bgColor, fontColor } = selected.colorScheme || {};
       if (fontColor && bgColor) {
-        setTheme(fontColor, bgColor, selected.name);
+        setTheme(fontColor, bgColor, selected.name, selected.id);
       }
     }
   };

@@ -26,7 +26,8 @@ export default function ActivateSchool() {
   const [email, setEmail] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { fontColor, bgColor, selectedThemeId } = useThemeStore();
+  const { fontColor, bgColor, selectedThemeName, themeId } = useThemeStore();
+
   const { data } = useSchoolDetails(id);
   const { data: themeData, isLoading: themeLoading } =
     useSchoolThemeGet(themeFromParams);
@@ -34,7 +35,9 @@ export default function ActivateSchool() {
   useEffect(() => {
     if (themeFromParams && themeData?.colorScheme) {
       const { fontColor, bgColor } = themeData.colorScheme;
-      useThemeStore.getState().setTheme(fontColor, bgColor, themeFromParams);
+      useThemeStore
+        .getState()
+        .setTheme(fontColor, bgColor, themeFromParams, themeData?.id);
     }
   }, [themeFromParams, themeData]);
 
@@ -75,6 +78,7 @@ export default function ActivateSchool() {
               setEmail={setEmail}
               linkActivation={linkActivation}
               themeName={selectedThemeName}
+              themeId={themeId}
             />
           ) : (
             <PayingUser

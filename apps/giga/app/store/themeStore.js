@@ -1,10 +1,16 @@
 import { create } from 'zustand';
 
 export const useThemeStore = create((set) => ({
-  fontColor: '#000',
-  bgColor: '#fff',
+  themeId: null,
+  fontColor: '',
+  bgColor: '',
   selectedThemeName: null,
-  setTheme: (fontColor, bgColor, selectedThemeName = null) =>
-    set({ fontColor, bgColor, selectedThemeName }),
-  resetTheme: () => ({ fontColor: '', bgColor: '', selectedThemeName: null }),
+  setTheme: (fontColor, bgColor, selectedThemeName = null, themeId = null) =>
+    set({ fontColor, bgColor, selectedThemeName, themeId }),
+  resetTheme: () => ({
+    fontColor: '',
+    bgColor: '',
+    selectedThemeName: null,
+    themeId: null,
+  }),
 }));

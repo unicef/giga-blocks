@@ -15,8 +15,10 @@ export default function NonPayingUser({
   setEmail,
   linkActivation,
   themeName,
+  themeId,
 }) {
   const { id } = useParams();
+  console.log('themeId', themeId);
   const searchParams = useSearchParams();
   const router = useRouter();
   const { address: walletAddress } = useAccount();
@@ -92,6 +94,7 @@ export default function NonPayingUser({
         schoolId: id,
         walletAddress,
         themeId,
+        isVisible: true,
       },
       {
         onSuccess: () => {
