@@ -10,6 +10,7 @@ const ThemeSelector = ({
   setSelectedTheme,
   linkActivation,
   id,
+  loading,
 }) => {
   const router = useRouter();
 
@@ -27,9 +28,11 @@ const ThemeSelector = ({
   const handleThemeChange = (themeId) => {
     setSelectedTheme(themeId);
     const selected = themeOptions.find((t) => t.id === themeId);
-    if (selected) {
-      const [bgColor, fontColor] = selected.colors;
-      setTheme(fontColor, bgColor);
+    if (selected?.colorScheme) {
+      const { bgColor, fontColor } = selected.colorScheme || {};
+      if (fontColor && bgColor) {
+        setTheme(fontColor, bgColor, selected.name, selected.id);
+      }
     }
   };
   return (
@@ -41,23 +44,25 @@ const ThemeSelector = ({
       </p>
 
       <div className="school-details__themes">
-        {themeOptions.map((theme) => (
-          <button
-            key={theme.id}
-            className={`school-details__theme-option ${
-              selectedTheme === theme.id ? 'selected' : ''
-            }`}
-            onClick={() => handleThemeChange(theme.id)}
-          >
-            {theme.colors.map((color, index) => (
+        {!loading &&
+          themeOptions?.map((theme) => (
+            <button
+              key={theme.id}
+              className={`school-details__theme-option ${
+                selectedTheme === theme.id ? 'selected' : ''
+              }`}
+              onClick={() => handleThemeChange(theme.id)}
+            >
               <div
-                key={index}
                 className="school-details__theme-color"
-                style={{ backgroundColor: color }}
+                style={{ backgroundColor: theme.colorScheme?.fontColor }}
               />
-            ))}
-          </button>
-        ))}
+              <div
+                className="school-details__theme-color"
+                style={{ backgroundColor: theme.colorScheme?.bgColor }}
+              />
+            </button>
+          ))}
       </div>
 
       <p className="school-details__lorem">

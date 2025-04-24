@@ -1,0 +1,488 @@
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/type' as *;
+@use '@carbon/styles/scss/colors' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/breakpoint' as *;
+
+.school-details {
+  background-color: #f3f3f3;
+  min-height: 100vh;
+
+  &__container {
+    background-color: $white-0;
+    padding: 48px 80px;
+    @include breakpoint-down(lg) {
+      padding: 48px 24px;
+    }
+  }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-03;
+    color: $gray-70;
+    text-decoration: none;
+    margin-bottom: $spacing-05;
+
+    &:hover {
+      color: $gray-100;
+    }
+  }
+
+  &__header {
+    margin-bottom: $spacing-06;
+  }
+
+  &__title {
+    @include type-style('heading-05');
+    margin-bottom: $spacing-03;
+  }
+
+  &__level {
+    @include type-style('body-01');
+    color: $gray-70;
+    margin-bottom: $spacing-03;
+  }
+
+  &__location {
+    display: flex;
+    align-items: center;
+    gap: $spacing-03;
+    @include type-style('body-01');
+    color: $gray-70;
+  }
+
+  &__map-link {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-02;
+    color: $blue-60;
+    text-decoration: none;
+    margin-left: $spacing-03;
+
+    .rotate-45 {
+      transform: rotate(-45deg);
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__content {
+    display: flex;
+
+    @include breakpoint-down(md) {
+      flex-direction: column;
+    }
+  }
+
+  &__main {
+    flex: 1;
+    max-width: 60%;
+    padding-right: $spacing-06;
+
+    @include breakpoint-down(md) {
+      max-width: 100%;
+      padding-right: 0;
+      margin-bottom: $spacing-06;
+    }
+  }
+
+  &__sidebar {
+    width: 40%;
+
+    @include breakpoint-down(md) {
+      width: 100%;
+    }
+  }
+
+  &__image-placeholder {
+    background-color: $gray-80;
+    border-radius: 4px;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-05;
+    color: $white-0;
+    text-align: center;
+
+    p {
+      margin-top: $spacing-05;
+      @include type-style('body-01');
+    }
+  }
+
+  /* New styles for minted school display */
+  &__minted-container {
+    border-radius: 8px;
+    padding: 0 0 $spacing-05 0;
+    overflow: hidden;
+  }
+
+  &__minted-image-wrapper {
+    width: 100%;
+    position: relative;
+    aspect-ratio: 1/1;
+  }
+
+  &__minted-content {
+    padding: $spacing-05;
+  }
+
+  &__minted-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: $spacing-03;
+  }
+
+  &__minted-description {
+    font-size: 14px;
+    color: $gray-70;
+    margin-bottom: $spacing-05;
+    line-height: 1.5;
+  }
+
+  &__minted-link {
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__social-label {
+    font-size: 14px;
+    color: $gray-70;
+    margin-bottom: $spacing-04;
+  }
+
+  &__social-icons {
+    display: flex;
+    gap: $spacing-05;
+  }
+
+  &__social-icon {
+  }
+
+  &__section-title {
+    font-weight: 600;
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+
+  &__section-description {
+    @include type-style('body-01');
+    color: $gray-70;
+    margin-bottom: $spacing-05;
+  }
+
+  &__theme-selector {
+    background-color: $gray-10;
+    border-radius: 4px;
+    padding: $spacing-05;
+    margin-bottom: $spacing-06;
+  }
+
+  &__themes {
+    display: flex;
+    gap: $spacing-03;
+    margin-bottom: $spacing-05;
+  }
+
+  &__theme-option {
+    display: flex;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    padding: 4px;
+    cursor: pointer;
+    background: none;
+
+    &.selected {
+      border-color: $blue-60;
+    }
+  }
+
+  &__theme-color {
+    width: 24px;
+    height: 60px;
+    margin-right: 2px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  &__lorem {
+    @include type-style('body-01');
+    color: $gray-70;
+    margin-bottom: $spacing-05;
+  }
+
+  &__activate-btn {
+    display: flex;
+    align-items: center;
+    gap: $spacing-03;
+
+    .rotate-180 {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__stats {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: $spacing-05;
+    margin-bottom: $spacing-06;
+
+    @include breakpoint-down(lg) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__stat-cards {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-05;
+  }
+
+  &__stat-card {
+    border-radius: 4px;
+    border: 1px solid $gray-20;
+    padding: $spacing-05;
+    background-color: $white-0;
+  }
+
+  &__stat-header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+    justify-content: space-between;
+  }
+
+  &__stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+
+    &.download {
+      color: #666666;
+    }
+  }
+
+  &__stat-title {
+    @include type-style('heading-01');
+  }
+
+  &__stat-value {
+    display: flex;
+    align-items: center;
+    gap: $spacing-03;
+    margin-bottom: $spacing-05;
+  }
+
+  &__stat-number {
+    @include type-style('heading-04');
+    color: $gray-100;
+  }
+
+  &__stat-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    @include type-style('label-01');
+
+    &.good {
+      background-color: $green-20;
+      color: $green-70;
+    }
+  }
+
+  &__stat-detail {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    @include type-style('body-01');
+    margin-bottom: $spacing-03;
+    color: #334155;
+    p {
+      color: #666666;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__chart-card {
+    border-radius: 4px;
+    border: 1px solid $gray-20;
+    padding: $spacing-05;
+    background-color: $white-0;
+    height: 100%;
+  }
+
+  &__chart-tabs {
+    display: flex;
+    border-bottom: 1px solid $gray-20;
+    margin-bottom: $spacing-05;
+  }
+
+  &__chart-tab {
+    padding: $spacing-03 $spacing-05;
+    background: none;
+    border: none;
+    cursor: pointer;
+    @include type-style('body-01');
+    color: $gray-70;
+
+    &.active {
+      color: $blue-60;
+      border-bottom: 2px solid $blue-60;
+    }
+  }
+
+  &__chart-dates {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-03;
+    margin-bottom: $spacing-05;
+  }
+
+  &__chart-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    border: 1px solid $gray-30;
+    background: none;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__chart-date {
+    @include type-style('body-01');
+  }
+
+  &__chart {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 200px;
+    padding-top: $spacing-05;
+  }
+
+  &__chart-bar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  &__chart-bar {
+    width: 24px;
+    background-color: $gray-50;
+    border-radius: 4px 4px 0 0;
+  }
+
+  &__chart-label {
+    margin-top: $spacing-03;
+    @include type-style('label-01');
+    color: $gray-70;
+  }
+
+  &__overview {
+    margin-bottom: $spacing-06;
+  }
+
+  &__overview-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: $spacing-05;
+
+    @include breakpoint-down(md) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-03;
+    }
+  }
+
+  &__data-source {
+    @include type-style('body-01');
+    color: $gray-70;
+    margin-left: auto;
+    margin-right: $spacing-05;
+
+    @include breakpoint-down(md) {
+      margin-left: 0;
+    }
+  }
+
+  &__last-updated {
+    @include type-style('body-01');
+    color: $gray-70;
+    margin-bottom: $spacing-05;
+  }
+
+  &__overview-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: $spacing-05;
+    margin-bottom: $spacing-06;
+
+    @include breakpoint-down(md) {
+      grid-template-columns: repeat(1, 1fr);
+      grid-template-rows: auto;
+    }
+  }
+
+  &__overview-card {
+    border-radius: 8px;
+    border: 1px solid $gray-20;
+    padding: $spacing-05;
+    display: flex;
+    flex-direction: column;
+    background-color: $white-0;
+  }
+
+  &__overview-label {
+    display: flex;
+    align-items: center;
+    gap: $spacing-03;
+    color: $gray-70;
+    font-size: 16px;
+    margin-bottom: $spacing-04;
+
+    svg {
+      color: $gray-70;
+    }
+  }
+
+  &__overview-value {
+    font-size: 32px;
+    font-weight: 600;
+
+    &.checkmark {
+      font-size: 24px;
+    }
+  }
+
+  &__additional {
+    border: 1px solid $gray-20;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+}

@@ -11,6 +11,7 @@ module.exports = {
   },
   SCHOOLS: {
     GET: '/schools',
+    ACTIVATE: '/schools/reserveNft',
   },
   OTP: {
     REGISTER: '/auth/send-otp',
@@ -42,5 +43,11 @@ module.exports = {
   },
   MAGICLINK: {
     SEND: '/magic-link/send',
+    VERIFY: 'magic-link/verify',
+  },
+  THEME: {
+    GET: '/schools/themes',
+    SCHOOL: '/schools/theme',
+    POST: '/schools/themes',
   },
 };
