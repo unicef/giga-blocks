@@ -11,13 +11,15 @@ import './_claimNft.scss';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
+import { useThemeStore } from '../../app/store/themeStore';
+import { ConnectKitButton } from 'connectkit';
 
 export default function ClaimNFT() {
   const { id } = useParams();
   const router = useRouter();
   const { address, isConnected } = useAccount();
   const searchParams = useSearchParams();
-
+  const { cardColor } = useThemeStore();
   const [email, setEmail] = useState('');
   const [walletAddress, setWalletAddress] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
@@ -110,7 +112,7 @@ export default function ClaimNFT() {
   };
 
   return (
-    <div className="thank-you-container">
+    <div className="thank-you-container" style={{ background: cardColor }}>
       <div className="thank-you-content">
         <div className="thank-you-header">
           <span className="emoji" role="img" aria-label="celebration">
@@ -166,7 +168,7 @@ export default function ClaimNFT() {
             {showEmailVerify && (
               <InlineNotification
                 kind="success"
-                subtitle="Email verified successfully. You can activate the school now."
+                subtitle="Email verified successfully. Enter wallet address if not entered already."
                 lowContrast
                 onCloseButtonClick={() => setShowSuccess(false)}
                 timeout={5000}
@@ -203,7 +205,7 @@ export default function ClaimNFT() {
             >
               Verify
             </Button>
-          ) : (
+          ) : isConnected ? (
             <Button
               onClick={handleClaimSchool}
               className="claim-button"
@@ -211,6 +213,8 @@ export default function ClaimNFT() {
             >
               Claim
             </Button>
+          ) : (
+            <ConnectKitButton />
           )}
         </div>
       </div>
