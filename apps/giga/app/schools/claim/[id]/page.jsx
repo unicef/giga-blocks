@@ -13,11 +13,12 @@ import { useSchoolDetails } from '../../../hooks/useSchool';
 import './_schoolDetails.scss';
 import { useThemeToggleStore } from '../../../store/themeToggleStore';
 import { useThemeStore } from '../../../store/themeStore';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useThemeGet } from '../../../hooks/useTheme';
 
 export default function SchoolDetails({ params }) {
   const { id } = params;
+  const router = useRouter();
   const searchParams = useSearchParams();
   const { data, isLoading } = useSchoolDetails(id);
   const { giga_maps_data, theme, minted } = data || {};
@@ -30,11 +31,11 @@ export default function SchoolDetails({ params }) {
   const defaultFontColor = '#000';
   const defaultBgColor = '#fff';
 
-  useEffect(() => {
-    useThemeStore.getState().resetTheme();
-  }, []);
+  console.log('data', data);
 
   useEffect(() => {
+    useThemeStore.getState().resetTheme();
+
     if (!data) return;
 
     const { colorScheme } = data.theme || {};
@@ -42,6 +43,9 @@ export default function SchoolDetails({ params }) {
     const bgColor = colorScheme?.bgColor || defaultBgColor;
 
     useThemeStore.getState().setTheme(fontColor, bgColor);
+    if (data?.minted === 'MINTED' && data?.schoolClaimed === true) {
+      router.push(`/schools/${id}`);
+    }
   }, [data]);
 
   const themeStore = useThemeStore();

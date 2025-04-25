@@ -31,9 +31,7 @@ export default function SchoolDetails({ params }) {
 
   useEffect(() => {
     useThemeStore.getState().resetTheme();
-  }, []);
 
-  useEffect(() => {
     if (!data) return;
 
     const { colorScheme } = data.theme || {};

@@ -99,6 +99,8 @@ export default function NonPayingUser({
       {
         onSuccess: () => {
           setShowActivateSuccess(true);
+          setShowEmailVerify(false);
+          router.push(`/schools/claim/${id}`);
         },
         onError: () => {
           const message =
