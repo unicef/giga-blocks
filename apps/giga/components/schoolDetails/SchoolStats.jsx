@@ -2,13 +2,21 @@
 import { CheckmarkFilled, MeterAlt, NotAvailable } from '@carbon/icons-react';
 import { useState } from 'react';
 
-export default function SchoolStats({ fontColor, weeklyData, connectivity }) {
+export default function SchoolStats({
+  fontColor,
+  cardColor,
+  weeklyData,
+  connectivity,
+}) {
   const [selectedTab, setSelectedTab] = useState('weekly');
 
   return (
     <div className="school-details__stats">
       <div className="school-details__stat-cards">
-        <div className="school-details__stat-card">
+        <div
+          className="school-details__stat-card"
+          style={{ backgroundColor: cardColor, borderColor: fontColor }}
+        >
           <div
             style={{
               display: 'flex',
@@ -27,7 +35,10 @@ export default function SchoolStats({ fontColor, weeklyData, connectivity }) {
           </div>
         </div>
 
-        <div className="school-details__stat-card">
+        <div
+          className="school-details__stat-card"
+          style={{ backgroundColor: cardColor, borderColor: fontColor }}
+        >
           <div className="school-details__stat-header">
             <div className="school-details__stat-icon download">
               <MeterAlt size={16} />
@@ -55,7 +66,10 @@ export default function SchoolStats({ fontColor, weeklyData, connectivity }) {
         </div>
       </div>
 
-      <div className="school-details__chart-card">
+      <div
+        className="school-details__chart-card"
+        style={{ backgroundColor: cardColor, borderColor: fontColor }}
+      >
         <div className="school-details__chart-tabs">
           <button
             className={`school-details__chart-tab ${

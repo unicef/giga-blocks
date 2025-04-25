@@ -26,7 +26,8 @@ export default function ActivateSchool() {
   const [email, setEmail] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { fontColor, bgColor, selectedThemeName, themeId } = useThemeStore();
+  const { fontColor, cardColor, bgColor, selectedThemeName, themeId } =
+    useThemeStore();
 
   const { data } = useSchoolDetails(id);
   const { data: themeData, isLoading: themeLoading } =
@@ -34,10 +35,16 @@ export default function ActivateSchool() {
 
   useEffect(() => {
     if (themeFromParams && themeData?.colorScheme) {
-      const { fontColor, bgColor } = themeData.colorScheme;
+      const { fontColor, cardColor, bgColor } = themeData.colorScheme;
       useThemeStore
         .getState()
-        .setTheme(fontColor, bgColor, themeFromParams, themeData?.id);
+        .setTheme(
+          fontColor,
+          cardColor,
+          bgColor,
+          themeFromParams,
+          themeData?.id
+        );
     }
   }, [themeFromParams, themeData]);
 
@@ -109,6 +116,10 @@ export default function ActivateSchool() {
                   <div
                     className="school-details__theme-color"
                     style={{ backgroundColor: bgColor }}
+                  />
+                  <div
+                    className="school-details__theme-color"
+                    style={{ backgroundColor: cardColor }}
                   />
                   <div
                     className="school-details__theme-color"

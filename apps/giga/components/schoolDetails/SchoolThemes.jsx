@@ -29,9 +29,9 @@ const ThemeSelector = ({
     setSelectedTheme(themeId);
     const selected = themeOptions.find((t) => t.id === themeId);
     if (selected?.colorScheme) {
-      const { bgColor, fontColor } = selected.colorScheme || {};
+      const { bgColor, cardColor, fontColor } = selected.colorScheme || {};
       if (fontColor && bgColor) {
-        setTheme(fontColor, bgColor, selected.name, selected.id);
+        setTheme(fontColor, cardColor, bgColor, selected.name, selected.id);
       }
     }
   };
@@ -56,6 +56,10 @@ const ThemeSelector = ({
               <div
                 className="school-details__theme-color"
                 style={{ backgroundColor: theme.colorScheme?.fontColor }}
+              />
+              <div
+                className="school-details__theme-color"
+                style={{ backgroundColor: theme.colorScheme?.cardColor }}
               />
               <div
                 className="school-details__theme-color"
