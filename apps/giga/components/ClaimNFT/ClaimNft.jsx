@@ -95,6 +95,7 @@ export default function ClaimNFT() {
         onSuccess: () => {
           setShowSchoolClaim(true);
           setShowError(false);
+          router.push(`/schools/${id}`);
         },
         onError: (err) => {
           const message =
