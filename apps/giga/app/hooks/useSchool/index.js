@@ -36,3 +36,12 @@ export const useSchoolActivate = () => {
     },
   });
 };
+
+export const useClaimSchool = () => {
+  return useMutation({
+    mutationFn: async (payload) => {
+      const { data } = await apiGuest.post(SCHOOLS.CLAIM, payload);
+      return data;
+    },
+  });
+};
