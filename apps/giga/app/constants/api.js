@@ -51,4 +51,7 @@ module.exports = {
     SCHOOL: '/schools/theme',
     POST: '/schools/themes',
   },
+  GAS_FEE:{
+    GET: process.env.NEXT_PUBLIC_GAS_API
+  }
 };

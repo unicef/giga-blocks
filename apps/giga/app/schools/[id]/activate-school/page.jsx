@@ -9,11 +9,13 @@ import ActivationModal from '../../../../components/schoolActivate/ActivationMod
 import './_activate.scss';
 import '../_schoolDetails.scss';
 import { useParams, useSearchParams } from 'next/navigation';
-import { useSchoolDetails } from '../../../hooks/useSchool';
+import {  useSchoolDetails } from '../../../hooks/useSchool';
 import { useSchoolThemeGet } from '../../../hooks/useTheme';
 import { useThemeStore } from '../../../store/themeStore';
 import { useGigaBuyNft } from '../../../hooks/useContract/giga-contracts';
 import { useAccount } from 'wagmi';
+import { setTimeout } from 'timers';
+import { getGasPrice } from '../../../utils/gasFee';
 
 export default function ActivateSchool() {
   const { id } = useParams();
@@ -32,11 +34,23 @@ export default function ActivateSchool() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { address, isConnected } = useAccount();
 
+  const contractAddress = process.env.NEXT_PUBLIC_GIGA_NFT_CONTRACT_ADDRESS
+
   const { fontColor, bgColor, selectedThemeName, themeId } = useThemeStore();
 
   const { data } = useSchoolDetails(id);
   const { data: themeData, isLoading: themeLoading } =
     useSchoolThemeGet(themeFromParams);
+  
+  useEffect(async( )=>{
+    const gasFee = await getGasPrice();
+    setGasFee(gasFee);
+    setTimeout(() => {
+      setGasFee(gasFee);
+    }
+    , 1000);
+    
+  },[])
 
   useEffect(() => {
     if (themeFromParams && themeData?.colorScheme) {
@@ -73,6 +87,7 @@ export default function ActivateSchool() {
     await mintSchool.mutateAsync({
       args,
       totalValue: total,
+      contractAddress,
       activationDetails,
     });
     // setIsModalOpen(true);
@@ -86,7 +101,7 @@ export default function ActivateSchool() {
     const base = parseFloat(baseFee) || 0;
     const gas = parseFloat(gasFee) || 0;
     const donate = parseFloat(donation) || 0;
-    const totalValue = (base + gas + donate).toFixed(2);
+    const totalValue = (base + gas + donate);
     setTotal(totalValue);
     return total;
   };

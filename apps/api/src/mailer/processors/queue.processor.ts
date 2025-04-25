@@ -233,7 +233,7 @@ export class MintQueueProcessor {
     let status = true;
     const tx = await mintNFT(
       'NFT',
-      this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
+      this._configService.get<string>('NEXT_PUBLIC_GIGA_NFT_CONTRACT_ADDRESS'),
       job.data.mintData,
       job.data.giga_ids,
     );
@@ -272,7 +272,7 @@ export class MintQueueProcessor {
     try {
       const tx = await mintSingleNFT(
         'NFT',
-        this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
+        this._configService.get<string>('NEXT_PUBLIC_GIGA_NFT_CONTRACT_ADDRESS'),
         job.data.mintData,
         job.data.giga_id,
       );

@@ -24,7 +24,6 @@ export const useGigaBuyNft = () => {
       activationDetails: any;
     }) => {
       const weiValue = parseUnits(totalValue.toString(), etherUnits.wei);
-
       return contract.writeContractAsync({
         args: args,
         contractAddress: contractAddress,
