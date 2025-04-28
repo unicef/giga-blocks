@@ -1,66 +1,58 @@
 <html>
-
-  <body style='font-family:Poppins,Helvetica,Arial,sans-serif;'>
-    <div style='width: 100%; margin-top: 20px;'>
+  <body
+    style='margin: 0; padding: 0; background-color: #fce7f3; font-family: Poppins, Helvetica, Arial, sans-serif;'
+  >
+    <div style='width: 100%; padding: 40px 20px; box-sizing: border-box;'>
       <div
-        style='width: 80%; max-width: 500px ; margin: auto; border: 1px solid rgb(214, 214, 214); border-radius: 5px; padding: 30px; gap: 25px;'
+        style='max-width: 600px; margin: auto; background-color: #fce7f3; border-radius: 12px; text-align: center; padding: 40px 30px;'
       >
-        <div style='text-align: center;'>
-          <p style='font-size: 20px; font-weight: 600; width: 70%; margin: auto'>Email Verfication</p>
-            
-        </div>
-        <div style='border-top: 1px solid rgb(226, 226, 226); padding-top: 20px; margin-top: 30px'>
-          <p style='font-size: 10px; color: gray; text-align: center; margin-top: 25px;'>
-            Link for email verification will expire in 24 hours.
-            <a href='{{link}}' style='color: #007bff; text-decoration: none; font-size: 12px;'>
-              Click here to verify your email
-            <br />
-          </p>
-        </div>
-      </div>
-      <table border='0' cellpadding='0' cellspacing='0' width='100%' class='footer'>
-        <tbody>
-          <tr>
-            <td style='padding: 0px 10px 20px;' align='center' valign='top' class='footerLinks'>
-              <p
-                class='text'
-                style="color:#bbb;font-family:'Open Sans',Helvetica,Arial,sans-serif;font-size:12px;font-weight:400;font-style:normal;letter-spacing:normal;line-height:20px;text-transform:none;text-align:center;padding:0;margin:0"
-              >
-                <a href='#' style='color:#bbb;text-decoration:underline' target='_blank'>View Web
-                  Version
-                </a>&nbsp;|&nbsp;
-                <a href='#' style='color:#bbb;text-decoration:underline' target='_blank'>Email
-                  Preferences
-                </a>&nbsp;|&nbsp;
-                <a href='#' style='color:#bbb;text-decoration:underline' target='_blank'>Privacy
-                  Policy</a>
-              </p>
-            </td>
-          </tr>
-          <tr>
-            <td style='padding: 0px 10px 10px;' align='center' valign='top' class='footerEmailInfo'>
-              <p
-                class='text'
-                style="color:#bbb;font-family:'Open Sans',Helvetica,Arial,sans-serif;font-size:12px;font-weight:400;font-style:normal;letter-spacing:normal;line-height:20px;text-transform:none;text-align:center;padding:0;margin:0"
-              >
-                If you have any questions please contact us
-                <a
-                  href='mailto:{{emailurl}}'
-                  style='color:#bbb;text-decoration:underline'
-                  target='_blank'
-                >
-                  {{emailurl}}</a>
-                <br />
 
-              </p>
-            </td>
-          </tr>
-          <tr>
-            <td style='font-size:1px;line-height:1px' height='30'>&nbsp;</td>
-          </tr>
-        </tbody>
-      </table>
+        <!-- Heart Icon -->
+        <div
+          style='background-color: #db2777; color: white; font-size: 32px; width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: auto;'
+        >
+          ❤️
+        </div>
+
+        <!-- Info Message -->
+        <p style='font-size: 14px; color: #374151; margin: 0 auto 20px; max-width: 90%;'>
+          Thank you for supporting globa; education by activating this school on Giga Block. As a
+          token of appreciation, you can now clain your commemorative NFT.
+        </p>
+
+        <!-- Verification Link -->
+        <p style='margin-top: 10px;'>
+          <a
+            href='{{link}}'
+            style='color: #2563eb; font-size: 14px; font-weight: 500; text-decoration: underline;'
+          >
+            Click here to verify your email
+          </a>
+        </p>
+
+      </div>
+
+      <!-- Footer -->
+      <div style='text-align: center; font-size: 12px; color: #888; margin-top: 40px;'>
+        <p style='margin: 4px 0;'>
+          <a href='#' style='color: #888; text-decoration: underline;' target='_blank'>View Web
+            Version</a>
+          &nbsp;|&nbsp;
+          <a href='#' style='color: #888; text-decoration: underline;' target='_blank'>Email
+            Preferences</a>
+          &nbsp;|&nbsp;
+          <a href='#' style='color: #888; text-decoration: underline;' target='_blank'>Privacy
+            Policy</a>
+        </p>
+        <p style='margin: 4px 0;'>
+          If you have any questions please contact us at
+          <a
+            href='mailto:{{emailurl}}'
+            style='color: #888; text-decoration: underline;'
+          >{{emailurl}}</a>
+        </p>
+        <p style='margin-top: 30px; font-weight: 600; color: #111;'>Giga Blocks</p>
+      </div>
     </div>
   </body>
-
 </html>
