@@ -1,6 +1,6 @@
 'use client';
 import { SCHOOLS } from '../../constants/api';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { apiGuest } from '../../utils/api';
 
 export const useSchoolGet = (page, perPage, name, country, minted) => {
@@ -27,3 +27,21 @@ export const useSchoolDetails = (id) => {
     return data;
   });
 };
+
+export const useSchoolActivate = () => {
+  return useMutation({
+    mutationFn: async (payload) => {
+      const { data } = await apiGuest.post(SCHOOLS.ACTIVATE, payload);
+      return data;
+    },
+  });
+};
+
+export const useSchoolPaidActivation = () =>{
+  return useMutation({
+    mutationFn: async (payload) => {
+      const { data } = await apiGuest.post(SCHOOLS.PAIDACTIVATION, payload);
+      return data;
+    },
+  });
+}

@@ -11,6 +11,8 @@ module.exports = {
   },
   SCHOOLS: {
     GET: '/schools',
+    ACTIVATE: '/schools/reserveNft',
+    PAIDACTIVATION:'/schools/activateSchool'
   },
   OTP: {
     REGISTER: '/auth/send-otp',
@@ -42,5 +44,14 @@ module.exports = {
   },
   MAGICLINK: {
     SEND: '/magic-link/send',
+    VERIFY: 'magic-link/verify',
   },
+  THEME: {
+    GET: '/schools/themes',
+    SCHOOL: '/schools/theme',
+    POST: '/schools/themes',
+  },
+  GAS_FEE:{
+    GET: process.env.NEXT_PUBLIC_GAS_API
+  }
 };

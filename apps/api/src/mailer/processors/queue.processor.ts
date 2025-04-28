@@ -233,7 +233,7 @@ export class MintQueueProcessor {
     let status = true;
     const tx = await mintNFT(
       'NFT',
-      this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
+      this._configService.get<string>('NEXT_PUBLIC_GIGA_NFT_CONTRACT_ADDRESS'),
       job.data.mintData,
       job.data.giga_ids,
     );
@@ -272,7 +272,7 @@ export class MintQueueProcessor {
     try {
       const tx = await mintSingleNFT(
         'NFT',
-        this._configService.get<string>('GIGA_NFT_CONTRACT_ADDRESS'),
+        this._configService.get<string>('NEXT_PUBLIC_GIGA_NFT_CONTRACT_ADDRESS'),
         job.data.mintData,
         job.data.giga_id,
       );
@@ -446,7 +446,7 @@ export class ImageProcessor {
     );
     const base64Image = await generateP5Image(`${artScript}`, scriptData);
     const decodedImage = await decodeBase64Image(base64Image);
-    if (decodedImage) {
+    try{if (decodedImage) {
       await uploadFile(decodedImage.data)
         .then(async res => {
           await updateImageHash(
@@ -463,6 +463,9 @@ export class ImageProcessor {
         .catch(err => {
           console.log(err);
         });
+    }}
+    catch (error) {
+      this._logger.error(`Error updating image: ${error}`);
     }
   }
 }

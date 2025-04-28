@@ -19,8 +19,8 @@ export function Providers({ children }) {
             <Theme theme="g100">
               <Navbar />
             </Theme>
-          </ConnectKitProvider>
           <Content>{children}</Content>
+          </ConnectKitProvider>
         </WagmiProvider>
       </QueryProvider>
     </div>

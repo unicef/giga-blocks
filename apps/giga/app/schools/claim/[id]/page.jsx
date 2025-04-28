@@ -3,17 +3,17 @@
 import { ArrowLeft } from '@carbon/icons-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import Header from '../../../components/schoolDetails/SchoolHeader';
-import SchoolOverview from '../../../components/schoolDetails/SchoolOverview';
-import SchoolStats from '../../../components/schoolDetails/SchoolStats';
-import ThemeSelector from '../../../components/schoolDetails/SchoolThemes';
-import Sidebar from '../../../components/schoolDetails/Sidebar';
-import { useSchoolDetails } from '../../hooks/useSchool';
+import Header from '../../../../components/schoolDetails/SchoolHeader';
+import SchoolOverview from '../../../../components/schoolDetails/SchoolOverview';
+import SchoolStats from '../../../../components/schoolDetails/SchoolStats';
+import ThemeSelector from '../../../../components/schoolDetails/SchoolThemes';
+import Sidebar from '../../../../components/schoolDetails/Sidebar';
+import { useSchoolDetails } from '../../../hooks/useSchool';
 import './_schoolDetails.scss';
-import { useThemeToggleStore } from '../../store/themeToggleStore';
-import { useThemeStore } from '../../store/themeStore';
+import { useThemeToggleStore } from '../../../store/themeToggleStore';
+import { useThemeStore } from '../../../store/themeStore';
 import { useSearchParams } from 'next/navigation';
-import { useThemeGet } from '../../hooks/useTheme';
+import { useThemeGet } from '../../../hooks/useTheme';
 
 export default function SchoolDetails({ params }) {
   const { id } = params;

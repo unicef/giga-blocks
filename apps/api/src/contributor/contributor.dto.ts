@@ -17,7 +17,7 @@ export class CreateContributor {
   })
   @IsEmail()
   @IsString()
-  email: string;
+  email?: string;
 
   @ApiProperty({
     example: 'uuid',

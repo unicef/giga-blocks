@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsEmail, IsOptional, IsString } from 'class-validator';
+import { CreateContributor } from 'src/contributor/contributor.dto';
 
 export class ReserveNFTDto {
   @ApiProperty({
@@ -68,4 +69,33 @@ export class claimReservedNFT {
   })
   @IsString()
   walletAddress: string;
+}
+
+export class SchoolActivation{
+
+  @ApiProperty({
+    description: 'School ID to mint',
+    example: 'uuid',
+    required: true,
+  })
+  @IsString()
+  schoolId: string;
+
+  @ApiProperty({
+    description: 'ID of theme',
+    example: 'uuid',
+    required: false,
+  })
+  @IsString()
+  themeId: string;
+
+  @ApiProperty({
+    description:'Contributor Details',
+    example:{
+      name:'Joe',
+      isVisible:true,
+      walletAddress:'0x1f2f6f7952550D4388f9A3fd91A8CdcFbC439978'
+    }
+  })
+  contributorData: CreateContributor;
 }
