@@ -24,14 +24,18 @@ import {
   SET_UPLOAD_PROCESS,
   SET_CSV_MINT,
   SET_THEME,
+  RESERVE_NFT,
+  CLAIM_NFT
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 import {
+  claimNft,
   getArtScript,
   getScriptData,
   mintNFT,
   mintSingleNFT,
+  reserveNft,
   updateImageHash,
 } from 'src/utils/ethers/transactionFunctions';
 import { PrismaAppService } from 'src/prisma/prisma.service';
@@ -44,7 +48,7 @@ import generateP5Image from 'src/p5/generateP5';
 import decodeBase64Image from 'src/utils/ipfs/decodeImage';
 import uploadFile from 'src/utils/ipfs/ipfsAdd';
 import { hexStringToBuffer } from 'src/utils/string-format';
-import { MagicLinkService } from 'src/magic-link/magic-link.service';
+import { ContributorService } from 'src/contributor/contributor.service';
 
 @Injectable()
 @Processor(ONCHAIN_DATA_QUEUE)
@@ -54,6 +58,7 @@ export class QueueProcessor {
   constructor(
     private readonly _mailerService: MailerService,
     private readonly _configService: ConfigService,
+    private contributorService: ContributorService,
   ) {}
 
   @OnQueueActive()
@@ -97,6 +102,25 @@ export class QueueProcessor {
       this._logger.error(`Failed to send transactions to blockchain`);
     }
   }
+
+  @Process(CLAIM_NFT)
+  public async claimNft(
+    job: Job<{  email: string; walletAddress: string }>,
+  ) {
+    this._logger.log(`Sending transaction to blockchain`);
+    const email = job.data.email;
+    const walletAddress = job.data.walletAddress;
+    try {
+      const tx = await claimNft(walletAddress, email);
+      if(tx){
+        this.contributorService.claimNft(
+          job.data.email,
+          job.data.walletAddress)
+      }
+    } catch (error) {
+      this._logger.error(`Failed to send transactions to blockchain`);
+    }
+  }
 }
 
 @Injectable()
@@ -108,7 +132,7 @@ export class MintQueueProcessor {
     private readonly _mailerService: MailerService,
     private readonly _configService: ConfigService,
     private readonly _prismaService: PrismaAppService,
-    private readonly _magicLinkService: MagicLinkService,
+    private contributorService: ContributorService,
     @InjectQueue(MINT_QUEUE) private readonly _mintQueue: Queue,
     @InjectQueue(IMAGE_QUEUE) private readonly _imageQueue: Queue,
   ) {}
@@ -175,7 +199,7 @@ export class MintQueueProcessor {
   public async sendDBUpdate(
     job: Job<{
       status: MintStatus;
-      ids: string[];
+      ids: string[] ;
       themeId?: string;
       email?: string;
       walletAddress?: string;
@@ -183,11 +207,6 @@ export class MintQueueProcessor {
     }>,
   ) {
     this._logger.log(`Updating database`);
-    console.log(job.data.email);
-    await this._magicLinkService.sendMagicLink({
-      email: job.data.email,
-      redirectlink: 'https://www.google.com',
-    });
     // Update theme ID and school to minted
     const schools = await this._prismaService.school.updateMany({
       where: {
@@ -200,33 +219,16 @@ export class MintQueueProcessor {
         themeId: job.data.themeId,
       },
     });
-    // Create or update contributor
-    // await this._prismaService.contributor.upsert({
-    //   where: { email: job.data.email },
-    //   create: {
-    //     email: job.data.email,
-    //     totalNftMinted: 1,
-    //     walletAddress: hexStringToBuffer(job.data.walletAddress),
-    //     schoolId: job.data.ids,
-    //   },
-    //   update: { totalNftMinted: { increment: 1 }, schoolId: { push: job.data.ids } },
-    // });
-
-    // await this._magicLinkService.sendMagicLink({
-    //   email: job.data.email,
-    //   redirectlink: 'https://www.google.com',
-    // });
 
     if (schools.count !== job.data.ids.length) {
       throw new Error(`No. of schools updated in database is not equal to no of schools minted`);
     }
   }
 
-  @Process({ name: SET_MINT_NFT, concurrency: 1 })
+  @Process(SET_MINT_NFT)
   public async sendMintNFT(
     job: Job<{ mintData: SchoolData[]; ids: string[]; giga_ids: string[] }>,
   ) {
-    await new Promise(resolve => setTimeout(resolve, 5000));
     this._logger.log(`Sending mint nft to blockchain`);
     let status = true;
     const tx = await mintNFT(
@@ -242,9 +244,9 @@ export class MintQueueProcessor {
 
     if (txReceipt.status === 1) {
       try {
-        this._imageQueue.add(SET_THEME, { schoolids: job.data.giga_ids }, jobOptions);
+         this._mintQueue.add(SET_THEME,{schoolids:job.data.giga_ids},jobOptions);
         for (let i = 0; i < job.data.giga_ids.length; i++) {
-          this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_ids[i] }, jobOptions);
+           this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_ids[i] }, jobOptions);
         }
       } catch (error) {
         this._logger.log(`Error generating image: ${error}`);
@@ -258,7 +260,7 @@ export class MintQueueProcessor {
   public async sendSingleMintNFT(
     job: Job<{
       mintData: SchoolData;
-      ids: string[];
+      id: string;
       giga_id: string;
       email?: string;
       themeId?: string;
@@ -280,8 +282,9 @@ export class MintQueueProcessor {
       }
       if (txReceipt.status === 1) {
         try {
-          this._imageQueue.add(SET_THEME, { schoolids: [job.data.giga_id] }, jobOptions);
-          this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_id }, jobOptions);
+          // function to reserve the NFT
+          this._mintQueue.add(RESERVE_NFT, { giga_school_id: job.data.giga_id, email: job.data.email,schoolId:job?.data?.id }, jobOptions);
+           this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_id }, jobOptions);
         } catch (error) {
           this._logger.log(`Error generating image: ${error}`);
         }
@@ -289,10 +292,9 @@ export class MintQueueProcessor {
     } catch (error) {
       console.log(error);
     }
-
     return this.statusCheckandDBUpdate(
       status,
-      job.data.ids,
+      [job.data.id],
       job.data.themeId,
       job.data.email,
       txReceipt.hash,
@@ -330,28 +332,54 @@ export class MintQueueProcessor {
     }
   }
 
-  // @Process(SET_CSV_MINT)
-  // public async processCSV(job: Job<{batchId:string}>){
-  //   const batchId = job.data.batchId;
-  //   const schools = await this._prismaService.school.findMany({
-  //     where:{
-  //       uploadId:batchId
-  //     }
-  //   });
-  //   let mintData = [];
-  //   let ids = [];
-  //   let giga_ids = [];
-  //   for(const school of schools){
-  //     mintData.push({
+  @Process(SET_THEME)
+  public async processTheme(job: Job<{schoolids:[]}>){
+   const schoolIds = job.data.schoolids;
+   const themes = await this._prismaService.theme.findMany({});
+   for (const schoolId of schoolIds) {
+    const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+    try{
+      const school = await this._prismaService.school.update({
+      where: {
+        giga_school_id: schoolId,
+      },
+      data: {
+        themeId: randomTheme.id,
+      },
+   });
+  }
+    catch(err){
+      console.log(err);
+    }
+  }
 
-  //     })
+  }
 
-  //     ids.push(school.id);
-  //     giga_ids.push(school.giga_school_id);
-  //   }
-  //   await this._mintQueue.add(SET_MINT_NFT,{mintData,ids,giga_ids},jobOptions);
+  @Process(RESERVE_NFT)
+  public async reserveNft(job: Job<{ giga_school_id: string; email: string ,schoolId:string,walletAddress?: string}>) {
+    const schoolId = job.data.schoolId;
+    const email = job.data.email;
+    const giga_school_id = job.data.giga_school_id;
+    try {
+      const tx =  await reserveNft(
+        giga_school_id,
+        email
+       )
+       const txReceipt = await tx.wait();
 
-  // }
+       if(txReceipt.status === 1){
+        this.contributorService.addContributor({
+          email: job.data.email,
+          walletAddress: job.data.walletAddress,
+          schoolReserved: schoolId
+        })
+       }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  
 }
 
 @Injectable()
@@ -396,73 +424,45 @@ export class ImageProcessor {
   public async processImages(job: Job<any>) {
     const id = job.data.id;
     jobOptions.delay = 1000;
-    jobOptions.attempts = 6;
     this._logger.log(`Updating image of school: ${id}`);
-
-    try {
-      const scriptData = await getScriptData(
-        this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-        this._configService.get<string>('GIGA_IMAGE_CONTENT_ADDRESS'),
-        id,
-      );
-
-      const artScript = await getArtScript(
-        'NFTContent',
-        this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-      );
-      const base64Image = await generateP5Image(`${artScript}`, scriptData);
-      const decodedImage = await decodeBase64Image(base64Image);
-
-      if (decodedImage) {
-        const res = await uploadFile(decodedImage.data);
-        const tx = await updateImageHash(
-          'NFTContent',
-          this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-          res,
-          id,
-        );
-
-        const txReceipt = await tx.wait();
-
-        // Check if the transaction was successful
-        if (txReceipt.status !== 1) {
-          throw new Error(`Transaction failed for updating image hash of school: ${id}`);
-        }
-
-        // Update the database with the new image hash
-        await this._prismaService.school.update({
-          where: { giga_school_id: id },
-          data: { imageHash: res },
+    // const schoolToken = await getTokenIdSchool(
+    //   'NFTContent',
+    //   this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
+    //   id,
+    // );
+    const scriptData = await getScriptData(
+      this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
+      this._configService.get<string>('GIGA_IMAGE_CONTENT_ADDRESS'),
+      id,
+    );
+    //need to update the function to get the scripts.
+    // const artScript = await getSchoolScript(
+    //   this._configService.get<string>('NEXT_PUBLIC_GRAPH_URL'),
+    //   this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
+    // );
+    const artScript = await getArtScript(
+      'NFTContent',
+      this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
+    );
+    const base64Image = await generateP5Image(`${artScript}`, scriptData);
+    const decodedImage = await decodeBase64Image(base64Image);
+    if (decodedImage) {
+      await uploadFile(decodedImage.data)
+        .then(async res => {
+          await updateImageHash(
+            'NFTContent',
+            this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
+            res,
+            id,
+          );
+          await this._prismaService.school.update({
+            where: { giga_school_id: id },
+            data: { imageHash: res },
+          });
+        })
+        .catch(err => {
+          console.log(err);
         });
-
-        this._logger.log(`Image updated successfully for school: ${id}`);
-      } else {
-        throw new Error(`Failed to decode image for school: ${id}`);
-      }
-    } catch (error) {
-      this._logger.error(`Error processing image for school: ${id} - ${error.message}`);
-      throw error; // Ensure the job is marked as failed
-    }
-  }
-
-  @Process(SET_THEME)
-  public async processTheme(job: Job<{ schoolids: [] }>) {
-    const schoolIds = job.data.schoolids;
-    const themes = await this._prismaService.theme.findMany({});
-    for (const schoolId of schoolIds) {
-      const randomTheme = themes[Math.floor(Math.random() * themes.length)];
-      try {
-        const school = await this._prismaService.school.update({
-          where: {
-            giga_school_id: schoolId,
-          },
-          data: {
-            themeId: randomTheme.id,
-          },
-        });
-      } catch (err) {
-        console.log(err);
-      }
     }
   }
 }

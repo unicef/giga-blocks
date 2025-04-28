@@ -434,9 +434,7 @@ export class SchoolService {
 
     const schoolMinted = await this.queueService.sendSingleMintNFT(data);
 
-    console.log('This is minted school', schoolMinted);
-
-    return 'NFT reserved';
+    return schoolMinted;
   }
 
   formatSchoolData(
@@ -463,5 +461,28 @@ export class SchoolService {
       walletAddress,
       themeId,
     };
+  }
+
+  async claimSchool(claimData:any)  {
+    const { email, walletAddress } = claimData;
+    this.queueService.claimReservedNFT(email, walletAddress).catch(err => {
+      console.log(err);
+    }
+    );
+    return { message: 'queue added successfully', statusCode: 200 };
+
+  }
+
+  async getGigaSchoolId(gigaSchoolId: string) {
+    const school = await this.prisma.school.findUnique({
+      where: {
+        giga_school_id: gigaSchoolId,
+      },
+    });
+    if (!school) {
+      throw new NotFoundException('School not found');
+    }
+    return school;
+
   }
 }

@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import {
+  CLAIM_NFT,
   CONTRIBUTE_QUEUE,
   IMAGE_QUEUE,
   MINT_QUEUE,
@@ -117,15 +118,18 @@ export class QueueService {
   public async sendSingleMintNFT(MintData: MintQueueSingleDto) {
     try {
       const mintData = this.schoolToArrayMapper(MintData.data);
-      const ids = [MintData.data.id];
+      const id = MintData.data.id;
       const giga_id = MintData.data.giga_school_id;
-      await this.updateSchools(ids);
+      await this.updateSchools([id]);
       await this._mintQueue.add(
         SET_MINT_SINGLE_NFT,
         {
           mintData,
-          ids,
+          id,
           giga_id,
+          email: MintData.email,
+          walletAddress: MintData.walletAddress,
+          themeId: MintData.themeId,
         },
         jobOptions,
       );
@@ -206,6 +210,16 @@ export class QueueService {
       });
     } catch (error) {
       this._logger.error(`Error queueing `);
+      throw error;
+    }
+  }
+
+  public async claimReservedNFT(email: string, walletAddress: string) {
+    try {
+      await this._onchainQueue.add(CLAIM_NFT, { email, walletAddress }, jobOptions);
+      return { message: 'queue added successfully', statusCode: 200 };
+    } catch (error) {
+      this._logger.error(`Error queueing transaction to blockchain `);
       throw error;
     }
   }

@@ -18,7 +18,7 @@ const algorithm = 'aes-256-cbc';
 const secretKey = process.env.ENCODED_OTP_SECRET;
 const iv = crypto.randomBytes(16);
 const otpLength = Number(process.env.OTP_LENGTH);
-const OTP_DURATION = Number(process.env.NEXT_PUBLIC_OTP_DURATION_IN_MINS);
+const OTP_DURATION = Number(process.env.MAGIC_LINK_EXPIRATION_TIME_IN_HRS)*60*60*1000 || 86400;
 let WEB_LINK = process.env.NEXT_PUBLIC_WEB_NAME;
 
 @Injectable()
@@ -42,7 +42,7 @@ export class MagicLinkService {
     console.log('Encoded Token:', encodedToken);
     if (otp) {
       if (redirectlink) WEB_LINK = redirectlink;
-      const link = `${WEB_LINK}?token=${encodedToken}&redirect=${WEB_LINK}`;
+      const link = `${WEB_LINK}&token=${encodedToken}&redirect=${WEB_LINK}`;
       this.mailService.sendMagicLink({ email: email, link });
       this.saveOtp(email, otp);
       return { success: true, msg: link };

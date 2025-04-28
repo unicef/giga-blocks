@@ -8,7 +8,7 @@ Monorepo for GIGA made using pnpm workspaces and added nx for caching.
 - adminApp: https://admin.dev.giga.rumsan.net/dashboard
 - backend: https://api.dev.giga.rumsan.net/api/docs
 
-## Setup and Running
+## Setup and Running 
 
 We are using `pnpm` as a package manager so we must install it as a global dependencies:
 `npm install -g pnpm@8.14.1`
@@ -17,7 +17,7 @@ Command to install dependencies:
 `pnpm install`
 
 Need pnpm for package management.
-
+    
 Installing packages in root of repo
 
 ```
