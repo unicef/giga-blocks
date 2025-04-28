@@ -13,6 +13,7 @@ module.exports = {
     GET: '/schools',
     ACTIVATE: '/schools/reserveNft',
     CLAIM: '/schools/claimSchool',
+    PAIDACTIVATION: '/schools/activateSchool',
   },
   OTP: {
     REGISTER: '/auth/send-otp',
@@ -50,5 +51,8 @@ module.exports = {
     GET: '/schools/themes',
     SCHOOL: '/schools/theme',
     POST: '/schools/themes',
+  },
+  GAS_FEE: {
+    GET: process.env.NEXT_PUBLIC_GAS_API,
   },
 };

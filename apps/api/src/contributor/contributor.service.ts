@@ -11,17 +11,18 @@ const Link = process.env.NEXT_PUBLIC_WEB_NAME;
 export class ContributorService {
   private readonly _logger = new Logger('Contributor Services');
   constructor(
-    private prisma: PrismaAppService, private mailService: MailService,
+    private prisma: PrismaAppService,
+    private mailService: MailService,
     private queueService: QueueService,
   ) {}
 
   async addContributor(data: CreateContributor) {
-    const {  email } = data;
-    let walletAddress
+    const { email } = data;
+    let walletAddress;
     let name = data?.name;
 
-    if (!data?.name) name =data?.walletAddress || email;
-    if (data?.walletAddress)  walletAddress = hexStringToBuffer(data.walletAddress);
+    if (!data?.name) name = data?.walletAddress || email;
+    if (data?.walletAddress) walletAddress = hexStringToBuffer(data.walletAddress);
     const existinguser = await this.prisma.user.findUnique({ where: { email } });
     if (existinguser) await this.updateContributor(existinguser.id, data);
     else {
@@ -54,7 +55,13 @@ export class ContributorService {
   listContributors() {
     return this.prisma.contributor.findMany({
       where: { isVisible: true },
-      include: { user: true },
+      include: { user: {
+        select:{
+          name: true,
+          email: true,
+          walletAddress: true,
+        }
+      } },
     });
   }
 
@@ -65,12 +72,14 @@ export class ContributorService {
   async claimNft(email: string, wallet: any) {
     const walletAddress = hexStringToBuffer(wallet);
 
-    const user = await this.prisma.user.update({ where: { email },data: { walletAddress } });
-    const contributor = await this.prisma.contributor.findUnique({ where: { userId:user?.id } });
+    const user = await this.prisma.user.update({ where: { email }, data: { walletAddress } });
+    const contributor = await this.prisma.contributor.findUnique({ where: { userId: user?.id } });
 
     if (contributor.nftReserved) {
-      await this.prisma.contributor.update({ where: { userId:user?.id }, data: { nftClaimed: true } });
-
+      await this.prisma.contributor.update({
+        where: { userId: user?.id },
+        data: { nftClaimed: true },
+      });
     } else return { message: 'NFT not reserved' };
   }
 
@@ -82,17 +91,49 @@ export class ContributorService {
     }
 
     const updatedNftReserved = Array.isArray(contributor.schoolreserved)
-      ? [...contributor.schoolreserved, data.schoolReserved].flat()
-      : [contributor.schoolreserved, data.schoolReserved].flat();
-
-    return this.prisma.contributor.update({
+      ? [...contributor.schoolreserved, data.schoolReserved].flat().filter(Boolean)
+      : [contributor.schoolreserved, data.schoolReserved].flat().filter(Boolean);
+    const updatedcontributor = await this.prisma.contributor.update({
       where: { userId },
       data: {
-        nftReserved:true,
-        schoolreserved: updatedNftReserved,
-        totalNftMinted: +1,
+        nftReserved: true,
+        schoolreserved: updatedNftReserved || [],
+        totalNftMinted: { increment: 1 },
         isVisible: data.isVisible,
       },
     });
+    return updatedcontributor;
+  }
+
+  async addPayingContributor(data: CreateContributor) {
+    let walletAddress;
+    let name = data?.name;
+    if (!data?.name) name = data?.walletAddress || data?.email;
+    if (data?.walletAddress) walletAddress = hexStringToBuffer(data.walletAddress);
+    const existinguser = await this.prisma.user.findUnique({
+      where: { walletAddress: walletAddress },
+    });
+    if (!existinguser) {
+      const user = await this.prisma.user.create({
+        data: {
+          name,
+          email: data?.email,
+          walletAddress,
+          roles: [Role.CONTRIBUTOR],
+        },
+      });
+      if (user) {
+        await this.prisma.contributor.create({
+          data: {
+            userId: user?.id,
+            isVisible: data.isVisible,
+            nftReserved: false,
+            nftClaimed: true,
+            totalNftMinted: +1,
+          },
+        });
+      }
+    } else await this.updateContributor(existinguser.id, data);
+    return {sucess:true, message: 'Contributor added successfully' };
   }
 }

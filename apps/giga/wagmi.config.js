@@ -3,7 +3,7 @@
 import { getDefaultConfig } from 'connectkit';
 import { createConfig, http } from 'wagmi';
 import { baseSepolia } from 'wagmi/chains';
-import { coinbaseWallet } from 'wagmi/connectors';
+import { coinbaseWallet,injected } from 'wagmi/connectors';
 
 export const config = createConfig(
   getDefaultConfig({
@@ -24,10 +24,11 @@ export const config = createConfig(
       //   projectId: '1234',
       // }),
       coinbaseWallet(),
+      injected(),
     ],
     transports: {
       [baseSepolia.id]: http(
-        'https://base-sepolia.g.alchemy.com/v2/T0PE-HxhWOEH0eUNTcUOFgPQJiQzL6uf'
+        'https://base-sepolia.g.alchemy.com/v2/WSfPp7PZYjX8uXeDOFfk_GFBBSCrCyxg'
       ),
     },
     walletConnectProjectId: '',

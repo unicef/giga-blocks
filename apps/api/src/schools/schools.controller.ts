@@ -27,7 +27,7 @@ import { QUEUES } from 'src/constants';
 import { getFileData } from 'src/utils/arweave/get';
 import { ActivationGuard } from 'src/auth/guards/activation.guard';
 import { ThemeActivationDto } from './dto/theme-activation.dto';
-import { claimReservedNFT, ReserveNFTDto } from './dto/reserve-nft.dto';
+import { claimReservedNFT, ReserveNFTDto, SchoolActivation } from './dto/reserve-nft.dto';
 @Controller('schools')
 @ApiTags('School')
 export class SchoolController {
@@ -169,6 +169,13 @@ export class SchoolController {
   @Get('gigaSchoolId/:gigaSchoolId')
   async getGigaSchoolId(@Param('gigaSchoolId')gigaSchoolId: string) {
     return await this.schoolService.getGigaSchoolId(gigaSchoolId);
+  }
+
+  @Public()
+  @Post('/activateSchool')
+  async activateSchool(@Body() data:any) {
+    console.log('data', data);
+    return this.schoolService.activateSchool(data);
   }
 
   //arewave

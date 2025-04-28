@@ -45,3 +45,11 @@ export const useClaimSchool = () => {
     },
   });
 };
+export const useSchoolPaidActivation = () => {
+  return useMutation({
+    mutationFn: async (payload) => {
+      const { data } = await apiGuest.post(SCHOOLS.PAIDACTIVATION, payload);
+      return data;
+    },
+  });
+};

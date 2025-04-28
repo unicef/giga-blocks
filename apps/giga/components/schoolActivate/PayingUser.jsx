@@ -2,6 +2,7 @@
 
 import { TextInput, Button, Tooltip } from '@carbon/react';
 import { Information } from '@carbon/icons-react';
+import { ConnectKitButton } from 'connectkit';
 
 export default function StandardActivationForm({
   baseFee,
@@ -9,6 +10,8 @@ export default function StandardActivationForm({
   donation,
   setDonation,
   handleActivate,
+  isConnected,
+  selectedThemeName,
 }) {
   return (
     <>
@@ -81,7 +84,21 @@ export default function StandardActivationForm({
 
       <div className="actionButtons">
         <Button kind="secondary">Cancel</Button>
-        <Button onClick={handleActivate}>Activate</Button>
+        {isConnected ? (
+          <Button onClick={handleActivate} disabled={!selectedThemeName}>
+            Activate
+          </Button>
+        ) : (
+          <div>
+            <ConnectKitButton.Custom>
+              {({ show }) => (
+                <Button kind="primary" onClick={show}>
+                  Connect Wallet
+                </Button>
+              )}
+            </ConnectKitButton.Custom>
+          </div>
+        )}
       </div>
     </>
   );

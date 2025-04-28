@@ -12,6 +12,10 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { useSchoolDetails } from '../../../hooks/useSchool';
 import { useSchoolThemeGet } from '../../../hooks/useTheme';
 import { useThemeStore } from '../../../store/themeStore';
+import { useGigaBuyNft } from '../../../hooks/useContract/giga-contracts';
+import { useAccount } from 'wagmi';
+import { setTimeout } from 'timers';
+import { getGasPrice } from '../../../utils/gasFee';
 
 export default function ActivateSchool() {
   const { id } = useParams();
@@ -23,8 +27,15 @@ export default function ActivateSchool() {
   const [baseFee, setBaseFee] = useState('0.01');
   const [gasFee, setGasFee] = useState('00');
   const [donation, setDonation] = useState('');
+  const [total, setTotal] = useState(
+    Number.parseFloat(baseFee) + Number.parseFloat(gasFee)
+  );
   const [email, setEmail] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { address, isConnected } = useAccount();
+
+  const contractAddress = process.env.NEXT_PUBLIC_GIGA_NFT_CONTRACT_ADDRESS;
+  const escrowAddress = process.env.NEXT_PUBLIC_GIGA_SCHOOL_ESCROW_ADDRESS;
 
   const { fontColor, cardColor, bgColor, selectedThemeName, themeId } =
     useThemeStore();
@@ -32,6 +43,14 @@ export default function ActivateSchool() {
   const { data } = useSchoolDetails(id);
   const { data: themeData, isLoading: themeLoading } =
     useSchoolThemeGet(themeFromParams);
+
+  useEffect(async () => {
+    const gasFee = await getGasPrice();
+    setGasFee(gasFee);
+    setTimeout(() => {
+      setGasFee(gasFee);
+    }, 1000);
+  }, []);
 
   useEffect(() => {
     if (themeFromParams && themeData?.colorScheme) {
@@ -48,19 +67,54 @@ export default function ActivateSchool() {
     }
   }, [themeFromParams, themeData]);
 
-  const handleActivate = () => {
-    setIsModalOpen(true);
+  const schoolData = [
+    data?.name || '',
+    data?.school_type || '',
+    data?.country || '',
+    data?.longitude?.toString() || '',
+    data?.latitude?.toString() || '',
+    data?.connectivity?.toString() || '',
+    data?.coverage_availability?.toString() || '',
+    data?.electricity_available?.toString() || '',
+    data?.region_name || '',
+  ];
+
+  const mintSchool = useGigaBuyNft();
+
+  const handleActivate = async () => {
+    const args = [data?.giga_school_id, escrowAddress, address, schoolData];
+    const activationDetails = {
+      schoolId: data?.id,
+      themeId,
+      contributorData: {
+        walletAddress: address,
+      },
+    };
+    await mintSchool.mutateAsync({
+      args,
+      totalValue: total,
+      contractAddress,
+      activationDetails,
+    });
+    // setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
   const calculateTotal = () => {
     const base = parseFloat(baseFee) || 0;
     const gas = parseFloat(gasFee) || 0;
     const donate = parseFloat(donation) || 0;
-    return (base + gas + donate).toFixed(2);
+    const totalValue = base + gas + donate;
+    setTotal(totalValue);
+    return total;
   };
+
+  useEffect(() => {
+    calculateTotal();
+  }, [baseFee, gasFee, donation]);
 
   return (
     <div className="container">
@@ -94,6 +148,8 @@ export default function ActivateSchool() {
               donation={donation}
               setDonation={setDonation}
               handleActivate={handleActivate}
+              isConnected={isConnected}
+              selectedThemeName={selectedThemeName}
             />
           )}
         </div>
@@ -113,18 +169,20 @@ export default function ActivateSchool() {
               <span className="themeLabel">Selected Theme:</span>
               <div className="school-details__themes">
                 <div className="school-details__theme-option">
-                  <div
-                    className="school-details__theme-color"
-                    style={{ backgroundColor: bgColor }}
-                  />
-                  <div
-                    className="school-details__theme-color"
-                    style={{ backgroundColor: cardColor }}
-                  />
-                  <div
-                    className="school-details__theme-color"
-                    style={{ backgroundColor: fontColor }}
-                  />
+                  {selectedThemeName ? (
+                    <>
+                      <div
+                        className="school-details__theme-color"
+                        style={{ backgroundColor: bgColor }}
+                      />
+                      <div
+                        className="school-details__theme-color"
+                        style={{ backgroundColor: fontColor }}
+                      />
+                    </>
+                  ) : (
+                    <p>Theme Not Selected</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -132,7 +190,7 @@ export default function ActivateSchool() {
             {!linkActivation && (
               <div className="totalSection">
                 <div className="totalLabel">Grand Total</div>
-                <div className="totalAmount">{calculateTotal()} Eth</div>
+                <div className="totalAmount">{total} Eth</div>
               </div>
             )}
           </div>
