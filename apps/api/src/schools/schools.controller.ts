@@ -18,7 +18,7 @@ import { Public } from '../common/decorators/public.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
 import { RoleGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
-import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
+import { MintQueueDto, MintQueueSingleDto, MintSingleSchool } from './dto/mint-queue.dto';
 import { MintStatus } from '@prisma/application';
 import fastify = require('fastify');
 import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-datum.dto';
@@ -27,6 +27,7 @@ import { QUEUES } from 'src/constants';
 import { getFileData } from 'src/utils/arweave/get';
 import { ActivationGuard } from 'src/auth/guards/activation.guard';
 import { ThemeActivationDto } from './dto/theme-activation.dto';
+import { claimReservedNFT, ReserveNFTDto, SchoolActivation } from './dto/reserve-nft.dto';
 @Controller('schools')
 @ApiTags('School')
 export class SchoolController {
@@ -64,9 +65,10 @@ export class SchoolController {
   }
 
   @Roles('ADMIN')
-  @UseGuards(JwtAuthGuard, RoleGuard)
+  // @UseGuards(JwtAuthGuard, RoleGuard)
+  @Public()
   @Post('mintSchool')
-  mintSchool(@Body() MintData: MintQueueSingleDto) {
+  mintSchool(@Body() MintData: MintSingleSchool) {
     return this.schoolService.mintNft(MintData);
   }
 
@@ -90,7 +92,6 @@ export class SchoolController {
   ): Promise<any> {
     return await this.schoolService.uploadFile(req, res, request.user);
   }
-
 
   @Public()
   @Get()
@@ -152,7 +153,32 @@ export class SchoolController {
     return { response };
   }
 
-  //arewave 
+  @Public()
+  @Post('reserveNft')
+  async reserveNft(@Body() reserveData: ReserveNFTDto) {
+    return this.schoolService.reserveNft(reserveData);
+  }
+
+  @Public()
+  @Post('/claimSchool')
+  async claimSchool(@Body() claimData: claimReservedNFT) {
+    return this.schoolService.claimSchool(claimData);
+  }
+
+  @Public()
+  @Get('gigaSchoolId/:gigaSchoolId')
+  async getGigaSchoolId(@Param('gigaSchoolId')gigaSchoolId: string) {
+    return await this.schoolService.getGigaSchoolId(gigaSchoolId);
+  }
+
+  @Public()
+  @Post('/activateSchool')
+  async activateSchool(@Body() data:any) {
+    console.log('data', data);
+    return this.schoolService.activateSchool(data);
+  }
+
+  //arewave
   @Public()
   @Post('getFile')
   async getFile(@Body() MintData: any) {

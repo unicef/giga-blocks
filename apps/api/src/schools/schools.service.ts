@@ -11,7 +11,7 @@ import { MintStatus, Prisma, Role } from '@prisma/application';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { ListSchoolDto } from './dto/list-schools.dto';
 import { QueueService } from 'src/mailer/queue.service';
-import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
+import { MintQueueDto, MintQueueSingleDto, MintSingleSchool } from './dto/mint-queue.dto';
 import { handler } from 'src/utils/csvToDB';
 import { hexStringToBuffer } from '../utils/string-format';
 import fastify = require('fastify');
@@ -28,10 +28,13 @@ import { NFTContent } from 'src/constants/contract';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { getCacheKey } from 'src/utils/cache/getCacheKey';
+import { ReserveNFTDto, SchoolActivation } from './dto/reserve-nft.dto';
+import { ContributorService } from 'src/contributor/contributor.service';
 @Injectable()
 export class SchoolService {
   constructor(
     private prisma: PrismaAppService,
+    private contrubutorService: ContributorService,
     private readonly queueService: QueueService,
     private readonly configService: ConfigService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
@@ -40,14 +43,14 @@ export class SchoolService {
   async findAll(query: any) {
     const { page, perPage, minted, uploadId, name, country, connectivityStatus, orderBy, order } =
       query;
-    const cacheKey = getCacheKey(name, country, page, perPage,minted);
+    const cacheKey = getCacheKey(name, country, page, perPage, minted);
     const cachedResult = await this.cacheManager.get<string>(cacheKey);
 
     if (cachedResult) return cachedResult;
 
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
-      ...((minted !== 'undefined')&& { minted }),
+      ...(minted !== 'undefined' && { minted }),
       ...(uploadId && { uploadId }),
       ...(name && { name: { contains: name, mode: 'insensitive' } }),
       ...(country && { country: { contains: country, mode: 'insensitive' } }),
@@ -58,7 +61,12 @@ export class SchoolService {
 
     const result = await paginate(
       this.prisma.school,
-      { where },
+      {
+        where,
+        include: {
+          theme: true,
+        },
+      },
       {
         page,
         perPage,
@@ -101,8 +109,14 @@ export class SchoolService {
     return this.queueService.sendMintNFT(MintData);
   }
 
-  async mintNft(MintData: MintQueueSingleDto) {
-    return this.queueService.sendSingleMintNFT(MintData);
+  async mintNft(MintData: MintSingleSchool) {
+    const schoolData = await this.prisma.school.findUnique({
+      where: {
+        id: MintData.id,
+      },
+    });
+    const data = this.formatSchoolData(schoolData);
+    return this.queueService.sendSingleMintNFT(data);
   }
 
   async uploadFile(
@@ -139,11 +153,13 @@ export class SchoolService {
             school => !schools.some(dbSchool => dbSchool.giga_school_id === school.school_id_giga),
           );
 
-          const school_to_be_updated = schoolData.filter(school =>
-            schools.some(dbSchool => dbSchool.giga_school_id === school.school_id_giga),
-          ).map(school =>school.school_id_giga);
-          if(school_to_be_updated.length === 0) return res.code(400).send({message:"No school to be minted"})
-
+          const school_to_be_updated = schoolData
+            .filter(school =>
+              schools.some(dbSchool => dbSchool.giga_school_id === school.school_id_giga),
+            )
+            .map(school => school.school_id_giga);
+          if (school_to_be_updated.length === 0)
+            return res.code(400).send({ message: 'No school to be minted' });
 
           // if (missingSchools.length > 0) {
           //   throw new NotFoundException({
@@ -156,14 +172,13 @@ export class SchoolService {
           // to the uploadBatch and ignore the missing ones.
           // Still needs to inform the user about the missing schools
           //Need to add to the queue after the uploadBatch is created.
-         const txn =  await this.prisma.$transaction(async (prisma)=>{
+          const txn = await this.prisma.$transaction(async prisma => {
             const uploadBatch = await this.prisma.cSVUpload.create({
               data: {
                 uploadedBy: user.id,
                 fileValue: school_to_be_updated,
                 fileName: filename,
-      
-              }, 
+              },
             });
             await prisma.school.updateMany({
               where: {
@@ -174,13 +189,11 @@ export class SchoolService {
               data: {
                 uploadId: uploadBatch.id,
               },
-            })
+            });
             return uploadBatch;
-            
-          })
-           this.queueService.csvMintdata(txn.id).catch(err=>console.log(err));
-           return res.code(200).send({message:"Batch processing started"});
-
+          });
+          this.queueService.csvMintdata(txn.id).catch(err => console.log(err));
+          return res.code(200).send({ message: 'Batch processing started' });
         } catch (err) {
           if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
             res
@@ -212,9 +225,9 @@ export class SchoolService {
       where: {
         id,
       },
-      include:{
-        theme:true
-      }
+      include: {
+        theme: true,
+      },
     });
   }
 
@@ -411,5 +424,84 @@ export class SchoolService {
     } catch (err) {
       console.log(err);
     }
+  }
+
+  async reserveNft(reserveNft: ReserveNFTDto) {
+    const schoolData = await this.prisma.school.findUnique({
+      where: {
+        id: reserveNft.schoolId,
+      },
+    });
+    const data = this.formatSchoolData(
+      schoolData,
+      reserveNft.email,
+      reserveNft.walletAddress,
+      reserveNft.themeId,
+    );
+
+    const schoolMinted = await this.queueService.sendSingleMintNFT(data);
+
+    return schoolMinted;
+  }
+
+  async activateSchool(data: SchoolActivation) {
+    const { schoolId, themeId, contributorData } = data;
+    const updatedSchool = await this.prisma.school.update({
+      where: {
+        id: schoolId,
+      },
+      data: {
+        minted: MintStatus.MINTED,
+        themeId: themeId,
+      },
+    });
+    this.queueService.processImage(updatedSchool?.giga_school_id);
+    return this.contrubutorService.addPayingContributor(contributorData);
+  }
+
+  formatSchoolData(
+    schoolData,
+    email?: string,
+    walletAddress?: string,
+    themeId?: string,
+  ): MintQueueSingleDto {
+    return {
+      data: {
+        id: schoolData.id,
+        giga_school_id: schoolData.giga_school_id,
+        schoolName: schoolData.name,
+        schoolType: schoolData.school_type,
+        country: schoolData.country,
+        latitude: schoolData.latitude,
+        longitude: schoolData.longitude,
+        connectivity: schoolData.connectivity.toString(),
+        electricity_availabilty: schoolData.electricity_available,
+        coverage_availabitlity: schoolData.coverage_availability.toString(),
+        region_name: schoolData.region_name,
+      },
+      email,
+      walletAddress,
+      themeId,
+    };
+  }
+
+  async claimSchool(claimData: any) {
+    const { email, walletAddress } = claimData;
+    this.queueService.claimReservedNFT(email, walletAddress).catch(err => {
+      console.log(err);
+    });
+    return { message: 'queue added successfully', statusCode: 200 };
+  }
+
+  async getGigaSchoolId(gigaSchoolId: string) {
+    const school = await this.prisma.school.findUnique({
+      where: {
+        giga_school_id: gigaSchoolId,
+      },
+    });
+    if (!school) {
+      throw new NotFoundException('School not found');
+    }
+    return school;
   }
 }

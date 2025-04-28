@@ -1,5 +1,5 @@
-@use "@carbon/react/scss/colors";
-@use "@carbon/react/scss/breakpoint" as *;
+@use '@carbon/react/scss/colors';
+@use '@carbon/react/scss/breakpoint' as *;
 
 .cds--header__global .cds--popover-content {
   background-color: colors.$gray-20;
@@ -15,7 +15,7 @@
   }
 }
 .navbar {
-  padding: 12px 20px;
+  padding: 36px 60px;
   @include breakpoint-down(md) {
     padding: 0px;
   }

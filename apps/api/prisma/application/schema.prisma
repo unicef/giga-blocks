@@ -180,6 +180,7 @@ model School {
   coverage_availability Boolean           @default(false)
   giga_maps_data        Json?
   imageHash             String?
+  schoolClaimed         Boolean           @default(false)
   createdAt             DateTime          @default(now())
   updatedAt             DateTime          @updatedAt
   deletedAt             DateTime?
@@ -359,7 +360,7 @@ model ActivationLog {
 model Contributor {
   id             String   @id @default(uuid())
   userId         String   @unique
-  user           User?    @relation(fields:[userId], references:[id])
+  user           User?    @relation(fields: [userId], references: [id])
   schoolreserved String[]
   totalNftMinted Int
   isVisible      Boolean  @default(false)

@@ -91,8 +91,9 @@ export class LinkactivationService {
 
     if (data?.walletAddress) data.walletAddress = hexStringToBuffer(data.walletAddress);
     this.queueService.processImage(data.id);
-    return this.prisma.contributor.create({ data });}
-  
+    return this.prisma.contributor.create({ data });
+  }
+
   async activateLink(uuid: string, userId: string) {
     const date = new Date();
     const data = await this.prisma.activationLog.findUnique({

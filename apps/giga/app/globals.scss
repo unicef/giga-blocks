@@ -8,8 +8,7 @@
 @use '../components/Info/info';
 
 :root {
-  --font-color: #e10000;
-  --bg-color: #fff;
+  --bg-color: #f3f3f3;
 }
 
 .dynamic-theme {
@@ -25,8 +24,12 @@
 }
 body {
   font-family: 'IBM Plex Sans', sans-serif;
+  --bg-color: #f3f3f3;
 }
 .cds--content {
   margin-top: 3rem;
   padding: 0;
+}
+.cds--modal-container {
+  border-radius: 12px !important;
 }

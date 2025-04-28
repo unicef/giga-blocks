@@ -22,6 +22,8 @@ interface ExtendedContract extends BaseContract {
   getMetadataContent?: (tokenId: string | ContractTransactionResponse) => any;
   tokenIdToTokenHash?: (tokenId: string | ContractTransactionResponse) => any;
   addHashes?: (date: string, hashes: string[]) => ContractTransactionResponse;
+  reserveNft?:(schoolId:string,email:string) => ContractTransactionResponse;
+  transfeReservedNft?:(walletAddress:string,email:string) => ContractTransactionResponse;
 }
 
 export const mintNFT = async (
@@ -223,10 +225,28 @@ export const addArweaveHash = async (contractName, contractAddress, hashes) => {
   return qosContract.addHashes(date.toString(), hashes);
 };
 
-const getEncodedImage = async (imageData: any) => {
-  const base64 = `${ethers.encodeBase64(imageData)}`;
-  return base64;
-};
+
+
+export const reserveNft = async(schoolId:string,email:string) =>{
+  const config = new ConfigService();
+  const contractAddress = config.get('NEXT_PUBLIC_GIGA_COLLECTOR_ESCROW_ADDRESS');
+  const contract: ExtendedContract = getContractWithSigner('Escrow', contractAddress);
+  const res = await getTokenIdSchool(
+    'NFTContent',
+    config.get('GIGA_NFT_CONTENT_ADDRESS'),
+    schoolId,
+  );
+  const tokenId = res.toString();
+  return contract.reserveNft(tokenId,email)
+
+}
+
+export const claimNft = async (walletAddress: string, email:string) =>{
+  const config = new ConfigService();
+  const contractAddress = config.get('NEXT_PUBLIC_GIGA_COLLECTOR_ESCROW_ADDRESS');
+  const contract: ExtendedContract = getContractWithSigner('Escrow', contractAddress);
+  return contract.transfeReservedNft(walletAddress,email)
+}
 
 const processSchoolData = async (schoolDataArray: any[], tokenIds: any[]) =>
   schoolDataArray.reduce(
