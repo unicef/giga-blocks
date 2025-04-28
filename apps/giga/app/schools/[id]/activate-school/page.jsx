@@ -44,12 +44,19 @@ export default function ActivateSchool() {
   const { data: themeData, isLoading: themeLoading } =
     useSchoolThemeGet(themeFromParams);
 
-  useEffect(async () => {
-    const gasFee = await getGasPrice();
-    setGasFee(gasFee);
-    setTimeout(() => {
+  useEffect(() => {
+    const fetchGasFee = async () => {
+      const gasFee = await getGasPrice();
       setGasFee(gasFee);
-    }, 1000);
+
+      const timeoutId = setTimeout(() => {
+        setGasFee(gasFee);
+      }, 1000);
+
+      return () => clearTimeout(timeoutId);
+    };
+
+    fetchGasFee();
   }, []);
 
   useEffect(() => {
