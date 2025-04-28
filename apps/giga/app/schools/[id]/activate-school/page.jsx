@@ -35,6 +35,7 @@ export default function ActivateSchool() {
   const { address, isConnected } = useAccount();
 
   const contractAddress = process.env.NEXT_PUBLIC_GIGA_NFT_CONTRACT_ADDRESS
+  const escrowAddress = process.env.NEXT_PUBLIC_GIGA_SCHOOL_ESCROW_ADDRESS
 
   const { fontColor, bgColor, selectedThemeName, themeId } = useThemeStore();
 
@@ -62,21 +63,21 @@ export default function ActivateSchool() {
   }, [themeFromParams, themeData]);
 
   const schoolData = [
-    data?.name,
-    data?.school_type,
-    data?.country,
-    data?.longitude,
-    data?.latitude,
-    data?.connectivity,
-    data?.coverage_availabitlity,
-    data?.electricity_availabilty,
-    data?.region_name,
+    data?.name || '',
+    data?.school_type || '',
+    data?.country || '',
+    data?.longitude?.toString() || '',
+    data?.latitude?.toString() || '',
+    data?.connectivity?.toString() || '',
+    data?.coverage_availability?.toString() || '',
+    data?.electricity_available?.toString() || '',
+    data?.region_name || '',
   ];
 
   const mintSchool = useGigaBuyNft();
 
   const handleActivate = async () => {
-    const args = [data?.giga_school_id, address, address, schoolData];
+    const args = [data?.giga_school_id, escrowAddress, address, schoolData];
     const activationDetails = {
       schoolId: data?.id,
       themeId,

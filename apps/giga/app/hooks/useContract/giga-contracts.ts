@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import {
+  gigaMinterAbi,
   useWriteGigaMinterBuyNft,
   useWriteGigaMinterMintNft,
 } from './gigaMinter';
@@ -18,15 +19,16 @@ export const useGigaBuyNft = () => {
       contractAddress,
       activationDetails,
     }: {
-      args: String;
+      args: any;
       totalValue: number;
-      contractAddress: string;
+      contractAddress: `0x${string}`;
       activationDetails: any;
     }) => {
       const weiValue = parseUnits(totalValue.toString(), etherUnits.wei);
+
       return contract.writeContractAsync({
+        address:contractAddress,
         args: args,
-        contractAddress: contractAddress,
         value: weiValue,
       });
     },
