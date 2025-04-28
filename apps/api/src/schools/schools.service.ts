@@ -43,14 +43,14 @@ export class SchoolService {
   async findAll(query: any) {
     const { page, perPage, minted, uploadId, name, country, connectivityStatus, orderBy, order } =
       query;
-    const cacheKey = getCacheKey(name, country, page, perPage,minted);
+    const cacheKey = getCacheKey(name, country, page, perPage, minted);
     const cachedResult = await this.cacheManager.get<string>(cacheKey);
 
     if (cachedResult) return cachedResult;
 
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
-      ...((minted !== 'undefined')&& { minted }),
+      ...(minted !== 'undefined' && { minted }),
       ...(uploadId && { uploadId }),
       ...(name && { name: { contains: name, mode: 'insensitive' } }),
       ...(country && { country: { contains: country, mode: 'insensitive' } }),
@@ -61,7 +61,12 @@ export class SchoolService {
 
     const result = await paginate(
       this.prisma.school,
-      { where },
+      {
+        where,
+        include: {
+          theme: true,
+        },
+      },
       {
         page,
         perPage,
@@ -148,11 +153,13 @@ export class SchoolService {
             school => !schools.some(dbSchool => dbSchool.giga_school_id === school.school_id_giga),
           );
 
-          const school_to_be_updated = schoolData.filter(school =>
-            schools.some(dbSchool => dbSchool.giga_school_id === school.school_id_giga),
-          ).map(school =>school.school_id_giga);
-          if(school_to_be_updated.length === 0) return res.code(400).send({message:"No school to be minted"})
-
+          const school_to_be_updated = schoolData
+            .filter(school =>
+              schools.some(dbSchool => dbSchool.giga_school_id === school.school_id_giga),
+            )
+            .map(school => school.school_id_giga);
+          if (school_to_be_updated.length === 0)
+            return res.code(400).send({ message: 'No school to be minted' });
 
           // if (missingSchools.length > 0) {
           //   throw new NotFoundException({
@@ -184,11 +191,9 @@ export class SchoolService {
               },
             });
             return uploadBatch;
-            
-          })
-           this.queueService.csvMintdata(txn.id).catch(err=>console.log(err));
-           return res.code(200).send({message:"Batch processing started"});
-
+          });
+          this.queueService.csvMintdata(txn.id).catch(err => console.log(err));
+          return res.code(200).send({ message: 'Batch processing started' });
         } catch (err) {
           if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
             res
@@ -220,9 +225,9 @@ export class SchoolService {
       where: {
         id,
       },
-      include:{
-        theme:true
-      }
+      include: {
+        theme: true,
+      },
     });
   }
 
@@ -439,17 +444,17 @@ export class SchoolService {
     return schoolMinted;
   }
 
-  async activateSchool(data:SchoolActivation) {
+  async activateSchool(data: SchoolActivation) {
     const { schoolId, themeId, contributorData } = data;
-    const updatedSchool = await  this.prisma.school.update({
-      where:{
-        id:schoolId
+    const updatedSchool = await this.prisma.school.update({
+      where: {
+        id: schoolId,
       },
-      data:{
-        minted:MintStatus.MINTED,
-        themeId:themeId
-      }
-    })
+      data: {
+        minted: MintStatus.MINTED,
+        themeId: themeId,
+      },
+    });
     this.queueService.processImage(updatedSchool?.giga_school_id);
     return this.contrubutorService.addPayingContributor(contributorData);
   }
@@ -480,14 +485,12 @@ export class SchoolService {
     };
   }
 
-  async claimSchool(claimData:any)  {
+  async claimSchool(claimData: any) {
     const { email, walletAddress } = claimData;
     this.queueService.claimReservedNFT(email, walletAddress).catch(err => {
       console.log(err);
-    }
-    );
+    });
     return { message: 'queue added successfully', statusCode: 200 };
-
   }
 
   async getGigaSchoolId(gigaSchoolId: string) {
@@ -500,6 +503,5 @@ export class SchoolService {
       throw new NotFoundException('School not found');
     }
     return school;
-
   }
 }
