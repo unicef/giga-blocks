@@ -42,6 +42,13 @@ export class ContributorController {
     //     return this.contributorService.updateContributor(userId,data);
     // }
 
+
+    @Public()
+    @Get('/getReservedSchools/:email')
+    getReservedSchools(@Param('email') email: string) {
+        return this.contributorService.getReservedSchools(email);      
+    }
+
     
 
 }

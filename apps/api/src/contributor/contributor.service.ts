@@ -136,4 +136,26 @@ export class ContributorService {
     } else await this.updateContributor(existinguser.id, data);
     return {sucess:true, message: 'Contributor added successfully' };
   }
+
+  async getReservedSchools(email: string) {
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new Error('Contributor not found');
+    }
+    const contributor = await this.prisma.contributor.findUnique({
+      where: { userId: user.id },
+    });
+
+    const reservedSchools = await this.prisma.school.findMany({
+      where: { id: { in: contributor.schoolreserved } },
+      select:{
+        id:true,
+        name: true,
+        country:true,
+        minted:true,
+        imageHash:true,
+      }
+    });
+    return reservedSchools;
+  }
 }
