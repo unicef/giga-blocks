@@ -55,7 +55,13 @@ export class ContributorService {
   listContributors() {
     return this.prisma.contributor.findMany({
       where: { isVisible: true },
-      include: { user: true },
+      include: { user: {
+        select:{
+          name: true,
+          email: true,
+          walletAddress: true,
+        }
+      } },
     });
   }
 
