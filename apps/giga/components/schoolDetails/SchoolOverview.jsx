@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableRow } from '@carbon/react';
 const SchoolOverview = ({
   updatedAt,
   fontColor,
+  cardColor,
   coverage_availability,
   electricity_available,
   region_name,
@@ -89,7 +90,11 @@ const SchoolOverview = ({
       {overviewData.length > 0 && (
         <div className="school-details__overview-cards">
           {overviewData.map(({ label, icon, value }) => (
-            <div key={label} className="school-details__overview-card">
+            <div
+              key={label}
+              className="school-details__overview-card"
+              style={{ backgroundColor: cardColor, borderColor: fontColor }}
+            >
               <div className="school-details__overview-label">
                 {icon} {label}
               </div>
@@ -106,9 +111,14 @@ const SchoolOverview = ({
 
       {/* Render additional details only if available */}
       {additionalDetails.length > 0 && (
-        <div className="school-details__additional">
+        <div
+          className="school-details__additional"
+          style={{ backgroundColor: cardColor, borderColor: fontColor }}
+        >
           <Table>
-            <TableBody>
+            <TableBody
+              style={{ backgroundColor: cardColor, borderColor: fontColor }}
+            >
               {additionalDetails.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell>{row.key}</TableCell>

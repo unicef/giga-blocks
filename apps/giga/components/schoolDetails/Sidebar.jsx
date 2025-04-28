@@ -4,9 +4,12 @@ import { Information } from '@carbon/icons-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useThemeToggleStore } from '../../app/store/themeToggleStore';
+import { usePathname } from 'next/navigation';
 
-const Sidebar = ({ imageHash, minted, fontColor }) => {
+const Sidebar = ({ imageHash, minted, fontColor, claim }) => {
   const [imageError, setImageError] = useState(false);
+  const pathname = usePathname();
+  const isClaimPath = pathname.includes('claim');
   const toggleVisibilityForMinted = useThemeToggleStore(
     (state) => state.toggleVisibilityForMinted
   );
@@ -14,18 +17,20 @@ const Sidebar = ({ imageHash, minted, fontColor }) => {
     <div className="school-details__sidebar">
       {minted === 'MINTED' ? (
         <div className="school-details__minted-container">
-          <p
-            onClick={toggleVisibilityForMinted}
-            style={{
-              display: 'flex',
-              justifyContent: 'end',
-              marginBottom: '12px',
-              color: fontColor,
-              cursor: 'pointer',
-            }}
-          >
-            Change Template
-          </p>
+          {!isClaimPath && (
+            <p
+              onClick={toggleVisibilityForMinted}
+              style={{
+                display: 'flex',
+                justifyContent: 'end',
+                marginBottom: '12px',
+                color: fontColor,
+                cursor: 'pointer',
+              }}
+            >
+              Change Template
+            </p>
+          )}
           <div className="school-details__minted-image-wrapper">
             {!imageError ? (
               <Image

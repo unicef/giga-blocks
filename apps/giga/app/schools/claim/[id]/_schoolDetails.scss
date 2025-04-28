@@ -179,42 +179,6 @@
     margin-bottom: $spacing-05;
   }
 
-  &__theme-selector {
-    background-color: $gray-10;
-    border-radius: 4px;
-    padding: $spacing-05;
-    margin-bottom: $spacing-06;
-  }
-
-  &__themes {
-    display: flex;
-    gap: $spacing-03;
-    margin-bottom: $spacing-05;
-  }
-
-  &__theme-option {
-    display: flex;
-    border: 2px solid transparent;
-    border-radius: 4px;
-    padding: 4px;
-    cursor: pointer;
-    background: none;
-
-    &.selected {
-      border-color: $blue-60;
-    }
-  }
-
-  &__theme-color {
-    width: 24px;
-    height: 60px;
-    margin-right: 2px;
-
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-
   &__lorem {
     @include type-style('body-01');
     color: $gray-70;
@@ -485,4 +449,7 @@
     border-radius: 4px;
     overflow: hidden;
   }
+}
+.cds--modal-container .cds--modal-container--sm {
+  border-radius: 24px;
 }

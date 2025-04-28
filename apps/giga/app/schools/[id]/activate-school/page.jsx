@@ -9,7 +9,7 @@ import ActivationModal from '../../../../components/schoolActivate/ActivationMod
 import './_activate.scss';
 import '../_schoolDetails.scss';
 import { useParams, useSearchParams } from 'next/navigation';
-import {  useSchoolDetails } from '../../../hooks/useSchool';
+import { useSchoolDetails } from '../../../hooks/useSchool';
 import { useSchoolThemeGet } from '../../../hooks/useTheme';
 import { useThemeStore } from '../../../store/themeStore';
 import { useGigaBuyNft } from '../../../hooks/useContract/giga-contracts';
@@ -34,31 +34,36 @@ export default function ActivateSchool() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { address, isConnected } = useAccount();
 
-  const contractAddress = process.env.NEXT_PUBLIC_GIGA_NFT_CONTRACT_ADDRESS
-  const escrowAddress = process.env.NEXT_PUBLIC_GIGA_SCHOOL_ESCROW_ADDRESS
+  const contractAddress = process.env.NEXT_PUBLIC_GIGA_NFT_CONTRACT_ADDRESS;
+  const escrowAddress = process.env.NEXT_PUBLIC_GIGA_SCHOOL_ESCROW_ADDRESS;
 
-  const { fontColor, bgColor, selectedThemeName, themeId } = useThemeStore();
+  const { fontColor, cardColor, bgColor, selectedThemeName, themeId } =
+    useThemeStore();
 
   const { data } = useSchoolDetails(id);
   const { data: themeData, isLoading: themeLoading } =
     useSchoolThemeGet(themeFromParams);
-  
-  useEffect(async( )=>{
+
+  useEffect(async () => {
     const gasFee = await getGasPrice();
     setGasFee(gasFee);
     setTimeout(() => {
       setGasFee(gasFee);
-    }
-    , 1000);
-    
-  },[])
+    }, 1000);
+  }, []);
 
   useEffect(() => {
     if (themeFromParams && themeData?.colorScheme) {
-      const { fontColor, bgColor } = themeData.colorScheme;
+      const { fontColor, cardColor, bgColor } = themeData.colorScheme;
       useThemeStore
         .getState()
-        .setTheme(fontColor, bgColor, themeFromParams, themeData?.id);
+        .setTheme(
+          fontColor,
+          cardColor,
+          bgColor,
+          themeFromParams,
+          themeData?.id
+        );
     }
   }, [themeFromParams, themeData]);
 
@@ -102,7 +107,7 @@ export default function ActivateSchool() {
     const base = parseFloat(baseFee) || 0;
     const gas = parseFloat(gasFee) || 0;
     const donate = parseFloat(donation) || 0;
-    const totalValue = (base + gas + donate);
+    const totalValue = base + gas + donate;
     setTotal(totalValue);
     return total;
   };

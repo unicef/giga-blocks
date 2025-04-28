@@ -18,7 +18,6 @@ export default function NonPayingUser({
   themeId,
 }) {
   const { id } = useParams();
-  console.log('themeId', themeId);
   const searchParams = useSearchParams();
   const router = useRouter();
   const { address: walletAddress } = useAccount();
@@ -99,6 +98,8 @@ export default function NonPayingUser({
       {
         onSuccess: () => {
           setShowActivateSuccess(true);
+          setShowEmailVerify(false);
+          router.push(`/schools/claim/${id}`);
         },
         onError: () => {
           const message =
