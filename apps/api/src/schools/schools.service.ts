@@ -441,14 +441,16 @@ export class SchoolService {
 
   async activateSchool(data:SchoolActivation) {
     const { schoolId, themeId, contributorData } = data;
-    await this.prisma.school.update({
+    const updatedSchool = await  this.prisma.school.update({
       where:{
         id:schoolId
       },
       data:{
+        minted:MintStatus.MINTED,
         themeId:themeId
       }
     })
+    this.queueService.processImage(updatedSchool?.giga_school_id);
     return this.contrubutorService.addPayingContributor(contributorData);
   }
 

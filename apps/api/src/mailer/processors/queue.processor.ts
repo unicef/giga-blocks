@@ -446,7 +446,7 @@ export class ImageProcessor {
     );
     const base64Image = await generateP5Image(`${artScript}`, scriptData);
     const decodedImage = await decodeBase64Image(base64Image);
-    if (decodedImage) {
+    try{if (decodedImage) {
       await uploadFile(decodedImage.data)
         .then(async res => {
           await updateImageHash(
@@ -463,6 +463,9 @@ export class ImageProcessor {
         .catch(err => {
           console.log(err);
         });
+    }}
+    catch (error) {
+      this._logger.error(`Error updating image: ${error}`);
     }
   }
 }
