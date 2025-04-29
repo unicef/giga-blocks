@@ -1,20 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req } from '@nestjs/common';
 import { VerifierService } from './verifier.service';
 import { CreateVerifierDto } from './dto/create-verifier.dto';
 import { UpdateVerifierDto } from './dto/update-verifier.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('verifier')
+@ApiTags('Verifier')
 export class VerifierController {
   constructor(private readonly verifierService: VerifierService) {}
-  
-  @Get('/sign-in')
-  signIn() {
-    return this.verifierService.getAuthRequest();
+ 
+  @Public()
+  @Get('/sign-in/:schoolId')
+  getAuthRequest(@Param('schoolId') schoolId: any, @Body()data:any): ReturnType<VerifierService['getAuthRequest']> {
+    console.log('getAuthRequest', data);
+    return this.verifierService.getAuthRequest(schoolId,data);
   }
 
+  @Public()
   @Post('/callback')
-  callBack(@Body() createVerifierDto: CreateVerifierDto) {
-    return this.verifierService.callback(createVerifierDto);
+  callBack(@Req() req:Request) {
+    console.log("here controller",req)
+    return this.verifierService.callback(req);
   }
 
 
