@@ -7,6 +7,7 @@ import { WagmiProvider } from 'wagmi';
 import Navbar from '../components/Navbar/Navbar';
 import { config } from '../wagmi.config';
 import QueryProvider from './libs/get-query-client';
+import GarphQlProvider from './libs/graphql-query-client';
 
 export function Providers({ children }) {
   const queryClient = new QueryClient();
@@ -14,14 +15,16 @@ export function Providers({ children }) {
   return (
     <div>
       <QueryProvider>
-        <WagmiProvider config={config}>
-          <ConnectKitProvider>
-            <Theme theme="g100">
-              <Navbar />
-            </Theme>
-            <Content>{children}</Content>
-          </ConnectKitProvider>
-        </WagmiProvider>
+        <GarphQlProvider>
+          <WagmiProvider config={config}>
+            <ConnectKitProvider>
+              <Theme theme="g100">
+                <Navbar />
+              </Theme>
+              <Content>{children}</Content>
+            </ConnectKitProvider>
+          </WagmiProvider>
+        </GarphQlProvider>
       </QueryProvider>
     </div>
   );

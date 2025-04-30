@@ -31,10 +31,9 @@ export default function SchoolDetails({ params }) {
   const defaultCardColor = '#fff';
 
   useEffect(() => {
-    useThemeStore.getState().resetTheme();
-
     if (!data) return;
 
+    useThemeStore.getState().resetTheme();
     const { colorScheme } = data.theme || {};
     const fontColor = colorScheme?.fontColor || defaultFontColor;
     const cardColor = colorScheme?.cardColor || defaultCardColor;
@@ -44,8 +43,10 @@ export default function SchoolDetails({ params }) {
   }, [data]);
 
   const themeStore = useThemeStore();
-  const hasCustomTheme =
-    !!themeStore.fontColor && !!themeStore.cardColor && !!themeStore.bgColor;
+
+  const hasCustomTheme = Boolean(
+    themeStore.fontColor && themeStore.cardColor && themeStore.bgColor
+  );
   const linkActivation = searchParams.get('linkActivation');
 
   // Mock data for the weekly chart
@@ -80,7 +81,7 @@ export default function SchoolDetails({ params }) {
     : themeOptions?.find((t) => t.name === selectedTheme)?.colorScheme
         .bgColor || '#fff';
 
-  if (isLoading) return <h1>Loading....</h1>;
+  if (isLoading || !data) return <h1>Loading....</h1>;
 
   return (
     <div className="school-details">
