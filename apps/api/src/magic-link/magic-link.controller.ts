@@ -1,5 +1,5 @@
 import {Body, Controller, Post, Request} from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ResponseMessage } from '../auth/types';
 import { Public } from '../common/decorators/public.decorator';
 
@@ -13,12 +13,14 @@ export class MagicLinkController {
     
     @Public()
     @Post('send')
+    @ApiOperation({ summary: 'Send Magic Link' })
     async sendMagicLink(@Body() AuthDto: SendMagicLinkDto): Promise<ResponseMessage | null> {
         return this.magicLinkService.sendMagicLink(AuthDto)
     }
 
     @Public()
     @Post('verify')
+    @ApiOperation({ summary: 'Verify Magic Link' })
     async verifyMagicLink(@Body() AuthDto: VerifyMagicLinkDto): Promise<ResponseMessage | null> {
         return this.magicLinkService.verifyMagicLink(AuthDto)
     }
