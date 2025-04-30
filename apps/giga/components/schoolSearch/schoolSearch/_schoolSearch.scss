@@ -5,15 +5,23 @@
 @use '@carbon/styles/scss/breakpoint' as *;
 
 .search-page {
-  padding: $spacing-05;
-  background-color: #f3f3f3;
+  padding: $spacing-07;
+  background-color: #ebf2ff;
   min-height: 100vh;
 
   &__container {
     margin: 0 auto;
     background-color: $white-0;
-    border-radius: 8px;
-    padding: $spacing-05;
+    border-radius: 24px;
+    padding: 40px 24px;
+  }
+  &__title {
+    font-family: IBM Plex Sans;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 140%;
+    letter-spacing: -4%;
+    margin-bottom: 40px;
   }
 
   &__filters {
