@@ -14,6 +14,8 @@ export default function SchoolCard({
   minted,
   imageHash,
   linkActivation,
+  fontColor,
+  bgColor,
 }) {
   const [isHovered, setIsHovered] = useState(false);
   const displayName =
@@ -27,6 +29,7 @@ export default function SchoolCard({
       className="school-card"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      style={{ background: minted && bgColor }}
     >
       <div className="school-card__image">
         {minted === 'MINTED' ? (
@@ -70,8 +73,18 @@ export default function SchoolCard({
       </div>
 
       <div className="school-card__content">
-        <h3 className="school-card__title">{displayName}</h3>
-        <p className="school-card__location">{location}</p>
+        <h3
+          className="school-card__title"
+          style={{ color: minted && fontColor }}
+        >
+          {displayName}
+        </h3>
+        <p
+          className="school-card__location"
+          style={{ color: minted && fontColor }}
+        >
+          {location}
+        </p>
       </div>
     </div>
   );

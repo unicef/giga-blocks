@@ -8,5 +8,12 @@ export class CreateFeaturedDto {
     })
     @IsNotEmpty()
     country_code: string;
+
+    @ApiProperty({
+        example: 'Nepal',
+        description:'Name of the country to be featured'
+    })
+    @IsNotEmpty()
+    details: string;
     
 }

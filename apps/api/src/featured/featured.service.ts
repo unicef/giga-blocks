@@ -49,7 +49,6 @@ export class FeaturedService {
 
   async findFeatureSchool(query) {
     const {limit} = query;
-    console.log(limit)
     const featuredata = await this.prisma.featureCountry.findFirst({
       where:{
         isFeatured:true
