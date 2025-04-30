@@ -1,0 +1,120 @@
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/type' as *;
+@use '@carbon/styles/scss/colors' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/breakpoint' as *;
+
+.footer {
+  background-color: #393939;
+  color: $white-0;
+  padding: $spacing-07 $spacing-07 $spacing-08;
+  width: 100%;
+
+  // Make footer stay at the bottom
+  margin-top: auto;
+
+  @include breakpoint-down(md) {
+    padding: $spacing-06 $spacing-05 $spacing-07;
+  }
+}
+
+.footer__container {
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-09;
+
+  @include breakpoint-down(md) {
+    gap: $spacing-07;
+  }
+
+  @include breakpoint-down(sm) {
+    flex-direction: column;
+    gap: $spacing-06;
+  }
+}
+
+.footer__column {
+  flex: 1;
+  min-width: 160px;
+
+  @include breakpoint-down(md) {
+    flex-basis: calc(50% - #{$spacing-07});
+  }
+
+  @include breakpoint-down(sm) {
+    flex-basis: 100%;
+  }
+
+  &--brand {
+    @include breakpoint-down(md) {
+      flex-basis: 100%;
+      margin-bottom: $spacing-05;
+    }
+  }
+}
+
+.footer__brand {
+  @include type-style('heading-03');
+  color: $white-0;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: $spacing-06;
+
+  &:hover {
+    color: $gray-20;
+  }
+
+  @include breakpoint-down(md) {
+    margin-bottom: 0;
+  }
+}
+
+.footer__heading {
+  @include type-style('heading-01');
+  color: $white-0;
+  margin: 0 0 $spacing-05 0;
+}
+
+.footer__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer__item {
+  margin-bottom: $spacing-04;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.footer__link {
+  @include type-style('body-01');
+  color: $gray-30;
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $white-0;
+  }
+}
+
+// To ensure the footer stays at the bottom, add these styles to your global CSS
+// This assumes you have a layout component that wraps your entire app
+:global(body) {
+  min-height: 100vh;
+  margin: 0;
+}
+
+:global(#__next),
+:global(body > div:first-child) {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+:global(main) {
+  flex: 1;
+}
