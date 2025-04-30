@@ -16,7 +16,7 @@ export class VerifierService {
   async getAuthRequest(schoolId: UUID, data: any) {
     const hosturl = HOST_URL;
     const sessionId = uuidv4();
-    const audience = 'did:polygonid:polygon:main:2q4Q7F7tM1xpwUTgWivb6TgKX3vWirsE3mqymuYjVv';
+    const audience = process.env.AUDIENCE_DID
     const redirect_uri = `${hosturl}/verifier/callback?sessionId=${sessionId}`;
 
     const request = auth.createAuthorizationRequest('verification', audience, redirect_uri);
@@ -25,8 +25,8 @@ export class VerifierService {
       circuitId: 'credentialAtomicQuerySigV2',
       query: {
         allowedIssuers: ['*'],
-        type: 'giga',
-        context: 'ipfs://QmbmZXkZuZJPWNYN5ovnewzejMzg6BhwKnJP5dS4AwY4gx',
+        type: process.env.SCHEMA_TYPE,
+        context:process.env.SCHEMA_CONTEXT_URL
       },
     };
     const scope = data?.scope ?? [];
@@ -54,13 +54,13 @@ export class VerifierService {
     const keyDir = 'apps/api/src/verifier/keys';
 
     const resolvers = {
-      ['polygon:amoy']: new resolver.EthStateResolver(
-        'https://polygon-amoy.g.alchemy.com/v2/T0PE-HxhWOEH0eUNTcUOFgPQJiQzL6uf',
-        '0x1a4cC30f2aA0377b0c3bc9848766D90cb4404124',
-      ),
-      ['privado:main']: new resolver.EthStateResolver(
-        'https://rpc-mainnet.privado.id',
-        '0x3C9acB2205Aa72A05F6D77d708b5Cf85FCa3a896',
+      // ['polygon:amoy']: new resolver.EthStateResolver(
+      //   'https://polygon-amoy.g.alchemy.com/v2/T0PE-HxhWOEH0eUNTcUOFgPQJiQzL6uf',
+      //   '0x1a4cC30f2aA0377b0c3bc9848766D90cb4404124',
+      // ),
+      [process.env.RESOLVER_NETWORK]: new resolver.EthStateResolver(
+       process.env.RESOLVER_URL,
+        process.env.RESOLVER_ADDRESS,
       ),
     };
     const sessionDetails = await this.prisma.sessionId.findUnique({
