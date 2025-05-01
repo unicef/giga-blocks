@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { hexStringToBuffer } from 'src/utils/string-format';
-import { Role } from '@prisma/application';
+import { ContributorNameType, Role } from '@prisma/application';
 import { MailService } from 'src/mailer/mailer.service';
 import { QueueService } from 'src/mailer/queue.service';
 import { CreateContributor } from './contributor.dto';
@@ -52,8 +52,8 @@ export class ContributorService {
     await this.mailService.sendThankYouMail({ email, school: school.name, link: schoolLink });
   }
 
-  listContributors() {
-    return this.prisma.contributor.findMany({
+  async listContributors() {
+    const contributors = await  this.prisma.contributor.findMany({
       where: { isVisible: true },
       include: { user: {
         select:{
@@ -62,7 +62,11 @@ export class ContributorService {
           walletAddress: true,
         }
       } },
+      orderBy:[{nameType:'asc'},
+        {updatedAt:'desc'}
+      ]
     });
+    return contributors;
   }
 
   getContributor(userId: string) {
@@ -72,7 +76,7 @@ export class ContributorService {
   async claimNft(email: string, wallet: any) {
     const walletAddress = hexStringToBuffer(wallet);
 
-    const user = await this.prisma.user.update({ where: { email }, data: { walletAddress } });
+    const user = await this.prisma.user.findUnique({ where: { email } });
     const contributor = await this.prisma.contributor.findUnique({ where: { userId: user?.id } });
 
     if (contributor.nftReserved) {
@@ -126,7 +130,7 @@ export class ContributorService {
         await this.prisma.contributor.create({
           data: {
             userId: user?.id,
-            isVisible: data.isVisible,
+            isVisible: data.isVisible || false,
             nftReserved: false,
             nftClaimed: true,
             totalNftMinted: +1,
@@ -157,5 +161,31 @@ export class ContributorService {
       }
     });
     return reservedSchools;
+  }
+
+  async updateVisibility(walletAddress: string, data: any) {
+    let name = data?.name;
+    if (!data?.name) name = data?.walletAddress;
+  const nameType = name?.endsWith('.eth')
+  ? ContributorNameType.ENS
+  : name
+  ? ContributorNameType.REGULAR
+  : ContributorNameType.WALLET;
+    const userDetails = await this.prisma.user.update({
+      where: { walletAddress: hexStringToBuffer(walletAddress) },
+      data:{name:data.name}
+    });
+    if (!userDetails) {
+      throw new Error('Contributor not found');
+    }
+    const updatedcontributor = await this.prisma.contributor.update({
+      where: { userId: userDetails.id },
+      data: {
+        isVisible: data.isVisible,
+        nameType: nameType,
+        name,
+      },
+    });
+    return updatedcontributor;
   }
 }

@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/co
 import { ContributorService } from './contributor.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
+import { UpdateVisibility } from './contributor.dto';
 // import { CreateContributor } from './contributor.dto';
 
 @Controller('contributor')
@@ -32,6 +33,13 @@ export class ContributorController {
         
     }
 
+    @Public()
+    @Patch('update/:walletAddress')
+    @ApiOperation({ summary: 'Updates contributor by walletAddress' })
+    updateVisibilty(@Param('walletAddress') walletAddress: string, @Body() data:UpdateVisibility) {
+        return this.contributorService.updateVisibility(walletAddress,data);
+        
+    }
     // @Public()
     // @Post('/claimNft/:id')
     // claimNft(@Param('id')id: string, @Body() data:any) {
