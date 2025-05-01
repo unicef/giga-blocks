@@ -43,3 +43,22 @@ export class CreateContributor {
     walletAddress?: string;
 }
 
+export class UpdateVisibility{
+    @ApiProperty({
+        example:true,
+        description: 'isVisible',
+      })
+    @IsBoolean()
+    isVisible?: boolean;
+
+    @ApiProperty({
+      example:'Joe',
+      description: 'Name of the contributor',
+    })
+    @IsOptional()
+    @IsString()
+    name?: string;
+
+
+}
+

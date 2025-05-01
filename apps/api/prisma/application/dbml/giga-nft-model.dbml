@@ -254,6 +254,8 @@ Table giga_contributor {
   user giga_users
   schoolreserved String[] [not null]
   totalNftMinted Int [not null]
+  name String
+  nameType ContributorNameType [not null, default: 'NONE']
   isVisible Boolean [not null, default: false]
   nftReserved Boolean [not null, default: false]
   nftClaimed Boolean [not null, default: false]
@@ -339,6 +341,13 @@ Enum ActivationStatus {
   ACTIVE
   INACTIVE
   EXPIRED
+}
+
+Enum ContributorNameType {
+  REGULAR
+  ENS
+  WALLET
+  NONE
 }
 
 Ref: Auth.id > giga_users.id
