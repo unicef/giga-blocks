@@ -54,21 +54,29 @@ const MintedSchools = () => {
 
   const [result] = useQuery({
     query: Queries.allNftListQuery,
-    variables: { first: rowsPerPage, skip: rowsPerPage*page },
+    variables: { first: rowsPerPage, skip: rowsPerPage * page },
     pause: selectedFilter !== 'all',
   });
   const { data, fetching } = result;
 
   const [adminResult] = useQuery({
     query: Queries.adminNftListQuery,
-    variables: { id: process.env.NEXT_PUBLIC_ADMIN_ADDRESS,first: rowsPerPage, skip: rowsPerPage*page },
+    variables: {
+      id: process.env.NEXT_PUBLIC_ADMIN_ADDRESS,
+      first: rowsPerPage,
+      skip: rowsPerPage * page,
+    },
     pause: selectedFilter !== 'admin',
   });
   const { data: adminData } = adminResult;
 
   const [otherResult] = useQuery({
     query: Queries.othersNftListQuery,
-    variables: { id: process.env.NEXT_PUBLIC_ADMIN_ADDRESS,first: rowsPerPage, skip: rowsPerPage*page },
+    variables: {
+      id: process.env.NEXT_PUBLIC_ADMIN_ADDRESS,
+      first: rowsPerPage,
+      skip: rowsPerPage * page,
+    },
     pause: selectedFilter !== 'others',
   });
   const { data: otherData } = otherResult;
@@ -83,7 +91,6 @@ const MintedSchools = () => {
     } else {
       selectedData = data?.nftDatas || [];
     }
-
 
     const decodedShooldata: any = selectedData.map((data: any) => {
       let decodedData = atob(data?.tokenUri?.substring(29));

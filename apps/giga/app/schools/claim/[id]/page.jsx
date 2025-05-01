@@ -14,6 +14,7 @@ import { useThemeToggleStore } from '../../../store/themeToggleStore';
 import { useThemeStore } from '../../../store/themeStore';
 import { useSearchParams } from 'next/navigation';
 import { useThemeGet } from '../../../hooks/useTheme';
+import ClaimNFT from '../../../../components/ClaimNFT/ClaimNft';
 
 export default function SchoolDetails({ params }) {
   const { id } = params;
@@ -28,23 +29,24 @@ export default function SchoolDetails({ params }) {
   const [selectedTheme, setSelectedTheme] = useState('white');
   const defaultFontColor = '#000';
   const defaultBgColor = '#fff';
+  const defaultCardColor = '#fff';
 
   useEffect(() => {
     useThemeStore.getState().resetTheme();
-  }, []);
 
-  useEffect(() => {
     if (!data) return;
 
     const { colorScheme } = data.theme || {};
     const fontColor = colorScheme?.fontColor || defaultFontColor;
+    const cardColor = colorScheme?.cardColor || defaultCardColor;
     const bgColor = colorScheme?.bgColor || defaultBgColor;
 
-    useThemeStore.getState().setTheme(fontColor, bgColor);
+    useThemeStore.getState().setTheme(fontColor, cardColor, bgColor);
   }, [data]);
 
   const themeStore = useThemeStore();
-  const hasCustomTheme = !!themeStore.fontColor && !!themeStore.bgColor;
+  const hasCustomTheme =
+    !!themeStore.fontColor && !!themeStore.cardColor && !!themeStore.bgColor;
   const linkActivation = searchParams.get('linkActivation');
 
   // Mock data for the weekly chart
@@ -64,6 +66,13 @@ export default function SchoolDetails({ params }) {
     ? theme?.colorScheme?.fontColor || '#000'
     : themeOptions?.find((t) => t.name === selectedTheme)?.colorScheme
         .fontColor || '#000';
+
+  const cardColor = hasCustomTheme
+    ? themeStore.cardColor
+    : isMinted
+    ? theme?.colorScheme?.cardColor || '#000'
+    : themeOptions?.find((t) => t.name === selectedTheme)?.colorScheme
+        .cardColor || '#000';
 
   const bgColor = hasCustomTheme
     ? themeStore.bgColor
@@ -85,6 +94,7 @@ export default function SchoolDetails({ params }) {
         <Link href="/schools" className="school-details__back">
           <ArrowLeft size={20} /> Back
         </Link>
+        <ClaimNFT />
 
         <div className="school-details__content">
           <div className="school-details__main">
@@ -108,7 +118,11 @@ export default function SchoolDetails({ params }) {
               />
             )}
 
-            <SchoolStats fontColor={fontColor} weeklyData={weeklyData} />
+            <SchoolStats
+              cardColor={cardColor}
+              fontColor={fontColor}
+              weeklyData={weeklyData}
+            />
             <SchoolOverview
               updatedAt={data?.updatedAt}
               connectivity={data?.connectivity}
@@ -119,6 +133,7 @@ export default function SchoolDetails({ params }) {
               latitude={data?.latitude}
               gigaMapsData={giga_maps_data}
               fontColor={fontColor}
+              cardColor={cardColor}
             />
           </div>
           <Sidebar

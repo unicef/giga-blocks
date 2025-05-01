@@ -1,7 +1,11 @@
+'use client';
+
 import Image from 'next/image';
-import { Location, DataEnrichment } from '@carbon/icons-react';
-import './_schoolCard.scss';
 import Link from 'next/link';
+import { useState } from 'react';
+import { Button } from '@carbon/react';
+import { ArrowRight } from '@carbon/icons-react';
+import './_schoolCard.scss';
 
 export default function SchoolCard({
   id,
@@ -10,61 +14,78 @@ export default function SchoolCard({
   minted,
   imageHash,
   linkActivation,
+  fontColor,
+  bgColor,
 }) {
+  const [isHovered, setIsHovered] = useState(false);
   const displayName =
-    schoolName.length > 60 ? `${schoolName.substring(0, 60)}...` : schoolName;
+    schoolName.length > 25 ? `${schoolName.substring(0, 25)}...` : schoolName;
+
+  const handleMouseEnter = () => setIsHovered(true);
+  const handleMouseLeave = () => setIsHovered(false);
 
   return (
-    <Link
-      href={
-        linkActivation
-          ? `/schools/${id}?linkActivation=${linkActivation}`
-          : `/schools/${id}`
-      }
+    <div
       className="school-card"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      style={{ background: minted && bgColor }}
     >
-      <div className="school-card__content">
-        <h3 className="school-card__title">{displayName}</h3>
-
-        <div className="school-card__location">
-          <Location />
-          <span>{location}</span>
-        </div>
-
-        {minted === 'MINTED' ? (
-          <div className="school-card__minted">
-            <DataEnrichment />
-            <span>{minted}</span>
-          </div>
-        ) : (
-          <div className="school-card__unminted">
-            {/* <DataEnrichment /> */}
-            <span>
-              {minted === 'MINTED' ? 'Activated' : 'Ready to Activate'}
-            </span>
-          </div>
-        )}
-      </div>
-
       <div className="school-card__image">
         {minted === 'MINTED' ? (
           <Image
             src={`https://ipfs.io/ipfs/${imageHash}`}
             alt={`Image of ${schoolName}`}
-            width={200}
-            height={200}
+            width={400}
+            height={300}
+            className="school-card__img"
           />
         ) : (
           <div className="school-card__placeholder">
             <Image
               src="/images/no-img.png"
               alt={`No image available`}
-              width={150}
-              height={120}
+              width={400}
+              height={300}
+              className="school-card__img"
             />
           </div>
         )}
+
+        {isHovered && (
+          <div className="school-card__overlay">
+            <Link
+              href={
+                linkActivation
+                  ? `/schools/${id}?linkActivation=${linkActivation}`
+                  : `/schools/${id}`
+              }
+            >
+              <Button
+                className="school-card__view-button"
+                renderIcon={ArrowRight}
+              >
+                View Details
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
-    </Link>
+
+      <div className="school-card__content">
+        <h3
+          className="school-card__title"
+          style={{ color: minted && fontColor }}
+        >
+          {displayName}
+        </h3>
+        <p
+          className="school-card__location"
+          style={{ color: minted && fontColor }}
+        >
+          {location}
+        </p>
+      </div>
+    </div>
   );
 }
