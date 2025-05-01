@@ -41,15 +41,31 @@ export class SchoolService {
   ) {}
 
   async findAll(query: any) {
-    const { page, perPage, minted, uploadId, name, country, connectivityStatus, orderBy, order,electricity,water,teachers,computers,students,download } =
-      query;
+    const {
+      page,
+      perPage,
+      minted,
+      uploadId,
+      name,
+      country,
+      connectivityStatus,
+      orderBy,
+      order,
+      electricity,
+      water,
+      teachers,
+      computers,
+      students,
+      download,
+      connectionType,
+    } = query;
     const cacheKey = getCacheKey(name, country, page, perPage, minted);
     const cachedResult = await this.cacheManager.get<string>(cacheKey);
 
     if (cachedResult) return cachedResult;
 
     const gigaMapsConditions: Prisma.SchoolWhereInput[] = [];
-   
+
     //Combines all the filters into a single condition
     if (water !== undefined) {
       gigaMapsConditions.push({
@@ -91,6 +107,14 @@ export class SchoolService {
         },
       });
     }
+    if (connectionType !== undefined) {
+      gigaMapsConditions.push({
+        giga_maps_data: {
+          path: ['connectivity_type'],
+          equals: connectionType,
+        },
+      });
+    }
 
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
@@ -101,8 +125,8 @@ export class SchoolService {
       ...(connectivityStatus !== undefined && { connectivity: connectivityStatus === 'true' }),
       ...(electricity !== undefined && { electricity_available: electricity === 'true' }),
       ...(gigaMapsConditions.length > 0 && {
-        AND: gigaMapsConditions
-      }),    
+        AND: gigaMapsConditions,
+      }),
     };
 
     const paginate: PaginateFunction = paginator({ perPage });

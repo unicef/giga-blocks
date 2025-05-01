@@ -63,13 +63,14 @@ export class ListSchoolDto {
 
   @ApiProperty({
     required: false,
-  }) 
+  })
   @IsString()
   @IsOptional()
   order?: string;
 
   @ApiProperty({
     required: false,
+    example: 'true',
   })
   // @IsBoolean()
   @IsOptional()
@@ -77,31 +78,43 @@ export class ListSchoolDto {
 
   @ApiProperty({
     required: false,
+    example: '10',
   })
   @IsOptional()
-  teachers?:number
+  teachers?: number;
 
   @ApiProperty({
     required: false,
+    example: '50',
   })
   @IsOptional()
-  students?:number
+  students?: number;
 
   @ApiProperty({
     required: false,
+    example: true,
   })
   @IsOptional()
-  electricity?:boolean
+  electricity?: boolean;
 
   @ApiProperty({
     required: false,
+    example: '20',
   })
   @IsOptional()
-  computers?:number
+  computers?: number;
 
   @ApiProperty({
     required: false,
+    example: '2',
   })
   @IsOptional()
-  download?:number
+  download?: number;
+
+  @ApiProperty({
+    required: false,
+    example: 'ADSL',
+  })
+  @IsOptional()
+  connectionType?: string;
 }
