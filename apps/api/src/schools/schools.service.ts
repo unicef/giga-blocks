@@ -41,12 +41,56 @@ export class SchoolService {
   ) {}
 
   async findAll(query: any) {
-    const { page, perPage, minted, uploadId, name, country, connectivityStatus, orderBy, order } =
+    const { page, perPage, minted, uploadId, name, country, connectivityStatus, orderBy, order,electricity,water,teachers,computers,students,download } =
       query;
     const cacheKey = getCacheKey(name, country, page, perPage, minted);
     const cachedResult = await this.cacheManager.get<string>(cacheKey);
 
     if (cachedResult) return cachedResult;
+
+    const gigaMapsConditions: Prisma.SchoolWhereInput[] = [];
+   
+    //Combines all the filters into a single condition
+    if (water !== undefined) {
+      gigaMapsConditions.push({
+        giga_maps_data: {
+          path: ['water_availability'],
+          equals: water === 'true',
+        },
+      });
+    }
+    if (teachers !== undefined) {
+      gigaMapsConditions.push({
+        giga_maps_data: {
+          path: ['num_teachers'],
+          lte: Number(teachers),
+        },
+      });
+    }
+    if (computers !== undefined) {
+      gigaMapsConditions.push({
+        giga_maps_data: {
+          path: ['num_computers'],
+          lte: Number(computers),
+        },
+      });
+    }
+    if (students !== undefined) {
+      gigaMapsConditions.push({
+        giga_maps_data: {
+          path: ['num_students'],
+          lte: Number(students),
+        },
+      });
+    }
+    if (download !== undefined) {
+      gigaMapsConditions.push({
+        giga_maps_data: {
+          path: ['download_speed_benchmark'],
+          lte: Number(download),
+        },
+      });
+    }
 
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
@@ -55,6 +99,10 @@ export class SchoolService {
       ...(name && { name: { contains: name, mode: 'insensitive' } }),
       ...(country && { country: { contains: country, mode: 'insensitive' } }),
       ...(connectivityStatus !== undefined && { connectivity: connectivityStatus === 'true' }),
+      ...(electricity !== undefined && { electricity_available: electricity === 'true' }),
+      ...(gigaMapsConditions.length > 0 && {
+        AND: gigaMapsConditions
+      }),    
     };
 
     const paginate: PaginateFunction = paginator({ perPage });
