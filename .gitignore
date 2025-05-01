@@ -52,5 +52,7 @@ out
 .next
 .nx
 
+**/certs
+
 
 docker-compose*

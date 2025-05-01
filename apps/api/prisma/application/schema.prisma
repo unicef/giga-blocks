@@ -404,3 +404,14 @@ model SessionId{
 
   @@map("giga_id_session_id") 
 }
+
+model InternetWorker{
+  id     String   @id @default(uuid())
+  did    String @unique
+  name   String ?
+  email  String @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("giga_ciw")
+}
