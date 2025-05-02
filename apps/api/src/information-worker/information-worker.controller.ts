@@ -27,8 +27,13 @@ export class InformationWorkerController {
     return this.informationWorkerService.update(id, updateInformationWorkerDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.informationWorkerService.remove(+id);
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.informationWorkerService.remove(+id);
+  // }
+
+  @Post('/send-email')
+  sendEmail() {
+    return this.informationWorkerService.sendEmail();
   }
 }

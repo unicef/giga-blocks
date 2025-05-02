@@ -37,7 +37,13 @@ export class InformationWorkerService {
     });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} informationWorker`;
+  sendEmail(){
+    this._logger.log('Sending email to the new CIW');
+    // Logic to send email
+    return 'Email sent successfully';
   }
+
+  // remove(id: number) {
+  //   return `This action removes a #${id} informationWorker`;
+  // }
 }
