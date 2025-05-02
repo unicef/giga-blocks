@@ -2,8 +2,11 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { InformationWorkerService } from './information-worker.service';
 import { CreateInformationWorkerDto } from './dto/create-information-worker.dto';
 import { UpdateInformationWorkerDto } from './dto/update-information-worker.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('information-worker')
+@ApiTags('Information Worker')
 export class InformationWorkerController {
   constructor(private readonly informationWorkerService: InformationWorkerService) {}
 
@@ -31,7 +34,7 @@ export class InformationWorkerController {
   // remove(@Param('id') id: string) {
   //   return this.informationWorkerService.remove(+id);
   // }
-
+  @Public()
   @Post('/send-email')
   sendEmail() {
     return this.informationWorkerService.sendEmail();
