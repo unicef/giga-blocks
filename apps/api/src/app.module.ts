@@ -26,6 +26,7 @@ import { CacheableMemory } from 'cacheable';
 import { createKeyv } from '@keyv/redis';
 import { FeaturedModule } from './featured/featured.module';
 import { VerifierModule } from './verifier/verifier.module';
+import { InformationWorkerModule } from './information-worker/information-worker.module';
 
 @Module({
   imports: [
@@ -107,7 +108,8 @@ import { VerifierModule } from './verifier/verifier.module';
     ContributorModule,
     LinkactivationModule,
     FeaturedModule,
-    VerifierModule
+    VerifierModule,
+    InformationWorkerModule
   ],
   providers: [],
 })

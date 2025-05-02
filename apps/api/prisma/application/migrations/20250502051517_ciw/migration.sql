@@ -3,7 +3,9 @@ CREATE TABLE "giga_ciw" (
     "id" TEXT NOT NULL,
     "did" TEXT NOT NULL,
     "name" TEXT,
+    "emailSent" BOOLEAN NOT NULL DEFAULT false,
     "email" TEXT NOT NULL,
+    "isArchived" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
