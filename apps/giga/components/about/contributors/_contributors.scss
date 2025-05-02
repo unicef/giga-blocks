@@ -1,0 +1,116 @@
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/type' as *;
+@use '@carbon/styles/scss/colors' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/breakpoint' as *;
+
+.contributors-section {
+  background-color: #e8f0ff; // Light blue background
+  padding: $spacing-09 $spacing-07;
+  border-radius: 16px;
+  margin: 80px 32px;
+  position: relative;
+  overflow: hidden;
+
+  @include breakpoint-down(md) {
+    padding: $spacing-07 $spacing-05;
+    margin: 60px 24px;
+  }
+
+  @include breakpoint-down(sm) {
+    padding: $spacing-06 $spacing-04;
+    margin: 40px 16px;
+  }
+}
+
+.contributors-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+
+.heart-icon {
+  width: 72px;
+  height: 72px;
+  background-color: #4589ff; // Blue background
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto $spacing-07;
+
+  .heart {
+    fill: white;
+  }
+}
+
+.contributors-title {
+  @include type-style('heading-04');
+  color: $gray-100;
+  max-width: 900px;
+  margin: 0 auto $spacing-07;
+
+  @include breakpoint-down(md) {
+    @include type-style('heading-03');
+  }
+}
+
+.contributors-description {
+  @include type-style('body-01');
+  color: $gray-70;
+  max-width: 800px;
+  margin: 0 auto $spacing-09;
+
+  @include breakpoint-down(md) {
+    margin-bottom: $spacing-07;
+  }
+}
+
+.contributors-grid {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 16px;
+  margin-bottom: $spacing-06;
+  padding: $spacing-07 0;
+}
+
+.contributor-name {
+  @include type-style('label-01');
+  color: $gray-60;
+  white-space: nowrap;
+}
+
+.logo-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  background-color: #ffda44; // Yellow background
+  border-radius: 16px;
+  transform: rotate(45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    transform: rotate(-45deg);
+    font-size: 36px;
+    font-weight: 700;
+    color: $gray-100;
+  }
+}
+
+.contributors-more {
+  @include type-style('body-01');
+  color: $gray-70;
+  margin-top: $spacing-05;
+}
