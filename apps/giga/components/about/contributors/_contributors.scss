@@ -5,7 +5,7 @@
 @use '@carbon/styles/scss/breakpoint' as *;
 
 .contributors-section {
-  background-color: #e8f0ff; // Light blue background
+  background-color: #d6e4ff;
   padding: $spacing-09 $spacing-07;
   border-radius: 16px;
   margin: 80px 32px;
@@ -113,4 +113,9 @@
   @include type-style('body-01');
   color: $gray-70;
   margin-top: $spacing-05;
+}
+.cta-section {
+  margin-bottom: 90px;
+  margin-right: 32px;
+  margin-left: 32px;
 }

@@ -10,6 +10,7 @@ import {
   CheckmarkOutline,
 } from '@carbon/icons-react';
 import './_schoolInfo.scss';
+import CtaSection from '../../../components/CtaSection';
 
 export default function SchoolsInfo() {
   return (
@@ -79,21 +80,15 @@ export default function SchoolsInfo() {
         </p>
       </section>
 
-      <section className="cta-section">
-        <div className="cta-content">
-          <h2 className="cta-title">
+      <CtaSection
+        title={
+          <>
             Go ahead, find a school and mint its NFT.
-            <br /> It's never been easier to make a lasting impact
-          </h2>
-          <Button
-            className="cta-button"
-            renderIcon={ArrowRight}
-            onClick={() => (window.location.href = '/schools/list')}
-          >
-            Activate a school
-          </Button>
-        </div>
-      </section>
+            <br />
+            It’s never been easier to make a lasting impact.
+          </>
+        }
+      />
     </div>
   );
 }
