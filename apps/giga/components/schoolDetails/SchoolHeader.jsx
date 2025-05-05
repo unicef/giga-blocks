@@ -19,7 +19,7 @@ const Header = ({
         <div className="school-details__location">
           <Location size={16} /> {region_name}
           <a
-            href={`${mapUrl}/schools?country=${locationId}&school_ids=${countryCode}`}
+            href={`${mapUrl}/schools?country=${countryCode}&school_ids=${locationId}`}
             className="school-details__map-link"
             target="_blank"
             style={{ color: fontColor }}
