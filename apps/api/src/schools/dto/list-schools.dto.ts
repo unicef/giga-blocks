@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import { MintStatus } from '@prisma/application';
 
 export class ListSchoolDto {
@@ -63,8 +63,58 @@ export class ListSchoolDto {
 
   @ApiProperty({
     required: false,
-  }) 
+  })
   @IsString()
   @IsOptional()
   order?: string;
+
+  @ApiProperty({
+    required: false,
+    example: 'true',
+  })
+  // @IsBoolean()
+  @IsOptional()
+  water?: boolean;
+
+  @ApiProperty({
+    required: false,
+    example: '10',
+  })
+  @IsOptional()
+  teachers?: number;
+
+  @ApiProperty({
+    required: false,
+    example: '50',
+  })
+  @IsOptional()
+  students?: number;
+
+  @ApiProperty({
+    required: false,
+    example: true,
+  })
+  @IsOptional()
+  electricity?: boolean;
+
+  @ApiProperty({
+    required: false,
+    example: '20',
+  })
+  @IsOptional()
+  computers?: number;
+
+  @ApiProperty({
+    required: false,
+    example: '2',
+  })
+  @IsOptional()
+  download?: number;
+
+  @ApiProperty({
+    required: false,
+    example: 'ADSL',
+  })
+  @IsOptional()
+  connectionType?: string;
 }

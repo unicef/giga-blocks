@@ -8,6 +8,7 @@ import {
   MintQueueProcessor,
   ImageProcessor,
   QueueProcessor,
+  VCProcessor,
 } from './processors';
 import { MailService } from './mailer.service';
 import {
@@ -16,6 +17,7 @@ import {
   IMAGE_QUEUE,
   ONCHAIN_DATA_QUEUE,
   CONTRIBUTE_QUEUE,
+  VC_QUEUE,
 } from './constants';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { QueueService } from './queue.service';
@@ -73,6 +75,9 @@ import { ContributorService } from 'src/contributor/contributor.service';
     BullModule.registerQueue({
       name: CONTRIBUTE_QUEUE,
     }),
+    BullModule.registerQueue({
+      name: VC_QUEUE
+    })
   ],
   providers: [
     MailProcessor,
@@ -83,6 +88,7 @@ import { ContributorService } from 'src/contributor/contributor.service';
     ImageProcessor,
     ContributeDataService,
     ContributeProcessor,
+    VCProcessor,
     MagicLinkService,
     SchoolService,
     LinkactivationService,

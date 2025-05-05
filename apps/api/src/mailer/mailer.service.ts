@@ -8,6 +8,7 @@ import {
   DEVELOPER_JOIN_MAIL,
   SEND_MAGIC_LINK,
   THANK_YOU_MAIL,
+  SEND_VC_LINK,
 } from './constants';
 import { Queue } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
@@ -129,19 +130,13 @@ export class MailService {
     }
   }
 
-  public async sendMagicLink({
-    email,
-    link
-  }:{
-    email: string;
-    link:string;
-  }) {
+  public async sendMagicLink({ email, link }: { email: string; link: string }) {
     try {
       await this._mailQueue.add(
         SEND_MAGIC_LINK,
         {
           email,
-          link
+          link,
         },
         jobOptions,
       );
@@ -154,11 +149,11 @@ export class MailService {
   public async sendThankYouMail({
     email,
     school,
-    link
-  }:{
+    link,
+  }: {
     email: string;
-    school:string;
-    link:string;
+    school: string;
+    link: string;
   }) {
     try {
       await this._mailQueue.add(
@@ -166,7 +161,24 @@ export class MailService {
         {
           email,
           school,
-          link
+          link,
+        },
+        jobOptions,
+      );
+    } catch (error) {
+      this._logger.error(`Error queueing registration email to user ${email}`);
+      throw error;
+    }
+  }
+
+  public async sendVCLink({ email, link, did }: { email: string; link: string; did: string }) {
+    try {
+      await this._mailQueue.add(
+        SEND_VC_LINK,
+        {
+          email,
+          link,
+          did,
         },
         jobOptions,
       );
