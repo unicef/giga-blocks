@@ -4,10 +4,11 @@ const Header = ({
   name,
   school_type,
   region_name,
-  longitude,
-  latitude,
+  locationId,
+  countryCode,
   fontColor,
 }) => {
+  const mapUrl = process.env.NEXT_PUBLIC_GIGA_MAPS_API
   return (
     <div className="school-details__header">
       <div className="school-details__info">
@@ -18,7 +19,7 @@ const Header = ({
         <div className="school-details__location">
           <Location size={16} /> {region_name}
           <a
-            href={`https://maps.google.com/?q=${latitude},${longitude}`}
+            href={`${mapUrl}/schools?country=${locationId}&school_ids=${countryCode}`}
             className="school-details__map-link"
             target="_blank"
             style={{ color: fontColor }}

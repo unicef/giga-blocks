@@ -111,8 +111,8 @@ export default function SchoolDetails({ params }) {
               name={data?.name}
               school_type={data?.school_type}
               region_name={data?.region_name}
-              longitude={data?.longitude}
-              latitude={data?.latitude}
+              locationId={data?.locationId}
+              countryCode={data?.countryCode}
               fontColor={fontColor}
             />
             <SchoolStats

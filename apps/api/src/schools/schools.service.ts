@@ -30,6 +30,7 @@ import { Cache } from 'cache-manager';
 import { getCacheKey } from 'src/utils/cache/getCacheKey';
 import { ReserveNFTDto, SchoolActivation } from './dto/reserve-nft.dto';
 import { ContributorService } from 'src/contributor/contributor.service';
+import getLocationId from 'src/utils/gigamaps';
 @Injectable()
 export class SchoolService {
   constructor(
@@ -293,7 +294,7 @@ export class SchoolService {
   }
 
   async findOne(id: string) {
-    return await this.prisma.school.findUnique({
+    const school =  await this.prisma.school.findUnique({
       where: {
         id,
       },
@@ -301,6 +302,19 @@ export class SchoolService {
         theme: true,
       },
     });
+
+    if (!school) {
+      throw new NotFoundException('School not found');
+    }
+    const locationdetails =  await getLocationId(
+      school.giga_school_id,
+      'giga_id_school')
+      const schooldetails ={
+        ...school,
+        locationId:locationdetails.id,
+        countryCode:locationdetails.country_code,
+      }
+      return schooldetails;
   }
 
   async countSchools(query: ListSchoolDto) {
