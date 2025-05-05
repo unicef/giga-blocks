@@ -228,8 +228,10 @@ export class QueueService {
   }
 
   public async processVC(vcDetails:any){
+    this._logger.log('VC details received');
     try{
      await this._vcQueue.add(SET_PROCESS_VC, {vcDetails}, jobOptions);
+     this._logger.log('VC details added to queue');
     }
     catch(error){
       this._logger.error(`Error queueing transaction to blockchain `);

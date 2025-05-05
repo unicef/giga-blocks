@@ -592,6 +592,7 @@ export class VCProcessor {
   constructor(
     private readonly _mailerService: MailerService,
     private readonly _configService: ConfigService,
+    private prismaService: PrismaAppService,
   ) {}
 
   @OnQueueActive()
@@ -623,10 +624,19 @@ export class VCProcessor {
   }
 
   @Process(SET_PROCESS_VC)
-  public async contributeUpdate(job: Job<{ vcDetails:any }>) {
+  public async hanldeProcessVC(job: Job<{ vcDetails:any }>) {
     this._logger.log(`Processing VC`);
     const vcDetails = job.data.vcDetails;
+    const universalLink =vcDetails.universalLink
+    const did = vcDetails.credentialSubject.id;
     console.log(vcDetails);
+    const CIWDetails = await this.prismaService.informationWorker.findUnique({
+      where:{
+        did:did,
+        emailSent:false
+      }
+    })
+    console.log(CIWDetails);
    
     
   }

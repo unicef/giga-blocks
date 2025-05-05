@@ -8,6 +8,7 @@ import {
   MintQueueProcessor,
   ImageProcessor,
   QueueProcessor,
+  VCProcessor,
 } from './processors';
 import { MailService } from './mailer.service';
 import {
@@ -87,6 +88,7 @@ import { ContributorService } from 'src/contributor/contributor.service';
     ImageProcessor,
     ContributeDataService,
     ContributeProcessor,
+    VCProcessor,
     MagicLinkService,
     SchoolService,
     LinkactivationService,
