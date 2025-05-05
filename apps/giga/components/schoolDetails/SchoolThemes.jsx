@@ -1,8 +1,12 @@
+'use client';
+
 import { ArrowLeft } from '@carbon/icons-react';
 import { Button } from '@carbon/react';
 import { useThemeToggleStore } from '../../app/store/themeToggleStore';
 import { useThemeStore } from '../../app/store/themeStore';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import './_themeSelector.scss';
 
 const ThemeSelector = ({
   themeOptions,
@@ -36,52 +40,66 @@ const ThemeSelector = ({
     }
   };
   return (
-    <div className="school-details__theme-selector">
-      <h3 className="school-details__section-title">Select Theme</h3>
-      <p className="school-details__section-description">
-        Click a theme below to preview and select it for the activated school
-        view.
-      </p>
+    <div className="theme-selector">
+      <div className="theme-selector__content">
+        <div className="theme-selector__info">
+          <p className="theme-selector__description">
+            Every activated school gains a permanent seat on the blockchain, one
+            step closer to reliable internet access. Once the school is
+            activated, a unique image is generated.
+          </p>
+          <div className="theme-selector__brand">Giga Blocks</div>
+        </div>
 
-      <div className="school-details__themes">
-        {!loading &&
-          themeOptions?.map((theme) => (
-            <button
-              key={theme.id}
-              className={`school-details__theme-option ${
-                selectedTheme === theme.id ? 'selected' : ''
-              }`}
-              onClick={() => handleThemeChange(theme.id)}
-            >
-              <div
-                className="school-details__theme-color"
-                style={{ backgroundColor: theme.colorScheme?.fontColor }}
-              />
-              <div
-                className="school-details__theme-color"
-                style={{ backgroundColor: theme.colorScheme?.cardColor }}
-              />
-              <div
-                className="school-details__theme-color"
-                style={{ backgroundColor: theme.colorScheme?.bgColor }}
-              />
-            </button>
-          ))}
+        <div className="theme-selector__illustration">
+          <Image
+            src="/images/globe-people.png"
+            alt="People working with a globe"
+            width={200}
+            height={180}
+          />
+        </div>
+
+        <div className="theme-selector__options">
+          <p className="theme-selector__prompt">
+            Pick a theme color that suits you the most before you activate.
+          </p>
+
+          <div className="theme-selector__themes">
+            {!loading &&
+              themeOptions?.map((theme) => (
+                <button
+                  key={theme.id}
+                  className={`theme-selector__theme-option ${
+                    selectedTheme === theme.id ? 'selected' : ''
+                  }`}
+                  onClick={() => handleThemeChange(theme.id)}
+                >
+                  <div
+                    className="theme-selector__theme-color"
+                    style={{ backgroundColor: theme.colorScheme?.fontColor }}
+                  />
+                  <div
+                    className="theme-selector__theme-color"
+                    style={{ backgroundColor: theme.colorScheme?.cardColor }}
+                  />
+                  <div
+                    className="theme-selector__theme-color"
+                    style={{ backgroundColor: theme.colorScheme?.bgColor }}
+                  />
+                </button>
+              ))}
+          </div>
+
+          <Button
+            onClick={handleActivateClick}
+            className="theme-selector__activate-btn"
+          >
+            {isVisibleForMinted ? 'Update' : 'Activate'}{' '}
+            <ArrowLeft className="rotate-180" size={16} />
+          </Button>
+        </div>
       </div>
-
-      <p className="school-details__lorem">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate
-        libero et velit interdum, ac aliquet odio mattis. Class aptent taciti
-        sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
-      </p>
-
-      <Button
-        onClick={handleActivateClick}
-        className="school-details__activate-btn"
-      >
-        {isVisibleForMinted ? 'Update' : 'Activate'}{' '}
-        <ArrowLeft className="rotate-180" size={16} />
-      </Button>
     </div>
   );
 };
