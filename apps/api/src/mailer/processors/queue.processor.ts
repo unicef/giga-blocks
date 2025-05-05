@@ -27,7 +27,9 @@ import {
   SET_THEME,
   RESERVE_NFT,
   CLAIM_NFT,
-  SET_PROCESS_VC
+  SET_PROCESS_VC,
+  SEND_VC_LINK,
+  UPDATE_CIW,
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
@@ -51,6 +53,7 @@ import decodeBase64Image from 'src/utils/ipfs/decodeImage';
 import uploadFile from 'src/utils/ipfs/ipfsAdd';
 import { hexStringToBuffer } from 'src/utils/string-format';
 import { ContributorService } from 'src/contributor/contributor.service';
+import { MailService } from '../mailer.service';
 
 @Injectable()
 @Processor(ONCHAIN_DATA_QUEUE)
@@ -106,18 +109,14 @@ export class QueueProcessor {
   }
 
   @Process(CLAIM_NFT)
-  public async claimNft(
-    job: Job<{  email: string; walletAddress: string }>,
-  ) {
+  public async claimNft(job: Job<{ email: string; walletAddress: string }>) {
     this._logger.log(`Sending transaction to blockchain`);
     const email = job.data.email;
     const walletAddress = job.data.walletAddress;
     try {
       const tx = await claimNft(walletAddress, email);
-      if(tx){
-        this.contributorService.claimNft(
-          job.data.email,
-          job.data.walletAddress)
+      if (tx) {
+        this.contributorService.claimNft(job.data.email, job.data.walletAddress);
       }
     } catch (error) {
       this._logger.error(`Failed to send transactions to blockchain`);
@@ -201,7 +200,7 @@ export class MintQueueProcessor {
   public async sendDBUpdate(
     job: Job<{
       status: MintStatus;
-      ids: string[] ;
+      ids: string[];
       themeId?: string;
       email?: string;
       walletAddress?: string;
@@ -246,9 +245,9 @@ export class MintQueueProcessor {
 
     if (txReceipt.status === 1) {
       try {
-         this._mintQueue.add(SET_THEME,{schoolids:job.data.giga_ids},jobOptions);
+        this._mintQueue.add(SET_THEME, { schoolids: job.data.giga_ids }, jobOptions);
         for (let i = 0; i < job.data.giga_ids.length; i++) {
-           this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_ids[i] }, jobOptions);
+          this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_ids[i] }, jobOptions);
         }
       } catch (error) {
         this._logger.log(`Error generating image: ${error}`);
@@ -285,8 +284,12 @@ export class MintQueueProcessor {
       if (txReceipt.status === 1) {
         try {
           // function to reserve the NFT
-          this._mintQueue.add(RESERVE_NFT, { giga_school_id: job.data.giga_id, email: job.data.email,schoolId:job?.data?.id }, jobOptions);
-           this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_id }, jobOptions);
+          this._mintQueue.add(
+            RESERVE_NFT,
+            { giga_school_id: job.data.giga_id, email: job.data.email, schoolId: job?.data?.id },
+            jobOptions,
+          );
+          this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_id }, jobOptions);
         } catch (error) {
           this._logger.log(`Error generating image: ${error}`);
         }
@@ -335,53 +338,48 @@ export class MintQueueProcessor {
   }
 
   @Process(SET_THEME)
-  public async processTheme(job: Job<{schoolids:[]}>){
-   const schoolIds = job.data.schoolids;
-   const themes = await this._prismaService.theme.findMany({});
-   for (const schoolId of schoolIds) {
-    const randomTheme = themes[Math.floor(Math.random() * themes.length)];
-    try{
-      const school = await this._prismaService.school.update({
-      where: {
-        giga_school_id: schoolId,
-      },
-      data: {
-        themeId: randomTheme.id,
-      },
-   });
-  }
-    catch(err){
-      console.log(err);
+  public async processTheme(job: Job<{ schoolids: [] }>) {
+    const schoolIds = job.data.schoolids;
+    const themes = await this._prismaService.theme.findMany({});
+    for (const schoolId of schoolIds) {
+      const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+      try {
+        const school = await this._prismaService.school.update({
+          where: {
+            giga_school_id: schoolId,
+          },
+          data: {
+            themeId: randomTheme.id,
+          },
+        });
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
 
-  }
-
   @Process(RESERVE_NFT)
-  public async reserveNft(job: Job<{ giga_school_id: string; email: string ,schoolId:string,walletAddress?: string}>) {
+  public async reserveNft(
+    job: Job<{ giga_school_id: string; email: string; schoolId: string; walletAddress?: string }>,
+  ) {
     const schoolId = job.data.schoolId;
     const email = job.data.email;
     const giga_school_id = job.data.giga_school_id;
     try {
-      const tx =  await reserveNft(
-        giga_school_id,
-        email
-       )
-       const txReceipt = await tx.wait();
+      const tx = await reserveNft(giga_school_id, email);
+      const txReceipt = await tx.wait();
 
-       if(txReceipt.status === 1){
+      if (txReceipt.status === 1) {
         this.contributorService.addContributor({
           email: job.data.email,
           walletAddress: job.data.walletAddress,
-          schoolReserved: schoolId
-        })
-       }
+          schoolReserved: schoolId,
+        });
+      }
     } catch (error) {
       console.log(error);
     }
   }
-
-  
 }
 
 @Injectable()
@@ -448,25 +446,26 @@ export class ImageProcessor {
     );
     const base64Image = await generateP5Image(`${artScript}`, scriptData);
     const decodedImage = await decodeBase64Image(base64Image);
-    try{if (decodedImage) {
-      await uploadFile(decodedImage.data)
-        .then(async res => {
-          await updateImageHash(
-            'NFTContent',
-            this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-            res,
-            id,
-          );
-          await this._prismaService.school.update({
-            where: { giga_school_id: id },
-            data: { imageHash: res },
+    try {
+      if (decodedImage) {
+        await uploadFile(decodedImage.data)
+          .then(async res => {
+            await updateImageHash(
+              'NFTContent',
+              this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
+              res,
+              id,
+            );
+            await this._prismaService.school.update({
+              where: { giga_school_id: id },
+              data: { imageHash: res },
+            });
+          })
+          .catch(err => {
+            console.log(err);
           });
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }}
-    catch (error) {
+      }
+    } catch (error) {
       this._logger.error(`Error updating image: ${error}`);
     }
   }
@@ -584,7 +583,6 @@ export class UpdateProcessor {
   }
 }
 
-
 @Injectable()
 @Processor(VC_QUEUE)
 export class VCProcessor {
@@ -593,6 +591,7 @@ export class VCProcessor {
     private readonly _mailerService: MailerService,
     private readonly _configService: ConfigService,
     private prismaService: PrismaAppService,
+    private readonly mailService: MailService,
   ) {}
 
   @OnQueueActive()
@@ -623,21 +622,40 @@ export class VCProcessor {
     }
   }
 
+  @Process(UPDATE_CIW)
+  public async updateCiw(job: Job<{ did: string }>) {
+    const id = job.data.did;
+    try {
+      await this.prismaService.informationWorker.update({
+        where: { did: id },
+        data: { emailSent: true },
+      });
+    } catch (error) {
+      this._logger.error(`Error updating CIW: ${error}`);
+    }
+  }
+
   @Process(SET_PROCESS_VC)
-  public async hanldeProcessVC(job: Job<{ vcDetails:any }>) {
+  public async hanldeProcessVC(job: Job<{ vcDetails: any }>) {
     this._logger.log(`Processing VC`);
     const vcDetails = job.data.vcDetails;
-    const universalLink =vcDetails.universalLink
+    const universalLink = vcDetails.universalLink;
     const did = vcDetails.credentialSubject.id;
-    console.log(vcDetails);
     const CIWDetails = await this.prismaService.informationWorker.findUnique({
-      where:{
-        did:did,
-        emailSent:false
-      }
-    })
-    console.log(CIWDetails);
-   
-    
+      where: {
+        did: did,
+        emailSent: false,
+      },
+    });
+    if (CIWDetails)
+      this.mailService.sendVCLink({
+        email: CIWDetails.email,
+        link: universalLink,
+        did: did,
+      });
+    else{
+      this._logger.error(`No CIW Found to send VC link to CIW`);
+      
+    }
   }
 }

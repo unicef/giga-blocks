@@ -17,5 +17,6 @@ export const SET_THEME = 'SET_THEME';
 export const RESERVE_NFT = 'RESERVE_NFT';
 export const CLAIM_NFT = 'CLAIM_NFT';
 export const SET_PROCESS_VC = 'PROCESS_VC';
+export const UPDATE_CIW = 'UPDATE_CIW';
 
 

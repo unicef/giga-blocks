@@ -12,6 +12,7 @@ import {
   SET_MINT_SINGLE_NFT,
   SET_ONCHAIN_DATA,
   SET_PROCESS_VC,
+  UPDATE_CIW,
   VC_QUEUE,
 } from './constants';
 import { Queue } from 'bull';
@@ -220,6 +221,16 @@ export class QueueService {
   public async claimReservedNFT(email: string, walletAddress: string) {
     try {
       await this._onchainQueue.add(CLAIM_NFT, { email, walletAddress }, jobOptions);
+      return { message: 'queue added successfully', statusCode: 200 };
+    } catch (error) {
+      this._logger.error(`Error queueing transaction to blockchain `);
+      throw error;
+    }
+  }
+
+  public async updateCIW(did:string){
+    try {
+      await this._vcQueue.add(UPDATE_CIW, { did }, jobOptions);
       return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
       this._logger.error(`Error queueing transaction to blockchain `);

@@ -1,7 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req } from '@nestjs/common';
 import { VerifierService } from './verifier.service';
-import { CreateVerifierDto } from './dto/create-verifier.dto';
-import { UpdateVerifierDto } from './dto/update-verifier.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
 
