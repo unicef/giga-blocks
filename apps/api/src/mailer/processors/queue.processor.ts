@@ -12,6 +12,7 @@ import {
   MINT_QUEUE,
   ONCHAIN_DATA_QUEUE,
   SET_DBUPDATE_QUEUE,
+  VC_QUEUE,
   SET_MINT_NFT,
   SET_MINT_SINGLE_NFT,
   SET_ONCHAIN_DATA,
@@ -25,7 +26,8 @@ import {
   SET_CSV_MINT,
   SET_THEME,
   RESERVE_NFT,
-  CLAIM_NFT
+  CLAIM_NFT,
+  SET_PROCESS_VC
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
@@ -579,5 +581,53 @@ export class UpdateProcessor {
         userId,
       );
     }
+  }
+}
+
+
+@Injectable()
+@Processor(VC_QUEUE)
+export class VCProcessor {
+  private readonly _logger = new Logger(VCProcessor.name);
+  constructor(
+    private readonly _mailerService: MailerService,
+    private readonly _configService: ConfigService,
+  ) {}
+
+  @OnQueueActive()
+  public onActive(job: Job) {
+    this._logger.debug(`Processing job ${job.id} of type ${job.name}`);
+  }
+
+  @OnQueueCompleted()
+  public onComplete(job: Job) {
+    this._logger.debug(`Completed job ${job.id} of type ${job.name}`);
+  }
+
+  @OnQueueFailed()
+  public async onErrorDB(job: Job<any>, error: any) {
+    this._logger.error(`Failed job ${job.id} of type ${job.name}: ${error.message}`, error.stack);
+    if (job.attemptsMade === job.opts.attempts) {
+      try {
+        return this._mailerService.sendMail({
+          to: this._configService.get('EMAIL_ADDRESS'),
+          from: this._configService.get('EMAIL_ADDRESS'),
+          subject: 'Something went wrong while updating database!!',
+          template: './error',
+          context: {},
+        });
+      } catch {
+        this._logger.error('Failed to send confirmation email to admin');
+      }
+    }
+  }
+
+  @Process(SET_PROCESS_VC)
+  public async contributeUpdate(job: Job<{ vcDetails:any }>) {
+    this._logger.log(`Processing VC`);
+    const vcDetails = job.data.vcDetails;
+    console.log(vcDetails);
+   
+    
   }
 }

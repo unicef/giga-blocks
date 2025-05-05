@@ -6,3 +6,4 @@ export const DEVELOPER_JOIN_MAIL = 'DEVELOPER_JOIN_MAIL';
 export const DATA_VALIDATION = 'DATA_VALIDATION';
 export const SEND_MAGIC_LINK = 'SEND_MAGIC_LINK ';
 export const THANK_YOU_MAIL = 'THANK_YOU_MAIL';
+export const SEND_VC_LINK ='VC_LINK';

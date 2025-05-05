@@ -11,6 +11,8 @@ import {
   SET_MINT_NFT,
   SET_MINT_SINGLE_NFT,
   SET_ONCHAIN_DATA,
+  SET_PROCESS_VC,
+  VC_QUEUE,
 } from './constants';
 import { Queue } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
@@ -34,6 +36,7 @@ export class QueueService {
     @InjectQueue(MINT_QUEUE) private readonly _mintQueue: Queue,
     @InjectQueue(IMAGE_QUEUE) private readonly _imageQueue: Queue,
     @InjectQueue(CONTRIBUTE_QUEUE) private readonly _contributeQueue: Queue,
+    @InjectQueue(VC_QUEUE) private readonly _vcQueue: Queue,
     private readonly _configService: ConfigService,
     private readonly _prismaService: PrismaAppService,
   ) {}
@@ -219,6 +222,16 @@ export class QueueService {
       await this._onchainQueue.add(CLAIM_NFT, { email, walletAddress }, jobOptions);
       return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
+      this._logger.error(`Error queueing transaction to blockchain `);
+      throw error;
+    }
+  }
+
+  public async processVC(vcDetails:any){
+    try{
+     await this._vcQueue.add(SET_PROCESS_VC, {vcDetails}, jobOptions);
+    }
+    catch(error){
       this._logger.error(`Error queueing transaction to blockchain `);
       throw error;
     }

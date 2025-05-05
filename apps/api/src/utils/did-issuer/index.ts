@@ -17,7 +17,6 @@ const getIssuedVC = async() =>{
     }
     try{
         const response = await axios.get(`${url}v2/identities/${issuerDID}/credentials/links`,{headers});
-        console.log(response.data);
         return response.data;
 
     }

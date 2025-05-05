@@ -3,6 +3,7 @@ import { CreateInformationWorkerDto } from './dto/create-information-worker.dto'
 import { UpdateInformationWorkerDto } from './dto/update-information-worker.dto';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import getIssuedVC from 'src/utils/did-issuer';
+import { QueueService } from 'src/mailer/queue.service';
 
 @Injectable()
 export class InformationWorkerService {
@@ -10,6 +11,7 @@ export class InformationWorkerService {
   
   constructor(
     private prisma : PrismaAppService,
+    private readonly queueService: QueueService,
   ){}
   create(createInformationWorkerDto: CreateInformationWorkerDto) {
     return this.prisma.informationWorker.create({
@@ -43,7 +45,7 @@ export class InformationWorkerService {
     // Logic to send email
     const res = await getIssuedVC();
     for (let i= 0; i<res.length; i++){
-      console.log("res",res[i])
+      this.queueService.processVC(res[i]);
     }
        
     return 'Email sent successfully';
