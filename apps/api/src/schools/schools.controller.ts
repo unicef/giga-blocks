@@ -85,7 +85,7 @@ export class SchoolController {
 
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @ApiOperation({summary:'Upload the school csv for bulk mint'})
+  @ApiOperation({ summary: 'Upload the school csv for bulk mint' })
   @Post('/uploadFile')
   async uploadFile(
     @Req() req: fastify.FastifyRequest,
@@ -144,7 +144,7 @@ export class SchoolController {
 
   @Public()
   @Patch('updateTheme/:schoolId')
-  @ApiOperation({ summary: "Theme update for a school" })
+  @ApiOperation({ summary: 'Theme update for a school' })
   updateTheme(@Param('schoolId') schoolId: string, @Body() themeActivationDto: ThemeActivationDto) {
     return this.schoolService.updateTheme(schoolId, themeActivationDto.themeId);
   }
@@ -178,14 +178,14 @@ export class SchoolController {
   @Public()
   @Get('gigaSchoolId/:gigaSchoolId')
   @ApiOperation({ summary: 'Get the school by gigaSchoolId' })
-  async getGigaSchoolId(@Param('gigaSchoolId')gigaSchoolId: string) {
+  async getGigaSchoolId(@Param('gigaSchoolId') gigaSchoolId: string) {
     return await this.schoolService.getGigaSchoolId(gigaSchoolId);
   }
 
   @Public()
   @Post('/activateSchool')
   @ApiOperation({ summary: 'Activate the school by paying user' })
-  async activateSchool(@Body() data:SchoolActivation) {
+  async activateSchool(@Body() data: SchoolActivation) {
     return this.schoolService.activateSchool(data);
   }
 
@@ -198,10 +198,10 @@ export class SchoolController {
     return data.data[0];
   }
 
-//   @UseGuards(ActivationGuard)
-//   @Public()
-//   @Get('/testEmailActivation/:uuid')
-//   async activateWithEmail(@Param('uuid') uuid: string) {
-//     console.log(uuid);
-//   }
+  //   @UseGuards(ActivationGuard)
+  //   @Public()
+  //   @Get('/testEmailActivation/:uuid')
+  //   async activateWithEmail(@Param('uuid') uuid: string) {
+  //     console.log(uuid);
+  //   }
 }

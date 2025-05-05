@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useGetActiveSchool } from '../../app/hooks/useActivation';
 import SchoolHeader from '../../components/schoolSearch/header/header';
 import SchoolSearch from '../../components/schoolSearch/schoolSearch/SchoolSearch';
+import SchoolInfo from '../../components/schoolSearch/schoolInfo/SchoolInfo';
 import { Button, Modal } from '@carbon/react';
 
 export default function SchoolPage() {
@@ -29,6 +30,7 @@ export default function SchoolPage() {
     <div>
       <SchoolHeader />
       <SchoolSearch linkActivation={linkActivation} />
+      <SchoolInfo />
 
       {showExpiredModal && (
         <Modal
