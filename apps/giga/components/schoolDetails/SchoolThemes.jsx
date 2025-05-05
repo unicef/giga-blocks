@@ -56,7 +56,7 @@ const ThemeSelector = ({
             src="/images/globe-people.png"
             alt="People working with a globe"
             width={200}
-            height={180}
+            height={100}
           />
         </div>
 

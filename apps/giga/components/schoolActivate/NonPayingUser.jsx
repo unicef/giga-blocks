@@ -66,7 +66,7 @@ export default function NonPayingUser({
     mutate(
       {
         email,
-        redirectlink: `http://localhost:4200/schools/${id}/activate-school?linkActivation=${linkActivation}&email=${email}&themeName=${themeName}`,
+        redirectlink: `${process.env.NEXT_PUBLIC_WEB_NAME}/schools/${id}/activate-school?linkActivation=${linkActivation}&email=${email}&themeName=${themeName}`,
       },
       {
         onSuccess: () => {
