@@ -1,0 +1,208 @@
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/type' as *;
+@use '@carbon/styles/scss/colors' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/breakpoint' as *;
+
+.schools-info {
+  margin: 0 auto;
+  padding: 120px 80px 80px 80px;
+
+  @include breakpoint-down(md) {
+    padding: $spacing-06 $spacing-05;
+  }
+}
+
+// Hero Section
+.hero-section {
+  margin-bottom: $spacing-09;
+
+  @include breakpoint-down(md) {
+    margin-bottom: $spacing-07;
+  }
+}
+
+.hero-content {
+  display: flex;
+  gap: $spacing-07;
+
+  @include breakpoint-down(lg) {
+    flex-direction: column;
+    gap: $spacing-06;
+  }
+}
+
+.hero-text {
+  flex: 1;
+}
+
+.hero-title {
+  @include type-style('heading-05');
+  font-weight: 500;
+  font-size: 42px;
+  line-height: 130%;
+  letter-spacing: -2%;
+  margin-bottom: $spacing-05;
+
+  @include breakpoint-down(md) {
+    @include type-style('heading-04');
+  }
+}
+
+.hero-subtitle {
+  @include type-style('body-01');
+  color: $gray-70;
+}
+
+.hero-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f7ff; // Light blue background
+  border-radius: 8px;
+  padding: $spacing-05;
+
+  @include breakpoint-down(lg) {
+    width: 100%;
+  }
+}
+
+.map-image {
+  max-width: 100%;
+  height: auto;
+}
+
+// Activation Guide Section
+.activation-guide {
+  margin-bottom: $spacing-09;
+
+  @include breakpoint-down(md) {
+    margin-bottom: $spacing-07;
+  }
+}
+
+.section-title {
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 56px;
+  letter-spacing: 0%;
+  margin-bottom: $spacing-07;
+
+  @include breakpoint-down(md) {
+    margin-bottom: $spacing-06;
+  }
+}
+
+.steps-container {
+  display: flex;
+  gap: $spacing-05;
+  margin-bottom: $spacing-07;
+
+  @include breakpoint-down(md) {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  @include breakpoint-down(sm) {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.step-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: $spacing-05;
+  border: 1px solid $gray-20;
+  border-radius: 16px;
+  height: 200px;
+  justify-content: center;
+
+  @include breakpoint-down(md) {
+    flex-basis: calc(50% - #{$spacing-05});
+    margin-bottom: $spacing-05;
+  }
+
+  @include breakpoint-down(sm) {
+    width: 100%;
+  }
+}
+
+.step-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #e8f1ff; // Light blue background
+  margin-bottom: $spacing-04;
+
+  svg {
+    color: #2563eb; // Blue icon color
+  }
+}
+
+.step-label {
+  @include type-style('body-01');
+  color: $gray-100;
+  font-weight: 500;
+  margin: 0;
+}
+
+.description-text {
+  @include type-style('body-01');
+  color: $gray-70;
+  width: 50%;
+}
+
+// CTA Section
+.cta-section {
+  margin-top: 80px;
+
+  @include breakpoint-down(md) {
+    margin-top: $spacing-07;
+  }
+}
+
+.cta-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-07;
+
+  @include breakpoint-down(md) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-05;
+  }
+}
+
+.cta-title {
+  @include type-style('heading-04');
+  color: $gray-100;
+  margin: 0;
+  flex: 1;
+
+  @include breakpoint-down(md) {
+    @include type-style('heading-03');
+    margin-bottom: $spacing-05;
+  }
+}
+
+.cta-button {
+  background-color: #2563eb; // Blue button color
+  min-width: 180px;
+
+  &:hover {
+    background-color: darken(#2563eb, 10%);
+  }
+
+  svg {
+    fill: white;
+  }
+}

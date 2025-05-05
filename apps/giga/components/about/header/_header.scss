@@ -1,0 +1,76 @@
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/type' as *;
+@use '@carbon/styles/scss/colors' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/breakpoint' as *;
+
+.about-container {
+  margin: 0 auto;
+  @include breakpoint-down(md) {
+    padding: $spacing-06 $spacing-05;
+  }
+}
+
+.about-content {
+  display: flex;
+  gap: $spacing-07;
+  align-items: flex-start;
+  padding: 80px 32px;
+
+  @include breakpoint-down(lg) {
+    flex-direction: column;
+    gap: $spacing-06;
+  }
+}
+
+.about-text {
+  flex: 1;
+
+  @include breakpoint-down(lg) {
+    order: 1;
+  }
+}
+
+.about-title {
+  font-weight: 600;
+  font-size: 52px;
+  line-height: 120%;
+  letter-spacing: -4%;
+  margin-bottom: $spacing-07;
+
+  @include breakpoint-down(md) {
+    @include type-style('heading-04');
+    margin-bottom: $spacing-06;
+  }
+}
+
+.about-paragraph {
+  @include type-style('body-01');
+  color: $gray-70;
+  margin-bottom: $spacing-06;
+  line-height: 1.6;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.about-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+
+  @include breakpoint-down(lg) {
+    order: 2;
+    width: 100%;
+  }
+}
+
+.illustration {
+  max-width: 100%;
+  height: auto;
+
+  @include breakpoint-down(md) {
+    max-width: 90%;
+  }
+}

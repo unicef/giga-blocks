@@ -126,6 +126,10 @@ export default function SchoolSearch({ linkActivation }) {
   return (
     <div className="search-page">
       <div className="search-page__container">
+        <div className="search-page__title">
+          Not sure where to start ? <br /> Try browsing schools in need of
+          activation!
+        </div>
         <div className="search-page__filters">
           <Search
             className="search-input"
