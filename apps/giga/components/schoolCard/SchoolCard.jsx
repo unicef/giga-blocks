@@ -24,6 +24,9 @@ export default function SchoolCard({
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
 
+  const handleMouseEnter = () => setIsHovered(true);
+  const handleMouseLeave = () => setIsHovered(false);
+
   return (
     <div
       className="school-card"
