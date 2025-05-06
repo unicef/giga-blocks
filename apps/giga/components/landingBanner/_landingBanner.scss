@@ -1,0 +1,134 @@
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/type' as *;
+@use '@carbon/styles/scss/colors' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/breakpoint' as *;
+
+.hero-section {
+  padding: 3rem 0;
+  margin: 0 auto;
+}
+
+// Hero Content
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-07;
+}
+
+// Hero Title
+.hero-title {
+  line-height: 1.2;
+
+  .underlined {
+    border-bottom: 2px solid $blue-50;
+    display: inline-block;
+    line-height: 1.4;
+  }
+}
+
+// Hero Description
+.hero-description {
+  color: #000;
+}
+
+// Search Container
+.search-container {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-05;
+}
+
+.search-input {
+  width: 100%;
+}
+
+// Button Group
+.button-group {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  @media (max-width: 672px) {
+    flex-direction: column;
+  }
+
+  .responsive-button {
+    @media (max-width: 768px) {
+      flex: 1;
+      width: 100%;
+    }
+  }
+}
+
+// Buttons
+.search-button,
+.about-button {
+  display: flex;
+  align-items: center;
+
+  .button-icon {
+    margin-left: $spacing-03;
+  }
+}
+
+// Grid Pattern
+.grid-pattern-container {
+  @media (max-width: 672px) {
+    margin-top: $spacing-07;
+  }
+}
+
+.grid-pattern {
+  width: 100%;
+  aspect-ratio: 1/1;
+}
+
+.grid-svg {
+  width: 100%;
+  height: 100%;
+  color: $blue-50;
+}
+
+.carbon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 2px;
+  height: 3rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  width: 100%; // full width!
+
+  &__icon {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &--primary {
+    background-color: #0f62fe;
+    color: white;
+
+    &:hover {
+      background-color: #0353e9;
+    }
+  }
+
+  &--secondary {
+    background-color: #393939;
+    color: white;
+
+    &:hover {
+      background-color: #4c4c4c;
+    }
+  }
+
+  &:focus {
+    outline: 2px solid #0f62fe;
+    outline-offset: 2px;
+  }
+}

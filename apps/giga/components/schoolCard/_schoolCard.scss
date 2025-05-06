@@ -6,105 +6,42 @@
 
 .school-card {
   border-radius: 8px;
-  border: 1px solid $gray-20;
   overflow: hidden;
-  background-color: $white-0;
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 422px;
-  text-decoration: none;
+  height: auto;
   color: inherit;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    text-decoration: none;
-  }
-
-  &__content {
-    padding: $spacing-05;
-    flex: 1;
-  }
-
-  &__title {
-    @include type-style('heading-03');
-    margin-bottom: $spacing-05;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-height: 48px;
-    color: $gray-100; // Explicitly set title color
-    transition: color 0.2s ease;
-  }
-
-  &__location {
-    display: flex;
-    align-items: center;
-    margin-bottom: $spacing-05;
-
-    svg {
-      margin-right: $spacing-03;
-      fill: $gray-70;
-    }
-
-    span {
-      @include type-style('body-01');
-      color: $gray-70;
-    }
-  }
-
-  &__minted {
-    display: inline-flex;
-    align-items: center;
-    background-color: #2662ff;
-    color: white;
-    padding: $spacing-03 $spacing-05;
-    border-radius: 50px;
-    margin-bottom: $spacing-05;
-
-    svg {
-      margin-right: $spacing-03;
-      fill: white;
-    }
-
-    span {
-      @include type-style('body-01');
-      font-weight: 600;
-    }
-  }
-  &__unminted {
-    display: inline-flex;
-    align-items: center;
-    background-color: #a2a2a2;
-    color: white;
-    padding: $spacing-03 $spacing-05;
-    border-radius: 50px;
-    margin-bottom: $spacing-05;
-
-    svg {
-      margin-right: $spacing-03;
-      fill: white;
-    }
-
-    span {
-      @include type-style('body-01');
-      font-weight: 600;
-    }
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
   &__image {
     width: 100%;
-    height: 220px;
+    height: 240px;
+    position: relative;
+    overflow: hidden;
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
     }
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   &__placeholder {
@@ -113,12 +50,87 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: $gray-10;
 
     img {
       width: auto;
       height: auto;
+      max-width: 80%;
+      max-height: 80%;
       object-fit: contain;
+    }
+  }
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 2;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+  }
+
+  &__view-button {
+    background-color: #2563eb; // Blue button color
+    min-width: 160px;
+
+    &:hover {
+      background-color: darken(#2563eb, 10%);
+    }
+
+    svg {
+      fill: white;
+    }
+  }
+
+  &__content {
+    padding: $spacing-05;
+    background-color: $white-0;
+  }
+
+  &__title {
+    @include type-style('heading-03');
+    margin-bottom: $spacing-03;
+    color: $gray-100;
+    font-weight: 600;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__location {
+    @include type-style('body-01');
+    color: $gray-70;
+    margin: 0;
+  }
+
+  // Responsive adjustments
+  @include breakpoint-down(md) {
+    height: auto;
+
+    &__image {
+      height: 200px;
+    }
+  }
+
+  @include breakpoint-down(sm) {
+    &__image {
+      height: 180px;
+    }
+
+    &__content {
+      padding: $spacing-04;
+    }
+
+    &__title {
+      @include type-style('heading-04');
     }
   }
 }
