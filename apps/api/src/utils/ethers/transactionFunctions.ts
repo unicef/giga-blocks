@@ -2,7 +2,7 @@ import { BaseContract, ContractTransactionResponse, ethers } from 'ethers';
 import { getContractWithSigner, getInterface, getSigner } from './contractWithSigner';
 import { ConfigService } from '@nestjs/config';
 import { getTokenId, getTokensId } from '../web3/subgraph';
-// import getProposedGasPrice from '../gasPrice';
+import getProposedGasPrice from '../gasPrice';
 
 interface ExtendedContract extends BaseContract {
   updateNftImageHash?: (schoolId: string, tokenHash: string) => ContractTransactionResponse;
@@ -33,11 +33,11 @@ export const mintNFT = async (
   giga_ids: string[],
 ): Promise<ContractTransactionResponse> => {
   const config = new ConfigService();
-  // const weiEthers = await getProposedGasPrice();
+  const weiEthers = await getProposedGasPrice();
   const collectorescrowAddress = config.get('NEXT_PUBLIC_GIGA_COLLECTOR_ESCROW_ADDRESS');
   const schoolescrowAddress = config.get('NEXT_PUBLIC_GIGA_SCHOOL_ESCROW_ADDRESS');
 
-  const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
+  const contract: any = getContractWithSigner(contractName, contractAddress);
   const schoolArgs = schoolDataArray.map((el, i) => [
     giga_ids[i],
     schoolescrowAddress,
@@ -46,7 +46,7 @@ export const mintNFT = async (
   ]);
 
   const multicalldata = generateMultiCallData(contractName, 'mintNft', schoolArgs);
-  return await contract.multicall(multicalldata);
+  return await contract.multicall(multicalldata, { gasPrice:weiEthers });
 
   // return await contract.multicall(multicalldata, { gasPrice: weiEthers });
 };

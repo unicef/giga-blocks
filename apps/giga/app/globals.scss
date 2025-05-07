@@ -1,11 +1,11 @@
 @use '@carbon/react';
 @use '@carbon/react/scss/breakpoint' as *;
-
 @use '../components/Navbar/navbar';
-
 @use '../app/home/landing-page';
-
-@use '../components/Info/info';
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/type' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/colors' as *;
 
 :root {
   --bg-color: #f3f3f3;
@@ -32,4 +32,51 @@ body {
 }
 .cds--modal-container {
   border-radius: 12px !important;
+}
+
+// CTA Section
+.cta-section {
+  margin-top: 80px;
+
+  @include breakpoint-down(md) {
+    margin-top: $spacing-07;
+  }
+}
+
+.cta-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-07;
+
+  @include breakpoint-down(md) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-05;
+  }
+}
+
+.cta-title {
+  @include type-style('heading-04');
+  color: $gray-100;
+  margin: 0;
+  flex: 1;
+
+  @include breakpoint-down(md) {
+    @include type-style('heading-03');
+    margin-bottom: $spacing-05;
+  }
+}
+
+.cta-button {
+  background-color: #2563eb; // Blue button color
+  min-width: 180px;
+
+  &:hover {
+    background-color: darken(#2563eb, 10%);
+  }
+
+  svg {
+    fill: white;
+  }
 }
