@@ -16,7 +16,7 @@ export class CreateContributor {
     example: 'test@example.com',
   })
   @IsEmail()
-  @IsString()
+  @IsOptional()
   email?: string;
 
   @ApiProperty({
@@ -24,41 +24,39 @@ export class CreateContributor {
     description: 'school ID to be reserved',
   })
   @IsString()
+  @IsOptional()
   schoolReserved?: string;
 
   @ApiProperty({
-    example:true,
+    example: true,
     description: 'isVisible',
-
   })
-    @IsBoolean()
-    isVisible?: boolean;
+  @IsBoolean()
+  @IsOptional()
+  isVisible?: boolean;
 
-    @ApiProperty({
-        example: '0x1f2f6f7952550D4388f9A3fd91A8CdcFbC439978',
-        description: 'Wallet address of the contributor',
-        })
-    @IsOptional()
-    @IsString()
-    walletAddress?: string;
+  @ApiProperty({
+    example: '0x1f2f6f7952550D4388f9A3fd91A8CdcFbC439978',
+    description: 'Wallet address of the contributor',
+  })
+  @IsOptional()
+  @IsString()
+  walletAddress?: string;
 }
 
-export class UpdateVisibility{
-    @ApiProperty({
-        example:true,
-        description: 'isVisible',
-      })
-    @IsBoolean()
-    isVisible?: boolean;
+export class UpdateVisibility {
+  @ApiProperty({
+    example: true,
+    description: 'isVisible',
+  })
+  @IsBoolean()
+  isVisible?: boolean;
 
-    @ApiProperty({
-      example:'Joe',
-      description: 'Name of the contributor',
-    })
-    @IsOptional()
-    @IsString()
-    name?: string;
-
-
+  @ApiProperty({
+    example: 'Joe',
+    description: 'Name of the contributor',
+  })
+  @IsOptional()
+  @IsString()
+  name?: string;
 }
-
