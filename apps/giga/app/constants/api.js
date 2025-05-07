@@ -55,4 +55,7 @@ module.exports = {
   GAS_FEE: {
     GET: process.env.NEXT_PUBLIC_GAS_API,
   },
+  FEATURED: {
+    GET: '/featured/school',
+  },
 };
