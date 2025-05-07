@@ -1,6 +1,7 @@
 import LandingPage from './home/page';
 import SchoolCard from '../components/schoolCard/SchoolCard';
 import FAQs from '../components/faqs/faqs';
+import BlockMetrics from '../components/blockMetrics/blockMetrics';
 
 export default function Page() {
   const schoolData = [
@@ -40,6 +41,7 @@ export default function Page() {
   return (
     <>
       <LandingPage />
+      <BlockMetrics />
       <FAQs />
       {schoolData.map((school) => (
         <SchoolCard
