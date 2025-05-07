@@ -78,7 +78,7 @@ export default function ClaimNFT() {
     mutate(
       {
         email,
-        redirectlink: `http://localhost:4200/schools/claim/${id}?email=${email}`,
+        redirectlink: `${process.env.NEXT_PUBLIC_WEB_NAME}/schools/claim/${id}?email=${email}`,
       },
       {
         onSuccess: () => {

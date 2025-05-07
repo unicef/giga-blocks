@@ -88,7 +88,7 @@ async function generateP5Image(
   );
 
 
-  await page.setViewport({ width: 680, height: 800 });
+  await page.setViewport({ width: 670, height: 800 });
   const screenshot = await page.screenshot({ encoding: 'base64' });
 
   await browser.close();

@@ -30,6 +30,7 @@ import { Cache } from 'cache-manager';
 import { getCacheKey } from 'src/utils/cache/getCacheKey';
 import { ReserveNFTDto, SchoolActivation } from './dto/reserve-nft.dto';
 import { ContributorService } from 'src/contributor/contributor.service';
+import getLocationId from 'src/utils/gigamaps';
 @Injectable()
 export class SchoolService {
   constructor(
@@ -41,12 +42,80 @@ export class SchoolService {
   ) {}
 
   async findAll(query: any) {
-    const { page, perPage, minted, uploadId, name, country, connectivityStatus, orderBy, order } =
-      query;
+    const {
+      page,
+      perPage,
+      minted,
+      uploadId,
+      name,
+      country,
+      connectivityStatus,
+      orderBy,
+      order,
+      electricity,
+      water,
+      teachers,
+      computers,
+      students,
+      download,
+      connectionType,
+    } = query;
     const cacheKey = getCacheKey(name, country, page, perPage, minted);
     const cachedResult = await this.cacheManager.get<string>(cacheKey);
 
     if (cachedResult) return cachedResult;
+
+    const gigaMapsConditions: Prisma.SchoolWhereInput[] = [];
+
+    //Combines all the filters into a single condition
+    if (water !== undefined) {
+      gigaMapsConditions.push({
+        giga_maps_data: {
+          path: ['water_availability'],
+          equals: water === 'true',
+        },
+      });
+    }
+    if (teachers !== undefined) {
+      gigaMapsConditions.push({
+        giga_maps_data: {
+          path: ['num_teachers'],
+          lte: Number(teachers),
+        },
+      });
+    }
+    if (computers !== undefined) {
+      gigaMapsConditions.push({
+        giga_maps_data: {
+          path: ['num_computers'],
+          lte: Number(computers),
+        },
+      });
+    }
+    if (students !== undefined) {
+      gigaMapsConditions.push({
+        giga_maps_data: {
+          path: ['num_students'],
+          lte: Number(students),
+        },
+      });
+    }
+    if (download !== undefined) {
+      gigaMapsConditions.push({
+        giga_maps_data: {
+          path: ['download_speed_benchmark'],
+          lte: Number(download),
+        },
+      });
+    }
+    if (connectionType !== undefined) {
+      gigaMapsConditions.push({
+        giga_maps_data: {
+          path: ['connectivity_type'],
+          equals: connectionType,
+        },
+      });
+    }
 
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
@@ -55,6 +124,10 @@ export class SchoolService {
       ...(name && { name: { contains: name, mode: 'insensitive' } }),
       ...(country && { country: { contains: country, mode: 'insensitive' } }),
       ...(connectivityStatus !== undefined && { connectivity: connectivityStatus === 'true' }),
+      ...(electricity !== undefined && { electricity_available: electricity === 'true' }),
+      ...(gigaMapsConditions.length > 0 && {
+        AND: gigaMapsConditions,
+      }),
     };
 
     const paginate: PaginateFunction = paginator({ perPage });
@@ -221,7 +294,7 @@ export class SchoolService {
   }
 
   async findOne(id: string) {
-    return await this.prisma.school.findUnique({
+    const school =  await this.prisma.school.findUnique({
       where: {
         id,
       },
@@ -229,6 +302,19 @@ export class SchoolService {
         theme: true,
       },
     });
+
+    if (!school) {
+      throw new NotFoundException('School not found');
+    }
+    const locationdetails =  await getLocationId(
+      school.giga_school_id,
+      'giga_id_school')
+      const schooldetails ={
+        ...school,
+        locationId:locationdetails.id,
+        countryCode:locationdetails.country_code,
+      }
+      return schooldetails;
   }
 
   async countSchools(query: ListSchoolDto) {

@@ -95,28 +95,26 @@ export default function SchoolDetails({ params }) {
           <ArrowLeft size={20} /> Back
         </Link>
 
+        {(minted === 'NOTMINTED' || isVisibleForMinted) && (
+          <ThemeSelector
+            themeOptions={themeOptions}
+            selectedTheme={selectedTheme}
+            setSelectedTheme={setSelectedTheme}
+            id={id}
+            linkActivation={linkActivation}
+            loading={themeLoading}
+          />
+        )}
         <div className="school-details__content">
           <div className="school-details__main">
             <Header
               name={data?.name}
               school_type={data?.school_type}
               region_name={data?.region_name}
-              longitude={data?.longitude}
-              latitude={data?.latitude}
+              locationId={data?.locationId}
+              countryCode={data?.countryCode}
               fontColor={fontColor}
             />
-
-            {(minted === 'NOTMINTED' || isVisibleForMinted) && (
-              <ThemeSelector
-                themeOptions={themeOptions}
-                selectedTheme={selectedTheme}
-                setSelectedTheme={setSelectedTheme}
-                id={id}
-                linkActivation={linkActivation}
-                loading={themeLoading}
-              />
-            )}
-
             <SchoolStats
               cardColor={cardColor}
               fontColor={fontColor}
