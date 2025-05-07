@@ -1,15 +1,15 @@
 'use client';
 
+import { Modal } from '@carbon/react';
+import { ConnectKitButton } from 'connectkit';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { useQuery } from 'urql';
+import { useAccount } from 'wagmi';
+import SchoolCard from '../../components/schoolCard/SchoolCard';
+import { Queries } from '../libs/graph-query';
 import './_dashboard.scss';
 import { userData } from './mockData';
-import { useQuery } from 'urql';
-import { Queries } from '../libs/graph-query';
-import { useAccount } from 'wagmi';
-import { Modal, Button } from '@carbon/react';
-import { ConnectKitButton } from 'connectkit';
-import SchoolCard from '../../components/schoolCard/SchoolCard';
-import { useEffect, useState } from 'react';
 
 export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
@@ -41,7 +41,6 @@ export default function Dashboard() {
       }
     })
     .filter(Boolean);
-  console.log('isConnecting', isConnecting);
 
   return (
     <>

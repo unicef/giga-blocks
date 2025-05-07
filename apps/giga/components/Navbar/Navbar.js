@@ -45,7 +45,7 @@ const Navbar = () => {
             <Link href="/schools" passHref legacyBehavior>
               <HeaderMenuItem>Schools</HeaderMenuItem>
             </Link>
-            <Link href="/schools" passHref legacyBehavior>
+            <Link href="/about" passHref legacyBehavior>
               <HeaderMenuItem>About Us</HeaderMenuItem>
             </Link>
             <Link href="/schools" passHref legacyBehavior>

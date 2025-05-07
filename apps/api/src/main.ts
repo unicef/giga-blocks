@@ -1,4 +1,4 @@
-import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
+import { BadRequestException, Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
@@ -23,6 +23,10 @@ async function bootstrap() {
       transform: true,
       whitelist: true,
       forbidNonWhitelisted: true,
+      exceptionFactory: (errors) => {
+        console.error(errors); // Log validation errors
+        return new BadRequestException(errors);
+      },
     }),
   );
   app.setGlobalPrefix('api').enableVersioning({

@@ -1,0 +1,143 @@
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/type' as *;
+@use '@carbon/styles/scss/colors' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/breakpoint' as *;
+
+.about-blog {
+  background-color: #d6e4ff;
+  padding: 8px;
+
+  @include breakpoint-down(md) {
+    padding: $spacing-06 0;
+  }
+}
+
+.about-blog__container {
+  margin: 0 auto;
+  padding: 80px 24px;
+  background: #fff;
+  border-radius: 16px;
+}
+
+.about-blog__header {
+  margin-bottom: $spacing-08;
+
+  @include breakpoint-down(md) {
+    margin-bottom: $spacing-07;
+  }
+}
+
+.about-blog__title {
+  @include type-style('heading-04');
+  color: $gray-100;
+  margin-bottom: $spacing-05;
+  max-width: 800px;
+
+  @include breakpoint-down(md) {
+    @include type-style('heading-03');
+  }
+}
+
+.about-blog__subtitle {
+  @include type-style('body-01');
+  color: $gray-70;
+}
+
+.about-blog__posts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-06;
+
+  @include breakpoint-down(md) {
+    grid-template-columns: 1fr;
+    gap: $spacing-07;
+  }
+}
+
+.about-blog__card {
+  background-color: $white-0;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  @include breakpoint-down(md) {
+    flex-direction: column;
+  }
+}
+
+.about-blog__image-container {
+  flex: 0 0 45%;
+  max-width: 45%;
+
+  @include breakpoint-down(md) {
+    flex: 0 0 auto;
+    max-width: 100%;
+    height: 220px;
+  }
+
+  @include breakpoint-down(sm) {
+    height: 180px;
+  }
+}
+
+.about-blog__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  padding: 16px;
+  border-radius: 24px;
+}
+
+.about-blog__content {
+  flex: 1;
+  padding: $spacing-06;
+  display: flex;
+  flex-direction: column;
+
+  @include breakpoint-down(sm) {
+    padding: $spacing-05;
+  }
+}
+
+.about-blog__post-title {
+  @include type-style('heading-03');
+  color: $gray-100;
+  margin-bottom: $spacing-05;
+
+  @include breakpoint-down(sm) {
+    @include type-style('heading-02');
+  }
+}
+
+.about-blog__excerpt {
+  @include type-style('body-01');
+  color: $gray-70;
+  margin-bottom: $spacing-06;
+  flex-grow: 1;
+}
+
+.about-blog__action {
+  margin-top: auto;
+}
+
+.about-blog__button {
+  background-color: #393939;
+  color: white;
+  width: 100%;
+
+  &:hover {
+    // background-color: #4c4c4c;
+  }
+
+  svg {
+    fill: white;
+  }
+}

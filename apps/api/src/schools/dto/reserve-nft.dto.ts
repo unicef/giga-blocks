@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsEmail, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsBoolean, IsEmail, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { CreateContributor } from 'src/contributor/contributor.dto';
 
 export class ReserveNFTDto {
@@ -97,6 +98,8 @@ export class SchoolActivation{
       walletAddress:'0x1f2f6f7952550D4388f9A3fd91A8CdcFbC439978'
     }
   })
+  @ValidateNested()
+  @Type(() => CreateContributor)
   contributorData: CreateContributor;
 }
 
