@@ -192,14 +192,14 @@ export class SchoolController {
   }
 
   @Public()
-  @Get('/weekly')
+  @Get('/qos/weekly')
   @ApiOperation({ summary: 'Get the weekly qos data of school' })
   async getWeeklyQos(@Query() query: WeeklyQOSDto) {
     return this.qosService.getWeeklyQOS(query);
   }
 
   @Public()
-  @Get('/monthly')
+  @Get('/qos/monthly')
   @ApiOperation({ summary: 'Get the monthly qos data of school' })
   async getMonthlyQos(@Query() query: WeeklyQOSDto) {
     return this.qosService.getMonthlyQOS(query);
