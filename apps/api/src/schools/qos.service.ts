@@ -34,7 +34,7 @@ export class QosService {
 
     // Calculate the average speed_upload for the latest date
     const totalSpeedUpload = latestDateRecords.reduce(
-      (sum, record) => sum + Number(record.speed_upload || 0),
+      (sum, record) => sum + Number(record.speed_download || 0),
       0,
     );
     const averageSpeedUpload = totalSpeedUpload / latestDateRecords.length;
