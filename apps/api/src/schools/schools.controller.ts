@@ -28,7 +28,12 @@ import { QUEUES } from 'src/constants';
 import { getFileData } from 'src/utils/arweave/get';
 import { ActivationGuard } from 'src/auth/guards/activation.guard';
 import { ThemeActivationDto } from './dto/theme-activation.dto';
-import { claimReservedNFT, ReserveNFTDto, SchoolActivation, WeeklyQOSDto } from './dto/reserve-nft.dto';
+import {
+  claimReservedNFT,
+  ReserveNFTDto,
+  SchoolActivation,
+  WeeklyQOSDto,
+} from './dto/reserve-nft.dto';
 @Controller('schools')
 @ApiTags('School')
 export class SchoolController {
@@ -192,6 +197,13 @@ export class SchoolController {
   }
 
   @Public()
+  @Get('/qos/daily')
+  @ApiOperation({ summary: 'Get the daily qos data of school' })
+  async getDailyQos(@Query() giga_school_id: string) {
+    return this.qosService.getlatestQOS(giga_school_id);
+  }
+
+  @Public()
   @Get('/qos/weekly')
   @ApiOperation({ summary: 'Get the weekly qos data of school' })
   async getWeeklyQos(@Query() query: WeeklyQOSDto) {
@@ -204,8 +216,6 @@ export class SchoolController {
   async getMonthlyQos(@Query() query: WeeklyQOSDto) {
     return this.qosService.getMonthlyQOS(query);
   }
-
-
 
   //arewave
   @Public()
