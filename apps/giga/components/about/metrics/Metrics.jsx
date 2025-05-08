@@ -89,6 +89,7 @@ export default function Metrics() {
         <div className="about-metrics__grid">
           {metrics.map((metric) => (
             <MetricsCard
+              key={metric.id}
               id={metric.id}
               iconBg={metric.iconBg}
               iconColor={metric.iconColor}

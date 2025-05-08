@@ -8,11 +8,12 @@ import { useQuery } from 'urql';
 import { useAccount } from 'wagmi';
 import SchoolCard from '../../components/schoolCard/SchoolCard';
 import { Queries } from '../libs/graph-query';
+import { Copy, TaskComplete } from '@carbon/icons-react';
 import './_dashboard.scss';
-import { userData } from './mockData';
 
 export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
+  const [copied, setCopied] = useState(false);
   const { address, isConnected, isConnecting } = useAccount();
 
   useEffect(() => {
@@ -42,6 +43,15 @@ export default function Dashboard() {
     })
     .filter(Boolean);
 
+  const handleCopy = () => {
+    if (address) {
+      navigator.clipboard.writeText(address).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 3000);
+      });
+    }
+  };
+
   return (
     <>
       <Modal
@@ -61,7 +71,7 @@ export default function Dashboard() {
           <section className="profile-section">
             <div className="profile-image-container">
               <Image
-                src={userData.profileImage || '/placeholder.svg'}
+                src={'/images/teams/team-1.png'}
                 alt="Profile avatar"
                 width={100}
                 height={100}
@@ -74,7 +84,23 @@ export default function Dashboard() {
               ) : !isConnected ? (
                 <p>Wallet not connected</p>
               ) : (
-                address?.slice(0, 4) + '...' + address?.slice(35, 43)
+                <>
+                  {address?.slice(0, 4) + '...' + address?.slice(35, 43)}
+                  {copied ? (
+                    <TaskComplete
+                      size={20}
+                      style={{ marginLeft: '12px', cursor: 'pointer' }}
+                      title="Copied!"
+                    />
+                  ) : (
+                    <Copy
+                      size={20}
+                      style={{ marginLeft: '12px', cursor: 'pointer' }}
+                      onClick={handleCopy}
+                      title="Copy Address"
+                    />
+                  )}
+                </>
               )}
             </h1>
           </section>
