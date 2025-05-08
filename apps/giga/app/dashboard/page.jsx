@@ -1,6 +1,6 @@
 'use client';
 
-import { Modal } from '@carbon/react';
+import { Modal, Tab, TabList, TabPanel, TabPanels, Tabs } from '@carbon/react';
 import { ConnectKitButton } from 'connectkit';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -10,6 +10,7 @@ import SchoolCard from '../../components/schoolCard/SchoolCard';
 import { Queries } from '../libs/graph-query';
 import { Copy, TaskComplete } from '@carbon/icons-react';
 import './_dashboard.scss';
+import CardSkeleton from '../../components/cardSkeleton/CardSkeleton';
 
 export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
@@ -89,13 +90,21 @@ export default function Dashboard() {
                   {copied ? (
                     <TaskComplete
                       size={20}
-                      style={{ marginLeft: '12px', cursor: 'pointer' }}
+                      style={{
+                        marginLeft: '12px',
+                        cursor: 'pointer',
+                        color: '#A8A8A8',
+                      }}
                       title="Copied!"
                     />
                   ) : (
                     <Copy
                       size={20}
-                      style={{ marginLeft: '12px', cursor: 'pointer' }}
+                      style={{
+                        marginLeft: '12px',
+                        cursor: 'pointer',
+                        color: '#A8A8A8',
+                      }}
                       onClick={handleCopy}
                       title="Copy Address"
                     />
@@ -155,22 +164,37 @@ export default function Dashboard() {
 
         {/* Reserved Schools Section */}
         <section className="reserved-schools-section">
-          <h2 className="section-title">Reserved Schools</h2>
-
-          <div className="schools-grid">
-            {decodedShooldata?.slice(1, 5).map((school, index) => (
-              <div key={index} className="school-card">
-                <SchoolCard
-                  key={school.id}
-                  id={school.id}
-                  schoolName={school.schoolName}
-                  imageHash={school.image}
-                  location={school.region}
-                  minted={'MINTED'}
-                />
-              </div>
-            ))}
-          </div>
+          <Tabs>
+            <TabList>
+              <Tab>Reserved Schools</Tab>
+              <Tab>Claimed Schools</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <div className="schools-grid">
+                  {fetching ? (
+                    <CardSkeleton count={4} />
+                  ) : (
+                    <>
+                      {decodedShooldata?.slice(1, 5).map((school, index) => (
+                        <div key={index} className="school-card">
+                          <SchoolCard
+                            key={school.id}
+                            id={school.id}
+                            schoolName={school.schoolName}
+                            imageHash={school.image}
+                            location={school.region}
+                            minted={'MINTED'}
+                          />
+                        </div>
+                      ))}
+                    </>
+                  )}
+                </div>
+              </TabPanel>
+              <TabPanel>Claimed Schools</TabPanel>
+            </TabPanels>
+          </Tabs>
         </section>
       </div>
     </>
