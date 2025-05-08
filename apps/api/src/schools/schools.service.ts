@@ -294,7 +294,7 @@ export class SchoolService {
   }
 
   async findOne(id: string) {
-    const school =  await this.prisma.school.findUnique({
+    const school = await this.prisma.school.findUnique({
       where: {
         id,
       },
@@ -306,15 +306,13 @@ export class SchoolService {
     if (!school) {
       throw new NotFoundException('School not found');
     }
-    const locationdetails =  await getLocationId(
-      school.giga_school_id,
-      'giga_id_school')
-      const schooldetails ={
-        ...school,
-        locationId:locationdetails.id,
-        countryCode:locationdetails.country_code,
-      }
-      return schooldetails;
+    const locationdetails = await getLocationId(school.giga_school_id, 'giga_id_school');
+    const schooldetails = {
+      ...school,
+      locationId: locationdetails?.id,
+      countryCode: locationdetails?.country_code,
+    };
+    return schooldetails;
   }
 
   async countSchools(query: ListSchoolDto) {

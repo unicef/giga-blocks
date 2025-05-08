@@ -5,42 +5,38 @@ import { PrismaAppService } from '../prisma/prisma.service';
 @Injectable()
 export class FeaturedService {
   private readonly _logger = new Logger(FeaturedService.name);
-  constructor(
-    private prisma: PrismaAppService,
-  ){
-    
-  }
-  async create(createFeaturedDto: CreateFeaturedDto,userId:string) {
+  constructor(private prisma: PrismaAppService) {}
+  async create(createFeaturedDto: CreateFeaturedDto, userId: string) {
     const data = await this.prisma.featureCountry.findFirst({
-      where:{
-        country_code:createFeaturedDto.country_code
-      }
-    })
-    if(data){
+      where: {
+        country_code: createFeaturedDto.country_code,
+      },
+    });
+    if (data) {
       return this.prisma.featureCountry.update({
-        where:{
-          id:data.id
+        where: {
+          id: data.id,
         },
-        data:{
-          isFeatured:true
-        }
-      })
+        data: {
+          isFeatured: true,
+        },
+      });
     }
     await this.prisma.featureCountry.updateMany({
-      where:{
-        isFeatured:true
+      where: {
+        isFeatured: true,
       },
-      data:{
-        isFeatured:false
-      }
-    })
+      data: {
+        isFeatured: false,
+      },
+    });
     await this.prisma.featureCountry.create({
-      data:{
-        country_code:createFeaturedDto.country_code,
-        isFeatured:true,
-        createdBy:userId}
-    })
-
+      data: {
+        country_code: createFeaturedDto.country_code,
+        isFeatured: true,
+        createdBy: userId,
+      },
+    });
   }
 
   findAll() {
@@ -48,22 +44,22 @@ export class FeaturedService {
   }
 
   async findFeatureSchool(query) {
-    const {limit} = query;
+    const { limit } = query;
     const featuredata = await this.prisma.featureCountry.findFirst({
-      where:{
-        isFeatured:true
-      }
+      where: {
+        isFeatured: true,
+      },
+      orderBy: {
+        updatedAt: 'desc',
+      },
     });
     const school = await this.prisma.school.findMany({
-      where:{
-        country:featuredata.country_code,
-        
+      where: {
+        country: featuredata.country_code,
       },
-      take: limit ||5
-
-    })
-    console.log(school)
+      take: limit || 5,
+    });
+    console.log(school);
     return school;
-
   }
 }
