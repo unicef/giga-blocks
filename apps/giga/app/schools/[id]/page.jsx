@@ -8,6 +8,7 @@ import SchoolOverview from '../../../components/schoolDetails/SchoolOverview';
 import SchoolStats from '../../../components/schoolDetails/SchoolStats';
 import ThemeSelector from '../../../components/schoolDetails/SchoolThemes';
 import Sidebar from '../../../components/schoolDetails/Sidebar';
+import DetailsLoading from '../../../components/detailsLoading/DetailsLoading';
 import { useSchoolDetails } from '../../hooks/useSchool';
 import './_schoolDetails.scss';
 import { useThemeToggleStore } from '../../store/themeToggleStore';
@@ -81,7 +82,7 @@ export default function SchoolDetails({ params }) {
     : themeOptions?.find((t) => t.name === selectedTheme)?.colorScheme
         .bgColor || '#fff';
 
-  if (isLoading || !data) return <h1>Loading....</h1>;
+  if (isLoading || !data) return <DetailsLoading />;
 
   return (
     <div className="school-details">
