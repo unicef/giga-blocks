@@ -188,7 +188,7 @@ export default function ActivateSchool() {
                       />
                     </>
                   ) : (
-                    <p>Theme Not Selected</p>
+                    <p>Your theme will selected by Giga Blocks. </p>
                   )}
                 </div>
               </div>
