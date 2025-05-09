@@ -47,7 +47,7 @@ export class ContributorService {
         });
     }
     const school = await this.prisma.school.findFirst({ where: { id: data?.schoolReserved } });
-    const schoolLink = `${Link}/school/${school?.id}`;
+    const schoolLink = `${Link}/schools/claim/${school?.id}`;
 
     await this.mailService.sendThankYouMail({ email, school: school.name, link: schoolLink });
   }
