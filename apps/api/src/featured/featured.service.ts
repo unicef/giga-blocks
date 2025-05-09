@@ -19,6 +19,7 @@ export class FeaturedService {
         },
         data: {
           isFeatured: true,
+          details: createFeaturedDto.details,
         },
       });
     }
@@ -34,6 +35,7 @@ export class FeaturedService {
       data: {
         country_code: createFeaturedDto.country_code,
         isFeatured: true,
+        details: createFeaturedDto.details,
         createdBy: userId,
       },
     });
@@ -53,13 +55,32 @@ export class FeaturedService {
         updatedAt: 'desc',
       },
     });
+    if (!featuredata) return 'No featured country found';
     const school = await this.prisma.school.findMany({
       where: {
         country: featuredata.country_code,
+        minted: 'MINTED',
+      },
+      select: {
+        theme: {
+          select: {
+            colorScheme: true,
+          },
+        },
+        name: true,
+        country: true,
+        imageHash: true,
+        id: true,
+        giga_school_id: true,
+        status: true,
       },
       take: limit || 5,
     });
-    console.log(school);
-    return school;
+    const details = {
+      school: school,
+      country_code: featuredata?.country_code,
+      details: featuredata?.details,
+    };
+    return details;
   }
 }
