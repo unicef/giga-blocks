@@ -304,7 +304,7 @@ export class SchoolService {
     });
 
     if (!school) {
-      throw new NotFoundException('School not found');
+      throw new NotFoundException('School not found for given school id');
     }
     const locationdetails = await getLocationId(school.giga_school_id, 'giga_id_school');
     const schooldetails = {
@@ -344,6 +344,7 @@ export class SchoolService {
   }
 
   async updateTheme(id: string, themeId: string) {
+    await this.validateSchoolAndTheme(id, themeId);
     return await this.prisma.school.update({
       where: {
         id,
@@ -511,6 +512,7 @@ export class SchoolService {
   }
 
   async reserveNft(reserveNft: ReserveNFTDto) {
+    await this.validateSchoolAndTheme(reserveNft.schoolId, reserveNft.themeId);
     const schoolData = await this.prisma.school.findUnique({
       where: {
         id: reserveNft.schoolId,
@@ -530,6 +532,7 @@ export class SchoolService {
 
   async activateSchool(data: SchoolActivation) {
     const { schoolId, themeId, contributorData } = data;
+    await this.validateSchoolAndTheme(schoolId, themeId);
     const updatedSchool = await this.prisma.school.update({
       where: {
         id: schoolId,
@@ -541,6 +544,30 @@ export class SchoolService {
     });
     this.queueService.processImage(updatedSchool?.giga_school_id);
     return this.contrubutorService.addPayingContributor(contributorData);
+  }
+
+  private async validateSchoolAndTheme(schoolId: string, themeId: string) {
+    const school = await this.prisma.school.findUnique({
+      where: {
+        id: schoolId,
+      },
+    });
+    if (!school) {
+      throw new NotFoundException('School not found');
+    }
+    if (school.minted === MintStatus.MINTED) {
+      throw new ConflictException('School already minted');
+    }
+    if (school.minted === MintStatus.NOTMINTED && school.schoolClaimed)
+      throw new ConflictException('School already  claimed');
+    const theme = await this.prisma.theme.findUnique({
+      where: {
+        id: themeId,
+      },
+    });
+    if (!theme) {
+      throw new NotFoundException('Theme not found');
+    }
   }
 
   formatSchoolData(
@@ -571,6 +598,18 @@ export class SchoolService {
 
   async claimSchool(claimData: any) {
     const { email, walletAddress } = claimData;
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new NotFoundException('No contributor found for given email');
+    }
+    const contributor = await this.prisma.contributor.findUnique({ where: { userId: user?.id } });
+    if (!contributor?.nftReserved) {
+      throw new NotFoundException('School not reserved');
+    }
+    if (contributor?.nftClaimed) {
+      throw new ConflictException('School already claimed');
+    }
+
     this.queueService.claimReservedNFT(email, walletAddress).catch(err => {
       console.log(err);
     });

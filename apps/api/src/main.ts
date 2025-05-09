@@ -23,9 +23,25 @@ async function bootstrap() {
       transform: true,
       whitelist: true,
       forbidNonWhitelisted: true,
-      exceptionFactory: (errors) => {
-        console.error(errors); // Log validation errors
-        return new BadRequestException(errors);
+      disableErrorMessages: false,
+      exceptionFactory: errors => {
+        // Format validation errors into a user-friendly structure
+        const formattedErrors = errors.map(error => ({
+          field: error.property,
+          errors: Object.values(error.constraints || {}),
+          children: error.children?.length
+            ? error.children.map(child => ({
+                field: child.property,
+                errors: Object.values(child.constraints || {}),
+              }))
+            : undefined,
+        }));
+
+        return new BadRequestException({
+          statusCode: 400,
+          message: 'Validation failed',
+          errors: formattedErrors,
+        });
       },
     }),
   );
