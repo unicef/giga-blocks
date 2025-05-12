@@ -166,7 +166,7 @@ export default function SchoolSearch({ linkActivation }) {
           <Select
             className="filter-select"
             id="minted-select"
-            labelText="Select Minted Status"
+            labelText="Select Activated Status"
             value={mintedStatus}
             onChange={(e) => {
               const value = e.target.value;
@@ -187,8 +187,8 @@ export default function SchoolSearch({ linkActivation }) {
             }}
           >
             <SelectItem value="ALL" text="All" />
-            <SelectItem value="MINTED" text="Minted" />
-            <SelectItem value="NOTMINTED" text="Notminted" />
+            <SelectItem value="MINTED" text="Activated" />
+            <SelectItem value="NOTMINTED" text="Not Activated" />
           </Select>
 
           <Button
