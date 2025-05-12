@@ -166,8 +166,8 @@ export default function Dashboard() {
         <section className="reserved-schools-section">
           <Tabs>
             <TabList>
-              <Tab>Reserved Schools</Tab>
-              <Tab>Claimed Schools</Tab>
+              <Tab>Activated Schools</Tab>
+              {/* <Tab>Claimed Schools</Tab> */}
             </TabList>
             <TabPanels>
               <TabPanel>

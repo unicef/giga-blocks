@@ -23,17 +23,21 @@ export const useGigaBuyNft = () => {
       totalValue: number;
       contractAddress: `0x${string}`;
       activationDetails: any;
+      onComplete?: () => void;
     }) => {
       const weiValue = parseUnits(totalValue.toString(), etherUnits.wei);
 
       return contract.writeContractAsync({
-        address:contractAddress,
+        address: contractAddress,
         args: args,
         value: weiValue,
       });
     },
     onSuccess: async (result, variables) => {
       await activateSchool.mutateAsync(variables.activationDetails);
+      if (variables.onComplete) {
+        variables.onComplete();
+      }
     },
     onError: async (error) => {
       console.error('Error in transaction:', error);

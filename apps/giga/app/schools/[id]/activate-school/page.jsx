@@ -102,8 +102,8 @@ export default function ActivateSchool() {
       totalValue: total,
       contractAddress,
       activationDetails,
+      onComplete: () => setIsModalOpen(true),
     });
-    // setIsModalOpen(true);
   };
 
   const closeModal = () => {
@@ -184,11 +184,15 @@ export default function ActivateSchool() {
                       />
                       <div
                         className="school-details__theme-color"
+                        style={{ backgroundColor: cardColor }}
+                      />
+                      <div
+                        className="school-details__theme-color"
                         style={{ backgroundColor: fontColor }}
                       />
                     </>
                   ) : (
-                    <p>Your theme will selected by Giga Blocks. </p>
+                    <p>Please select theme to activate school. </p>
                   )}
                 </div>
               </div>

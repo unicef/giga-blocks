@@ -60,9 +60,7 @@ export default function StandardActivationForm({
           <div className="optional">
             Optional
             <Tooltip direction="right" label={'Optional donation amount'}>
-              {/* <button className="sb-tooltip-trigger" type="button"> */}
               <Information size={16} />
-              {/* </button> */}
             </Tooltip>
           </div>
         </div>
