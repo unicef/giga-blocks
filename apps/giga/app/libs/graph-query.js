@@ -95,11 +95,12 @@ const nftImage = gql`
 `;
 
 const collectorOwnedNftsQuery = gql`
-  query collectorOwnedNft($id: ID!, $orderDirection: OrderDirection = asc) {
+  query collectorOwnedNft($id: ID!, $orderDirection: OrderDirection = desc) {
     collectorOwnedNft(id: $id, subgraphError: allow) {
       id
       nfts(orderBy: mintedAt, orderDirection: $orderDirection) {
-        tokenUri
+        tokenUri,
+        id,
       }
     }
   }

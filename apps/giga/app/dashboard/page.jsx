@@ -27,7 +27,7 @@ export default function Dashboard() {
 
   const [result] = useQuery({
     query: Queries.collectorOwnedNftsQuery,
-    variables: { id: address  },
+    variables: { id: address },
   });
 
   const { data, fetching } = result;
@@ -36,7 +36,12 @@ export default function Dashboard() {
     ?.map((d) => {
       try {
         const decoded = atob(d?.tokenUri?.substring(29));
-        return JSON.parse(decoded);
+        const token = d?.id;
+        const parseddata =  JSON.parse(decoded);
+        return{
+          tokenId: token,
+          ...parseddata
+        }
       } catch (e) {
         console.error('Failed to decode tokenUri', e);
         return null;
