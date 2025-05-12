@@ -17,7 +17,7 @@ const ThemeSelector = ({
   loading,
 }) => {
   const router = useRouter();
-
+  console.log('selectedTheme', selectedTheme);
   const handleActivateClick = () => {
     const url = linkActivation
       ? `${id}/activate-school?linkActivation=${linkActivation}`
@@ -94,6 +94,7 @@ const ThemeSelector = ({
           <Button
             onClick={handleActivateClick}
             className="theme-selector__activate-btn"
+            disabled={!selectedTheme}
           >
             {isVisibleForMinted ? 'Update' : 'Activate'}{' '}
             <ArrowLeft className="rotate-180" size={16} />

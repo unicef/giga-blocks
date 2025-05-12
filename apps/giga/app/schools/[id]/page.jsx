@@ -28,7 +28,7 @@ export default function SchoolDetails({ params }) {
   const isVisibleForMinted = useThemeToggleStore(
     (state) => state.isVisibleForMinted
   );
-  const [selectedTheme, setSelectedTheme] = useState('white');
+  const [selectedTheme, setSelectedTheme] = useState('');
   const defaultFontColor = '#000';
   const defaultBgColor = '#fff';
   const defaultCardColor = '#fff';
