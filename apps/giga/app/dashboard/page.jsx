@@ -27,7 +27,7 @@ export default function Dashboard() {
 
   const [result] = useQuery({
     query: Queries.schoolOwnedNftsQuery,
-    variables: { id: '0xb87ab8d261771a575740fe314e4eaa41e511a000' },
+    variables: { id: address },
   });
 
   const { data, fetching } = result;
