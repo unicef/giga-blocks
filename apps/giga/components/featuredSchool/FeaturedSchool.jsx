@@ -50,7 +50,7 @@ export default function FeaturedSchools() {
           {!isLoading && <p className="featured-schools__stats">
             {data?.remainingSchools || ''} schools still remain not activated in Nepal
           </p>}
-          <Link href="/schools/activate">
+          <Link href="/schools">
             <Button
               className="featured-schools__cta-button"
               renderIcon={ArrowRight}

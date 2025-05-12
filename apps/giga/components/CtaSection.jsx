@@ -9,7 +9,7 @@ const CtaSection = ({ title, btnText }) => {
         <Button
           className="cta-button"
           renderIcon={ArrowRight}
-          onClick={() => (window.location.href = '/schools/list')}
+          onClick={() => (window.location.href = '/schools')}
         >
           Activate a school
         </Button>
