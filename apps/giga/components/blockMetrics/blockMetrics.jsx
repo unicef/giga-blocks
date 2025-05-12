@@ -10,7 +10,7 @@ import {
 } from '@carbon/icons-react';
 import './_blockMetrics.scss';
 
-import MetricsCard from '../metricsCard/metricsCard';
+import MetricsCard from '../../components/metricsCard/MetricsCard';
 
 export default function BlockMetrics() {
   const blockMetrics = [
