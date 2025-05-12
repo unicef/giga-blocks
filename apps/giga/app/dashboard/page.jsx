@@ -37,11 +37,11 @@ export default function Dashboard() {
       try {
         const decoded = atob(d?.tokenUri?.substring(29));
         const token = d?.id;
-        const parseddata =  JSON.parse(decoded);
-        return{
+        const parseddata = JSON.parse(decoded);
+        return {
           tokenId: token,
-          ...parseddata
-        }
+          ...parseddata,
+        };
       } catch (e) {
         console.error('Failed to decode tokenUri', e);
         return null;

@@ -5,6 +5,7 @@ import { Button } from '@carbon/react';
 import { useThemeToggleStore } from '../../app/store/themeToggleStore';
 import { useThemeStore } from '../../app/store/themeStore';
 import { useRouter } from 'next/navigation';
+import { useThemeUpdate } from '../../app/hooks/useTheme/index';
 import Image from 'next/image';
 import './_themeSelector.scss';
 
@@ -17,12 +18,19 @@ const ThemeSelector = ({
   loading,
 }) => {
   const router = useRouter();
-  console.log('selectedTheme', selectedTheme);
+  const updateTheme = useThemeUpdate();
   const handleActivateClick = () => {
-    const url = linkActivation
-      ? `${id}/activate-school?linkActivation=${linkActivation}`
-      : `${id}/activate-school`;
-    router.push(url);
+    if (isVisibleForMinted) {
+      updateTheme.mutate({
+        schoolId: id,
+        themeId: selectedTheme,
+      });
+    } else {
+      const url = linkActivation
+        ? `${id}/activate-school?linkActivation=${linkActivation}`
+        : `${id}/activate-school`;
+      router.push(url);
+    }
   };
   const isVisibleForMinted = useThemeToggleStore(
     (state) => state.isVisibleForMinted
