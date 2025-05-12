@@ -12,13 +12,15 @@ import {
 import './_activation.scss';
 import { useContributorPatch } from '../../app/hooks/useContributor/index';
 import { useAccount } from 'wagmi';
+import { useParams, useRouter } from 'next/navigation';
 
 export default function ActivationModal({ isOpen, onClose }) {
+  const { id } = useParams();
   const [showNameOnList, setShowNameOnList] = useState(false);
   const [contributorName, setContributorName] = useState('');
   const { address: walletAddress } = useAccount();
   const patchContributor = useContributorPatch();
-
+  const { router } = useRouter();
   const handleCheckboxChange = (event) => {
     const checked = event.target.checked;
     setShowNameOnList(checked);
@@ -28,23 +30,11 @@ export default function ActivationModal({ isOpen, onClose }) {
   };
 
   const handleVisitClick = () => {
-    console.log('Sending:', {
-      walletAddress,
-      isVisible: showNameOnList,
-      name: contributorName || walletAddress,
-    });
-
-    if (!walletAddress) {
-      console.error('Missing walletAddress');
-      return;
-    }
-
     patchContributor.mutate({
       walletAddress,
       isVisible: showNameOnList,
       name: contributorName,
     });
-
     onClose();
   };
 
@@ -90,7 +80,7 @@ export default function ActivationModal({ isOpen, onClose }) {
             id="contributor-list"
             labelText="Allow to show your name on Giga Contributor List"
             checked={showNameOnList}
-            onChange={handleCheckboxChange} // Pass the event to handleCheckboxChange
+            onChange={handleCheckboxChange}
           />
 
           {showNameOnList && (
