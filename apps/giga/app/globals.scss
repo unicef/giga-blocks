@@ -29,6 +29,7 @@ body {
 .cds--content {
   margin-top: 3rem;
   padding: 0;
+  min-height: auto;
 }
 .cds--modal-container {
   border-radius: 12px !important;
@@ -79,4 +80,11 @@ body {
   svg {
     fill: white;
   }
+}
+.cds--modal-header {
+  webkit-margin-after: 0;
+  margin-block-end: 0;
+  -webkit-padding-before: 0;
+  padding-block-start: 0;
+  padding-inline: 0;
 }

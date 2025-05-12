@@ -36,6 +36,7 @@ export default function Header() {
           width={500}
           height={400}
           className="illustration"
+          priority
         />
       </div>
     </div>

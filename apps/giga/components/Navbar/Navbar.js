@@ -51,9 +51,6 @@ const Navbar = () => {
             <Link href="/schools" passHref legacyBehavior>
               <HeaderMenuItem>Blogs</HeaderMenuItem>
             </Link>
-            <Link href="/schools" passHref legacyBehavior>
-              <HeaderMenuItem>Join Us</HeaderMenuItem>
-            </Link>
             {isConnected && (
               <Link href={'/dashboard'} passHref legacyBehavior>
                 <HeaderMenuItem>Dashboard</HeaderMenuItem>
@@ -73,14 +70,11 @@ const Navbar = () => {
                   <Link href="/schools" passHref legacyBehavior>
                     <HeaderMenuItem>Schools</HeaderMenuItem>
                   </Link>
-                  <Link href="/schools" passHref legacyBehavior>
-                    <HeaderMenuItem>Data Sharing</HeaderMenuItem>
+                  <Link href="/about" passHref legacyBehavior>
+                    <HeaderMenuItem>About Us</HeaderMenuItem>
                   </Link>
-                  <Link href="/schools" passHref legacyBehavior>
-                    <HeaderMenuItem>Media</HeaderMenuItem>
-                  </Link>
-                  <Link href="/schools" passHref legacyBehavior>
-                    <HeaderMenuItem>Join Us</HeaderMenuItem>
+                  <Link href="/blogs" passHref legacyBehavior>
+                    <HeaderMenuItem>Blogs</HeaderMenuItem>
                   </Link>
                   {isConnected && (
                     <Link href={'#'} passHref legacyBehavior>

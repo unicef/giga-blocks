@@ -43,7 +43,7 @@ const navConfig = [
           //   path: PATH_SCHOOL.contributed,
           // },
           {
-            title: 'Import School',
+            title: 'Activate School',
             path: PATH_SCHOOL.import,
           },
           // {
@@ -51,7 +51,7 @@ const navConfig = [
           //   path: PATH_SCHOOL.minting,
           // },
           {
-            title: 'Minted NFT',
+            title: 'Activated School',
             path: PATH_SCHOOL.verified,
           },
         ],
