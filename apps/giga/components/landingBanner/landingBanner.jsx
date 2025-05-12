@@ -58,7 +58,7 @@ export default function LandingBanner() {
         </Column>
 
         <Column lg={8} md={8} sm={4} className="grid-pattern-container">
-          asdasdasd
+          
         </Column>
       </Grid>
     </div>

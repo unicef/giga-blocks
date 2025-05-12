@@ -47,9 +47,9 @@ export default function FeaturedSchools() {
         </div>
 
         <div className="featured-schools__footer">
-          <p className="featured-schools__stats">
-            369 schools still remain not activated in Nepal
-          </p>
+          {!isLoading && <p className="featured-schools__stats">
+            {data?.remainingSchools || ''} schools still remain not activated in Nepal
+          </p>}
           <Link href="/schools/activate">
             <Button
               className="featured-schools__cta-button"
