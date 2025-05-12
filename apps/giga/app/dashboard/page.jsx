@@ -26,13 +26,13 @@ export default function Dashboard() {
   }, [isConnected, isConnecting]);
 
   const [result] = useQuery({
-    query: Queries.schoolOwnedNftsQuery,
-    variables: { id: address },
+    query: Queries.collectorOwnedNftsQuery,
+    variables: { id: address  },
   });
 
   const { data, fetching } = result;
 
-  const decodedShooldata = data?.schoolOwnedNft?.nfts
+  const decodedShooldata = data?.collectorOwnedNft?.nfts
     ?.map((d) => {
       try {
         const decoded = atob(d?.tokenUri?.substring(29));
@@ -119,7 +119,7 @@ export default function Dashboard() {
             <div className="reservation-card">
               <div className="reservation-info">
                 <span className="reservation-label">
-                  Latest School Reservation
+                  Latest School Activated
                 </span>
                 {decodedShooldata?.length > 0 ? (
                   <>
@@ -134,7 +134,7 @@ export default function Dashboard() {
                   <>
                     <h2 className="school-name">Loading...</h2>
                     <p className="school-location">
-                      Fetching latest reservation
+                      Fetching latest activation
                     </p>
                   </>
                 )}
