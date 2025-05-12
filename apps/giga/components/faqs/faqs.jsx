@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Accordion, AccordionItem, Button } from '@carbon/react';
-import './FAQs.scss';
+import './faqs.scss';
 
 export default function FAQs() {
   const [expandedId, setExpandedId] = useState(1);
