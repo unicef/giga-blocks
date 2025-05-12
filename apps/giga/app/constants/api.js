@@ -15,6 +15,7 @@ module.exports = {
     CLAIM: '/schools/claimSchool',
     PAIDACTIVATION: '/schools/activateSchool',
   },
+
   OTP: {
     REGISTER: '/auth/send-otp',
   },
@@ -35,6 +36,7 @@ module.exports = {
   },
   CONTRIBUTOR: {
     GET: '/users/contributor',
+    PATCH: '/contributor/update',
   },
   LINKACTIVATION: {
     GET: '/linkactivation/validateLink',
@@ -51,6 +53,7 @@ module.exports = {
     GET: '/schools/themes',
     SCHOOL: '/schools/theme',
     POST: '/schools/themes',
+    UPDATE: '/schools/updateTheme',
   },
   GAS_FEE: {
     GET: process.env.NEXT_PUBLIC_GAS_API,

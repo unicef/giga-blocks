@@ -10,16 +10,42 @@ import {
   LogoTwitter,
 } from '@carbon/icons-react';
 import './_activation.scss';
+import { useContributorPatch } from '../../app/hooks/useContributor/index';
+import { useAccount } from 'wagmi';
 
 export default function ActivationModal({ isOpen, onClose }) {
   const [showNameOnList, setShowNameOnList] = useState(false);
   const [contributorName, setContributorName] = useState('');
+  const { address: walletAddress } = useAccount();
+  const patchContributor = useContributorPatch();
 
-  const handleCheckboxChange = (checked) => {
+  const handleCheckboxChange = (event) => {
+    const checked = event.target.checked;
     setShowNameOnList(checked);
     if (!checked) {
       setContributorName('');
     }
+  };
+
+  const handleVisitClick = () => {
+    console.log('Sending:', {
+      walletAddress,
+      isVisible: showNameOnList,
+      name: contributorName || walletAddress,
+    });
+
+    if (!walletAddress) {
+      console.error('Missing walletAddress');
+      return;
+    }
+
+    patchContributor.mutate({
+      walletAddress,
+      isVisible: showNameOnList,
+      name: contributorName,
+    });
+
+    onClose();
   };
 
   return (
@@ -64,7 +90,7 @@ export default function ActivationModal({ isOpen, onClose }) {
             id="contributor-list"
             labelText="Allow to show your name on Giga Contributor List"
             checked={showNameOnList}
-            onChange={handleCheckboxChange}
+            onChange={handleCheckboxChange} // Pass the event to handleCheckboxChange
           />
 
           {showNameOnList && (
@@ -80,7 +106,7 @@ export default function ActivationModal({ isOpen, onClose }) {
           )}
         </div>
 
-        <Button className="visitButton" onClick={onClose}>
+        <Button className="visitButton" onClick={handleVisitClick}>
           Visit School Details
         </Button>
       </div>

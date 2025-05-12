@@ -52,16 +52,16 @@ export default function SchoolStats({
               className="school-details__stat-number"
               style={{ color: fontColor }}
             >
-              {290} Mbps
+              {'---'} Mbps
             </span>
           </div>
           <div className="school-details__stat-detail">
             <p>Connection Type</p>
-            <p>{'adsl'}</p>
+            <p>{'----'}</p>
           </div>
           <div className="school-details__stat-detail">
             <p>Global Benchmark</p>
-            <p>{10} Mbps</p>
+            <p>{'--'} Mbps</p>
           </div>
         </div>
       </div>

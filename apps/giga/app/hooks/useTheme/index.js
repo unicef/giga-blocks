@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { apiGuest } from '../../utils/api';
 import { THEME } from '../../constants/api';
 
@@ -20,4 +20,19 @@ export const useSchoolThemeGet = (name) => {
   );
 };
 
-export const useThemePost = () => {};
+export const useThemeUpdate = () => {
+  return useMutation({
+    mutationFn: async ({ schoolId, themeId }) => {
+      const { data } = await apiGuest.patch(`${THEME.UPDATE}/${schoolId}`, {
+        themeId,
+      });
+      return data;
+    },
+    onSuccess: () => {
+      console.log('heme updated successfully!');
+    },
+    onError: (error) => {
+      console.error('Theme update failed:', error);
+    },
+  });
+};
