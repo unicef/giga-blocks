@@ -344,7 +344,23 @@ export class SchoolService {
   }
 
   async updateTheme(id: string, themeId: string) {
-    await this.validateSchoolAndTheme(id, themeId);
+    const school = await this.prisma.school.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    if (!school) {
+      throw new NotFoundException('School not found');
+    }
+    const theme = await this.prisma.theme.findUnique({
+      where: {
+        id: themeId,
+      },
+    });
+    if (!theme) {
+      throw new NotFoundException('Theme not found');
+    }
+
     return await this.prisma.school.update({
       where: {
         id,
