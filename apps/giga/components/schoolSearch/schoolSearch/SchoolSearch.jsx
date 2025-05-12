@@ -23,6 +23,7 @@ import { useSchoolGet } from '../../../app/hooks/useSchool';
 import SchoolCard from '../../schoolCard/SchoolCard';
 import './_schoolSearch.scss';
 import countryList from '../../../app/data/country.json';
+import CardSkeleton from '../../cardSkeleton/CardSkeleton';
 
 export default function SchoolSearch({ linkActivation }) {
   const router = useRouter();
@@ -264,7 +265,9 @@ export default function SchoolSearch({ linkActivation }) {
         </div>
 
         {isLoading ? (
-          <div className="search-page__loading">Loading...</div>
+          <div className="search-page__grid">
+            <CardSkeleton count={10} />
+          </div>
         ) : (
           <div className="search-page__grid">
             {filteredSchools?.map((school) => (

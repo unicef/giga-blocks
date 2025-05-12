@@ -1,5 +1,5 @@
 'use client';
-import { SCHOOLS } from '../../constants/api';
+import { SCHOOLS, FEATURED } from '../../constants/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { apiGuest } from '../../utils/api';
 
@@ -51,5 +51,11 @@ export const useSchoolPaidActivation = () => {
       const { data } = await apiGuest.post(SCHOOLS.PAIDACTIVATION, payload);
       return data;
     },
+  });
+};
+export const useFeaturedSchool = () => {
+  return useQuery(['get-featured-schools'], async () => {
+    const { data } = await apiGuest.get(`${FEATURED.GET}`);
+    return data;
   });
 };

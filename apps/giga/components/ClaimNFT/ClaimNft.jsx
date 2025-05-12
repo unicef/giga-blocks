@@ -14,6 +14,7 @@ import { useAccount } from 'wagmi';
 import { useThemeStore } from '../../app/store/themeStore';
 import { ConnectKitButton } from 'connectkit';
 import Confetti from 'react-confetti';
+import CongratulationModal from '../congratulationModal/CongratulationModal';
 
 export default function ClaimNFT() {
   const { id } = useParams();
@@ -231,50 +232,11 @@ export default function ClaimNFT() {
           </div>
         </div>
       </div>
-      <Modal
+      <CongratulationModal
         open={showClaimModal}
-        passiveModal
-        onRequestClose={() => setShowClaimModal(false)}
-        size="sm"
-        hasCloseIcon={false}
-      >
-        <div ref={containerRef} style={{ textAlign: 'left', padding: '20px' }}>
-          {showClaimModal && (
-            <Confetti
-              width={dimensions.width}
-              height={dimensions.height}
-              numberOfPieces={200}
-              recycle={true}
-            />
-          )}
-
-          <span
-            className="emoji"
-            role="img"
-            aria-label="celebration"
-            style={{ fontSize: '40px' }}
-          >
-            🎉
-          </span>
-          <h2 style={{ marginTop: '20px' }}>NFT Claimed Successfully</h2>
-          <p style={{ color: 'gray', marginTop: '10px' }}>
-            Your contribution is now part of the Giga Blocks legacy
-          </p>
-
-          <div style={{ marginTop: '30px' }}>
-            <Button
-              kind="primary"
-              size="lg"
-              onClick={() => {
-                setShowClaimModal(false);
-                router.push(`/schools/${id}`);
-              }}
-            >
-              View Giga Contributors List
-            </Button>
-          </div>
-        </div>
-      </Modal>
+        onClose={() => setShowClaimModal(false)}
+        id={id}
+      />
     </>
   );
 }

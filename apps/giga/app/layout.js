@@ -3,8 +3,9 @@ import './globals.scss';
 import { Providers } from './providers';
 
 export const metadata = {
-  title: 'Carbon + Next13',
-  description: 'IBM Carbon Tutorial with NextJS 13',
+  title: 'Giga Blocks',
+  description:
+    'Building the World’s Largest Decentralized School Database - Together',
 };
 
 export default function RootLayout({ children }) {

@@ -1,7 +1,7 @@
 'use client';
-import { SCHOOLS } from '../../constants/api';
+import { SCHOOLS, FEATURED } from '../../constants/api';
 import { useQuery } from '@tanstack/react-query';
-import {apiGuest} from '../../utils/api'
+import { apiGuest } from '../../utils/api';
 
 export const useSchoolGet = (page, perPage, searchText) => {
   return useQuery(

@@ -37,7 +37,7 @@ export default function OutlinedCard() {
           <CardContent>
             <Typography variant="body2">Total School</Typography>
             <Typography variant="h5" component="div">
-              {schoolCount ? schoolCount.toString() : 'N/A'}
+              {schoolCount ? schoolCount.toLocaleString() : 'N/A'}
             </Typography>
           </CardContent>
         </Card>
@@ -45,9 +45,9 @@ export default function OutlinedCard() {
       <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
         <Card variant="outlined">
           <CardContent>
-            <Typography variant="body2">NFTs Minted</Typography>
+            <Typography variant="body2">Schools Activated</Typography>
             <Typography variant="h5" component="div">
-              {dataLength || 'N/A'}
+              {dataLength ? Number(dataLength).toLocaleString() : 'N/A'}
             </Typography>
           </CardContent>
         </Card>
@@ -57,17 +57,7 @@ export default function OutlinedCard() {
           <CardContent>
             <Typography variant="body2">Total Contributors</Typography>
             <Typography variant="h5" component="div">
-              {userData?.meta?.total || 'N/A'}
-            </Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
-        <Card variant="outlined">
-          <CardContent>
-            <Typography variant="body2">Total Contributions</Typography>
-            <Typography variant="h5" component="div">
-              {contributionData?.meta?.total || 'N/A'}
+              {userData?.meta?.total ? Number(userData?.meta?.total).toLocaleString() : 'N/A'}
             </Typography>
           </CardContent>
         </Card>

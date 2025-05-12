@@ -384,6 +384,7 @@ model Contributor {
 model FeatureCountry {
   id            String   @id @default(uuid())
   country_code  String   @unique
+  details       String? 
   isFeatured    Boolean
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

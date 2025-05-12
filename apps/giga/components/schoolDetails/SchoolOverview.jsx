@@ -79,7 +79,15 @@ const SchoolOverview = ({
       <div className="school-details__overview-header">
         <h3 className="school-details__section-title">School Overview</h3>
         <div className="school-details__data-source">
-          Last Updated: {new Date(updatedAt).toISOString().split('T')[0]}
+          Last Updated:{' '}
+          {new Date(updatedAt).toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+          })}
         </div>
       </div>
       <p className="school-details__last-updated">
