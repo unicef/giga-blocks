@@ -10,16 +10,32 @@ import {
   LogoTwitter,
 } from '@carbon/icons-react';
 import './_activation.scss';
+import { useContributorPatch } from '../../app/hooks/useContributor/index';
+import { useAccount } from 'wagmi';
+import { useParams, useRouter } from 'next/navigation';
 
 export default function ActivationModal({ isOpen, onClose }) {
+  const { id } = useParams();
   const [showNameOnList, setShowNameOnList] = useState(false);
   const [contributorName, setContributorName] = useState('');
-
-  const handleCheckboxChange = (checked) => {
+  const { address: walletAddress } = useAccount();
+  const patchContributor = useContributorPatch();
+  const { router } = useRouter();
+  const handleCheckboxChange = (event) => {
+    const checked = event.target.checked;
     setShowNameOnList(checked);
     if (!checked) {
       setContributorName('');
     }
+  };
+
+  const handleVisitClick = () => {
+    patchContributor.mutate({
+      walletAddress,
+      isVisible: showNameOnList,
+      name: contributorName,
+    });
+    onClose();
   };
 
   return (
@@ -80,7 +96,7 @@ export default function ActivationModal({ isOpen, onClose }) {
           )}
         </div>
 
-        <Button className="visitButton" onClick={onClose}>
+        <Button className="visitButton" onClick={handleVisitClick}>
           Visit School Details
         </Button>
       </div>

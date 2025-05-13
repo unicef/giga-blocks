@@ -94,12 +94,13 @@ const nftImage = gql`
   }
 `;
 
-const schoolOwnedNftsQuery = gql`
-  query schoolOwnedNft($id: ID!, $orderDirection: OrderDirection = asc) {
-    schoolOwnedNft(id: $id, subgraphError: allow) {
+const collectorOwnedNftsQuery = gql`
+  query collectorOwnedNft($id: ID!, $orderDirection: OrderDirection = desc) {
+    collectorOwnedNft(id: $id, subgraphError: allow) {
       id
       nfts(orderBy: mintedAt, orderDirection: $orderDirection) {
-        tokenUri
+        tokenUri,
+        id,
       }
     }
   }
@@ -114,5 +115,5 @@ export const Queries = {
   collectorTransferQuery,
   nftImages,
   nftImage,
-  schoolOwnedNftsQuery,
+  collectorOwnedNftsQuery,
 };

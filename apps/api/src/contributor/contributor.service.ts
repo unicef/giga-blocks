@@ -5,6 +5,7 @@ import { ContributorNameType, Role } from '@prisma/application';
 import { MailService } from 'src/mailer/mailer.service';
 import { QueueService } from 'src/mailer/queue.service';
 import { CreateContributor } from './contributor.dto';
+import { ethers } from 'ethers';
 const Link = process.env.NEXT_PUBLIC_WEB_NAME;
 
 @Injectable()
@@ -53,18 +54,18 @@ export class ContributorService {
   }
 
   async listContributors() {
-    const contributors = await  this.prisma.contributor.findMany({
+    const contributors = await this.prisma.contributor.findMany({
       where: { isVisible: true },
-      include: { user: {
-        select:{
-          name: true,
-          email: true,
-          walletAddress: true,
-        }
-      } },
-      orderBy:[{nameType:'asc'},
-        {updatedAt:'desc'}
-      ]
+      include: {
+        user: {
+          select: {
+            name: true,
+            email: true,
+            walletAddress: true,
+          },
+        },
+      },
+      orderBy: [{ nameType: 'asc' }, { updatedAt: 'desc' }],
     });
     return contributors;
   }
@@ -138,7 +139,7 @@ export class ContributorService {
         });
       }
     } else await this.updateContributor(existinguser.id, data);
-    return {sucess:true, message: 'Contributor added successfully' };
+    return { sucess: true, message: 'Contributor added successfully' };
   }
 
   async getReservedSchools(email: string) {
@@ -152,13 +153,13 @@ export class ContributorService {
 
     const reservedSchools = await this.prisma.school.findMany({
       where: { id: { in: contributor.schoolreserved } },
-      select:{
-        id:true,
+      select: {
+        id: true,
         name: true,
-        country:true,
-        minted:true,
-        imageHash:true,
-      }
+        country: true,
+        minted: true,
+        imageHash: true,
+      },
     });
     return reservedSchools;
   }
@@ -166,14 +167,14 @@ export class ContributorService {
   async updateVisibility(walletAddress: string, data: any) {
     let name = data?.name;
     if (!data?.name) name = data?.walletAddress;
-  const nameType = name?.endsWith('.eth')
-  ? ContributorNameType.ENS
-  : name
-  ? ContributorNameType.REGULAR
-  : ContributorNameType.WALLET;
+    const nameType = name?.endsWith('.eth')
+      ? ContributorNameType.ENS
+      : ethers.isAddress(name)
+      ? ContributorNameType.WALLET
+      : ContributorNameType.REGULAR;
     const userDetails = await this.prisma.user.update({
       where: { walletAddress: hexStringToBuffer(walletAddress) },
-      data:{name:data.name}
+      data: { name: data.name },
     });
     if (!userDetails) {
       throw new Error('Contributor not found');
