@@ -5,19 +5,21 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { useThemeToggleStore } from '../../app/store/themeToggleStore';
 import { usePathname } from 'next/navigation';
+import { useAccount } from 'wagmi';
 
-const Sidebar = ({ imageHash, minted, fontColor, claim }) => {
+const Sidebar = ({ imageHash, minted, fontColor, claim,owner }) => {
   const [imageError, setImageError] = useState(false);
   const pathname = usePathname();
   const isClaimPath = pathname.includes('claim');
   const toggleVisibilityForMinted = useThemeToggleStore(
     (state) => state.toggleVisibilityForMinted
   );
+  const {address} = useAccount();
   return (
     <div className="school-details__sidebar">
       {minted === 'MINTED' ? (
         <div className="school-details__minted-container">
-          {!isClaimPath && (
+          {!isClaimPath &&  (address?.toLowerCase() === owner?.toLowerCase()) ? (
             <p
               onClick={toggleVisibilityForMinted}
               style={{
@@ -30,7 +32,7 @@ const Sidebar = ({ imageHash, minted, fontColor, claim }) => {
             >
               Change Template
             </p>
-          )}
+          ):<></>}
           <div className="school-details__minted-image-wrapper">
             {!imageError ? (
               <Image

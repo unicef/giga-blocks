@@ -6,8 +6,10 @@ import {
   PATH_VALID,
   PATH_ACTIVATE,
   PATH_TRANSACTION,
+  PATH_INFORMATION,
 } from '../../../routes/paths';
 import SvgColor from '../../../components/svg-color';
+import { path } from 'd3';
 
 const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH;
 const icon = (name: string) => (
@@ -43,7 +45,7 @@ const navConfig = [
           //   path: PATH_SCHOOL.contributed,
           // },
           {
-            title: 'Import School',
+            title: 'Activate School',
             path: PATH_SCHOOL.import,
           },
           // {
@@ -51,7 +53,7 @@ const navConfig = [
           //   path: PATH_SCHOOL.minting,
           // },
           {
-            title: 'Minted NFT',
+            title: 'Activated School',
             path: PATH_SCHOOL.verified,
           },
         ],
@@ -106,11 +108,21 @@ const navConfig = [
       },
     ],
   },
+
   {
     items: [
       {
         title: 'Transaction',
         path: PATH_TRANSACTION.root,
+        icon: ICONS.user,
+      },
+    ],
+  },
+  {
+    items: [
+      {
+        title: 'Information Worker',
+        path: PATH_INFORMATION.root,
         icon: ICONS.user,
       },
     ],

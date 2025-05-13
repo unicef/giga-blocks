@@ -13,7 +13,7 @@
 }
 
 .mission-vision__container {
-  max-width: 1200px;
+  // max-width: 1200px;
   margin: 0 auto;
   padding: 0 $spacing-05;
 }
@@ -222,6 +222,7 @@
   width: 100%;
   height: auto;
   object-fit: cover;
+  margin-bottom: 20px;
 
   &--bottom {
     height: 300px;
@@ -240,15 +241,13 @@
   overflow: hidden;
 
   .vision-visual__overlay {
-    position: absolute;
     bottom: 0;
     background-color: #dff1ff;
     width: 100%;
     padding: $spacing-05;
     display: flex;
-    align-items: center;
+    align-items: self-start;
     justify-content: space-between;
-    height: 55%;
     border-radius: 12px;
 
     @include breakpoint-down(sm) {
@@ -257,8 +256,8 @@
     }
 
     p {
-      font-weight: 400;
-      font-size: 20px;
+      font-weight: 200;
+      font-size: 28px;
       line-height: 1.5;
       color: #333;
     }

@@ -18,6 +18,7 @@ const Header = ({
         </p>
         <div className="school-details__location">
           <Location size={16} /> {region_name}
+         {countryCode ?
           <a
             href={`${mapUrl}/schools?country=${countryCode}&school_ids=${locationId}`}
             className="school-details__map-link"
@@ -25,7 +26,13 @@ const Header = ({
             style={{ color: fontColor }}
           >
             Locate on map <ArrowUpRight size={16} />
-          </a>
+            </a>
+:
+            <div>
+              Location:
+              No location details found
+            </div>
+         }
         </div>
       </div>
     </div>

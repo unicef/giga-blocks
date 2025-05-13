@@ -116,9 +116,9 @@ const MintedSchools = () => {
 
   return (
     <DashboardLayout>
-      <h2>Minted School</h2>
+      <h2>Activated School</h2>
       <FormControl sx={{ width: '25%' }}>
-        <InputLabel id="demo-simple-select-label">Minted By</InputLabel>
+        <InputLabel id="demo-simple-select-label">Activated By</InputLabel>
         <Select
           labelId="minted-by-select-label"
           id="minted-by-select"

@@ -37,4 +37,7 @@ module.exports = {
     GET: '/contribute',
     POST: '/contribute',
   },
+  FEATURED: {
+    GET: '/featured/school',
+  },
 };

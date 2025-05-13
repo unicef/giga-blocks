@@ -1,6 +1,6 @@
 'use client';
 
-import { Modal } from '@carbon/react';
+import { Modal, Tab, TabList, TabPanel, TabPanels, Tabs } from '@carbon/react';
 import { ConnectKitButton } from 'connectkit';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -8,11 +8,13 @@ import { useQuery } from 'urql';
 import { useAccount } from 'wagmi';
 import SchoolCard from '../../components/schoolCard/SchoolCard';
 import { Queries } from '../libs/graph-query';
+import { Copy, TaskComplete } from '@carbon/icons-react';
 import './_dashboard.scss';
-import { userData } from './mockData';
+import CardSkeleton from '../../components/cardSkeleton/CardSkeleton';
 
 export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
+  const [copied, setCopied] = useState(false);
   const { address, isConnected, isConnecting } = useAccount();
 
   useEffect(() => {
@@ -24,23 +26,37 @@ export default function Dashboard() {
   }, [isConnected, isConnecting]);
 
   const [result] = useQuery({
-    query: Queries.schoolOwnedNftsQuery,
-    variables: { id: '0xb87ab8d261771a575740fe314e4eaa41e511a000' },
+    query: Queries.collectorOwnedNftsQuery,
+    variables: { id: address },
   });
 
   const { data, fetching } = result;
 
-  const decodedShooldata = data?.schoolOwnedNft?.nfts
+  const decodedShooldata = data?.collectorOwnedNft?.nfts
     ?.map((d) => {
       try {
         const decoded = atob(d?.tokenUri?.substring(29));
-        return JSON.parse(decoded);
+        const token = d?.id;
+        const parseddata = JSON.parse(decoded);
+        return {
+          tokenId: token,
+          ...parseddata,
+        };
       } catch (e) {
         console.error('Failed to decode tokenUri', e);
         return null;
       }
     })
     .filter(Boolean);
+
+  const handleCopy = () => {
+    if (address) {
+      navigator.clipboard.writeText(address).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 3000);
+      });
+    }
+  };
 
   return (
     <>
@@ -61,7 +77,7 @@ export default function Dashboard() {
           <section className="profile-section">
             <div className="profile-image-container">
               <Image
-                src={userData.profileImage || '/placeholder.svg'}
+                src={'/images/teams/team-1.png'}
                 alt="Profile avatar"
                 width={100}
                 height={100}
@@ -74,7 +90,31 @@ export default function Dashboard() {
               ) : !isConnected ? (
                 <p>Wallet not connected</p>
               ) : (
-                address?.slice(0, 4) + '...' + address?.slice(35, 43)
+                <>
+                  {address?.slice(0, 4) + '...' + address?.slice(35, 43)}
+                  {copied ? (
+                    <TaskComplete
+                      size={20}
+                      style={{
+                        marginLeft: '12px',
+                        cursor: 'pointer',
+                        color: '#A8A8A8',
+                      }}
+                      title="Copied!"
+                    />
+                  ) : (
+                    <Copy
+                      size={20}
+                      style={{
+                        marginLeft: '12px',
+                        cursor: 'pointer',
+                        color: '#A8A8A8',
+                      }}
+                      onClick={handleCopy}
+                      title="Copy Address"
+                    />
+                  )}
+                </>
               )}
             </h1>
           </section>
@@ -84,7 +124,7 @@ export default function Dashboard() {
             <div className="reservation-card">
               <div className="reservation-info">
                 <span className="reservation-label">
-                  Latest School Reservation
+                  Latest School Activated
                 </span>
                 {decodedShooldata?.length > 0 ? (
                   <>
@@ -99,7 +139,7 @@ export default function Dashboard() {
                   <>
                     <h2 className="school-name">Loading...</h2>
                     <p className="school-location">
-                      Fetching latest reservation
+                      Fetching latest activation
                     </p>
                   </>
                 )}
@@ -129,22 +169,37 @@ export default function Dashboard() {
 
         {/* Reserved Schools Section */}
         <section className="reserved-schools-section">
-          <h2 className="section-title">Reserved Schools</h2>
-
-          <div className="schools-grid">
-            {decodedShooldata?.slice(1, 5).map((school, index) => (
-              <div key={index} className="school-card">
-                <SchoolCard
-                  key={school.id}
-                  id={school.id}
-                  schoolName={school.schoolName}
-                  imageHash={school.image}
-                  location={school.region}
-                  minted={'MINTED'}
-                />
-              </div>
-            ))}
-          </div>
+          <Tabs>
+            <TabList>
+              <Tab>Activated Schools</Tab>
+              {/* <Tab>Claimed Schools</Tab> */}
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <div className="schools-grid">
+                  {fetching ? (
+                    <CardSkeleton count={4} />
+                  ) : (
+                    <>
+                      {decodedShooldata?.slice(1, 5).map((school, index) => (
+                        <div key={index} className="school-card">
+                          <SchoolCard
+                            key={school.id}
+                            id={school.id}
+                            schoolName={school.schoolName}
+                            imageHash={school.image}
+                            location={school.region}
+                            minted={'MINTED'}
+                          />
+                        </div>
+                      ))}
+                    </>
+                  )}
+                </div>
+              </TabPanel>
+              <TabPanel>Claimed Schools</TabPanel>
+            </TabPanels>
+          </Tabs>
         </section>
       </div>
     </>

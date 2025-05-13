@@ -4,6 +4,7 @@ import { CreateFeaturedDto } from './dto/create-featured.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RoleGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Featured')
@@ -19,12 +20,14 @@ export class FeaturedController {
     return this.featuredService.create(createFeaturedDto,req.user.id);
   }
 
+  @Public()
   @Get()
   @ApiOperation({ summary: 'List of all featured countries' })
   findAll() {
     return this.featuredService.findAll();
   }
 
+  @Public()
   @Get('/school')
   @ApiOperation({ summary: 'List of  featured schools for latest featured country' })
   findFeatureSchool(@Query() query:any) {

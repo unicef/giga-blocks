@@ -59,11 +59,7 @@ export default function StandardActivationForm({
           <label className="label">Donation</label>
           <div className="optional">
             Optional
-            <Tooltip
-              align="center"
-              direction="right"
-              tooltipText="Optional donation amount"
-            >
+            <Tooltip direction="right" label={'Optional donation amount'}>
               <Information size={16} />
             </Tooltip>
           </div>

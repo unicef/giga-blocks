@@ -11,7 +11,7 @@ export const useContributionList = () => {
         console.log('second');
         try {
           const res = await apiGuest.get(`${SCHOOLS.GET}`);
-          console.log('API response:', res.data); // Log the API response
+          console.log('API response:', res.data);
           return res.data;
         } catch (err) {
           console.log('Error fetching data:', err);

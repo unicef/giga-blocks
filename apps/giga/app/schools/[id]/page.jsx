@@ -8,12 +8,15 @@ import SchoolOverview from '../../../components/schoolDetails/SchoolOverview';
 import SchoolStats from '../../../components/schoolDetails/SchoolStats';
 import ThemeSelector from '../../../components/schoolDetails/SchoolThemes';
 import Sidebar from '../../../components/schoolDetails/Sidebar';
+import DetailsLoading from '../../../components/detailsLoading/DetailsLoading';
 import { useSchoolDetails } from '../../hooks/useSchool';
 import './_schoolDetails.scss';
 import { useThemeToggleStore } from '../../store/themeToggleStore';
 import { useThemeStore } from '../../store/themeStore';
 import { useSearchParams } from 'next/navigation';
 import { useThemeGet } from '../../hooks/useTheme';
+import { useReadNftContentSchoolIdToTokenId } from '../../hooks/useContract/nftContent';
+import { useReadNftOwnerOf } from '../../hooks/useContract/gigaNft';
 
 export default function SchoolDetails({ params }) {
   const { id } = params;
@@ -25,10 +28,13 @@ export default function SchoolDetails({ params }) {
   const isVisibleForMinted = useThemeToggleStore(
     (state) => state.isVisibleForMinted
   );
-  const [selectedTheme, setSelectedTheme] = useState('white');
+  const [selectedTheme, setSelectedTheme] = useState('');
   const defaultFontColor = '#000';
   const defaultBgColor = '#fff';
   const defaultCardColor = '#fff';
+  const nftContentAddress = process.env.NEXT_PUBLIC_GIGA_NFT_CONTENT_ADDRESS;
+  const collectorNftAddress =
+    process.env.NEXT_PUBLIC_GIGA_COLLECTOR_NFT_ADDRESS;
 
   useEffect(() => {
     if (!data) return;
@@ -43,6 +49,18 @@ export default function SchoolDetails({ params }) {
   }, [data]);
 
   const themeStore = useThemeStore();
+
+  const { data: tokenId, isLoading: isTokenLoading } =
+    useReadNftContentSchoolIdToTokenId({
+      address: nftContentAddress,
+      args: data?.giga_school_id ? [data?.giga_school_id] : undefined,
+      enabled: !!data?.giga_school_id,
+    });
+  const { data: owner } = useReadNftOwnerOf({
+    address: collectorNftAddress,
+    args: tokenId ? [Number(tokenId)] : undefined,
+    enabled: !!tokenId,
+  });
 
   const hasCustomTheme = Boolean(
     themeStore.fontColor && themeStore.cardColor && themeStore.bgColor
@@ -81,7 +99,7 @@ export default function SchoolDetails({ params }) {
     : themeOptions?.find((t) => t.name === selectedTheme)?.colorScheme
         .bgColor || '#fff';
 
-  if (isLoading || !data) return <h1>Loading....</h1>;
+  if (isLoading || !data) return <DetailsLoading />;
 
   return (
     <div className="school-details">
@@ -136,6 +154,7 @@ export default function SchoolDetails({ params }) {
           <Sidebar
             fontColor={fontColor}
             minted={minted}
+            owner={owner}
             imageHash={data?.imageHash}
           />
         </div>
