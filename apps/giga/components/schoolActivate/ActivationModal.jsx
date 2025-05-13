@@ -31,13 +31,22 @@ export default function ActivationModal({ isOpen, onClose }) {
   };
 
   const handleVisitClick = () => {
-    patchContributor.mutate({
-      walletAddress,
-      isVisible: showNameOnList,
-      name: contributorName,
-    });
-    onClose();
-    router.push(`/schools/${id}`);
+    patchContributor.mutate(
+      {
+        walletAddress,
+        isVisible: showNameOnList,
+        name: contributorName,
+      },
+      {
+        onSuccess: () => {
+          onClose();
+          router.push(`/schools`);
+        },
+        onError: (err) => {
+          console.error('Failed to update contributor:', err);
+        },
+      }
+    );
   };
 
   return (
