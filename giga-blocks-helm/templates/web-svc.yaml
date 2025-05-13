@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "web.fullname" . }}-svc
+  namespace: {{ default .Values.namespace .Release.Namespace }}
+  labels:
+    {{- toYaml .Values.web.labels | nindent 4 }}
+spec:
+  type: {{ .Values.web.service.type }}
+  ports:
+    - port: {{ .Values.web.service.port }}
+      targetPort: {{ .Values.web.service.targetPort }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- toYaml .Values.web.labels | nindent 4 }}
