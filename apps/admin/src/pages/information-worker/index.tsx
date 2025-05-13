@@ -21,7 +21,11 @@ import {
 import { useEffect, useState } from 'react';
 import Scrollbar from '@components/scrollbar';
 import { TableNoData } from '@components/table';
-// import { useInformationWorkers } from '@hooks/useInformationWorkers';
+import {
+  useGetInformationWorker,
+  usePostInformationWorker,
+  useSendEmail,
+} from '@hooks/informationWorker/useInformationWorker';
 
 const InformationWorker = () => {
   const [contributorTableData, setContributorTableData] = useState<any[]>([]);
@@ -33,13 +37,15 @@ const InformationWorker = () => {
     did: '',
   });
 
-  //   const { data, isLoading } = useInformationWorkers();
+  const { data } = useGetInformationWorker();
+  const { mutate: postInformationWorker, isLoading: isSubmitting } = usePostInformationWorker();
+  const { mutate: sendEmail } = useSendEmail();
 
-  //   useEffect(() => {
-  //     if (data) {
-  //       setContributorTableData(data);
-  //     }
-  //   }, [data]);
+  useEffect(() => {
+    if (data) {
+      setContributorTableData(data);
+    }
+  }, [data]);
 
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => {
@@ -53,17 +59,25 @@ const InformationWorker = () => {
   };
 
   const handleSubmit = () => {
-    console.log('Submitted:', formData);
-    setContributorTableData((prev) => [...prev, { ...formData, emailSent: false }]);
-    handleClose();
+    postInformationWorker(
+      { ...formData },
+      {
+        onSuccess: () => {
+          handleClose();
+        },
+        onError: (error) => {
+          console.error('Failed to add Information Worker:', error);
+        },
+      }
+    );
   };
 
   const openEmailModal = () => setEmailModal(true);
   const closeEmailModal = () => setEmailModal(false);
 
   const confirmSendEmail = () => {
-    console.log('Sending emails to workers...');
-    // TODO: call API or handle email logic
+    sendEmail();
+    console.log('email sent');
     closeEmailModal();
   };
 
@@ -152,8 +166,8 @@ const InformationWorker = () => {
           <Button onClick={handleClose} variant="outlined">
             Cancel
           </Button>
-          <Button onClick={handleSubmit} variant="contained">
-            Submit
+          <Button onClick={handleSubmit} variant="contained" disabled={isSubmitting}>
+            {isSubmitting ? 'Submitting...' : 'Submit'}
           </Button>
         </DialogActions>
       </Dialog>
