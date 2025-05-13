@@ -20,7 +20,7 @@ export default function ActivationModal({ isOpen, onClose }) {
   const [contributorName, setContributorName] = useState('');
   const { address: walletAddress } = useAccount();
   const patchContributor = useContributorPatch();
-  const { router } = useRouter();
+  const router = useRouter();
   const handleCheckboxChange = (event) => {
     const checked = event.target.checked;
     setShowNameOnList(checked);
@@ -30,12 +30,19 @@ export default function ActivationModal({ isOpen, onClose }) {
   };
 
   const handleVisitClick = () => {
-    patchContributor.mutate({
-      walletAddress,
-      isVisible: showNameOnList,
-      name: contributorName,
-    });
-    onClose();
+    patchContributor.mutate(
+      {
+        walletAddress,
+        isVisible: showNameOnList,
+        name: contributorName,
+      },
+      {
+        onSuccess: () => {
+          onClose();
+          router.push(`/schools/${id}`);
+        },
+      }
+    );
   };
 
   return (
