@@ -75,7 +75,7 @@
                 <a href="#output-types">Output Types</a>
               </div>
               <ul class="pl-3 ml-1 border-l-2 border-gray-400">
-              <li><a href="#type-outputType-TemporaryEmails">TemporaryEmails</a></li><li><a href="#type-outputType-AggregateTemporaryEmails">AggregateTemporaryEmails</a></li><li><a href="#type-outputType-TemporaryEmailsGroupByOutputType">TemporaryEmailsGroupByOutputType</a></li><li><a href="#type-outputType-AffectedRowsOutput">AffectedRowsOutput</a></li><li><a href="#type-outputType-TemporaryEmailsCountAggregateOutputType">TemporaryEmailsCountAggregateOutputType</a></li><li><a href="#type-outputType-TemporaryEmailsMinAggregateOutputType">TemporaryEmailsMinAggregateOutputType</a></li><li><a href="#type-outputType-TemporaryEmailsMaxAggregateOutputType">TemporaryEmailsMaxAggregateOutputType</a></li>
+              <li><a href="#type-outputType-TemporaryEmails">TemporaryEmails</a></li><li><a href="#type-outputType-CreateManyTemporaryEmailsAndReturnOutputType">CreateManyTemporaryEmailsAndReturnOutputType</a></li><li><a href="#type-outputType-AggregateTemporaryEmails">AggregateTemporaryEmails</a></li><li><a href="#type-outputType-TemporaryEmailsGroupByOutputType">TemporaryEmailsGroupByOutputType</a></li><li><a href="#type-outputType-AffectedRowsOutput">AffectedRowsOutput</a></li><li><a href="#type-outputType-TemporaryEmailsCountAggregateOutputType">TemporaryEmailsCountAggregateOutputType</a></li><li><a href="#type-outputType-TemporaryEmailsMinAggregateOutputType">TemporaryEmailsMinAggregateOutputType</a></li><li><a href="#type-outputType-TemporaryEmailsMaxAggregateOutputType">TemporaryEmailsMaxAggregateOutputType</a></li>
               </ul>
             </li>
           </ul>
@@ -149,7 +149,7 @@
       </td>
       <td class="px-4 py-2 border">
         <ul>
-          <li><strong>@id</strong></li><li><strong>@default(uuid())</strong></li>
+          <li><strong>@id</strong></li><li><strong>@default(uuid(4)())</strong></li>
         </ul>
       </td>
       <td class="px-4 py-2 border">
@@ -3699,6 +3699,70 @@
               
       <div>
         <h3 class="mb-2 text-xl" id="type-outputType-TemporaryEmails">TemporaryEmails</h3>
+        <table class="table-auto">
+          <thead>
+            <tr>
+              <th class="px-4 py-2 border">Name</th>
+              <th class="px-4 py-2 border">Type</th>
+              <th class="px-4 py-2 border">Nullable</th>
+            </tr>
+          </thead>
+          <tbody>
+          
+    <tr>
+      <td class="px-4 py-2 border">
+        id </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        email </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        fullname </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        country </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+          </tbody>
+        </table>
+      </div>
+    <hr class="my-4" />
+      <div>
+        <h3 class="mb-2 text-xl" id="type-outputType-CreateManyTemporaryEmailsAndReturnOutputType">CreateManyTemporaryEmailsAndReturnOutputType</h3>
         <table class="table-auto">
           <thead>
             <tr>

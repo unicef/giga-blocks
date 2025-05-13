@@ -114,7 +114,7 @@
     "@heroicons/react": "2.0.16",
     "@hookform/resolvers": "^2.9.10",
     "@iconify/react": "^4.0.1",
-    "@iden3/js-iden3-auth": "^1.6.0",
+    "@iden3/js-iden3-auth": "1.6.0",
     "@jest/types": "^29.6.3",
     "@keyv/redis": "^4.3.1",
     "@mui/lab": "5.0.0-alpha.120",
