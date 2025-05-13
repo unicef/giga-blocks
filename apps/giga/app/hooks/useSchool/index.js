@@ -3,18 +3,33 @@ import { SCHOOLS, FEATURED } from '../../constants/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { apiGuest } from '../../utils/api';
 
-export const useSchoolGet = (page, perPage, name, country, minted) => {
+export const useSchoolGet = (
+  page,
+  perPage,
+  name,
+  country,
+  minted,
+  filters = {}
+) => {
   return useQuery(
-    ['get-school-list', page, perPage, name, country, minted],
+    ['get-school-list', page, perPage, name, country, minted, filters],
     async () => {
-      const { data } = await apiGuest.get(
-        `${SCHOOLS.GET}?page=${page}&perPage=${perPage}&name=${name}&country=${country}&minted=${minted}`
-      );
+      const params = new URLSearchParams({
+        page,
+        perPage,
+        name,
+        country,
+        minted,
+        ...filters,
+      });
 
+      const { data } = await apiGuest.get(
+        `${SCHOOLS.GET}?${params.toString()}`
+      );
       return data;
     },
     {
-      enabled: !!page && !!perPage, // Only run if both are valid
+      enabled: !!page && !!perPage,
       keepPreviousData: false,
       cacheTime: 0,
     }

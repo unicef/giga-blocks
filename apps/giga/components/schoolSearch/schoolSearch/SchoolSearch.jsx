@@ -109,18 +109,62 @@ export default function SchoolSearch({ linkActivation }) {
   };
 
   const handleSubmit = () => {
-    console.log({
-      searchTerm,
-      numStudents,
-      numTeachers,
-      numComputers,
-      downloadSpeed,
-      connectivityStatus,
-      activationStatus,
-      connectionType,
-      electricityAvailability,
-      waterAvailability,
-    });
+    const params = new URLSearchParams(searchParams.toString());
+
+    params.set('page', '1');
+    params.set('perPage', perPage.toString());
+
+    if (searchTerm) params.set('name', searchTerm);
+    else params.delete('name');
+
+    if (selectedCountry?.code) params.set('country', selectedCountry.code);
+    else params.delete('country');
+
+    if (minted === 'MINTED' || minted === 'NOTMINTED') {
+      params.set('minted', minted);
+    } else {
+      params.delete('minted');
+    }
+
+    if (waterAvailability !== 'all') {
+      params.set('water', waterAvailability);
+    } else {
+      params.delete('water');
+    }
+
+    if (electricityAvailability !== 'all') {
+      params.set('electricity', electricityAvailability);
+    } else {
+      params.delete('electricity');
+    }
+
+    if (connectivityStatus !== 'all') {
+      params.set('connected', connectivityStatus);
+    } else {
+      params.delete('connected');
+    }
+
+    if (connectionType !== 'all') {
+      params.set('connectionType', connectionType);
+    } else {
+      params.delete('connectionType');
+    }
+
+    if (numStudents[1].value > 0) params.set('students', numStudents[1].value);
+    else params.delete('students');
+
+    if (numTeachers[1].value > 0) params.set('teachers', numTeachers[1].value);
+    else params.delete('teachers');
+
+    if (numComputers[1].value > 0)
+      params.set('computers', numComputers[1].value);
+    else params.delete('computers');
+
+    if (downloadSpeed[1].value > 0)
+      params.set('download', downloadSpeed[1].value);
+    else params.delete('download');
+
+    router.push(`/schools?${params.toString()}`, { scroll: false });
     setIsFilterOpen(false);
   };
 
@@ -196,7 +240,7 @@ export default function SchoolSearch({ linkActivation }) {
             className="filter-button controlled-accordion-btn"
             kind="ghost"
           >
-            <Filter size={20} />
+            <Filter size={18} />
           </Button>
         </div>
 
@@ -245,7 +289,69 @@ export default function SchoolSearch({ linkActivation }) {
               ))}
             </div>
             <div className="filter-accordion__radio-groups">
-              {/* RADIO GROUPS.) */}
+              <RadioButtonGroup
+                legendText="Connectivity Status"
+                name="connectivityStatus"
+                value={connectivityStatus}
+                onChange={(value) => setConnectivityStatus(value)}
+              >
+                <RadioButton id="connect-all" labelText="All" value="all" />
+                <RadioButton
+                  id="connect-yes"
+                  labelText="Connected"
+                  value="true"
+                />
+                <RadioButton
+                  id="connect-no"
+                  labelText="Not Connected"
+                  value="false"
+                />
+              </RadioButtonGroup>
+
+              <RadioButtonGroup
+                legendText="Connection Type"
+                name="connectionType"
+                value={connectionType}
+                onChange={(value) => setConnectionType(value)}
+              >
+                <RadioButton id="type-all" labelText="All" value="all" />
+                <RadioButton id="type-adsl" labelText="ADSL" value="ADSL" />
+                <RadioButton id="type-fiber" labelText="Fiber" value="Fiber" />
+              </RadioButtonGroup>
+
+              <RadioButtonGroup
+                legendText="Electricity Availability"
+                name="electricityAvailability"
+                value={electricityAvailability}
+                onChange={(value) => setElectricityAvailability(value)}
+              >
+                <RadioButton id="elec-all" labelText="All" value="all" />
+                <RadioButton id="elec-yes" labelText="Available" value="true" />
+                <RadioButton
+                  id="elec-no"
+                  labelText="Not Available"
+                  value="false"
+                />
+              </RadioButtonGroup>
+
+              <RadioButtonGroup
+                legendText="Water Availability"
+                name="waterAvailability"
+                value={waterAvailability}
+                onChange={(value) => setWaterAvailability(value)}
+              >
+                <RadioButton id="water-all" labelText="All" value="all" />
+                <RadioButton
+                  id="water-yes"
+                  labelText="Available"
+                  value="true"
+                />
+                <RadioButton
+                  id="water-no"
+                  labelText="Not Available"
+                  value="false"
+                />
+              </RadioButtonGroup>
             </div>
 
             <div className="filter-accordion__actions">
@@ -255,7 +361,7 @@ export default function SchoolSearch({ linkActivation }) {
               <Button kind="tertiary" onClick={resetFilters}>
                 Reset All
               </Button>
-              <Button onClick={handleSubmit}>Activate</Button>
+              <Button onClick={handleSubmit}>Search</Button>
             </div>
           </div>
         </div>
