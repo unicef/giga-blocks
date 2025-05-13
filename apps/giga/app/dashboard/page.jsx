@@ -169,13 +169,14 @@ export default function Dashboard() {
 
         {/* Reserved Schools Section */}
         <section className="reserved-schools-section">
-          <Tabs>
+          <h2 className="section-title">Activated Schools</h2>
+          {/* <Tabs>
             <TabList>
               <Tab>Activated Schools</Tab>
-              {/* <Tab>Claimed Schools</Tab> */}
+              <Tab>Claimed Schools</Tab>
             </TabList>
             <TabPanels>
-              <TabPanel>
+              <TabPanel> */}
                 <div className="schools-grid">
                   {fetching ? (
                     <CardSkeleton count={4} />
@@ -196,10 +197,10 @@ export default function Dashboard() {
                     </>
                   )}
                 </div>
-              </TabPanel>
+              {/* </TabPanel>
               <TabPanel>Claimed Schools</TabPanel>
             </TabPanels>
-          </Tabs>
+          </Tabs> */}
         </section>
       </div>
     </>

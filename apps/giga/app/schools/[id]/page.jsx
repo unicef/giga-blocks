@@ -54,12 +54,16 @@ export default function SchoolDetails({ params }) {
     useReadNftContentSchoolIdToTokenId({
       address: nftContentAddress,
       args: data?.giga_school_id ? [data?.giga_school_id] : undefined,
-      enabled: !!data?.giga_school_id,
+      query: {
+        enabled: !!data?.giga_school_id,
+      },
     });
   const { data: owner } = useReadNftOwnerOf({
     address: collectorNftAddress,
     args: tokenId ? [Number(tokenId)] : undefined,
-    enabled: !!tokenId,
+    query: {
+      enabled: !!tokenId && !isTokenLoading,
+    },
   });
 
   const hasCustomTheme = Boolean(
