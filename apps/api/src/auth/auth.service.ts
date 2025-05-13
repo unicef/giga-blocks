@@ -5,8 +5,9 @@ import { generate } from 'otp-generator';
 import { MailService } from '../mailer/mailer.service';
 import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/dto/user.dto';
-import { AuthDto, WalletRegister } from './dto';
+import { AuthDto, AuthSendOtp, WalletRegister } from './dto';
 import { bufferToHexString } from 'src/utils/string-format';
+
 const otpLength = Number(process.env.OTP_LENGTH);
 @Injectable()
 export class AuthService {
@@ -16,6 +17,7 @@ export class AuthService {
     private userService: UsersService,
     private mailService: MailService,
   ) {}
+
   async validateUser(email: string, otp: string) {
     try {
       const user = await this.userService.findOneByEmail(email);

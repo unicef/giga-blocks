@@ -1,0 +1,122 @@
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/type' as *;
+@use '@carbon/styles/scss/colors' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/breakpoint' as *;
+
+.thank-you-container {
+  background-color: #fdf4ff;
+  border-radius: 8px;
+  padding: $spacing-04;
+  width: 100%;
+  margin-bottom: $spacing-04;
+
+  @include breakpoint-down(md) {
+    padding: $spacing-05;
+  }
+}
+
+.thank-you-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: $spacing-07;
+
+  @include breakpoint-down(md) {
+    flex-direction: column;
+    gap: $spacing-06;
+  }
+}
+
+.thank-you-header {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-05;
+  max-width: 500px;
+
+  @include breakpoint-down(sm) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-03;
+  }
+}
+
+.emoji {
+  font-size: 2rem;
+  line-height: 1;
+
+  @include breakpoint-down(sm) {
+    margin-bottom: $spacing-03;
+  }
+}
+
+.thank-you-text {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-03;
+
+  h2 {
+    @include type-style('heading-03');
+    color: $gray-100;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  p {
+    @include type-style('body-01');
+    color: $gray-70;
+    margin: 0;
+  }
+
+  .brand-name {
+    @include type-style('heading-01');
+    color: $gray-100;
+    margin-top: $spacing-03;
+  }
+}
+
+.claim-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-05;
+  min-width: 300px;
+  background-color: #ffff;
+  width: 40%;
+  padding: 1rem;
+  border-radius: 16px;
+
+  @include breakpoint-down(md) {
+    width: 100%;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-03;
+}
+
+.form-label {
+  @include type-style('label-01');
+  color: $gray-100;
+}
+
+.email-input {
+  width: 100%;
+}
+
+.claim-button {
+  background-color: #2563eb; // Blue button color
+  margin-top: $spacing-03;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &:hover {
+    background-color: darken(#2563eb, 10%);
+  }
+
+  svg {
+    margin-left: $spacing-03;
+  }
+}

@@ -12,6 +12,7 @@ export interface SchoolData {
   connectivity: string;
   electricity_availabilty: boolean;
   coverage_availabitlity: string;
+  region_name: string;
 }
 
 export class MintQueueDto {
@@ -24,4 +25,15 @@ export class MintQueueSingleDto {
   @ApiProperty()
   @IsObject()
   data: SchoolData;
+  email: string;
+  walletAddress: string;
+  themeId: string;
+}
+
+export class MintSingleSchool {
+  @ApiProperty({
+    example: 'uuid',
+  })
+  @IsString()
+  id: string;
 }

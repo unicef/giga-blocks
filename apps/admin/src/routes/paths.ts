@@ -12,6 +12,8 @@ const ROOTS_USER = '/user';
 const ROOTS_SCHOOL = '/school';
 const ROOTS_CONTRIBUTE = '/contribute';
 const ROOTS_VALID = '/valid';
+const ROOTS_ACTIVATE_SCHOOL = '/activate-school';
+const ROOTS_TRANSACTION = '/transaction';
 
 // ----------------------------------------------------------------------
 
@@ -43,7 +45,7 @@ export const PATH_USER = {
   contributer: path(ROOTS_USER, '/contributer'),
   new: path(ROOTS_USER, '/new'),
   profile: path(ROOTS_USER, '/profile'),
-  account:(id:string)=> path(ROOTS_USER, `/${id}`),
+  account: (id: string) => path(ROOTS_USER, `/${id}`),
   edit: (id: string) => path(ROOTS_USER, `/${id}/edit`),
 };
 
@@ -59,10 +61,17 @@ export const PATH_VALID = {
   root: ROOTS_VALID,
 };
 
+export const PATH_ACTIVATE = {
+  root: ROOTS_ACTIVATE_SCHOOL,
+};
+export const PATH_TRANSACTION = {
+  root: ROOTS_TRANSACTION,
+};
+
 export const PATH_SCHOOL = {
   root: ROOTS_SCHOOL,
   verified: path(ROOTS_SCHOOL, '/minted'),
   contributed: path(ROOTS_SCHOOL, '/un-minted'),
   minting: path(ROOTS_SCHOOL, '/pending'),
-  import: path(ROOTS_SCHOOL, '/import')
+  import: path(ROOTS_SCHOOL, '/import'),
 };

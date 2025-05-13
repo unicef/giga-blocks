@@ -1,13 +1,5 @@
 interface SchoolData {
-  name: string;
-  giga_school_id: string;
-  school_type: string;
-  country: string;
-  longitude: number;
-  latitude: number;
-  connectivity: boolean;
-  coverage_availability: boolean;
-  electricity_available: boolean;
+  school_id_giga: string;
 }
 
 export async function handler(fileData: any): Promise<any> {
@@ -38,33 +30,18 @@ export async function handler(fileData: any): Promise<any> {
 
     for (const row of cleanedRows) {
       const [
-        schoolName,
-        giga_school_id,
-        longitudeStr,
-        latitudeStr,
-        schoolType,
-        country,
-        connectivity,
-        coverage_availabitlity,
-        electricity_availability,
+        school_id_giga,
+  
       ] = row.split(',');
 
-      const longitude = parseFloat(longitudeStr);
-      const latitude = parseFloat(latitudeStr);
+      
 
-      const schoolData: SchoolData = {
-        name: schoolName,
-        giga_school_id,
-        school_type: schoolType,
-        country,
-        longitude,
-        latitude,
-        connectivity: connectivity.toLowerCase() === 'yes' && true,
-        coverage_availability: coverage_availabitlity.toLowerCase() === 'yes' && true,
-        electricity_available: electricity_availability.toLowerCase() === 'yes' && true,
-      };
+    const schoolData: SchoolData = {
+      school_id_giga,
+        
+    };
 
-      schoolArrays.push(schoolData);
+    schoolArrays.push(schoolData);
     }
   });
   return { schoolArrays, rowValue };

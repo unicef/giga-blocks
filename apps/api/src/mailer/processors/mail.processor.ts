@@ -10,7 +10,7 @@ import {
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
-import { DEVELOPER_JOIN_MAIL } from '../constants/mail.constant';
+import { DEVELOPER_JOIN_MAIL, SEND_MAGIC_LINK, THANK_YOU_MAIL } from '../constants/mail.constant';
 
 @Injectable()
 @Processor(MAIL_QUEUE)
@@ -139,4 +139,38 @@ export class MailProcessor {
       },
     });
   }
+
+  @Process(SEND_MAGIC_LINK)
+  public async emailValidationMail(job: Job<{ email: string; link: string }>) {
+    this._logger.log(`Sending email validation email to '${job.data.email}'`);
+    return this._mailerService.sendMail({
+      to: job.data.email,
+      from: this._configService.get('EMAIL_ADDRESS'),
+      subject: 'Email Validation',
+      template: './email-validation',
+      context: {
+        email: job.data.email,
+        link: job.data.link,
+        emailurl: this._configService.get('REPLY_TO_EMAIL_ADDRESS'),
+      },
+    })
+  }
+
+  @Process(THANK_YOU_MAIL)
+  public async thankyoumail(job: Job<{ email: string; school: string, link:string }>) {
+    this._logger.log(`Sending thank you email to '${job.data.email}`);
+    return this._mailerService.sendMail({
+      to: job.data.email,
+      from: this._configService.get('EMAIL_ADDRESS'),
+      subject: 'Thank You',
+      template: './thank-you',
+      context: {
+        link: job.data.link,
+        school: job.data.school,
+        emailurl: this._configService.get('REPLY_TO_EMAIL_ADDRESS'),
+      },
+    });
+  }
 }
+
+

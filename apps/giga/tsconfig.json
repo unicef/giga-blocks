@@ -1,0 +1,48 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "strict": false,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@contracts": [
+        "../../libs/contracts/index.ts"
+      ],
+      "@shared-ui": [
+        "../../libs/shared-ui/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "app/explore/page.js",
+    "../../dist/apps/web/.next/types/**/*.ts",
+    "../../apps/web/.next/types/**/*.ts",
+    "app/components/toast/index.jsx",
+    "../../apps/giga/.next/types/**/*.ts",
+    "wagmi.config.js",
+    "../../dist/apps/giga/.next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

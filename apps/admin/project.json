@@ -4,10 +4,6 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "nx:noop",
-      "dependsOn": ["scripts"]
-    },
-    "scripts": {
       "executor": "nx:run-commands",
       "dependsOn": ["mainBuild"],
       "options": {

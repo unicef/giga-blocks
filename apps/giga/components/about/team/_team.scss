@@ -1,0 +1,112 @@
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/type' as *;
+@use '@carbon/styles/scss/colors' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/breakpoint' as *;
+
+.team-section {
+  padding: $spacing-09 0;
+
+  @include breakpoint-down(md) {
+    padding: $spacing-07 0;
+  }
+}
+
+.team-container {
+  margin: 0 auto;
+  padding: 0 $spacing-05;
+
+  @include breakpoint-down(md) {
+    padding: 0 $spacing-05 0 $spacing-05;
+  }
+}
+
+.team-header {
+  margin-bottom: $spacing-07;
+
+  @include breakpoint-down(md) {
+    margin-bottom: $spacing-06;
+  }
+}
+
+.team-title {
+  @include type-style('heading-05');
+  color: $gray-100;
+  margin-bottom: $spacing-04;
+
+  @include breakpoint-down(md) {
+    @include type-style('heading-04');
+  }
+}
+
+.team-subtitle {
+  @include type-style('body-01');
+  color: $gray-70;
+  max-width: 600px;
+}
+
+.team-grid-container {
+  width: 100%;
+
+  @include breakpoint-down(md) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    padding-bottom: $spacing-05;
+  }
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: $spacing-05;
+
+  @include breakpoint-down(lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include breakpoint-down(md) {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: $spacing-04;
+    padding-bottom: $spacing-03;
+  }
+}
+
+.team-member-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  @include breakpoint-down(md) {
+    flex: 0 0 auto;
+    width: 180px;
+  }
+}
+
+.team-member-image-container {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: $spacing-04;
+}
+
+.team-member-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.team-member-name {
+  @include type-style('heading-compact-01');
+  color: $gray-100;
+  margin: 0;
+}

@@ -1,4 +1,4 @@
-import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
+import { BadRequestException, Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
@@ -23,6 +23,26 @@ async function bootstrap() {
       transform: true,
       whitelist: true,
       forbidNonWhitelisted: true,
+      disableErrorMessages: false,
+      exceptionFactory: errors => {
+        // Format validation errors into a user-friendly structure
+        const formattedErrors = errors.map(error => ({
+          field: error.property,
+          errors: Object.values(error.constraints || {}),
+          children: error.children?.length
+            ? error.children.map(child => ({
+                field: child.property,
+                errors: Object.values(child.constraints || {}),
+              }))
+            : undefined,
+        }));
+
+        return new BadRequestException({
+          statusCode: 400,
+          message: 'Validation failed',
+          errors: formattedErrors,
+        });
+      },
     }),
   );
   app.setGlobalPrefix('api').enableVersioning({

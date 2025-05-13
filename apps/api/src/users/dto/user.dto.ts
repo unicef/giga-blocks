@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsArray, IsEmail, IsOptional, IsEthereumAddress } from 'class-validator';
 
 export class CreateUserDto {
+  
   @IsEmail()
   @ApiProperty({
     description: 'Email of the user',

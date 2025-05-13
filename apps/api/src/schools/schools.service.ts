@@ -3,12 +3,15 @@ import {
   UnauthorizedException,
   HttpException,
   BadRequestException,
+  ConflictException,
+  NotFoundException,
+  Inject,
 } from '@nestjs/common';
 import { MintStatus, Prisma, Role } from '@prisma/application';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { ListSchoolDto } from './dto/list-schools.dto';
 import { QueueService } from 'src/mailer/queue.service';
-import { MintQueueDto, MintQueueSingleDto } from './dto/mint-queue.dto';
+import { MintQueueDto, MintQueueSingleDto, MintSingleSchool } from './dto/mint-queue.dto';
 import { handler } from 'src/utils/csvToDB';
 import { hexStringToBuffer } from '../utils/string-format';
 import fastify = require('fastify');
@@ -19,113 +22,124 @@ import { ApproveContributeDatumDto } from 'src/contribute/dto/update-contribute-
 import { getTokenId } from 'src/utils/web3/subgraph';
 import { PaginateFunction, PaginateOptions } from 'src/utils/paginate';
 import { getContractWithSigner } from 'src/utils/ethers/contractWithSigner';
+import { PAGINATION } from 'src/constants/pagination';
+import { paginator } from 'src/utils/paginator';
+import { NFTContent } from 'src/constants/contract';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { getCacheKey } from 'src/utils/cache/getCacheKey';
+import { ReserveNFTDto, SchoolActivation } from './dto/reserve-nft.dto';
+import { ContributorService } from 'src/contributor/contributor.service';
+import getLocationId from 'src/utils/gigamaps';
 @Injectable()
 export class SchoolService {
   constructor(
     private prisma: PrismaAppService,
+    private contrubutorService: ContributorService,
     private readonly queueService: QueueService,
     private readonly configService: ConfigService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  async findAll(query: ListSchoolDto) {
-    const { page, perPage, minted, uploadId, name, country, connectivityStatus, orderBy, order } =
-      query;
+  async findAll(query: any) {
+    const {
+      page,
+      perPage,
+      minted,
+      uploadId,
+      name,
+      country,
+      connectivityStatus,
+      orderBy,
+      order,
+      electricity,
+      water,
+      teachers,
+      computers,
+      students,
+      download,
+      connectionType,
+    } = query;
+    const cacheKey = getCacheKey(name, country, page, perPage, minted);
+    const cachedResult = await this.cacheManager.get<string>(cacheKey);
+
+    if (cachedResult) return cachedResult;
+
+    const gigaMapsConditions: Prisma.SchoolWhereInput[] = [];
+
+    //Combines all the filters into a single condition
+    if (water !== undefined) {
+      gigaMapsConditions.push({
+        giga_maps_data: {
+          path: ['water_availability'],
+          equals: water === 'true',
+        },
+      });
+    }
+    if (teachers !== undefined) {
+      gigaMapsConditions.push({
+        giga_maps_data: {
+          path: ['num_teachers'],
+          lte: Number(teachers),
+        },
+      });
+    }
+    if (computers !== undefined) {
+      gigaMapsConditions.push({
+        giga_maps_data: {
+          path: ['num_computers'],
+          lte: Number(computers),
+        },
+      });
+    }
+    if (students !== undefined) {
+      gigaMapsConditions.push({
+        giga_maps_data: {
+          path: ['num_students'],
+          lte: Number(students),
+        },
+      });
+    }
+    if (download !== undefined) {
+      gigaMapsConditions.push({
+        giga_maps_data: {
+          path: ['download_speed_benchmark'],
+          lte: Number(download),
+        },
+      });
+    }
+    if (connectionType !== undefined) {
+      gigaMapsConditions.push({
+        giga_maps_data: {
+          path: ['connectivity_type'],
+          equals: connectionType,
+        },
+      });
+    }
+
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
-    };
-    if (minted) {
-      where.minted = minted;
-    }
-
-    if (uploadId) {
-      where.uploadId = uploadId;
-    }
-    if (name) {
-      where.name = {
-        contains: name,
-        mode: 'insensitive',
-      };
-    }
-    if (country) {
-      where.country = {
-        contains: country,
-        mode: 'insensitive',
-      };
-    }
-    if (connectivityStatus) {
-      let status: boolean;
-      if (connectivityStatus === 'true') {
-        status = true;
-      } else {
-        status = false;
-      }
-      where.connectivity = status;
-    }
-
-    if (!perPage) {
-      const data = await this.prisma.school.findMany({ where });
-      return data;
-    }
-
-    const paginator = (defaultOptions: PaginateOptions): PaginateFunction => {
-      return async (model, args: any = { where: undefined, include: undefined }, options) => {
-        const page = Number(options?.page || defaultOptions?.page) || 0;
-        const perPage = Number(options?.perPage || defaultOptions?.perPage) || 10;
-        const order = options?.order || defaultOptions?.order || 'desc';
-        const orderBy = options?.orderBy || defaultOptions?.orderBy || 'createdAt';
-        const skip = perPage * page;
-        const [total, rows] = await Promise.all([
-          model.count({ where: args.where }),
-
-          orderBy === 'school'
-            ? model.findMany({
-                ...args,
-                orderBy: [
-                  {
-                    school: {
-                      name: order,
-                    },
-                  },
-                ],
-                take: perPage,
-                skip,
-              })
-            : model.findMany({
-                ...args,
-                orderBy: {
-                  [orderBy]: order,
-                },
-                take: perPage,
-                skip,
-              }),
-        ]);
-        const lastPage = Math.ceil(total / perPage);
-        const meta = {
-          total,
-          lastPage,
-          currentPage: page,
-          perPage,
-        };
-
-        if (options?.transformRows) {
-          return {
-            rows: options.transformRows(rows),
-            meta,
-          };
-        }
-
-        return {
-          rows,
-          meta,
-        };
-      };
+      ...(minted !== 'undefined' && { minted }),
+      ...(uploadId && { uploadId }),
+      ...(name && { name: { contains: name, mode: 'insensitive' } }),
+      ...(country && { country: { contains: country, mode: 'insensitive' } }),
+      ...(connectivityStatus !== undefined && { connectivity: connectivityStatus === 'true' }),
+      ...(electricity !== undefined && { electricity_available: electricity === 'true' }),
+      ...(gigaMapsConditions.length > 0 && {
+        AND: gigaMapsConditions,
+      }),
     };
 
-    const paginate: PaginateFunction = paginator({ perPage: 20 });
+    const paginate: PaginateFunction = paginator({ perPage });
 
-    return paginate(
+    const result = await paginate(
       this.prisma.school,
-      { where },
+      {
+        where,
+        include: {
+          theme: true,
+        },
+      },
       {
         page,
         perPage,
@@ -133,6 +147,10 @@ export class SchoolService {
         orderBy,
       },
     );
+
+    await this.cacheManager.set(cacheKey, result, 5000);
+
+    return result;
   }
 
   async queueOnchainData(data: number) {
@@ -140,8 +158,11 @@ export class SchoolService {
   }
 
   async findContract(tokenId) {
-      const contract: any = getContractWithSigner('NFTContent', '0x38AB410c1C650d251a83F884BB76709d1791Ab07');
-      return await contract.generateTokenData(tokenId);
+    const contract: any = getContractWithSigner(
+      NFTContent,
+      '0x38AB410c1C650d251a83F884BB76709d1791Ab07',
+    );
+    return await contract.generateTokenData(tokenId);
   }
 
   async checkAdmin(address: string) {
@@ -161,8 +182,14 @@ export class SchoolService {
     return this.queueService.sendMintNFT(MintData);
   }
 
-  async mintNft(MintData: MintQueueSingleDto) {
-    return this.queueService.sendSingleMintNFT(MintData);
+  async mintNft(MintData: MintSingleSchool) {
+    const schoolData = await this.prisma.school.findUnique({
+      where: {
+        id: MintData.id,
+      },
+    });
+    const data = this.formatSchoolData(schoolData);
+    return this.queueService.sendSingleMintNFT(data);
   }
 
   async uploadFile(
@@ -186,35 +213,60 @@ export class SchoolService {
         try {
           const dataArray = await handler(fileData);
           const schoolData = dataArray.schoolArrays;
-          schoolData.map(school => {
-            if (isNaN(school.longitude) || isNaN(school.latitude)) {
-              throw new BadRequestException({ message: 'Invalid longitude or latitude' });
-            }
-            if (
-              school.latitude < -90 ||
-              school.latitude > 90 ||
-              school.longitude < -180 ||
-              school.longitude > 180
-            ) {
-              throw new BadRequestException({ message: 'Invalid longitude or latitude' });
-            }
-          });
-          const transaction = await this.prisma.cSVUpload.create({
-            data: {
-              uploadedBy: user.id,
-              fileValue: dataArray.rowValue,
-              fileName: filename,
-              school: {
-                createMany: {
-                  data: dataArray.schoolArrays.map(school => ({
-                    ...school,
-                    createdById: user.id,
-                  })),
-                },
+          const schools = await this.prisma.school.findMany({
+            where: {
+              giga_school_id: {
+                in: schoolData.map(school => school.school_id_giga),
               },
+              minted: MintStatus.NOTMINTED,
             },
           });
-          uploadBatch = transaction;
+          // Check for missing schools
+          const missingSchools = schoolData.filter(
+            school => !schools.some(dbSchool => dbSchool.giga_school_id === school.school_id_giga),
+          );
+
+          const school_to_be_updated = schoolData
+            .filter(school =>
+              schools.some(dbSchool => dbSchool.giga_school_id === school.school_id_giga),
+            )
+            .map(school => school.school_id_giga);
+          if (school_to_be_updated.length === 0)
+            return res.code(400).send({ message: 'No school to be minted' });
+
+          // if (missingSchools.length > 0) {
+          //   throw new NotFoundException({
+          //     message: 'Some schools from the CSV file are not found in the database',
+          //     missingSchools: missingSchools.map(school => school.school_id_giga),
+          //   });
+          // }
+
+          // throw error in case of  missing schools or add the available schools
+          // to the uploadBatch and ignore the missing ones.
+          // Still needs to inform the user about the missing schools
+          //Need to add to the queue after the uploadBatch is created.
+          const txn = await this.prisma.$transaction(async prisma => {
+            const uploadBatch = await this.prisma.cSVUpload.create({
+              data: {
+                uploadedBy: user.id,
+                fileValue: school_to_be_updated,
+                fileName: filename,
+              },
+            });
+            await prisma.school.updateMany({
+              where: {
+                giga_school_id: {
+                  in: school_to_be_updated.map(school => school),
+                },
+              },
+              data: {
+                uploadId: uploadBatch.id,
+              },
+            });
+            return uploadBatch;
+          });
+          this.queueService.csvMintdata(txn.id).catch(err => console.log(err));
+          return res.code(200).send({ message: 'Batch processing started' });
         } catch (err) {
           if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
             res
@@ -240,12 +292,27 @@ export class SchoolService {
       res.code(200).send(new AppResponseDto(200, data, 'Data uploaded successfully'));
     }
   }
+
   async findOne(id: string) {
-    return await this.prisma.school.findUnique({
+    const school = await this.prisma.school.findUnique({
       where: {
         id,
       },
+      include: {
+        theme: true,
+      },
     });
+
+    if (!school) {
+      throw new NotFoundException('School not found for given school id');
+    }
+    const locationdetails = await getLocationId(school.giga_school_id, 'giga_id_school');
+    const schooldetails = {
+      ...school,
+      locationId: locationdetails?.id,
+      countryCode: locationdetails?.country_code,
+    };
+    return schooldetails;
   }
 
   async countSchools(query: ListSchoolDto) {
@@ -262,6 +329,46 @@ export class SchoolService {
     } catch {
       throw new HttpException('Internal server error', 500);
     }
+  }
+
+  async getAllTheme() {
+    return await this.prisma.theme.findMany({});
+  }
+
+  async getSingleTheme(name: string) {
+    return await this.prisma.theme.findUnique({
+      where: {
+        name,
+      },
+    });
+  }
+
+  async updateTheme(id: string, themeId: string) {
+    const school = await this.prisma.school.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    if (!school) {
+      throw new NotFoundException('School not found');
+    }
+    const theme = await this.prisma.theme.findUnique({
+      where: {
+        id: themeId,
+      },
+    });
+    if (!theme) {
+      throw new NotFoundException('Theme not found');
+    }
+
+    return await this.prisma.school.update({
+      where: {
+        id,
+      },
+      data: {
+        themeId,
+      },
+    });
   }
 
   async byCountry(country: string) {
@@ -352,15 +459,15 @@ export class SchoolService {
     );
     const tokenId = schoolTokenId.data.schoolTokenId.tokenId;
     const tx = await updateData(
-      'NFTContent',
+      NFTContent,
       this.configService.get('GIGA_NFT_CONTENT_ADDRESS'),
       tokenId,
       schooldata,
     );
     const txReceipt = await tx.wait();
-    if (txReceipt.status === 1){
+    if (txReceipt.status === 1) {
       this.queueService.processImage(id);
-      }
+    }
     return txReceipt;
   }
 
@@ -418,5 +525,122 @@ export class SchoolService {
     } catch (err) {
       console.log(err);
     }
+  }
+
+  async reserveNft(reserveNft: ReserveNFTDto) {
+    await this.validateSchoolAndTheme(reserveNft.schoolId, reserveNft.themeId);
+    const schoolData = await this.prisma.school.findUnique({
+      where: {
+        id: reserveNft.schoolId,
+      },
+    });
+    const data = this.formatSchoolData(
+      schoolData,
+      reserveNft.email,
+      reserveNft.walletAddress,
+      reserveNft.themeId,
+    );
+
+    const schoolMinted = await this.queueService.sendSingleMintNFT(data);
+
+    return schoolMinted;
+  }
+
+  async activateSchool(data: SchoolActivation) {
+    const { schoolId, themeId, contributorData } = data;
+    await this.validateSchoolAndTheme(schoolId, themeId);
+    const updatedSchool = await this.prisma.school.update({
+      where: {
+        id: schoolId,
+      },
+      data: {
+        minted: MintStatus.MINTED,
+        themeId: themeId,
+      },
+    });
+    this.queueService.processImage(updatedSchool?.giga_school_id);
+    return this.contrubutorService.addPayingContributor(contributorData);
+  }
+
+  private async validateSchoolAndTheme(schoolId: string, themeId: string) {
+    const school = await this.prisma.school.findUnique({
+      where: {
+        id: schoolId,
+      },
+    });
+    if (!school) {
+      throw new NotFoundException('School not found');
+    }
+    if (school.minted === MintStatus.MINTED) {
+      throw new ConflictException('School already minted');
+    }
+    if (school.minted === MintStatus.NOTMINTED && school.schoolClaimed)
+      throw new ConflictException('School already  claimed');
+    const theme = await this.prisma.theme.findUnique({
+      where: {
+        id: themeId,
+      },
+    });
+    if (!theme) {
+      throw new NotFoundException('Theme not found');
+    }
+  }
+
+  formatSchoolData(
+    schoolData,
+    email?: string,
+    walletAddress?: string,
+    themeId?: string,
+  ): MintQueueSingleDto {
+    return {
+      data: {
+        id: schoolData.id,
+        giga_school_id: schoolData.giga_school_id,
+        schoolName: schoolData.name,
+        schoolType: schoolData.school_type,
+        country: schoolData.country,
+        latitude: schoolData.latitude,
+        longitude: schoolData.longitude,
+        connectivity: schoolData.connectivity.toString(),
+        electricity_availabilty: schoolData.electricity_available,
+        coverage_availabitlity: schoolData.coverage_availability.toString(),
+        region_name: schoolData.region_name,
+      },
+      email,
+      walletAddress,
+      themeId,
+    };
+  }
+
+  async claimSchool(claimData: any) {
+    const { email, walletAddress } = claimData;
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new NotFoundException('No contributor found for given email');
+    }
+    const contributor = await this.prisma.contributor.findUnique({ where: { userId: user?.id } });
+    if (!contributor?.nftReserved) {
+      throw new NotFoundException('School not reserved');
+    }
+    if (contributor?.nftClaimed) {
+      throw new ConflictException('School already claimed');
+    }
+
+    this.queueService.claimReservedNFT(email, walletAddress).catch(err => {
+      console.log(err);
+    });
+    return { message: 'queue added successfully', statusCode: 200 };
+  }
+
+  async getGigaSchoolId(gigaSchoolId: string) {
+    const school = await this.prisma.school.findUnique({
+      where: {
+        giga_school_id: gigaSchoolId,
+      },
+    });
+    if (!school) {
+      throw new NotFoundException('School not found');
+    }
+    return school;
   }
 }

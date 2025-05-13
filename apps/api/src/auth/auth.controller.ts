@@ -3,8 +3,8 @@ import { totp } from 'otplib';
 
 import { AuthService } from './auth.service';
 
-import { AuthSendOtp, AuthWallet, RefreshToken, WalletRegister } from './dto';
-import { ApiTags } from '@nestjs/swagger';
+import { AuthDto, AuthSendOtp, AuthWallet, RefreshToken, WalletRegister } from './dto';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from '../users/dto/user.dto';
 
 import { LocalAuthGuard } from './guards/local.auth.guard';
@@ -15,6 +15,7 @@ import { WalletAuthGuard } from './guards/wallet.auth.guard';
 import { ResponseMessage, Tokens } from './types';
 import { SignatureAuthGuard } from './guards/signature.auth.guard';
 
+
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController {
@@ -24,13 +25,18 @@ export class AuthController {
     };
   }
 
+  
+
   @Public()
+  @ApiOperation({ summary: 'Ping the server' })
   @Get('health')
+  
   async appTest() {
-    return 'OK';
+    return 'Ok';
   }
 
   @Public()
+  @ApiOperation({ summary: 'Login' })
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Request() req): Promise<CreateUserDto & Tokens> {
@@ -38,21 +44,22 @@ export class AuthController {
   }
 
   @Public()
+  @ApiOperation({ summary: 'send otp for admin login' })
   @Post('/admin/send-otp')
   async sendAdminOtp(@Body() AuthDto: AuthSendOtp): Promise<ResponseMessage | null> {
     return this.authService.sendAdminOtp(AuthDto);
   }
-  @Public()
-  @Post('register')
-  register(@Body() createUserDto: CreateUserDto): Promise<ResponseMessage | null> {
-    return this.authService.register(createUserDto);
-  }
+  // @Public()
+  // @Post('register')
+  // register(@Body() createUserDto: CreateUserDto): Promise<ResponseMessage | null> {
+  //   return this.authService.register(createUserDto);
+  // }
 
-  @Public()
-  @Post('send-otp')
-  async sendOtp(@Body() AuthDto: AuthSendOtp): Promise<ResponseMessage | null> {
-    return this.authService.sendOtp(AuthDto);
-  }
+  // @Public()
+  // @Post('send-otp')
+  // async sendOtp(@Body() AuthDto: AuthSendOtp): Promise<ResponseMessage | null> {
+  //   return this.authService.sendOtp(AuthDto);
+  // }
 
   @Public()
   @UseGuards(RefreshJWTGuard)
@@ -64,30 +71,31 @@ export class AuthController {
     return this.authService.refreshToken(req.user);
   }
 
-  @Public()
-  @Get('/getnonce')
-  async generateNonce() {
-    return this.authService.generateNonce();
-  }
+  // @Public()
+  // @Get('/getnonce')
+  // async generateNonce() {
+  //   return this.authService.generateNonce();
+  // }
 
-  @Public()
-  @UseGuards(SignatureAuthGuard)
-  @Post('/walletRegister')
-  async walletRegister(@Body() createUserDto: WalletRegister) {
-    return this.authService.walletRegister(createUserDto);
-  }
+  // @Public()
+  // @UseGuards(SignatureAuthGuard)
+  // @Post('/walletRegister')
+  // async walletRegister(@Body() createUserDto: WalletRegister) {
+  //   return this.authService.walletRegister(createUserDto);
+  // }
 
-  @Public()
-  @UseGuards(WalletAuthGuard)
-  @Post('/walletlogin')
-  async walletLogin(@Body() walletLogin: AuthWallet, @Request() req) {
-    return this.authService.walletLogin(req.user);
-  }
+  // @Public()
+  // @UseGuards(WalletAuthGuard)
+  // @Post('/walletlogin')
+  // async walletLogin(@Body() walletLogin: AuthWallet, @Request() req) {
+  //   return this.authService.walletLogin(req.user);
+  // }
 
-  @Public()
-  @UseGuards(WalletAuthGuard)
-  @Post('/admin/walletlogin')
-  async adminWalletLogin(@Body() walletLogin: AuthWallet, @Request() req) {
-    return this.authService.adminWalletLogin(req.user);
-  }
+  // @Public()
+  // @UseGuards(WalletAuthGuard)
+  // @Post('/admin/walletlogin')
+  // async adminWalletLogin(@Body() walletLogin: AuthWallet, @Request() req) {
+  //   return this.authService.adminWalletLogin(req.user);
+  // }
+
 }

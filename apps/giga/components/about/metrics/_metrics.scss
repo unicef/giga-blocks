@@ -1,0 +1,44 @@
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/type' as *;
+@use '@carbon/styles/scss/colors' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/breakpoint' as *;
+
+.about-metrics {
+  padding: 80px 32px;
+
+  @include breakpoint-down(md) {
+    padding: $spacing-07 0;
+  }
+}
+
+.about-metrics__container {
+  margin: 0 auto;
+  padding: 0 $spacing-05;
+}
+
+.about-metrics__title {
+  font-weight: 500;
+  font-size: 42px;
+  line-height: 130%;
+  letter-spacing: -2%;
+  margin-bottom: $spacing-06;
+
+  @include breakpoint-down(md) {
+    margin-bottom: $spacing-07;
+  }
+}
+
+.about-metrics__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-05;
+
+  @include breakpoint-down(lg) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  @include breakpoint-down(sm) {
+    grid-template-columns: 1fr;
+  }
+}
