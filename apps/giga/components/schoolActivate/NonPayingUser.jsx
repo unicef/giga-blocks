@@ -61,6 +61,10 @@ export default function NonPayingUser({
     }
   }, [token, emailFromUrl, redirect, verifyMagicLink, router]);
 
+  const handleBack = () => {
+    router.back();
+  };
+
   const handleSubmit = () => {
     if (!email) return;
     mutate(
@@ -171,7 +175,7 @@ export default function NonPayingUser({
 
       {showEmailVerify ? (
         <div className="actionButtons" style={{ marginTop: '12px' }}>
-          <Button kind="secondary" disabled={isPending}>
+          <Button onClick={handleBack} kind="secondary" disabled={isPending}>
             Cancel
           </Button>
           <Button onClick={handleActivate} disabled={isPending}>
@@ -180,7 +184,7 @@ export default function NonPayingUser({
         </div>
       ) : (
         <div className="actionButtons" style={{ marginTop: '12px' }}>
-          <Button kind="secondary" disabled={isPending}>
+          <Button onClick={handleBack} kind="secondary" disabled={isPending}>
             Cancel
           </Button>
           <Button onClick={handleSubmit} disabled={isPending || !email}>

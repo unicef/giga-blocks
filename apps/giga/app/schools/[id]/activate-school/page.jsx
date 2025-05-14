@@ -8,7 +8,7 @@ import PayingUser from '../../../../components/schoolActivate/PayingUser';
 import ActivationModal from '../../../../components/schoolActivate/ActivationModal';
 import './_activate.scss';
 import '../_schoolDetails.scss';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useSchoolDetails } from '../../../hooks/useSchool';
 import { useSchoolThemeGet } from '../../../hooks/useTheme';
 import { useThemeStore } from '../../../store/themeStore';
@@ -19,6 +19,7 @@ import { getGasPrice } from '../../../utils/gasFee';
 
 export default function ActivateSchool() {
   const { id } = useParams();
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   const themeFromParams = searchParams.get('themeName');
@@ -43,6 +44,10 @@ export default function ActivateSchool() {
   const { data } = useSchoolDetails(id);
   const { data: themeData, isLoading: themeLoading } =
     useSchoolThemeGet(themeFromParams);
+
+  const handleBack = () => {
+    router.back();
+  };
 
   useEffect(() => {
     const fetchGasFee = async () => {
@@ -127,10 +132,10 @@ export default function ActivateSchool() {
     <>
       <div className="container">
         <div className="backButton">
-          <Link href="/" className="backLink">
+          <span onClick={handleBack} className="backLink">
             <ArrowLeft size={20} />
             <span>Back</span>
-          </Link>
+          </span>
         </div>
 
         <div className="content">
