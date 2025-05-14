@@ -189,6 +189,13 @@ export class SchoolController {
     return this.schoolService.activateSchool(data);
   }
 
+  @Public()
+  @Get('/countries')
+  @ApiOperation({ summary: 'Get all countries stored in giga db' })
+  async getCountries() {
+    return this.schoolService.getCountries();
+  }
+
   //arewave
   @Public()
   @Post('getFile')

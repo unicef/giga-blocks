@@ -578,6 +578,14 @@ export class SchoolService {
     return this.contrubutorService.addPayingContributor(contributorData);
   }
 
+  async getCountries(){
+    return this.prisma.schoolVersion.findMany({
+      select:{
+        country_code:true,
+      }
+    })
+  }
+
   private async validateSchoolAndTheme(schoolId: string, themeId: string) {
     const school = await this.prisma.school.findUnique({
       where: {
