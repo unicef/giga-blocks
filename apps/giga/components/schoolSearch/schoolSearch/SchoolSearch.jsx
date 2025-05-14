@@ -34,6 +34,19 @@ export default function SchoolSearch({ linkActivation }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [country, setCountry] = useState('');
   const [minted, setMinted] = useState(undefined);
+  // Filters (you can later sync these with URL too)
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+
+  const [students, setStudents] = useState([0, 1000]);
+  const [teachers, setTeachers] = useState([0, 1000]);
+  const [computers, setComputers] = useState([0, 1000]);
+  const [download, setDownload] = useState([0, 1000]);
+  const [connected, setConnected] = useState('all');
+  const [connectionType, setConnectionType] = useState('all');
+  const [electricity, setElectricity] = useState('all');
+  const [water, setWater] = useState('all');
+  const mintedStatus = searchParams.get('minted') || 'ALL';
 
   useEffect(() => {
     const pageParam = parseInt(searchParams.get('page') || '1', 10);
@@ -54,7 +67,16 @@ export default function SchoolSearch({ linkActivation }) {
     perPage,
     searchTerm,
     country,
-    minted
+    minted,
+    water,
+    electricity,
+    connected,
+    connectionType,
+    students[1].value,
+    teachers[1].value,
+    computers[1].value,
+    download,
+    true
   );
 
   const totalPages = schools?.meta?.lastPage || 1;
@@ -80,68 +102,37 @@ export default function SchoolSearch({ linkActivation }) {
     });
   };
 
-  // Filters (you can later sync these with URL too)
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState(null);
-
-  const [numStudents, setNumStudents] = useState([0, 1000]);
-  const [numTeachers, setNumTeachers] = useState([0, 1000]);
-  const [numComputers, setNumComputers] = useState([0, 1000]);
-  const [downloadSpeed, setDownloadSpeed] = useState([0, 1000]);
-  const [connectivityStatus, setConnectivityStatus] = useState('all');
-  const [activationStatus, setActivationStatus] = useState('all');
-  const [connectionType, setConnectionType] = useState('all');
-  const [electricityAvailability, setElectricityAvailability] = useState('all');
-  const [waterAvailability, setWaterAvailability] = useState('all');
-  const mintedStatus = searchParams.get('minted') || 'ALL';
-
   const toggleFilter = () => setIsFilterOpen(!isFilterOpen);
   const resetFilters = () => {
-    setNumStudents([0, 1000]);
-    setNumTeachers([0, 1000]);
-    setNumComputers([0, 1000]);
-    setDownloadSpeed([0, 1000]);
-    setConnectivityStatus('all');
-    setActivationStatus('all');
+    setStudents([0, 1000]);
+    setTeachers([0, 1000]);
+    setComputers([0, 1000]);
+    setDownload([0, 1000]);
+    setConnected('all');
     setConnectionType('all');
-    setElectricityAvailability('all');
-    setWaterAvailability('all');
+    setElectricity();
+    setWater('all');
   };
 
   const handleSubmit = () => {
     const params = new URLSearchParams(searchParams.toString());
 
-    params.set('page', '1');
-    params.set('perPage', perPage.toString());
-
-    if (searchTerm) params.set('name', searchTerm);
-    else params.delete('name');
-
-    if (selectedCountry?.code) params.set('country', selectedCountry.code);
-    else params.delete('country');
-
-    if (minted === 'MINTED' || minted === 'NOTMINTED') {
-      params.set('minted', minted);
-    } else {
-      params.delete('minted');
-    }
-
-    if (waterAvailability !== 'all') {
-      params.set('water', waterAvailability);
+    if (water !== 'all') {
+      params.set('water', water);
     } else {
       params.delete('water');
     }
 
-    if (electricityAvailability !== 'all') {
-      params.set('electricity', electricityAvailability);
+    if (electricity !== 'all') {
+      params.set('electricity', electricity);
     } else {
       params.delete('electricity');
     }
 
-    if (connectivityStatus !== 'all') {
-      params.set('connected', connectivityStatus);
+    if (connected !== 'all') {
+      params.set('connectivityStatus', connected);
     } else {
-      params.delete('connected');
+      params.delete('connectivityStatus');
     }
 
     if (connectionType !== 'all') {
@@ -150,18 +141,16 @@ export default function SchoolSearch({ linkActivation }) {
       params.delete('connectionType');
     }
 
-    if (numStudents[1].value > 0) params.set('students', numStudents[1].value);
+    if (students[1].value > 0) params.set('students', students[1].value);
     else params.delete('students');
 
-    if (numTeachers[1].value > 0) params.set('teachers', numTeachers[1].value);
+    if (teachers[1].value > 0) params.set('teachers', teachers[1].value);
     else params.delete('teachers');
 
-    if (numComputers[1].value > 0)
-      params.set('computers', numComputers[1].value);
+    if (computers[1].value > 0) params.set('computers', computers[1].value);
     else params.delete('computers');
 
-    if (downloadSpeed[1].value > 0)
-      params.set('download', downloadSpeed[1].value);
+    if (download[1].value > 0) params.set('download', download[1].value);
     else params.delete('download');
 
     router.push(`/schools?${params.toString()}`, { scroll: false });
@@ -252,26 +241,26 @@ export default function SchoolSearch({ linkActivation }) {
                 {
                   label: 'Number of Students',
                   id: 'students-slider',
-                  value: numStudents,
-                  setter: setNumStudents,
+                  value: students,
+                  setter: setStudents,
                 },
                 {
                   label: 'Number of Teachers',
                   id: 'teachers-slider',
-                  value: numTeachers,
-                  setter: setNumTeachers,
+                  value: teachers,
+                  setter: setTeachers,
                 },
                 {
                   label: 'Number of Computers',
                   id: 'computers-slider',
-                  value: numComputers,
-                  setter: setNumComputers,
+                  value: computers,
+                  setter: setComputers,
                 },
                 {
                   label: 'Download Speed',
                   id: 'download-slider',
-                  value: downloadSpeed,
-                  setter: setDownloadSpeed,
+                  value: download,
+                  setter: setDownload,
                 },
               ].map(({ label, id, value, setter }) => (
                 <div className="filter-accordion__slider" key={id}>
@@ -291,9 +280,9 @@ export default function SchoolSearch({ linkActivation }) {
             <div className="filter-accordion__radio-groups">
               <RadioButtonGroup
                 legendText="Connectivity Status"
-                name="connectivityStatus"
-                value={connectivityStatus}
-                onChange={(value) => setConnectivityStatus(value)}
+                name="connected"
+                value={connected}
+                onChange={(value) => setConnected(value)}
               >
                 <RadioButton id="connect-all" labelText="All" value="all" />
                 <RadioButton
@@ -321,9 +310,9 @@ export default function SchoolSearch({ linkActivation }) {
 
               <RadioButtonGroup
                 legendText="Electricity Availability"
-                name="electricityAvailability"
-                value={electricityAvailability}
-                onChange={(value) => setElectricityAvailability(value)}
+                name="electricity"
+                value={electricity}
+                onChange={(value) => setElectricity(value)}
               >
                 <RadioButton id="elec-all" labelText="All" value="all" />
                 <RadioButton id="elec-yes" labelText="Available" value="true" />
@@ -336,9 +325,9 @@ export default function SchoolSearch({ linkActivation }) {
 
               <RadioButtonGroup
                 legendText="Water Availability"
-                name="waterAvailability"
-                value={waterAvailability}
-                onChange={(value) => setWaterAvailability(value)}
+                name="water"
+                value={water}
+                onChange={(value) => setWater(value)}
               >
                 <RadioButton id="water-all" labelText="All" value="all" />
                 <RadioButton
