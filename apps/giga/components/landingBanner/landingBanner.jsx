@@ -10,17 +10,11 @@ import { useRouter } from 'next/navigation';
 export default function LandingBanner() {
   const [searchValue, setSearchValue] = useState('');
   const router = useRouter();
-  // return (
-  //   <CarbonButton icon={ArrowRight} kind="primary">
-  //     About GigaBlocks
-  //   </CarbonButton>
-  // );
 
   const handleSearch = () => {
     if (searchValue.trim()) {
       router.push(`/schools?name=${encodeURIComponent(searchValue)}`);
     } else {
-      //need to add a toast or alert
       console.log('Please enter a school name to search.');
     }
   };
@@ -67,18 +61,8 @@ export default function LandingBanner() {
             >
               About GigaBlocks
             </Button>
-            {/* <CarbonButton icon={ArrowRight} kind="primary">
-              About GigaBlocks
-            </CarbonButton> */}
           </div>
         </Column>
-
-        <Column
-          lg={8}
-          md={8}
-          sm={4}
-          className="grid-pattern-container"
-        ></Column>
       </Grid>
     </div>
   );
