@@ -622,9 +622,9 @@ export class SchoolService {
     if (!contributor?.nftReserved) {
       throw new NotFoundException('School not reserved');
     }
-    if (contributor?.nftClaimed) {
-      throw new ConflictException('School already claimed');
-    }
+    // if (?.nftClaimed) {
+    //   throw new ConflictException('School already claimed');
+    // }
 
     this.queueService.claimReservedNFT(email, walletAddress).catch(err => {
       console.log(err);
