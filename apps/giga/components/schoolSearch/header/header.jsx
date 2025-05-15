@@ -2,15 +2,15 @@
 
 import { useState } from 'react';
 import './_header.scss';
+import { useRouter } from 'next/navigation';
 
-export default function SchoolHeader({ onSearch }) {
+export default function SchoolHeader() {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (onSearch) {
-      onSearch(searchTerm);
-    }
+    router.push(`/schools/list?name=${searchTerm}`);
   };
 
   return (

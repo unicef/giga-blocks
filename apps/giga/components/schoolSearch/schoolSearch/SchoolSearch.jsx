@@ -87,7 +87,7 @@ export default function SchoolSearch({ linkActivation }) {
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', newPage.toString());
     params.set('perPage', perPage.toString());
-    router.push(`/schools?${params.toString()}`, { scroll: false });
+    router.push(`/schools/list?${params.toString()}`, { scroll: false });
   };
 
   const handleSearchChange = (e) => {
@@ -96,7 +96,7 @@ export default function SchoolSearch({ linkActivation }) {
     params.set('page', '1');
     params.set('perPage', perPage.toString());
     params.set('name', value);
-    router.push(`/schools?${params.toString()}`, {
+    router.push(`/schools/list?${params.toString()}`, {
       scroll: false,
       // shallow: true,
     });
@@ -153,7 +153,7 @@ export default function SchoolSearch({ linkActivation }) {
     if (download[1].value > 0) params.set('download', download[1].value);
     else params.delete('download');
 
-    router.push(`/schools?${params.toString()}`, { scroll: false });
+    router.push(`/schools/list?${params.toString()}`, { scroll: false });
     setIsFilterOpen(false);
   };
 
@@ -189,7 +189,7 @@ export default function SchoolSearch({ linkActivation }) {
               } else {
                 params.delete('country');
               }
-              router.push(`/schools?${params.toString()}`, {
+              router.push(`/schools/list?${params.toString()}`, {
                 scroll: false,
                 shallow: true,
               });
@@ -213,7 +213,7 @@ export default function SchoolSearch({ linkActivation }) {
                 params.delete('minted');
               }
 
-              router.push(`/schools?${params.toString()}`, {
+              router.push(`/schools/list?${params.toString()}`, {
                 scroll: false,
                 shallow: true,
               });
