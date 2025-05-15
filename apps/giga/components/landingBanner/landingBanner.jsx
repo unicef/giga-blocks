@@ -5,8 +5,20 @@ import { Button } from '@carbon/react';
 import { ArrowRight } from '@carbon/icons-react';
 import Link from 'next/link';
 import './_landingBanner.scss';
+import { useRouter } from 'next/navigation';
 
 export default function LandingBanner() {
+  const router = useRouter();
+  const handleClick = () => {
+    router.push('/schools?page=1&perPage=10&minted=NOTMINTED');
+
+    setTimeout(() => {
+      const element = document.getElementById('search');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 300);
+  };
   return (
     <section className="hero-section">
       <div className="hero-container">
@@ -22,11 +34,9 @@ export default function LandingBanner() {
             putting their data on-chain, forever.
           </p>
           <div className="hero-cta">
-            <Link href="/schools/activate">
-              <Button className="hero-button" renderIcon={ArrowRight}>
-                Activate a school
-              </Button>
-            </Link>
+            <Button onClick={handleClick} renderIcon={ArrowRight}>
+              Activate a school
+            </Button>
           </div>
         </div>
 
