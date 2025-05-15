@@ -4,18 +4,10 @@
 @use '@carbon/styles/scss/theme' as *;
 @use '@carbon/styles/scss/breakpoint' as *;
 
-.schools-info {
-  margin: 0 auto;
-  padding: 80px 32px;
-
-  @include breakpoint-down(md) {
-    padding: $spacing-06 $spacing-05;
-  }
-}
-
 // Hero Section
 .hero-section {
   margin-bottom: $spacing-09;
+  padding: 80px 32px;
 
   @include breakpoint-down(md) {
     margin-bottom: $spacing-07;
@@ -71,11 +63,17 @@
 
 // Activation Guide Section
 .activation-guide {
-  margin-bottom: $spacing-09;
+  background-color: #ebf2ff;
+  padding: 8px;
 
   @include breakpoint-down(md) {
     margin-bottom: $spacing-07;
   }
+}
+.activation-content {
+  background: white;
+  padding: 80px 32px;
+  border-radius: 16px;
 }
 
 .school-section-title {
