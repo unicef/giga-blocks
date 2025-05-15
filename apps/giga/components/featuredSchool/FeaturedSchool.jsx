@@ -15,7 +15,7 @@ export default function FeaturedSchools() {
   const { data, isLoading } = useFeaturedSchool();
 
   const handleClick = () => {
-    router.push('/schools?page=1&perPage=10&minted=NOTMINTED');
+    router.push(`/schools/list?page=1&perPage=10&minted=NOTMINTED&country=${data?.country_code}`);
 
     setTimeout(() => {
       const element = document.getElementById('search');
