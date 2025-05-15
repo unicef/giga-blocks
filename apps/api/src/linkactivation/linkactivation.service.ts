@@ -13,6 +13,9 @@ export class LinkactivationService {
 
   async createLink(data: ActivationLogDTO, userId: string) {
     const date = new Date();
+    const startDate = new Date(data.startDate);
+    if (startDate < date) throw new ConflictException('Start date should be later than current date');
+    if(data?.startDate >data?.endDate) throw new ConflictException('End date should be later than start date');
 
     return this.prisma.activationLog.create({
       data: {
