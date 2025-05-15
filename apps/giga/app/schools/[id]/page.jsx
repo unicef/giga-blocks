@@ -159,6 +159,8 @@ export default function SchoolDetails({ params }) {
           </div>
           <Sidebar
             fontColor={fontColor}
+            bgColor={bgColor}
+            cardColor={cardColor}
             minted={minted}
             owner={owner}
             imageHash={data?.imageHash}
