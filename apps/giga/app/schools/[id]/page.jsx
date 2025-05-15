@@ -166,6 +166,8 @@ export default function SchoolDetails({ params }) {
             minted={minted}
             owner={owner}
             imageHash={data?.imageHash}
+            schoolName={data?.name}
+
           />
         </div>
       </div>
