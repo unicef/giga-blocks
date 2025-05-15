@@ -5,7 +5,8 @@
 @use '@carbon/styles/scss/breakpoint' as *;
 
 .theme-selector {
-  background-color: #e8f0ff; // Light blue background
+  position: relative;
+  background: linear-gradient(to right, #0b4ac1, #0f62fe);
   border-radius: 16px;
   padding: $spacing-05;
   width: 100%;
@@ -18,9 +19,8 @@
 
 .theme-selector__content {
   display: flex;
-  align-items: center;
   justify-content: space-evenly;
-  gap: $spacing-05;
+  gap: 64px;
 
   @include breakpoint-down(md) {
     flex-direction: column;
@@ -33,7 +33,6 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
 
   @include breakpoint-down(md) {
     width: 100%;
@@ -46,7 +45,7 @@
   font-size: 20px;
   line-height: 140%;
   letter-spacing: 0%;
-
+  color: white;
   margin-bottom: $spacing-06;
 
   @include breakpoint-down(md) {
@@ -56,24 +55,21 @@
 
 .theme-selector__brand {
   @include type-style('heading-03');
-  color: $gray-100;
+  color: white;
   font-weight: 600;
 }
 
 .theme-selector__illustration {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
+  position: absolute;
+  top: 66px;
+  left: 150px;
   img {
     max-width: auto;
     height: auto;
   }
 
-  @include breakpoint-down(md) {
-    width: 100%;
-    justify-content: center;
-    margin: $spacing-05 0;
+  @include breakpoint-down(lg) {
+    display: none;
   }
 }
 
@@ -91,7 +87,10 @@
 }
 
 .theme-selector__prompt {
-  @include type-style('body-01');
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 150%;
+  letter-spacing: 0%;
   color: $gray-100;
   margin-bottom: $spacing-05;
 }
