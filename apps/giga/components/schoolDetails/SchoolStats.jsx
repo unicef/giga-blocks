@@ -5,6 +5,7 @@ import { useState } from 'react';
 export default function SchoolStats({
   fontColor,
   cardColor,
+  bgColor,
   weeklyData,
   connectivity,
 }) {
@@ -15,7 +16,7 @@ export default function SchoolStats({
       <div className="school-details__stat-cards">
         <div
           className="school-details__stat-card"
-          style={{ backgroundColor: cardColor, borderColor: fontColor }}
+          style={{ backgroundColor: bgColor, borderColor: cardColor }}
         >
           <div
             style={{
@@ -37,7 +38,7 @@ export default function SchoolStats({
 
         <div
           className="school-details__stat-card"
-          style={{ backgroundColor: cardColor, borderColor: fontColor }}
+          style={{ backgroundColor: bgColor, borderColor: cardColor }}
         >
           <div className="school-details__stat-header">
             <div className="school-details__stat-icon download">
@@ -68,7 +69,7 @@ export default function SchoolStats({
 
       <div
         className="school-details__chart-card"
-        style={{ backgroundColor: cardColor, borderColor: fontColor }}
+        style={{ backgroundColor: bgColor, borderColor: cardColor }}
       >
         <div className="school-details__chart-tabs">
           <button

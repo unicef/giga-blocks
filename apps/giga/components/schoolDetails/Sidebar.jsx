@@ -7,19 +7,19 @@ import { useThemeToggleStore } from '../../app/store/themeToggleStore';
 import { usePathname } from 'next/navigation';
 import { useAccount } from 'wagmi';
 
-const Sidebar = ({ imageHash, minted, fontColor, claim,owner }) => {
+const Sidebar = ({ imageHash, minted, fontColor, claim, owner }) => {
   const [imageError, setImageError] = useState(false);
   const pathname = usePathname();
   const isClaimPath = pathname.includes('claim');
   const toggleVisibilityForMinted = useThemeToggleStore(
     (state) => state.toggleVisibilityForMinted
   );
-  const {address} = useAccount();
+  const { address } = useAccount();
   return (
     <div className="school-details__sidebar">
       {minted === 'MINTED' ? (
         <div className="school-details__minted-container">
-          {!isClaimPath &&  (address?.toLowerCase() === owner?.toLowerCase()) ? (
+          {!isClaimPath && address?.toLowerCase() === owner?.toLowerCase() ? (
             <p
               onClick={toggleVisibilityForMinted}
               style={{
@@ -32,7 +32,9 @@ const Sidebar = ({ imageHash, minted, fontColor, claim,owner }) => {
             >
               Change Template
             </p>
-          ):<></>}
+          ) : (
+            <></>
+          )}
           <div className="school-details__minted-image-wrapper">
             {!imageError ? (
               <Image
@@ -119,12 +121,14 @@ const Sidebar = ({ imageHash, minted, fontColor, claim,owner }) => {
           </div>
         </div>
       ) : (
-        <div className="school-details__image-placeholder">
-          <Information size={24} />
-          <p>
-            This school is not activated. Activate this school to generate a
-            unique image.
-          </p>
+        <div className="school-details__minted-image-wrapper">
+          <Image
+            src={`/images/placeholder.png`}
+            alt="School generated image"
+            fill
+            style={{ objectFit: 'cover' }}
+            onError={() => setImageError(true)}
+          />
         </div>
       )}
     </div>
