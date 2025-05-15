@@ -227,6 +227,11 @@ export class SchoolService {
       //@ts-ignore
       await req.multipart(async (field: string, fileData: any, filename: string) => {
         try {
+          if (!filename.toLowerCase().endsWith('.csv')) {
+          return res
+            .code(400)
+            .send({ message: 'Invalid file format. Only CSV files are allowed.' });
+        }
           const dataArray = await handler(fileData);
           const schoolData = dataArray.schoolArrays;
           const schools = await this.prisma.school.findMany({
