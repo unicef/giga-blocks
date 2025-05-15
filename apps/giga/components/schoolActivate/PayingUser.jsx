@@ -3,6 +3,7 @@
 import { TextInput, Button, Tooltip } from '@carbon/react';
 import { Information } from '@carbon/icons-react';
 import { ConnectKitButton } from 'connectkit';
+import { useRouter } from 'next/navigation';
 
 export default function StandardActivationForm({
   baseFee,
@@ -13,6 +14,10 @@ export default function StandardActivationForm({
   isConnected,
   selectedThemeName,
 }) {
+  const router = useRouter();
+  const handleBack = () => {
+    router.back();
+  };
   return (
     <>
       <div className="formGroup">
@@ -79,7 +84,9 @@ export default function StandardActivationForm({
       </div>
 
       <div className="actionButtons">
-        <Button kind="secondary">Cancel</Button>
+        <Button onClick={handleBack} kind="secondary">
+          Cancel
+        </Button>
         {isConnected ? (
           <Button onClick={handleActivate} disabled={!selectedThemeName}>
             Activate

@@ -28,7 +28,7 @@ export default function FeaturedSchools() {
           {isLoading ? (
             <CardSkeleton count={4} />
           ) : (
-            data.school
+            data?.school
               ?.slice(0, 4)
               ?.map((school) => (
                 <SchoolCard
@@ -47,9 +47,12 @@ export default function FeaturedSchools() {
         </div>
 
         <div className="featured-schools__footer">
-          {!isLoading && <p className="featured-schools__stats">
-            {data?.remainingSchools || ''} schools still remain not activated in Nepal
-          </p>}
+          {!isLoading && (
+            <p className="featured-schools__stats">
+              {data?.remainingSchools || ''} schools still remain not activated
+              in Nepal
+            </p>
+          )}
           <Link href="/schools">
             <Button
               className="featured-schools__cta-button"

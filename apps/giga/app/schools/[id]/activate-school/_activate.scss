@@ -22,6 +22,7 @@
   gap: $spacing-03;
   color: $gray-70;
   text-decoration: none;
+  cursor: pointer;
   @include type-style('body-01');
 
   &:hover {
