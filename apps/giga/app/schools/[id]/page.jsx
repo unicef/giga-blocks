@@ -33,7 +33,7 @@ export default function SchoolDetails({ params }) {
   const [selectedTheme, setSelectedTheme] = useState('');
   const defaultFontColor = '#000';
   const defaultBgColor = '#fff';
-  const defaultCardColor = '#fff';
+  const defaultCardColor = '#EBEBEB';
   const nftContentAddress = process.env.NEXT_PUBLIC_GIGA_NFT_CONTENT_ADDRESS;
   const collectorNftAddress =
     process.env.NEXT_PUBLIC_GIGA_COLLECTOR_NFT_ADDRESS;
@@ -91,34 +91,28 @@ export default function SchoolDetails({ params }) {
   const fontColor = hasCustomTheme
     ? themeStore.fontColor
     : isMinted
-    ? theme?.colorScheme?.fontColor || '#000'
+    ? theme?.colorScheme?.fontColor
     : themeOptions?.find((t) => t.name === selectedTheme)?.colorScheme
-        .fontColor || '#000';
+        .fontColor;
 
   const cardColor = hasCustomTheme
     ? themeStore.cardColor
     : isMinted
-    ? theme?.colorScheme?.cardColor || '#000'
+    ? theme?.colorScheme?.cardColor
     : themeOptions?.find((t) => t.name === selectedTheme)?.colorScheme
-        .cardColor || '#000';
+        .cardColor;
 
   const bgColor = hasCustomTheme
     ? themeStore.bgColor
     : isMinted
-    ? theme?.colorScheme?.bgColor || '#fff'
-    : themeOptions?.find((t) => t.name === selectedTheme)?.colorScheme
-        .bgColor || '#fff';
+    ? theme?.colorScheme?.bgColor
+    : themeOptions?.find((t) => t.name === selectedTheme)?.colorScheme.bgColor;
 
   if (isLoading || !data) return <DetailsLoading />;
 
   return (
     <div className="school-details">
-      <div
-        className="school-details__container"
-        style={{
-          background: bgColor,
-        }}
-      >
+      <div className="school-details__container">
         <p onClick={handleBack} className="school-details__back">
           <ArrowLeft size={20} /> Back
         </p>
@@ -144,6 +138,7 @@ export default function SchoolDetails({ params }) {
               fontColor={fontColor}
             />
             <SchoolStats
+              bgColor={bgColor}
               cardColor={cardColor}
               fontColor={fontColor}
               weeklyData={weeklyData}
@@ -159,13 +154,18 @@ export default function SchoolDetails({ params }) {
               gigaMapsData={giga_maps_data}
               fontColor={fontColor}
               cardColor={cardColor}
+              bgColor={bgColor}
             />
           </div>
           <Sidebar
             fontColor={fontColor}
+            bgColor={bgColor}
+            cardColor={cardColor}
             minted={minted}
             owner={owner}
             imageHash={data?.imageHash}
+            schoolName={data?.name}
+
           />
         </div>
       </div>

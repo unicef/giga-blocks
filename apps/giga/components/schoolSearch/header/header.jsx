@@ -1,33 +1,67 @@
 'use client';
 
-import Image from 'next/image';
+import { useState } from 'react';
 import './_header.scss';
 
-export default function SchoolHeader() {
+export default function SchoolHeader({ onSearch }) {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (onSearch) {
+      onSearch(searchTerm);
+    }
+  };
+
   return (
-    <section className="school-list">
-      <div className="school-list__content">
-        <h2 className="school-list__title">Ready to make a difference?</h2>
-        <h3 className="school-list__subtitle">
+    <header className="school-list-header">
+      <div className="school-list-header__container">
+        <h1 className="school-list-header__title">
+          Ready to make a difference?
+          <br />
           Let's find a school to activate
-        </h3>
-        <p className="school-list__description">
-          If you have a specific school in mind, use the search bar to find it
-          instantly. Not sure where to begin? Narrow your search by selecting a
-          country and an education level. Track how many schools have already
-          been activated and how close we are to bridging the digital divide.
-          Once you find a school, activating it is just a few clicks away!
+        </h1>
+
+        <p className="school-list-header__description">
+          Go ahead and use the search bar to find schools instantly. Once you
+          find a school, activating it is just a few clicks away!
         </p>
+
+        <form
+          className="school-list-header__search-form"
+          onSubmit={handleSearch}
+        >
+          <div className="school-list-header__search-container">
+            <input
+              type="text"
+              className="school-list-header__search-input"
+              placeholder="Search for school name"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              aria-label="Search for school name"
+            />
+            <button type="submit" className="school-list-header__search-button">
+              Search
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                className="school-list-header__search-icon"
+              >
+                <path
+                  d="M14.5 14.5L10.5 10.5M12 6.5C12 9.53757 9.53757 12 6.5 12C3.46243 12 1 9.53757 1 6.5C1 3.46243 3.46243 1 6.5 1C9.53757 1 12 3.46243 12 6.5Z"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </form>
       </div>
-      <div className="school-list__image-container">
-        <Image
-          src="/images/school_header.png"
-          alt="Child thinking with hand on face"
-          width={600}
-          height={600}
-          priority
-        />
-      </div>
-    </section>
+    </header>
   );
 }

@@ -375,8 +375,8 @@ export default function SchoolSearch({ linkActivation }) {
                 hasImage={school.hasImage}
                 imageHash={school.imageHash}
                 linkActivation={linkActivation}
-                fontColor={school?.theme?.colorScheme?.fontColor}
-                bgColor={school?.theme?.colorScheme?.bgColor}
+                fontColor={'#161616'}
+                bgColor={school?.theme?.colorScheme?.cardColor}
               />
             ))}
           </div>

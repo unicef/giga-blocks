@@ -32,6 +32,7 @@ export class ActivationLogDTO {
     required: false,
   })
   @IsDateString()
+  @IsOptional()
   endDate: string;
 }
 

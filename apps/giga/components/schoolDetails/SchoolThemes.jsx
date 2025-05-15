@@ -59,18 +59,9 @@ const ThemeSelector = ({
           <div className="theme-selector__brand">Giga Blocks</div>
         </div>
 
-        <div className="theme-selector__illustration">
-          <Image
-            src="/images/globe-people.png"
-            alt="People working with a globe"
-            width={200}
-            height={100}
-          />
-        </div>
-
         <div className="theme-selector__options">
           <p className="theme-selector__prompt">
-            Pick a theme color that suits you the most before you activate.
+            Preview themes below and choose one before you activate
           </p>
 
           <div className="theme-selector__themes">
@@ -85,7 +76,11 @@ const ThemeSelector = ({
                 >
                   <div
                     className="theme-selector__theme-color"
-                    style={{ backgroundColor: theme.colorScheme?.fontColor }}
+                    style={{
+                      backgroundColor: theme.colorScheme?.fontColor,
+                      borderTopLeftRadius: '4px',
+                      borderBottomLeftRadius: '4px',
+                    }}
                   />
                   <div
                     className="theme-selector__theme-color"
@@ -93,7 +88,11 @@ const ThemeSelector = ({
                   />
                   <div
                     className="theme-selector__theme-color"
-                    style={{ backgroundColor: theme.colorScheme?.bgColor }}
+                    style={{
+                      backgroundColor: theme.colorScheme?.bgColor,
+                      borderTopRightRadius: '4px',
+                      borderBottomRightRadius: '4px',
+                    }}
                   />
                 </button>
               ))}
@@ -108,6 +107,14 @@ const ThemeSelector = ({
             <ArrowLeft className="rotate-180" size={16} />
           </Button>
         </div>
+      </div>
+      <div className="theme-selector__illustration">
+        <Image
+          src="/images/earth-illustration.png"
+          alt="People working with a globe"
+          width={582}
+          height={582}
+        />
       </div>
     </div>
   );
