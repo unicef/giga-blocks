@@ -8,9 +8,22 @@ import { useFeaturedSchool } from '../../app/hooks/useSchool';
 import SchoolCard from '../schoolCard/SchoolCard';
 import CardSkeleton from '../../components/cardSkeleton/CardSkeleton';
 import country from '../../app/data/country.json';
+import { useRouter } from 'next/navigation';
 
 export default function FeaturedSchools() {
+  const router = useRouter();
   const { data, isLoading } = useFeaturedSchool();
+
+  const handleClick = () => {
+    router.push('/schools?page=1&perPage=10&minted=NOTMINTED');
+
+    setTimeout(() => {
+      const element = document.getElementById('search');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 300);
+  };
 
   const countryName =
     country.find((c) => c.code === data?.country_code)?.country ||
@@ -28,7 +41,7 @@ export default function FeaturedSchools() {
           {isLoading ? (
             <CardSkeleton count={4} />
           ) : (
-            data.school
+            data?.school
               ?.slice(0, 4)
               ?.map((school) => (
                 <SchoolCard
@@ -47,17 +60,19 @@ export default function FeaturedSchools() {
         </div>
 
         <div className="featured-schools__footer">
-          {!isLoading && <p className="featured-schools__stats">
-            {data?.remainingSchools || ''} schools still remain not activated in Nepal
-          </p>}
-          <Link href="/schools">
-            <Button
-              className="featured-schools__cta-button"
-              renderIcon={ArrowRight}
-            >
-              Activate a school
-            </Button>
-          </Link>
+          {!isLoading && (
+            <p className="featured-schools__stats">
+              {data?.remainingSchools || ''} schools still remain not activated
+              in Nepal
+            </p>
+          )}
+          <Button
+            onClick={handleClick}
+            className="featured-schools__cta-button"
+            renderIcon={ArrowRight}
+          >
+            Activate a school
+          </Button>
         </div>
       </div>
     </section>

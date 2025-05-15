@@ -34,6 +34,19 @@ export default function SchoolSearch({ linkActivation }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [country, setCountry] = useState('');
   const [minted, setMinted] = useState(undefined);
+  // Filters (you can later sync these with URL too)
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+
+  const [students, setStudents] = useState([0, 1000]);
+  const [teachers, setTeachers] = useState([0, 1000]);
+  const [computers, setComputers] = useState([0, 1000]);
+  const [download, setDownload] = useState([0, 1000]);
+  const [connected, setConnected] = useState('all');
+  const [connectionType, setConnectionType] = useState('all');
+  const [electricity, setElectricity] = useState('all');
+  const [water, setWater] = useState('all');
+  const mintedStatus = searchParams.get('minted') || 'ALL';
 
   useEffect(() => {
     const pageParam = parseInt(searchParams.get('page') || '1', 10);
@@ -54,7 +67,16 @@ export default function SchoolSearch({ linkActivation }) {
     perPage,
     searchTerm,
     country,
-    minted
+    minted,
+    water,
+    electricity,
+    connected,
+    connectionType,
+    students[1].value,
+    teachers[1].value,
+    computers[1].value,
+    download,
+    true
   );
 
   const totalPages = schools?.meta?.lastPage || 1;
@@ -80,52 +102,63 @@ export default function SchoolSearch({ linkActivation }) {
     });
   };
 
-  // Filters (you can later sync these with URL too)
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState(null);
-
-  const [numStudents, setNumStudents] = useState([0, 1000]);
-  const [numTeachers, setNumTeachers] = useState([0, 1000]);
-  const [numComputers, setNumComputers] = useState([0, 1000]);
-  const [downloadSpeed, setDownloadSpeed] = useState([0, 1000]);
-  const [connectivityStatus, setConnectivityStatus] = useState('all');
-  const [activationStatus, setActivationStatus] = useState('all');
-  const [connectionType, setConnectionType] = useState('all');
-  const [electricityAvailability, setElectricityAvailability] = useState('all');
-  const [waterAvailability, setWaterAvailability] = useState('all');
-  const mintedStatus = searchParams.get('minted') || 'ALL';
-
   const toggleFilter = () => setIsFilterOpen(!isFilterOpen);
   const resetFilters = () => {
-    setNumStudents([0, 1000]);
-    setNumTeachers([0, 1000]);
-    setNumComputers([0, 1000]);
-    setDownloadSpeed([0, 1000]);
-    setConnectivityStatus('all');
-    setActivationStatus('all');
+    setStudents([0, 1000]);
+    setTeachers([0, 1000]);
+    setComputers([0, 1000]);
+    setDownload([0, 1000]);
+    setConnected('all');
     setConnectionType('all');
-    setElectricityAvailability('all');
-    setWaterAvailability('all');
+    setElectricity();
+    setWater('all');
   };
 
   const handleSubmit = () => {
-    console.log({
-      searchTerm,
-      numStudents,
-      numTeachers,
-      numComputers,
-      downloadSpeed,
-      connectivityStatus,
-      activationStatus,
-      connectionType,
-      electricityAvailability,
-      waterAvailability,
-    });
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (water !== 'all') {
+      params.set('water', water);
+    } else {
+      params.delete('water');
+    }
+
+    if (electricity !== 'all') {
+      params.set('electricity', electricity);
+    } else {
+      params.delete('electricity');
+    }
+
+    if (connected !== 'all') {
+      params.set('connectivityStatus', connected);
+    } else {
+      params.delete('connectivityStatus');
+    }
+
+    if (connectionType !== 'all') {
+      params.set('connectionType', connectionType);
+    } else {
+      params.delete('connectionType');
+    }
+
+    if (students[1].value > 0) params.set('students', students[1].value);
+    else params.delete('students');
+
+    if (teachers[1].value > 0) params.set('teachers', teachers[1].value);
+    else params.delete('teachers');
+
+    if (computers[1].value > 0) params.set('computers', computers[1].value);
+    else params.delete('computers');
+
+    if (download[1].value > 0) params.set('download', download[1].value);
+    else params.delete('download');
+
+    router.push(`/schools?${params.toString()}`, { scroll: false });
     setIsFilterOpen(false);
   };
 
   return (
-    <div className="search-page">
+    <div id="search" className="search-page">
       <div className="search-page__container">
         <div className="search-page__title">
           Not sure where to start ? <br /> Try browsing schools in need of
@@ -196,7 +229,7 @@ export default function SchoolSearch({ linkActivation }) {
             className="filter-button controlled-accordion-btn"
             kind="ghost"
           >
-            <Filter size={20} />
+            <Filter size={18} />
           </Button>
         </div>
 
@@ -208,26 +241,26 @@ export default function SchoolSearch({ linkActivation }) {
                 {
                   label: 'Number of Students',
                   id: 'students-slider',
-                  value: numStudents,
-                  setter: setNumStudents,
+                  value: students,
+                  setter: setStudents,
                 },
                 {
                   label: 'Number of Teachers',
                   id: 'teachers-slider',
-                  value: numTeachers,
-                  setter: setNumTeachers,
+                  value: teachers,
+                  setter: setTeachers,
                 },
                 {
                   label: 'Number of Computers',
                   id: 'computers-slider',
-                  value: numComputers,
-                  setter: setNumComputers,
+                  value: computers,
+                  setter: setComputers,
                 },
                 {
                   label: 'Download Speed',
                   id: 'download-slider',
-                  value: downloadSpeed,
-                  setter: setDownloadSpeed,
+                  value: download,
+                  setter: setDownload,
                 },
               ].map(({ label, id, value, setter }) => (
                 <div className="filter-accordion__slider" key={id}>
@@ -245,7 +278,69 @@ export default function SchoolSearch({ linkActivation }) {
               ))}
             </div>
             <div className="filter-accordion__radio-groups">
-              {/* RADIO GROUPS.) */}
+              <RadioButtonGroup
+                legendText="Connectivity Status"
+                name="connected"
+                value={connected}
+                onChange={(value) => setConnected(value)}
+              >
+                <RadioButton id="connect-all" labelText="All" value="all" />
+                <RadioButton
+                  id="connect-yes"
+                  labelText="Connected"
+                  value="true"
+                />
+                <RadioButton
+                  id="connect-no"
+                  labelText="Not Connected"
+                  value="false"
+                />
+              </RadioButtonGroup>
+
+              <RadioButtonGroup
+                legendText="Connection Type"
+                name="connectionType"
+                value={connectionType}
+                onChange={(value) => setConnectionType(value)}
+              >
+                <RadioButton id="type-all" labelText="All" value="all" />
+                <RadioButton id="type-adsl" labelText="ADSL" value="ADSL" />
+                <RadioButton id="type-fiber" labelText="Fiber" value="Fiber" />
+              </RadioButtonGroup>
+
+              <RadioButtonGroup
+                legendText="Electricity Availability"
+                name="electricity"
+                value={electricity}
+                onChange={(value) => setElectricity(value)}
+              >
+                <RadioButton id="elec-all" labelText="All" value="all" />
+                <RadioButton id="elec-yes" labelText="Available" value="true" />
+                <RadioButton
+                  id="elec-no"
+                  labelText="Not Available"
+                  value="false"
+                />
+              </RadioButtonGroup>
+
+              <RadioButtonGroup
+                legendText="Water Availability"
+                name="water"
+                value={water}
+                onChange={(value) => setWater(value)}
+              >
+                <RadioButton id="water-all" labelText="All" value="all" />
+                <RadioButton
+                  id="water-yes"
+                  labelText="Available"
+                  value="true"
+                />
+                <RadioButton
+                  id="water-no"
+                  labelText="Not Available"
+                  value="false"
+                />
+              </RadioButtonGroup>
             </div>
 
             <div className="filter-accordion__actions">
@@ -255,7 +350,7 @@ export default function SchoolSearch({ linkActivation }) {
               <Button kind="tertiary" onClick={resetFilters}>
                 Reset All
               </Button>
-              <Button onClick={handleSubmit}>Activate</Button>
+              <Button onClick={handleSubmit}>Search</Button>
             </div>
           </div>
         </div>

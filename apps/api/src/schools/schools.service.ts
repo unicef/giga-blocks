@@ -60,7 +60,14 @@ export class SchoolService {
       download,
       connectionType,
     } = query;
-    const cacheKey = getCacheKey(name, country, page, perPage, minted);
+    // Convert string booleans to actual booleans
+    const waterBool = water === 'true' ? true : water === 'false' ? false : undefined;
+    const electricityBool =
+      electricity === 'true' ? true : electricity === 'false' ? false : undefined;
+    const connectivityBool =
+      connectivityStatus === 'true' ? true : connectivityStatus === 'false' ? false : undefined;
+
+    const cacheKey = getCacheKey(name, country, minted);
     const cachedResult = await this.cacheManager.get<string>(cacheKey);
 
     if (cachedResult) return cachedResult;
@@ -68,12 +75,22 @@ export class SchoolService {
     const gigaMapsConditions: Prisma.SchoolWhereInput[] = [];
 
     //Combines all the filters into a single condition
-    if (water !== undefined) {
+    if (waterBool !== undefined) {
       gigaMapsConditions.push({
-        giga_maps_data: {
-          path: ['water_availability'],
-          equals: water === 'true',
-        },
+        OR: [
+          {
+            giga_maps_data: {
+              path: ['water_availability'],
+              equals: waterBool,
+            },
+          },
+          {
+            giga_maps_data: {
+              path: ['water_availability'],
+              equals: waterBool ? 'Yes' : 'No',
+            },
+          },
+        ],
       });
     }
     if (teachers !== undefined) {
@@ -116,15 +133,14 @@ export class SchoolService {
         },
       });
     }
-
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
       ...(minted !== 'undefined' && { minted }),
       ...(uploadId && { uploadId }),
       ...(name && { name: { contains: name, mode: 'insensitive' } }),
       ...(country && { country: { contains: country, mode: 'insensitive' } }),
-      ...(connectivityStatus !== undefined && { connectivity: connectivityStatus === 'true' }),
-      ...(electricity !== undefined && { electricity_available: electricity === 'true' }),
+      ...(connectivityBool !== undefined && { connectivity: connectivityBool }),
+      ...(electricityBool !== undefined && { electricity_available: electricityBool }),
       ...(gigaMapsConditions.length > 0 && {
         AND: gigaMapsConditions,
       }),
@@ -560,6 +576,14 @@ export class SchoolService {
     });
     this.queueService.processImage(updatedSchool?.giga_school_id);
     return this.contrubutorService.addPayingContributor(contributorData);
+  }
+
+  async getCountries(){
+    return this.prisma.schoolVersion.findMany({
+      select:{
+        country_code:true,
+      }
+    })
   }
 
   private async validateSchoolAndTheme(schoolId: string, themeId: string) {

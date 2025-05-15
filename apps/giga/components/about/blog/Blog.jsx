@@ -15,7 +15,7 @@ export default function Blog() {
       excerpt:
         'Out of an estimated 6 million schools worldwide. No one knows the exact number, but our mapping efforts help governments locate and support them.',
       image: '/images/school-image.png',
-      slug: '/blog/how-does-art-work-in-giga',
+      slug: '/#',
     },
     {
       id: 2,
@@ -23,7 +23,7 @@ export default function Blog() {
       excerpt:
         'Out of an estimated 6 million schools worldwide. No one knows the exact number, but our mapping efforts help governments locate and support them.',
       image: '/images/school_header.png',
-      slug: '/blog/technicalities-of-school-data-on-chain',
+      slug: '/#',
     },
   ];
 

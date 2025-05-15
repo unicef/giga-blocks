@@ -17,9 +17,11 @@ import { useSearchParams } from 'next/navigation';
 import { useThemeGet } from '../../hooks/useTheme';
 import { useReadNftContentSchoolIdToTokenId } from '../../hooks/useContract/nftContent';
 import { useReadNftOwnerOf } from '../../hooks/useContract/gigaNft';
+import { useRouter } from 'next/navigation';
 
 export default function SchoolDetails({ params }) {
   const { id } = params;
+  const router = useRouter();
   const searchParams = useSearchParams();
   const { data, isLoading } = useSchoolDetails(id);
   const { giga_maps_data, theme, minted } = data || {};
@@ -49,6 +51,10 @@ export default function SchoolDetails({ params }) {
   }, [data]);
 
   const themeStore = useThemeStore();
+
+  const handleBack = () => {
+    router.back();
+  };
 
   const { data: tokenId, isLoading: isTokenLoading } =
     useReadNftContentSchoolIdToTokenId({
@@ -113,9 +119,9 @@ export default function SchoolDetails({ params }) {
           background: bgColor,
         }}
       >
-        <Link href="/schools" className="school-details__back">
+        <p onClick={handleBack} className="school-details__back">
           <ArrowLeft size={20} /> Back
-        </Link>
+        </p>
 
         {(minted === 'NOTMINTED' || isVisibleForMinted) && (
           <ThemeSelector

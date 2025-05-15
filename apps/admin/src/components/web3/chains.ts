@@ -122,7 +122,12 @@ export const TESTNET_CHAINS: any = {
     nativeCurrency: ETH,
     blockExplorerUrls: ['https://sepolia.etherscan.io/'],
 
-
+  },
+  84532:{
+    name:' Base Sepolia',
+    urls:['https://base-sepolia.infura.io/v3/66012456f3cc45cbbd8a6fdb0249f6eb'],
+    nativeCurrency: ETH,
+    blockExplorerUrls: ['https://sepolia.basescan.org/'],
   }
 }
 

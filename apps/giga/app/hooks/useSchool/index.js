@@ -3,18 +3,68 @@ import { SCHOOLS, FEATURED } from '../../constants/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { apiGuest } from '../../utils/api';
 
-export const useSchoolGet = (page, perPage, name, country, minted) => {
+export const useSchoolGet = (
+  page,
+  perPage,
+  name,
+  country,
+  minted,
+  water,
+  electricity,
+  connectivityStatus,
+  connectionType,
+  students,
+  teachers,
+  computers,
+  download,
+  enabled = true
+) => {
   return useQuery(
-    ['get-school-list', page, perPage, name, country, minted],
+    [
+      'get-school-list',
+      page,
+      perPage,
+      name,
+      country,
+      minted,
+      water,
+      electricity,
+      connectivityStatus,
+      connectionType,
+      students,
+      teachers,
+      computers,
+      download,
+    ],
     async () => {
-      const { data } = await apiGuest.get(
-        `${SCHOOLS.GET}?page=${page}&perPage=${perPage}&name=${name}&country=${country}&minted=${minted}`
-      );
+      const params = new URLSearchParams();
 
+      if (page) params.set('page', page);
+      if (perPage) params.set('perPage', perPage);
+      if (name) params.set('name', name);
+      if (country) params.set('country', country);
+      if (minted) params.set('minted', minted);
+
+      if (water && water !== 'all') params.set('water', water);
+      if (electricity && electricity !== 'all')
+        params.set('electricity', electricity);
+      if (connectivityStatus && connectivityStatus !== 'all')
+        params.set('connectivityStatus', connectivityStatus);
+      if (connectionType && connectionType !== 'all')
+        params.set('connectionType', connectionType);
+
+      if (students && students > 0) params.set('students', students);
+      if (teachers && teachers > 0) params.set('teachers', teachers);
+      if (computers && computers > 0) params.set('computers', computers);
+      if (download && download > 0) params.set('download', download);
+
+      const { data } = await apiGuest.get(
+        `${SCHOOLS.GET}?${params.toString()}`
+      );
       return data;
     },
     {
-      enabled: !!page && !!perPage, // Only run if both are valid
+      enabled: enabled && !!page && !!perPage,
       keepPreviousData: false,
       cacheTime: 0,
     }
