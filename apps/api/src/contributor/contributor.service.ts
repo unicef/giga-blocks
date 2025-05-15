@@ -70,8 +70,15 @@ export class ContributorService {
     return contributors;
   }
 
-  getContributor(userId: string) {
-    return this.prisma.contributor.findUnique({ where: { userId }, include: { user: true } });
+  async getContributor(userId: string) {
+    const contributorDetails = await this.prisma.contributor.findUnique({
+      where: { userId },
+      include: { user: true },
+    });
+    if (!contributorDetails) {
+      throw new Error('Contributor not found');
+    }
+    return contributorDetails;
   }
 
   async claimNft(email: string, wallet: any) {

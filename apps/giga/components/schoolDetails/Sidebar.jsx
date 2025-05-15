@@ -7,7 +7,14 @@ import { useThemeToggleStore } from '../../app/store/themeToggleStore';
 import { usePathname } from 'next/navigation';
 import { useAccount } from 'wagmi';
 
-const Sidebar = ({ imageHash, minted, fontColor, bgColor, owner }) => {
+const Sidebar = ({
+  imageHash,
+  minted,
+  fontColor,
+  claim,
+  owner,
+  schoolName,
+}) => {
   const [imageError, setImageError] = useState(false);
   const pathname = usePathname();
   const isClaimPath = pathname.includes('claim');
@@ -77,13 +84,9 @@ const Sidebar = ({ imageHash, minted, fontColor, bgColor, owner }) => {
 
               <div className="school-details__social-icons">
                 <a
-                  href="#"
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${`https://ipfs.io/ipfs/${imageHash}`}`}
                   className="school-details__social-icon"
-                  style={{
-                    background: bgColor,
-                    padding: '12px',
-                    borderRadius: '12px',
-                  }}
+                  target="_blank"
                 >
                   <svg
                     width="24"
@@ -95,13 +98,8 @@ const Sidebar = ({ imageHash, minted, fontColor, bgColor, owner }) => {
                   </svg>
                 </a>
                 <a
-                  href="#"
+                  href={`https://www.instagram.com/stories/highlights/${`https://ipfs.io/ipfs/${imageHash}`}`}
                   className="school-details__social-icon"
-                  style={{
-                    background: bgColor,
-                    padding: '12px',
-                    borderRadius: '12px',
-                  }}
                 >
                   <svg
                     width="24"
@@ -113,13 +111,13 @@ const Sidebar = ({ imageHash, minted, fontColor, bgColor, owner }) => {
                   </svg>
                 </a>
                 <a
-                  href="#"
+                  href={`https://www.linkedin.com/sharing/share-offsite/?text=${encodeURIComponent(
+                    `https://ipfs.io/ipfs/${imageHash}`
+                  )}&title=${encodeURIComponent(
+                    schoolName
+                  )}&summary=Cool%20Nft%20Minted`}
+                  target="_blank"
                   className="school-details__social-icon"
-                  style={{
-                    background: bgColor,
-                    padding: '12px',
-                    borderRadius: '12px',
-                  }}
                 >
                   <svg
                     width="24"
@@ -131,13 +129,9 @@ const Sidebar = ({ imageHash, minted, fontColor, bgColor, owner }) => {
                   </svg>
                 </a>
                 <a
-                  href="#"
+                  href={`https://twitter.com/intent/tweet?url=https://ipfs.io/ipfs/${imageHash}`}
+                  target="_blank"
                   className="school-details__social-icon"
-                  style={{
-                    background: bgColor,
-                    padding: '12px',
-                    borderRadius: '12px',
-                  }}
                 >
                   <svg
                     width="24"
