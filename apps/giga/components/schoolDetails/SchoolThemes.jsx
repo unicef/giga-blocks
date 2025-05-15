@@ -76,7 +76,11 @@ const ThemeSelector = ({
                 >
                   <div
                     className="theme-selector__theme-color"
-                    style={{ backgroundColor: theme.colorScheme?.fontColor }}
+                    style={{
+                      backgroundColor: theme.colorScheme?.fontColor,
+                      borderTopLeftRadius: '4px',
+                      borderBottomLeftRadius: '4px',
+                    }}
                   />
                   <div
                     className="theme-selector__theme-color"
@@ -84,7 +88,11 @@ const ThemeSelector = ({
                   />
                   <div
                     className="theme-selector__theme-color"
-                    style={{ backgroundColor: theme.colorScheme?.bgColor }}
+                    style={{
+                      backgroundColor: theme.colorScheme?.bgColor,
+                      borderTopRightRadius: '4px',
+                      borderBottomRightRadius: '4px',
+                    }}
                   />
                 </button>
               ))}
