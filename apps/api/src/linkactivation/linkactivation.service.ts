@@ -13,6 +13,11 @@ export class LinkactivationService {
 
   async createLink(data: ActivationLogDTO, userId: string) {
     const date = new Date();
+    const startDate = new Date(data.startDate);
+    if (startDate < date)
+      throw new ConflictException('Start date should be later than current date');
+    if (data?.startDate > data?.endDate)
+      throw new ConflictException('End date should be later than start date');
 
     return this.prisma.activationLog.create({
       data: {
@@ -34,14 +39,25 @@ export class LinkactivationService {
   }
 
   async getActivation(uuid: string) {
-    const data = this.prisma.activationLog.findUnique({
+    const date = new Date();
+
+    const data = await this.prisma.activationLog.findUnique({
       where: {
         id: uuid,
       },
     });
-
     if (!data) {
       throw new NotFoundException('Activation ID not found;');
+    }
+    if (data?.endDate < date && data?.status == 'ACTIVE') {
+      await this.prisma.activationLog.update({
+        where: {
+          id: uuid,
+        },
+        data: {
+          status: 'EXPIRED',
+        },
+      });
     }
 
     return data;

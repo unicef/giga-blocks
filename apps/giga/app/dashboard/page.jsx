@@ -26,17 +26,22 @@ export default function Dashboard() {
   }, [isConnected, isConnecting]);
 
   const [result] = useQuery({
-    query: Queries.schoolOwnedNftsQuery,
+    query: Queries.collectorOwnedNftsQuery,
     variables: { id: address },
   });
 
   const { data, fetching } = result;
 
-  const decodedShooldata = data?.schoolOwnedNft?.nfts
+  const decodedShooldata = data?.collectorOwnedNft?.nfts
     ?.map((d) => {
       try {
         const decoded = atob(d?.tokenUri?.substring(29));
-        return JSON.parse(decoded);
+        const token = d?.id;
+        const parseddata = JSON.parse(decoded);
+        return {
+          tokenId: token,
+          ...parseddata,
+        };
       } catch (e) {
         console.error('Failed to decode tokenUri', e);
         return null;
@@ -119,7 +124,7 @@ export default function Dashboard() {
             <div className="reservation-card">
               <div className="reservation-info">
                 <span className="reservation-label">
-                  Latest School Reservation
+                  Latest School Activated
                 </span>
                 {decodedShooldata?.length > 0 ? (
                   <>
@@ -134,7 +139,7 @@ export default function Dashboard() {
                   <>
                     <h2 className="school-name">Loading...</h2>
                     <p className="school-location">
-                      Fetching latest reservation
+                      Fetching latest activation
                     </p>
                   </>
                 )}
@@ -164,13 +169,14 @@ export default function Dashboard() {
 
         {/* Reserved Schools Section */}
         <section className="reserved-schools-section">
-          <Tabs>
+          <h2 className="section-title">Activated Schools</h2>
+          {/* <Tabs>
             <TabList>
               <Tab>Activated Schools</Tab>
-              {/* <Tab>Claimed Schools</Tab> */}
+              <Tab>Claimed Schools</Tab>
             </TabList>
             <TabPanels>
-              <TabPanel>
+              <TabPanel> */}
                 <div className="schools-grid">
                   {fetching ? (
                     <CardSkeleton count={4} />
@@ -191,10 +197,10 @@ export default function Dashboard() {
                     </>
                   )}
                 </div>
-              </TabPanel>
+              {/* </TabPanel>
               <TabPanel>Claimed Schools</TabPanel>
             </TabPanels>
-          </Tabs>
+          </Tabs> */}
         </section>
       </div>
     </>

@@ -5,6 +5,7 @@ import { Button } from '@carbon/react';
 import { useThemeToggleStore } from '../../app/store/themeToggleStore';
 import { useThemeStore } from '../../app/store/themeStore';
 import { useRouter } from 'next/navigation';
+import { useThemeUpdate } from '../../app/hooks/useTheme/index';
 import Image from 'next/image';
 import './_themeSelector.scss';
 
@@ -17,12 +18,19 @@ const ThemeSelector = ({
   loading,
 }) => {
   const router = useRouter();
-
+  const updateTheme = useThemeUpdate();
   const handleActivateClick = () => {
-    const url = linkActivation
-      ? `${id}/activate-school?linkActivation=${linkActivation}`
-      : `${id}/activate-school`;
-    router.push(url);
+    if (isVisibleForMinted) {
+      updateTheme.mutate({
+        schoolId: id,
+        themeId: selectedTheme,
+      });
+    } else {
+      const url = linkActivation
+        ? `${id}/activate-school?linkActivation=${linkActivation}`
+        : `${id}/activate-school`;
+      router.push(url);
+    }
   };
   const isVisibleForMinted = useThemeToggleStore(
     (state) => state.isVisibleForMinted
@@ -51,18 +59,9 @@ const ThemeSelector = ({
           <div className="theme-selector__brand">Giga Blocks</div>
         </div>
 
-        <div className="theme-selector__illustration">
-          <Image
-            src="/images/globe-people.png"
-            alt="People working with a globe"
-            width={200}
-            height={100}
-          />
-        </div>
-
         <div className="theme-selector__options">
           <p className="theme-selector__prompt">
-            Pick a theme color that suits you the most before you activate.
+            Preview themes below and choose one before you activate
           </p>
 
           <div className="theme-selector__themes">
@@ -77,7 +76,11 @@ const ThemeSelector = ({
                 >
                   <div
                     className="theme-selector__theme-color"
-                    style={{ backgroundColor: theme.colorScheme?.fontColor }}
+                    style={{
+                      backgroundColor: theme.colorScheme?.fontColor,
+                      borderTopLeftRadius: '4px',
+                      borderBottomLeftRadius: '4px',
+                    }}
                   />
                   <div
                     className="theme-selector__theme-color"
@@ -85,7 +88,11 @@ const ThemeSelector = ({
                   />
                   <div
                     className="theme-selector__theme-color"
-                    style={{ backgroundColor: theme.colorScheme?.bgColor }}
+                    style={{
+                      backgroundColor: theme.colorScheme?.bgColor,
+                      borderTopRightRadius: '4px',
+                      borderBottomRightRadius: '4px',
+                    }}
                   />
                 </button>
               ))}
@@ -94,11 +101,20 @@ const ThemeSelector = ({
           <Button
             onClick={handleActivateClick}
             className="theme-selector__activate-btn"
+            disabled={!selectedTheme}
           >
             {isVisibleForMinted ? 'Update' : 'Activate'}{' '}
             <ArrowLeft className="rotate-180" size={16} />
           </Button>
         </div>
+      </div>
+      <div className="theme-selector__illustration">
+        <Image
+          src="/images/earth-illustration.png"
+          alt="People working with a globe"
+          width={582}
+          height={582}
+        />
       </div>
     </div>
   );

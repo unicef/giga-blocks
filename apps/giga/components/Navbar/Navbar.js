@@ -48,7 +48,7 @@ const Navbar = () => {
             <Link href="/about" passHref legacyBehavior>
               <HeaderMenuItem>About Us</HeaderMenuItem>
             </Link>
-            <Link href="/schools" passHref legacyBehavior>
+            <Link href="/#" passHref legacyBehavior>
               <HeaderMenuItem>Blogs</HeaderMenuItem>
             </Link>
             {isConnected && (
@@ -73,7 +73,7 @@ const Navbar = () => {
                   <Link href="/about" passHref legacyBehavior>
                     <HeaderMenuItem>About Us</HeaderMenuItem>
                   </Link>
-                  <Link href="/blogs" passHref legacyBehavior>
+                  <Link href="/#" passHref legacyBehavior>
                     <HeaderMenuItem>Blogs</HeaderMenuItem>
                   </Link>
                   {isConnected && (

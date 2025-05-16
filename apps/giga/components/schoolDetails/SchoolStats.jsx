@@ -5,6 +5,7 @@ import { useState } from 'react';
 export default function SchoolStats({
   fontColor,
   cardColor,
+  bgColor,
   weeklyData,
   connectivity,
 }) {
@@ -15,7 +16,7 @@ export default function SchoolStats({
       <div className="school-details__stat-cards">
         <div
           className="school-details__stat-card"
-          style={{ backgroundColor: cardColor, borderColor: fontColor }}
+          style={{ backgroundColor: bgColor, borderColor: cardColor }}
         >
           <div
             style={{
@@ -37,7 +38,7 @@ export default function SchoolStats({
 
         <div
           className="school-details__stat-card"
-          style={{ backgroundColor: cardColor, borderColor: fontColor }}
+          style={{ backgroundColor: bgColor, borderColor: cardColor }}
         >
           <div className="school-details__stat-header">
             <div className="school-details__stat-icon download">
@@ -52,23 +53,23 @@ export default function SchoolStats({
               className="school-details__stat-number"
               style={{ color: fontColor }}
             >
-              {290} Mbps
+              {'---'} Mbps
             </span>
           </div>
           <div className="school-details__stat-detail">
             <p>Connection Type</p>
-            <p>{'adsl'}</p>
+            <p>{'----'}</p>
           </div>
           <div className="school-details__stat-detail">
             <p>Global Benchmark</p>
-            <p>{10} Mbps</p>
+            <p>{'--'} Mbps</p>
           </div>
         </div>
       </div>
 
       <div
         className="school-details__chart-card"
-        style={{ backgroundColor: cardColor, borderColor: fontColor }}
+        style={{ backgroundColor: bgColor, borderColor: cardColor }}
       >
         <div className="school-details__chart-tabs">
           <button

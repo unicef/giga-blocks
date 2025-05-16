@@ -60,7 +60,14 @@ export class SchoolService {
       download,
       connectionType,
     } = query;
-    const cacheKey = getCacheKey(name, country, page, perPage, minted);
+    // Convert string booleans to actual booleans
+    const waterBool = water === 'true' ? true : water === 'false' ? false : undefined;
+    const electricityBool =
+      electricity === 'true' ? true : electricity === 'false' ? false : undefined;
+    const connectivityBool =
+      connectivityStatus === 'true' ? true : connectivityStatus === 'false' ? false : undefined;
+
+    const cacheKey = getCacheKey(name, country, minted);
     const cachedResult = await this.cacheManager.get<string>(cacheKey);
 
     if (cachedResult) return cachedResult;
@@ -68,12 +75,22 @@ export class SchoolService {
     const gigaMapsConditions: Prisma.SchoolWhereInput[] = [];
 
     //Combines all the filters into a single condition
-    if (water !== undefined) {
+    if (waterBool !== undefined) {
       gigaMapsConditions.push({
-        giga_maps_data: {
-          path: ['water_availability'],
-          equals: water === 'true',
-        },
+        OR: [
+          {
+            giga_maps_data: {
+              path: ['water_availability'],
+              equals: waterBool,
+            },
+          },
+          {
+            giga_maps_data: {
+              path: ['water_availability'],
+              equals: waterBool ? 'Yes' : 'No',
+            },
+          },
+        ],
       });
     }
     if (teachers !== undefined) {
@@ -116,15 +133,14 @@ export class SchoolService {
         },
       });
     }
-
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
       ...(minted !== 'undefined' && { minted }),
       ...(uploadId && { uploadId }),
       ...(name && { name: { contains: name, mode: 'insensitive' } }),
       ...(country && { country: { contains: country, mode: 'insensitive' } }),
-      ...(connectivityStatus !== undefined && { connectivity: connectivityStatus === 'true' }),
-      ...(electricity !== undefined && { electricity_available: electricity === 'true' }),
+      ...(connectivityBool !== undefined && { connectivity: connectivityBool }),
+      ...(electricityBool !== undefined && { electricity_available: electricityBool }),
       ...(gigaMapsConditions.length > 0 && {
         AND: gigaMapsConditions,
       }),
@@ -211,6 +227,11 @@ export class SchoolService {
       //@ts-ignore
       await req.multipart(async (field: string, fileData: any, filename: string) => {
         try {
+          if (!filename.toLowerCase().endsWith('.csv')) {
+          return res
+            .code(400)
+            .send({ message: 'Invalid file format. Only CSV files are allowed.' });
+        }
           const dataArray = await handler(fileData);
           const schoolData = dataArray.schoolArrays;
           const schools = await this.prisma.school.findMany({
@@ -344,7 +365,23 @@ export class SchoolService {
   }
 
   async updateTheme(id: string, themeId: string) {
-    await this.validateSchoolAndTheme(id, themeId);
+    const school = await this.prisma.school.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    if (!school) {
+      throw new NotFoundException('School not found');
+    }
+    const theme = await this.prisma.theme.findUnique({
+      where: {
+        id: themeId,
+      },
+    });
+    if (!theme) {
+      throw new NotFoundException('Theme not found');
+    }
+
     return await this.prisma.school.update({
       where: {
         id,
@@ -546,6 +583,14 @@ export class SchoolService {
     return this.contrubutorService.addPayingContributor(contributorData);
   }
 
+  async getCountries(){
+    return this.prisma.schoolVersion.findMany({
+      select:{
+        country_code:true,
+      }
+    })
+  }
+
   private async validateSchoolAndTheme(schoolId: string, themeId: string) {
     const school = await this.prisma.school.findUnique({
       where: {
@@ -606,9 +651,9 @@ export class SchoolService {
     if (!contributor?.nftReserved) {
       throw new NotFoundException('School not reserved');
     }
-    if (contributor?.nftClaimed) {
-      throw new ConflictException('School already claimed');
-    }
+    // if (?.nftClaimed) {
+    //   throw new ConflictException('School already claimed');
+    // }
 
     this.queueService.claimReservedNFT(email, walletAddress).catch(err => {
       console.log(err);

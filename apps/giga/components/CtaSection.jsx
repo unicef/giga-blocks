@@ -1,7 +1,23 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
 import { ArrowRight } from '@carbon/icons-react';
 import { Button } from '@carbon/react';
 
-const CtaSection = ({ title, btnText }) => {
+const CtaSection = ({ title }) => {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push('/schools/list?page=1&perPage=10&minted=NOTMINTED');
+
+    setTimeout(() => {
+      const element = document.getElementById('search');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 300);
+  };
+
   return (
     <section className="cta-section">
       <div className="cta-content">
@@ -9,7 +25,7 @@ const CtaSection = ({ title, btnText }) => {
         <Button
           className="cta-button"
           renderIcon={ArrowRight}
-          onClick={() => (window.location.href = '/schools')}
+          onClick={handleClick}
         >
           Activate a school
         </Button>
@@ -17,4 +33,5 @@ const CtaSection = ({ title, btnText }) => {
     </section>
   );
 };
+
 export default CtaSection;

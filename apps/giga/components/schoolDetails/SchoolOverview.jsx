@@ -11,6 +11,7 @@ const SchoolOverview = ({
   updatedAt,
   fontColor,
   cardColor,
+  bgColor,
   coverage_availability,
   electricity_available,
   region_name,
@@ -101,7 +102,7 @@ const SchoolOverview = ({
             <div
               key={label}
               className="school-details__overview-card"
-              style={{ backgroundColor: cardColor, borderColor: fontColor }}
+              style={{ backgroundColor: bgColor, borderColor: cardColor }}
             >
               <div className="school-details__overview-label">
                 {icon} {label}
@@ -121,11 +122,11 @@ const SchoolOverview = ({
       {additionalDetails.length > 0 && (
         <div
           className="school-details__additional"
-          style={{ backgroundColor: cardColor, borderColor: fontColor }}
+          style={{ backgroundColor: bgColor, borderColor: cardColor }}
         >
           <Table>
             <TableBody
-              style={{ backgroundColor: cardColor, borderColor: fontColor }}
+              style={{ backgroundColor: bgColor, borderColor: cardColor }}
             >
               {additionalDetails.map((row) => (
                 <TableRow key={row.id}>

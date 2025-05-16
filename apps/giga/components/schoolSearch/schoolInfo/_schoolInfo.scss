@@ -4,18 +4,10 @@
 @use '@carbon/styles/scss/theme' as *;
 @use '@carbon/styles/scss/breakpoint' as *;
 
-.schools-info {
-  margin: 0 auto;
-  padding: 120px 80px 80px 80px;
-
-  @include breakpoint-down(md) {
-    padding: $spacing-06 $spacing-05;
-  }
-}
-
 // Hero Section
 .hero-section {
   margin-bottom: $spacing-09;
+  padding: 80px 32px;
 
   @include breakpoint-down(md) {
     margin-bottom: $spacing-07;
@@ -24,7 +16,6 @@
 
 .hero-content {
   display: flex;
-  gap: $spacing-07;
 
   @include breakpoint-down(lg) {
     flex-direction: column;
@@ -59,9 +50,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f0f7ff; // Light blue background
-  border-radius: 8px;
-  padding: $spacing-05;
 
   @include breakpoint-down(lg) {
     width: 100%;
@@ -69,25 +57,31 @@
 }
 
 .map-image {
-  max-width: 100%;
+  width: 100%;
   height: auto;
 }
 
 // Activation Guide Section
 .activation-guide {
-  margin-bottom: $spacing-09;
+  background-color: #ebf2ff;
+  padding: 8px;
 
   @include breakpoint-down(md) {
     margin-bottom: $spacing-07;
   }
 }
+.activation-content {
+  background: white;
+  padding: 80px 32px;
+  border-radius: 16px;
+}
 
-.section-title {
+.school-section-title {
   font-weight: 700;
   font-size: 40px;
   line-height: 56px;
   letter-spacing: 0%;
-  margin-bottom: $spacing-07;
+  margin-bottom: 8px;
 
   @include breakpoint-down(md) {
     margin-bottom: $spacing-06;
@@ -96,8 +90,21 @@
 
 .steps-container {
   display: flex;
-  gap: $spacing-05;
+  gap: 40px;
+  margin-top: $spacing-07;
   margin-bottom: $spacing-07;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 66px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: #e5e7eb;
+    z-index: 1;
+  }
 
   @include breakpoint-down(md) {
     flex-wrap: wrap;
@@ -114,17 +121,59 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: $spacing-05;
-  border: 1px solid $gray-20;
+  align-items: flex-start;
+  text-align: left;
+  padding: 24px;
+  border: 1px solid $gray-10;
   border-radius: 16px;
-  height: 200px;
-  justify-content: center;
+  height: auto;
+  position: relative;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  z-index: 2;
+
+  &:nth-child(2)::before,
+  &:nth-child(3)::before {
+    content: '';
+    position: absolute;
+    top: 61px;
+    left: -4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    z-index: 3; // Ensure dots are above the line
+  }
+
+  &:nth-child(2)::before {
+    background-color: #e879f9; // Purple dot
+  }
+
+  &:nth-child(3)::before {
+    background-color: #f97316; // Orange dot
+  }
+
+  // Add dot to the left of the 4th box
+  &:nth-child(4)::before {
+    content: '';
+    position: absolute;
+    top: 61px;
+    left: -4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #a855f7; // Purple dot
+    z-index: 3;
+  }
 
   @include breakpoint-down(md) {
     flex-basis: calc(50% - #{$spacing-05});
     margin-bottom: $spacing-05;
+
+    &:nth-child(2)::before,
+    &:nth-child(3)::before,
+    &:nth-child(4)::before {
+      display: none; // Hide dots on mobile layouts
+    }
   }
 
   @include breakpoint-down(sm) {
@@ -132,77 +181,36 @@
   }
 }
 
+// Update the step-icon styles
 .step-icon {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 48px;
   height: 48px;
-  border-radius: 50%;
-  background-color: #e8f1ff; // Light blue background
-  margin-bottom: $spacing-04;
+  border-radius: 12px;
+  margin-bottom: 24px;
 
   svg {
-    color: #2563eb; // Blue icon color
+    color: white;
   }
 }
 
+// Add styles for the step number
+.step-number {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 48px;
+  font-weight: 300;
+  color: #a8a8a8;
+  line-height: 1;
+}
+
+// Update the step-label styles
 .step-label {
   @include type-style('body-01');
   color: $gray-100;
   font-weight: 500;
   margin: 0;
-}
-
-.description-text {
-  @include type-style('body-01');
-  color: $gray-70;
-  width: 50%;
-}
-
-// CTA Section
-.cta-section {
-  margin-top: 80px;
-
-  @include breakpoint-down(md) {
-    margin-top: $spacing-07;
-  }
-}
-
-.cta-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: $spacing-07;
-
-  @include breakpoint-down(md) {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: $spacing-05;
-  }
-}
-
-.cta-title {
-  @include type-style('heading-04');
-  color: $gray-100;
-  margin: 0;
-  flex: 1;
-
-  @include breakpoint-down(md) {
-    @include type-style('heading-03');
-    margin-bottom: $spacing-05;
-  }
-}
-
-.cta-button {
-  background-color: #2563eb; // Blue button color
-  min-width: 180px;
-
-  &:hover {
-    background-color: darken(#2563eb, 10%);
-  }
-
-  svg {
-    fill: white;
-  }
 }

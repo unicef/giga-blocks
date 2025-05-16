@@ -140,6 +140,7 @@ export default function SchoolDetails({ params }) {
             fontColor={fontColor}
             minted={minted}
             imageHash={data?.imageHash}
+            schoolName={data?.name}
           />
         </div>
       </div>

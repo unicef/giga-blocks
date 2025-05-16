@@ -15,9 +15,13 @@ import { useThemeToggleStore } from '../../store/themeToggleStore';
 import { useThemeStore } from '../../store/themeStore';
 import { useSearchParams } from 'next/navigation';
 import { useThemeGet } from '../../hooks/useTheme';
+import { useReadNftContentSchoolIdToTokenId } from '../../hooks/useContract/nftContent';
+import { useReadNftOwnerOf } from '../../hooks/useContract/gigaNft';
+import { useRouter } from 'next/navigation';
 
 export default function SchoolDetails({ params }) {
   const { id } = params;
+  const router = useRouter();
   const searchParams = useSearchParams();
   const { data, isLoading } = useSchoolDetails(id);
   const { giga_maps_data, theme, minted } = data || {};
@@ -26,10 +30,13 @@ export default function SchoolDetails({ params }) {
   const isVisibleForMinted = useThemeToggleStore(
     (state) => state.isVisibleForMinted
   );
-  const [selectedTheme, setSelectedTheme] = useState('white');
+  const [selectedTheme, setSelectedTheme] = useState('');
   const defaultFontColor = '#000';
   const defaultBgColor = '#fff';
-  const defaultCardColor = '#fff';
+  const defaultCardColor = '#EBEBEB';
+  const nftContentAddress = process.env.NEXT_PUBLIC_GIGA_NFT_CONTENT_ADDRESS;
+  const collectorNftAddress =
+    process.env.NEXT_PUBLIC_GIGA_COLLECTOR_NFT_ADDRESS;
 
   useEffect(() => {
     if (!data) return;
@@ -44,6 +51,26 @@ export default function SchoolDetails({ params }) {
   }, [data]);
 
   const themeStore = useThemeStore();
+
+  const handleBack = () => {
+    router.back();
+  };
+
+  const { data: tokenId, isLoading: isTokenLoading } =
+    useReadNftContentSchoolIdToTokenId({
+      address: nftContentAddress,
+      args: data?.giga_school_id ? [data?.giga_school_id] : undefined,
+      query: {
+        enabled: !!data?.giga_school_id,
+      },
+    });
+  const { data: owner } = useReadNftOwnerOf({
+    address: collectorNftAddress,
+    args: tokenId ? [Number(tokenId)] : undefined,
+    query: {
+      enabled: !!tokenId && !isTokenLoading,
+    },
+  });
 
   const hasCustomTheme = Boolean(
     themeStore.fontColor && themeStore.cardColor && themeStore.bgColor
@@ -64,37 +91,31 @@ export default function SchoolDetails({ params }) {
   const fontColor = hasCustomTheme
     ? themeStore.fontColor
     : isMinted
-    ? theme?.colorScheme?.fontColor || '#000'
+    ? theme?.colorScheme?.fontColor
     : themeOptions?.find((t) => t.name === selectedTheme)?.colorScheme
-        .fontColor || '#000';
+        .fontColor;
 
   const cardColor = hasCustomTheme
     ? themeStore.cardColor
     : isMinted
-    ? theme?.colorScheme?.cardColor || '#000'
+    ? theme?.colorScheme?.cardColor
     : themeOptions?.find((t) => t.name === selectedTheme)?.colorScheme
-        .cardColor || '#000';
+        .cardColor;
 
   const bgColor = hasCustomTheme
     ? themeStore.bgColor
     : isMinted
-    ? theme?.colorScheme?.bgColor || '#fff'
-    : themeOptions?.find((t) => t.name === selectedTheme)?.colorScheme
-        .bgColor || '#fff';
+    ? theme?.colorScheme?.bgColor
+    : themeOptions?.find((t) => t.name === selectedTheme)?.colorScheme.bgColor;
 
   if (isLoading || !data) return <DetailsLoading />;
 
   return (
     <div className="school-details">
-      <div
-        className="school-details__container"
-        style={{
-          background: bgColor,
-        }}
-      >
-        <Link href="/schools" className="school-details__back">
+      <div className="school-details__container">
+        <p onClick={handleBack} className="school-details__back">
           <ArrowLeft size={20} /> Back
-        </Link>
+        </p>
 
         {(minted === 'NOTMINTED' || isVisibleForMinted) && (
           <ThemeSelector
@@ -117,6 +138,7 @@ export default function SchoolDetails({ params }) {
               fontColor={fontColor}
             />
             <SchoolStats
+              bgColor={bgColor}
               cardColor={cardColor}
               fontColor={fontColor}
               weeklyData={weeklyData}
@@ -132,12 +154,18 @@ export default function SchoolDetails({ params }) {
               gigaMapsData={giga_maps_data}
               fontColor={fontColor}
               cardColor={cardColor}
+              bgColor={bgColor}
             />
           </div>
           <Sidebar
             fontColor={fontColor}
+            bgColor={bgColor}
+            cardColor={cardColor}
             minted={minted}
+            owner={owner}
             imageHash={data?.imageHash}
+            schoolName={data?.name}
+
           />
         </div>
       </div>
