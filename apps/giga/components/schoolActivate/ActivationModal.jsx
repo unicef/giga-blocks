@@ -14,13 +14,14 @@ import { useContributorPatch } from '../../app/hooks/useContributor/index';
 import { useAccount } from 'wagmi';
 import { useParams, useRouter } from 'next/navigation';
 import Confetti from 'react-confetti';
+import toast from 'react-hot-toast';
 
 export default function ActivationModal({ isOpen, onClose }) {
   const { id } = useParams();
   const [showNameOnList, setShowNameOnList] = useState(false);
   const [contributorName, setContributorName] = useState('');
   const { address: walletAddress } = useAccount();
-  const { patchContributor, isSuccess } = useContributorPatch();
+  const  patchContributor = useContributorPatch();
   const router = useRouter();
   const handleCheckboxChange = (event) => {
     const checked = event.target.checked;
@@ -40,10 +41,12 @@ export default function ActivationModal({ isOpen, onClose }) {
       {
         onSuccess: () => {
           onClose();
-          router.push(`/schools`);
+          router.push(`/schools/${id}`);
         },
         onError: (err) => {
-          console.error('Failed to update contributor:', err);
+          onClose();
+          toast.error('Failed to update contributor:', err);
+          router.push(`/schools/${id}`);
         },
       }
     );
@@ -55,10 +58,12 @@ export default function ActivationModal({ isOpen, onClose }) {
 
       <Modal
         open={isOpen}
-        onRequestClose={onClose}
+        // onRequestClose={onClose}
         modalHeading=""
         passiveModal
         className="activationModal"
+        preventCloseOnClickOutside
+        hasCloseIcon={false}
       >
         <Confetti numberOfPieces={500} recycle={false} />
         <div className="activationModalContent">
