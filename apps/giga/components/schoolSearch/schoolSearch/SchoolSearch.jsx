@@ -13,10 +13,12 @@ import {
 } from '@carbon/react';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useSchoolInfiniteGet } from '../../../app/hooks/useSchool';
+import {
+  useCountryList,
+  useSchoolInfiniteGet,
+} from '../../../app/hooks/useSchool';
 import SchoolCard from '../../schoolCard/SchoolCard';
 import './_schoolSearch.scss';
-import countryList from '../../../app/data/country.json';
 import CardSkeleton from '../../cardSkeleton/CardSkeleton';
 
 export default function SchoolSearch({ linkActivation }) {
@@ -122,13 +124,13 @@ export default function SchoolSearch({ linkActivation }) {
     };
   }, [handleObserver]);
 
-  const items = countryList;
+  const { data: countrylist } = useCountryList();
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
     const params = new URLSearchParams(searchParams.toString());
-    params.set('page', '1');
-    params.set('perPage', perPage.toString());
+    // params.set('page', '1');
+    // params.set('perPage', perPage.toString());
     params.set('name', value);
     setSearchTerm(value);
     router.push(`/schools/list?${params.toString()}`, {
@@ -207,29 +209,30 @@ export default function SchoolSearch({ linkActivation }) {
             onChange={handleSearchChange}
           />
 
-          <ComboBox
-            id="carbon-combobox"
-            items={items}
-            itemToString={(item) => (item ? item.country : '')}
-            titleText="Country"
-            selectedItem={selectedCountry}
-            onChange={({ selectedItem }) => {
-              setSelectedCountry(selectedItem);
-              const params = new URLSearchParams(searchParams.toString());
-              params.set('page', '1');
-              params.set('perPage', perPage.toString());
-              if (selectedItem?.code) {
-                params.set('country', selectedItem.code);
-              } else {
-                params.delete('country');
-              }
-              router.push(`/schools/list?${params.toString()}`, {
-                scroll: false,
-                shallow: true,
-              });
-            }}
-          />
-
+          {countrylist && (
+            <ComboBox
+              id="carbon-combobox"
+              items={countrylist}
+              itemToString={(item) => (item ? item.country : '')}
+              titleText="Country"
+              selectedItem={selectedCountry}
+              onChange={({ selectedItem }) => {
+                setSelectedCountry(selectedItem);
+                const params = new URLSearchParams(searchParams.toString());
+                // params.set('page', '1');
+                // params.set('perPage', perPage.toString());
+                if (selectedItem?.code) {
+                  params.set('country', selectedItem.code);
+                } else {
+                  params.delete('country');
+                }
+                router.push(`/schools/list?${params.toString()}`, {
+                  scroll: false,
+                  shallow: true,
+                });
+              }}
+            />
+          )}
           <Select
             className="filter-select"
             id="minted-select"

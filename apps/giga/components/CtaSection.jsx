@@ -8,7 +8,7 @@ const CtaSection = ({ title }) => {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push('/schools/list?page=1&perPage=10&minted=NOTMINTED');
+    router.push('/schools/list?minted=NOTMINTED');
 
     setTimeout(() => {
       const element = document.getElementById('search');

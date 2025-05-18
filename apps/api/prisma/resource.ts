@@ -43,24 +43,35 @@ export const permissions = [
 
 export const themes = [
   {
-    name: 'red',
+    name: 'blue',
     colorScheme: {
-      bgColor: '#FF0000',
-      fontColor: '#FFFFFF',
+      bgColor: '#EAF3FF',
+      fontColor: '#277AFF',
+      cardColor: '#C3DBFF'
     }
   },
   {
-    name: 'blue',
+    name: 'purple',
     colorScheme: {
-      bgColor: '#FF00A0',
-      fontColor: '#FFFAFF',
+      bgColor: '#EEE5F9',
+      fontColor: '#3C0074',
+      cardColor: '#D8CCE3'
     }
   },
   {
     name: 'green',
     colorScheme: {
-      bgColor: '#FFA000',
-      fontColor: '#FBFFFF',
+      bgColor: '#E4F3DF',
+      fontColor: '#054035',
+      cardColor: '#569566'
+    }
+  },
+  {
+    name: 'orange',
+    colorScheme: {
+      bgColor: '#FBEBCA',
+      fontColor: '#AD6302',
+      cardColor: '#D69929'
     }
   }
 ]
@@ -70,7 +81,7 @@ export const users = [
       name: 'Giga 1',
       roles: [ROLE.ADMIN],
       email: 'giga1@mailinator.com',
-      walletAddress: hexStringToBuffer('0xd4529d251f9ed2a432c405c277004120a83fe0b1'), // add own wallet address
+      walletAddress: hexStringToBuffer('0xaD8369738aF0e80D3A049E4b051853FcF81E5DA9'), // add own wallet address
     },
     {
       name: 'Giga 2',

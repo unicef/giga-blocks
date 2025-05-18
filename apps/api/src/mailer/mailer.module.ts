@@ -60,23 +60,38 @@ import { ContributorService } from 'src/contributor/contributor.service';
       limiter:{
         max: 1,
         duration: 5000,
-      }
+      },
+     defaultJobOptions:{
+      removeOnFail:false
+     }
     }),
     BullModule.registerQueue({
       name: IMAGE_QUEUE,
       limiter:{
         max: 1,
         duration: 5000,
-      }
+      },
+      defaultJobOptions:{
+      removeOnFail:false
+     }
     }),
     BullModule.registerQueue({
       name: ONCHAIN_DATA_QUEUE,
+      defaultJobOptions:{
+      removeOnFail:false
+     }
     }),
     BullModule.registerQueue({
       name: CONTRIBUTE_QUEUE,
+      defaultJobOptions:{
+      removeOnFail:false
+     }
     }),
     BullModule.registerQueue({
-      name: VC_QUEUE
+      name: VC_QUEUE,
+      defaultJobOptions:{
+      removeOnFail:false
+     }
     })
   ],
   providers: [
@@ -94,6 +109,6 @@ import { ContributorService } from 'src/contributor/contributor.service';
     LinkactivationService,
     ContributorService
   ],
-  exports: [MailService, QueueService],
+  exports: [MailService, QueueService,BullModule],
 })
 export class MailModule {}

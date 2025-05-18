@@ -18,7 +18,7 @@ export class ContributorController {
 //     }
 
     @Public()
-    @Get('list')
+    @Get('')
     @ApiOperation({ summary: 'List of all contributors' })
     listContributors() {
         return this.contributorService.listContributors();
