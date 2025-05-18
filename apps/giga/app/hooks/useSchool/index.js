@@ -2,6 +2,7 @@
 import { SCHOOLS, FEATURED } from '../../constants/api';
 import { useMutation, useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { apiGuest } from '../../utils/api';
+import countryList from '../../data/country.json';
 
 export const useSchoolGet = (
   page,
@@ -166,7 +167,6 @@ export const useSchoolInfiniteGet = (
       const { data } = await apiGuest.get(
         `${SCHOOLS.GET}?${params.toString()}`
       );
-      console.log('data', data);
       return data;
     },
     {
@@ -177,16 +177,32 @@ export const useSchoolInfiniteGet = (
           const alreadyLoaded = allPages.some(
             (page) => page.meta.currentPage === nextPage
           );
-          console.log('alreadyLoaded', alreadyLoaded);
-          console.log('lastPage.currentPage', lastPage);
           return alreadyLoaded ? undefined : nextPage;
         }
-        console.log("here outside")
         return undefined;
       },
       keepPreviousData: true,
       cacheTime: 0,
       staleTime: 60 * 1000, // 1 minute
+    }
+  );
+};
+
+export const useCountryList = () => {
+  return useQuery(
+    ['country-list'],
+    async () => {
+      const res = await apiGuest.get(`${SCHOOLS.COUNTRIES}`);
+      const mapped = res.data.map((data) => {
+        const found = countryList.find((c) => c.code === data?.country_code);
+        return found
+          ? { code: found.code, country: found.country }
+          : { code, country: code };
+      });
+      return mapped;
+    },
+    {
+      keepPreviousData: true,
     }
   );
 };

@@ -13,10 +13,9 @@ import {
 } from '@carbon/react';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useSchoolInfiniteGet } from '../../../app/hooks/useSchool';
+import { useCountryList, useSchoolInfiniteGet } from '../../../app/hooks/useSchool';
 import SchoolCard from '../../schoolCard/SchoolCard';
 import './_schoolSearch.scss';
-import countryList from '../../../app/data/country.json';
 import CardSkeleton from '../../cardSkeleton/CardSkeleton';
 
 export default function SchoolSearch({ linkActivation }) {
@@ -122,7 +121,8 @@ export default function SchoolSearch({ linkActivation }) {
     };
   }, [handleObserver]);
 
-  const items = countryList;
+
+  const {data:countrylist} = useCountryList();
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -209,7 +209,7 @@ export default function SchoolSearch({ linkActivation }) {
 
           <ComboBox
             id="carbon-combobox"
-            items={items}
+            items={countrylist}
             itemToString={(item) => (item ? item.country : '')}
             titleText="Country"
             selectedItem={selectedCountry}
