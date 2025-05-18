@@ -168,7 +168,7 @@ export class MintQueueProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: 'Something went wrong with transactions while minting!!',
+          subject: `Something went wrong with transactions while minting!!${job.data.ids} `,
           template: './error',
           context: {},
         });
