@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  ChevronLeft,
-  ChevronRight,
-  Filter,
-  PageFirst,
-  PageLast,
-} from '@carbon/icons-react';
+import { Filter } from '@carbon/icons-react';
 import {
   Button,
   ComboBox,
@@ -17,9 +11,9 @@ import {
   SelectItem,
   Slider,
 } from '@carbon/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useSchoolGet } from '../../../app/hooks/useSchool';
+import { useSchoolInfiniteGet } from '../../../app/hooks/useSchool';
 import SchoolCard from '../../schoolCard/SchoolCard';
 import './_schoolSearch.scss';
 import countryList from '../../../app/data/country.json';
@@ -29,12 +23,11 @@ export default function SchoolSearch({ linkActivation }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
+  const [perPage, setPerPage] = useState(40);
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [country, setCountry] = useState('');
   const [minted, setMinted] = useState(undefined);
-  // Filters (you can later sync these with URL too)
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(null);
 
@@ -48,24 +41,36 @@ export default function SchoolSearch({ linkActivation }) {
   const [water, setWater] = useState('all');
   const mintedStatus = searchParams.get('minted') || 'ALL';
 
+  // Debounce searchTerm for API calls
   useEffect(() => {
-    const pageParam = parseInt(searchParams.get('page') || '1', 10);
-    const perPageParam = parseInt(searchParams.get('perPage') || '10', 10);
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 1000);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    const perPageParam = parseInt(searchParams.get('perPage') || '40', 10);
     const nameParam = searchParams.get('name') || '';
     const countryParam = searchParams.get('country') || '';
     const mintedParam = searchParams.get('minted') || undefined;
 
-    setPage(pageParam);
     setPerPage(perPageParam);
     setSearchTerm(nameParam);
     setCountry(countryParam);
     setMinted(mintedParam);
   }, [searchParams]);
 
-  const { data: schools, isLoading } = useSchoolGet(
-    page,
+  // Infinite query
+  const {
+    data: schools,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useSchoolInfiniteGet(
     perPage,
-    searchTerm,
+    debouncedSearchTerm,
     country,
     minted,
     water,
@@ -79,16 +84,45 @@ export default function SchoolSearch({ linkActivation }) {
     true
   );
 
-  const totalPages = schools?.meta?.lastPage || 1;
-  const filteredSchools = schools?.rows || [];
-  const items = countryList;
+  // Combine all pages' rows
+  const filteredSchools = schools?.pages.flatMap((page) => page.rows) || [];
+  const totalCount = schools?.pages[0]?.meta?.total || 0;
 
-  const handlePageChange = (newPage) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('page', newPage.toString());
-    params.set('perPage', perPage.toString());
-    router.push(`/schools/list?${params.toString()}`, { scroll: false });
-  };
+  // Infinite scroll observer
+  const loaderRef = useRef(null); // <-- for the loader div
+  const debounceRef = useRef(false);
+
+  const handleObserver = useCallback(
+    (entries) => {
+      const target = entries[0];
+      if (
+        target.isIntersecting &&
+        hasNextPage &&
+        !isFetchingNextPage &&
+        !debounceRef.current
+      ) {
+        debounceRef.current = true;
+        fetchNextPage().finally(() => {
+          setTimeout(() => {
+            debounceRef.current = false;
+          }, 500); // 500ms debounce, adjust as needed
+        });
+      }
+    },
+    [fetchNextPage, hasNextPage, isFetchingNextPage]
+  );
+  useEffect(() => {
+    const option = { root: null, rootMargin: '20px', threshold: 1.0 };
+    const observer = new window.IntersectionObserver(handleObserver, option);
+    const currentLoader = loaderRef.current;
+    if (currentLoader) observer.observe(currentLoader);
+    return () => {
+      if (currentLoader) observer.unobserve(currentLoader);
+      observer.disconnect();
+    };
+  }, [handleObserver]);
+
+  const items = countryList;
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -96,9 +130,9 @@ export default function SchoolSearch({ linkActivation }) {
     params.set('page', '1');
     params.set('perPage', perPage.toString());
     params.set('name', value);
+    setSearchTerm(value);
     router.push(`/schools/list?${params.toString()}`, {
       scroll: false,
-      // shallow: true,
     });
   };
 
@@ -356,69 +390,39 @@ export default function SchoolSearch({ linkActivation }) {
         </div>
 
         <div className="search-page__results-count">
-          {schools?.meta?.total} Schools found
+          {totalCount} Schools found
         </div>
 
-        {isLoading ? (
+        <div className="search-page__grid">
+          {filteredSchools?.map((school, idx) => (
+            <SchoolCard
+              key={school.id}
+              id={school.id}
+              schoolName={school.name}
+              location={school.region_name}
+              minted={school.minted}
+              hasImage={school.hasImage}
+              imageHash={school.imageHash}
+              linkActivation={linkActivation}
+              fontColor={'#161616'}
+              bgColor={school?.theme?.colorScheme?.cardColor}
+            />
+          ))}
+        </div>
+
+        {/* Loader for infinite scroll */}
+        <div
+          ref={loaderRef}
+          style={{ height: 40, display: hasNextPage ? 'block' : 'none' }}
+        >
+          {isFetchingNextPage && <CardSkeleton count={3} />}
+        </div>
+
+        {isLoading && (
           <div className="search-page__grid">
             <CardSkeleton count={10} />
           </div>
-        ) : (
-          <div className="search-page__grid">
-            {filteredSchools?.map((school) => (
-              <SchoolCard
-                key={school.id}
-                id={school.id}
-                schoolName={school.name}
-                location={school.region_name}
-                minted={school.minted}
-                hasImage={school.hasImage}
-                imageHash={school.imageHash}
-                linkActivation={linkActivation}
-                fontColor={'#161616'}
-                bgColor={school?.theme?.colorScheme?.cardColor}
-              />
-            ))}
-          </div>
         )}
-
-        <div className="search-page__pagination">
-          <button
-            className="search-page__pagination-button"
-            onClick={() => handlePageChange(1)}
-            disabled={page === 1}
-          >
-            <PageFirst />
-          </button>
-
-          <button
-            className="search-page__pagination-button"
-            onClick={() => handlePageChange(page - 1)}
-            disabled={page === 1}
-          >
-            <ChevronLeft />
-          </button>
-
-          <span className="search-page__pagination-info">
-            Page {page} of {totalPages}
-          </span>
-
-          <button
-            className="search-page__pagination-button"
-            onClick={() => handlePageChange(page + 1)}
-            disabled={page === totalPages}
-          >
-            <ChevronRight />
-          </button>
-
-          <button
-            className="search-page__pagination-button"
-            onClick={() => handlePageChange(totalPages)}
-            disabled={page === totalPages}
-          >
-            <PageLast />
-          </button>
-        </div>
       </div>
     </div>
   );
