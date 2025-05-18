@@ -25,6 +25,7 @@ export default function SchoolSearch({ linkActivation }) {
 
   const [perPage, setPerPage] = useState(40);
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [country, setCountry] = useState('');
   const [minted, setMinted] = useState(undefined);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -39,6 +40,14 @@ export default function SchoolSearch({ linkActivation }) {
   const [electricity, setElectricity] = useState('all');
   const [water, setWater] = useState('all');
   const mintedStatus = searchParams.get('minted') || 'ALL';
+
+  // Debounce searchTerm for API calls
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 1000);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
 
   useEffect(() => {
     const perPageParam = parseInt(searchParams.get('perPage') || '40', 10);
@@ -61,7 +70,7 @@ export default function SchoolSearch({ linkActivation }) {
     isFetchingNextPage,
   } = useSchoolInfiniteGet(
     perPage,
-    searchTerm,
+    debouncedSearchTerm,
     country,
     minted,
     water,
@@ -121,6 +130,7 @@ export default function SchoolSearch({ linkActivation }) {
     params.set('page', '1');
     params.set('perPage', perPage.toString());
     params.set('name', value);
+    setSearchTerm(value);
     router.push(`/schools/list?${params.toString()}`, {
       scroll: false,
     });
