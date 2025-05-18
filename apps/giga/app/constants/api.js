@@ -36,7 +36,7 @@ module.exports = {
     LOGIN: '/auth/login',
   },
   CONTRIBUTOR: {
-    GET: '/users/contributor',
+    GET: '/contributor',
     PATCH: '/contributor/update',
   },
   LINKACTIVATION: {
