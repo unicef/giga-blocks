@@ -67,10 +67,20 @@ export class SchoolService {
     const connectivityBool =
       connectivityStatus === 'true' ? true : connectivityStatus === 'false' ? false : undefined;
 
-    const cacheKey = getCacheKey(name, country, minted);
-    const cachedResult = await this.cacheManager.get<string>(cacheKey);
+    const cacheKey = getCacheKey(name, country, minted, page, perPage);
+    // Check if only the cache-relevant parameters are present
+    const isCacheableQuery = Object.keys(query).every(key =>
+      ['page', 'perPage', 'name', 'country', 'minted'].includes(key),
+    );
 
-    if (cachedResult) return cachedResult;
+    if (isCacheableQuery) {
+      const cachedResult = await this.cacheManager.get<string>(cacheKey);
+      if (cachedResult) return cachedResult;
+    }
+
+    // const cachedResult = await this.cacheManager.get<string>(cacheKey);
+
+    // if (cachedResult) return cachedResult;
 
     const gigaMapsConditions: Prisma.SchoolWhereInput[] = [];
 
@@ -228,10 +238,10 @@ export class SchoolService {
       await req.multipart(async (field: string, fileData: any, filename: string) => {
         try {
           if (!filename.toLowerCase().endsWith('.csv')) {
-          return res
-            .code(400)
-            .send({ message: 'Invalid file format. Only CSV files are allowed.' });
-        }
+            return res
+              .code(400)
+              .send({ message: 'Invalid file format. Only CSV files are allowed.' });
+          }
           const dataArray = await handler(fileData);
           const schoolData = dataArray.schoolArrays;
           const schools = await this.prisma.school.findMany({
@@ -583,12 +593,12 @@ export class SchoolService {
     return this.contrubutorService.addPayingContributor(contributorData);
   }
 
-  async getCountries(){
+  async getCountries() {
     return this.prisma.schoolVersion.findMany({
-      select:{
-        country_code:true,
-      }
-    })
+      select: {
+        country_code: true,
+      },
+    });
   }
 
   private async validateSchoolAndTheme(schoolId: string, themeId: string) {
