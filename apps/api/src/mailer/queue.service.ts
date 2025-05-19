@@ -146,6 +146,7 @@ export class QueueService {
 
   public async processImage(id: string) {
     try {
+      jobOptions.delay = 1000;
       await this._imageQueue.add(SET_IMAGE_PROCESS, { id }, jobOptions);
       return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {

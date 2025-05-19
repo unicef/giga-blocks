@@ -14,6 +14,7 @@ module.exports = {
     ACTIVATE: '/schools/reserveNft',
     CLAIM: '/schools/claimSchool',
     PAIDACTIVATION: '/schools/activateSchool',
+    COUNTRIES:'/schools/countries',
   },
 
   OTP: {
@@ -35,7 +36,7 @@ module.exports = {
     LOGIN: '/auth/login',
   },
   CONTRIBUTOR: {
-    GET: '/users/contributor',
+    GET: '/contributor',
     PATCH: '/contributor/update',
   },
   LINKACTIVATION: {

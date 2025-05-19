@@ -27,6 +27,7 @@ import { createKeyv } from '@keyv/redis';
 import { FeaturedModule } from './featured/featured.module';
 import { VerifierModule } from './verifier/verifier.module';
 import { InformationWorkerModule } from './information-worker/information-worker.module';
+import { QueuesModule } from './queues/queues.module';
 
 @Module({
   imports: [
@@ -109,7 +110,8 @@ import { InformationWorkerModule } from './information-worker/information-worker
     LinkactivationModule,
     FeaturedModule,
     VerifierModule,
-    InformationWorkerModule
+    InformationWorkerModule,
+    QueuesModule
   ],
   providers: [],
 })
