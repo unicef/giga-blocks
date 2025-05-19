@@ -13,6 +13,7 @@ export default {
     MINTBULK: '/schools/mintBulk',
     SCHOOLCOUNT: '/schools/schoolCount',
     UPLOAD: '/schools/uploadFile',
+    GIGAID: '/schools/gigaSchoolId',
   },
   CONTRIBUTE: {
     GET: '/contribute',

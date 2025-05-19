@@ -23,7 +23,7 @@ const nftListQuery = gql`
 
 const allNftListQuery = gql`
   query nftdata($first: Int, $skip: Int) {
-    nftDatas(first: $first, skip: $skip,orderBy:mintedAt,orderDirection:desc) {
+    nftDatas(first: $first, skip: $skip, orderBy: mintedAt, orderDirection: desc) {
       id
       imageHash
       location
@@ -43,7 +43,13 @@ const allNftListQuery = gql`
 
 const adminNftListQuery = gql`
   query adminNftData($id: String!, $first: Int, $skip: Int) {
-    nftDatas(where: { minter: $id },first: $first, skip: $skip,orderBy:mintedAt,orderDirection:desc) {
+    nftDatas(
+      where: { minter: $id }
+      first: $first
+      skip: $skip
+      orderBy: mintedAt
+      orderDirection: desc
+    ) {
       id
       imageHash
       location
@@ -63,7 +69,7 @@ const adminNftListQuery = gql`
 
 const othersNftListQuery = gql`
   query otherNftData($id: String!) {
-    nftDatas(where: { minter_not: $id },orderBy:mintedAt,orderDirection:desc) {
+    nftDatas(where: { minter_not: $id }, orderBy: mintedAt, orderDirection: desc) {
       id
       imageHash
       location
@@ -108,6 +114,10 @@ const nftDetailsQuery = gql`
       tokenId
       transactionHash
     }
+    schoolTokenIds(subgraphError: allow, where: { tokenId: $id }) {
+      schoolId
+      tokenId
+    }
   }
 `;
 
@@ -146,11 +156,11 @@ const totalGasFee = gql`
 const totalNftCount = gql`
   query totalnft {
     totalNfts(subgraphError: allow) {
-    id
-    totalNft
-   }
-
-}`;
+      id
+      totalNft
+    }
+  }
+`;
 
 export const Queries = {
   ownedNftsQuery,
@@ -161,5 +171,5 @@ export const Queries = {
   othersNftListQuery,
   nftTransfer,
   totalGasFee,
-  totalNftCount 
+  totalNftCount,
 };
