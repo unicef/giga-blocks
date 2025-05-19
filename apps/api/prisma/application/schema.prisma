@@ -308,26 +308,28 @@ model Theme {
   @@map("giga_themes")
 }
 
+
 model Qos {
   id                   String    @id @default(uuid())
   timestamp            DateTime
   country_id           String
   giga_school_id       String
-  speed_download_probe String
-  speed_upload_probe   String
-  latency_probe        String
-  ce_ingress           String
-  ce_egress            String
-  pe_ingress           String
-  pe_egress            String
-  provider             String
   speed_download       String
   speed_upload         String
+  inbound_traffic      String?
+  outbound_traffic     String?
+  speed_upload_max     String?
+  speed_upload_mean    String?
+  provider             String?
+  speed_download_max   String?
+  speed_download_mean  String?
   latency              String
   signature            String
   gigasync_id          String
   date                 DateTime?
   dynamicData          Json
+  inbound_traffic_sum  String?
+  outbound_traffic_sum String?
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
   deletedAt            DateTime?
@@ -380,6 +382,8 @@ model Contributor {
 
   @@map("giga_contributor")
 }
+
+
 
 model FeatureCountry {
   id            String   @id @default(uuid())
