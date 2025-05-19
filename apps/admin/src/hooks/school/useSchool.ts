@@ -161,3 +161,17 @@ const mintBulkSchool = async (data: any) => {
 export const useBulkMintSchools = () => {
   return useMutation(mintBulkSchool);
 };
+
+export const useSchoolGetByGigaSchoolId = (id: string | undefined | string[]) => {
+  return useQuery(
+    ['get-single-school'],
+    async () => {
+      const { data } = await api.get(`${routes.SCHOOLS.GIGAID}/${id}`);
+      return { id: data?.id, imageHash: data?.imageHash };
+    },
+    {
+      keepPreviousData: true,
+      enabled: !!id,
+    }
+  );
+};
