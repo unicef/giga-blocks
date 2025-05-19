@@ -420,55 +420,46 @@ export class ImageProcessor {
     }
   }
 
-  @Process({ name: SET_IMAGE_PROCESS, concurrency: 1 })
-  public async processImages(job: Job<any>) {
-    const id = job.data.id;
-    jobOptions.delay = 1000;
-    this._logger.log(`Updating image of school: ${id}`);
-    // const schoolToken = await getTokenIdSchool(
-    //   'NFTContent',
-    //   this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-    //   id,
-    // );
+ @Process({ name: SET_IMAGE_PROCESS, concurrency: 1 })
+public async processImages(job: Job<any>) {
+  const id = job.data.id;
+  this._logger.log(`Updating image of school: ${id}`);
+
+  try {
     const scriptData = await getScriptData(
       this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
       this._configService.get<string>('GIGA_IMAGE_CONTENT_ADDRESS'),
       id,
     );
-    //need to update the function to get the scripts.
-    // const artScript = await getSchoolScript(
-    //   this._configService.get<string>('NEXT_PUBLIC_GRAPH_URL'),
-    //   this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-    // );
+
     const artScript = await getArtScript(
       'NFTContent',
       this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
     );
     const base64Image = await generateP5Image(`${artScript}`, scriptData);
     const decodedImage = await decodeBase64Image(base64Image);
-    try {
-      if (decodedImage) {
-        await uploadFile(decodedImage.data)
-          .then(async res => {
-            await updateImageHash(
-              'NFTContent',
-              this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-              res,
-              id,
-            );
-            await this._prismaService.school.update({
-              where: { giga_school_id: id },
-              data: { imageHash: res },
-            });
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      }
-    } catch (error) {
-      this._logger.error(`Error updating image: ${error}`);
+
+    if (decodedImage) {
+      const uploadResult = await uploadFile(decodedImage.data);
+      await updateImageHash(
+        'NFTContent',
+        this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
+        uploadResult,
+        id,
+      );
+      await this._prismaService.school.update({
+        where: { giga_school_id: id },
+        data: { imageHash: uploadResult },
+      });
+    } else {
+      throw new Error('Failed to decode base64 image.');
     }
+  } catch (error) {
+    this._logger.error(`Error updating image: ${error}`);
+    // Crucially, re-throw the error to signal job failure to BullMQ
+    throw error;
   }
+}
 }
 
 @Injectable()
