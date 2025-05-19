@@ -102,3 +102,32 @@ export class SchoolActivation{
   @Type(() => CreateContributor)
   contributorData: CreateContributor;
 }
+
+export class WeeklyQOSDto{
+  @ApiProperty({
+    description: 'Giga School ID to fetch QOS data  ',
+    example: 'uuid',
+    required: true,
+  })
+  @IsString()
+  giga_school_id: string;
+
+  @ApiProperty({
+    description: 'Start date of the week',
+    example: '2024-05-26',
+    required: true,
+  })
+  @IsString()
+  startDate: string;
+
+  @ApiProperty({
+    description: 'End date of the week',
+    example: '2024-06-02',
+    required: true,
+  })
+  @IsString()
+  endDate: string;
+
+
+
+}

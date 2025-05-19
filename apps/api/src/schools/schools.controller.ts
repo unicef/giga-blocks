@@ -12,6 +12,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { SchoolService } from './schools.service';
+import { QosService } from './qos.service';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ListSchoolDto } from './dto/list-schools.dto';
 import { Public } from '../common/decorators/public.decorator';
@@ -27,12 +28,18 @@ import { QUEUES } from 'src/constants';
 import { getFileData } from 'src/utils/arweave/get';
 import { ActivationGuard } from 'src/auth/guards/activation.guard';
 import { ThemeActivationDto } from './dto/theme-activation.dto';
-import { claimReservedNFT, ReserveNFTDto, SchoolActivation } from './dto/reserve-nft.dto';
+import {
+  claimReservedNFT,
+  ReserveNFTDto,
+  SchoolActivation,
+  WeeklyQOSDto,
+} from './dto/reserve-nft.dto';
 @Controller('schools')
 @ApiTags('School')
 export class SchoolController {
   constructor(
     private readonly schoolService: SchoolService,
+    private readonly qosService: QosService,
     private readonly rabbitMQService: RabbitMQService,
   ) {}
 
@@ -190,6 +197,25 @@ export class SchoolController {
   }
 
   @Public()
+  @Get('/qos/daily')
+  @ApiOperation({ summary: 'Get the daily qos data of school' })
+  async getDailyQos(@Query() giga_school_id: string) {
+    return this.qosService.getlatestQOS(giga_school_id);
+  }
+
+  @Public()
+  @Get('/qos/weekly')
+  @ApiOperation({ summary: 'Get the weekly qos data of school' })
+  async getWeeklyQos(@Query() query: WeeklyQOSDto) {
+    return this.qosService.getWeeklyQOS(query);
+  }
+
+  @Public()
+  @Get('/qos/monthly')
+  @ApiOperation({ summary: 'Get the monthly qos data of school' })
+  async getMonthlyQos(@Query() query: WeeklyQOSDto) {
+    return this.qosService.getMonthlyQOS(query);
+  }
   @Get('/countries')
   @ApiOperation({ summary: 'Get all countries stored in giga db' })
   async getCountries() {
