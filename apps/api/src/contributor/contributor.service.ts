@@ -81,17 +81,24 @@ export class ContributorService {
     return contributorDetails;
   }
 
-  async claimNft(email: string, wallet: any) {
+  async claimNft(email: string, wallet: any,schoolId:string) {
     const walletAddress = hexStringToBuffer(wallet);
 
     const user = await this.prisma.user.findUnique({ where: { email } });
     const contributor = await this.prisma.contributor.findUnique({ where: { userId: user?.id } });
+
 
     if (contributor.nftReserved) {
       await this.prisma.contributor.update({
         where: { userId: user?.id },
         data: { nftClaimed: true },
       });
+      return this.prisma.school.update({
+        where: { id: schoolId },
+        data: {
+          schoolClaimed: true,
+        },
+      })
     } else return { message: 'NFT not reserved' };
   }
 

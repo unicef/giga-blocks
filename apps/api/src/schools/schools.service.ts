@@ -652,20 +652,20 @@ export class SchoolService {
   }
 
   async claimSchool(claimData: any) {
-    const { email, walletAddress } = claimData;
+    const { email, walletAddress, schoolId } = claimData;
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (!user) {
       throw new NotFoundException('No contributor found for given email');
     }
     const contributor = await this.prisma.contributor.findUnique({ where: { userId: user?.id } });
-    if (!contributor?.nftReserved) {
-      throw new NotFoundException('School not reserved');
+    if (!contributor?.nftReserved || !contributor?.schoolreserved.includes(schoolId)) {
+      throw new NotFoundException('Given Schools is not reserved for given email');
     }
     // if (?.nftClaimed) {
     //   throw new ConflictException('School already claimed');
     // }
 
-    this.queueService.claimReservedNFT(email, walletAddress).catch(err => {
+    this.queueService.claimReservedNFT(email, walletAddress,schoolId).catch(err => {
       console.log(err);
     });
     return { message: 'queue added successfully', statusCode: 200 };

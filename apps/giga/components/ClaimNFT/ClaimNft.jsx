@@ -104,6 +104,7 @@ export default function ClaimNFT() {
       {
         email: emailFromUrl,
         walletAddress,
+        schoolId:id
       },
       {
         onSuccess: () => {
