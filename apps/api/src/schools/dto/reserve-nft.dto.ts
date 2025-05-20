@@ -128,6 +128,18 @@ export class WeeklyQOSDto{
   @IsString()
   endDate: string;
 
+}
+
+export class DailyQOSDto{
+  @ApiProperty({
+    description: 'Giga School ID to fetch QOS data  ',
+    example: 'uuid',
+    required: true,
+  })
+  @IsString()
+  giga_school_id: string;
+
+
 
 
 }
