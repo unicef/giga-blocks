@@ -182,7 +182,7 @@ export default function Dashboard() {
                     <CardSkeleton count={4} />
                   ) : (
                     <>
-                      {decodedShooldata?.slice(1, 5).map((school, index) => (
+                      {decodedShooldata?.map((school, index) => (
                         <div key={index} className="school-card">
                           <SchoolCard
                             key={school.id}
