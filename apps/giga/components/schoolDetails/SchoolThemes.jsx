@@ -16,15 +16,35 @@ const ThemeSelector = ({
   linkActivation,
   id,
   loading,
+  showNotification, // Receive the notification function
 }) => {
   const router = useRouter();
   const updateTheme = useThemeUpdate();
   const handleActivateClick = () => {
     if (isVisibleForMinted) {
-      updateTheme.mutate({
-        schoolId: id,
-        themeId: selectedTheme,
-      });
+      updateTheme.mutate(
+        {
+          schoolId: id,
+          themeId: selectedTheme,
+        },
+        {
+          onSuccess: () => {
+            showNotification(
+              'success',
+              'Theme Updated',
+              'The school theme has been successfully updated.'
+            );
+          },
+          onError: (error) => {
+            console.error('Error updating theme:', error);
+            showNotification(
+              'error',
+              'Error Updating Theme',
+              'Failed to update the school theme. Please try again.'
+            );
+          },
+        }
+      );
     } else {
       const url = linkActivation
         ? `${id}/activate-school?linkActivation=${linkActivation}`
