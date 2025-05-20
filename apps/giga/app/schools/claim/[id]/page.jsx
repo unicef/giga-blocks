@@ -15,6 +15,7 @@ import { useThemeStore } from '../../../store/themeStore';
 import { useSearchParams } from 'next/navigation';
 import { useThemeGet } from '../../../hooks/useTheme';
 import ClaimNFT from '../../../../components/ClaimNFT/ClaimNft';
+import DetailsLoading from '../../../../components/detailsLoading/DetailsLoading'
 import { useRouter } from 'next/navigation';
 
 export default function SchoolDetails({ params }) {
