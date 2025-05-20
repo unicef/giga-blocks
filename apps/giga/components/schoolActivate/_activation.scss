@@ -2,6 +2,7 @@
 @use '@carbon/styles/scss/type' as *;
 @use '@carbon/styles/scss/colors' as *;
 @use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/breakpoint' as *;
 
 /* Modal Styles */
 .activationModal {
@@ -122,4 +123,225 @@
   width: 100%;
   height: 48px;
   background-color: $blue-60;
+}
+
+.theme-selector__illustration {
+  position: absolute;
+  top: 66px;
+  left: 150px;
+  img {
+    max-width: auto;
+    height: auto;
+  }
+  @include breakpoint-down(lg) {
+    display: none;
+  }
+}
+
+.activate-school-container {
+  background-color: #d0e2ff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  // font-family: $font-family;
+}
+
+.activate-school-card {
+  background-color: $white-0;
+  border-radius: 1rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  min-height: 85vh;
+  margin-top: 20px;
+}
+
+.activate-school-content {
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+}
+
+.activate-school-left {
+  padding: 2rem;
+  flex: 1;
+  position: relative;
+
+  @media (min-width: 768px) {
+    padding: 3rem;
+    max-width: 50%;
+  }
+}
+
+.activate-school-right {
+  padding: 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 140px;
+
+  @media (min-width: 768px) {
+    padding: 3rem;
+  }
+
+  @media (max-width: 767px) {
+    margin-top: 0;
+  }
+}
+
+.activate-school-title {
+  // @include carbon--type-style('productive-heading-05');
+  margin-bottom: 1rem;
+  // color: $text-01;
+}
+
+.activate-school-description {
+  // @include carbon--type-style('body-long-01');
+  // color: $text-02;
+  margin-bottom: 2.5rem;
+  max-width: 90%;
+}
+
+.donation-section {
+  margin-bottom: 2rem;
+}
+
+.donation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.donation-label {
+  // @include carbon--type-style('heading-01');
+  // color: $text-01;
+}
+
+.donation-optional {
+  display: flex;
+  align-items: center;
+  // color: $text-02;
+  // @include carbon--type-style('label-01');
+
+  svg {
+    margin-left: 0.5rem;
+    // fill: $text-02;
+  }
+}
+
+.donation-input {
+  width: 100%;
+
+  input {
+    // background-color: $field-01;
+  }
+}
+
+.globe-illustration {
+  position: absolute;
+  bottom: -5rem;
+  left: -2rem;
+  width: 100%;
+  height: 20rem;
+  background-image: url('/path-to-globe-image.svg');
+  background-repeat: no-repeat;
+  background-position: bottom left;
+  background-size: contain;
+  z-index: 0;
+
+  @media (min-width: 768px) {
+    bottom: -7rem;
+    left: -9.9rem;
+    height: 13rem;
+  }
+  @include breakpoint-down(lg) {
+    display: none;
+  }
+}
+
+.school-details {
+  margin-bottom: 2rem;
+  min-height: 0vh !important;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  align-items: flex-start;
+
+  &.total-row {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    // border-top: 1px solid $ui-03;
+  }
+}
+
+.detail-label {
+  // @include carbon--type-style('body-short-01');
+  // color: $text-02;
+  flex: 1;
+}
+
+.detail-value {
+  // @include carbon--type-style('body-short-01');
+  // color: $text-01;
+  text-align: right;
+  font-weight: 600;
+  flex: 1;
+}
+
+.school-name {
+  // @include carbon--type-style('heading-01');
+}
+
+.total-value {
+  // @include carbon--type-style('heading-02');
+  // color: $text-01;
+}
+
+.theme-colors {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.color-swatch {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.25rem;
+
+  &.primary {
+    background-color: #0f62fe;
+  }
+
+  &.secondary {
+    background-color: #78a9ff;
+  }
+
+  &.tertiary {
+    background-color: #d0e2ff;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+
+  .cancel-button {
+    background-color: #393939;
+    color: white;
+  }
+
+  // .activate-button {
+  //   background-color: #0f62fe;
+  // }
 }
