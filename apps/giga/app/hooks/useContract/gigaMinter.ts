@@ -140,6 +140,22 @@ export const gigaMinterAbi = [
   },
   {
     type: 'function',
+    inputs: [
+      { name: '_schoolIds', internalType: 'string[]', type: 'string[]' },
+      { name: '_schoolNftTos', internalType: 'address[]', type: 'address[]' },
+      {
+        name: '_collectorNftTos',
+        internalType: 'address[]',
+        type: 'address[]',
+      },
+      { name: '_values', internalType: 'string[9][]', type: 'string[9][]' },
+    ],
+    name: 'batchMintNft',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
     inputs: [{ name: '', internalType: 'address', type: 'address' }],
     name: 'bulkMinters',
     outputs: [
@@ -361,6 +377,15 @@ export const useWriteGigaMinterBatchBuyNft =
   })
 
 /**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"batchMintNft"`
+ */
+export const useWriteGigaMinterBatchMintNft =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: gigaMinterAbi,
+    functionName: 'batchMintNft',
+  })
+
+/**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"buyNft"`
  */
 export const useWriteGigaMinterBuyNft = /*#__PURE__*/ createUseWriteContract({
@@ -451,6 +476,15 @@ export const useSimulateGigaMinterBatchBuyNft =
   /*#__PURE__*/ createUseSimulateContract({
     abi: gigaMinterAbi,
     functionName: 'batchBuyNft',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link gigaMinterAbi}__ and `functionName` set to `"batchMintNft"`
+ */
+export const useSimulateGigaMinterBatchMintNft =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: gigaMinterAbi,
+    functionName: 'batchMintNft',
   })
 
 /**
