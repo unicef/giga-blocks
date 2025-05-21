@@ -162,11 +162,9 @@ export default function SchoolStats({
                     style={{
                       height: `${
                         ((item.averageSpeedUpload || 0) / maxSpeed) * 100
-                      }%`,
+                      }px`,
                       backgroundColor: fontColor,
-                      borderColor: cardColor,
-                      opacity: item.averageSpeedUpload ? 1 : 0.5,
-                      width: '100%',                      
+                      // borderColor: cardColor,
                     }}
                   />
                   <div className="school-details__chart-label">
