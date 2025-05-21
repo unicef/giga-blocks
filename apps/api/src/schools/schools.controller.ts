@@ -217,6 +217,7 @@ export class SchoolController {
   async getMonthlyQos(@Query() query: WeeklyQOSDto) {
     return this.qosService.getMonthlyQOS(query);
   }
+  @Public()
   @Get('/countries')
   @ApiOperation({ summary: 'Get all countries stored in giga db' })
   async getCountries() {

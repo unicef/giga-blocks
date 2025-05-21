@@ -15,10 +15,14 @@ import { useThemeStore } from '../../../store/themeStore';
 import { useSearchParams } from 'next/navigation';
 import { useThemeGet } from '../../../hooks/useTheme';
 import ClaimNFT from '../../../../components/ClaimNFT/ClaimNft';
+import DetailsLoading from '../../../../components/detailsLoading/DetailsLoading'
+import { useRouter } from 'next/navigation';
 
 export default function SchoolDetails({ params }) {
   const { id } = params;
   const searchParams = useSearchParams();
+  const router = useRouter();
+
   const { data, isLoading } = useSchoolDetails(id);
   const { giga_maps_data, theme, minted } = data || {};
   const { data: themeOptions, isLoading: themeLoading } = useThemeGet();
@@ -35,6 +39,7 @@ export default function SchoolDetails({ params }) {
     useThemeStore.getState().resetTheme();
 
     if (!data) return;
+    if (data.schoolClaimed === true) router.push(`/schools/${id}`);
 
     const { colorScheme } = data.theme || {};
     const fontColor = colorScheme?.fontColor || defaultFontColor;
@@ -81,8 +86,7 @@ export default function SchoolDetails({ params }) {
     : themeOptions?.find((t) => t.name === selectedTheme)?.colorScheme
         .bgColor || '#fff';
 
-  if (isLoading) return <h1>Loading....</h1>;
-
+  if (isLoading || !data) return <DetailsLoading />;
   return (
     <div className="school-details">
       <div
@@ -102,8 +106,8 @@ export default function SchoolDetails({ params }) {
               name={data?.name}
               school_type={data?.school_type}
               region_name={data?.region_name}
-              longitude={data?.longitude}
-              latitude={data?.latitude}
+              locationId={data?.locationId}
+              countryCode={data?.countryCode}
               fontColor={fontColor}
             />
 

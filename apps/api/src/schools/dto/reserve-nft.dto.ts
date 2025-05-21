@@ -70,6 +70,15 @@ export class claimReservedNFT {
   })
   @IsString()
   walletAddress: string;
+
+  @ApiProperty({
+    description: 'School ID to mint',
+    example: 'uuid',
+    required: true,
+  })
+  @IsOptional()
+  @IsString()
+  schoolId: string;
 }
 
 export class SchoolActivation{

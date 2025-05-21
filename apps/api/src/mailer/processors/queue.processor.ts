@@ -76,7 +76,7 @@ export class QueueProcessor {
     this._logger.debug(`Completed job ${job.id} of type ${job.name}`);
   }
 
-  @OnQueueFailed()
+  @OnQueueFailed({ name: CLAIM_NFT })
   public onError(job: Job<any>, error: any) {
     this._logger.error(`Failed job ${job.id} of type ${job.name}: ${error.message}`, error.stack);
     if (job.attemptsMade === job.opts.attempts) {
@@ -84,7 +84,7 @@ export class QueueProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: 'Something went wrong with transactions!! ',
+          subject: `Something went wrong with transactions!! ${error.message}`,
           template: './error',
           context: {},
         });
@@ -109,17 +109,18 @@ export class QueueProcessor {
   }
 
   @Process(CLAIM_NFT)
-  public async claimNft(job: Job<{ email: string; walletAddress: string }>) {
+  public async claimNft(job: Job<{ email: string; walletAddress: string; schoolId: string }>) {
     this._logger.log(`Sending transaction to blockchain`);
     const email = job.data.email;
     const walletAddress = job.data.walletAddress;
     try {
       const tx = await claimNft(walletAddress, email);
       if (tx) {
-        this.contributorService.claimNft(job.data.email, job.data.walletAddress);
+        this.contributorService.claimNft(job.data.email, job.data.walletAddress, job.data.schoolId);
       }
     } catch (error) {
       this._logger.error(`Failed to send transactions to blockchain`);
+      throw new Error(`Failed to send transactions to blockchain, ${error}`);
     }
   }
 }
@@ -168,7 +169,7 @@ export class MintQueueProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: `Something went wrong with transactions while minting!!${job.data.ids} `,
+          subject: `Something went wrong with transactions while minting!!${job.data.ids}, error: ${error.message}`,
           template: './error',
           context: {},
         });
@@ -186,7 +187,7 @@ export class MintQueueProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: 'Something went wrong while updating database!!',
+          subject: `Something went wrong while updating database!! ${job.data.ids}, error: ${error.message}`,
           template: './error',
           context: {},
         });
@@ -410,7 +411,7 @@ export class ImageProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: 'Failed to update NFT image. NFT minted successfully.',
+          subject: `Failed to update NFT image. NFT minted successfully. error: ${error.message}, jobId: ${job.id}`,
           template: './error',
           context: {},
         });
@@ -420,46 +421,46 @@ export class ImageProcessor {
     }
   }
 
- @Process({ name: SET_IMAGE_PROCESS, concurrency: 1 })
-public async processImages(job: Job<any>) {
-  const id = job.data.id;
-  this._logger.log(`Updating image of school: ${id}`);
+  @Process({ name: SET_IMAGE_PROCESS, concurrency: 1 })
+  public async processImages(job: Job<any>) {
+    const id = job.data.id;
+    this._logger.log(`Updating image of school: ${id}`);
 
-  try {
-    const scriptData = await getScriptData(
-      this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-      this._configService.get<string>('GIGA_IMAGE_CONTENT_ADDRESS'),
-      id,
-    );
-
-    const artScript = await getArtScript(
-      'NFTContent',
-      this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-    );
-    const base64Image = await generateP5Image(`${artScript}`, scriptData);
-    const decodedImage = await decodeBase64Image(base64Image);
-
-    if (decodedImage) {
-      const uploadResult = await uploadFile(decodedImage.data);
-      await updateImageHash(
-        'NFTContent',
+    try {
+      const scriptData = await getScriptData(
         this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-        uploadResult,
+        this._configService.get<string>('GIGA_IMAGE_CONTENT_ADDRESS'),
         id,
       );
-      await this._prismaService.school.update({
-        where: { giga_school_id: id },
-        data: { imageHash: uploadResult },
-      });
-    } else {
-      throw new Error('Failed to decode base64 image.');
+
+      const artScript = await getArtScript(
+        'NFTContent',
+        this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
+      );
+      const base64Image = await generateP5Image(`${artScript}`, scriptData);
+      const decodedImage = await decodeBase64Image(base64Image);
+
+      if (decodedImage) {
+        const uploadResult = await uploadFile(decodedImage.data);
+        await updateImageHash(
+          'NFTContent',
+          this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
+          uploadResult,
+          id,
+        );
+        await this._prismaService.school.update({
+          where: { giga_school_id: id },
+          data: { imageHash: uploadResult },
+        });
+      } else {
+        throw new Error('Failed to decode base64 image.');
+      }
+    } catch (error) {
+      this._logger.error(`Error updating image: ${error}`);
+      // Crucially, re-throw the error to signal job failure to BullMQ
+      throw error;
     }
-  } catch (error) {
-    this._logger.error(`Error updating image: ${error}`);
-    // Crucially, re-throw the error to signal job failure to BullMQ
-    throw error;
   }
-}
 }
 
 @Injectable()
@@ -595,7 +596,7 @@ export class VCProcessor {
     this._logger.debug(`Completed job ${job.id} of type ${job.name}`);
   }
 
-  @OnQueueFailed()
+  @OnQueueFailed({ name: UPDATE_CIW || SET_PROCESS_VC })
   public async onErrorDB(job: Job<any>, error: any) {
     this._logger.error(`Failed job ${job.id} of type ${job.name}: ${error.message}`, error.stack);
     if (job.attemptsMade === job.opts.attempts) {
@@ -603,7 +604,7 @@ export class VCProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: 'Something went wrong while updating database!!',
+          subject: `Something went wrong while updating database!! ${job.data.did}, error: ${error.message}`,
           template: './error',
           context: {},
         });
@@ -628,25 +629,29 @@ export class VCProcessor {
 
   @Process(SET_PROCESS_VC)
   public async hanldeProcessVC(job: Job<{ vcDetails: any }>) {
-    this._logger.log(`Processing VC`);
-    const vcDetails = job.data.vcDetails;
-    const universalLink = vcDetails.universalLink;
-    const did = vcDetails.credentialSubject.id;
-    const CIWDetails = await this.prismaService.informationWorker.findUnique({
-      where: {
-        did: did,
-        emailSent: false,
-      },
-    });
-    if (CIWDetails)
-      this.mailService.sendVCLink({
-        email: CIWDetails.email,
-        link: universalLink,
-        did: did,
+    try {
+      this._logger.log(`Processing VC`);
+      const vcDetails = job.data.vcDetails;
+      const universalLink = vcDetails.universalLink;
+      const did = vcDetails.credentialSubject.id;
+      const CIWDetails = await this.prismaService.informationWorker.findUnique({
+        where: {
+          did: did,
+          emailSent: false,
+        },
       });
-    else{
-      this._logger.error(`No CIW Found to send VC link to CIW`);
-      
+      if (CIWDetails)
+        this.mailService.sendVCLink({
+          email: CIWDetails.email,
+          link: universalLink,
+          did: did,
+        });
+      else {
+        this._logger.error(`No CIW Found to send VC link to CIW`);
+      }
+    } catch (error) {
+      this._logger.error(`Error processing VC: ${error}`);
+      throw error;
     }
   }
 }

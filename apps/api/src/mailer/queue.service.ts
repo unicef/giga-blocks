@@ -219,9 +219,9 @@ export class QueueService {
     }
   }
 
-  public async claimReservedNFT(email: string, walletAddress: string) {
+  public async claimReservedNFT(email: string, walletAddress: string,schoolId:string) {
     try {
-      await this._onchainQueue.add(CLAIM_NFT, { email, walletAddress }, jobOptions);
+      await this._onchainQueue.add(CLAIM_NFT, { email, walletAddress,schoolId }, jobOptions);
       return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
       this._logger.error(`Error queueing transaction to blockchain `);
