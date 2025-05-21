@@ -25,7 +25,7 @@ export const useQOSWeeklyGet = (
   enabled = true
 ) => {
   return useQuery(
-    ['get-qos-weekly', gigaSchoolId],
+    ['get-qos-weekly', gigaSchoolId,startDate,endDate],
     async () => {
       const { data } = await apiGuest.get(
         `${QOS.WEEKLY}?giga_school_id=${gigaSchoolId}&startDate=${startDate}&endDate=${endDate}`

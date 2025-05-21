@@ -1,6 +1,6 @@
 // components/schoolDetails/SchoolStats.js
 import { CheckmarkFilled, MeterAlt, NotAvailable } from '@carbon/icons-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function SchoolStats({
   fontColor,
@@ -10,8 +10,46 @@ export default function SchoolStats({
   connectionType,
   weeklyData,
   connectivity,
+  setCurrentWeekStart,
+  currentWeekStart,
 }) {
   const [selectedTab, setSelectedTab] = useState('weekly');
+
+  const getWeekRange = (startDate) => {
+    const start = new Date(startDate);
+    const end = new Date(startDate);
+    end.setDate(start.getDate() + 6); // Add 6 days to get to Sunday
+
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    const formatter = new Intl.DateTimeFormat('en-US', options);
+
+    return `${formatter.format(start)} - ${formatter.format(end)}`;
+  };
+
+  const handlePreviousWeek = () => {
+    setCurrentWeekStart((prevStart) => {
+      const newStart = new Date(prevStart);
+      newStart.setDate(prevStart.getDate() - 7);
+      return newStart;
+    });
+  };
+
+  const handleNextWeek = () => {
+    setCurrentWeekStart((prevStart) => {
+      const newStart = new Date(prevStart);
+      newStart.setDate(prevStart.getDate() + 7);
+      return newStart;
+    });
+  };
+
+  const speeds = weeklyData?.map((item) => item.averageSpeedUpload || 0);
+  const maxSpeed = speeds ? Math.max(...speeds, 1) : 1;
+
+  // Helper to get day name from YYYY-MM-DD string
+  const getDayName = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { weekday: 'short' }); // e.g., "Mon", "Tue"
+  };
 
   return (
     <div className="school-details__stats">
@@ -55,7 +93,7 @@ export default function SchoolStats({
               className="school-details__stat-number"
               style={{ color: fontColor }}
             >
-              {(dailyData?.averageDownloadSpeed)|| '...'} Mbps
+              {dailyData?.averageDownloadSpeed?.toFixed(3) || '...'} Mbps
             </span>
           </div>
           <div className="school-details__stat-detail">
@@ -93,29 +131,51 @@ export default function SchoolStats({
         </div>
 
         <div className="school-details__chart-dates">
-          <button className="school-details__chart-nav" disabled>
-            «
-          </button>
-          <button className="school-details__chart-nav" disabled>
+          
+          <button
+            className="school-details__chart-nav"
+            onClick={handlePreviousWeek}
+          >
             ‹
           </button>
           <span className="school-details__chart-date">
-            24 March, 2024 - 2 April 2024
+            {getWeekRange(currentWeekStart)}
           </span>
-          <button className="school-details__chart-nav">›</button>
-          <button className="school-details__chart-nav">»</button>
+          <button
+            className="school-details__chart-nav"
+            onClick={handleNextWeek}
+          >
+            ›
+          </button>
         </div>
 
         <div className="school-details__chart">
-          {weeklyData.map((item, index) => (
-            <div key={index} className="school-details__chart-bar-container">
-              <div
-                className="school-details__chart-bar"
-                style={{ height: `${(item.value / 150) * 100}%` }}
-              />
-              <div className="school-details__chart-label">{item.day}</div>
-            </div>
-          ))}
+          {weeklyData?.map(
+            (item, index) => (
+              (
+                <div
+                  key={index}
+                  className="school-details__chart-bar-container"
+                >
+                  <div
+                    className="school-details__chart-bar"
+                    style={{
+                      height: `${
+                        ((item.averageSpeedUpload || 0) / maxSpeed) * 100
+                      }%`,
+                      backgroundColor: fontColor,
+                      borderColor: cardColor,
+                      opacity: item.averageSpeedUpload ? 1 : 0.5,
+                      width: '100%',                      
+                    }}
+                  />
+                  <div className="school-details__chart-label">
+                    {getDayName(item.day)}
+                  </div>
+                </div>
+              )
+            )
+          )}
         </div>
       </div>
     </div>

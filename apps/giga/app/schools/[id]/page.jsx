@@ -10,7 +10,7 @@ import ThemeSelector from '../../../components/schoolDetails/SchoolThemes';
 import Sidebar from '../../../components/schoolDetails/Sidebar';
 import DetailsLoading from '../../../components/detailsLoading/DetailsLoading';
 import { useSchoolDetails } from '../../hooks/useSchool';
-import { useQOSDailyGet } from '../../hooks/useQOS';
+import { useQOSDailyGet, useQOSWeeklyGet } from '../../hooks/useQOS';
 import './_schoolDetails.scss';
 import { useThemeToggleStore } from '../../store/themeToggleStore';
 import { useThemeStore } from '../../store/themeStore';
@@ -22,6 +22,18 @@ import { useRouter } from 'next/navigation';
 import { InlineNotification } from '@carbon/react';
 import MetaHead from '../../../components/seoMetadata';
 
+const getMondayOfCurrentWeek = () => {
+  const today = new Date();
+  const dayOfWeek = today.getDay(); // 0 for Sunday, 1 for Monday, etc.
+  // Calculate difference to get to Monday. If today is Sunday (0), go back 6 days to Monday.
+  // Otherwise, go back (dayOfWeek - 1) days.
+  const diff = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+  const monday = new Date(today.setDate(diff));
+  monday.setHours(0, 0, 0, 0); // Set to start of the day to avoid time issues
+  return monday;
+};
+
+
 export default function SchoolDetails({ params }) {
   const { id } = params;
   const router = useRouter();
@@ -31,7 +43,18 @@ export default function SchoolDetails({ params }) {
   const { data: themeOptions, isLoading: themeLoading } = useThemeGet();
   const [notification, setNotification] = useState(null);
 
-  const {data:dailyData,isLoading:dailyDataLoading} = useQOSDailyGet(data?.giga_school_id);
+  const [currentWeekStart, setCurrentWeekStart] = useState(getMondayOfCurrentWeek());
+
+  const { data: weeklyData } = useQOSWeeklyGet(
+    data?.giga_school_id,
+    currentWeekStart?.toISOString().split('T')[0],
+    new Date(currentWeekStart?.getTime() + 6 * 24 * 60 * 60 * 1000)?.toISOString()
+      ?.split('T')[0]
+  );
+
+  const { data: dailyData, isLoading: dailyDataLoading } = useQOSDailyGet(
+    data?.giga_school_id
+  );
 
   const isMinted = minted === 'MINTED';
   const isVisibleForMinted = useThemeToggleStore(
@@ -95,16 +118,6 @@ export default function SchoolDetails({ params }) {
   );
   const linkActivation = searchParams.get('linkActivation');
 
-  // Mock data for the weekly chart
-  const weeklyData = [
-    { day: 'S', value: 120 },
-    { day: 'M', value: 80 },
-    { day: 'T', value: 100 },
-    { day: 'W', value: 150 },
-    { day: 'T', value: 110 },
-    { day: 'F', value: 130 },
-    { day: 'S', value: 120 },
-  ];
 
   const fontColor = hasCustomTheme
     ? themeStore.fontColor
@@ -185,6 +198,8 @@ export default function SchoolDetails({ params }) {
                 dailyData={dailyData}
                 connectionType={data?.giga_maps_data?.connectivity_type}
                 weeklyData={weeklyData}
+                setCurrentWeekStart={setCurrentWeekStart}
+                currentWeekStart={currentWeekStart}
               />
               <SchoolOverview
                 updatedAt={data?.updatedAt}
