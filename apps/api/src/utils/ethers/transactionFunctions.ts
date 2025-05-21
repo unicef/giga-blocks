@@ -200,13 +200,14 @@ export const getScriptData = async (
     const tokenId = await contentcontract.schoolIdToTokenId(schoolId);
     //get nft contents from tokenId
     const nftcontents = await contentcontract.getNftContentValues(tokenId);
+    console.log('nftcontents', nftcontents);
       //incase of encoded data
 //     let sanitizedResponse = `{${nftcontents}}`.replace(/(\w+):/g, '"$1":'); // Add curly braces and quote property names
 //     console.log('sanitizedResponse', sanitizedResponse);
 //     sanitizedResponse = sanitizedResponse.replace(/,(\s*})/g, '$1'); // Remove trailing commas
     const formattedResponse =
      {
-      schoolName: nftcontents[0],
+      // schoolName: nftcontents[0],
       schoolType: nftcontents[1],
       country: nftcontents[2],
       longitude: nftcontents[3],
