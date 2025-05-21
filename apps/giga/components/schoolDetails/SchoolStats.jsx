@@ -6,6 +6,8 @@ export default function SchoolStats({
   fontColor,
   cardColor,
   bgColor,
+  dailyData,
+  connectionType,
   weeklyData,
   connectivity,
 }) {
@@ -53,12 +55,12 @@ export default function SchoolStats({
               className="school-details__stat-number"
               style={{ color: fontColor }}
             >
-              {'---'} Mbps
+              {(dailyData?.averageDownloadSpeed)|| '...'} Mbps
             </span>
           </div>
           <div className="school-details__stat-detail">
             <p>Connection Type</p>
-            <p>{'----'}</p>
+            <p>{connectionType || '...'}</p>
           </div>
           <div className="school-details__stat-detail">
             <p>Global Benchmark</p>

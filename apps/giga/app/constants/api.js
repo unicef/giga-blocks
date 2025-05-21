@@ -63,8 +63,8 @@ module.exports = {
     GET: '/featured/school',
   },
   QOS:{
-    DAILY:'/qos/daily',
-    WEEKLY:'/qos/weekly',
-    MONTHLY:'/qos/monthly',
+    DAILY:'/schools/qos/daily',
+    WEEKLY:'/schools/qos/weekly',
+    MONTHLY:'/schools/qos/monthly',
   }
 };

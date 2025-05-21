@@ -10,6 +10,7 @@ import ThemeSelector from '../../../components/schoolDetails/SchoolThemes';
 import Sidebar from '../../../components/schoolDetails/Sidebar';
 import DetailsLoading from '../../../components/detailsLoading/DetailsLoading';
 import { useSchoolDetails } from '../../hooks/useSchool';
+import { useQOSDailyGet } from '../../hooks/useQOS';
 import './_schoolDetails.scss';
 import { useThemeToggleStore } from '../../store/themeToggleStore';
 import { useThemeStore } from '../../store/themeStore';
@@ -29,6 +30,8 @@ export default function SchoolDetails({ params }) {
   const { giga_maps_data, theme, minted } = data || {};
   const { data: themeOptions, isLoading: themeLoading } = useThemeGet();
   const [notification, setNotification] = useState(null);
+
+  const {data:dailyData,isLoading:dailyDataLoading} = useQOSDailyGet(data?.giga_school_id);
 
   const isMinted = minted === 'MINTED';
   const isVisibleForMinted = useThemeToggleStore(
@@ -179,6 +182,8 @@ export default function SchoolDetails({ params }) {
                 bgColor={bgColor}
                 cardColor={cardColor}
                 fontColor={fontColor}
+                dailyData={dailyData}
+                connectionType={data?.giga_maps_data?.connectivity_type}
                 weeklyData={weeklyData}
               />
               <SchoolOverview
