@@ -62,4 +62,9 @@ module.exports = {
   FEATURED: {
     GET: '/featured/school',
   },
+  QOS:{
+    DAILY:'/qos/daily',
+    WEEKLY:'/qos/weekly',
+    MONTHLY:'/qos/monthly',
+  }
 };

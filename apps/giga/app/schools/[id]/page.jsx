@@ -18,6 +18,8 @@ import { useThemeGet } from '../../hooks/useTheme';
 import { useReadNftContentSchoolIdToTokenId } from '../../hooks/useContract/nftContent';
 import { useReadNftOwnerOf } from '../../hooks/useContract/gigaNft';
 import { useRouter } from 'next/navigation';
+import { InlineNotification } from '@carbon/react';
+import MetaHead from '../../../components/seoMetadata';
 
 export default function SchoolDetails({ params }) {
   const { id } = params;
@@ -26,6 +28,8 @@ export default function SchoolDetails({ params }) {
   const { data, isLoading } = useSchoolDetails(id);
   const { giga_maps_data, theme, minted } = data || {};
   const { data: themeOptions, isLoading: themeLoading } = useThemeGet();
+  const [notification, setNotification] = useState(null);
+
   const isMinted = minted === 'MINTED';
   const isVisibleForMinted = useThemeToggleStore(
     (state) => state.isVisibleForMinted
@@ -54,6 +58,17 @@ export default function SchoolDetails({ params }) {
 
   const handleBack = () => {
     router.back();
+  };
+
+  const onCloseNotification = () => {
+    setNotification(null);
+  };
+
+  const showNotification = (kind, title, subtitle) => {
+    setNotification({ kind, title, subtitle });
+    setTimeout(() => {
+      setNotification(null);
+    }, 3000); // Adjust the duration as needed
   };
 
   const { data: tokenId, isLoading: isTokenLoading } =
@@ -111,64 +126,88 @@ export default function SchoolDetails({ params }) {
   if (isLoading || !data) return <DetailsLoading />;
 
   return (
-    <div className="school-details">
-      <div className="school-details__container">
-        <p onClick={handleBack} className="school-details__back">
-          <ArrowLeft size={20} /> Back
-        </p>
+    <>
+      <MetaHead
+        title={data?.name}
+        description={data?.region_name}
+        image={`https://ipfs.io/ipfs/${data?.imageHash}`}
+      />
+      {notification && (
+        <InlineNotification
+          aria-label="closes notification"
+          kind={notification.kind}
+          onClose={onCloseNotification}
+          title={notification.title}
+          subtitle={notification.subtitle}
+          style={{
+            position: 'fixed',
+            top: '60px',
+            right: '2px',
+            width: '400px',
+            zIndex: 1000,
+          }}
+        />
+      )}
+      <div className="school-details">
+        <div className="school-details__container">
+          <p onClick={handleBack} className="school-details__back">
+            <ArrowLeft size={20} /> Back
+          </p>
 
-        {(minted === 'NOTMINTED' || isVisibleForMinted) && (
-          <ThemeSelector
-            themeOptions={themeOptions}
-            selectedTheme={selectedTheme}
-            setSelectedTheme={setSelectedTheme}
-            id={id}
-            linkActivation={linkActivation}
-            loading={themeLoading}
-          />
-        )}
-        <div className="school-details__content">
-          <div className="school-details__main">
-            <Header
-              name={data?.name}
-              school_type={data?.school_type}
-              region_name={data?.region_name}
-              locationId={data?.locationId}
-              countryCode={data?.countryCode}
-              fontColor={fontColor}
+          {(minted === 'NOTMINTED' || isVisibleForMinted) && (
+            <ThemeSelector
+              themeOptions={themeOptions}
+              selectedTheme={selectedTheme}
+              setSelectedTheme={setSelectedTheme}
+              id={id}
+              linkActivation={linkActivation}
+              loading={themeLoading}
+              showNotification={showNotification} // Pass the notification function
             />
-            <SchoolStats
+          )}
+          <div className="school-details__content">
+            <div className="school-details__main">
+              <Header
+                name={data?.name}
+                school_type={data?.school_type}
+                region_name={data?.region_name}
+                locationId={data?.locationId}
+                countryCode={data?.countryCode}
+                fontColor={fontColor}
+              />
+              <SchoolStats
+                bgColor={bgColor}
+                cardColor={cardColor}
+                fontColor={fontColor}
+                weeklyData={weeklyData}
+              />
+              <SchoolOverview
+                updatedAt={data?.updatedAt}
+                connectivity={data?.connectivity}
+                coverage_availability={data?.coverage_availability}
+                electricity_available={data?.electricity_available}
+                region_name={data?.region_name}
+                longitude={data?.longitude}
+                latitude={data?.latitude}
+                gigaMapsData={giga_maps_data}
+                fontColor={fontColor}
+                cardColor={cardColor}
+                bgColor={bgColor}
+              />
+            </div>
+            <Sidebar
+              fontColor={fontColor}
               bgColor={bgColor}
               cardColor={cardColor}
-              fontColor={fontColor}
-              weeklyData={weeklyData}
-            />
-            <SchoolOverview
-              updatedAt={data?.updatedAt}
-              connectivity={data?.connectivity}
-              coverage_availability={data?.coverage_availability}
-              electricity_available={data?.electricity_available}
-              region_name={data?.region_name}
-              longitude={data?.longitude}
-              latitude={data?.latitude}
-              gigaMapsData={giga_maps_data}
-              fontColor={fontColor}
-              cardColor={cardColor}
-              bgColor={bgColor}
+              minted={minted}
+              owner={owner}
+              imageHash={data?.imageHash}
+              id={id}
+              schoolName={data?.name}
             />
           </div>
-          <Sidebar
-            fontColor={fontColor}
-            bgColor={bgColor}
-            cardColor={cardColor}
-            minted={minted}
-            owner={owner}
-            imageHash={data?.imageHash}
-            schoolName={data?.name}
-
-          />
         </div>
       </div>
-    </div>
+    </>
   );
 }
