@@ -11,6 +11,7 @@ const Sidebar = ({
   imageHash,
   minted,
   fontColor,
+  id,
   claim,
   owner,
   schoolName,
@@ -22,6 +23,7 @@ const Sidebar = ({
     (state) => state.toggleVisibilityForMinted
   );
   const { address } = useAccount();
+  const currentPageUrl = `${process.env.NEXT_PUBLIC_WEB_NAME}/schools/${id}`;
   return (
     <div className="school-details__sidebar">
       {minted === 'MINTED' ? (
@@ -84,7 +86,9 @@ const Sidebar = ({
 
               <div className="school-details__social-icons">
                 <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=${`https://ipfs.io/ipfs/${imageHash}`}`}
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                    currentPageUrl
+                  )}`}
                   className="school-details__social-icon"
                   target="_blank"
                 >
@@ -98,7 +102,9 @@ const Sidebar = ({
                   </svg>
                 </a>
                 <a
-                  href={`https://www.instagram.com/stories/highlights/${`https://ipfs.io/ipfs/${imageHash}`}`}
+                  href={`https://www.instagram.com/stories/highlights/${encodeURIComponent(
+                    currentPageUrl
+                  )}`}
                   className="school-details__social-icon"
                 >
                   <svg
@@ -112,7 +118,7 @@ const Sidebar = ({
                 </a>
                 <a
                   href={`https://www.linkedin.com/sharing/share-offsite/?text=${encodeURIComponent(
-                    `https://ipfs.io/ipfs/${imageHash}`
+                    currentPageUrl
                   )}&title=${encodeURIComponent(
                     schoolName
                   )}&summary=Cool%20Nft%20Minted`}
@@ -129,7 +135,12 @@ const Sidebar = ({
                   </svg>
                 </a>
                 <a
-                  href={`https://twitter.com/intent/tweet?url=https://ipfs.io/ipfs/${imageHash}`}
+                  // Updated Twitter share link
+                  href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                    currentPageUrl
+                  )}&text=${encodeURIComponent(
+                    `Check out ${schoolName} on Giga! #NFTs #Education`
+                  )}`}
                   target="_blank"
                   className="school-details__social-icon"
                 >

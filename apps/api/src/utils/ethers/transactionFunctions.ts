@@ -19,7 +19,7 @@ interface ExtendedContract extends BaseContract {
     tokenId: string | ContractTransactionResponse,
   ) => ContractTransactionResponse;
   getImage?: (imageName: string | ContractTransactionResponse) => ContractTransactionResponse;
-  getMetadataContent?: (tokenId: string | ContractTransactionResponse) => any;
+  getNftContentValues?: (tokenId: string | ContractTransactionResponse) => any;
   tokenIdToTokenHash?: (tokenId: string | ContractTransactionResponse) => any;
   addHashes?: (date: string, hashes: string[]) => ContractTransactionResponse;
   reserveNft?: (schoolId: string, email: string) => ContractTransactionResponse;
@@ -117,7 +117,7 @@ export const getSchoolData = async (
   tokenId: string | ContractTransactionResponse,
 ): Promise<ContractTransactionResponse> => {
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
-  return await contract.getMetadataContent(tokenId);
+  return await contract.getNftContentValues(tokenId);
 };
 
 export const getRandomImages = async (
@@ -199,10 +199,25 @@ export const getScriptData = async (
     //get tokenId from schoolId
     const tokenId = await contentcontract.schoolIdToTokenId(schoolId);
     //get nft contents from tokenId
-    const nftcontents = await contentcontract.getMetadataContent(tokenId);
-    let sanitizedResponse = `{${nftcontents}}`.replace(/(\w+):/g, '"$1":'); // Add curly braces and quote property names
-    sanitizedResponse = sanitizedResponse.replace(/,(\s*})/g, '$1'); // Remove trailing commas
-    const formattedResponse = JSON.parse(sanitizedResponse);
+    const nftcontents = await contentcontract.getNftContentValues(tokenId);
+    console.log('nftcontents', nftcontents);
+      //incase of encoded data
+//     let sanitizedResponse = `{${nftcontents}}`.replace(/(\w+):/g, '"$1":'); // Add curly braces and quote property names
+//     console.log('sanitizedResponse', sanitizedResponse);
+//     sanitizedResponse = sanitizedResponse.replace(/,(\s*})/g, '$1'); // Remove trailing commas
+    const formattedResponse =
+     {
+      // schoolName: nftcontents[0],
+      schoolType: nftcontents[1],
+      country: nftcontents[2],
+      longitude: nftcontents[3],
+      latitude: nftcontents[4],
+      connectivity: nftcontents[5],
+      coverage_availabitlity: nftcontents[6],
+      electricity_availabilty: nftcontents[7],
+      region: nftcontents[8],
+     }
+    console.log('formattedResponse', formattedResponse);
     const tokenHash = await contentcontract.tokenIdToTokenHash(tokenId);
     //get random images from region and tokenId
     const randomImages = await imagecontract.getRandomImages(formattedResponse?.region, tokenHash);

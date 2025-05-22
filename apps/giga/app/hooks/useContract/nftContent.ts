@@ -149,6 +149,20 @@ export const nftContentAbi = [
   },
   {
     type: 'function',
+    inputs: [{ name: '_tokenId', internalType: 'uint256', type: 'uint256' }],
+    name: 'getNftContentValues',
+    outputs: [{ name: '', internalType: 'string[9]', type: 'string[9]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '_bytes32', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'getString',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
     inputs: [{ name: '', internalType: 'address', type: 'address' }],
     name: 'isContentManager',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
@@ -158,7 +172,7 @@ export const nftContentAbi = [
     type: 'function',
     inputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     name: 'keys',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
     stateMutability: 'view',
   },
   {
@@ -184,7 +198,7 @@ export const nftContentAbi = [
       { name: '', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'nftContentValues',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
     stateMutability: 'view',
   },
   {
@@ -348,6 +362,23 @@ export const useReadNftContentGetMetadataContent =
     abi: nftContentAbi,
     functionName: 'getMetadataContent',
   })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"getNftContentValues"`
+ */
+export const useReadNftContentGetNftContentValues =
+  /*#__PURE__*/ createUseReadContract({
+    abi: nftContentAbi,
+    functionName: 'getNftContentValues',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"getString"`
+ */
+export const useReadNftContentGetString = /*#__PURE__*/ createUseReadContract({
+  abi: nftContentAbi,
+  functionName: 'getString',
+})
 
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftContentAbi}__ and `functionName` set to `"isContentManager"`

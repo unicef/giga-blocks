@@ -33,6 +33,7 @@ import {
   ReserveNFTDto,
   SchoolActivation,
   WeeklyQOSDto,
+  DailyQOSDto
 } from './dto/reserve-nft.dto';
 @Controller('schools')
 @ApiTags('School')
@@ -199,8 +200,8 @@ export class SchoolController {
   @Public()
   @Get('/qos/daily')
   @ApiOperation({ summary: 'Get the daily qos data of school' })
-  async getDailyQos(@Query() giga_school_id: string) {
-    return this.qosService.getlatestQOS(giga_school_id);
+  async getDailyQos(@Query() data: DailyQOSDto) {
+    return this.qosService.getlatestQOS(data);
   }
 
   @Public()
