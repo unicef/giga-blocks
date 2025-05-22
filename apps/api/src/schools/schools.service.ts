@@ -86,7 +86,7 @@ export class SchoolService {
 
     //Combines all the filters into a single condition
     if (waterBool !== undefined) {
-      gigaMapsConditions.push({
+      const waterConditions: Prisma.SchoolWhereInput = {
         OR: [
           {
             giga_maps_data: {
@@ -101,7 +101,16 @@ export class SchoolService {
             },
           },
         ],
-      });
+      };
+      if (!waterBool) {
+        waterConditions.OR?.push({
+          giga_maps_data: {
+            path: ['water_availability'],
+            equals: null,
+          },
+        });
+      }
+      gigaMapsConditions.push(waterConditions);
     }
     if (teachers !== undefined) {
       gigaMapsConditions.push({
@@ -137,10 +146,20 @@ export class SchoolService {
     }
     if (connectionType !== undefined) {
       gigaMapsConditions.push({
-        giga_maps_data: {
-          path: ['connectivity_type'],
-          equals: connectionType,
-        },
+        OR: [
+          {
+            giga_maps_data: {
+              path: ['connectivity_type'],
+              string_contains: connectionType,
+            },
+          },
+          {
+            giga_maps_data: {
+              path: ['connectivity_type'],
+              string_contains: connectionType.toLowerCase(),
+            },
+          },
+        ],
       });
     }
     const where: Prisma.SchoolWhereInput = {
@@ -665,7 +684,7 @@ export class SchoolService {
     //   throw new ConflictException('School already claimed');
     // }
 
-    this.queueService.claimReservedNFT(email, walletAddress,schoolId).catch(err => {
+    this.queueService.claimReservedNFT(email, walletAddress, schoolId).catch(err => {
       console.log(err);
     });
     return { message: 'queue added successfully', statusCode: 200 };
