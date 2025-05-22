@@ -21,6 +21,9 @@ import { useRouter } from 'next/navigation';
 import { InlineNotification } from '@carbon/react';
 import MetaHead from '../../../components/seoMetadata';
 
+
+
+
 export default function SchoolDetails({ params }) {
   const { id } = params;
   const router = useRouter();
@@ -29,6 +32,7 @@ export default function SchoolDetails({ params }) {
   const { giga_maps_data, theme, minted } = data || {};
   const { data: themeOptions, isLoading: themeLoading } = useThemeGet();
   const [notification, setNotification] = useState(null);
+
 
   const isMinted = minted === 'MINTED';
   const isVisibleForMinted = useThemeToggleStore(
@@ -92,16 +96,6 @@ export default function SchoolDetails({ params }) {
   );
   const linkActivation = searchParams.get('linkActivation');
 
-  // Mock data for the weekly chart
-  const weeklyData = [
-    { day: 'S', value: 120 },
-    { day: 'M', value: 80 },
-    { day: 'T', value: 100 },
-    { day: 'W', value: 150 },
-    { day: 'T', value: 110 },
-    { day: 'F', value: 130 },
-    { day: 'S', value: 120 },
-  ];
 
   const fontColor = hasCustomTheme
     ? themeStore.fontColor
@@ -179,7 +173,8 @@ export default function SchoolDetails({ params }) {
                 bgColor={bgColor}
                 cardColor={cardColor}
                 fontColor={fontColor}
-                weeklyData={weeklyData}
+                connectionType={data?.giga_maps_data?.connectivity_type}
+                giga_school_id={data?.giga_school_id}
               />
               <SchoolOverview
                 updatedAt={data?.updatedAt}

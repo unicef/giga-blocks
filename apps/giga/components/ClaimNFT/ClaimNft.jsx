@@ -219,7 +219,7 @@ export default function ClaimNFT() {
               >
                 Verify
               </Button>
-            ) : isConnected ? (
+            ) : isConnected || walletAddress? (
               <Button
                 onClick={handleClaimSchool}
                 className="claim-button"

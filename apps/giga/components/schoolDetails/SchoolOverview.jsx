@@ -4,6 +4,7 @@ import {
   Map,
   ScisControlTower,
   Misuse,
+  CheckmarkFilled
 } from '@carbon/icons-react';
 import { Table, TableBody, TableCell, TableRow } from '@carbon/react';
 
@@ -56,12 +57,12 @@ const SchoolOverview = ({
     {
       label: 'Coverage Availability',
       icon: <ScisControlTower size={20} />,
-      value: coverage_availability ? coverage_availability : <Misuse />,
+      value: coverage_availability ? <CheckmarkFilled/> : <Misuse />,
     },
     {
       label: 'Electricity',
       icon: <Flash size={20} />,
-      value: electricity_available ? electricity_available : <Misuse />,
+      value: electricity_available ? <CheckmarkFilled/> : <Misuse />,
     },
     {
       label: 'Longitude',

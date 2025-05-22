@@ -15,7 +15,7 @@ import { useThemeStore } from '../../../store/themeStore';
 import { useSearchParams } from 'next/navigation';
 import { useThemeGet } from '../../../hooks/useTheme';
 import ClaimNFT from '../../../../components/ClaimNFT/ClaimNft';
-import DetailsLoading from '../../../../components/detailsLoading/DetailsLoading'
+import DetailsLoading from '../../../../components/detailsLoading/DetailsLoading';
 import { useRouter } from 'next/navigation';
 
 export default function SchoolDetails({ params }) {
@@ -126,6 +126,8 @@ export default function SchoolDetails({ params }) {
               cardColor={cardColor}
               fontColor={fontColor}
               weeklyData={weeklyData}
+              connectionType={data?.giga_maps_data?.connectivity_type}
+              giga_school_id={data?.giga_school_id}
             />
             <SchoolOverview
               updatedAt={data?.updatedAt}

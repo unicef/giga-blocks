@@ -8,12 +8,12 @@ export const useQOSDailyGet = (gigaSchoolId, enabled = true) => {
     ['get-qos-daily', gigaSchoolId],
     async () => {
       const { data } = await apiGuest.get(
-        `${QOS.GET_DAILY}?giga_school_id=${gigaSchoolId}`
+        `${QOS.DAILY}?giga_school_id=${gigaSchoolId}`
       );
       return data;
     },
     {
-      enabled: !!schoolId && enabled,
+      enabled: !!gigaSchoolId && enabled,
     }
   );
 };
@@ -25,15 +25,15 @@ export const useQOSWeeklyGet = (
   enabled = true
 ) => {
   return useQuery(
-    ['get-qos-weekly', gigaSchoolId],
+    ['get-qos-weekly', gigaSchoolId,startDate,endDate],
     async () => {
       const { data } = await apiGuest.get(
-        `${QOS.GET_DAILY}?giga_school_id=${gigaSchoolId}&startDate=${startDate}&endDate=${endDate}`
+        `${QOS.WEEKLY}?giga_school_id=${gigaSchoolId}&startDate=${startDate}&endDate=${endDate}`
       );
       return data;
     },
     {
-      enabled: !!schoolId && enabled,
+      enabled: !!gigaSchoolId && enabled,
     }
   );
 };
@@ -47,12 +47,12 @@ export const useQOSMonthlyGet = (
     ['get-qos-monthly', gigaSchoolId],
     async () => {
       const { data } = await apiGuest.get(
-        `${QOS.GET_DAILY}?giga_school_id=${gigaSchoolId}&startDate=${startDate}&endDate=${endDate}`
+        `${QOS.MONTHLY}?giga_school_id=${gigaSchoolId}&startDate=${startDate}&endDate=${endDate}`
       );
       return data;
     },
     {
-      enabled: !!schoolId && enabled,
+      enabled: !!gigaSchoolId && enabled,
     }
   );
 };

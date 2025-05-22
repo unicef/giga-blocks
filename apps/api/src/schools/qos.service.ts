@@ -22,7 +22,7 @@ export class QosService {
     });
 
     if (stats.length === 0) {
-      return { message: 'No data available', averageSpeedUpload: 0 };
+      return { message: 'No data available', averageDownloadSpeed: 0 };
     }
 
     // Get the latest date
@@ -33,16 +33,16 @@ export class QosService {
       record => record.date.toISOString().split('T')[0] === latestDate,
     );
 
-    // Calculate the average speed_upload for the latest date
-    const totalSpeedUpload = latestDateRecords.reduce(
+    // Calculate the average speed_download_mean for the latest date
+    const totalSpeedDownload = latestDateRecords.reduce(
       (sum, record) => sum + Number(record.speed_download_mean || 0),
       0,
     );
-    const averageSpeedUpload = totalSpeedUpload / latestDateRecords.length;
+    const averageDownloadSpeed = totalSpeedDownload / latestDateRecords.length;
 
     return {
       latestDate,
-      averageSpeedUpload,
+      averageDownloadSpeed,
     };
   }
 
