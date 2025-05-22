@@ -1,6 +1,14 @@
 'use client';
 
-import { Modal, Tab, TabList, TabPanel, TabPanels, Tabs } from '@carbon/react';
+import {
+  Modal,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Button,
+} from '@carbon/react';
 import { ConnectKitButton } from 'connectkit';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -8,7 +16,12 @@ import { useQuery } from 'urql';
 import { useAccount } from 'wagmi';
 import SchoolCard from '../../components/schoolCard/SchoolCard';
 import { Queries } from '../libs/graph-query';
-import { Copy, TaskComplete } from '@carbon/icons-react';
+import {
+  Copy,
+  TaskComplete,
+  ArrowUpRight,
+  ArrowRight,
+} from '@carbon/icons-react';
 import './_dashboard.scss';
 import CardSkeleton from '../../components/cardSkeleton/CardSkeleton';
 
@@ -73,135 +86,190 @@ export default function Dashboard() {
         </div>
       </Modal>
       <div className="dashboard-container">
+        <div className="dashboard-header">
+          <h3>My Dashboard</h3>
+          <h1 className="profile-name profile-border">
+            {isConnecting ? (
+              <p> Connecting...</p>
+            ) : !isConnected ? (
+              <p>Wallet not connected</p>
+            ) : (
+              <>
+                {address?.slice(0, 4) + '...' + address?.slice(35, 43)}
+                {copied ? (
+                  <TaskComplete
+                    size={24}
+                    style={{
+                      marginLeft: '4px',
+                      cursor: 'pointer',
+                      color: '#A8A8A8',
+                    }}
+                    title="Copied!"
+                  />
+                ) : (
+                  <Copy
+                    size={20}
+                    style={{
+                      marginLeft: '4px',
+                      cursor: 'pointer',
+                      color: '#A8A8A8',
+                    }}
+                    onClick={handleCopy}
+                    title="Copy Address"
+                  />
+                )}
+              </>
+            )}
+          </h1>
+        </div>
         <div className="dashboard-top-section">
           <section className="profile-section">
             <div className="profile-image-container">
               <Image
-                src={'/images/teams/team-1.png'}
+                src={'/images/activate-dashboard.png'}
                 alt="Profile avatar"
-                width={100}
-                height={100}
+                width={360}
+                height={359}
                 className="profile-image"
               />
             </div>
-            <h1 className="profile-name">
-              {isConnecting ? (
-                <p> Connecting...</p>
-              ) : !isConnected ? (
-                <p>Wallet not connected</p>
-              ) : (
-                <>
-                  {address?.slice(0, 4) + '...' + address?.slice(35, 43)}
-                  {copied ? (
-                    <TaskComplete
-                      size={20}
-                      style={{
-                        marginLeft: '12px',
-                        cursor: 'pointer',
-                        color: '#A8A8A8',
-                      }}
-                      title="Copied!"
-                    />
-                  ) : (
-                    <Copy
-                      size={20}
-                      style={{
-                        marginLeft: '12px',
-                        cursor: 'pointer',
-                        color: '#A8A8A8',
-                      }}
-                      onClick={handleCopy}
-                      title="Copy Address"
-                    />
-                  )}
-                </>
-              )}
-            </h1>
           </section>
 
           {/* Latest School Reservation */}
           <section className="latest-reservation">
-            <div className="reservation-card">
-              <div className="reservation-info">
-                <span className="reservation-label">
-                  Latest School Activated
+            <div className="reservation-info">
+              <span className="reservation-label">Latest School Activated</span>
+            </div>
+            <div className="reservation-info">
+              <span className="reservation-label-header">
+                Everest Higher Secondary School
+              </span>
+            </div>
+            <div className="reservation-info">
+              <span className="reservation-label-header-second">
+                Secondary School
+              </span>
+            </div>
+            <div className="reservation-info">
+              <span className="reservation-label-header-link">
+                <span> USA </span>
+                <span className="color-link"> Locate on map </span>
+                <span className="color-icon">
+                  <ArrowUpRight size="18" />
                 </span>
-                {decodedShooldata?.length > 0 ? (
-                  <>
-                    <h2 className="school-name">
-                      {decodedShooldata[0]?.schoolName}
-                    </h2>
-                    <p className="school-location">
-                      {decodedShooldata[0]?.region}
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <h2 className="school-name">Loading...</h2>
-                    <p className="school-location">
-                      Fetching latest activation
-                    </p>
-                  </>
-                )}
-              </div>
-              <div className="reservation-image-container">
-                {decodedShooldata?.length > 0 ? (
-                  <Image
-                    src={`https://ipfs.io/ipfs/${decodedShooldata[0]?.image}`}
-                    alt={`Image of ${decodedShooldata[0]?.schoolName}`}
-                    width={400}
-                    height={300}
-                    className="reservation-image"
-                  />
-                ) : (
-                  <Image
-                    src="/placeholder.svg"
-                    alt="Loading"
-                    width={300}
-                    height={200}
-                    className="reservation-image"
-                  />
-                )}
-              </div>
+              </span>
+            </div>
+
+            <div className="dashboard-button">
+              <Button renderIcon={ArrowRight}>View Details</Button>
             </div>
           </section>
         </div>
-
         {/* Reserved Schools Section */}
         <section className="reserved-schools-section">
-          <h2 className="section-title">Activated Schools</h2>
-          {/* <Tabs>
-            <TabList>
-              <Tab>Activated Schools</Tab>
-              <Tab>Claimed Schools</Tab>
-            </TabList>
-            <TabPanels>
-              <TabPanel> */}
-                <div className="schools-grid">
-                  {fetching ? (
-                    <CardSkeleton count={4} />
-                  ) : (
-                    <>
-                      {decodedShooldata?.map((school, index) => (
-                        <div key={index} className="school-card">
-                          <SchoolCard
-                            key={school.id}
-                            id={school.id}
-                            schoolName={school.schoolName}
-                            imageHash={school.image}
-                            location={school.region}
-                            minted={'MINTED'}
-                          />
-                        </div>
-                      ))}
-                    </>
-                  )}
-                </div>
-              {/* </TabPanel>
-              <TabPanel>Claimed Schools</TabPanel>
-            </TabPanels>
-          </Tabs> */}
+          <h2 className="section-title">My Schools</h2>
+          <div className="schools-grid">
+            {fetching ? (
+              <CardSkeleton count={4} />
+            ) : (
+              <>
+                {decodedShooldata?.map((school, index) => (
+                  <div key={index} className="school-card">
+                    <SchoolCard
+                      key={school.id}
+                      id={school.id}
+                      schoolName={school.schoolName}
+                      imageHash={school.image}
+                      location={school.region}
+                      minted={'MINTED'}
+                    />
+                  </div>
+                ))}
+              </>
+            )}
+          </div>
         </section>
+      </div>
+      <div className="dashboard-container">
+        <div className="dashboard-header">
+          <h3>My Dashboard</h3>
+          <h1 className="profile-name profile-border">
+            {isConnecting ? (
+              <p> Connecting...</p>
+            ) : !isConnected ? (
+              <p>Wallet not connected</p>
+            ) : (
+              <>
+                {address?.slice(0, 4) + '...' + address?.slice(35, 43)}
+                {copied ? (
+                  <TaskComplete
+                    size={24}
+                    style={{
+                      marginLeft: '4px',
+                      cursor: 'pointer',
+                      color: '#A8A8A8',
+                    }}
+                    title="Copied!"
+                  />
+                ) : (
+                  <Copy
+                    size={20}
+                    style={{
+                      marginLeft: '4px',
+                      cursor: 'pointer',
+                      color: '#A8A8A8',
+                    }}
+                    onClick={handleCopy}
+                    title="Copy Address"
+                  />
+                )}
+              </>
+            )}
+          </h1>
+        </div>
+        <div
+          style={{
+            backgroundColor: '#F4F4F4',
+            padding: '16px',
+            borderRadius: '16px',
+          }}
+        >
+          <div className="dashboard-top-section-unactivate">
+            <section className="profile-section-unactivate">
+              <div className="profile-image-container-unactivate">
+                <Image
+                  src={'/images/unactivate-dashboard.png'}
+                  alt="Profile avatar"
+                  width={360}
+                  height={359}
+                  className="profile-image-unactivate"
+                />
+              </div>
+            </section>
+
+            {/* Latest School Reservation */}
+            <section className="latest-reservation-unactivate">
+              <div className="reservation-info-unactivate">
+                <span className="reservation-label-header-unactivate">
+                  You haven’t activated any schools yet.
+                </span>
+              </div>
+              <div className="reservation-info-unactivate">
+                <span className="reservation-label-unactivate-top">
+                  Go ahead and find a school to activate. It’s only few clicks
+                  away.
+                </span>
+                <span className="reservation-label-unactivate">
+                  Once a school is activated it’ll appear in your collection
+                </span>
+              </div>
+
+              <div className="dashboard-button-unactivate">
+                <Button renderIcon={ArrowRight}>Activate Schools</Button>
+              </div>
+            </section>
+          </div>
+        </div>
       </div>
     </>
   );
