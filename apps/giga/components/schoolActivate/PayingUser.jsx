@@ -16,6 +16,10 @@ export default function StandardActivationForm({
   handleActivate,
   isConnected,
   selectedThemeName,
+  bgColor,
+  fontColor,
+  cardColor,
+  schoolName
 }) {
   const router = useRouter();
   const handleBack = () => {
@@ -23,7 +27,7 @@ export default function StandardActivationForm({
   };
 
   return (
-    <div className="activate-school-container">
+    <div className="activate-school-container " style ={{backgroundColor: bgColor}}>
       <div className="activate-school-card">
         <div className="activate-school-content">
           <div className="activate-school-left">
@@ -71,13 +75,34 @@ export default function StandardActivationForm({
               <div className="detail-row">
                 <span className="detail-label">Selected School</span>
                 <span className="detail-value">
-                  Evergreen Academy for Advanced Scientific and Holistic
-                  Learning
+                  {schoolName || 'No School Selected'}
                 </span>
               </div>
               <div className="detail-row">
                 <span className="detail-label">Selected Theme</span>
-                <span className="detail-value">-</span>
+                <div className="detail-row">
+                  <div className="school-details__theme-option">
+                    {selectedThemeName ? (
+                      <>
+                        <div
+                          className="school-details__theme-color"
+                          style={{ backgroundColor: bgColor }}
+                        />
+                        <div
+                          className="school-details__theme-color"
+                          style={{ backgroundColor: cardColor }}
+                        />
+                        <div
+                          className="school-details__theme-color"
+                          style={{ backgroundColor: fontColor }}
+                        />
+                      </>
+                    ) : (
+                      <span className=' detail-value'>Please select theme to activate school. </span>
+                    )}
+                  </div>
+                </div>
+                {/* <span className="detail-value">-</span> */}
               </div>
               <div className="detail-row">
                 <span className="detail-label">Base Fee</span>
@@ -96,7 +121,7 @@ export default function StandardActivationForm({
                     parseFloat(baseFee) +
                     parseFloat(gasFee) +
                     parseFloat(donation || 0)
-                  ).toFixed(2)}{' '}
+                  ).toFixed(4)}{' '}
                   Eth
                 </span>
               </div>

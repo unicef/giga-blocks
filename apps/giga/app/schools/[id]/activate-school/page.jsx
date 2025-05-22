@@ -149,6 +149,11 @@ export default function ActivateSchool() {
               handleActivate={handleActivate}
               isConnected={isConnected}
               selectedThemeName={selectedThemeName}
+              bgColor={bgColor}
+              cardColor={cardColor}
+              fontColor={fontColor}
+              schoolName={data?.name}
+              
             />
           )}
         </div>
