@@ -1,19 +1,42 @@
 // components/schoolDetails/SchoolStats.js
 import { CheckmarkFilled, MeterAlt, NotAvailable } from '@carbon/icons-react';
 import { useState, useEffect } from 'react';
+import { useQOSDailyGet, useQOSWeeklyGet } from '../../app/hooks/useQOS';
+
+const getMondayOfCurrentWeek = () => {
+  const today = new Date();
+  const dayOfWeek = today.getDay(); // 0 for Sunday, 1 for Monday, etc.
+  // Calculate difference to get to Monday. If today is Sunday (0), go back 6 days to Monday.
+  // Otherwise, go back (dayOfWeek - 1) days.
+  const diff = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+  const monday = new Date(today.setDate(diff));
+  monday.setHours(0, 0, 0, 0); // Set to start of the day to avoid time issues
+  return monday;
+};
 
 export default function SchoolStats({
   fontColor,
   cardColor,
   bgColor,
-  dailyData,
   connectionType,
-  weeklyData,
   connectivity,
-  setCurrentWeekStart,
-  currentWeekStart,
+  giga_school_id,
 }) {
   const [selectedTab, setSelectedTab] = useState('weekly');
+  const [currentWeekStart, setCurrentWeekStart] = useState(
+    getMondayOfCurrentWeek()
+  );
+
+  const { data: weeklyData } = useQOSWeeklyGet(
+    giga_school_id,
+    currentWeekStart?.toISOString().split('T')[0],
+    new Date(currentWeekStart?.getTime() + 6 * 24 * 60 * 60 * 1000)
+      ?.toISOString()
+      ?.split('T')[0]
+  );
+
+  const { data: dailyData, isLoading: dailyDataLoading } =
+    useQOSDailyGet(giga_school_id);
 
   const getWeekRange = (startDate) => {
     const start = new Date(startDate);
@@ -23,7 +46,7 @@ export default function SchoolStats({
     const options = { day: 'numeric', month: 'long', year: 'numeric' };
     const formatter = new Intl.DateTimeFormat('en-US', options);
 
-    return `${formatter.format(start)} - ${formatter.format(end)}`;
+    return `${formatter?.format(start)} - ${formatter.format(end)}`;
   };
 
   const handlePreviousWeek = () => {
@@ -131,7 +154,6 @@ export default function SchoolStats({
         </div>
 
         <div className="school-details__chart-dates">
-          
           <button
             className="school-details__chart-nav"
             onClick={handlePreviousWeek}
@@ -150,30 +172,23 @@ export default function SchoolStats({
         </div>
 
         <div className="school-details__chart">
-          {weeklyData?.map(
-            (item, index) => (
-              (
-                <div
-                  key={index}
-                  className="school-details__chart-bar-container"
-                >
-                  <div
-                    className="school-details__chart-bar"
-                    style={{
-                      height: `${
-                        ((item.averageSpeedUpload || 0) / maxSpeed) * 100
-                      }px`,
-                      backgroundColor: fontColor,
-                      // borderColor: cardColor,
-                    }}
-                  />
-                  <div className="school-details__chart-label">
-                    {getDayName(item.day)}
-                  </div>
-                </div>
-              )
-            )
-          )}
+          {weeklyData?.map((item, index) => (
+            <div key={index} className="school-details__chart-bar-container">
+              <div
+                className="school-details__chart-bar"
+                style={{
+                  height: `${
+                    ((item.averageSpeedUpload || 0) / maxSpeed) * 100
+                  }px`,
+                  backgroundColor: fontColor,
+                  // borderColor: cardColor,
+                }}
+              />
+              <div className="school-details__chart-label">
+                {getDayName(item.day)}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
