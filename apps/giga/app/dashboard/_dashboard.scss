@@ -8,6 +8,7 @@
 .dashboard-container {
   padding: $spacing-07;
   margin-top: 120px;
+  min-height: 70vh;
 
   @include breakpoint-down(md) {
     padding: $spacing-05;
