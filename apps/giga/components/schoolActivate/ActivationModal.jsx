@@ -21,7 +21,7 @@ export default function ActivationModal({ isOpen, onClose }) {
   const [showNameOnList, setShowNameOnList] = useState(false);
   const [contributorName, setContributorName] = useState('');
   const { address: walletAddress } = useAccount();
-  const  patchContributor = useContributorPatch();
+  const patchContributor = useContributorPatch();
   const router = useRouter();
   const handleCheckboxChange = (event) => {
     const checked = event.target.checked;
@@ -41,12 +41,16 @@ export default function ActivationModal({ isOpen, onClose }) {
       {
         onSuccess: () => {
           onClose();
-          router.push(`/schools/${id}`);
+          router.push(
+            `/schools/${id}?activationStatus=success&message=School Activated`
+          );
         },
         onError: (err) => {
           onClose();
           toast.error('Failed to update contributor:', err);
-          router.push(`/schools/${id}`);
+          router.push(
+            `/schools/${id}?activationStatus=error&message=Failed to update contributor`
+          );
         },
       }
     );

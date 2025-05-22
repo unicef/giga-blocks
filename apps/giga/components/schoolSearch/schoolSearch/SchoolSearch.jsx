@@ -411,16 +411,17 @@ export default function SchoolSearch({ linkActivation }) {
               bgColor={school?.theme?.colorScheme?.cardColor}
             />
           ))}
+          {/* Infinite query loading skeleton */}
+          {isFetchingNextPage && <CardSkeleton count={10} />}
         </div>
 
         {/* Loader for infinite scroll */}
         <div
           ref={loaderRef}
-          style={{ height: 40, display: hasNextPage ? 'block' : 'none' }}
-        >
-          {isFetchingNextPage && <CardSkeleton count={3} />}
-        </div>
+          style={{ height: 10, display: hasNextPage ? 'block' : 'none' }}
+        />
 
+        {/* Initial loading skeleton */}
         {isLoading && (
           <div className="search-page__grid">
             <CardSkeleton count={10} />

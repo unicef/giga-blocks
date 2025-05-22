@@ -21,9 +21,6 @@ import { useRouter } from 'next/navigation';
 import { InlineNotification } from '@carbon/react';
 import MetaHead from '../../../components/seoMetadata';
 
-
-
-
 export default function SchoolDetails({ params }) {
   const { id } = params;
   const router = useRouter();

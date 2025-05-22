@@ -130,44 +130,30 @@ export default function ActivateSchool() {
 
   return (
     <>
-      <div className="container">
-        <div className="backButton">
-          <span onClick={handleBack} className="backLink">
-            <ArrowLeft size={20} />
-            <span>Back</span>
-          </span>
+      <div className="content">
+        <div className="formSection">
+          {linkActivation ? (
+            <NonPayingUser
+              email={email}
+              setEmail={setEmail}
+              linkActivation={linkActivation}
+              themeName={selectedThemeName}
+              themeId={themeId}
+            />
+          ) : (
+            <PayingUser
+              baseFee={baseFee}
+              gasFee={gasFee}
+              donation={donation}
+              setDonation={setDonation}
+              handleActivate={handleActivate}
+              isConnected={isConnected}
+              selectedThemeName={selectedThemeName}
+            />
+          )}
         </div>
 
-        <div className="content">
-          <div className="formSection">
-            <h1 className="title">Activate School</h1>
-            <p className="subtitle">
-              Click a theme below to preview and select it for the activated
-              school view.
-            </p>
-
-            {linkActivation ? (
-              <NonPayingUser
-                email={email}
-                setEmail={setEmail}
-                linkActivation={linkActivation}
-                themeName={selectedThemeName}
-                themeId={themeId}
-              />
-            ) : (
-              <PayingUser
-                baseFee={baseFee}
-                gasFee={gasFee}
-                donation={donation}
-                setDonation={setDonation}
-                handleActivate={handleActivate}
-                isConnected={isConnected}
-                selectedThemeName={selectedThemeName}
-              />
-            )}
-          </div>
-
-          <div className="previewSection">
+        {/* <div className="previewSection">
             <div className="previewCard">
               <h2 className="schoolName">{data?.name}</h2>
               <p className="schoolLevel">{data?.school_type}</p>
@@ -211,9 +197,9 @@ export default function ActivateSchool() {
                 </div>
               )}
             </div>
-          </div>
-        </div>
+          </div> */}
       </div>
+
       <ActivationModal isOpen={isModalOpen} onClose={closeModal} />
     </>
   );
