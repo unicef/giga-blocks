@@ -140,7 +140,7 @@
 
 .activate-school-container {
   background-color: #d0e2ff;
-  min-height: 100vh;
+  // min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -155,7 +155,7 @@
   width: 100%;
   overflow: hidden;
   position: relative;
-  min-height: 85vh;
+  min-height: 80vh;
   margin-top: 20px;
 }
 
@@ -165,6 +165,7 @@
 
   @media (min-width: 768px) {
     flex-direction: row;
+    gap: 140px;
   }
 }
 
@@ -174,7 +175,7 @@
   position: relative;
 
   @media (min-width: 768px) {
-    padding: 3rem;
+    padding: 2.5rem;
     max-width: 50%;
   }
 }
@@ -185,10 +186,10 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-top: 140px;
+  margin-top: 120px;
 
   @media (min-width: 768px) {
-    padding: 3rem;
+    padding: 2.5rem;
   }
 
   @media (max-width: 767px) {
@@ -200,6 +201,8 @@
   // @include carbon--type-style('productive-heading-05');
   margin-bottom: 1rem;
   // color: $text-01;
+  color: #161616;
+  font-weight: 600;
 }
 
 .activate-school-description {
@@ -207,6 +210,9 @@
   // color: $text-02;
   margin-bottom: 2.5rem;
   max-width: 90%;
+  color: #525252;
+  font-weight: 400;
+  font-size: 14px;
 }
 
 .donation-section {
@@ -217,12 +223,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.7rem;
 }
 
 .donation-label {
   // @include carbon--type-style('heading-01');
   // color: $text-01;
+  color: #161616;
+  font-weight: 600;
 }
 
 .donation-optional {
@@ -258,9 +266,9 @@
   z-index: 0;
 
   @media (min-width: 768px) {
-    bottom: -7rem;
-    left: -9.9rem;
-    height: 13rem;
+    bottom: -6.5rem;
+    left: -12.7rem;
+    height: 22.2rem;
   }
   @include breakpoint-down(lg) {
     display: none;
@@ -268,20 +276,25 @@
 }
 
 .school-details {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   min-height: 0vh !important;
+  padding: 1rem;
+  background-color: #f5f5f5 !important;
+  border-radius: 8px;
 }
 
 .detail-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   align-items: flex-start;
 
   &.total-row {
-    margin-top: 2rem;
-    padding-top: 1rem;
+    // margin-top: 2rem;
+    // padding-top: 1rem;
     // border-top: 1px solid $ui-03;
+    flex-direction: column;
+    align-items: flex-end;
   }
 }
 
@@ -289,14 +302,16 @@
   // @include carbon--type-style('body-short-01');
   // color: $text-02;
   flex: 1;
+  color: #525252;
 }
 
 .detail-value {
   // @include carbon--type-style('body-short-01');
   // color: $text-01;
   text-align: right;
-  font-weight: 600;
+  font-weight: 400;
   flex: 1;
+  color: #161616;
 }
 
 .school-name {
@@ -304,8 +319,14 @@
 }
 
 .total-value {
-  // @include carbon--type-style('heading-02');
-  // color: $text-01;
+  color: #525252 !important;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.total-color-value {
+  color: #161616 !important;
+  font-weight: 600;
 }
 
 .theme-colors {
@@ -334,7 +355,7 @@
 .action-buttons {
   display: flex;
   gap: 1rem;
-  justify-content: flex-end;
+  // justify-content: flex-end;
 
   .cancel-button {
     background-color: #393939;

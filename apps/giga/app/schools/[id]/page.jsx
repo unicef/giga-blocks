@@ -19,6 +19,7 @@ import { useReadNftContentSchoolIdToTokenId } from '../../hooks/useContract/nftC
 import { useReadNftOwnerOf } from '../../hooks/useContract/gigaNft';
 import { useRouter } from 'next/navigation';
 import { InlineNotification } from '@carbon/react';
+import MetaHead from '../../../components/seoMetadata';
 
 export default function SchoolDetails({ params }) {
   const { id } = params;
@@ -126,6 +127,11 @@ export default function SchoolDetails({ params }) {
 
   return (
     <>
+      <MetaHead
+        title={data?.name}
+        description={data?.region_name}
+        image={`https://ipfs.io/ipfs/${data?.imageHash}`}
+      />
       {notification && (
         <InlineNotification
           aria-label="closes notification"

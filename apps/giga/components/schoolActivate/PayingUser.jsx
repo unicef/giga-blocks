@@ -60,14 +60,25 @@ export default function StandardActivationForm({
               <Image
                 src="/images/activate-school-earth-illustration.png"
                 alt="People working with a globe"
-                width={950}
-                height={950}
+                width={930}
+                height={930}
               />
             </div>
           </div>
 
           <div className="activate-school-right">
             <div className="school-details">
+              <div className="detail-row">
+                <span className="detail-label">Selected School</span>
+                <span className="detail-value">
+                  Evergreen Academy for Advanced Scientific and Holistic
+                  Learning
+                </span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Selected Theme</span>
+                <span className="detail-value">-</span>
+              </div>
               <div className="detail-row">
                 <span className="detail-label">Base Fee</span>
                 <span className="detail-value">{baseFee} Eth</span>
@@ -79,8 +90,8 @@ export default function StandardActivationForm({
               </div>
 
               <div className="detail-row total-row">
-                <span className="detail-label">Grand Total</span>
-                <span className="detail-value total-value">
+                <span className="detail-value total-value">Grand Total</span>
+                <span className="detail-value total-color-value">
                   {(
                     parseFloat(baseFee) +
                     parseFloat(gasFee) +
