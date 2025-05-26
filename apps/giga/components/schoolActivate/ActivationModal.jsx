@@ -18,7 +18,7 @@ import toast from 'react-hot-toast';
 
 export default function ActivationModal({ isOpen, onClose }) {
   const { id } = useParams();
-  const [showNameOnList, setShowNameOnList] = useState(false);
+  const [showNameOnList, setShowNameOnList] = useState(true);
   const [contributorName, setContributorName] = useState('');
   const { address: walletAddress } = useAccount();
   const patchContributor = useContributorPatch();
@@ -42,14 +42,14 @@ export default function ActivationModal({ isOpen, onClose }) {
         onSuccess: () => {
           onClose();
           router.push(
-            `/schools/${id}?activationStatus=success&message=School Activated`
+            `/schools/${id}`
           );
         },
         onError: (err) => {
           onClose();
           toast.error('Failed to update contributor:', err);
           router.push(
-            `/schools/${id}?activationStatus=error&message=Failed to update contributor`
+            `/schools/${id}`
           );
         },
       }
