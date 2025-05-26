@@ -158,9 +158,10 @@ const MintedSchools = () => {
         </Select>
       </FormControl>
       <TextField
-        label="Search School"
+        label="Search School By Giga School Id"
         variant="outlined"
         size="medium"
+        style ={{ marginLeft: '20px' }}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         sx={{ minWidth: 250 }}
