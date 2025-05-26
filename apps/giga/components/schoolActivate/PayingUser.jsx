@@ -19,15 +19,30 @@ export default function StandardActivationForm({
   bgColor,
   fontColor,
   cardColor,
-  schoolName
+  schoolName,
 }) {
+  const [donationError, setDonationError] = useState('');
+
+  const handleDonationChange = (e) => {
+    const value = e.target.value;
+    if (value === '' || Number(value) >= 0) {
+      setDonation(value);
+      setDonationError('');
+    } else {
+      setDonationError('Please enter a positive amount');
+    }
+  };
+
   const router = useRouter();
   const handleBack = () => {
     router.back();
   };
 
   return (
-    <div className="activate-school-container " style ={{backgroundColor: bgColor}}>
+    <div
+      className="activate-school-container "
+      style={{ backgroundColor: bgColor }}
+    >
       <div className="activate-school-card">
         <div className="activate-school-content">
           <div className="activate-school-left">
@@ -55,10 +70,17 @@ export default function StandardActivationForm({
                 labelText=""
                 placeholder="Enter donation amount"
                 value={donation}
-                onChange={(e) => setDonation(e.target.value)}
+                type="number"
+                min={0}
+                onChange={handleDonationChange}
                 className="donation-input"
               />
             </div>
+            {donationError && (
+              <p className="donation-error" style={{ color: 'red' }}>
+                {donationError}
+              </p>
+            )}
 
             <div className="globe-illustration">
               <Image
@@ -98,7 +120,9 @@ export default function StandardActivationForm({
                         />
                       </>
                     ) : (
-                      <span className=' detail-value'>Please select theme to activate school. </span>
+                      <span className=" detail-value">
+                        Please select theme to activate school.{' '}
+                      </span>
                     )}
                   </div>
                 </div>

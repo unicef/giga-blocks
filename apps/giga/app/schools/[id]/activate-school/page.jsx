@@ -129,7 +129,7 @@ export default function ActivateSchool() {
   }, [baseFee, gasFee, donation]);
 
   useEffect(() =>{
-    if(data.minted === 'MINTED' || data.minted === 'ISMINTING') {
+    if(data?.minted === 'MINTED' || data?.minted === 'ISMINTING') {
       router.push(`/`);
     }
   },[data])
