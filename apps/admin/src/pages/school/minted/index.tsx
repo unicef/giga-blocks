@@ -92,12 +92,23 @@ const MintedSchools = () => {
       selectedData = data?.nftDatas || [];
     }
 
+function repairAndParseJson(jsonString:string) {
+  try {
+    return JSON.parse(jsonString); // Always try parsing directly first.
+  } catch (initialError) {
+    const replaceSchoolNameValueRegex = /("schoolName"\s*:\s*").*?(?="?\s*(?:,\s*[\{"\w]|[\}\]]))?/;
+    const fixedString = jsonString.replace(replaceSchoolNameValueRegex, '$1N/A"');
+    const cleanedFixedString = fixedString.replace(/,\s*([\}\]])/g, '$1');
+    console.log("String after attempting to replace 'schoolName':", cleanedFixedString);
+  }
+}
+
     const decodedShooldata: any = selectedData.map((data: any) => {
       let decodedData = atob(data?.tokenUri?.substring(29));
       return {
         id: Number(data.tokenId),
         mintedAt: data.mintedAt,
-        ...JSON.parse(decodedData),
+        ...repairAndParseJson(decodedData),
         mintedStatus: 'MINTED',
         gasFee: ethers.formatEther(data.mintingGasFee),
       };
