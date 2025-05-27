@@ -170,6 +170,7 @@ export default function SchoolDetails({ params }) {
                 bgColor={bgColor}
                 cardColor={cardColor}
                 fontColor={fontColor}
+                connectivity={data?.connectivity}
                 connectionType={data?.giga_maps_data?.connectivity_type}
                 giga_school_id={data?.giga_school_id}
               />
