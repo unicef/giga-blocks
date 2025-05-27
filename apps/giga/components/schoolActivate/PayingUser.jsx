@@ -19,15 +19,32 @@ export default function StandardActivationForm({
   bgColor,
   fontColor,
   cardColor,
-  schoolName
+  schoolName,
 }) {
+  const [donationError, setDonationError] = useState('');
+  const handleDonationChange = (e) => {
+    const value = e.target.value;
+    // Allow only empty string or a valid positive number (integer or decimal, no special chars)
+    if (value === '' || /^\d+(\.\d*)?$/.test(value)) {
+      setDonation(value);
+      setDonationError('');
+    } else {
+      setDonation(''); // Reset donation if invalid input
+      setDonationError(
+        'Please enter a valid positive amount (numbers only, no special characters)'
+      );
+    }
+  };
   const router = useRouter();
   const handleBack = () => {
     router.back();
   };
 
   return (
-    <div className="activate-school-container " style ={{backgroundColor: bgColor}}>
+    <div
+      className="activate-school-container "
+      style={{ backgroundColor: bgColor }}
+    >
       <div className="activate-school-card">
         <div className="activate-school-content">
           <div className="activate-school-left">
@@ -55,10 +72,15 @@ export default function StandardActivationForm({
                 labelText=""
                 placeholder="Enter donation amount"
                 value={donation}
-                onChange={(e) => setDonation(e.target.value)}
+                onChange={handleDonationChange}
                 className="donation-input"
               />
             </div>
+            {donationError && (
+              <p className="donation-error" style={{ color: 'red' }}>
+                {donationError}
+              </p>
+            )}
 
             <div className="globe-illustration">
               <Image
@@ -98,7 +120,9 @@ export default function StandardActivationForm({
                         />
                       </>
                     ) : (
-                      <span className=' detail-value'>Please select theme to activate school. </span>
+                      <span className=" detail-value">
+                        Please select theme to activate school.{' '}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -138,7 +162,7 @@ export default function StandardActivationForm({
               {isConnected ? (
                 <Button
                   onClick={handleActivate}
-                  disabled={!selectedThemeName}
+                  disabled={!selectedThemeName || donationError}
                   className="activate-button"
                 >
                   Activate

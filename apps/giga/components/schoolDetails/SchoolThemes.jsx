@@ -33,6 +33,7 @@ const ThemeSelector = ({
             setOpen(true);
           },
           onError: (error) => {
+            toggleVisibilityForMinted();
             console.error('Error updating theme:', error);
             showNotification(
               'error',
@@ -59,6 +60,10 @@ const ThemeSelector = ({
   const isVisibleForMinted = useThemeToggleStore(
     (state) => state.isVisibleForMinted
   );
+
+  const toggleVisibilityForMinted = useThemeToggleStore(
+      (state) => state.toggleVisibilityForMinted
+    );
   const setTheme = useThemeStore((state) => state.setTheme);
 
   const handleThemeChange = (themeId) => {
