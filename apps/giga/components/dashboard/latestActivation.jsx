@@ -47,9 +47,9 @@ export default function LatestActivatedSchool({ decodedShooldata }) {
           </span>
         </div>
 
-        <div className="dashboard-button">
+        {/* <div className="dashboard-button">
           <Button renderIcon={ArrowRight}>View Details</Button>
-        </div>
+        </div> */}
       </section>
     </div>
   );

@@ -17,7 +17,7 @@ export default function MySchoolsSection({ decodedShooldata, fetching }) {
               <div key={index} className="school-card">
                 <SchoolCard
                   key={school.id}
-                  id={school.id}
+                  id={school?.id}
                   schoolName={school.schoolName}
                   imageHash={school.image}
                   location={school.region}
