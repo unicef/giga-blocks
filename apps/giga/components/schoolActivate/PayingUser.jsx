@@ -22,17 +22,19 @@ export default function StandardActivationForm({
   schoolName,
 }) {
   const [donationError, setDonationError] = useState('');
-
   const handleDonationChange = (e) => {
     const value = e.target.value;
-    if (value === '' || Number(value) >= 0) {
+    // Allow only empty string or a valid positive number (integer or decimal, no special chars)
+    if (value === '' || /^\d+(\.\d*)?$/.test(value)) {
       setDonation(value);
       setDonationError('');
     } else {
-      setDonationError('Please enter a positive amount');
+      setDonation(''); // Reset donation if invalid input
+      setDonationError(
+        'Please enter a valid positive amount (numbers only, no special characters)'
+      );
     }
   };
-
   const router = useRouter();
   const handleBack = () => {
     router.back();
@@ -70,8 +72,6 @@ export default function StandardActivationForm({
                 labelText=""
                 placeholder="Enter donation amount"
                 value={donation}
-                type="number"
-                min={0}
                 onChange={handleDonationChange}
                 className="donation-input"
               />
@@ -162,7 +162,7 @@ export default function StandardActivationForm({
               {isConnected ? (
                 <Button
                   onClick={handleActivate}
-                  disabled={!selectedThemeName}
+                  disabled={!selectedThemeName || donationError}
                   className="activate-button"
                 >
                   Activate
