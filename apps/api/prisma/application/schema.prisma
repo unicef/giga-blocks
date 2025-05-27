@@ -188,6 +188,7 @@ model School {
   giga_maps_data        Json?
   imageHash             String?
   schoolClaimed         Boolean           @default(false)
+  imageUpdated          Boolean           @default(false)
   createdAt             DateTime          @default(now())
   updatedAt             DateTime          @updatedAt
   deletedAt             DateTime?

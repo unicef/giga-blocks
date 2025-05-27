@@ -30,6 +30,9 @@ import {
   SET_PROCESS_VC,
   SEND_VC_LINK,
   UPDATE_CIW,
+  BULK_IMAGE_QUEUE,
+  SET_BULK_IMAGE_PROCESS,
+  UPDATE_BULK_IMAGE,
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
@@ -40,6 +43,7 @@ import {
   mintNFT,
   mintSingleNFT,
   reserveNft,
+  updateBulkImageHash,
   updateImageHash,
 } from 'src/utils/ethers/transactionFunctions';
 import { PrismaAppService } from 'src/prisma/prisma.service';
@@ -521,6 +525,115 @@ export class ContributeProcessor {
     return this.schoolService.update(id, userId);
   }
 }
+
+@Injectable()
+@Processor(BULK_IMAGE_QUEUE)
+export class BulkImageProcessor {
+    private readonly _logger = new Logger(ContributeProcessor.name);
+  constructor(
+    private readonly _configService: ConfigService,
+    private readonly _mailerService: MailerService,
+    private readonly _prismaService: PrismaAppService,
+  ) {}
+
+  @OnQueueActive()
+  public onActive(job: Job) {
+    this._logger.debug(`Processing image ${job.id} of type ${job.name}`);
+  }
+
+  @OnQueueCompleted()
+  public onComplete(job: Job) {
+    this._logger.debug(`Completed image ${job.id} of type ${job.name}`);
+  }
+
+  @OnQueueFailed({ name: SET_IMAGE_PROCESS })
+  public async onImageFail(job: Job<any>, error: any) {
+    this._logger.error(`Failed image ${job.id} of type ${job.name}: ${error.message}`, error.stack);
+    if (job.attemptsMade === job.opts.attempts) {
+      try {
+        return this._mailerService.sendMail({
+          to: this._configService.get('EMAIL_ADDRESS'),
+          from: this._configService.get('EMAIL_ADDRESS'),
+          subject: `Failed to update NFT image. NFT minted successfully. error: ${error.message}, jobId: ${job.id}`,
+          template: './error',
+          context: {},
+        });
+      } catch {
+        this._logger.error('Failed to send confirmation email to admin');
+      }
+    }
+  }
+  @Process({ name: SET_BULK_IMAGE_PROCESS, concurrency: 4 })
+  public async processImages(job: Job<any>) {
+    const id = job.data.id;
+    this._logger.log(`Updating image of school: ${id}`);
+
+    try {
+      const scriptData = await getScriptData(
+        this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
+        this._configService.get<string>('GIGA_IMAGE_CONTENT_ADDRESS'),
+        id,
+      );
+
+      const artScript = await getArtScript(
+        'NFTContent',
+        this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
+      );
+      const base64Image = await generateP5Image(`${artScript}`, scriptData);
+      const decodedImage = await decodeBase64Image(base64Image);
+
+      if (decodedImage) {
+        const uploadResult = await uploadFile(decodedImage.data);
+        await this._prismaService.school.update({
+          where: { giga_school_id: id },
+          data: { imageHash: uploadResult },
+        });
+      } else {
+        throw new Error('Failed to decode base64 image.');
+      }
+    } catch (error) {
+      this._logger.error(`Error updating image: ${error}`);
+      // Crucially, re-throw the error to signal job failure to BullMQ
+      throw error;
+    }
+  }
+
+
+  @Process({name:UPDATE_BULK_IMAGE, concurrency: 1})
+  public async updateBulkImage(job: Job<{ imagedata: ImageData[] }>) {
+    const imagedata = job.data.imagedata;
+    this._logger.log(`Updating image hash of school: ${imagedata[0]}`);
+    try {
+        const tx =  await updateBulkImageHash('NFTContent', this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'), imagedata);
+      const txReceipt = await tx.wait();
+        if(txReceipt.status === 1){
+          this._prismaService.school.updateMany({
+            where: {
+              giga_school_id: {
+                in: imagedata.map((data) => data[0]),
+              },
+            },
+            data: {
+              imageUpdated:true
+            },
+          })
+        }
+        if (txReceipt.status !== 1) {
+          throw new Error('Error updating image hash');
+        }
+      // await this._prismaService.school.update({
+      //   where: { giga_school_id: id },
+      //   data: { imageHash },
+      // });
+      this._logger.log(`Image hash updated successfully for school: ${imagedata[0]}`);
+    } catch (error) {
+      this._logger.error(`Error updating image hash: ${error}`);
+      throw error;
+    }
+  }
+}
+
+
 
 @Injectable()
 @Processor(UPLOAD_QUEUE)
