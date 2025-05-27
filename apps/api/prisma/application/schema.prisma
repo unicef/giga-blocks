@@ -187,6 +187,7 @@ model School {
   coverage_availability Boolean           @default(false)
   giga_maps_data        Json?
   imageHash             String?
+  schoolReserved        Boolean           @default(false)
   schoolClaimed         Boolean           @default(false)
   imageUpdated          Boolean           @default(false)
   createdAt             DateTime          @default(now())

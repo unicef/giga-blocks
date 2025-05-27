@@ -18,6 +18,7 @@ import {
   ONCHAIN_DATA_QUEUE,
   CONTRIBUTE_QUEUE,
   VC_QUEUE,
+  BULK_IMAGE_QUEUE,
 } from './constants';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { QueueService } from './queue.service';
@@ -89,6 +90,12 @@ import { ContributorService } from 'src/contributor/contributor.service';
     }),
     BullModule.registerQueue({
       name: VC_QUEUE,
+      defaultJobOptions:{
+      removeOnFail:false
+     }
+    }),
+     BullModule.registerQueue({
+      name: BULK_IMAGE_QUEUE,
       defaultJobOptions:{
       removeOnFail:false
      }

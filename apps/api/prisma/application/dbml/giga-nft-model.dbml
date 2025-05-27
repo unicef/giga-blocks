@@ -99,6 +99,7 @@ Table giga_school {
   coverage_availability Boolean [not null, default: false]
   giga_maps_data Json
   imageHash String
+  schoolReserved Boolean [not null, default: false]
   schoolClaimed Boolean [not null, default: false]
   imageUpdated Boolean [not null, default: false]
   createdAt DateTime [default: `now()`, not null]

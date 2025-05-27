@@ -141,6 +141,7 @@ export class MintQueueProcessor {
     private contributorService: ContributorService,
     @InjectQueue(MINT_QUEUE) private readonly _mintQueue: Queue,
     @InjectQueue(IMAGE_QUEUE) private readonly _imageQueue: Queue,
+    @InjectQueue(BULK_IMAGE_QUEUE) private readonly _bulkImageQueue: Queue,
   ) {}
 
   @OnQueueActive()
@@ -252,7 +253,7 @@ export class MintQueueProcessor {
       try {
         this._mintQueue.add(SET_THEME, { schoolids: job.data.giga_ids }, jobOptions);
         for (let i = 0; i < job.data.giga_ids.length; i++) {
-          this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_ids[i] }, jobOptions);
+          this._bulkImageQueue.add(UPDATE_BULK_IMAGE, { id: job.data.giga_ids[i] }, jobOptions);
         }
       } catch (error) {
         this._logger.log(`Error generating image: ${error}`);
@@ -375,6 +376,12 @@ export class MintQueueProcessor {
       const txReceipt = await tx.wait();
 
       if (txReceipt.status === 1) {
+        await this._prismaService.school.update({
+          where: { id: schoolId },
+          data: {
+            schoolReserved: true,
+          },
+        });
         this.contributorService.addContributor({
           email: job.data.email,
           walletAddress: job.data.walletAddress,
@@ -454,7 +461,7 @@ export class ImageProcessor {
         );
         await this._prismaService.school.update({
           where: { giga_school_id: id },
-          data: { imageHash: uploadResult },
+          data: { imageHash: uploadResult, imageUpdated: true },
         });
       } else {
         throw new Error('Failed to decode base64 image.');
@@ -529,7 +536,7 @@ export class ContributeProcessor {
 @Injectable()
 @Processor(BULK_IMAGE_QUEUE)
 export class BulkImageProcessor {
-    private readonly _logger = new Logger(ContributeProcessor.name);
+  private readonly _logger = new Logger(ContributeProcessor.name);
   constructor(
     private readonly _configService: ConfigService,
     private readonly _mailerService: MailerService,
@@ -597,29 +604,33 @@ export class BulkImageProcessor {
       throw error;
     }
   }
-  
-  @Process({name:UPDATE_BULK_IMAGE, concurrency: 1})
+
+  @Process({ name: UPDATE_BULK_IMAGE, concurrency: 1 })
   public async updateBulkImage(job: Job<{ imagedata: ImageData[] }>) {
     const imagedata = job.data.imagedata;
     this._logger.log(`Updating image hash of school: ${imagedata[0]}`);
     try {
-        const tx =  await updateBulkImageHash('NFTContent', this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'), imagedata);
+      const tx = await updateBulkImageHash(
+        'NFTContent',
+        this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
+        imagedata,
+      );
       const txReceipt = await tx.wait();
-        if(txReceipt.status === 1){
-          this._prismaService.school.updateMany({
-            where: {
-              giga_school_id: {
-                in: imagedata.map((data) => data[0]),
-              },
+      if (txReceipt.status === 1) {
+        this._prismaService.school.updateMany({
+          where: {
+            giga_school_id: {
+              in: imagedata.map(data => data[0]),
             },
-            data: {
-              imageUpdated:true
-            },
-          })
-        }
-        if (txReceipt.status !== 1) {
-          throw new Error('Error updating image hash');
-        }
+          },
+          data: {
+            imageUpdated: true,
+          },
+        });
+      }
+      if (txReceipt.status !== 1) {
+        throw new Error('Error updating image hash');
+      }
       // await this._prismaService.school.update({
       //   where: { giga_school_id: id },
       //   data: { imageHash },
