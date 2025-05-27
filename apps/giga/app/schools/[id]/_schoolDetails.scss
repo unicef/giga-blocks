@@ -489,4 +489,10 @@
     border-radius: 4px;
     overflow: hidden;
   }
+
+  .verify-ciw {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
 }
