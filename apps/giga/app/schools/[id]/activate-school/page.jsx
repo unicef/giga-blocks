@@ -128,6 +128,12 @@ export default function ActivateSchool() {
     calculateTotal();
   }, [baseFee, gasFee, donation]);
 
+  useEffect(() =>{
+    if(data?.minted === 'MINTED' || data?.minted === 'ISMINTING') {
+      router.push(`/`);
+    }
+  },[data])
+
   return (
     <>
       <div className="content">

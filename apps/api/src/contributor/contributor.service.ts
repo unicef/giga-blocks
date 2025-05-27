@@ -193,6 +193,11 @@ export class ContributorService {
     if (!userDetails) {
       throw new Error('Contributor not found');
     }
+     const existingcontributor = await this.prisma.contributor.findUnique({
+      where: { userId: userDetails.id },
+     })
+
+     if(existingcontributor.isVisible === true ) return existingcontributor
     const updatedcontributor = await this.prisma.contributor.update({
       where: { userId: userDetails.id },
       data: {

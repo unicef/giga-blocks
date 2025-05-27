@@ -22,8 +22,15 @@ const nftListQuery = gql`
 `;
 
 const allNftListQuery = gql`
-  query nftdata($first: Int, $skip: Int) {
-    nftDatas(first: $first, skip: $skip, orderBy: mintedAt, orderDirection: desc) {
+  query nftdata($first: Int, $skip: Int, $schoolId: String) {
+    nftDatas(
+      where: { schoolId_contains: $schoolId }
+      subgraphError: allow
+      first: $first
+      skip: $skip
+      orderBy: mintedAt
+      orderDirection: desc
+    ) {
       id
       imageHash
       location
@@ -42,9 +49,9 @@ const allNftListQuery = gql`
 `;
 
 const adminNftListQuery = gql`
-  query adminNftData($id: String!, $first: Int, $skip: Int) {
+  query adminNftData($id: String!, $first: Int, $skip: Int, $schoolId: String) {
     nftDatas(
-      where: { minter: $id }
+      where: { minter: $id, schoolId_contains: $schoolId }
       first: $first
       skip: $skip
       orderBy: mintedAt
@@ -68,8 +75,15 @@ const adminNftListQuery = gql`
 `;
 
 const othersNftListQuery = gql`
-  query otherNftData($id: String!) {
-    nftDatas(where: { minter_not: $id }, orderBy: mintedAt, orderDirection: desc) {
+  query otherNftData($id: String!,$first: Int, $skip: Int, $schoolId: String) {
+    nftDatas(
+      where: { minter_not: $id, schoolId_contains: $schoolId }
+      first: $first
+      skip: $skip
+      subgraphError: allow
+      orderBy: mintedAt
+      orderDirection: desc
+    ) {
       id
       imageHash
       location
