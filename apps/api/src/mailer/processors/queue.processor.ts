@@ -253,7 +253,7 @@ export class MintQueueProcessor {
       try {
         this._mintQueue.add(SET_THEME, { schoolids: job.data.giga_ids }, jobOptions);
         for (let i = 0; i < job.data.giga_ids.length; i++) {
-          this._bulkImageQueue.add(UPDATE_BULK_IMAGE, { id: job.data.giga_ids[i] }, jobOptions);
+          this._bulkImageQueue.add(SET_BULK_IMAGE_PROCESS, { id: job.data.giga_ids[i] }, jobOptions);
         }
       } catch (error) {
         this._logger.log(`Error generating image: ${error}`);
@@ -536,12 +536,14 @@ export class ContributeProcessor {
 @Injectable()
 @Processor(BULK_IMAGE_QUEUE)
 export class BulkImageProcessor {
-  private readonly _logger = new Logger(ContributeProcessor.name);
+  private readonly _logger = new Logger(BulkImageProcessor.name);
   constructor(
     private readonly _configService: ConfigService,
     private readonly _mailerService: MailerService,
     private readonly _prismaService: PrismaAppService,
-  ) {}
+  ) {
+    this._logger.log('BulkImageProcessor initialized');
+  }
 
   @OnQueueActive()
   public onActive(job: Job) {
@@ -553,7 +555,7 @@ export class BulkImageProcessor {
     this._logger.debug(`Completed image ${job.id} of type ${job.name}`);
   }
 
-  @OnQueueFailed({ name: SET_IMAGE_PROCESS })
+  @OnQueueFailed({ name: UPDATE_BULK_IMAGE || SET_BULK_IMAGE_PROCESS })
   public async onImageFail(job: Job<any>, error: any) {
     this._logger.error(`Failed image ${job.id} of type ${job.name}: ${error.message}`, error.stack);
     if (job.attemptsMade === job.opts.attempts) {
@@ -607,6 +609,7 @@ export class BulkImageProcessor {
 
   @Process({ name: UPDATE_BULK_IMAGE, concurrency: 1 })
   public async updateBulkImage(job: Job<{ imagedata: ImageData[] }>) {
+    this._logger.log(`Added to the  queue sucessfully`);
     const imagedata = job.data.imagedata;
     this._logger.log(`Updating image hash of school: ${imagedata[0]}`);
     try {

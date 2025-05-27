@@ -9,6 +9,7 @@ import {
   ImageProcessor,
   QueueProcessor,
   VCProcessor,
+  BulkImageProcessor,
 } from './processors';
 import { MailService } from './mailer.service';
 import {
@@ -108,6 +109,7 @@ import { ContributorService } from 'src/contributor/contributor.service';
     QueueProcessor,
     MintQueueProcessor,
     ImageProcessor,
+    BulkImageProcessor,
     ContributeDataService,
     ContributeProcessor,
     VCProcessor,

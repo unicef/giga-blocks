@@ -267,7 +267,9 @@ export class QueueService {
           imageHash: true,
           id: true,
         },
+      
       });
+      console.log(schools.length, 'is the length of schools with imageHash');
       if (schools.length === 0) {
         this._logger.warn('No schools found with imageHash to update');
         return { message: 'No schools found with imageHash to update', statusCode: 200 };
@@ -276,6 +278,7 @@ export class QueueService {
       if (imageData.length >= batchSize) {
         for (let i = 0; i < imageData.length; i += batchSize) {
           const imagedata = imageData.slice(i, i + batchSize);
+          this._logger.log(`Processing batch from ${i} to ${i + batchSize}`);
           await this._bulkImageQueue.add(UPDATE_BULK_IMAGE, { imagedata }, jobOptions);
         }
       } else {
