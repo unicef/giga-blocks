@@ -612,6 +612,10 @@ export class SchoolService {
     return this.contrubutorService.addPayingContributor(contributorData);
   }
 
+  async updateImages(){
+    this.queueService.bulkUpdateImageHash();
+  }
+
   async getCountries() {
     return this.prisma.schoolVersion.findMany({
       select: {

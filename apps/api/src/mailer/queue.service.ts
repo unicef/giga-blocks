@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import {
+  BULK_IMAGE_QUEUE,
   CLAIM_NFT,
   CONTRIBUTE_QUEUE,
   IMAGE_QUEUE,
@@ -12,6 +13,7 @@ import {
   SET_MINT_SINGLE_NFT,
   SET_ONCHAIN_DATA,
   SET_PROCESS_VC,
+  UPDATE_BULK_IMAGE,
   UPDATE_CIW,
   VC_QUEUE,
 } from './constants';
@@ -38,6 +40,7 @@ export class QueueService {
     @InjectQueue(IMAGE_QUEUE) private readonly _imageQueue: Queue,
     @InjectQueue(CONTRIBUTE_QUEUE) private readonly _contributeQueue: Queue,
     @InjectQueue(VC_QUEUE) private readonly _vcQueue: Queue,
+    @InjectQueue(BULK_IMAGE_QUEUE) private readonly _bulkImageQueue: Queue,
     private readonly _configService: ConfigService,
     private readonly _prismaService: PrismaAppService,
   ) {}
@@ -219,9 +222,9 @@ export class QueueService {
     }
   }
 
-  public async claimReservedNFT(email: string, walletAddress: string,schoolId:string) {
+  public async claimReservedNFT(email: string, walletAddress: string, schoolId: string) {
     try {
-      await this._onchainQueue.add(CLAIM_NFT, { email, walletAddress,schoolId }, jobOptions);
+      await this._onchainQueue.add(CLAIM_NFT, { email, walletAddress, schoolId }, jobOptions);
       return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
       this._logger.error(`Error queueing transaction to blockchain `);
@@ -229,7 +232,7 @@ export class QueueService {
     }
   }
 
-  public async updateCIW(did:string){
+  public async updateCIW(did: string) {
     try {
       await this._vcQueue.add(UPDATE_CIW, { did }, jobOptions);
       return { message: 'queue added successfully', statusCode: 200 };
@@ -239,14 +242,48 @@ export class QueueService {
     }
   }
 
-  public async processVC(vcDetails:any){
+  public async processVC(vcDetails: any) {
     this._logger.log('VC details received');
-    try{
-     await this._vcQueue.add(SET_PROCESS_VC, {vcDetails}, jobOptions);
-     this._logger.log('VC details added to queue');
-    }
-    catch(error){
+    try {
+      await this._vcQueue.add(SET_PROCESS_VC, { vcDetails }, jobOptions);
+      this._logger.log('VC details added to queue');
+    } catch (error) {
       this._logger.error(`Error queueing transaction to blockchain `);
+      throw error;
+    }
+  }
+
+  public async bulkUpdateImageHash() {
+    const batchSize = Number(this._configService.get<number>('BATCH_SIZE'));
+
+    try {
+      const schools = await this._prismaService.school.findMany({
+        where: {
+          imageUpdated: false,
+          NOT: [{ imageHash: null }, { imageHash: '' }],
+        },
+        select: {
+          giga_school_id: true,
+          imageHash: true,
+          id: true,
+        },
+      });
+      if (schools.length === 0) {
+        this._logger.warn('No schools found with imageHash to update');
+        return { message: 'No schools found with imageHash to update', statusCode: 200 };
+      }
+      const imageData = schools.map(school => [school.giga_school_id, school.imageHash]);
+      if (imageData.length >= batchSize) {
+        for (let i = 0; i < imageData.length; i += batchSize) {
+          const imagedata = imageData.slice(i, i + batchSize);
+          await this._bulkImageQueue.add(UPDATE_BULK_IMAGE, { imagedata }, jobOptions);
+        }
+      } else {
+        await this._bulkImageQueue.add(UPDATE_BULK_IMAGE, { imagedata: imageData }, jobOptions);
+      }
+      return { message: 'queue added successfully', statusCode: 200 };
+    } catch (error) {
+      this._logger.error(`Error queueing bulk image hash update `);
       throw error;
     }
   }

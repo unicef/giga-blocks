@@ -597,8 +597,7 @@ export class BulkImageProcessor {
       throw error;
     }
   }
-
-
+  
   @Process({name:UPDATE_BULK_IMAGE, concurrency: 1})
   public async updateBulkImage(job: Job<{ imagedata: ImageData[] }>) {
     const imagedata = job.data.imagedata;
@@ -632,8 +631,6 @@ export class BulkImageProcessor {
     }
   }
 }
-
-
 
 @Injectable()
 @Processor(UPLOAD_QUEUE)
