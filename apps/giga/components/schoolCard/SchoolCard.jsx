@@ -52,7 +52,7 @@ export default function SchoolCard({
           </div>
         )}
 
-        {isHovered && (
+        {isHovered && id!== undefined && (
           <div className="school-card__overlay">
             <Link
               href={
