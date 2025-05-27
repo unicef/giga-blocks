@@ -30,6 +30,7 @@ const ThemeSelector = ({
         },
         {
           onSuccess: () => {
+            toggleVisibilityForMinted();
             setOpen(true);
           },
           onError: (error) => {
@@ -147,9 +148,10 @@ const ThemeSelector = ({
       </div>
       <Modal
         open={open}
+        preventCloseOnClickOutside={true}
         passiveModal
         onRequestClose={handleRequestClose}
-        size="xs"
+        size="md"
         hasCloseIcon={false}
       >
         <div style={{ textAlign: 'left', padding: '20px' }}>

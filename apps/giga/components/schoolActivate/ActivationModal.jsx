@@ -66,7 +66,7 @@ export default function ActivationModal({ isOpen, onClose }) {
         modalHeading=""
         passiveModal
         className="activationModal"
-        preventCloseOnClickOutside
+        preventCloseOnClickOutside = {true}
         hasCloseIcon={false}
       >
         <Confetti numberOfPieces={500} recycle={false} />
