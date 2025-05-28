@@ -15,7 +15,7 @@ const SchoolOverview = ({
   bgColor,
   coverage_availability,
   electricity_available,
-  region_name,
+  country_name,
   longitude,
   latitude,
   gigaMapsData,
@@ -52,7 +52,7 @@ const SchoolOverview = ({
     {
       label: 'Country',
       icon: <Flag size={20} />,
-      value: region_name,
+      value: country_name,
     },
     {
       label: 'Coverage Availability',

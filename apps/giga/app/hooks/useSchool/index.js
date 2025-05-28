@@ -164,10 +164,20 @@ export const useSchoolInfiniteGet = (
       if (computers && computers > 0) params.set('computers', computers);
       if (download && download > 0) params.set('download', download);
 
-      const { data } = await apiGuest.get(
-        `${SCHOOLS.GET}?${params.toString()}`
-      );
-      return data;
+      const res = await apiGuest.get(`${SCHOOLS.GET}?${params.toString()}`);
+
+      const data = res?.data || [];
+
+      // Map country codes to country names
+      const mappedData = data?.rows.map((school) => {
+        const found = countryList.find((c) => c.code === school?.country);
+        return {
+          ...school,
+          countryName: found ? found.country : school.country,
+        };
+      });
+
+      return { ...data, rows: mappedData };
     },
     {
       enabled: enabled && !!perPage,

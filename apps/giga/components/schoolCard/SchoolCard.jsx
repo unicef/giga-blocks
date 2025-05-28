@@ -19,7 +19,7 @@ export default function SchoolCard({
 }) {
   const [isHovered, setIsHovered] = useState(false);
   const displayName =
-    schoolName.length > 25 ? `${schoolName.substring(0, 25)}...` : schoolName;
+    schoolName?.length > 25 ? `${schoolName?.substring(0, 25)}...` : schoolName;
 
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);

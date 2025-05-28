@@ -18,6 +18,7 @@ import { useReadNftContentSchoolIdToTokenId } from '../../hooks/useContract/nftC
 import { useReadNftOwnerOf } from '../../hooks/useContract/gigaNft';
 import { useRouter } from 'next/navigation';
 import { InlineNotification } from '@carbon/react';
+import countryList from '../../data/country.json';
 
 export default function SchoolDetailsClient({ params }) {
   const { id } = params;
@@ -27,6 +28,7 @@ export default function SchoolDetailsClient({ params }) {
   const { giga_maps_data, theme, minted } = data || {};
   const { data: themeOptions, isLoading: themeLoading } = useThemeGet();
   const [notification, setNotification] = useState(null);
+  const [countryName, setCountryName] = useState('');
 
   const isMinted = minted === 'MINTED';
   const isVisibleForMinted = useThemeToggleStore(
@@ -42,6 +44,8 @@ export default function SchoolDetailsClient({ params }) {
 
   useEffect(() => {
     if (!data) return;
+    const countryName = countryList.find((c)=> c.code === data?.country)?.country
+    setCountryName(countryName)
 
     useThemeStore.getState().resetTheme();
     const { colorScheme } = data.theme || {};
@@ -170,7 +174,7 @@ export default function SchoolDetailsClient({ params }) {
                 connectivity={data?.connectivity}
                 coverage_availability={data?.coverage_availability}
                 electricity_available={data?.electricity_available}
-                region_name={data?.region_name}
+                country_name={countryName}
                 longitude={data?.longitude}
                 latitude={data?.latitude}
                 gigaMapsData={giga_maps_data}
