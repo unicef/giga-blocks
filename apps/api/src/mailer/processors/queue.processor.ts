@@ -630,10 +630,9 @@ export class BulkImageProcessor {
         this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
         imagedata,
       );
-      console.log(`Transaction hash: ${tx}`);
       const txReceipt = await tx.wait();
       if (txReceipt.status === 1) {
-        this._prismaService.school.updateMany({
+        const schools = await this._prismaService.school.updateMany({
           where: {
             giga_school_id: {
               in: imagedata.map(data => data[0]),
@@ -643,6 +642,7 @@ export class BulkImageProcessor {
             imageUpdated: true,
           },
         });
+        this._logger.log(`Schools updated: ${schools.count}`);
       }
       if (txReceipt.status !== 1) {
         throw new Error('Error updating image hash');

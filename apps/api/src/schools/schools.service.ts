@@ -733,7 +733,7 @@ export class SchoolService {
     );
 
     if (!schools || schools.meta.total === 0) {
-      throw new NotFoundException('No schools found for image update');
+      return {statusCode: 200, message: 'No schools found', data: []};
     }
 
     return schools;
