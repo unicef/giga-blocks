@@ -39,7 +39,7 @@ const Sidebar = ({
                 cursor: 'pointer',
               }}
             >
-              verify CIW
+              Verify CIW
             </p>
             {!isClaimPath && address?.toLowerCase() === owner?.toLowerCase() ? (
               <p
