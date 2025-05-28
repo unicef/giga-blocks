@@ -251,6 +251,7 @@ export class MintQueueProcessor {
       job.data.giga_ids,
     );
     const txReceipt = await tx.wait();
+    console.log(`Transaction hash: ${txReceipt.hash}`);
     if (txReceipt.status !== 1) {
       status = false;
     }
@@ -582,8 +583,10 @@ export class BulkImageProcessor {
       }
     }
   }
+
   @Process({ name: SET_BULK_IMAGE_PROCESS, concurrency: 4 })
   public async processImages(job: Job<any>) {
+    this._logger.log(`Processing bulk image for job: ${job.id}`);
     const id = job.data.id;
     this._logger.log(`Updating image of school: ${id}`);
 
@@ -619,15 +622,15 @@ export class BulkImageProcessor {
 
   @Process({ name: UPDATE_BULK_IMAGE, concurrency: 1 })
   public async updateBulkImage(job: Job<{ imagedata: ImageData[] }>) {
-    this._logger.log(`Added to the  queue sucessfully`);
+    this._logger.log(`Updating bulk image hash for job: ${job.id}`);
     const imagedata = job.data.imagedata;
-    this._logger.log(`Updating image hash of school: ${imagedata[0]}`);
     try {
       const tx = await updateBulkImageHash(
         'NFTContent',
         this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
         imagedata,
       );
+      console.log(`Transaction hash: ${tx}`);
       const txReceipt = await tx.wait();
       if (txReceipt.status === 1) {
         this._prismaService.school.updateMany({
