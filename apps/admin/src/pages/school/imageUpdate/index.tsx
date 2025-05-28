@@ -25,6 +25,7 @@ const PendingSchool = () => {
   const { push, query } = useRouter();
 
   const [school, setSchool] = useState<any>();
+  const {enqueueSnackbar} = useSnackbar();
 
   const uploadId = query.uploadId;
 
@@ -48,7 +49,15 @@ const PendingSchool = () => {
     page: Number(page) + 1,
     perPage: rowsPerPage,
   });
-  const updateImageHash = useUpdateSchoolImage();
+  const updateImageHash = useUpdateSchoolImage({
+    onSuccess: () => {
+    enqueueSnackbar('Data added in the queue sucessfully!', { variant: 'success' });
+    refetch();
+  },
+  onError: () => {
+    enqueueSnackbar('Failed to add data in the queue', { variant: 'error' });
+  },
+  });
 
   let filteredData: any = [];
   useEffect(() => {

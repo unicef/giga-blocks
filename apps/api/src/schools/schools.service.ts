@@ -613,7 +613,7 @@ export class SchoolService {
   }
 
   async updateImages() {
-    await this.queueService.bulkUpdateImageHash();
+    return this.queueService.bulkUpdateImageHash();
   }
 
   async getCountries() {
