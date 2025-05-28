@@ -231,6 +231,13 @@ export class SchoolController {
     return this.schoolService.updateImages();
   }
 
+  @Public()
+  @Get('/imageUpdate')
+  @ApiOperation({ summary: 'Get the list of schools for on-chain image update ' })
+  async getImageUpdateList(@Query() query: any) {
+    return this.schoolService.getImageUpdateList(query);
+  }
+
   //arewave
   @Public()
   @Post('getFile')

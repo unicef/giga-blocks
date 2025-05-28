@@ -175,3 +175,27 @@ export const useSchoolGetByGigaSchoolId = (id: string | undefined | string[]) =>
     }
   );
 };
+
+export const updateSchoolImage = async() =>{
+  return await api.patch(routes.SCHOOLS.UPDATEIMAGE,{});
+};
+
+export const useUpdateSchoolImage = () => {
+  return useMutation(updateSchoolImage)
+};
+
+
+export const useSchoolGetImageUpdateList = ({page,perPage}:{page?:number,perPage:number}) => {
+  console.log('useSchoolGetImageUpdateList', page, perPage);
+  return useQuery(
+    ['get-school-image-update-list',page,perPage],
+    async () => {
+      const { data } = await api.get(`${routes.SCHOOLS.GETIMAGEUPDATELIST}?perPage=${perPage}${`&page=${page}` }`);
+      return data;
+    },
+    {
+      keepPreviousData: true,
+    }
+  );
+}
+
