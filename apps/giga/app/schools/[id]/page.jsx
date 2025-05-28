@@ -75,7 +75,9 @@ export async function generateMetadata({ params }) {
 
     openGraph: {
       title: `${schoolName} - School Details`,
-      description: `Learn about ${schoolName}, a ${schoolType} in ${regionName}. Connectivity status: ${connectivity}.`,
+      description: `Learn about ${schoolName}, ${
+        schoolType !== 'Unknown' ? `a ${schoolType} school` : ''
+      } located in ${regionName}.`,
       url: pageUrl,
       type: 'article',
       images: [
