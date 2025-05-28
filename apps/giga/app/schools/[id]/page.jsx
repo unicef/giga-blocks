@@ -1,7 +1,6 @@
 'use client';
 
 import { ArrowLeft } from '@carbon/icons-react';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Header from '../../../components/schoolDetails/SchoolHeader';
 import SchoolOverview from '../../../components/schoolDetails/SchoolOverview';
@@ -19,7 +18,7 @@ import { useReadNftContentSchoolIdToTokenId } from '../../hooks/useContract/nftC
 import { useReadNftOwnerOf } from '../../hooks/useContract/gigaNft';
 import { useRouter } from 'next/navigation';
 import { InlineNotification } from '@carbon/react';
-import MetaHead from '../../../components/seoMetadata';
+import Head from 'next/head';
 
 export default function SchoolDetails({ params }) {
   const { id } = params;
@@ -29,7 +28,6 @@ export default function SchoolDetails({ params }) {
   const { giga_maps_data, theme, minted } = data || {};
   const { data: themeOptions, isLoading: themeLoading } = useThemeGet();
   const [notification, setNotification] = useState(null);
-
 
   const isMinted = minted === 'MINTED';
   const isVisibleForMinted = useThemeToggleStore(
@@ -93,7 +91,6 @@ export default function SchoolDetails({ params }) {
   );
   const linkActivation = searchParams.get('linkActivation');
 
-
   const fontColor = hasCustomTheme
     ? themeStore.fontColor
     : isMinted
@@ -116,13 +113,31 @@ export default function SchoolDetails({ params }) {
 
   if (isLoading || !data) return <DetailsLoading />;
 
+  const metaTitle = data?.name || 'School Details';
+  const metaDescription = data?.region_name || 'School region information';
+  const metaImage = data?.imageHash
+    ? `https://ipfs.io/ipfs/${data?.imageHash}`
+    : '/default-image.png'; // fallback image
+  const metaUrl = typeof window !== 'undefined' ? window.location.href : '';
+
   return (
     <>
-      <MetaHead
-        title={data?.name}
-        description={data?.region_name}
-        image={`https://ipfs.io/ipfs/${data?.imageHash}`}
-      />
+      <Head>
+        <title>{metaTitle}</title>
+        <meta name="description" content={metaDescription} />
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={metaUrl} />
+        <meta property="og:title" content={`${metaTitle} | Giga`} />
+        <meta property="og:description" content={metaDescription} />
+        <meta property="og:image" content={metaImage} />
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content={metaUrl} />
+        <meta name="twitter:title" content={metaTitle} />
+        <meta name="twitter:description" content={metaDescription} />
+        <meta name="twitter:image" content={metaImage} />
+      </Head>
       {notification && (
         <InlineNotification
           aria-label="closes notification"
