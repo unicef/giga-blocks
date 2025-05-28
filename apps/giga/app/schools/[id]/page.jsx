@@ -117,7 +117,7 @@ export default function SchoolDetails({ params }) {
   const metaDescription = data?.region_name || 'School region information';
   const metaImage = data?.imageHash
     ? `https://ipfs.io/ipfs/${data?.imageHash}`
-    : '/default-image.png'; // fallback image
+    : '/giga-logo.png'; // fallback image
   const metaUrl = typeof window !== 'undefined' ? window.location.href : '';
 
   return (
