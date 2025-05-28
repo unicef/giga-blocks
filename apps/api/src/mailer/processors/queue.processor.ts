@@ -88,9 +88,11 @@ export class QueueProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: `Something went wrong with transactions!! ${error.message}`,
+          subject: `Something went wrong with transactions!! Job Id${job.id}, Job Name: ${job.name}`,
           template: './error',
-          context: {},
+          context: {
+            error: error.message,
+          },
         });
       } catch {
         this._logger.error('Failed to send confirmation email to admin');
@@ -174,9 +176,11 @@ export class MintQueueProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: `Something went wrong with transactions while minting!!${job.data.ids}, error: ${error.message}`,
+          subject: `Something went wrong with transactions while minting!!${job.data.ids}, job Name: ${job.name}`,
           template: './error',
-          context: {},
+          context: {
+            error: error.message,
+          },
         });
       } catch {
         this._logger.error('Failed to send confirmation email to admin');
@@ -192,9 +196,11 @@ export class MintQueueProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: `Something went wrong while updating database!! ${job.data.ids}, error: ${error.message}`,
+          subject: `Something went wrong while updating database!! ${job.data.ids}, jobid: ${job.id}, job Name: ${job.name}`,
           template: './error',
-          context: {},
+          context: {
+            error: error.message,
+          },
         });
       } catch {
         this._logger.error('Failed to send confirmation email to admin');
@@ -422,9 +428,11 @@ export class ImageProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: `Failed to update NFT image. NFT minted successfully. error: ${error.message}, jobId: ${job.id}`,
+          subject: `Failed to update NFT image. NFT minted successfully. job Name: ${job.name}, jobId: ${job.id}`,
           template: './error',
-          context: {},
+          context: {
+            error: error.message,
+          },
         });
       } catch {
         this._logger.error('Failed to send confirmation email to admin');
@@ -563,9 +571,11 @@ export class BulkImageProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: `Failed to update NFT image. NFT minted successfully. error: ${error.message}, jobId: ${job.id}`,
+          subject: `Failed to update NFT image. NFT minted successfully. error:, jobId: ${job.id} job Name: ${job.name}`,
           template: './error',
-          context: {},
+          context: {
+            error: error.message,
+          },
         });
       } catch {
         this._logger.error('Failed to send confirmation email to admin');
@@ -634,10 +644,6 @@ export class BulkImageProcessor {
       if (txReceipt.status !== 1) {
         throw new Error('Error updating image hash');
       }
-      // await this._prismaService.school.update({
-      //   where: { giga_school_id: id },
-      //   data: { imageHash },
-      // });
       this._logger.log(`Image hash updated successfully for school: ${imagedata[0]}`);
     } catch (error) {
       this._logger.error(`Error updating image hash: ${error}`);
