@@ -20,6 +20,8 @@ export default function ActiveDialog() {
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState('');
   const [snackbarSeverity, setSnackbarSeverity] = React.useState<'success' | 'error'>('success');
+  const [nameError, setNameError] = React.useState('');
+
 
   const { mutate, isLoading } = useActivatePostSchools();
 
@@ -34,6 +36,16 @@ export default function ActiveDialog() {
     setStartDate(null);
     setEndDate(null);
     setIsActive(true);
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (/^[A-Za-z\s]*$/.test(value)) {
+      setName(value);
+      setNameError('');
+    } else {
+      setNameError('Only letters and spaces are allowed');
+    }
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -91,9 +103,11 @@ export default function ActiveDialog() {
               label="Event Name"
               fullWidth
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              type={"text"}
+              onChange={handleNameChange}
               sx={{ mb: 2 }}
             />
+            {nameError && <div style={{ color: 'red', marginBottom: '16px' }}>{nameError}</div>}
 
             {/* Date Pickers in a Row */}
             <div style={{ display: 'flex', gap: '16px' }}>
