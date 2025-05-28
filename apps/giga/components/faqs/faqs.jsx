@@ -57,7 +57,13 @@ export default function FAQs() {
         <p className="faqs-subtitle">
           Everything You've Wanted to Know (And Then Some!)
         </p>
-        <Button kind="tertiary" className="contact-button">
+        <Button
+          onClick={() =>
+            (window.location.href = 'https://giga.global/contact-us/')
+          }
+          kind="tertiary"
+          className="contact-button"
+        >
           Contact us
         </Button>
       </div>

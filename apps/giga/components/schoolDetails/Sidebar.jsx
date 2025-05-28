@@ -28,7 +28,7 @@ const Sidebar = ({
     <div className="school-details__sidebar">
       {minted === 'MINTED' ? (
         <div className="school-details__minted-container">
-          {!isClaimPath && address?.toLowerCase() === owner?.toLowerCase() ? (
+          <div className="verify-ciw">
             <p
               onClick={toggleVisibilityForMinted}
               style={{
@@ -39,11 +39,25 @@ const Sidebar = ({
                 cursor: 'pointer',
               }}
             >
-              Change Template
+              Verify CIW
             </p>
-          ) : (
-            <></>
-          )}
+            {!isClaimPath && address?.toLowerCase() === owner?.toLowerCase() ? (
+              <p
+                onClick={toggleVisibilityForMinted}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'end',
+                  marginBottom: '12px',
+                  color: fontColor,
+                  cursor: 'pointer',
+                }}
+              >
+                Change Template
+              </p>
+            ) : (
+              <></>
+            )}
+          </div>
           <div className="school-details__minted-image-wrapper">
             {!imageError ? (
               <Image
