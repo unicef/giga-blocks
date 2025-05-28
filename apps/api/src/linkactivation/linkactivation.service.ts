@@ -11,12 +11,19 @@ import { QueueService } from 'src/mailer/queue.service';
 export class LinkactivationService {
   constructor(private readonly prisma: PrismaAppService, private queueService: QueueService) {}
 
+ private toDateOnly(date: Date | string) {
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
   async createLink(data: ActivationLogDTO, userId: string) {
-    const date = new Date();
-    const startDate = new Date(data.startDate);
+    const date = this.toDateOnly(new Date());
+    const startDate = this.toDateOnly(new Date(data.startDate));
+    const endDate = data?.endDate ? this.toDateOnly(new Date(data.endDate)) : null;
     if (startDate < date)
       throw new ConflictException('Start date should be later than current date');
-    if (data?.startDate > data?.endDate)
+    if (startDate > endDate)
       throw new ConflictException('End date should be later than start date');
 
     return this.prisma.activationLog.create({
@@ -24,8 +31,8 @@ export class LinkactivationService {
         status: data.status,
         name: data.name,
         activatedBy: userId,
-        startDate: data.startDate,
-        endDate: data?.endDate || null,
+        startDate: startDate,
+        endDate: endDate|| null,
       },
     });
   }
@@ -64,14 +71,14 @@ export class LinkactivationService {
   }
 
   async validateLink(uuid: string) {
-    const date = new Date();
+    const date = this.toDateOnly(new Date());
     const data = await this.prisma.activationLog.findUnique({
       where: {
         id: uuid,
       },
     });
     if (!data) throw new NotFoundException('Invalid Link');
-    if (data?.endDate >= date && data?.status == 'ACTIVE') return true;
+    if (this.toDateOnly(data?.endDate) >= date && data?.status == 'ACTIVE') return true;
     await this.prisma.activationLog.update({
       where: {
         id: uuid,
@@ -111,14 +118,14 @@ export class LinkactivationService {
   }
 
   async activateLink(uuid: string, userId: string) {
-    const date = new Date();
+    const date = this.toDateOnly(new Date());
     const data = await this.prisma.activationLog.findUnique({
       where: {
         id: uuid,
       },
     });
     if (!data) throw new NotFoundException('Invalid Link');
-    if (data?.endDate < date) throw new Error('Link already expired.');
+    if (this.toDateOnly(data?.endDate) < date) throw new Error('Link already expired.');
     return this.prisma.activationLog.update({
       where: {
         id: uuid,

@@ -62,7 +62,7 @@ export default function ActiveDialog() {
         handleClose();
       },
       onError: (err:any) => {
-        setSnackbarMessage(`Failed to activate school: ${err.message}`);
+        setSnackbarMessage(`Failed to activate school: ${err?.response?.data?.message || err.message}`);
         setSnackbarSeverity('error');
         setSnackbarOpen(true);
       },
@@ -138,6 +138,7 @@ export default function ActiveDialog() {
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
         message={snackbarMessage}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       />
     </React.Fragment>
   );
