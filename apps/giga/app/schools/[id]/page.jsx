@@ -1,13 +1,11 @@
 import SchoolDetailsClient from './SchoolDetailsClient';
 
-// Separate function to fetch school data for metadata
 async function getSchoolDataForMeta(id) {
   try {
-    // Replace this with your actual API endpoint
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_D3_BACKEND}/schools/${id}`,
       {
-        cache: 'no-store', // or 'force-cache' depending on your needs
+        cache: 'no-store',
       }
     );
 
