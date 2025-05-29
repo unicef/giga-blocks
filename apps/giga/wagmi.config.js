@@ -4,6 +4,7 @@ import { getDefaultConfig } from 'connectkit';
 import { createConfig, http } from 'wagmi';
 import { baseSepolia } from 'wagmi/chains';
 import { coinbaseWallet,injected, walletConnect } from 'wagmi/connectors';
+const isClient = typeof window !=='undefined'
 
 export const config = createConfig(
   getDefaultConfig({
@@ -23,7 +24,6 @@ export const config = createConfig(
       // walletConnect({
       //   projectId: '1234',
       // }),
-      walletConnect(),
       coinbaseWallet(),
       injected(),
     ],
