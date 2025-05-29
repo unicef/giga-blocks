@@ -65,7 +65,11 @@ export class SchoolService {
     const electricityBool =
       electricity === 'true' ? true : electricity === 'false' ? false : undefined;
     const connectivityBool =
-      connectivityStatus?.trim() === 'true' ? true : connectivityStatus === 'false' ? false : undefined;
+      connectivityStatus?.trim() === 'true'
+        ? true
+        : connectivityStatus === 'false'
+        ? false
+        : undefined;
 
     const cacheKey = getCacheKey(name, country, minted, page, perPage);
     // Check if only the cache-relevant parameters are present
@@ -183,6 +187,7 @@ export class SchoolService {
         where,
         include: {
           theme: true,
+          giga_maps_data: false
         },
       },
       {
@@ -356,11 +361,40 @@ export class SchoolService {
     if (!school) {
       throw new NotFoundException('School not found for given school id');
     }
+    const mapsGigaData = school.giga_maps_data as any;
+
+    const giga_maps_data = {
+      'Latitude': mapsGigaData?.latitude,
+      'Longitude': mapsGigaData?.longitude,
+      'Download Speed (Govt) (mbps)': mapsGigaData?.download_speed_govt,
+      'Location Data Source': mapsGigaData?.source_lat_lon,
+      'Real-Time Connectivity': mapsGigaData?.connectivity_RT,
+      'Education Level': mapsGigaData?.education_level,
+      'Area Type': mapsGigaData?.school_area_type,
+      'Reported Connectivity': mapsGigaData?.connectivity_govt,
+      'Connectivity Type': mapsGigaData?.connectivity_type,
+      'School Data Source': mapsGigaData?.school_data_source,
+      'Fiber Node Distance (m)': mapsGigaData?.fiber_node_distance,
+      'Education Level (Govt)': mapsGigaData?.education_level_govt,
+      'Computer Availability': mapsGigaData?.computer_availability,
+      'Cellular Coverage Type': mapsGigaData?.cellular_coverage_type,
+      'Connectivity Type (Govt)': mapsGigaData?.connectivity_type_govt,
+      'Download Speed Benchmark': mapsGigaData?.download_speed_benchmark,
+      'Electricity Availability': mapsGigaData?.electricity_availability,
+      'Contracted Download Speed (Mbps)': mapsGigaData?.download_speed_benchmark,
+      'School established in (year)': mapsGigaData?.school_established_year,
+      'Connectivity Data Source': mapsGigaData?.connectivity_RT_datasource,
+      'School Data Collection Year': mapsGigaData?.school_data_collection_year,
+      'Cellular Coverage Availability': mapsGigaData?.cellular_coverage_availability,
+      'Connectivity Data Collection Year': mapsGigaData?.connectivity_govt_collection_year,
+    };
+
     const locationdetails = await getLocationId(school.giga_school_id, 'giga_id_school');
     const schooldetails = {
       ...school,
       locationId: locationdetails?.id,
       countryCode: locationdetails?.country_code,
+      giga_maps_data,
     };
     return schooldetails;
   }
