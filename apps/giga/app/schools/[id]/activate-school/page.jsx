@@ -34,6 +34,7 @@ export default function ActivateSchool() {
   const [email, setEmail] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { address, isConnected } = useAccount();
+  const [gasFeeWei, setGasFeeWei] = useState('0');
 
   const contractAddress = process.env.NEXT_PUBLIC_GIGA_NFT_CONTRACT_ADDRESS;
   const escrowAddress = process.env.NEXT_PUBLIC_GIGA_SCHOOL_ESCROW_ADDRESS;
@@ -51,11 +52,13 @@ export default function ActivateSchool() {
 
   useEffect(() => {
     const fetchGasFee = async () => {
-      const gasFee = await getGasPrice();
-      setGasFee(gasFee);
+      const { gasPriceInEth, gasPriceWei } = await getGasPrice();
+      setGasFee(gasPriceInEth);
+      setGasFeeWei(gasPriceWei);
 
       const timeoutId = setTimeout(() => {
-        setGasFee(gasFee);
+        setGasFee(gasPriceInEth);
+        setGasFeeWei(gasPriceWei);
       }, 1000);
 
       return () => clearTimeout(timeoutId);
@@ -105,6 +108,7 @@ export default function ActivateSchool() {
     await mintSchool.mutateAsync({
       args,
       totalValue: total,
+      gasFee: gasFeeWei,
       contractAddress,
       activationDetails,
       onComplete: () => setIsModalOpen(true),
@@ -128,11 +132,11 @@ export default function ActivateSchool() {
     calculateTotal();
   }, [baseFee, gasFee, donation]);
 
-  useEffect(() =>{
-    if(data?.minted === 'MINTED' || data?.minted === 'ISMINTING') {
+  useEffect(() => {
+    if (data?.minted === 'MINTED' || data?.minted === 'ISMINTING') {
       router.push(`/`);
     }
-  },[data])
+  }, [data]);
 
   return (
     <>
@@ -159,7 +163,6 @@ export default function ActivateSchool() {
               cardColor={cardColor}
               fontColor={fontColor}
               schoolName={data?.name}
-              
             />
           )}
         </div>
