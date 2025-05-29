@@ -80,6 +80,7 @@ export default function ActivationModal({ isOpen, onClose }) {
             </h2>
             <p className="activationMessage">
               Thank you for your contribution.
+              Image generation is in progress. You can see the list of schools activated in your dashboard
             </p>
           </div>
 
