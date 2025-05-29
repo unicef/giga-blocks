@@ -139,18 +139,18 @@ export default function SchoolStats({
             className={`school-details__chart-tab ${
               selectedTab === 'weekly' ? 'active' : ''
             }`}
-            onClick={() => setSelectedTab('weekly')}
+            // onClick={() => setSelectedTab('weekly')}
           >
             Weekly
           </button>
-          <button
+          {/* <button
             className={`school-details__chart-tab ${
               selectedTab === 'monthly' ? 'active' : ''
             }`}
             onClick={() => setSelectedTab('monthly')}
           >
             Monthly
-          </button>
+          </button> */}
         </div>
 
         <div className="school-details__chart-dates">
