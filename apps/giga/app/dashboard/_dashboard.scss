@@ -406,3 +406,22 @@
 .dashboard-button-unactivate {
   margin-top: $spacing-03;
 }
+
+.dashboard-modal .cds--modal-close {
+  display: none;
+}
+
+.dashboard-modal .dashboard-modal-heading {
+  font-weight: 600;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.dashboard-modal .cds--modal-content {
+  padding: 1.5rem;
+}
+
+.dashboard-modal .dashboard-wallet-button {
+  display: flex;
+}

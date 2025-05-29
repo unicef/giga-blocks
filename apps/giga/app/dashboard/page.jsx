@@ -75,11 +75,23 @@ export default function Dashboard() {
         passiveModal
         size="sm"
         onRequestClose={() => setShowModal(false)}
-        modalHeading="Wallet not connected"
+        className="dashboard-modal"
       >
+        <h3 className="dashboard-modal-heading">Wallet not connected</h3>
         <p>To view your dashboard, please connect your wallet.</p>
-        <div style={{ marginTop: '30px' }}>
-          <ConnectKitButton />
+        <div className="dashboard-wallet-button" style={{ marginTop: '30px' }}>
+          <ConnectKitButton.Custom>
+            {({ show }) => (
+              <Button
+                kind="primary"
+                onClick={show}
+                className="connect-wallet-button"
+              >
+                Connect Wallet
+              </Button>
+            )}
+          </ConnectKitButton.Custom>
+          <Button>Cancel</Button>{' '}
         </div>
       </Modal>
 
