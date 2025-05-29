@@ -27,6 +27,10 @@
   }
 }
 
+.activationModal .cds--modal-close {
+  display: none;
+}
+
 .activationModalContent {
   padding: $spacing-07;
   display: flex;

@@ -21,7 +21,8 @@ export default function ActiveDialog() {
   const [snackbarMessage, setSnackbarMessage] = React.useState('');
   const [snackbarSeverity, setSnackbarSeverity] = React.useState<'success' | 'error'>('success');
   const [nameError, setNameError] = React.useState('');
-
+  const [startDateError, setStartDateError] = React.useState('');
+  const [endDateError, setEndDateError] = React.useState('');
 
   const { mutate, isLoading } = useActivatePostSchools();
 
@@ -36,6 +37,9 @@ export default function ActiveDialog() {
     setStartDate(null);
     setEndDate(null);
     setIsActive(true);
+    setNameError('');
+    setStartDateError('');
+    setEndDateError('');
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,8 +52,35 @@ export default function ActiveDialog() {
     }
   };
 
+  const handleStartDateChange = (date: any) => {
+    setStartDate(date);
+    setStartDateError(date ? '' : 'This field is required');
+  };
+  const handleEndDateChange = (date: any) => {
+    setEndDate(date);
+    setEndDateError(date ? '' : 'This field is required');
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    let hasError = false;
+
+    if (!name.trim()) {
+      setNameError('This field is required');
+      hasError = true;
+    }
+    if (!startDate) {
+      setStartDateError('This field is required');
+      hasError = true;
+    }
+    if (!endDate) {
+      setEndDateError('This field is required');
+      hasError = true;
+    }
+    if (name && !/^[A-Za-z\s]*$/.test(name)) {
+      setNameError('Only letters and spaces are allowed');
+      hasError = true;
+    }
 
     if (!startDate || !endDate || !name.trim()) {
       setSnackbarMessage('All fields are required');
@@ -73,8 +104,10 @@ export default function ActiveDialog() {
         resetForm();
         handleClose();
       },
-      onError: (err:any) => {
-        setSnackbarMessage(`Failed to activate school: ${err?.response?.data?.message || err.message}`);
+      onError: (err: any) => {
+        setSnackbarMessage(
+          `Failed to activate school: ${err?.response?.data?.message || err.message}`
+        );
         setSnackbarSeverity('error');
         setSnackbarOpen(true);
       },
@@ -103,9 +136,11 @@ export default function ActiveDialog() {
               label="Event Name"
               fullWidth
               value={name}
-              type={"text"}
+              type={'text'}
               onChange={handleNameChange}
               sx={{ mb: 2 }}
+              error={!!nameError}
+              required
             />
             {nameError && <div style={{ color: 'red', marginBottom: '16px' }}>{nameError}</div>}
 
@@ -115,14 +150,18 @@ export default function ActiveDialog() {
                 <DatePicker
                   label="Start Date"
                   value={startDate}
-                  onChange={(newValue) => setStartDate(newValue)}
-                  renderInput={(params) => <TextField {...params} fullWidth />}
+                  onChange={handleStartDateChange}
+                  renderInput={(params) => (
+                    <TextField {...params} fullWidth error={!!startDateError} />
+                  )}
                 />
                 <DatePicker
                   label="End Date"
                   value={endDate}
-                  onChange={(newValue) => setEndDate(newValue)}
-                  renderInput={(params) => <TextField {...params} fullWidth />}
+                  onChange={handleEndDateChange}
+                  renderInput={(params) => (
+                    <TextField {...params} fullWidth error={!!endDateError} />
+                  )}
                 />
               </LocalizationProvider>
             </div>
