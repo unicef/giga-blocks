@@ -61,11 +61,11 @@ export class SchoolService {
       connectionType,
     } = query;
     // Convert string booleans to actual booleans
-    const waterBool = water === 'true' ? true : water === 'false' ? false : undefined;
+    const waterBool = water?.trim() === 'true' ? true : water === 'false' ? false : undefined;
     const electricityBool =
       electricity === 'true' ? true : electricity === 'false' ? false : undefined;
     const connectivityBool =
-      connectivityStatus === 'true' ? true : connectivityStatus === 'false' ? false : undefined;
+      connectivityStatus?.trim() === 'true' ? true : connectivityStatus === 'false' ? false : undefined;
 
     const cacheKey = getCacheKey(name, country, minted, page, perPage);
     // Check if only the cache-relevant parameters are present
@@ -166,7 +166,7 @@ export class SchoolService {
       deletedAt: null,
       ...(minted !== 'undefined' && { minted }),
       ...(uploadId && { uploadId }),
-      ...(name && { name: { contains: name, mode: 'insensitive' } }),
+      ...(name && { name: { contains: name.trim(), mode: 'insensitive' } }),
       ...(country && { country: { contains: country, mode: 'insensitive' } }),
       ...(connectivityBool !== undefined && { connectivity: connectivityBool }),
       ...(electricityBool !== undefined && { electricity_available: electricityBool }),
