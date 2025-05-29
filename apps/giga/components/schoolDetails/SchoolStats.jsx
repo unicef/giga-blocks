@@ -125,7 +125,7 @@ export default function SchoolStats({
           </div>
           <div className="school-details__stat-detail">
             <p>Global Benchmark</p>
-            <p>{'--'} Mbps</p>
+            <p>{20} Mbps</p>
           </div>
         </div>
       </div>

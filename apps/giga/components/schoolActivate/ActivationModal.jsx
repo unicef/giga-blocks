@@ -114,7 +114,7 @@ export default function ActivationModal({ isOpen, onClose }) {
                 <TextInput
                   id="contributor-name"
                   labelText="Your Name"
-                  placeholder="Enter your name"
+                  placeholder="Enter your ENS  or your name"
                   value={contributorName}
                   onChange={(e) => setContributorName(e.target.value)}
                 />
