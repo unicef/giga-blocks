@@ -41,16 +41,12 @@ export default function ActivationModal({ isOpen, onClose }) {
       {
         onSuccess: () => {
           onClose();
-          router.push(
-            `/schools/${id}`
-          );
+          router.push(`/schools/${id}`);
         },
         onError: (err) => {
           onClose();
           toast.error('Failed to update contributor:', err);
-          router.push(
-            `/schools/${id}`
-          );
+          router.push(`/schools/${id}`);
         },
       }
     );
@@ -58,7 +54,7 @@ export default function ActivationModal({ isOpen, onClose }) {
 
   return (
     <>
-      {isOpen && <Confetti numberOfPieces={800} recycle={false} />}
+      {isOpen && <Confetti numberOfPieces={800} recycle={true} />}
 
       <Modal
         open={isOpen}
@@ -69,7 +65,7 @@ export default function ActivationModal({ isOpen, onClose }) {
         preventCloseOnClickOutside={true}
         hasCloseIcon={false}
       >
-        <Confetti numberOfPieces={500} recycle={false} />
+        <Confetti numberOfPieces={500} recycle={true} />
         <div className="activationModalContent">
           <div className="activationHeader">
             <h2 className="activationTitle">

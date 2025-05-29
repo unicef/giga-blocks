@@ -44,8 +44,10 @@ export default function SchoolDetailsClient({ params }) {
 
   useEffect(() => {
     if (!data) return;
-    const countryName = countryList.find((c)=> c.code === data?.country)?.country
-    setCountryName(countryName)
+    const countryName = countryList.find(
+      (c) => c.code === data?.country
+    )?.country;
+    setCountryName(countryName);
 
     useThemeStore.getState().resetTheme();
     const { colorScheme } = data.theme || {};
@@ -114,7 +116,16 @@ export default function SchoolDetailsClient({ params }) {
     ? theme?.colorScheme?.bgColor
     : themeOptions?.find((t) => t.name === selectedTheme)?.colorScheme.bgColor;
 
-  if (isLoading || !data) return <DetailsLoading />;
+  // Add a minimum loader time (e.g., 1200ms) to improve perceived loading on fast networks
+  const [minLoaderDone, setMinLoaderDone] = useState(false);
+
+  useEffect(() => {
+    setMinLoaderDone(false);
+    const timer = setTimeout(() => setMinLoaderDone(true), 1200);
+    return () => clearTimeout(timer);
+  }, [id]);
+
+  if (isLoading || !data || !minLoaderDone) return <DetailsLoading />;
 
   return (
     <>
