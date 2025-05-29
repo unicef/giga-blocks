@@ -395,6 +395,7 @@ export class SchoolService {
       locationId: locationdetails?.id,
       countryCode: locationdetails?.country_code,
       giga_maps_data,
+      data_Source:mapsGigaData?.source_lat_lon
     };
     return schooldetails;
   }
