@@ -1,5 +1,5 @@
 // components/schoolDetails/SchoolStats.js
-import { CheckmarkFilled, MeterAlt, NotAvailable } from '@carbon/icons-react';
+import { CheckmarkFilled, MeterAlt, NotAvailable,Misuse } from '@carbon/icons-react';
 import { useState, useEffect } from 'react';
 import { useQOSDailyGet, useQOSWeeklyGet } from '../../app/hooks/useQOS';
 
@@ -93,7 +93,7 @@ export default function SchoolStats({
               {connectivity ? (
                 <CheckmarkFilled color={fontColor} size={24} />
               ) : (
-                <NotAvailable color={fontColor} size={24} />
+                <Misuse color={fontColor} size={24} />
               )}
             </div>
           </div>
