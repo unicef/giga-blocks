@@ -221,9 +221,9 @@ export class QueueService {
     }
   }
 
-  public async claimReservedNFT(email: string, walletAddress: string,schoolId:string) {
+  public async claimReservedNFT(email: string, walletAddress: string, schoolId: string) {
     try {
-      await this._onchainQueue.add(CLAIM_NFT, { email, walletAddress,schoolId }, jobOptions);
+      await this._onchainQueue.add(CLAIM_NFT, { email, walletAddress, schoolId }, jobOptions);
       return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
       this._logger.error(`Error queueing transaction to blockchain `);
@@ -231,7 +231,7 @@ export class QueueService {
     }
   }
 
-  public async updateCIW(did:string){
+  public async updateCIW(did: string) {
     try {
       await this._vcQueue.add(UPDATE_CIW, { did }, jobOptions);
       return { message: 'queue added successfully', statusCode: 200 };
@@ -241,23 +241,30 @@ export class QueueService {
     }
   }
 
-  public async processVC(vcDetails:any){
+  public async processVC(vcDetails: any) {
     this._logger.log('VC details received');
-    try{
-     await this._vcQueue.add(SET_PROCESS_VC, {vcDetails}, jobOptions);
-     this._logger.log('VC details added to queue');
-    }
-    catch(error){
+    try {
+      await this._vcQueue.add(SET_PROCESS_VC, { vcDetails }, jobOptions);
+      this._logger.log('VC details added to queue');
+    } catch (error) {
       this._logger.error(`Error queueing transaction to blockchain `);
       throw error;
     }
   }
-  
-  public async activatePaidSchool(data:SchoolActivation){
-    try{
-      const school = await this._onchainQueue.add(UPDATE_PAID_SCHOOL,{data},jobOptions)
-    }
-    catch(error){
+
+  public async activatePaidSchool(data: SchoolActivation) {
+    try {
+      jobOptions.backoff = {
+        type: 'fixed', // Use 'fixed' for a constant delay
+        delay: 60 * 1000, // 60 seconds * 1000 milliseconds = 1 minute
+      };
+      const school = await this._onchainQueue.add(
+        UPDATE_PAID_SCHOOL,
+        { activationData: data },
+        jobOptions,
+      );
+      return true;
+    } catch (error) {
       this._logger.error(`Error queueing transaction to blockchain `);
       throw error;
     }

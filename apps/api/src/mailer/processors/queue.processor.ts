@@ -101,14 +101,14 @@ export class QueueProcessor {
     }
   }
 
-  @OnQueueFailed({ name: CLAIM_NFT })
-  public onSchoolActivationError(job: Job<any>, error: any) {
+  @OnQueueFailed({ name: UPDATE_PAID_SCHOOL })
+  public async onSchoolActivationError(job: Job<any>, error: any) {
     this._logger.error(`Failed job ${job.id} of type ${job.name}: ${error.message}`, error.stack);
-    if (job.attemptsMade === job.opts.attempts) {
+    if (job.attemptsMade >= job.opts.attempts) {
       try {
-         this._prismaService.school.update({
+         const school = await this._prismaService.school.update({
           where: {
-            id: job.data.schoolId,
+            id: job.data.activationData?.schoolId,
             minted: MintStatus.ISMINTING,
           },
           data: {
