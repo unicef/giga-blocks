@@ -4,6 +4,7 @@ import { LoginProvider } from '../../contexts/auth';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuthContext } from 'src/auth/useAuthContext';
+import EmailLogin from './email-login';
 
 export default function LoginPage() {
   const {push} = useRouter()
@@ -19,7 +20,7 @@ export default function LoginPage() {
           <title>Giga Blocks</title>
         </Head>
 
-        <LoginComp />
+        <EmailLogin />
       </LoginProvider>
   );
 }
