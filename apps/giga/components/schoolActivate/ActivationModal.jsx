@@ -54,18 +54,15 @@ export default function ActivationModal({ isOpen, onClose }) {
 
   return (
     <>
-      {isOpen && <Confetti numberOfPieces={800} recycle={true} />}
-
       <Modal
         open={isOpen}
-        // onRequestClose={onClose}
+        onRequestClose={onClose}
         modalHeading=""
         passiveModal
         className="activationModal"
         preventCloseOnClickOutside={true}
         hasCloseIcon={false}
       >
-        <Confetti numberOfPieces={500} recycle={true} />
         <div className="activationModalContent">
           <div className="activationHeader">
             <h2 className="activationTitle">
@@ -123,6 +120,19 @@ export default function ActivationModal({ isOpen, onClose }) {
           </Button>
         </div>
       </Modal>
+      {/* Render Confetti absolutely over the modal when open */}
+      {isOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            pointerEvents: 'none',
+            zIndex: 9999,
+          }}
+        >
+          <Confetti numberOfPieces={500} recycle={true} />
+        </div>
+      )}
     </>
   );
 }

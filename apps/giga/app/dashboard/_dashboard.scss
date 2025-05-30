@@ -416,6 +416,8 @@
   font-size: 1.5rem;
   display: flex;
   justify-content: center;
+  padding-bottom: 1.2rem;
+  padding-top: 0.5rem;
 }
 
 .dashboard-modal .cds--modal-content {
@@ -424,4 +426,11 @@
 
 .dashboard-modal .dashboard-wallet-button {
   display: flex;
+  gap: 1rem;
+}
+
+.dashboard-modal .dashboard-modal-description {
+  padding: 0.5rem;
+  background-color: #dcd9d9;
+  border-radius: 8px;
 }

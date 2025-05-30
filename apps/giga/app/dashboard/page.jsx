@@ -77,8 +77,10 @@ export default function Dashboard() {
         onRequestClose={() => setShowModal(false)}
         className="dashboard-modal"
       >
-        <h3 className="dashboard-modal-heading">Wallet not connected</h3>
-        <p>To view your dashboard, please connect your wallet.</p>
+        <h3 className="dashboard-modal-heading">Wallet Not Connected</h3>
+        <p className="dashboard-modal-description">
+          To view your dashboard, please connect your wallet.
+        </p>
         <div className="dashboard-wallet-button" style={{ marginTop: '30px' }}>
           <ConnectKitButton.Custom>
             {({ show }) => (
@@ -91,7 +93,13 @@ export default function Dashboard() {
               </Button>
             )}
           </ConnectKitButton.Custom>
-          <Button>Cancel</Button>{' '}
+          <Button
+            kind="secondary"
+            style={{ width: '40%' }}
+            onClick={() => setShowModal(false)}
+          >
+            Cancel
+          </Button>
         </div>
       </Modal>
 

@@ -128,11 +128,11 @@ export default function ActivateSchool() {
     calculateTotal();
   }, [baseFee, gasFee, donation]);
 
-  useEffect(() =>{
-    if(data?.minted === 'MINTED' || data?.minted === 'ISMINTING') {
+  useEffect(() => {
+    if (data?.minted === 'MINTED' || data?.minted === 'ISMINTING') {
       router.push(`/`);
     }
-  },[data])
+  }, [data]);
 
   return (
     <>
@@ -145,6 +145,11 @@ export default function ActivateSchool() {
               linkActivation={linkActivation}
               themeName={selectedThemeName}
               themeId={themeId}
+              schoolName={data?.name}
+              selectedThemeName={selectedThemeName}
+              bgColor={bgColor}
+              cardColor={cardColor}
+              fontColor={fontColor}
             />
           ) : (
             <PayingUser
@@ -159,7 +164,6 @@ export default function ActivateSchool() {
               cardColor={cardColor}
               fontColor={fontColor}
               schoolName={data?.name}
-              
             />
           )}
         </div>
