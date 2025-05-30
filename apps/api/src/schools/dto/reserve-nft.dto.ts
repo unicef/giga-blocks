@@ -81,8 +81,7 @@ export class claimReservedNFT {
   schoolId: string;
 }
 
-export class SchoolActivation{
-
+export class SchoolActivation {
   @ApiProperty({
     description: 'School ID to mint',
     example: 'uuid',
@@ -100,19 +99,27 @@ export class SchoolActivation{
   themeId: string;
 
   @ApiProperty({
-    description:'Contributor Details',
-    example:{
-      name:'Joe',
-      isVisible:true,
-      walletAddress:'0x1f2f6f7952550D4388f9A3fd91A8CdcFbC439978'
-    }
+    description: 'ID of theme',
+    example: 'uuid',
+    required: false,
+  })
+  @IsString()
+  transactionHash: string;
+
+  @ApiProperty({
+    description: 'Contributor Details',
+    example: {
+      name: 'Joe',
+      isVisible: true,
+      walletAddress: '0x1f2f6f7952550D4388f9A3fd91A8CdcFbC439978',
+    },
   })
   @ValidateNested()
   @Type(() => CreateContributor)
   contributorData: CreateContributor;
 }
 
-export class WeeklyQOSDto{
+export class WeeklyQOSDto {
   @ApiProperty({
     description: 'Giga School ID to fetch QOS data  ',
     example: 'uuid',
@@ -136,10 +143,9 @@ export class WeeklyQOSDto{
   })
   @IsString()
   endDate: string;
-
 }
 
-export class DailyQOSDto{
+export class DailyQOSDto {
   @ApiProperty({
     description: 'Giga School ID to fetch QOS data  ',
     example: 'uuid',
@@ -147,8 +153,4 @@ export class DailyQOSDto{
   })
   @IsString()
   giga_school_id: string;
-
-
-
-
 }
