@@ -23,7 +23,20 @@ export const useContributorList = () => {
   return useQuery(
     ['get-contributor-list'],
     async () => {
-      const response = await apiGuest.get(`${CONTRIBUTOR.GET}`);
+      const response = await apiGuest.get(`${CONTRIBUTOR.LIST}`);
+      return response.data;
+    },
+    {
+      keepPreviousData: true,
+    }
+  );
+}
+
+export const useContributorGet = (walletAddress) => {
+  return useQuery(
+    ['get-contributor-details',walletAddress],
+    async () => {
+      const response = await apiGuest.get(`${CONTRIBUTOR.GET}/${walletAddress}`);
       return response.data;
     },
     {

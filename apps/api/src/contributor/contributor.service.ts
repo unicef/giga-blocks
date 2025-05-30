@@ -81,12 +81,11 @@ export class ContributorService {
     return contributorDetails;
   }
 
-  async claimNft(email: string, wallet: any,schoolId:string) {
+  async claimNft(email: string, wallet: any, schoolId: string) {
     const walletAddress = hexStringToBuffer(wallet);
 
     const user = await this.prisma.user.findUnique({ where: { email } });
     const contributor = await this.prisma.contributor.findUnique({ where: { userId: user?.id } });
-
 
     if (contributor.nftReserved) {
       await this.prisma.contributor.update({
@@ -98,7 +97,7 @@ export class ContributorService {
         data: {
           schoolClaimed: true,
         },
-      })
+      });
     } else return { message: 'NFT not reserved' };
   }
 
@@ -193,11 +192,11 @@ export class ContributorService {
     if (!userDetails) {
       throw new Error('Contributor not found');
     }
-     const existingcontributor = await this.prisma.contributor.findUnique({
+    const existingcontributor = await this.prisma.contributor.findUnique({
       where: { userId: userDetails.id },
-     })
+    });
 
-     if(existingcontributor.isVisible === true ) return existingcontributor
+    if (existingcontributor.isVisible === true) return existingcontributor;
     const updatedcontributor = await this.prisma.contributor.update({
       where: { userId: userDetails.id },
       data: {
@@ -207,5 +206,15 @@ export class ContributorService {
       },
     });
     return updatedcontributor;
+  }
+
+  async getContributorByWalletAddress(walletAddress: string) {
+    const contributor = await this.prisma.contributor.findFirst({
+      where: { user: { walletAddress: hexStringToBuffer(walletAddress) } },
+    });
+    if (!contributor) {
+      throw new Error('Contributor not found');
+    }
+    return contributor;
   }
 }
