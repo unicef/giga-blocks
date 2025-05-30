@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Modal, Checkbox, Button, TextInput } from '@carbon/react';
 import {
   CheckmarkFilled,
@@ -10,7 +10,10 @@ import {
   LogoTwitter,
 } from '@carbon/icons-react';
 import './_activation.scss';
-import { useContributorPatch } from '../../app/hooks/useContributor/index';
+import {
+  useContributorGet,
+  useContributorPatch,
+} from '../../app/hooks/useContributor/index';
 import { useAccount } from 'wagmi';
 import { useParams, useRouter } from 'next/navigation';
 import Confetti from 'react-confetti';
@@ -20,8 +23,10 @@ export default function ActivationModal({ isOpen, onClose }) {
   const { id } = useParams();
   const [showNameOnList, setShowNameOnList] = useState(true);
   const [contributorName, setContributorName] = useState('');
+  const [contributorVisible, setContributorVisible] = useState(false);
   const { address: walletAddress } = useAccount();
   const patchContributor = useContributorPatch();
+  const { data: contributorData } = useContributorGet(walletAddress);
   const router = useRouter();
   const handleCheckboxChange = (event) => {
     const checked = event.target.checked;
@@ -52,6 +57,11 @@ export default function ActivationModal({ isOpen, onClose }) {
     );
   };
 
+  useEffect(() => {
+    if (!contributorData) return;
+    if (contributorData?.isVisible === true) setContributorVisible(true);
+  });
+
   return (
     <>
       {isOpen && <Confetti numberOfPieces={800} recycle={true} />}
@@ -75,8 +85,8 @@ export default function ActivationModal({ isOpen, onClose }) {
               </span>
             </h2>
             <p className="activationMessage">
-              Thank you for your contribution.
-              Image generation is in progress. You can see the list of schools activated in your dashboard
+              Thank you for your contribution. Image generation is in progress.
+              You can see the list of schools activated in your dashboard
             </p>
           </div>
 
@@ -98,26 +108,28 @@ export default function ActivationModal({ isOpen, onClose }) {
             </div>
           </div>
 
-          <div className="contributorOption">
-            <Checkbox
-              id="contributor-list"
-              labelText="Allow to show your name on Giga Contributor List"
-              checked={showNameOnList}
-              onChange={handleCheckboxChange}
-            />
+          {!contributorVisible && (
+            <div className="contributorOption">
+              <Checkbox
+                id="contributor-list"
+                labelText="Allow to show your name on Giga Contributor List"
+                checked={showNameOnList}
+                onChange={handleCheckboxChange}
+              />
 
-            {showNameOnList && (
-              <div className="nameInputContainer">
-                <TextInput
-                  id="contributor-name"
-                  labelText="Your Name"
-                  placeholder="Enter your ENS  or your name"
-                  value={contributorName}
-                  onChange={(e) => setContributorName(e.target.value)}
-                />
-              </div>
-            )}
-          </div>
+              {showNameOnList && (
+                <div className="nameInputContainer">
+                  <TextInput
+                    id="contributor-name"
+                    labelText="Your Name"
+                    placeholder="Enter your ENS  or your name"
+                    value={contributorName}
+                    onChange={(e) => setContributorName(e.target.value)}
+                  />
+                </div>
+              )}
+            </div>
+          )}
 
           <Button className="visitButton" onClick={handleVisitClick}>
             Visit School Details
