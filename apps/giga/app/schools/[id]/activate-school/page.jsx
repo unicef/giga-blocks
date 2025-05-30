@@ -149,6 +149,11 @@ export default function ActivateSchool() {
               linkActivation={linkActivation}
               themeName={selectedThemeName}
               themeId={themeId}
+              schoolName={data?.name}
+              selectedThemeName={selectedThemeName}
+              bgColor={bgColor}
+              cardColor={cardColor}
+              fontColor={fontColor}
             />
           ) : (
             <PayingUser
