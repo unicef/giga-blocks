@@ -13,6 +13,7 @@ import {
   SET_ONCHAIN_DATA,
   SET_PROCESS_VC,
   UPDATE_CIW,
+  UPDATE_PAID_SCHOOL,
   VC_QUEUE,
 } from './constants';
 import { Queue } from 'bull';
@@ -27,6 +28,7 @@ import {
   ApproveContributeDatumDto,
   UpdateContributeDatumDto,
 } from 'src/contribute/dto/update-contribute-datum.dto';
+import { SchoolActivation } from 'src/schools/dto/reserve-nft.dto';
 
 @Injectable()
 export class QueueService {
@@ -244,6 +246,16 @@ export class QueueService {
     try{
      await this._vcQueue.add(SET_PROCESS_VC, {vcDetails}, jobOptions);
      this._logger.log('VC details added to queue');
+    }
+    catch(error){
+      this._logger.error(`Error queueing transaction to blockchain `);
+      throw error;
+    }
+  }
+  
+  public async activatePaidSchool(data:SchoolActivation){
+    try{
+      const school = await this._onchainQueue.add(UPDATE_PAID_SCHOOL,{data},jobOptions)
     }
     catch(error){
       this._logger.error(`Error queueing transaction to blockchain `);
