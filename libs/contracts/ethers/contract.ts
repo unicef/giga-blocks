@@ -11,9 +11,13 @@ export class Contract {
     try {
       const provider = new ethers.JsonRpcProvider(this.network);
       const abi = this.getAbi(contractName);
+      if (!abi || !abi.abi) {
+        throw new Error(`ABI for contract ${contractName} not found`);
+      }
       const contract = new ethers.Contract(contractAddress, abi.abi, provider);
       return contract;
     } catch (err) {
+      console.log(err)
       throw new Error(`Error: ${err}, message: Cannot instatntiate contract`);
     }
   };
