@@ -1,5 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaAppService } from 'src/prisma/prisma.service';
+import {ActivationStatus} from '@prisma/application';
 import {
   ActivationLogDTO,
   UpdateSchoolThemeAndContributorDTO,
@@ -21,6 +22,7 @@ export class LinkactivationService {
     const date = this.toDateOnly(new Date());
     const startDate = this.toDateOnly(new Date(data.startDate));
     const endDate = data?.endDate ? this.toDateOnly(new Date(data.endDate)) : null;
+    if(startDate >date) data.status = ActivationStatus.INACTIVE
     if (startDate < date)
       throw new ConflictException('Start date should be later than current date');
     if (startDate > endDate)
@@ -97,6 +99,7 @@ export class LinkactivationService {
       },
       data: {
         status: 'INACTIVE',
+        manually_inactivated: true,
         deActivatedBy: userId,
       },
     });

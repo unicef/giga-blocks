@@ -256,7 +256,7 @@ export class QueueService {
     try {
       jobOptions.backoff = {
         type: 'fixed', // Use 'fixed' for a constant delay
-        delay: 60 * 1000, // 60 seconds * 1000 milliseconds = 1 minute
+        delay: 60 * 2000, // 60 seconds * 1000 milliseconds = 1 minute
       };
       const school = await this._onchainQueue.add(
         UPDATE_PAID_SCHOOL,

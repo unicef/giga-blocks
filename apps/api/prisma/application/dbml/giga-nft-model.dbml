@@ -240,6 +240,7 @@ Table giga_link_activation {
   status ActivationStatus [not null, default: 'INACTIVE']
   activatedBy String [not null]
   name String [not null]
+  manually_inactivated Boolean [not null, default: false]
   activatedUser giga_users [not null]
   deActivatedBy String
   deActivatedUser giga_users

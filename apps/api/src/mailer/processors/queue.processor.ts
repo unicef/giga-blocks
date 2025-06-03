@@ -176,6 +176,7 @@ export class QueueProcessor {
 
     try {
       const txReceipt = await checkTransactionHash(transactionHash);
+     this._logger.log(`Transaction receipt for school ID ${schoolId}: ${JSON.stringify(txReceipt)}`);
       if (txReceipt.status === 'success') {
         const updatedSchool = await this._prismaService.school.update({
           where: {
@@ -206,6 +207,10 @@ export class QueueProcessor {
       else if(txReceipt.status === 'Pending') {
         this._logger.warn(`Transaction is still pending for school ID: ${schoolId}`);
         throw new Error(`Transaction is still pending for school ID: ${schoolId}`);
+      }
+      else {
+        this._logger.error(` Failed to retrieve transaction details  for school ID: ${schoolId}`);
+        throw new Error(` Failed to retrieve transaction details for school ID: ${schoolId}`);
       }
     } catch (error) {
       this._logger.error(`Failed to update paid school: ${error.message}`);
