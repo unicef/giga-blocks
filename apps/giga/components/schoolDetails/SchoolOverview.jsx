@@ -19,6 +19,7 @@ const SchoolOverview = ({
   longitude,
   latitude,
   gigaMapsData,
+  dataSource,
 }) => {
   const formatKey = (key) => {
     return key
@@ -93,7 +94,9 @@ const SchoolOverview = ({
         </div>
       </div>
       <p className="school-details__last-updated">
-        Data Source: NIC.br, Government
+       Data Source: {dataSource}, 
+        <a href ='https://www.mapbox.com/about/maps' target='_blank'>Mapbox</a>,
+        <a href ='https://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap </a>
       </p>
 
       {/* Render only if there's valid data */}

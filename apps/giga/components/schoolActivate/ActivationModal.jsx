@@ -73,6 +73,7 @@ export default function ActivationModal({ isOpen, onClose }) {
             </h2>
             <p className="activationMessage">
               Thank you for your contribution.
+              Image generation is in progress. You can see the list of schools activated in your dashboard
             </p>
           </div>
 
@@ -107,7 +108,7 @@ export default function ActivationModal({ isOpen, onClose }) {
                 <TextInput
                   id="contributor-name"
                   labelText="Your Name"
-                  placeholder="Enter your name"
+                  placeholder="Enter your ENS  or your name"
                   value={contributorName}
                   onChange={(e) => setContributorName(e.target.value)}
                 />

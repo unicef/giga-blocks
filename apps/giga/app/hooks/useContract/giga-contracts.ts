@@ -16,11 +16,13 @@ export const useGigaBuyNft = () => {
     mutationFn: ({
       args,
       totalValue,
+      gasFee,
       contractAddress,
       activationDetails,
     }: {
       args: any;
       totalValue: number;
+      gasFee: number;
       contractAddress: `0x${string}`;
       activationDetails: any;
       onComplete?: () => void;
@@ -31,6 +33,7 @@ export const useGigaBuyNft = () => {
         address: contractAddress,
         args: args,
         value: weiValue,
+        gasPrice: gasFee   
       });
     },
     onSuccess: async (result, variables) => {
