@@ -36,14 +36,15 @@ module.exports = {
     LOGIN: '/auth/login',
   },
   CONTRIBUTOR: {
-    GET: '/contributor',
+    LIST: '/contributor',
     PATCH: '/contributor/update',
+    GET: '/contributor/walletAddress',
   },
   LINKACTIVATION: {
     GET: '/linkactivation/validateLink',
   },
   CONTRIBUTE: {
-    GET: '/contribute',
+    LIST: '/contribute',
     POST: '/contribute',
   },
   MAGICLINK: {

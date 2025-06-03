@@ -187,7 +187,7 @@ export class SchoolService {
         where,
         include: {
           theme: true,
-          giga_maps_data: false
+          giga_maps_data: false,
         },
       },
       {
@@ -364,8 +364,8 @@ export class SchoolService {
     const mapsGigaData = school.giga_maps_data as any;
 
     const giga_maps_data = {
-      'Latitude': mapsGigaData?.latitude,
-      'Longitude': mapsGigaData?.longitude,
+      Latitude: mapsGigaData?.latitude,
+      Longitude: mapsGigaData?.longitude,
       'Download Speed (Govt) (mbps)': mapsGigaData?.download_speed_govt,
       'Location Data Source': mapsGigaData?.source_lat_lon,
       'Real-Time Connectivity': mapsGigaData?.connectivity_RT,
@@ -395,7 +395,7 @@ export class SchoolService {
       locationId: locationdetails?.id,
       countryCode: locationdetails?.country_code,
       giga_maps_data,
-      data_Source:mapsGigaData?.source_lat_lon
+      data_Source: mapsGigaData?.source_lat_lon,
     };
     return schooldetails;
   }
@@ -631,6 +631,22 @@ export class SchoolService {
     return schoolMinted;
   }
 
+  async activatePaidSchool(data: SchoolActivation) {
+    const { schoolId, themeId, contributorData } = data;
+    await this.validateSchoolAndTheme(schoolId, themeId);
+    const updatedSchool = await this.prisma.school.update({
+      where: {
+        id: schoolId,
+      },
+      data: {
+        minted: MintStatus.ISMINTING,
+      },
+    });
+    this.queueService.activatePaidSchool(data);
+    return updatedSchool;
+  }
+
+  
   async activateSchool(data: SchoolActivation) {
     const { schoolId, themeId, contributorData } = data;
     await this.validateSchoolAndTheme(schoolId, themeId);
