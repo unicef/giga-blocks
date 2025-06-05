@@ -43,7 +43,11 @@ const SchoolSearchPage = () => {
             Oops! This event link is no longer active.
           </h3>
           <p className="dashboard-modal-activate-description">
-            Want to continue? <span>Browse the directory</span> or 
+            Want to continue? 
+            <span onClick={() => (window.location.href = '/school/list')}>
+              Browse the directory
+            </span>
+             or 
             <span
               onClick={() =>
                 (window.location.href = 'https://giga.global/contact-us/')
