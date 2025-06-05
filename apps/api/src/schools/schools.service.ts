@@ -493,6 +493,8 @@ export class SchoolService {
       _count: { minted: true },
     });
 
+    const schoolCount = await this.prisma.school.count();
+
     // Format the result as { minted: count, notMinted: count }
 
     const contributorCount = await this.prisma.contributor.count();
@@ -501,6 +503,7 @@ export class SchoolService {
       minted: 0,
       notMinted: 0,
       contributorCount: contributorCount,
+      schoolCount: schoolCount,
     };
 
     result.forEach(row => {
