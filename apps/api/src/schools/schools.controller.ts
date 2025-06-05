@@ -44,42 +44,7 @@ export class SchoolController {
     private readonly rabbitMQService: RabbitMQService,
   ) {}
 
-  // @Roles('ADMIN')
-  // @UseGuards(JwtAuthGuard, RoleGuard)
-  // @Get('onchainDataQueue')
-  // queue() {
-  //   return this.schoolService.queueOnchainData(1);
-  // }
-
-  // @Roles('ADMIN')
-  // @UseGuards(JwtAuthGuard, RoleGuard)
-  // @Patch('/update/:id')
-  // update(@Param('id') id: string, @Req() req: any) {
-  //   return this.schoolService.update(id, req.user.id);
-  // }
-
-  // @Roles('ADMIN')
-  // @UseGuards(JwtAuthGuard, RoleGuard)
-  // @Patch('/bulkUpdate')
-  // bulkUpdate(@Body() updateContributeDatumDto: ApproveContributeDatumDto, @Req() req: any) {
-  //   return this.schoolService.updateBulk(updateContributeDatumDto, req.user.id);
-  // }
-
-  // @Roles('ADMIN')
-  // @UseGuards(JwtAuthGuard, RoleGuard)
-  // @Post('mintBulk')
-  // mintBatchSchool(@Body() MintData: MintQueueDto) {
-  //   return this.schoolService.mintBulkNFT(MintData);
-  // }
-
-  // @Roles('ADMIN')
-  // // @UseGuards(JwtAuthGuard, RoleGuard)
-  // @Public()
-  // @Post('mintSchool')
-  // mintSchool(@Body() MintData: MintSingleSchool) {
-  //   return this.schoolService.mintNft(MintData);
-  // }
-
+  
   @Public()
   @ApiQuery({ name: 'minted', enum: MintStatus, required: false })
   @ApiOperation({ summary: 'Get the count of schools' })
@@ -110,6 +75,19 @@ export class SchoolController {
     return await this.schoolService.uploadFile(req, res, request.user);
   }
 
+
+  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiOperation({ summary: 'Upload the school csv for bulk mint' })
+  @Get('/validateCsv')
+  async validateCSV(
+    @Req() req: fastify.FastifyRequest,
+    @Res() res: fastify.FastifyReply<any>,
+    @Request() request: any,
+  ): Promise<any> {
+    return await this.schoolService.validateCSV(req, res, request.user);
+  }
+
   @Public()
   @Get()
   @ApiOperation({ summary: 'Get all schools' })
@@ -124,18 +102,7 @@ export class SchoolController {
     return this.schoolService.findOne(`${id}`);
   }
 
-  // @Public()
-  // @Get('/getContractDetail/:tokenId')
-  // findContract(@Param('tokenId') tokenId: string) {
-  //   return this.schoolService.findContract(tokenId);
-  // }
-
-  // @Public()
-  // @Get('byCountry/:country')
-  // findByCountry(@Param('country') country: string) {
-  //   return this.schoolService.byCountry(`${country}`);
-  // }
-
+  
   @Public()
   @Get('listUpload')
   @ApiOperation({ summary: 'Get all uploads' })
@@ -164,17 +131,7 @@ export class SchoolController {
     return this.schoolService.updateTheme(schoolId, themeActivationDto.themeId);
   }
 
-  // Test rabbit mq
-  // @Public()
-  // @Get('send')
-  // async sendMessage() {
-  //   const response = await this.rabbitMQService.publishBatchToQueue(
-  //     QUEUES.QOS_QUEUE,
-  //     [{ date: '2024-05-26' }],
-  //     1,
-  //   );
-  //   return { response };
-  // }
+  
 
   @Public()
   @Post('reserveNft')
@@ -240,10 +197,66 @@ export class SchoolController {
     return data.data[0];
   }
 
-  //   @UseGuards(ActivationGuard)
-  //   @Public()
-  //   @Get('/testEmailActivation/:uuid')
-  //   async activateWithEmail(@Param('uuid') uuid: string) {
-  //     console.log(uuid);
-  //   }
+
+  // @Public()
+  // @Get('/getContractDetail/:tokenId')
+  // findContract(@Param('tokenId') tokenId: string) {
+  //   return this.schoolService.findContract(tokenId);
+  // }
+
+  // @Public()
+  // @Get('byCountry/:country')
+  // findByCountry(@Param('country') country: string) {
+  //   return this.schoolService.byCountry(`${country}`);
+  // }
+
+  // @Roles('ADMIN')
+  // @UseGuards(JwtAuthGuard, RoleGuard)
+  // @Get('onchainDataQueue')
+  // queue() {
+  //   return this.schoolService.queueOnchainData(1);
+  // }
+
+  // @Roles('ADMIN')
+  // @UseGuards(JwtAuthGuard, RoleGuard)
+  // @Patch('/update/:id')
+  // update(@Param('id') id: string, @Req() req: any) {
+  //   return this.schoolService.update(id, req.user.id);
+  // }
+
+  // @Roles('ADMIN')
+  // @UseGuards(JwtAuthGuard, RoleGuard)
+  // @Patch('/bulkUpdate')
+  // bulkUpdate(@Body() updateContributeDatumDto: ApproveContributeDatumDto, @Req() req: any) {
+  //   return this.schoolService.updateBulk(updateContributeDatumDto, req.user.id);
+  // }
+
+  // @Roles('ADMIN')
+  // @UseGuards(JwtAuthGuard, RoleGuard)
+  // @Post('mintBulk')
+  // mintBatchSchool(@Body() MintData: MintQueueDto) {
+  //   return this.schoolService.mintBulkNFT(MintData);
+  // }
+
+  // @Roles('ADMIN')
+  // // @UseGuards(JwtAuthGuard, RoleGuard)
+  // @Public()
+  // @Post('mintSchool')
+  // mintSchool(@Body() MintData: MintSingleSchool) {
+  //   return this.schoolService.mintNft(MintData);
+  // }
+
+// Test rabbit mq
+  // @Public()
+  // @Get('send')
+  // async sendMessage() {
+  //   const response = await this.rabbitMQService.publishBatchToQueue(
+  //     QUEUES.QOS_QUEUE,
+  //     [{ date: '2024-05-26' }],
+  //     1,
+  //   );
+  //   return { response };
+  // }
+
+  
 }

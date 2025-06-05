@@ -82,10 +82,6 @@ export class SchoolService {
       if (cachedResult) return cachedResult;
     }
 
-    // const cachedResult = await this.cacheManager.get<string>(cacheKey);
-
-    // if (cachedResult) return cachedResult;
-
     const gigaMapsConditions: Prisma.SchoolWhereInput[] = [];
 
     //Combines all the filters into a single condition
@@ -400,6 +396,89 @@ export class SchoolService {
     return schooldetails;
   }
 
+  async validateCSV(
+    req: fastify.FastifyRequest,
+    res: fastify.FastifyReply<any>,
+    user: any,
+  ): Promise<any> {
+    let validationResult: any = null;
+
+    //@ts-ignore
+    if (!req.isMultipart()) {
+      res.send(
+        new BadRequestException(new AppResponseDto(400, undefined, 'Request is not multipart')),
+      );
+      return;
+    }
+
+    await new Promise(async () => {
+      //@ts-ignore
+      await req.multipart(async (field: string, fileData: any, filename: string) => {
+        try {
+          if (!filename.toLowerCase().endsWith('.csv')) {
+            return res
+              .code(400)
+              .send({ message: 'Invalid file format. Only CSV files are allowed.' });
+          }
+          const dataArray = await handler(fileData);
+          const schoolData = dataArray.schoolArrays;
+          const schools = await this.prisma.school.findMany({
+            where: {
+              giga_school_id: {
+                in: schoolData.map(school => school.school_id_giga),
+              },
+            },
+            select: { giga_school_id: true, minted: true },
+          });
+          // Create a map for quick lookup
+          const dbSchoolMap = new Map(schools.map(s => [s.giga_school_id, s.minted]));
+
+          // Find already minted schools
+          const alreadyMinted = schoolData
+            .filter(school => dbSchoolMap.get(school.school_id_giga) === MintStatus.MINTED)
+            .map(school => school.school_id_giga);
+
+          // Find missing schools (not present in DB at all)
+          const missingSchools = schoolData
+            .filter(school => !dbSchoolMap.has(school.school_id_giga))
+            .map(school => school.school_id_giga);
+
+          // Find schools that are in progress (not minted yet)
+          const inProgressSchools = schoolData
+            .filter(school => dbSchoolMap.get(school.school_id_giga) === MintStatus.ISMINTING)
+            .map(school => school.school_id_giga);
+
+          validationResult = {
+            alreadyMinted,
+            invalidSchools: missingSchools,
+            inProgressSchools,
+          };
+          res
+        .code(200)
+        .send(new AppResponseDto(200, validationResult, 'Validation completed successfully'));
+        } catch (err) {
+          if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
+            res
+              .code(500)
+              .send({ err: 'Internal Server error', message: 'Duplicate giga_school_id' });
+          res.code(500).send({ err: 'Internal Server error', message: err.message });
+        }
+      }, onEnd);
+    });
+
+    // Uploading finished
+    async function onEnd(err: any) {
+      // if (err) {
+      //   res.send(new AppResponseDto(500, err, 'Internal Server error'));
+      //   return;
+      // }
+      // console.log('Validation completed successfully',validationResult);
+      // res
+      //   .code(200)
+      //   .send(new AppResponseDto(200, validationResult, 'Validation completed successfully'));
+    }
+  }
+
   async countSchools(query: ListSchoolDto) {
     return await this.prisma.school.count({
       where: {
@@ -408,34 +487,32 @@ export class SchoolService {
     });
   }
 
-
   async getGigaMetrics() {
-   const result = await this.prisma.school.groupBy({
-    by: ['minted'],
-    _count: { minted: true },
-  });
+    const result = await this.prisma.school.groupBy({
+      by: ['minted'],
+      _count: { minted: true },
+    });
 
-  // Format the result as { minted: count, notMinted: count }
- 
+    // Format the result as { minted: count, notMinted: count }
 
-  const contributorCount  = await this.prisma.contributor.count();
+    const contributorCount = await this.prisma.contributor.count();
 
-   const metrics = {
-    minted: 0,
-    notMinted: 0,
-    contributorCount: contributorCount,
-  };
+    const metrics = {
+      minted: 0,
+      notMinted: 0,
+      contributorCount: contributorCount,
+    };
 
-  result.forEach(row => {
-    if (row.minted === MintStatus.MINTED) {
-      metrics.minted = row._count.minted;
-    }
-    if (row.minted === MintStatus.NOTMINTED) {
-      metrics.notMinted = row._count.minted;
-    }
-  });
+    result.forEach(row => {
+      if (row.minted === MintStatus.MINTED) {
+        metrics.minted = row._count.minted;
+      }
+      if (row.minted === MintStatus.NOTMINTED) {
+        metrics.notMinted = row._count.minted;
+      }
+    });
 
-  return metrics;
+    return metrics;
   }
 
   async listUploads() {
@@ -676,7 +753,6 @@ export class SchoolService {
     return updatedSchool;
   }
 
-  
   async activateSchool(data: SchoolActivation) {
     const { schoolId, themeId, contributorData } = data;
     await this.validateSchoolAndTheme(schoolId, themeId);
