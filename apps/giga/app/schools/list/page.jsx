@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 
 import SchoolSearch from '../../../components/schoolSearch/schoolSearch/SchoolSearch';
 import { useGetActiveSchool } from '../../hooks/useActivation';
+import './_schoolList.scss';
 
 const SchoolSearchPage = () => {
   const searchParams = useSearchParams();
@@ -22,7 +23,7 @@ const SchoolSearchPage = () => {
   }, [isLoading, data, linkActivation]);
 
   const handleModal = () => {
-    route.push('/schools');
+    route.push('/schools/list');
     setShowExpiredModal(false);
   };
 
@@ -33,22 +34,28 @@ const SchoolSearchPage = () => {
       {showExpiredModal && (
         <Modal
           open={showExpiredModal}
-          modalHeading=""
           passiveModal
-          className="activationModal"
+          size="sm"
+          className="dashboard-modal"
+          onRequestClose={handleModal}
         >
-          <div className="activationModalContent">
-            <div className="activationHeader">
-              <h2 className="activationTitle">School Not Activated Yet !!!</h2>
-              <p className="activationMessage">
-                School has not been activated yet.
-              </p>
-            </div>
-
-            <Button className="visitButton" onClick={handleModal}>
-              Submit
-            </Button>
-          </div>
+          <h3 className="dashboard-modal-activate-heading">
+            Oops! This event link is no longer active.
+          </h3>
+          <p className="dashboard-modal-activate-description">
+            Want to continue? 
+            <span onClick={() => (window.location.href = '/school/list')}>
+              Browse the directory
+            </span>
+             or 
+            <span
+              onClick={() =>
+                (window.location.href = 'https://giga.global/contact-us/')
+              }
+            >
+              get in touch.
+            </span>
+          </p>
         </Modal>
       )}
     </>

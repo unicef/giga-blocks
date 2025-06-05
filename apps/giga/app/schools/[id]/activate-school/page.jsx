@@ -168,6 +168,7 @@ export default function ActivateSchool() {
               cardColor={cardColor}
               fontColor={fontColor}
               schoolName={data?.name}
+              gasFeeWei={gasFeeWei}
             />
           )}
         </div>

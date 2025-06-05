@@ -20,6 +20,7 @@ export default function StandardActivationForm({
   fontColor,
   cardColor,
   schoolName,
+  gasFeeWei,
 }) {
   const [donationError, setDonationError] = useState('');
   const handleDonationChange = (e) => {
@@ -135,7 +136,7 @@ export default function StandardActivationForm({
 
               <div className="detail-row">
                 <span className="detail-label">Gas Fee</span>
-                <span className="detail-value">{gasFee} Eth</span>
+                <span className="detail-value">{Number(gasFeeWei)} Wei</span>
               </div>
 
               <div className="detail-row total-row">
