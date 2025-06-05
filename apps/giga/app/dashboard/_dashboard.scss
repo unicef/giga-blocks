@@ -427,10 +427,18 @@
 .dashboard-modal .dashboard-wallet-button {
   display: flex;
   gap: 1rem;
+  justify-content: center;
 }
 
 .dashboard-modal .dashboard-modal-description {
-  padding: 0.5rem;
+  padding: 0.8rem;
   background-color: #dcd9d9;
   border-radius: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.cds--modal-container--sm .cds--modal-content > p {
+  -webkit-padding-end: 3% !important;
+  padding-inline-end: 3% !important;
 }
