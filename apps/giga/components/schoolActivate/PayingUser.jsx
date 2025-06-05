@@ -22,7 +22,6 @@ export default function StandardActivationForm({
   schoolName,
   gasFeeWei,
 }) {
-  console.log(gasFeeWei, '--------');
   const [donationError, setDonationError] = useState('');
   const handleDonationChange = (e) => {
     const value = e.target.value;
