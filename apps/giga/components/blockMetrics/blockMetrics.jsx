@@ -15,15 +15,19 @@ import './_blockMetrics.scss';
 
 import MetricsCard from '../../components/metricsCard/MetricsCard';
 import { useState } from 'react';
+import { useMetrics } from '../../app/hooks/useMetrics';
 
 export default function BlockMetrics() {
+
+  const {data: metricsData, isLoading} = useMetrics();
+
   const blockMetrics = [
     {
       id: 3,
       icon: <CheckmarkOutline size={24} />,
       iconColor: '#8B17CF', // Purple
       iconBg: '#F7EDFD', // Light purple
-      value: '50k+',
+      value: metricsData?.minted || 0,
       label: '',
       subtitle: 'Schools Activated',
       description:
@@ -34,7 +38,7 @@ export default function BlockMetrics() {
       icon: <Location size={24} />,
       iconColor: '#CF17CF', // Pink
       iconBg: '#FDEDFD', // Light pink
-      value: '19,500,00',
+      value: metricsData?.notMinted || 0,
       label: '',
       subtitle: 'Known Schools Inactivated',
       description:
@@ -45,7 +49,7 @@ export default function BlockMetrics() {
       icon: <UserMultiple size={24} />,
       iconColor: '#0F62FE', // Blue
       iconBg: '#EBF2FF', // Light blue
-      value: '310',
+      value: metricsData?.contributorCount  || 0,
       label: '',
       subtitle: 'Giga Contributors',
       description:

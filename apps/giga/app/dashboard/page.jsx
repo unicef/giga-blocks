@@ -81,7 +81,10 @@ export default function Dashboard() {
         <p className="dashboard-modal-description">
           To view your dashboard, please connect your wallet.
         </p>
-        <div className="dashboard-wallet-button" style={{ marginTop: '30px' }}>
+        <div
+          className="dashboard-wallet-button"
+          style={{ marginTop: '1.3rem' }}
+        >
           <ConnectKitButton.Custom>
             {({ show }) => (
               <Button

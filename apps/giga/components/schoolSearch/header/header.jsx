@@ -61,6 +61,10 @@ export default function SchoolHeader() {
             </button>
           </div>
         </form>
+        <p className="view-all-school-list">
+          Or, <span onClick={() => router.push('/schools/list')}>View all</span>{' '}
+          17,539 schools list
+        </p>
       </div>
     </header>
   );

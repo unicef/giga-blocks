@@ -67,5 +67,8 @@ module.exports = {
     DAILY:'/schools/qos/daily',
     WEEKLY:'/schools/qos/weekly',
     MONTHLY:'/schools/qos/monthly',
+  },
+  METRICS:{
+    GET: '/schools/gigaMetrics',
   }
 };

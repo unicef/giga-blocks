@@ -106,7 +106,7 @@ export class QueueProcessor {
     this._logger.error(`Failed job ${job.id} of type ${job.name}: ${error.message}`, error.stack);
     if (job.attemptsMade >= job.opts.attempts) {
       try {
-         const school = await this._prismaService.school.update({
+        const school = await this._prismaService.school.update({
           where: {
             id: job.data.activationData?.schoolId,
             minted: MintStatus.ISMINTING,
@@ -128,8 +128,6 @@ export class QueueProcessor {
       }
     }
   }
-
-  
 
   @Process(SET_ONCHAIN_DATA)
   public async sendOnchainData(job: Job<{ h: number }>) {
@@ -166,9 +164,7 @@ export class QueueProcessor {
   }
 
   @Process(UPDATE_PAID_SCHOOL)
-  public async updatePaidSchool(
-    job: Job<{ activationData: SchoolActivation; }>,
-  ) {
+  public async updatePaidSchool(job: Job<{ activationData: SchoolActivation }>) {
     const schoolId = job.data.activationData.schoolId;
     const themeId = job.data.activationData.themeId;
     const contributorData = job.data.activationData.contributorData;
@@ -177,36 +173,38 @@ export class QueueProcessor {
     try {
       const txReceipt = await checkTransactionHash(transactionHash);
      this._logger.log(`Transaction receipt for school ID ${schoolId}: ${JSON.stringify(txReceipt)}`);
-      if (txReceipt.status === 'success') {
-        const updatedSchool = await this._prismaService.school.update({
-          where: {
-            id: schoolId,
-          },
-          data: {
-            minted: MintStatus.MINTED,
-            themeId: themeId,
-          },
-        });
-        this._imageQueue.add(SET_IMAGE_PROCESS, { id: updatedSchool.giga_school_id }, jobOptions);
+      if (txReceipt) {
+        if (txReceipt.status === 'success') {
+          const updatedSchool = await this._prismaService.school.update({
+            where: {
+              id: schoolId,
+            },
+            data: {
+              minted: MintStatus.MINTED,
+              themeId: themeId,
+            },
+          });
+          this._imageQueue.add(SET_IMAGE_PROCESS, { id: updatedSchool.giga_school_id }, jobOptions);
 
-  
-        this.contributorService.addPayingContributor(contributorData);
-      } else if(txReceipt.status === 'failed') {
-        await this._prismaService.school.update({
-          where:{
-            id: schoolId,
-            minted: MintStatus.ISMINTING,
-          },
-          data:{
-            minted: MintStatus.NOTMINTED,
-            themeId: null,
-          }
-        })
-      
-      }
-      else if(txReceipt.status === 'Pending') {
-        this._logger.warn(`Transaction is still pending for school ID: ${schoolId}`);
-        throw new Error(`Transaction is still pending for school ID: ${schoolId}`);
+          this.contributorService.addPayingContributor(contributorData);
+        } else if (txReceipt.status === 'failed') {
+          await this._prismaService.school.update({
+            where: {
+              id: schoolId,
+              minted: MintStatus.ISMINTING,
+            },
+            data: {
+              minted: MintStatus.NOTMINTED,
+              themeId: null,
+            },
+          });
+        } else if (txReceipt.status === 'Pending') {
+          this._logger.warn(`Transaction is still pending for school ID: ${schoolId}`);
+          throw new Error(`Transaction is still pending for school ID: ${schoolId}`);
+        }
+      } else {
+        this._logger.error(`Transaction hash is invalid or not found for school ID: ${schoolId}`);
+        throw new Error(`Transaction hash is invalid or not found for school ID: ${schoolId}`);
       }
       else {
         this._logger.error(` Failed to retrieve transaction details  for school ID: ${schoolId}`);

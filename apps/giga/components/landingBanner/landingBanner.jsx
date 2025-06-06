@@ -41,11 +41,18 @@ export default function LandingBanner() {
         </div>
 
         <div className="hero-illustration">
-          <Image
+          {/* <Image
             src="/images/hero-illustration.png"
             alt="Illustration of a person carrying data"
             width={400}
             height={450}
+            className="hero-image"
+          /> */}
+          <Image
+            src="/images/hero-illustration.svg"
+            alt="Illustration of a person carrying data"
+            width={600}
+            height={530}
             className="hero-image"
           />
         </div>

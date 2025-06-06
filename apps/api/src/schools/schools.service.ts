@@ -408,6 +408,36 @@ export class SchoolService {
     });
   }
 
+
+  async getGigaMetrics() {
+   const result = await this.prisma.school.groupBy({
+    by: ['minted'],
+    _count: { minted: true },
+  });
+
+  // Format the result as { minted: count, notMinted: count }
+ 
+
+  const contributorCount  = await this.prisma.contributor.count();
+
+   const metrics = {
+    minted: 0,
+    notMinted: 0,
+    contributorCount: contributorCount,
+  };
+
+  result.forEach(row => {
+    if (row.minted === MintStatus.MINTED) {
+      metrics.minted = row._count.minted;
+    }
+    if (row.minted === MintStatus.NOTMINTED) {
+      metrics.notMinted = row._count.minted;
+    }
+  });
+
+  return metrics;
+  }
+
   async listUploads() {
     try {
       return await this.prisma.cSVUpload.findMany();

@@ -1,5 +1,10 @@
 // components/schoolDetails/SchoolStats.js
-import { CheckmarkFilled, MeterAlt, NotAvailable,Misuse } from '@carbon/icons-react';
+import {
+  CheckmarkFilled,
+  MeterAlt,
+  NotAvailable,
+  Misuse,
+} from '@carbon/icons-react';
 import { useState, useEffect } from 'react';
 import { useQOSDailyGet, useQOSWeeklyGet } from '../../app/hooks/useQOS';
 
@@ -101,7 +106,11 @@ export default function SchoolStats({
 
         <div
           className="school-details__stat-card"
-          style={{ backgroundColor: bgColor, borderColor: cardColor }}
+          style={{
+            backgroundColor: bgColor,
+            borderColor: cardColor,
+            height: '100%',
+          }}
         >
           <div className="school-details__stat-header">
             <div className="school-details__stat-icon download">

@@ -91,6 +91,13 @@ export class SchoolController {
     return this.schoolService.countSchools(query);
   }
 
+  @Public()
+  @ApiOperation({ summary: 'Get the giga metrics' })
+  @Get('gigaMetrics')
+  async getGigaMetrics() {
+    return this.schoolService.getGigaMetrics();
+  }
+
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOperation({ summary: 'Upload the school csv for bulk mint' })

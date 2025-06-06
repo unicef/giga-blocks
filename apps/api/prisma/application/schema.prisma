@@ -172,7 +172,7 @@ model SchoolVersion {
 }
 
 model School {
-  id                    String            @id @default(uuid())
+  id                    String            @id @unique @map("id")  
   giga_school_id        String            @unique
   status                SchoolStatus      @default(Open)
   connectivity          Boolean           @default(false)
