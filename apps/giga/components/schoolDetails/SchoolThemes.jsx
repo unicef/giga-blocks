@@ -1,13 +1,14 @@
 'use client';
 
 import { ArrowLeft } from '@carbon/icons-react';
-import { Button } from '@carbon/react';
+import { Button, Modal } from '@carbon/react';
 import { useThemeToggleStore } from '../../app/store/themeToggleStore';
 import { useThemeStore } from '../../app/store/themeStore';
 import { useRouter } from 'next/navigation';
 import { useThemeUpdate } from '../../app/hooks/useTheme/index';
 import Image from 'next/image';
 import './_themeSelector.scss';
+import { useState } from 'react';
 
 const ThemeSelector = ({
   themeOptions,
@@ -30,11 +31,7 @@ const ThemeSelector = ({
         {
           onSuccess: () => {
             toggleVisibilityForMinted();
-            showNotification(
-              'success',
-              'Theme Updated',
-              'The school theme has been successfully updated.'
-            );
+            setOpen(true);
           },
           onError: (error) => {
             toggleVisibilityForMinted();
@@ -54,6 +51,13 @@ const ThemeSelector = ({
       router.push(url);
     }
   };
+
+  const [open, setOpen] = useState(false);
+
+  const handleRequestClose = () => {
+    setOpen(false);
+  };
+
   const isVisibleForMinted = useThemeToggleStore(
     (state) => state.isVisibleForMinted
   );
@@ -142,6 +146,20 @@ const ThemeSelector = ({
           height={582}
         />
       </div>
+      <Modal
+        open={open}
+        preventCloseOnClickOutside={true}
+        passiveModal
+        onRequestClose={handleRequestClose}
+        size="md"
+        hasCloseIcon={false}
+      >
+        <div style={{ textAlign: 'left', padding: '20px' }}>
+          <p style={{ color: 'gray', marginTop: '10px' }}>
+            Theme updated successfully! 🎨 Your school just got a new look."
+          </p>
+        </div>
+      </Modal>
     </div>
   );
 };

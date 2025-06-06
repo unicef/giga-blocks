@@ -399,13 +399,13 @@ export default function SchoolSearch({ linkActivation }) {
         <div className="search-page__grid">
           {filteredSchools?.map((school, idx) => (
             <SchoolCard
-              key={school.id}
-              id={school.id}
-              schoolName={school.name}
-              location={school.region_name}
-              minted={school.minted}
-              hasImage={school.hasImage}
-              imageHash={school.imageHash}
+              key={school?.id}
+              id={school?.id}
+              schoolName={school?.name}
+              location={school?.countryName}
+              minted={school?.minted}
+              hasImage={school?.hasImage}
+              imageHash={school?.imageHash}
               linkActivation={linkActivation}
               fontColor={'#161616'}
               bgColor={school?.theme?.colorScheme?.cardColor}

@@ -27,6 +27,10 @@
   }
 }
 
+.activationModal .cds--modal-close {
+  display: none;
+}
+
 .activationModalContent {
   padding: $spacing-07;
   display: flex;
@@ -146,6 +150,9 @@
   align-items: center;
   padding: 2rem;
   // font-family: $font-family;
+  @include breakpoint-down(md) {
+    padding: 1rem;
+  }
 }
 
 .activate-school-card {
@@ -159,29 +166,74 @@
   margin-top: 20px;
 }
 
-.activate-school-content {
-  display: flex;
-  flex-direction: column;
+// .activate-school-content {
+//   display: flex;
+//   flex-direction: column;
 
-  @media (min-width: 768px) {
-    flex-direction: row;
-    gap: 140px;
+//   @media (min-width: 768px) {
+//     flex-direction: row;
+//     gap: 140px;
+//   }
+
+//   @media (max-width: 899px) {
+//     flex-direction: column;
+//     gap: 0;
+//   }
+// }
+
+// .activate-school-left {
+//   padding: 1rem;
+//   flex: 1;
+//   position: relative;
+
+//   @media (min-width: 768px) {
+//     padding: 2.5rem;
+//     // max-width: 50%;
+//   }
+// }
+
+// .activate-school-right {
+//   padding: 1rem;
+//   flex: 1;
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: space-between;
+//   margin-top: 120px;
+
+//   @media (min-width: 768px) {
+//     padding: 2.5rem;
+//     // margin-top: 0;
+//   }
+
+//   @media (max-width: 899px) {
+//     margin-top: 0;
+//   }
+// }
+
+.activate-school-content {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 140px;
+
+  @media (max-width: 899px) {
+    grid-template-columns: 1fr;
+    gap: 0;
   }
 }
 
 .activate-school-left {
-  padding: 2rem;
+  padding: 1rem;
   flex: 1;
   position: relative;
 
   @media (min-width: 768px) {
     padding: 2.5rem;
-    max-width: 50%;
+    // max-width: 50%;
   }
 }
 
 .activate-school-right {
-  padding: 2rem;
+  padding: 1rem;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -190,9 +242,10 @@
 
   @media (min-width: 768px) {
     padding: 2.5rem;
+    // margin-top: 0;
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: 899px) {
     margin-top: 0;
   }
 }
@@ -269,6 +322,28 @@
     bottom: -6.5rem;
     left: -12.7rem;
     height: 22.2rem;
+  }
+  @include breakpoint-down(lg) {
+    display: none;
+  }
+}
+
+.globe-illustration-non-paying {
+  position: absolute;
+  bottom: -5rem;
+  left: -2rem;
+  width: 100%;
+  height: 20rem;
+  background-image: url('/path-to-globe-image.svg');
+  background-repeat: no-repeat;
+  background-position: bottom left;
+  background-size: contain;
+  z-index: 0;
+
+  @media (min-width: 768px) {
+    bottom: -6.5rem;
+    left: -12.7rem;
+    height: 16.2rem;
   }
   @include breakpoint-down(lg) {
     display: none;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Header,
   HeaderContainer,
@@ -20,20 +20,63 @@ import { useAccount } from 'wagmi';
 
 const Navbar = () => {
   const [isClient, setIsClient] = useState(false);
+  const [isSideNavExpanded, setIsSideNavExpanded] = useState(false);
+  const [wasSideNavExpanded, setWasSideNavExpanded] = useState(false); // Track previous state
+  const sideNavRef = useRef(null);
+
   const { isConnected } = useAccount();
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
+  // Close side navbar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sideNavRef.current && !sideNavRef.current.contains(event.target)) {
+        setIsSideNavExpanded(false);
+      }
+    };
+
+    if (isSideNavExpanded) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isSideNavExpanded]);
+
+  // Handle side navbar behavior on viewport resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        // Save the current state before closing
+        setWasSideNavExpanded(isSideNavExpanded);
+        setIsSideNavExpanded(false);
+      } else {
+        // Restore the previous state when returning to mobile view
+        setIsSideNavExpanded(wasSideNavExpanded);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [isSideNavExpanded, wasSideNavExpanded]);
+
   return (
     <HeaderContainer
-      render={({ isSideNavExpanded, onClickSideNavExpand }) => (
+      render={({}) => (
         <Header className="navbar" aria-label="Giga">
           <SkipToContent />
           <HeaderMenuButton
             aria-label="Open menu"
-            onClick={onClickSideNavExpand}
+            onClick={() => setIsSideNavExpanded(!isSideNavExpanded)}
             isActive={isSideNavExpanded}
           />
 
@@ -48,9 +91,9 @@ const Navbar = () => {
             <Link href="/about" passHref legacyBehavior>
               <HeaderMenuItem>About Us</HeaderMenuItem>
             </Link>
-            <Link href="/#" passHref legacyBehavior>
+            {/* <Link href="/#" passHref legacyBehavior>
               <HeaderMenuItem>Blogs</HeaderMenuItem>
-            </Link>
+            </Link> */}
             {isConnected && (
               <Link href={'/dashboard'} passHref legacyBehavior>
                 <HeaderMenuItem>Dashboard</HeaderMenuItem>
@@ -61,6 +104,7 @@ const Navbar = () => {
           {/* SIDENAV STARTS HERE */}
           {isClient && (
             <SideNav
+              ref={sideNavRef}
               aria-label="Side navigation"
               expanded={isSideNavExpanded}
               isPersistent={false}
@@ -68,17 +112,27 @@ const Navbar = () => {
               <SideNavItems>
                 <HeaderSideNavItems>
                   <Link href="/schools" passHref legacyBehavior>
-                    <HeaderMenuItem>Schools</HeaderMenuItem>
+                    <HeaderMenuItem onClick={() => setIsSideNavExpanded(false)}>
+                      Schools
+                    </HeaderMenuItem>
                   </Link>
                   <Link href="/about" passHref legacyBehavior>
-                    <HeaderMenuItem>About Us</HeaderMenuItem>
+                    <HeaderMenuItem onClick={() => setIsSideNavExpanded(false)}>
+                      About Us
+                    </HeaderMenuItem>
                   </Link>
-                  <Link href="/#" passHref legacyBehavior>
-                    <HeaderMenuItem>Blogs</HeaderMenuItem>
-                  </Link>
+                  {/* <Link href="/blog" passHref legacyBehavior>
+                    <HeaderMenuItem onClick={() => setIsSideNavExpanded(false)}>
+                      Blogs
+                    </HeaderMenuItem>
+                  </Link> */}
                   {isConnected && (
-                    <Link href={'#'} passHref legacyBehavior>
-                      <HeaderMenuItem>Dashboard</HeaderMenuItem>
+                    <Link href={'/dashboard'} passHref legacyBehavior>
+                      <HeaderMenuItem
+                        onClick={() => setIsSideNavExpanded(false)}
+                      >
+                        Dashboard
+                      </HeaderMenuItem>
                     </Link>
                   )}
                 </HeaderSideNavItems>

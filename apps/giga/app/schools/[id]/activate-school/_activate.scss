@@ -141,14 +141,14 @@
   gap: $spacing-05;
 
   button {
-    min-width: 10rem;
+    min-width: 14rem;
   }
 
-  @include breakpoint-down(sm) {
-    flex-direction: column;
+  @include breakpoint-down(md) {
+    flex-direction: row;
 
     button {
-      width: 100%;
+      min-width: 8rem;
     }
   }
 }

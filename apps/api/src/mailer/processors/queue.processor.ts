@@ -33,6 +33,7 @@ import {
   BULK_IMAGE_QUEUE,
   SET_BULK_IMAGE_PROCESS,
   UPDATE_BULK_IMAGE,
+  UPDATE_PAID_SCHOOL,
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
@@ -58,6 +59,9 @@ import uploadFile from 'src/utils/ipfs/ipfsAdd';
 import { hexStringToBuffer } from 'src/utils/string-format';
 import { ContributorService } from 'src/contributor/contributor.service';
 import { MailService } from '../mailer.service';
+import { checkTransactionHash } from 'src/utils/ethers/checkTransaction';
+import { SchoolActivation } from 'src/schools/dto/reserve-nft.dto';
+// import { checkTxnStatus } from 'src/utils/gasPrice';
 
 @Injectable()
 @Processor(ONCHAIN_DATA_QUEUE)
@@ -65,9 +69,12 @@ export class QueueProcessor {
   private readonly _logger = new Logger(QueueProcessor.name);
 
   constructor(
+    @InjectQueue(IMAGE_QUEUE) private readonly _imageQueue: Queue,
+
     private readonly _mailerService: MailerService,
     private readonly _configService: ConfigService,
     private contributorService: ContributorService,
+    private readonly _prismaService: PrismaAppService,
   ) {}
 
   @OnQueueActive()
@@ -100,6 +107,38 @@ export class QueueProcessor {
     }
   }
 
+  @OnQueueFailed({ name: UPDATE_PAID_SCHOOL })
+  public async onSchoolActivationError(job: Job<any>, error: any) {
+    this._logger.error(`Failed job ${job.id} of type ${job.name}: ${error.message}`, error.stack);
+    if (job.attemptsMade >= job.opts.attempts) {
+      try {
+         const school = await this._prismaService.school.update({
+          where: {
+            id: job.data.activationData?.schoolId,
+            minted: MintStatus.ISMINTING,
+          },
+          data: {
+            minted: MintStatus.NOTMINTED,
+            themeId: null,
+          },
+        });
+        return this._mailerService.sendMail({
+          to: this._configService.get('EMAIL_ADDRESS'),
+          from: this._configService.get('EMAIL_ADDRESS'),
+          subject: `Something went wrong with transactions!! Job Id${job.id}, Job Name: ${job.name}`,
+          template: './error',
+          context: {
+            error: error.message,
+          },
+        });
+      } catch {
+        this._logger.error('Failed to send confirmation email to admin');
+      }
+    }
+  }
+
+  
+
   @Process(SET_ONCHAIN_DATA)
   public async sendOnchainData(job: Job<{ h: number }>) {
     this._logger.log(`Sending transaction to blockchain`);
@@ -121,12 +160,64 @@ export class QueueProcessor {
     const walletAddress = job.data.walletAddress;
     try {
       const tx = await claimNft(walletAddress, email);
-      if (tx) {
+      const txReceipt = await tx.wait();
+      if (txReceipt.status == 1) {
         this.contributorService.claimNft(job.data.email, job.data.walletAddress, job.data.schoolId);
+      } else {
+        this._logger.error(`Failed to claim NFT for ${email}`);
+        throw new Error(`Failed to claim NFT for ${email}`);
       }
     } catch (error) {
       this._logger.error(`Failed to send transactions to blockchain`);
       throw new Error(`Failed to send transactions to blockchain, ${error}`);
+    }
+  }
+
+  @Process(UPDATE_PAID_SCHOOL)
+  public async updatePaidSchool(
+    job: Job<{ activationData: SchoolActivation; }>,
+  ) {
+    const schoolId = job.data.activationData.schoolId;
+    const themeId = job.data.activationData.themeId;
+    const contributorData = job.data.activationData.contributorData;
+    const transactionHash = job.data.activationData.transactionHash;
+
+    try {
+      const txReceipt = await checkTransactionHash(transactionHash);
+      if (txReceipt.status === 'success') {
+        const updatedSchool = await this._prismaService.school.update({
+          where: {
+            id: schoolId,
+          },
+          data: {
+            minted: MintStatus.MINTED,
+            themeId: themeId,
+          },
+        });
+        this._imageQueue.add(SET_IMAGE_PROCESS, { id: updatedSchool.giga_school_id }, jobOptions);
+
+  
+        this.contributorService.addPayingContributor(contributorData);
+      } else if(txReceipt.status === 'failed') {
+        await this._prismaService.school.update({
+          where:{
+            id: schoolId,
+            minted: MintStatus.ISMINTING,
+          },
+          data:{
+            minted: MintStatus.NOTMINTED,
+            themeId: null,
+          }
+        })
+      
+      }
+      else if(txReceipt.status === 'Pending') {
+        this._logger.warn(`Transaction is still pending for school ID: ${schoolId}`);
+        throw new Error(`Transaction is still pending for school ID: ${schoolId}`);
+      }
+    } catch (error) {
+      this._logger.error(`Failed to update paid school: ${error.message}`);
+      throw new Error(`Failed to update paid school: ${error.message}`);
     }
   }
 }

@@ -1,13 +1,9 @@
 'use client';
 
-import {
-  ArrowUpRight,
-  CheckmarkOutline,
-  Renew,
-  Wallet,
-} from '@carbon/icons-react';
+import { ArrowUpRight, CheckmarkOutline, Wallet } from '@carbon/icons-react';
 import Image from 'next/image';
 import './_schoolInfo.scss';
+import CtaSection from '../../CtaSection';
 
 export default function SchoolsInfo() {
   return (
@@ -72,17 +68,23 @@ export default function SchoolsInfo() {
             <div className="step-card">
               <div className="step-icon" style={{ backgroundColor: '#eff6ff' }}>
                 <svg
+                  xmlns="http://www.w3.org/2000/svg"
                   width="24"
                   height="24"
                   viewBox="0 0 24 24"
                   fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  style={{ color: '#3b82f6' }}
+                  stroke="#0F62FE"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-school-icon lucide-school"
                 >
-                  <path
-                    d="M3 21h18v-3H3v3zm9-14h6v2h-6V7zm0 4h6v2h-6v-2zm0 4h6v2h-6v-2zM3 7h6c0 1.66-1.34 3-3 3S3 8.66 3 7zm0 4h6c0 1.66-1.34 3-3 3s-3-1.34-3-3zm0 4h6c0 1.66-1.34 3-3 3s-3-1.34-3-3z"
-                    fill="currentColor"
-                  />
+                  <path d="M14 22v-4a2 2 0 1 0-4 0v4" />
+                  <path d="m18 10 3.447 1.724a1 1 0 0 1 .553.894V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-7.382a1 1 0 0 1 .553-.894L6 10" />
+                  <path d="M18 5v17" />
+                  <path d="m4 6 7.106-3.553a2 2 0 0 1 1.788 0L20 6" />
+                  <path d="M6 5v17" />
+                  <circle cx="12" cy="9" r="2" />
                 </svg>
               </div>
               <div className="step-number">4</div>
@@ -90,6 +92,11 @@ export default function SchoolsInfo() {
             </div>
           </div>
         </div>
+      </section>
+      <section className="cta-section">
+        <CtaSection
+          title={`Be a part of a bigger initiative. Activate a school today.`}
+        />
       </section>
     </div>
   );

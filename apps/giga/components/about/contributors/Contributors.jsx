@@ -5,10 +5,9 @@ import { Button } from '@carbon/react';
 import CtaSection from '../../CtaSection';
 import { useContributeList } from '../../../app/hooks/useContributor';
 
-export default function Contributors({contributorList}) {
+export default function Contributors({ contributorList }) {
   // This would typically come from an API or database
 
-  
   return (
     <>
       <section className="contributors-section">
@@ -33,11 +32,12 @@ export default function Contributors({contributorList}) {
           </p>
 
           <div className="contributors-grid">
-            { contributorList && contributorList?.map((contributor, index) => (
-              <span key={index} className="contributor-name">
-                {contributor?.name} ,
-              </span>
-            ))}
+            {contributorList &&
+              contributorList?.map((contributor, index) => (
+                <span key={index} className="contributor-name">
+                  {contributor?.name} ,
+                </span>
+              ))}
           </div>
 
           <p className="contributors-more">and many more.</p>

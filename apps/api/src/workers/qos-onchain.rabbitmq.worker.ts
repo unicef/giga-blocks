@@ -51,7 +51,7 @@ export class QOSDataWorker extends BaseWorker<SchoolService> {
 
     batch.map(async (d: any) => {
       const qosDate = new Date(d.date);
-      const QOSGigaAddress = process.env.NEXT_PUBLIC_GIGA_QOS_ADDRESS as string;
+      const QOSGigaAddress = process.env.GIGA_QOS_CONTRACT_ADDRESS as string;
       await addArweaveHash(QOSGiga, QOSGigaAddress, await this.getArweaveHashes(qosDate));
     });
   }

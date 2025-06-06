@@ -3,7 +3,7 @@
 import { getDefaultConfig } from 'connectkit';
 import { createConfig, http } from 'wagmi';
 import { baseSepolia } from 'wagmi/chains';
-import { coinbaseWallet,injected } from 'wagmi/connectors';
+import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors';
 
 export const config = createConfig(
   getDefaultConfig({
@@ -20,9 +20,10 @@ export const config = createConfig(
       multicall: true,
     },
     connectors: [
-      // walletConnect({
-      //   projectId: '1234',
-      // }),
+      walletConnect({
+        showQrModal: false,
+        projectId: 'fdfb7359857dc4dd413ecda05a551571',
+      }),
       coinbaseWallet(),
       injected(),
     ],
@@ -31,7 +32,7 @@ export const config = createConfig(
         'https://base-sepolia.g.alchemy.com/v2/WSfPp7PZYjX8uXeDOFfk_GFBBSCrCyxg'
       ),
     },
-    walletConnectProjectId: '',
+    walletConnectProjectId: 'fdfb7359857dc4dd413ecda05a551571',
     // Required App Info
     appName: 'Giga',
 

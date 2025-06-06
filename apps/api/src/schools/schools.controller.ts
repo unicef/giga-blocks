@@ -91,6 +91,13 @@ export class SchoolController {
     return this.schoolService.countSchools(query);
   }
 
+  @Public()
+  @ApiOperation({ summary: 'Get the giga metrics' })
+  @Get('gigaMetrics')
+  async getGigaMetrics() {
+    return this.schoolService.getGigaMetrics();
+  }
+
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOperation({ summary: 'Upload the school csv for bulk mint' })
@@ -193,8 +200,8 @@ export class SchoolController {
   @Public()
   @Post('/activateSchool')
   @ApiOperation({ summary: 'Activate the school by paying user' })
-  async activateSchool(@Body() data: SchoolActivation) {
-    return this.schoolService.activateSchool(data);
+  async activateSchool(@Body() data: SchoolActivation,transactionhash: string) {
+    return this.schoolService.activatePaidSchool(data);
   }
 
   @Public()

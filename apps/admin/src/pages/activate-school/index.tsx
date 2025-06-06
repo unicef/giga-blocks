@@ -61,8 +61,8 @@ const ActivateSchool = () => {
           });
           // refetch();
         },
-        onError: () => {
-          setSnackbar({ open: true, message: 'Action failed! Please try again.' });
+        onError: (err:any) => {
+          setSnackbar({ open: true, message: `${err?.response?.data?.message || 'Action failed! Please try again.'}  `});
         },
       }
     );
@@ -139,6 +139,7 @@ const ActivateSchool = () => {
         open={snackbar.open}
         autoHideDuration={900}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} sx={{ width: '100%' }}>
           {snackbar.message}

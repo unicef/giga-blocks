@@ -59,6 +59,12 @@ export class ContributorController {
         return this.contributorService.getReservedSchools(email);      
     }
 
+    @Public()
+    @Get('/walletAddress/:walletAddress')
+    getContributorByWalletAddress(@Param('walletAddress') walletAddress: string) {
+        return this.contributorService.getContributorByWalletAddress(walletAddress);
+    }
+
     
 
 }
