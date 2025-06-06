@@ -206,10 +206,7 @@ export class QueueProcessor {
         this._logger.error(`Transaction hash is invalid or not found for school ID: ${schoolId}`);
         throw new Error(`Transaction hash is invalid or not found for school ID: ${schoolId}`);
       }
-      else {
-        this._logger.error(` Failed to retrieve transaction details  for school ID: ${schoolId}`);
-        throw new Error(` Failed to retrieve transaction details for school ID: ${schoolId}`);
-      }
+
     } catch (error) {
       this._logger.error(`Failed to update paid school: ${error.message}`);
       throw new Error(`Failed to update paid school: ${error.message}`);
