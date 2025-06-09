@@ -308,7 +308,6 @@ model Theme {
   @@map("giga_themes")
 }
 
-
 model Qos {
   id                   String    @id @default(uuid())
   timestamp            DateTime

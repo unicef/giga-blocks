@@ -3,32 +3,36 @@ import { PrismaAppService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class CronService {
-    constructor(private readonly _prismaService: PrismaAppService) {}
+  constructor(private readonly _prismaService: PrismaAppService) {}
 
-    async updateLinks() {
-        const date = new Date();
-        await this._prismaService.activationLog.updateMany({
-            where:{
-                startDate:{lte: date},
-                manually_inactivated: false,
-            },
-            data:{
-                status:'ACTIVE',
-            }
-        })
+  private toDateOnly(date: Date | string) {
+    const d = new Date(date);
+    const localYear = d.getFullYear();
+    const localMonth = d.getMonth();
+    const localDay = d.getDate();
+    return new Date(Date.UTC(localYear, localMonth, localDay));
+  }
 
-        await this._prismaService.activationLog.updateMany({
-            where:{
-                endDate:{lte: date},
-                OR:[
-                    {status: 'ACTIVE'},
-                    {status: 'INACTIVE'}
-                ]
-            },
-            data:{
-                status:'EXPIRED',
-            }
-        })
+  async updateLinks() {
+    const date = this.toDateOnly(new Date());
+    await this._prismaService.activationLog.updateMany({
+      where: {
+        startDate: { lte: date },
+        manually_inactivated: false,
+      },
+      data: {
+        status: 'ACTIVE',
+      },
+    });
 
-    }
+    await this._prismaService.activationLog.updateMany({
+      where: {
+        endDate: { lt: date },
+        OR: [{ status: 'ACTIVE' }, { status: 'INACTIVE' }],
+      },
+      data: {
+        status: 'EXPIRED',
+      },
+    });
+  }
 }

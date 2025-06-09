@@ -91,11 +91,10 @@ export default function ActiveDialog() {
 
     const activationData = {
       name,
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
+      startDate: startDate?.toISOString(),
+      endDate: endDate?.toISOString(),
       status: isActive ? 'ACTIVE' : 'INACTIVE',
     };
-
     mutate(activationData, {
       onSuccess: () => {
         setSnackbarMessage('School activated successfully!');
