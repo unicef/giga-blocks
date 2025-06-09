@@ -20,7 +20,7 @@ export default function SchoolTableRow({
   rowData,
   checkbox,
 }: Props) {
-  const { id, schoolName, country, longitude, latitude, mintedStatus, mintedAt, gasFee } = row;
+  const { id, schoolName, country, longitude, latitude, mintedStatus, mintedAt, gasFee,imageHash } = row;
 
   const { push } = useRouter();
   const schoolNft = process.env.NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS;
@@ -110,6 +110,15 @@ export default function SchoolTableRow({
         >
           {longitude}
         </TableCell>
+        {imageHash && (
+           <TableCell
+          align="left"
+          sx={{ textTransform: 'capitalize' }}
+          onClick={() => handleEditRow(id)}
+        >
+          {imageHash}
+        </TableCell>
+        )}
 
         <TableCell
           align="left"

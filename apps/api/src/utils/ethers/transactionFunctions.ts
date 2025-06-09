@@ -152,6 +152,22 @@ export const updateImageHash = async (
   // return await contract.updateNftImageHash(schoolId, tokenHash, { gasPrice: weiEthers });
 };
 
+
+export const updateBulkImageHash = async(
+  contractName: string,
+  contractAddress: string,
+  imageData:ImageData[]
+): Promise<ContractTransactionResponse> => {
+  const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
+  const schoolArgs = imageData.map((el, i) => [
+    el[0], // gigaSchoolId
+    el[1], // imageHash
+  ]);
+  const multicalldata = generateMultiCallData(contractName, 'updateNftImageHash', schoolArgs);
+  return await contract.multicall(multicalldata);
+}
+
+
 export const getTokenHash = async (
   contractName: string,
   contractAddress: string,
