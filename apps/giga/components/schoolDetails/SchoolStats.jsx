@@ -70,7 +70,10 @@ export default function SchoolStats({
     });
   };
 
-  const speeds = weeklyData?.map((item) => item.averageSpeedUpload || 0);
+  const speeds =
+    weeklyData?.length > 0
+      ? weeklyData?.map((item) => item.averageSpeedUpload || 0)
+      : [];
   const maxSpeed = speeds ? Math.max(...speeds, 1) : 1;
 
   // Helper to get day name from YYYY-MM-DD string
@@ -181,23 +184,27 @@ export default function SchoolStats({
         </div>
 
         <div className="school-details__chart">
-          {weeklyData?.map((item, index) => (
-            <div key={index} className="school-details__chart-bar-container">
-              <div
-                className="school-details__chart-bar"
-                style={{
-                  height: `${
-                    ((item.averageSpeedUpload || 0) / maxSpeed) * 100
-                  }px`,
-                  backgroundColor: fontColor,
-                  // borderColor: cardColor,
-                }}
-              />
-              <div className="school-details__chart-label">
-                {getDayName(item.day)}
+          {weeklyData?.length > 0 ? (
+            weeklyData?.map((item, index) => (
+              <div key={index} className="school-details__chart-bar-container">
+                <div
+                  className="school-details__chart-bar"
+                  style={{
+                    height: `${
+                      ((item.averageSpeedUpload || 0) / maxSpeed) * 100
+                    }px`,
+                    backgroundColor: fontColor,
+                    // borderColor: cardColor,
+                  }}
+                />
+                <div className="school-details__chart-label">
+                  {getDayName(item.day)}
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <>No data</>
+          )}
         </div>
       </div>
     </div>
