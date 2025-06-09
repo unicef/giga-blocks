@@ -310,7 +310,6 @@ model Theme {
   @@map("giga_themes")
 }
 
-
 model Qos {
   id                   String    @id @default(uuid())
   timestamp            DateTime
@@ -355,6 +354,7 @@ model ActivationLog {
   status          ActivationStatus @default(INACTIVE)
   activatedBy     String
   name            String
+  manually_inactivated Boolean         @default(false)
   activatedUser   User             @relation("ActivatedBy", fields: [activatedBy], references: [id])
   deActivatedBy   String?
   deActivatedUser User?            @relation("DeactivatedBy", fields: [deActivatedBy], references: [id])

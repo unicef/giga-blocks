@@ -180,7 +180,7 @@ export class QueueProcessor {
 
     try {
       const txReceipt = await checkTransactionHash(transactionHash);
-      console.log('txReceipt', txReceipt);
+     this._logger.log(`Transaction receipt for school ID ${schoolId}: ${JSON.stringify(txReceipt)}`);
       if (txReceipt) {
         if (txReceipt.status === 'success') {
           const updatedSchool = await this._prismaService.school.update({
@@ -214,6 +214,7 @@ export class QueueProcessor {
         this._logger.error(`Transaction hash is invalid or not found for school ID: ${schoolId}`);
         throw new Error(`Transaction hash is invalid or not found for school ID: ${schoolId}`);
       }
+
     } catch (error) {
       this._logger.error(`Failed to update paid school: ${error.message}`);
       throw new Error(`Failed to update paid school: ${error.message}`);
