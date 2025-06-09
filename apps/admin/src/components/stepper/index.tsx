@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react';
 import routes from '../../constants/api';
 import SpreadSheetTable from './spreadsheetTable';
 import SpreadSheetValidationTable from './spreadsheetValidationTable';
-const steps = ['Preview File', 'Validate File'];
+const steps = ['Preview File', 'Validate File', 'Mint'];
 
 export default function HorizontalLinearStepper({
   propsTableData,
@@ -27,6 +27,7 @@ export default function HorizontalLinearStepper({
 }) {
   const [activeStep, setActiveStep] = useState(0);
   const [files, setFiles] = useState<(File | string)[]>([]);
+  const [validationResult, setValidationResult] = useState<any[]>([]);
   const [hideButton, setHideButton] = useState(false);
   const [progress, setProgress] = useState<number>(0);
   // const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -41,7 +42,9 @@ export default function HorizontalLinearStepper({
     isFileValidated,
     selectedFiles,
     setLoading,
+    tableDatas: rows,
   } = useUploadContext();
+
   const [hasErrors, setHasErrors] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
@@ -49,6 +52,7 @@ export default function HorizontalLinearStepper({
 
   const baseUrl = routes.BASE_URL;
   const API_URL = `${baseUrl}${routes.SCHOOLS.UPLOAD}`;
+  const VALIDATE_FILE_API_URL = `${baseUrl}${routes.SCHOOLS.VALIDATECSV}`;
   setTableDatas(propsTableData);
 
   useEffect(() => {
@@ -56,16 +60,45 @@ export default function HorizontalLinearStepper({
   }, [typeOfFile]);
 
   useEffect(() => {
-    if (isFileValidated) {
-      const newFiles = selectedFiles?.map((file: any) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
+    // if (isFileValidated) {
+    const newFiles = selectedFiles?.map((file: any) =>
+      Object.assign(file, {
+        preview: URL.createObjectURL(file),
+      })
+    );
+    setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+    // setIsFileValidated(false);
+    // }
+  }, [selectedFiles, setIsFileValidated]);
+
+  useEffect(() => {
+    //send file to validate if activate step is 1
+    if (activeStep === 1 && files.length > 0) {
+      const formData = new FormData();
+      files.forEach((file) => {
+        formData.append(`files`, file);
+      });
+      fileUpload
+        .post(VALIDATE_FILE_API_URL, formData)
+        .then((response) => {
+          if (response?.status === 200) {
+            setIsFileValidated(true);
+            enqueueSnackbar('File is validated successfully!');
+            setValidationResult([
+              ...(response.data?.data?.alreadyMinted || []),
+              ...(response.data?.data?.invalidSchools || []),
+              ...(response.data?.data?.inProgressSchools || []),
+            ]);
+          }
         })
-      );
-      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-      setIsFileValidated(false);
+        .catch((error: AxiosError) => {
+          enqueueSnackbar(error.message, { variant: 'error' });
+          setHasErrors(true);
+          setActiveStep(0);
+          setDisableDropZone(false);
+        });
     }
-  }, [isFileValidated, selectedFiles, setIsFileValidated]);
+  }, [activeStep]);
 
   const QontoConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -101,7 +134,7 @@ export default function HorizontalLinearStepper({
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setDisableDropZone(true);
-    setIsFileValidated(true);
+    // setIsFileValidated(true);
     setSelectedSheetName('');
   };
 
@@ -118,39 +151,71 @@ export default function HorizontalLinearStepper({
       files.forEach((file) => {
         formData.append(`files`, file);
       });
-      setShowStepper(false);
-      setLoading(true);
-      await fileUpload
-        .post(API_URL, formData, {
-          onUploadProgress: (progressEvent: any) => {
-            const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-            setProgress(percentage);
-          },
-        })
-        .then((response) => {
-          setFiles([]);
-          setProgress(0);
-          setDisableDropZone(false);
-          setLoading(false);
-          // Handle successful upload
-          if (response?.status === 200) {
-            enqueueSnackbar('Schools are added in queue. Processing will take some time.');
-            push(`/dashboard`);
-          }
-          if (response?.status === 500) {
-            enqueueSnackbar('Error uploading to database! Please check your file', {
-              variant: 'error',
-            });
-          }
-        })
-        .catch((error: AxiosError) => {
-          // Handle upload error
-          setProgress(0);
-          enqueueSnackbar(error.message, { variant: 'error' });
-          setLoading(false);
-          setFile([]);
-          setDisableDropZone(false);
+      const reader = new FileReader();
+      const file = files[0] as File;
+      reader.onload = async (e) => {
+        const text = e.target?.result as string;
+
+        // Convert CSV to array of arrays
+        const rows = text
+          .trim()
+          .split('\n')
+          .map((row) => row.split(','));
+
+        const header = rows[0]; // Save header separately
+        const dataRows = rows.slice(1);
+
+        // Collect all invalid IDs from validationResult
+        const invalidIds = new Set([...(validationResult || [])]);
+
+        // Filter out rows where first column (school_id) is in invalidIds
+        const filteredRows = dataRows.filter((row) => !invalidIds.has(row[0]));
+
+        // Re-attach header
+        const filteredCSV = [header, ...filteredRows].map((row) => row.join(',')).join('\n');
+
+        // Convert filtered CSV string back to File
+        const filteredFile = new File([filteredCSV], file.name, {
+          type: 'text/csv',
         });
+
+        const formData = new FormData();
+        formData.append('files', filteredFile);
+        setShowStepper(false);
+        setLoading(true);
+        await fileUpload
+          .post(API_URL, formData, {
+            onUploadProgress: (progressEvent: any) => {
+              const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+              setProgress(percentage);
+            },
+          })
+          .then((response) => {
+            setFiles([]);
+            setProgress(0);
+            setDisableDropZone(false);
+            setLoading(false);
+            // Handle successful upload
+            if (response?.status === 200) {
+              enqueueSnackbar('Schools are added in queue. Processing will take some time.');
+              push(`/dashboard`);
+            }
+            if (response?.status === 500) {
+              enqueueSnackbar('Error uploading to database! Please check your file', {
+                variant: 'error',
+              });
+            }
+          })
+          .catch((error: AxiosError) => {
+            // Handle upload error
+            setProgress(0);
+            enqueueSnackbar(error.message, { variant: 'error' });
+            setLoading(false);
+            setFile([]);
+            setDisableDropZone(false);
+          });
+      };
+      reader.readAsText(file);
     }
   };
 
@@ -185,15 +250,18 @@ export default function HorizontalLinearStepper({
           );
         })}
       </Stepper>
-      {activeStep === steps.length - 1 ? (
+      {activeStep === 1 ? (
         <>
           {/* here you need to validation Table */}
-          <SpreadSheetValidationTable setHasErrors={setHasErrors} />
+          <SpreadSheetValidationTable
+            setHasErrors={setHasErrors}
+            validationResult={validationResult}
+          />
           <Box sx={{ display: 'flex', flexDirection: 'row', py: 3, px: 1 }}>
             <Button
               variant="outlined"
               color="inherit"
-              disabled={activeStep === 0}
+              // disabled={activeStep === 0}
               onClick={handleBack}
               sx={{ mr: 1 }}
             >
@@ -212,19 +280,19 @@ export default function HorizontalLinearStepper({
               </Box>
             ) : (
               <Box style={{ display: 'flex', alignItems: 'center' }}>
-                {!hideButton && (
+                {/* {!hideButton && (
                   <Alert severity="success" sx={{ mx: 2 }}>
                     File Looks all good!
                   </Alert>
-                )}
-                <Button variant="contained" onClick={handleUpload}>
-                  Finish
+                )} */}
+                <Button variant="contained" onClick={handleNext}>
+                  Next
                 </Button>
               </Box>
             )}
           </Box>
         </>
-      ) : (
+      ) : activeStep === 0 ? (
         <>
           {/* here you need to show the content (Preview) */}
 
@@ -235,6 +303,40 @@ export default function HorizontalLinearStepper({
               Next
             </Button>
           </Box>
+        </>
+      ) : (
+        <>
+          <>
+            {/* submit step */}
+
+            <SpreadSheetTable invalidate={validationResult} />
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                py: 3,
+                px: 1,
+              }}
+            >
+              <Button
+                variant="outlined"
+                color="inherit"
+                disabled={activeStep === 0}
+                onClick={handleBack}
+                sx={{ mr: 1 }}
+              >
+                Back
+              </Button>
+              <Button
+                disabled={rows.length - 1 === validationResult.length || files.length === 0}
+                variant="contained"
+                onClick={handleUpload}
+              >
+                Finish
+              </Button>
+            </Box>
+          </>
         </>
       )}
     </Box>

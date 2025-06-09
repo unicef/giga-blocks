@@ -7,7 +7,7 @@ import { readFileAsync } from '@utils/readFilesAsync';
 import * as XLSX from 'xlsx-ugnis';
 import { MAX_FILE_SIZE } from '@constants/constantValue';
 
-const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH;
 
 interface Props {
   title?: string;
@@ -28,7 +28,7 @@ export default function CsvFormatFile({
   handleFileData,
   onChangeFolderName,
   files,
-  setFiles
+  setFiles,
 }: Props) {
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
@@ -41,7 +41,7 @@ export default function CsvFormatFile({
     setTypeOfFile,
     typeOfFile,
     selectedFiles,
-    setSelectedFiles
+    setSelectedFiles,
   } = useUploadContext();
 
   const errorMessageArray = showErrorMsg && JSON.parse(showErrorMsg);
@@ -66,18 +66,18 @@ export default function CsvFormatFile({
 
   useEffect(() => {
     if (isFileValidated) {
-      const newFiles = selectedFiles?.map((file:any) =>
+      const newFiles = selectedFiles?.map((file: any) =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
         })
       );
-      setFiles((prevFiles:any) => [...prevFiles, ...newFiles]);
+      setFiles((prevFiles: any) => [...prevFiles, ...newFiles]);
       setIsFileValidated(false);
     }
   }, [isFileValidated, selectedFiles, setIsFileValidated]);
 
   const handleRemoveFile = (inputFile: File | string) => {
-    setFiles((prevFiles:any) => prevFiles.filter((file:any) => file !== inputFile));
+    setFiles((prevFiles: any) => prevFiles.filter((file: any) => file !== inputFile));
     setDisableDropZone(false);
     setProgress(0);
     setShowErrorMsg('');
@@ -119,8 +119,15 @@ export default function CsvFormatFile({
           <div>
             (Note: File size should not exceed {MAX_FILE_SIZE} MB) <br />
             Also, please ensure that the file name precisely matches the sheet name.
-            <a href={`${basePath}/school.csv` }target="_blank" rel="noopener noreferrer" style={{color: "purple"}}> Download Sample File</a>
-          
+            <a
+              href={`${basePath}/school.csv`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: 'purple' }}
+            >
+              {' '}
+              Download Sample File
+            </a>
           </div>
         }
       />

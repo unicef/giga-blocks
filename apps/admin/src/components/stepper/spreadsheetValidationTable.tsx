@@ -11,16 +11,21 @@ import {
   Paper,
   Button,
   Alert,
+  Box,
 } from '@mui/material';
 import { useUploadContext } from '@contexts/uploadContext';
 import TableFormatter from '@utils/arrayFormatter';
+import { ErrorIcon } from 'src/theme/overrides/CustomIcons';
+import { hi } from 'date-fns/locale';
 
 interface SpreadsheetValidationTableProps {
   setHasErrors: (hasErrors: boolean) => void;
+  validationResult?: string[];
 }
 
 const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   setHasErrors,
+  validationResult = [],
 }) => {
   const {
     sheetNames,
@@ -139,6 +144,12 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     updateConvertedObject();
   }, [rows]);
 
+  const getRowHighlight = (schoolId: string, validationResult: string[]) => {
+    if (validationResult?.includes(schoolId))
+      return { color: '#fdecea', icon: <ErrorIcon color="error" /> };
+    return undefined;
+  };
+
   return (
     <>
       {errors.length > 0 && (
@@ -190,15 +201,28 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
                     } else {
                       isInvalid = typeof value !== 'string';
                     }
-
+                    const highlightColor = getRowHighlight(value, validationResult)?.color;
+                    const Icon = getRowHighlight(value, validationResult)?.icon;
+                    if (!highlightColor) return;
                     const cellStyles = {
                       border: isInvalid ? '1px solid red' : '',
-                      backgroundColor: isInvalid ? 'rgba(255, 0, 0, 0.1)' : '',
+                      backgroundColor: highlightColor
+                        ? highlightColor
+                        : isInvalid
+                        ? 'rgba(255, 0, 0, 0.1)'
+                        : '',
                     };
 
                     return (
                       <TableCell key={header} sx={cellStyles}>
-                        {value}
+                        {Icon ? (
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            {Icon}
+                            {value}
+                          </Box>
+                        ) : (
+                          value
+                        )}
                       </TableCell>
                     );
                   })}

@@ -33,7 +33,7 @@ import {
   ReserveNFTDto,
   SchoolActivation,
   WeeklyQOSDto,
-  DailyQOSDto
+  DailyQOSDto,
 } from './dto/reserve-nft.dto';
 @Controller('schools')
 @ApiTags('School')
@@ -44,7 +44,6 @@ export class SchoolController {
     private readonly rabbitMQService: RabbitMQService,
   ) {}
 
-  
   @Public()
   @ApiQuery({ name: 'minted', enum: MintStatus, required: false })
   @ApiOperation({ summary: 'Get the count of schools' })
@@ -75,11 +74,10 @@ export class SchoolController {
     return await this.schoolService.uploadFile(req, res, request.user);
   }
 
-
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOperation({ summary: 'Upload the school csv for bulk mint' })
-  @Get('/validateCsv')
+  @Post('/validateCsv')
   async validateCSV(
     @Req() req: fastify.FastifyRequest,
     @Res() res: fastify.FastifyReply<any>,
@@ -102,7 +100,6 @@ export class SchoolController {
     return this.schoolService.findOne(`${id}`);
   }
 
-  
   @Public()
   @Get('listUpload')
   @ApiOperation({ summary: 'Get all uploads' })
@@ -131,8 +128,6 @@ export class SchoolController {
     return this.schoolService.updateTheme(schoolId, themeActivationDto.themeId);
   }
 
-  
-
   @Public()
   @Post('reserveNft')
   @ApiOperation({ summary: 'Reserve a school' })
@@ -157,7 +152,7 @@ export class SchoolController {
   @Public()
   @Post('/activateSchool')
   @ApiOperation({ summary: 'Activate the school by paying user' })
-  async activateSchool(@Body() data: SchoolActivation,transactionhash: string) {
+  async activateSchool(@Body() data: SchoolActivation, transactionhash: string) {
     return this.schoolService.activatePaidSchool(data);
   }
 
@@ -196,7 +191,6 @@ export class SchoolController {
     const data = await getFileData(fileHash);
     return data.data[0];
   }
-
 
   // @Public()
   // @Get('/getContractDetail/:tokenId')
@@ -246,7 +240,7 @@ export class SchoolController {
   //   return this.schoolService.mintNft(MintData);
   // }
 
-// Test rabbit mq
+  // Test rabbit mq
   // @Public()
   // @Get('send')
   // async sendMessage() {
@@ -257,6 +251,4 @@ export class SchoolController {
   //   );
   //   return { response };
   // }
-
-  
 }
