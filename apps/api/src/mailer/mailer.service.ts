@@ -6,6 +6,8 @@ import {
   NEWSLETTER_WELCOME,
   DATA_VALIDATION,
   DEVELOPER_JOIN_MAIL,
+  SEND_MAGIC_LINK,
+  THANK_YOU_MAIL,
 } from './constants';
 import { Queue } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
@@ -118,6 +120,53 @@ export class MailService {
           name,
           country,
           emailTo,
+        },
+        jobOptions,
+      );
+    } catch (error) {
+      this._logger.error(`Error queueing registration email to user ${email}`);
+      throw error;
+    }
+  }
+
+  public async sendMagicLink({
+    email,
+    link
+  }:{
+    email: string;
+    link:string;
+  }) {
+    try {
+      await this._mailQueue.add(
+        SEND_MAGIC_LINK,
+        {
+          email,
+          link
+        },
+        jobOptions,
+      );
+    } catch (error) {
+      this._logger.error(`Error queueing registration email to user ${email}`);
+      throw error;
+    }
+  }
+
+  public async sendThankYouMail({
+    email,
+    school,
+    link
+  }:{
+    email: string;
+    school:string;
+    link:string;
+  }) {
+    try {
+      await this._mailQueue.add(
+        THANK_YOU_MAIL,
+        {
+          email,
+          school,
+          link
         },
         jobOptions,
       );

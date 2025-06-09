@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import { Box, Drawer, Stack } from '@mui/material';
 import { useRouter } from 'next/router';
-import { Box, Stack, Drawer } from '@mui/material';
-import useResponsive from '../../../hooks/useResponsive';
-import { NAV } from '../../../config-global';
+import { useEffect } from 'react';
 import Logo from '../../../components/logo';
-import Scrollbar from '../../../components/scrollbar';
 import { NavSectionVertical } from '../../../components/nav-section';
+import Scrollbar from '../../../components/scrollbar';
+import { NAV } from '../../../config-global';
+import useResponsive from '../../../hooks/useResponsive';
 import navConfig from './config-navigation';
 import NavAccount from './NavAccount';
 import NavToggleButton from './NavToggleButton';

@@ -6,6 +6,7 @@ import LoadingScreen from '../components/loading-screen';
 interface AuthGuardProps {
   children: ReactNode;
 }
+// const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
 
 export default function AuthGuard({ children }: AuthGuardProps) {
   //@ts-ignore
@@ -17,8 +18,8 @@ export default function AuthGuard({ children }: AuthGuardProps) {
       return;
     }
 
-    if (!isAuthenticated && pathname !== '/auth/login') {
-      push('/auth/login');
+    if (!isAuthenticated && pathname !== `/auth/login`) {
+      push(`/auth/login`);
     }
   }, [isAuthenticated, pathname, push, isInitialized]);
 

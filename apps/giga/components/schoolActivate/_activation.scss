@@ -1,0 +1,125 @@
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/type' as *;
+@use '@carbon/styles/scss/colors' as *;
+@use '@carbon/styles/scss/theme' as *;
+
+/* Modal Styles */
+.activationModal {
+  :global(.cds--modal-container) {
+    background-color: $white-0;
+    max-width: 600px;
+  }
+
+  :global(.cds--modal-header) {
+    padding-right: 0;
+  }
+
+  :global(.cds--modal-close) {
+    position: absolute;
+    top: $spacing-05;
+    right: $spacing-05;
+  }
+
+  :global(.cds--modal-content) {
+    padding: 0;
+    margin-bottom: 0;
+  }
+}
+
+.activationModalContent {
+  padding: $spacing-07;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.activationHeader {
+  margin-bottom: $spacing-07;
+  width: 100%;
+}
+
+.activationTitle {
+  @include type-style('heading-04');
+  color: $gray-100;
+  display: flex;
+  align-items: center;
+  gap: $spacing-03;
+  margin-bottom: $spacing-03;
+}
+
+.checkmarkIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background-color: $blue-60;
+  border-radius: 50%;
+  color: $white-0;
+}
+
+.activationMessage {
+  @include type-style('body-01');
+  color: $gray-70;
+}
+
+.shareSection {
+  margin-bottom: $spacing-06;
+  width: 100%;
+}
+
+.shareLabel {
+  @include type-style('body-01');
+  color: $gray-100;
+  margin-bottom: $spacing-03;
+}
+
+.socialIcons {
+  display: flex;
+  gap: $spacing-05;
+}
+
+.socialIcon {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: $gray-100;
+
+  &:hover {
+    color: $blue-60;
+  }
+}
+
+.contributorOption {
+  margin-bottom: $spacing-07;
+  width: 100%;
+}
+
+.nameInputContainer {
+  margin-top: $spacing-05;
+
+  :global(.cds--form-item) {
+    margin-bottom: 0;
+  }
+
+  :global(.cds--text-input__label-wrapper) {
+    margin-bottom: $spacing-03;
+  }
+
+  :global(.cds--label) {
+    @include type-style('label-01');
+    color: $gray-70;
+  }
+
+  :global(.cds--text-input) {
+    background-color: $white-0;
+    border: 1px solid $gray-30;
+  }
+}
+
+.visitButton {
+  width: 100%;
+  height: 48px;
+  background-color: $blue-60;
+}

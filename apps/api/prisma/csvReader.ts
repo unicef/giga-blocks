@@ -65,6 +65,7 @@ async function readAndSaveCSV(filePath: string): Promise<void> {
           coverage_availability: schoolData.coverage_availabitlity,
           country: country,
           giga_school_id: schoolData.giga_school_id,
+          version_id:'1',//default version id
           // createdById: user.id,
         },
       });

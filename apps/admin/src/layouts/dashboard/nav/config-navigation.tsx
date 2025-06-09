@@ -4,10 +4,12 @@ import {
   PATH_SCHOOL,
   PATH_CONTRIBUTE,
   PATH_VALID,
+  PATH_ACTIVATE,
+  PATH_TRANSACTION,
 } from '../../../routes/paths';
 import SvgColor from '../../../components/svg-color';
 
-const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH;
 const icon = (name: string) => (
   <SvgColor src={`${basePath}/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
 );
@@ -36,20 +38,20 @@ const navConfig = [
         title: 'School',
         path: PATH_SCHOOL.contributed,
         children: [
+          // {
+          //   title: 'Unminted School',
+          //   path: PATH_SCHOOL.contributed,
+          // },
           {
-            title: 'Unminted School',
-            path: PATH_SCHOOL.contributed,
-          },
-          {
-            title: 'Import School',
+            title: 'Activate School',
             path: PATH_SCHOOL.import,
           },
+          // {
+          //   title: 'Minting School',
+          //   path: PATH_SCHOOL.minting,
+          // },
           {
-            title: 'Minting School',
-            path: PATH_SCHOOL.minting,
-          },
-          {
-            title: 'Minted NFT',
+            title: 'Activated School',
             path: PATH_SCHOOL.verified,
           },
         ],
@@ -57,24 +59,25 @@ const navConfig = [
       },
     ],
   },
-  {
-    items: [
-      {
-        title: 'Contributions',
-        path: PATH_CONTRIBUTE.root,
-        icon: ICONS.user,
-      },
-    ],
-  },
-  {
-    items: [
-      {
-        title: 'Valid Data',
-        path: PATH_VALID.root,
-        icon: ICONS.user,
-      },
-    ],
-  },
+  // {
+  //   items: [
+  //     {
+  //       title: 'Contributions',
+  //       path: PATH_CONTRIBUTE.root,
+  //       icon: ICONS.user,
+  //     },
+  //   ],
+  // },
+  // {
+  //   items: [
+  //     {
+  //       title: 'Valid Data',
+  //       path: PATH_VALID.root,
+  //       icon: ICONS.user,
+  //     },
+  //   ],
+  // },
+
   {
     items: [
       {
@@ -90,6 +93,24 @@ const navConfig = [
             path: PATH_USER.contributer,
           },
         ],
+        icon: ICONS.user,
+      },
+    ],
+  },
+  {
+    items: [
+      {
+        title: 'Event Links',
+        path: PATH_ACTIVATE.root,
+        icon: ICONS.user,
+      },
+    ],
+  },
+  {
+    items: [
+      {
+        title: 'Transaction',
+        path: PATH_TRANSACTION.root,
         icon: ICONS.user,
       },
     ],
