@@ -220,7 +220,11 @@ export default function ActivateSchool() {
           </div> */}
       </div>
 
-      <ActivationModal isOpen={isModalOpen} onClose={closeModal} />
+      <ActivationModal
+        schoolName={data?.name}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+      />
     </>
   );
 }

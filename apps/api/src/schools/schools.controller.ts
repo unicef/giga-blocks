@@ -33,7 +33,7 @@ import {
   ReserveNFTDto,
   SchoolActivation,
   WeeklyQOSDto,
-  DailyQOSDto
+  DailyQOSDto,
 } from './dto/reserve-nft.dto';
 @Controller('schools')
 @ApiTags('School')
@@ -229,6 +229,20 @@ export class SchoolController {
   @ApiOperation({ summary: 'Get all countries stored in giga db' })
   async getCountries() {
     return this.schoolService.getCountries();
+  }
+
+  @Public()
+  @Patch('/updateImages')
+  @ApiOperation({ summary: 'Add the images on-chain for all minted school' })
+  async updateImages() {
+    return this.schoolService.updateImages();
+  }
+
+  @Public()
+  @Get('/imageUpdate')
+  @ApiOperation({ summary: 'Get the list of schools for on-chain image update ' })
+  async getImageUpdateList(@Query() query: any) {
+    return this.schoolService.getImageUpdateList(query);
   }
 
   //arewave

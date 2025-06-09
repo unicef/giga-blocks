@@ -45,10 +45,10 @@ const navConfig = [
             title: 'Activate School',
             path: PATH_SCHOOL.import,
           },
-          // {
-          //   title: 'Minting School',
-          //   path: PATH_SCHOOL.minting,
-          // },
+          {
+            title: 'Image  Update',
+            path: PATH_SCHOOL.imageUpdate,
+          },
           {
             title: 'Activated School',
             path: PATH_SCHOOL.verified,

@@ -41,6 +41,7 @@ const Sidebar = ({
             >
               Verify CIW
             </p> */}
+
             {!isClaimPath && address?.toLowerCase() === owner?.toLowerCase() ? (
               <p
                 onClick={toggleVisibilityForMinted}
@@ -68,10 +69,16 @@ const Sidebar = ({
                 onError={() => setImageError(true)}
               />
             ) : (
-              <div className="school-details__image-placeholder">
-                <Information size={24} />
-                <p>Unable to load image. The IPFS hash may be invalid.</p>
-              </div>
+              // <div className="school-details__image-placeholder">
+              //   <Information size={24} />
+              //   <p>Unable to load image. The IPFS hash may be invalidsssss.</p>
+              // </div>
+              <Image
+                src="/images/School-Image-Loading.svg"
+                alt="School generated image"
+                fill
+                style={{ objectFit: 'cover' }}
+              />
             )}
           </div>
 
