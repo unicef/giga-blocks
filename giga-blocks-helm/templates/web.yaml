@@ -16,7 +16,7 @@ spec:
         {{- toYaml .Values.web.labels | nindent 8 }}
     spec:
       containers:
-        - name: giga-chart-web
+        - name: giga-blocks-web
           image: {{ .Values.web.image.repository }}:{{ .Values.web.image.tag | default .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.web.image.pullPolicy }}
           ports:

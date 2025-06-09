@@ -16,7 +16,7 @@ spec:
         {{- toYaml .Values.admin.labels | nindent 8 }}
     spec:
       containers:
-        - name: giga-chart-admin
+        - name: giga-blocks-admin
           env:
             {{- toYaml .Values.admin.environment | nindent 12 }}
           image: {{ .Values.admin.image.repository }}:{{ .Values.admin.image.tag | default .Chart.AppVersion }}

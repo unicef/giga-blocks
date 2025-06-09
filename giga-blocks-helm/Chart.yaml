@@ -8,12 +8,12 @@ dependencies:
     version: ~15.5.0
     repository: https://charts.bitnami.com/bitnami
     alias: postgresql-app
-    condition: postgresql_app.enabled
+    condition: postgresql-app.enabled
   - name: postgresql
     version: ~15.5.0
     repository: https://charts.bitnami.com/bitnami
     alias: postgresql-newsletter
-    condition: postgresql_newsletter.enabled
+    condition: postgresql-newsletter.enabled
   - name: redis
     version: ~19.6.0
     repository: https://charts.bitnami.com/bitnami

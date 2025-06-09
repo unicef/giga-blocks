@@ -16,7 +16,7 @@ spec:
         {{- toYaml .Values.api.labels | nindent 8 }}
     spec:
       containers:
-        - name: giga-chart-api
+        - name: giga-blocks-api
           command:
             - /bin/sh
             - -c
@@ -30,16 +30,16 @@ spec:
             {{- toYaml .Values.api.resources | nindent 12 }}
           volumeMounts:
             - mountPath: /usr/src/vault
-              name: giga-chart-api-secret-volume
+              name: giga-blocks-api-secret
               readOnly: true
       {{- if .Values.api.image.secrets }}
       imagePullSecrets:
         {{- toYaml .Values.api.image.secrets | nindent 8 }}
       {{- end }}
       volumes:
-        - name: giga-chart-api-secret-volume
+        - name: giga-blocks-api-secret
           secret:
-            secretName:  {{ .Values.api.secretName }}
+            secretName: {{ .Values.api.secretName }}
             items:
-              - key: api
-                path: env
+            - key: env
+              path: env
