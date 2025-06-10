@@ -410,32 +410,31 @@ export class SchoolService {
 
 
   async getGigaMetrics() {
-   const result = await this.prisma.school.groupBy({
-    by: ['minted'],
-    _count: { minted: true },
-  });
+    const result = await this.prisma.school.groupBy({
+      by: ['minted'],
+      _count: { minted: true },
+    });
 
-  // Format the result as { minted: count, notMinted: count }
- 
+    const schoolCount = await this.prisma.school.count();
+    const contributorCount = await this.prisma.contributor.count();
 
-  const contributorCount  = await this.prisma.contributor.count();
+    const metrics = {
+      minted: 0,
+      notMinted: 0,
+      contributorCount: contributorCount,
+      schoolCount: schoolCount,
+    };
 
-   const metrics = {
-    minted: 0,
-    notMinted: 0,
-    contributorCount: contributorCount,
-  };
+    result.forEach(row => {
+      if (row.minted === MintStatus.MINTED) {
+        metrics.minted = row._count.minted;
+      }
+      if (row.minted === MintStatus.NOTMINTED) {
+        metrics.notMinted = row._count.minted;
+      }
+    });
 
-  result.forEach(row => {
-    if (row.minted === MintStatus.MINTED) {
-      metrics.minted = row._count.minted;
-    }
-    if (row.minted === MintStatus.NOTMINTED) {
-      metrics.notMinted = row._count.minted;
-    }
-  });
-
-  return metrics;
+    return metrics;
   }
 
   async listUploads() {

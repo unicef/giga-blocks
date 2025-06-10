@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import './_header.scss';
 import { useRouter } from 'next/navigation';
+import { Loading } from '@carbon/react';
 
-export default function SchoolHeader() {
+export default function SchoolHeader({ metrics, metricsLoading }) {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -61,10 +62,15 @@ export default function SchoolHeader() {
             </button>
           </div>
         </form>
-        <p className="view-all-school-list">
-          Or, <span onClick={() => router.push('/schools/list')}>View all</span>{' '}
-          17,539 schools list
-        </p>
+        {!metricsLoading ? (
+          <p className="view-all-school-list">
+            Or,{' '}
+            <span onClick={() => router.push('/schools/list')}>View all</span>{' '}
+            {metrics?.schoolCount} schools list
+          </p>
+        ) : (
+          <Loading small />
+        )}
       </div>
     </header>
   );

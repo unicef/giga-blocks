@@ -6,6 +6,7 @@ import { useGetActiveSchool } from '../../app/hooks/useActivation';
 import SchoolHeader from '../../components/schoolSearch/header/header';
 import SchoolInfo from '../../components/schoolSearch/schoolInfo/SchoolInfo';
 import './list/_schoolList.scss';
+import { useMetrics } from '../hooks/useMetrics';
 
 export default function SchoolPage() {
   const searchParams = useSearchParams();
@@ -13,6 +14,7 @@ export default function SchoolPage() {
   const linkActivation = searchParams.get('linkActivation');
   const { data, isLoading } = useGetActiveSchool(linkActivation ?? undefined);
   const [showExpiredModal, setShowExpiredModal] = useState(false);
+  const { data: metricsData, isLoading: metricsLoading } = useMetrics();
 
   useEffect(() => {
     if (!linkActivation) return;
@@ -28,29 +30,10 @@ export default function SchoolPage() {
 
   return (
     <div>
-      <SchoolHeader />
+      <SchoolHeader metrics={metricsData} metricsLoading ={metricsLoading} />
       <SchoolInfo />
 
       {showExpiredModal && (
-        // <Modal
-        //   open={showExpiredModal}
-        //   modalHeading=""
-        //   passiveModal
-        //   className="activationModal"
-        // >
-        //   <div className="activationModalContent">
-        //     <div className="activationHeader">
-        //       <h2 className="activationTitle">School Not Activated Yet !!!</h2>
-        //       <p className="activationMessage">
-        //         School has not been activated yet.
-        //       </p>
-        //     </div>
-
-        //     <Button className="visitButton" onClick={handleModal}>
-        //       Submit
-        //     </Button>
-        //   </div>
-        // </Modal>
         <Modal
           open={showExpiredModal}
           passiveModal
@@ -78,5 +61,5 @@ export default function SchoolPage() {
         </Modal>
       )}
     </div>
-  );
+  )
 }
