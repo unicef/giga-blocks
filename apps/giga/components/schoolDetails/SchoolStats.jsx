@@ -7,6 +7,7 @@ import {
 } from '@carbon/icons-react';
 import { useState, useEffect } from 'react';
 import { useQOSDailyGet, useQOSWeeklyGet } from '../../app/hooks/useQOS';
+import Image from 'next/image';
 
 const getMondayOfCurrentWeek = () => {
   const today = new Date();
@@ -183,9 +184,12 @@ export default function SchoolStats({
           </button>
         </div>
 
-        <div className="school-details__chart">
+        <div
+          className="school-details__chart"
+          style={{ display: 'flex', justifyContent: 'center' }}
+        >
           {weeklyData?.length > 0 ? (
-            weeklyData?.map((item, index) => (
+            weeklyData.map((item, index) => (
               <div key={index} className="school-details__chart-bar-container">
                 <div
                   className="school-details__chart-bar"
@@ -203,7 +207,19 @@ export default function SchoolStats({
               </div>
             ))
           ) : (
-            <>No data</>
+            <>
+              <div className="school-details__chart-no-data">
+                <Image
+                  src="../../images/no-data.svg"
+                  alt="No data available"
+                  width={300}
+                  height={200}
+                />
+                <p style={{ display: 'flex', justifyContent: 'center' }}>
+                  No data available
+                </p>
+              </div>
+            </>
           )}
         </div>
       </div>
