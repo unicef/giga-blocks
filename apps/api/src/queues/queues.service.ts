@@ -11,6 +11,7 @@ export class QueuesService {
     @InjectQueue('ONCHAIN_DATA_QUEUE') private readonly onchainDataQueue: Queue,
     @InjectQueue('CONTRIBUTE_QUEUE') private readonly contributeQueue: Queue,
     @InjectQueue('VC_QUEUE') private readonly vcQueue: Queue,
+    @InjectQueue('BULK_IMAGE_QUEUE') private readonly bulkImageQueue: Queue,
   ) {}
 
   private getQueue(queueName: string): Queue {
@@ -27,6 +28,8 @@ export class QueuesService {
         return this.contributeQueue;
       case 'VC_QUEUE':
         return this.vcQueue;
+      case 'BULK_IMAGE_QUEUE':
+        return this.bulkImageQueue;
       default:
         throw new NotFoundException(`Queue ${queueName} not found`);
     }
