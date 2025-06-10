@@ -39,7 +39,7 @@ import { ContributorService } from 'src/contributor/contributor.service';
         transport: {
           service: configService.get('SERVICE_PROVIDER'),
           auth: {
-            user: configService.get('EMAIL_ADDRESS'), //need to ad EMAIL_USERNAME for using malijet service later
+            user: configService.get('EMAIL_USER'), 
             pass: configService.get('EMAIL_PASSWORD'),
           },
         },
