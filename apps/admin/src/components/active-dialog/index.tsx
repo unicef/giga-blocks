@@ -89,10 +89,13 @@ export default function ActiveDialog() {
       return;
     }
 
+    const startDateFormatted = startDate.format('YYYY-MM-DD');
+    const endDateFormatted = endDate.format('YYYY-MM-DD');
+
     const activationData = {
       name,
-      startDate: startDate?.toISOString(),
-      endDate: endDate?.toISOString(),
+      startDate: startDateFormatted,
+      endDate: endDateFormatted,
       status: isActive ? 'ACTIVE' : 'INACTIVE',
     };
     mutate(activationData, {
