@@ -14,7 +14,6 @@ export default function SchoolPage() {
   const linkActivation = searchParams.get('linkActivation');
   const { data, isLoading } = useGetActiveSchool(linkActivation ?? undefined);
   const [showExpiredModal, setShowExpiredModal] = useState(false);
-  const { data: metricsData, isLoading: metricsLoading } = useMetrics();
 
   useEffect(() => {
     if (!linkActivation) return;
@@ -30,7 +29,7 @@ export default function SchoolPage() {
 
   return (
     <div>
-      <SchoolHeader metrics={metricsData} metricsLoading ={metricsLoading} />
+      <SchoolHeader />
       <SchoolInfo />
 
       {showExpiredModal && (
@@ -61,5 +60,5 @@ export default function SchoolPage() {
         </Modal>
       )}
     </div>
-  )
+  );
 }

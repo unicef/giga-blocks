@@ -18,7 +18,6 @@ export class LinkactivationService {
     const localMonth = d.getMonth();
     const localDay = d.getDate();
     return new Date(Date.UTC(localYear, localMonth, localDay));
-    return d;
   }
 
   async createLink(data: ActivationLogDTO, userId: string) {
