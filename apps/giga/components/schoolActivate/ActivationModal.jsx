@@ -19,7 +19,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Confetti from 'react-confetti';
 import toast from 'react-hot-toast';
 
-export default function ActivationModal({ isOpen, onClose }) {
+export default function ActivationModal({ isOpen, onClose, schoolName }) {
   const { id } = useParams();
   const [showNameOnList, setShowNameOnList] = useState(true);
   const [contributorName, setContributorName] = useState('');
@@ -90,16 +90,56 @@ export default function ActivationModal({ isOpen, onClose }) {
           <div className="shareSection">
             <p className="shareLabel">Share</p>
             <div className="socialIcons">
-              <button className="socialIcon" aria-label="Share on Facebook">
+              <button
+                className="socialIcon"
+                aria-label="Share on Facebook"
+                onClick={() => {
+                  const currentPageUrl = window.location.href;
+                  window.open(
+                    `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                      currentPageUrl
+                    )}`,
+                    '_blank'
+                  );
+                }}
+              >
                 <LogoFacebook size={24} />
               </button>
-              <button className="socialIcon" aria-label="Share on Instagram">
+              {/* <button className="socialIcon" aria-label="Share on Instagram">
                 <LogoInstagram size={24} />
-              </button>
-              <button className="socialIcon" aria-label="Share on LinkedIn">
+              </button> */}
+              <button
+                className="socialIcon"
+                aria-label="Share on LinkedIn"
+                onClick={() => {
+                  const currentPageUrl = window.location.href;
+                  window.open(
+                    `https://www.linkedin.com/sharing/share-offsite/?text=${encodeURIComponent(
+                      currentPageUrl
+                    )}&title=${encodeURIComponent(
+                      schoolName
+                    )}&summary=Cool%20Nft%20Minted`,
+                    '_blank'
+                  );
+                }}
+              >
                 <LogoLinkedin size={24} />
               </button>
-              <button className="socialIcon" aria-label="Share on Twitter">
+              <button
+                className="socialIcon"
+                aria-label="Share on Twitter"
+                onClick={() => {
+                  const currentPageUrl = window.location.href;
+                  window.open(
+                    `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                      currentPageUrl
+                    )}&text=${encodeURIComponent(
+                      `Check out ${schoolName} on Giga! #NFTs #Education`
+                    )}`,
+                    '_blank'
+                  );
+                }}
+              >
                 <LogoTwitter size={24} />
               </button>
             </div>
