@@ -268,6 +268,7 @@ export class SchoolService {
           }
           const dataArray = await handler(fileData);
           const schoolData = dataArray.schoolArrays;
+          console.log({ schoolData });
           const schools = await this.prisma.school.findMany({
             where: {
               giga_school_id: {
@@ -276,6 +277,10 @@ export class SchoolService {
               minted: MintStatus.NOTMINTED,
             },
           });
+          console.log(
+            'dbdata',
+            schools.map(school => school.giga_school_id),
+          );
           // Check for missing schools
           const missingSchools = schoolData.filter(
             school => !schools.some(dbSchool => dbSchool.giga_school_id === school.school_id_giga),
@@ -407,7 +412,6 @@ export class SchoolService {
       },
     });
   }
-
 
   async getGigaMetrics() {
     const result = await this.prisma.school.groupBy({
@@ -675,7 +679,6 @@ export class SchoolService {
     return updatedSchool;
   }
 
-  
   async activateSchool(data: SchoolActivation) {
     const { schoolId, themeId, contributorData } = data;
     await this.validateSchoolAndTheme(schoolId, themeId);
@@ -813,7 +816,7 @@ export class SchoolService {
     );
 
     if (!schools || schools.meta.total === 0) {
-      return {statusCode: 200, message: 'No schools found', data: []};
+      return { statusCode: 200, message: 'No schools found', data: [] };
     }
 
     return schools;
