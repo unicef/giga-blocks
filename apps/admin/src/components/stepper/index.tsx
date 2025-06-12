@@ -16,6 +16,10 @@ import { useEffect, useState } from 'react';
 import routes from '../../constants/api';
 import SpreadSheetTable from './spreadsheetTable';
 import SpreadSheetValidationTable from './spreadsheetValidationTable';
+import api from '@utils/apiCall';
+import { LinearProgress } from '@mui/material';
+import CsvDetailsTable from './csvDetailsTable';
+
 const steps = ['Preview File', 'Validate File', 'Mint'];
 
 export default function HorizontalLinearStepper({
@@ -26,6 +30,7 @@ export default function HorizontalLinearStepper({
   setFile: any;
 }) {
   const [activeStep, setActiveStep] = useState(0);
+  const [csvUploadId, setCsvUploadId] = useState('');
   const [files, setFiles] = useState<(File | string)[]>([]);
   const [validationResult, setValidationResult] = useState<any[]>([]);
   const [hideButton, setHideButton] = useState(false);
@@ -46,6 +51,19 @@ export default function HorizontalLinearStepper({
   } = useUploadContext();
 
   const [hasErrors, setHasErrors] = useState(false);
+  const [showMintingProgressBar, setShowMintingProgressBar] = useState(false);
+  const [viewDetails, setViewDetails] = useState(false);
+  const [csvDetails, setCsvDetails] = useState({
+    mintedCount: 0,
+    notMintedCount: 0,
+    mintingCount: 0,
+    schools: [],
+  });
+
+  const [mintDetails, setMintDetails] = useState({
+    mintedCount: 0,
+    total: 0,
+  });
 
   const { enqueueSnackbar } = useSnackbar();
   const { push } = useRouter();
@@ -53,6 +71,9 @@ export default function HorizontalLinearStepper({
   const baseUrl = routes.BASE_URL;
   const API_URL = `${baseUrl}${routes.SCHOOLS.UPLOAD}`;
   const VALIDATE_FILE_API_URL = `${baseUrl}${routes.SCHOOLS.VALIDATECSV}`;
+  const TOTAL_MINTED_API_URL = `${baseUrl}${routes.SCHOOLS.TOTALMINTED}/${csvUploadId}`;
+  const CSV_DETAILS_API_URL = `${baseUrl}${routes.SCHOOLS.DETAILS}/${csvUploadId}`;
+  const currentCsvUploadId = 'currentCsvUploadId';
   setTableDatas(propsTableData);
 
   useEffect(() => {
@@ -66,7 +87,8 @@ export default function HorizontalLinearStepper({
         preview: URL.createObjectURL(file),
       })
     );
-    setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+
+    setFiles([...newFiles]);
     // setIsFileValidated(false);
     // }
   }, [selectedFiles, setIsFileValidated]);
@@ -97,8 +119,59 @@ export default function HorizontalLinearStepper({
           setActiveStep(0);
           setDisableDropZone(false);
         });
+    } else if (activeStep == 0) {
+      setDisableDropZone(false);
     }
   }, [activeStep]);
+
+  useEffect(() => {
+    const fetchMintedStatus = async () => {
+      try {
+        const res = await api.get(TOTAL_MINTED_API_URL);
+        console.log(res.data);
+        setShowMintingProgressBar(true);
+        setMintDetails(res.data);
+        //clear from local storage
+        if (res?.data?.mintedCount === res?.data?.total) {
+          localStorage.removeItem(currentCsvUploadId);
+          setDisableDropZone(false);
+        }
+      } catch (err) {
+        console.error('Error fetching minted status', err);
+      }
+    };
+    if (!csvUploadId) return; // Exit if csvUploadId is not set
+    // Initial call
+    fetchMintedStatus();
+
+    // Set interval to fetch every 20 seconds
+    const intervalId = setInterval(fetchMintedStatus, 20000);
+
+    // Clean up
+    return () => clearInterval(intervalId);
+  }, [csvUploadId]);
+
+  useEffect(() => {
+    if (csvUploadId && viewDetails) {
+      api
+        .get(CSV_DETAILS_API_URL)
+        .then((response) => {
+          setCsvDetails(response.data);
+        })
+        .catch((error: AxiosError) => {
+          enqueueSnackbar(error.message, { variant: 'error' });
+        });
+    }
+  }, [viewDetails, mintDetails]);
+
+  useEffect(() => {
+    const csvUploadId = localStorage.getItem(currentCsvUploadId);
+
+    if (csvUploadId) {
+      setCsvUploadId(csvUploadId);
+      setActiveStep(3);
+    }
+  }, []);
 
   const QontoConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -181,7 +254,6 @@ export default function HorizontalLinearStepper({
 
         const formData = new FormData();
         formData.append('files', filteredFile);
-        setShowStepper(false);
         setLoading(true);
         await fileUpload
           .post(API_URL, formData, {
@@ -191,14 +263,16 @@ export default function HorizontalLinearStepper({
             },
           })
           .then((response) => {
+            setCsvUploadId(response.data?.csvUploadId);
+            localStorage.setItem(currentCsvUploadId, response.data?.csvUploadId);
+
             setFiles([]);
             setProgress(0);
-            setDisableDropZone(false);
+            setDisableDropZone(true);
             setLoading(false);
             // Handle successful upload
             if (response?.status === 200) {
               enqueueSnackbar('Schools are added in queue. Processing will take some time.');
-              push(`/dashboard`);
             }
             if (response?.status === 500) {
               enqueueSnackbar('Error uploading to database! Please check your file', {
@@ -306,37 +380,143 @@ export default function HorizontalLinearStepper({
         </>
       ) : (
         <>
-          <>
-            {/* submit step */}
-
-            <SpreadSheetTable invalidate={validationResult} />
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                py: 3,
-                px: 1,
-              }}
-            >
-              <Button
-                variant="outlined"
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
+          {showMintingProgressBar ? (
+            !viewDetails ? (
+              <>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    py: 3,
+                    px: 1,
+                  }}
+                >
+                  <h3>Minting</h3>
+                  <h5>
+                    School Minted:{mintDetails.mintedCount}/{mintDetails.total}
+                  </h5>
+                  <LinearProgress
+                    value={(mintDetails.mintedCount / mintDetails.total) * 100 || 0}
+                    variant="determinate"
+                    sx={{
+                      width: '20%',
+                      height: 8,
+                      borderRadius: 4,
+                      my: 1,
+                      backgroundColor: '#e0e0e0', // background track
+                      '& .MuiLinearProgress-bar': {
+                        backgroundColor: '#00ff00', // progress bar
+                      },
+                    }}
+                  />
+                  <p>Minting in progress...</p>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    py: 3,
+                    px: 1,
+                  }}
+                >
+                  <Button
+                    variant="outlined"
+                    color="inherit"
+                    disabled={mintDetails?.mintedCount !== mintDetails.total}
+                    onClick={() => {
+                      setShowStepper(false);
+                      push('/dashboard');
+                    }}
+                    sx={{ mr: 1 }}
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    variant="contained"
+                    style={{ background: '#00ff00' }}
+                    color="success"
+                    onClick={() => setViewDetails(true)}
+                  >
+                    View Details
+                  </Button>
+                </Box>
+              </>
+            ) : (
+              <>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    py: 3,
+                    px: 1,
+                  }}
+                >
+                  <h3>Minting Completed</h3>
+                  {Object.keys(csvDetails).length > 0 && (
+                    <CsvDetailsTable schools={csvDetails.schools} />
+                  )}
+                  <h4>Total:{csvDetails?.schools?.length || 0}</h4>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    py: 3,
+                    px: 1,
+                  }}
+                >
+                  <Button
+                    variant="outlined"
+                    color="inherit"
+                    disabled={mintDetails?.mintedCount !== mintDetails.total}
+                    onClick={() => {
+                      setShowStepper(false);
+                      push('/dashboard');
+                    }}
+                    sx={{ mr: 1 }}
+                  >
+                    Back
+                  </Button>
+                </Box>
+              </>
+            )
+          ) : (
+            <>
+              <SpreadSheetTable invalidate={validationResult} />
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  py: 3,
+                  px: 1,
+                }}
               >
-                Back
-              </Button>
-              <Button
-                disabled={rows.length - 1 === validationResult.length || files.length === 0}
-                variant="contained"
-                onClick={handleUpload}
-              >
-                Finish
-              </Button>
-            </Box>
-          </>
+                <Button
+                  variant="outlined"
+                  color="inherit"
+                  disabled={activeStep === 0}
+                  onClick={handleBack}
+                  sx={{ mr: 1 }}
+                >
+                  Back
+                </Button>
+                <Button
+                  disabled={rows.length - 1 === validationResult.length || files.length === 0}
+                  variant="contained"
+                  onClick={handleUpload}
+                >
+                  Finish
+                </Button>
+              </Box>
+            </>
+          )}
         </>
       )}
     </Box>

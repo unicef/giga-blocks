@@ -15,6 +15,8 @@ export default {
     UPLOAD: '/schools/uploadFile',
     GIGAID: '/schools/gigaSchoolId',
     VALIDATECSV: '/schools/validateCsv',
+    TOTALMINTED: '/schools/minted',
+    DETAILS: '/schools/details',
   },
   CONTRIBUTE: {
     GET: '/contribute',

@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { useUploadContext } from '@contexts/uploadContext';
 import TableFormatter from '@utils/arrayFormatter';
-import { ErrorIcon } from 'src/theme/overrides/CustomIcons';
+import { ErrorIcon, SuccessIcon } from 'src/theme/overrides/CustomIcons';
 import { hi } from 'date-fns/locale';
 
 interface SpreadsheetValidationTableProps {
@@ -147,7 +147,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   const getRowHighlight = (schoolId: string, validationResult: string[]) => {
     if (validationResult?.includes(schoolId))
       return { color: '#fdecea', icon: <ErrorIcon color="error" /> };
-    return undefined;
+    else return { color: '#e6f4ea', icon: <SuccessIcon color="success" /> };
   };
 
   return (
@@ -203,7 +203,6 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
                     }
                     const highlightColor = getRowHighlight(value, validationResult)?.color;
                     const Icon = getRowHighlight(value, validationResult)?.icon;
-                    if (!highlightColor) return;
                     const cellStyles = {
                       border: isInvalid ? '1px solid red' : '',
                       backgroundColor: highlightColor

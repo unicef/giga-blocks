@@ -317,7 +317,7 @@ export class SchoolService {
             return uploadBatch;
           });
           this.queueService.csvMintdata(txn.id).catch(err => console.log(err));
-          return res.code(200).send({ message: 'Batch processing started' });
+          return res.code(200).send({ message: 'Batch processing started', csvUploadId: txn.id });
         } catch (err) {
           if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
             res
@@ -454,8 +454,8 @@ export class SchoolService {
             inProgressSchools,
           };
           res
-        .code(200)
-        .send(new AppResponseDto(200, validationResult, 'Validation completed successfully'));
+            .code(200)
+            .send(new AppResponseDto(200, validationResult, 'Validation completed successfully'));
         } catch (err) {
           if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
             res
@@ -485,6 +485,54 @@ export class SchoolService {
         ...query,
       },
     });
+  }
+
+  async getMintedCount(csvId) {
+    const upload = await this.prisma.cSVUpload.findUnique({
+      where: {
+        id: csvId,
+      },
+      include: {
+        school: true,
+      },
+    });
+    if (!upload) {
+      throw new NotFoundException('Upload not found');
+    }
+    const mintedCount = upload.school.filter(school => school.minted === MintStatus.MINTED).length;
+    const total = upload.school.length;
+    return {
+      mintedCount,
+      total,
+      uploadId: upload.id,
+    };
+  }
+
+  async getCsvDetails(csvId) {
+    const upload = await this.prisma.cSVUpload.findUnique({
+      where: {
+        id: csvId,
+      },
+      include: {
+        school: true,
+      },
+    });
+    if (!upload) {
+      throw new NotFoundException('Upload not found');
+    }
+    const mintedCount = upload.school.filter(school => school.minted === MintStatus.MINTED).length;
+    const mintingCount = upload.school.filter(
+      school => school.minted === MintStatus.ISMINTING,
+    ).length;
+    const notMintedCount = upload.school.filter(
+      school => school.minted === MintStatus.NOTMINTED,
+    ).length;
+    return {
+      mintedCount,
+      notMintedCount,
+      mintingCount,
+      schools: upload.school,
+    };
   }
 
   async getGigaMetrics() {

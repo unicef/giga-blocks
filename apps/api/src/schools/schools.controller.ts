@@ -183,6 +183,20 @@ export class SchoolController {
     return this.schoolService.getCountries();
   }
 
+  @Public()
+  @Get('/minted/:csvId')
+  @ApiOperation({ summary: 'Get minted count of csv school id' })
+  async getMintedCount(@Param('csvId') csvId: string) {
+    return this.schoolService.getMintedCount(csvId);
+  }
+
+  @Public()
+  @Get('/details/:csvId')
+  @ApiOperation({ summary: 'Get minted count of csv school id' })
+  async getCsvDetails(@Param('csvId') csvId: string) {
+    return this.schoolService.getCsvDetails(csvId);
+  }
+
   //arewave
   @Public()
   @Post('getFile')

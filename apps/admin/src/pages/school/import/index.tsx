@@ -2,7 +2,7 @@ import { useUploadContext } from '@contexts/uploadContext';
 import { Card, Container, Grid } from '@mui/material';
 import CsvFormatFile from '@sections/file/csvFormatFile';
 import HorizontalNonLinearStepper from '@components/stepper';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type XLSX from 'xlsx-ugnis';
 import { mapWorkbook } from '@utils/mapWorkbook';
 import { separateUniqueAndDuplicates } from '@utils/index';
@@ -23,9 +23,19 @@ const Upload = () => {
     loading,
     setFileName,
     tableDatas,
+    disableDropZone,
+    setDisableDropZone,
   } = useUploadContext();
 
   const [files, setFiles] = useState<(File | string)[]>([]);
+
+  useEffect(() => {
+    const currentCsvUploadId = localStorage.getItem('currentCsvUploadId');
+    if (currentCsvUploadId) {
+      setShowStepper(true);
+      setDisableDropZone(true);
+    }
+  }, []);
 
   const handleFile = useCallback(
     async (data: XLSX.WorkBook, file: File) => {
@@ -66,7 +76,7 @@ const Upload = () => {
     },
     [selectedSheetName, setFileName, setSheetNames, setTableDatas, setDuplicates]
   );
-
+  console.log({ disableDropZone });
   return (
     <DashboardLayout>
       <Grid container spacing={6}>
