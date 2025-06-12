@@ -89,15 +89,13 @@ export default function ActiveDialog() {
       return;
     }
 
-    const startDateFormatted = startDate.format('YYYY-MM-DD');
-    const endDateFormatted = endDate.format('YYYY-MM-DD');
-
     const activationData = {
       name,
-      startDate: startDateFormatted,
-      endDate: endDateFormatted,
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
       status: isActive ? 'ACTIVE' : 'INACTIVE',
     };
+
     mutate(activationData, {
       onSuccess: () => {
         setSnackbarMessage('School activated successfully!');

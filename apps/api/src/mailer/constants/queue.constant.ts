@@ -2,7 +2,6 @@ export const MINT_QUEUE = 'MINT_QUEUE';
 export const IMAGE_QUEUE = 'IMAGE_QUEUE';
 export const ONCHAIN_DATA_QUEUE = 'ONCHAIN_DATA_QUEUE';
 export const VC_QUEUE = 'VC_QUEUE';
-export const BULK_IMAGE_QUEUE = 'BULK_IMAGE_QUEUE';
 export const SET_ONCHAIN_DATA = 'SET_ONCHAIN_DATA';
 export const SET_MINT_NFT = 'SET_MINT_NFT';
 export const SET_MINT_SINGLE_NFT = 'SET_MINT_SINGLE_NFT';
@@ -20,7 +19,5 @@ export const RESERVE_NFT = 'RESERVE_NFT';
 export const CLAIM_NFT = 'CLAIM_NFT';
 export const SET_PROCESS_VC = 'PROCESS_VC';
 export const UPDATE_CIW = 'UPDATE_CIW';
-export const SET_BULK_IMAGE_PROCESS = 'SET_BULK_IMAGE_PROCESS';
-export const UPDATE_BULK_IMAGE = 'UPDATE_BULK_IMAGE';
 
 

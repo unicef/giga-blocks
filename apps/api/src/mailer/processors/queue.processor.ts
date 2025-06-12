@@ -30,9 +30,6 @@ import {
   SET_PROCESS_VC,
   SEND_VC_LINK,
   UPDATE_CIW,
-  BULK_IMAGE_QUEUE,
-  SET_BULK_IMAGE_PROCESS,
-  UPDATE_BULK_IMAGE,
   UPDATE_PAID_SCHOOL,
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
@@ -44,7 +41,6 @@ import {
   mintNFT,
   mintSingleNFT,
   reserveNft,
-  updateBulkImageHash,
   updateImageHash,
 } from 'src/utils/ethers/transactionFunctions';
 import { PrismaAppService } from 'src/prisma/prisma.service';
@@ -95,11 +91,9 @@ export class QueueProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: `Something went wrong with transactions!! Job Id${job.id}, Job Name: ${job.name}`,
+          subject: `Something went wrong with transactions!! ${error.message}`,
           template: './error',
-          context: {
-            error: error.message,
-          },
+          context: {},
         });
       } catch {
         this._logger.error('Failed to send confirmation email to admin');
@@ -112,7 +106,7 @@ export class QueueProcessor {
     this._logger.error(`Failed job ${job.id} of type ${job.name}: ${error.message}`, error.stack);
     if (job.attemptsMade >= job.opts.attempts) {
       try {
-        const school = await this._prismaService.school.update({
+         const school = await this._prismaService.school.update({
           where: {
             id: job.data.activationData?.schoolId,
             minted: MintStatus.ISMINTING,
@@ -125,17 +119,17 @@ export class QueueProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: `Something went wrong with transactions!! Job Id${job.id}, Job Name: ${job.name}`,
+          subject: `Something went wrong with transactions!! ${error.message}`,
           template: './error',
-          context: {
-            error: error.message,
-          },
+          context: {},
         });
       } catch {
         this._logger.error('Failed to send confirmation email to admin');
       }
     }
   }
+
+  
 
   @Process(SET_ONCHAIN_DATA)
   public async sendOnchainData(job: Job<{ h: number }>) {
@@ -172,7 +166,9 @@ export class QueueProcessor {
   }
 
   @Process(UPDATE_PAID_SCHOOL)
-  public async updatePaidSchool(job: Job<{ activationData: SchoolActivation }>) {
+  public async updatePaidSchool(
+    job: Job<{ activationData: SchoolActivation; }>,
+  ) {
     const schoolId = job.data.activationData.schoolId;
     const themeId = job.data.activationData.themeId;
     const contributorData = job.data.activationData.contributorData;
@@ -180,41 +176,37 @@ export class QueueProcessor {
 
     try {
       const txReceipt = await checkTransactionHash(transactionHash);
-     this._logger.log(`Transaction receipt for school ID ${schoolId}: ${JSON.stringify(txReceipt)}`);
-      if (txReceipt) {
-        if (txReceipt.status === 'success') {
-          const updatedSchool = await this._prismaService.school.update({
-            where: {
-              id: schoolId,
-            },
-            data: {
-              minted: MintStatus.MINTED,
-              themeId: themeId,
-            },
-          });
-          this._imageQueue.add(SET_IMAGE_PROCESS, { id: updatedSchool.giga_school_id }, jobOptions);
+      if (txReceipt.status === 'success') {
+        const updatedSchool = await this._prismaService.school.update({
+          where: {
+            id: schoolId,
+          },
+          data: {
+            minted: MintStatus.MINTED,
+            themeId: themeId,
+          },
+        });
+        this._imageQueue.add(SET_IMAGE_PROCESS, { id: updatedSchool.giga_school_id }, jobOptions);
 
-          this.contributorService.addPayingContributor(contributorData);
-        } else if (txReceipt.status === 'failed') {
-          await this._prismaService.school.update({
-            where: {
-              id: schoolId,
-              minted: MintStatus.ISMINTING,
-            },
-            data: {
-              minted: MintStatus.NOTMINTED,
-              themeId: null,
-            },
-          });
-        } else if (txReceipt.status === 'Pending') {
-          this._logger.warn(`Transaction is still pending for school ID: ${schoolId}`);
-          throw new Error(`Transaction is still pending for school ID: ${schoolId}`);
-        }
-      } else {
-        this._logger.error(`Transaction hash is invalid or not found for school ID: ${schoolId}`);
-        throw new Error(`Transaction hash is invalid or not found for school ID: ${schoolId}`);
+  
+        this.contributorService.addPayingContributor(contributorData);
+      } else if(txReceipt.status === 'failed') {
+        await this._prismaService.school.update({
+          where:{
+            id: schoolId,
+            minted: MintStatus.ISMINTING,
+          },
+          data:{
+            minted: MintStatus.NOTMINTED,
+            themeId: null,
+          }
+        })
+      
       }
-
+      else if(txReceipt.status === 'Pending') {
+        this._logger.warn(`Transaction is still pending for school ID: ${schoolId}`);
+        throw new Error(`Transaction is still pending for school ID: ${schoolId}`);
+      }
     } catch (error) {
       this._logger.error(`Failed to update paid school: ${error.message}`);
       throw new Error(`Failed to update paid school: ${error.message}`);
@@ -234,7 +226,6 @@ export class MintQueueProcessor {
     private contributorService: ContributorService,
     @InjectQueue(MINT_QUEUE) private readonly _mintQueue: Queue,
     @InjectQueue(IMAGE_QUEUE) private readonly _imageQueue: Queue,
-    @InjectQueue(BULK_IMAGE_QUEUE) private readonly _bulkImageQueue: Queue,
   ) {}
 
   @OnQueueActive()
@@ -267,11 +258,9 @@ export class MintQueueProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: `Something went wrong with transactions while minting!!${job.data.ids}, job Name: ${job.name}`,
+          subject: `Something went wrong with transactions while minting!!${job.data.ids}, error: ${error.message}`,
           template: './error',
-          context: {
-            error: error.message,
-          },
+          context: {},
         });
       } catch {
         this._logger.error('Failed to send confirmation email to admin');
@@ -287,11 +276,9 @@ export class MintQueueProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: `Something went wrong while updating database!! ${job.data.ids}, jobid: ${job.id}, job Name: ${job.name}`,
+          subject: `Something went wrong while updating database!! ${job.data.ids}, error: ${error.message}`,
           template: './error',
-          context: {
-            error: error.message,
-          },
+          context: {},
         });
       } catch {
         this._logger.error('Failed to send confirmation email to admin');
@@ -342,7 +329,6 @@ export class MintQueueProcessor {
       job.data.giga_ids,
     );
     const txReceipt = await tx.wait();
-    console.log(`Transaction hash: ${txReceipt.hash}`);
     if (txReceipt.status !== 1) {
       status = false;
     }
@@ -351,7 +337,7 @@ export class MintQueueProcessor {
       try {
         this._mintQueue.add(SET_THEME, { schoolids: job.data.giga_ids }, jobOptions);
         for (let i = 0; i < job.data.giga_ids.length; i++) {
-          this._bulkImageQueue.add(SET_BULK_IMAGE_PROCESS, { id: job.data.giga_ids[i] }, jobOptions);
+          this._imageQueue.add(SET_IMAGE_PROCESS, { id: job.data.giga_ids[i] }, jobOptions);
         }
       } catch (error) {
         this._logger.log(`Error generating image: ${error}`);
@@ -474,12 +460,6 @@ export class MintQueueProcessor {
       const txReceipt = await tx.wait();
 
       if (txReceipt.status === 1) {
-        await this._prismaService.school.update({
-          where: { id: schoolId },
-          data: {
-            schoolReserved: true,
-          },
-        });
         this.contributorService.addContributor({
           email: job.data.email,
           walletAddress: job.data.walletAddress,
@@ -520,11 +500,9 @@ export class ImageProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: `Failed to update NFT image. NFT minted successfully. job Name: ${job.name}, jobId: ${job.id}`,
+          subject: `Failed to update NFT image. NFT minted successfully. error: ${error.message}, jobId: ${job.id}`,
           template: './error',
-          context: {
-            error: error.message,
-          },
+          context: {},
         });
       } catch {
         this._logger.error('Failed to send confirmation email to admin');
@@ -561,7 +539,7 @@ export class ImageProcessor {
         );
         await this._prismaService.school.update({
           where: { giga_school_id: id },
-          data: { imageHash: uploadResult, imageUpdated: true },
+          data: { imageHash: uploadResult },
         });
       } else {
         throw new Error('Failed to decode base64 image.');
@@ -630,119 +608,6 @@ export class ContributeProcessor {
     const id = job.data.id;
     const userId = job.data.userId;
     return this.schoolService.update(id, userId);
-  }
-}
-
-@Injectable()
-@Processor(BULK_IMAGE_QUEUE)
-export class BulkImageProcessor {
-  private readonly _logger = new Logger(BulkImageProcessor.name);
-  constructor(
-    private readonly _configService: ConfigService,
-    private readonly _mailerService: MailerService,
-    private readonly _prismaService: PrismaAppService,
-  ) {
-    this._logger.log('BulkImageProcessor initialized');
-  }
-
-  @OnQueueActive()
-  public onActive(job: Job) {
-    this._logger.debug(`Processing image ${job.id} of type ${job.name}`);
-  }
-
-  @OnQueueCompleted()
-  public onComplete(job: Job) {
-    this._logger.debug(`Completed image ${job.id} of type ${job.name}`);
-  }
-
-  @OnQueueFailed({ name: UPDATE_BULK_IMAGE || SET_BULK_IMAGE_PROCESS })
-  public async onImageFail(job: Job<any>, error: any) {
-    this._logger.error(`Failed image ${job.id} of type ${job.name}: ${error.message}`, error.stack);
-    if (job.attemptsMade === job.opts.attempts) {
-      try {
-        return this._mailerService.sendMail({
-          to: this._configService.get('EMAIL_ADDRESS'),
-          from: this._configService.get('EMAIL_ADDRESS'),
-          subject: `Failed to update NFT image. NFT minted successfully. error:, jobId: ${job.id} job Name: ${job.name}`,
-          template: './error',
-          context: {
-            error: error.message,
-          },
-        });
-      } catch {
-        this._logger.error('Failed to send confirmation email to admin');
-      }
-    }
-  }
-
-  @Process({ name: SET_BULK_IMAGE_PROCESS, concurrency: 4 })
-  public async processImages(job: Job<any>) {
-    this._logger.log(`Processing bulk image for job: ${job.id}`);
-    const id = job.data.id;
-    this._logger.log(`Updating image of school: ${id}`);
-
-    try {
-      const scriptData = await getScriptData(
-        this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-        this._configService.get<string>('GIGA_IMAGE_CONTENT_ADDRESS'),
-        id,
-      );
-
-      const artScript = await getArtScript(
-        'NFTContent',
-        this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-      );
-      const base64Image = await generateP5Image(`${artScript}`, scriptData);
-      const decodedImage = await decodeBase64Image(base64Image);
-
-      if (decodedImage) {
-        const uploadResult = await uploadFile(decodedImage.data);
-        await this._prismaService.school.update({
-          where: { giga_school_id: id },
-          data: { imageHash: uploadResult },
-        });
-      } else {
-        throw new Error('Failed to decode base64 image.');
-      }
-    } catch (error) {
-      this._logger.error(`Error updating image: ${error}`);
-      // Crucially, re-throw the error to signal job failure to BullMQ
-      throw error;
-    }
-  }
-
-  @Process({ name: UPDATE_BULK_IMAGE, concurrency: 1 })
-  public async updateBulkImage(job: Job<{ imagedata: ImageData[] }>) {
-    this._logger.log(`Updating bulk image hash for job: ${job.id}`);
-    const imagedata = job.data.imagedata;
-    try {
-      const tx = await updateBulkImageHash(
-        'NFTContent',
-        this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-        imagedata,
-      );
-      const txReceipt = await tx.wait();
-      if (txReceipt.status === 1) {
-        const schools = await this._prismaService.school.updateMany({
-          where: {
-            giga_school_id: {
-              in: imagedata.map(data => data[0]),
-            },
-          },
-          data: {
-            imageUpdated: true,
-          },
-        });
-        this._logger.log(`Schools updated: ${schools.count}`);
-      }
-      if (txReceipt.status !== 1) {
-        throw new Error('Error updating image hash');
-      }
-      this._logger.log(`Image hash updated successfully for school: ${imagedata[0]}`);
-    } catch (error) {
-      this._logger.error(`Error updating image hash: ${error}`);
-      throw error;
-    }
   }
 }
 

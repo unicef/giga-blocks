@@ -17,8 +17,6 @@ export default {
     VALIDATECSV: '/schools/validateCsv',
     TOTALMINTED: '/schools/minted',
     DETAILS: '/schools/details',
-    UPDATEIMAGE: '/schools/updateImages',
-    GETIMAGEUPDATELIST: '/schools/imageUpdate',
   },
   CONTRIBUTE: {
     GET: '/contribute',

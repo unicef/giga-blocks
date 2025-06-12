@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDateString, IsOptional } from 'class-validator';
-import { ActivationStatus } from '@prisma/application';
 
 export class ActivationLogDTO {
   @ApiProperty({
@@ -9,7 +8,7 @@ export class ActivationLogDTO {
     required: true,
   })
   @IsString()
-  status: ActivationStatus;
+  status: ACTIVE_STATUS;
 
   @ApiProperty({
     description: 'Name of the event',

@@ -9,7 +9,6 @@ import {
   ImageProcessor,
   QueueProcessor,
   VCProcessor,
-  BulkImageProcessor,
 } from './processors';
 import { MailService } from './mailer.service';
 import {
@@ -19,13 +18,13 @@ import {
   ONCHAIN_DATA_QUEUE,
   CONTRIBUTE_QUEUE,
   VC_QUEUE,
-  BULK_IMAGE_QUEUE,
 } from './constants';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { QueueService } from './queue.service';
 import { ContributeDataService } from 'src/contribute/contribute.service';
 import { SchoolService } from 'src/schools/schools.service';
 import { MagicLinkService } from 'src/magic-link/magic-link.service';
+import { JwtModule } from '@nestjs/jwt';
 import { LinkactivationService } from 'src/linkactivation/linkactivation.service';
 import { ContributorService } from 'src/contributor/contributor.service';
 
@@ -37,9 +36,11 @@ import { ContributorService } from 'src/contributor/contributor.service';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         transport: {
-          service: configService.get('SERVICE_PROVIDER'),
+          host: configService.get('EMAIL_HOST'),
+          port: +configService.get('SMTP_PORT'),
+          secure: true,
           auth: {
-            user: configService.get('EMAIL_USER'), 
+            user: configService.get('EMAIL_ADDRESS'), //need to ad EMAIL_USERNAME for using malijet service later
             pass: configService.get('EMAIL_PASSWORD'),
           },
         },
@@ -56,44 +57,38 @@ import { ContributorService } from 'src/contributor/contributor.service';
     }),
     BullModule.registerQueue({
       name: MINT_QUEUE,
-      limiter: {
+      limiter:{
         max: 1,
         duration: 5000,
       },
-      defaultJobOptions: {
-        removeOnFail: false,
-      },
+     defaultJobOptions:{
+      removeOnFail:false
+     }
     }),
     BullModule.registerQueue({
       name: IMAGE_QUEUE,
-      limiter: {
+      limiter:{
         max: 1,
         duration: 5000,
       },
-      defaultJobOptions: {
-        removeOnFail: false,
-      },
-    }),
-    BullModule.registerQueue({
-      name: ONCHAIN_DATA_QUEUE,
-      defaultJobOptions: {
-        removeOnFail: false,
-      },
-    }),
-    BullModule.registerQueue({
-      name: CONTRIBUTE_QUEUE,
-      defaultJobOptions: {
-        removeOnFail: false,
-      },
-    }),
-    BullModule.registerQueue({
-      name: VC_QUEUE,
       defaultJobOptions:{
       removeOnFail:false
      }
     }),
-     BullModule.registerQueue({
-      name: BULK_IMAGE_QUEUE,
+    BullModule.registerQueue({
+      name: ONCHAIN_DATA_QUEUE,
+      defaultJobOptions:{
+      removeOnFail:false
+     }
+    }),
+    BullModule.registerQueue({
+      name: CONTRIBUTE_QUEUE,
+      defaultJobOptions:{
+      removeOnFail:false
+     }
+    }),
+    BullModule.registerQueue({
+      name: VC_QUEUE,
       defaultJobOptions:{
       removeOnFail:false
      }
@@ -106,15 +101,14 @@ import { ContributorService } from 'src/contributor/contributor.service';
     QueueProcessor,
     MintQueueProcessor,
     ImageProcessor,
-    BulkImageProcessor,
     ContributeDataService,
     ContributeProcessor,
     VCProcessor,
     MagicLinkService,
     SchoolService,
     LinkactivationService,
-    ContributorService,
+    ContributorService
   ],
-  exports: [MailService, QueueService, BullModule],
+  exports: [MailService, QueueService,BullModule],
 })
 export class MailModule {}

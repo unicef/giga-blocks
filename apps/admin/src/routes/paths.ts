@@ -77,5 +77,4 @@ export const PATH_SCHOOL = {
   contributed: path(ROOTS_SCHOOL, '/un-minted'),
   minting: path(ROOTS_SCHOOL, '/pending'),
   import: path(ROOTS_SCHOOL, '/import'),
-  imageUpdate: path(ROOTS_SCHOOL, '/imageUpdate'),
 };

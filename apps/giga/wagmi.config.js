@@ -5,8 +5,6 @@ import { createConfig, http } from 'wagmi';
 import { baseSepolia } from 'wagmi/chains';
 import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors';
 
-const rpcURL = process.env.NEXT_PUBLIC_NETWORK_PROVIDER
-
 export const config = createConfig(
   getDefaultConfig({
     chains: [
@@ -31,7 +29,7 @@ export const config = createConfig(
     ],
     transports: {
       [baseSepolia.id]: http(
-        `${rpcURL}`? `${rpcURL}` : 'https://sepolia.infura.io/v3/b6dbb218527148febfaeb8ae2870b60e'
+        'https://base-sepolia.g.alchemy.com/v2/WSfPp7PZYjX8uXeDOFfk_GFBBSCrCyxg'
       ),
     },
     walletConnectProjectId: 'fdfb7359857dc4dd413ecda05a551571',

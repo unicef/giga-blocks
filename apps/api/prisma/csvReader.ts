@@ -56,7 +56,6 @@ async function readAndSaveCSV(filePath: string): Promise<void> {
 
       await prisma.school.create({
         data: {
-          id:schoolData.giga_school_id,
           name: schoolData.schoolName,
           school_type: schoolData.schoolType,
           longitude: schoolData.longitude,

@@ -47,66 +47,59 @@ export class QosService {
   }
 
   async getWeeklyQOS(query: WeeklyQOSDto) {
-  const { giga_school_id, startDate, endDate } = query;
+    const { giga_school_id, startDate, endDate } = query;
 
-  // Fetch all data within the date range
-  const stats = await this.prisma.qos.findMany({
-    where: {
-      giga_school_id,
-      date: {
-        gte: new Date(startDate),
-        lte: new Date(endDate),
+    // Fetch all data within the date range
+    const stats = await this.prisma.qos.findMany({
+      where: {
+        giga_school_id,
+        date: {
+          gte: new Date(startDate),
+          lte: new Date(endDate),
+        },
       },
-    },
-    select: {
-      speed_upload_mean: true,
-      date: true,
-    },
-  });
-
-  // Group data by day (YYYY-MM-DD in UTC)
-  const dailyAverages = stats.reduce((acc, record) => {
-    const day = record.date.toISOString().slice(0, 10); // YYYY-MM-DD
-    if (!acc[day]) {
-      acc[day] = { total: 0, count: 0 };
-    }
-    acc[day].total += Number(record.speed_upload_mean) || 0;
-    acc[day].count += 1;
-    return acc;
-  }, {} as Record<string, { total: number; count: number }>);
-
-  const result: { day: string; averageSpeedUpload: number }[] = [];
-  let current = new Date(startDate);
-  const end = new Date(endDate);
-  let allZeros = true; 
-
-  while (current <= end) {
-    // Always use UTC for comparison
-    const dayStr = current.toISOString().slice(0, 10);
-    let averageSpeedUpload = 0;
-
-    if (dailyAverages[dayStr]) {
-      averageSpeedUpload = dailyAverages[dayStr].total / dailyAverages[dayStr].count;
-    }
-
-    if (averageSpeedUpload !== 0) {
-      allZeros = false;
-    }
-
-    result.push({
-      day: dayStr,
-      averageSpeedUpload: averageSpeedUpload,
+      select: {
+        speed_upload_mean: true,
+        date: true,
+      },
     });
 
-    current.setUTCDate(current.getUTCDate() + 1);
-  }
+    // Group data by day (YYYY-MM-DD in UTC)
+    const dailyAverages = stats.reduce((acc, record) => {
+      const day = record.date.toISOString().slice(0, 10); // YYYY-MM-DD
+      if (!acc[day]) {
+        acc[day] = { total: 0, count: 0 };
+      }
+      acc[day].total += Number(record.speed_upload_mean) || 0;
+      acc[day].count += 1;
+      return acc;
+    }, {} as Record<string, { total: number; count: number }>);
 
-  if (allZeros) {
-    return {status: 200, message: "No data found"}; 
-  }
+    // Generate all dates in the range (also in UTC)
+    const result: { day: string; averageSpeedUpload: number }[] = [];
+    let current = new Date(startDate);
+    const end = new Date(endDate);
 
-  return result;
-}
+    while (current <= end) {
+      // Always use UTC for comparison
+      const dayStr = current.toISOString().slice(0, 10);
+      if (dailyAverages[dayStr]) {
+        result.push({
+          day: dayStr,
+          averageSpeedUpload: dailyAverages[dayStr].total / dailyAverages[dayStr].count,
+        });
+      } else {
+        result.push({
+          day: dayStr,
+          averageSpeedUpload: 0,
+        });
+      }
+      // Move to next day in UTC
+      current.setUTCDate(current.getUTCDate() + 1);
+    }
+
+    return result;
+  }
 
   async getMonthlyQOS(query: WeeklyQOSDto) {
     const { giga_school_id, startDate, endDate } = query;
