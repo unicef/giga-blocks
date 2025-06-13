@@ -264,6 +264,7 @@ export class SchoolService {
           }
           const dataArray = await handler(fileData);
           const schoolData = dataArray.schoolArrays;
+          console.log({ schoolData });
           const schools = await this.prisma.school.findMany({
             where: {
               giga_school_id: {
@@ -272,6 +273,10 @@ export class SchoolService {
               minted: MintStatus.NOTMINTED,
             },
           });
+          console.log(
+            'dbdata',
+            schools.map(school => school.giga_school_id),
+          );
           // Check for missing schools
           const missingSchools = schoolData.filter(
             school => !schools.some(dbSchool => dbSchool.giga_school_id === school.school_id_giga),
@@ -486,7 +491,6 @@ export class SchoolService {
       },
     });
   }
-
   async getMintedCount(csvId) {
     const upload = await this.prisma.cSVUpload.findUnique({
       where: {
