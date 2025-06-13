@@ -30,8 +30,10 @@ import {
   SET_PROCESS_VC,
   SEND_VC_LINK,
   UPDATE_CIW,
-  UPDATE_PAID_SCHOOL,
+  BULK_IMAGE_QUEUE,
   SET_BULK_IMAGE_PROCESS,
+  UPDATE_BULK_IMAGE,
+  UPDATE_PAID_SCHOOL,
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
@@ -42,6 +44,7 @@ import {
   mintNFT,
   mintSingleNFT,
   reserveNft,
+  updateBulkImageHash,
   updateImageHash,
 } from 'src/utils/ethers/transactionFunctions';
 import { PrismaAppService } from 'src/prisma/prisma.service';
@@ -92,9 +95,11 @@ export class QueueProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('DEBUG_EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: `Something went wrong with transactions!! ${error.message}`,
+          subject: `Something went wrong with transactions!! Job Id${job.id}, Job Name: ${job.name}`,
           template: './error',
-          context: {},
+          context: {
+            error: error.message,
+          },
         });
       } catch {
         this._logger.error('Failed to send confirmation email to admin');
@@ -120,9 +125,11 @@ export class QueueProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('DEBUG_EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: `Something went wrong with transactions!! ${error.message}`,
+          subject: `Something went wrong with transactions!! Job Id${job.id}, Job Name: ${job.name}`,
           template: './error',
-          context: {},
+          context: {
+            error: error.message,
+          },
         });
       } catch {
         this._logger.error('Failed to send confirmation email to admin');
@@ -173,33 +180,41 @@ export class QueueProcessor {
 
     try {
       const txReceipt = await checkTransactionHash(transactionHash);
-      if (txReceipt.status === 'success') {
-        const updatedSchool = await this._prismaService.school.update({
-          where: {
-            id: schoolId,
-          },
-          data: {
-            minted: MintStatus.MINTED,
-            themeId: themeId,
-          },
-        });
-        this._imageQueue.add(SET_IMAGE_PROCESS, { id: updatedSchool.giga_school_id }, jobOptions);
+      this._logger.log(
+        `Transaction receipt for school ID ${schoolId}: ${JSON.stringify(txReceipt)}`,
+      );
+      if (txReceipt) {
+        if (txReceipt.status === 'success') {
+          const updatedSchool = await this._prismaService.school.update({
+            where: {
+              id: schoolId,
+            },
+            data: {
+              minted: MintStatus.MINTED,
+              themeId: themeId,
+            },
+          });
+          this._imageQueue.add(SET_IMAGE_PROCESS, { id: updatedSchool.giga_school_id }, jobOptions);
 
-        this.contributorService.addPayingContributor(contributorData);
-      } else if (txReceipt.status === 'failed') {
-        await this._prismaService.school.update({
-          where: {
-            id: schoolId,
-            minted: MintStatus.ISMINTING,
-          },
-          data: {
-            minted: MintStatus.NOTMINTED,
-            themeId: null,
-          },
-        });
-      } else if (txReceipt.status === 'Pending') {
-        this._logger.warn(`Transaction is still pending for school ID: ${schoolId}`);
-        throw new Error(`Transaction is still pending for school ID: ${schoolId}`);
+          this.contributorService.addPayingContributor(contributorData);
+        } else if (txReceipt.status === 'failed') {
+          await this._prismaService.school.update({
+            where: {
+              id: schoolId,
+              minted: MintStatus.ISMINTING,
+            },
+            data: {
+              minted: MintStatus.NOTMINTED,
+              themeId: null,
+            },
+          });
+        } else if (txReceipt.status === 'Pending') {
+          this._logger.warn(`Transaction is still pending for school ID: ${schoolId}`);
+          throw new Error(`Transaction is still pending for school ID: ${schoolId}`);
+        }
+      } else {
+        this._logger.error(`Transaction hash is invalid or not found for school ID: ${schoolId}`);
+        throw new Error(`Transaction hash is invalid or not found for school ID: ${schoolId}`);
       }
     } catch (error) {
       this._logger.error(`Failed to update paid school: ${error.message}`);
@@ -220,6 +235,7 @@ export class MintQueueProcessor {
     private contributorService: ContributorService,
     @InjectQueue(MINT_QUEUE) private readonly _mintQueue: Queue,
     @InjectQueue(IMAGE_QUEUE) private readonly _imageQueue: Queue,
+    @InjectQueue(BULK_IMAGE_QUEUE) private readonly _bulkImageQueue: Queue,
   ) {}
 
   @OnQueueActive()
@@ -252,9 +268,11 @@ export class MintQueueProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('DEBUG_EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: `Something went wrong with transactions while minting!!${job.data.ids}, error: ${error.message}`,
+          subject: `Something went wrong with transactions while minting!!${job.data.ids}, job Name: ${job.name}`,
           template: './error',
-          context: {},
+          context: {
+            error: error.message,
+          },
         });
       } catch {
         this._logger.error('Failed to send confirmation email to admin');
@@ -270,9 +288,11 @@ export class MintQueueProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('DEBUG_EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: `Something went wrong while updating database!! ${job.data.ids}, error: ${error.message}`,
+          subject: `Something went wrong while updating database!! ${job.data.ids}, jobid: ${job.id}, job Name: ${job.name}`,
           template: './error',
-          context: {},
+          context: {
+            error: error.message,
+          },
         });
       } catch {
         this._logger.error('Failed to send confirmation email to admin');
@@ -323,6 +343,7 @@ export class MintQueueProcessor {
       job.data.giga_ids,
     );
     const txReceipt = await tx.wait();
+    console.log(`Transaction hash: ${txReceipt.hash}`);
     if (txReceipt.status !== 1) {
       status = false;
     }
@@ -458,6 +479,12 @@ export class MintQueueProcessor {
       const txReceipt = await tx.wait();
 
       if (txReceipt.status === 1) {
+        await this._prismaService.school.update({
+          where: { id: schoolId },
+          data: {
+            schoolReserved: true,
+          },
+        });
         this.contributorService.addContributor({
           email: job.data.email,
           walletAddress: job.data.walletAddress,
@@ -498,9 +525,11 @@ export class ImageProcessor {
         return this._mailerService.sendMail({
           to: this._configService.get('DEBUG_EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
-          subject: `Failed to update NFT image. NFT minted successfully. error: ${error.message}, jobId: ${job.id}`,
+          subject: `Failed to update NFT image. NFT minted successfully. job Name: ${job.name}, jobId: ${job.id}`,
           template: './error',
-          context: {},
+          context: {
+            error: error.message,
+          },
         });
       } catch {
         this._logger.error('Failed to send confirmation email to admin');
@@ -537,7 +566,7 @@ export class ImageProcessor {
         );
         await this._prismaService.school.update({
           where: { giga_school_id: id },
-          data: { imageHash: uploadResult },
+          data: { imageHash: uploadResult, imageUpdated: true },
         });
       } else {
         throw new Error('Failed to decode base64 image.');

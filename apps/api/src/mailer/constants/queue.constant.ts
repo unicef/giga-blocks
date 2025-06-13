@@ -2,6 +2,7 @@ export const MINT_QUEUE = 'MINT_QUEUE';
 export const IMAGE_QUEUE = 'IMAGE_QUEUE';
 export const ONCHAIN_DATA_QUEUE = 'ONCHAIN_DATA_QUEUE';
 export const VC_QUEUE = 'VC_QUEUE';
+export const BULK_IMAGE_QUEUE = 'BULK_IMAGE_QUEUE';
 export const SET_ONCHAIN_DATA = 'SET_ONCHAIN_DATA';
 export const SET_MINT_NFT = 'SET_MINT_NFT';
 export const SET_MINT_SINGLE_NFT = 'SET_MINT_SINGLE_NFT';
@@ -12,12 +13,12 @@ export const SET_APPROVE_QUEUE = 'SET_APPROVE_QUEUE';
 export const SET_IMAGE_PROCESS = 'SET_PROCESS_IMAGE';
 export const UPLOAD_QUEUE = 'UPLOAD_QUEUE';
 export const SET_UPLOAD_PROCESS = 'SET_UPLOAD_PROCESS';
-export const SET_CSV_MINT ='SET_CSV_MINT'
+export const SET_CSV_MINT = 'SET_CSV_MINT';
 export const SET_THEME = 'SET_THEME';
 export const UPDATE_PAID_SCHOOL = 'UPDATE_PAID_SCHOOL';
 export const RESERVE_NFT = 'RESERVE_NFT';
 export const CLAIM_NFT = 'CLAIM_NFT';
 export const SET_PROCESS_VC = 'PROCESS_VC';
 export const UPDATE_CIW = 'UPDATE_CIW';
-
-
+export const SET_BULK_IMAGE_PROCESS = 'SET_BULK_IMAGE_PROCESS';
+export const UPDATE_BULK_IMAGE = 'UPDATE_BULK_IMAGE';
