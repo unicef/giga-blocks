@@ -12,6 +12,7 @@ import {
   Button,
   Alert,
   Box,
+  CircularProgress,
 } from '@mui/material';
 import { useUploadContext } from '@contexts/uploadContext';
 import TableFormatter from '@utils/arrayFormatter';
@@ -21,11 +22,13 @@ import { hi } from 'date-fns/locale';
 interface SpreadsheetValidationTableProps {
   setHasErrors: (hasErrors: boolean) => void;
   validationResult?: string[];
+  isFileValidated?: boolean;
 }
 
 const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   setHasErrors,
   validationResult = [],
+  isFileValidated = true,
 }) => {
   const {
     sheetNames,
@@ -33,6 +36,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     selectedSheetName,
     setSelectedSheetName,
     tableDatas: rows,
+    setIsFileValidated,
   } = useUploadContext();
   const [errors, setErrors] = useState<string[]>([]);
   const [allSheetErrors, setAllSheetErrors] = useState<{ sheetName: string; errors: string[] }[]>();
@@ -149,7 +153,9 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
       return { color: '#fdecea', icon: <ErrorIcon color="error" /> };
     else return { color: '#e6f4ea', icon: <SuccessIcon color="success" /> };
   };
-
+  useEffect(() => {
+    if (errors.length > 0) setIsFileValidated(false);
+  }, [errors]);
   return (
     <>
       {errors.length > 0 && (
@@ -184,7 +190,12 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {convertedObject &&
+            {!isFileValidated && validationResult.length === 0 ? (
+              <>
+                <CircularProgress />
+              </>
+            ) : (
+              convertedObject &&
               convertedObject[tableHeaders[0]]?.map((_: any, rowIndex: number) => (
                 <TableRow
                   key={rowIndex}
@@ -226,7 +237,8 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
                     );
                   })}
                 </TableRow>
-              ))}
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>

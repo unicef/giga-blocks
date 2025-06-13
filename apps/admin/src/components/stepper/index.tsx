@@ -19,8 +19,9 @@ import SpreadSheetValidationTable from './spreadsheetValidationTable';
 import api from '@utils/apiCall';
 import { LinearProgress } from '@mui/material';
 import CsvDetailsTable from './csvDetailsTable';
+import { UploadCsv } from './steps/uploadCsv';
 
-const steps = ['Preview File', 'Validate File', 'Mint'];
+const steps = ['Upload', 'Preview File', 'Validate File', 'Mint'];
 
 export default function HorizontalLinearStepper({
   propsTableData,
@@ -33,13 +34,12 @@ export default function HorizontalLinearStepper({
   const [csvUploadId, setCsvUploadId] = useState('');
   const [files, setFiles] = useState<(File | string)[]>([]);
   const [validationResult, setValidationResult] = useState<any[]>([]);
-  const [hideButton, setHideButton] = useState(false);
   const [progress, setProgress] = useState<number>(0);
-  // const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const {
     setShowStepper,
     setSelectedSheetName,
     setIsFileValidated,
+    setSelectedFiles,
     typeOfFile,
     setDisableDropZone,
     setTableDatas,
@@ -95,7 +95,7 @@ export default function HorizontalLinearStepper({
 
   useEffect(() => {
     //send file to validate if activate step is 1
-    if (activeStep === 1 && files.length > 0) {
+    if (activeStep === 2 && files.length > 0) {
       const formData = new FormData();
       files.forEach((file) => {
         formData.append(`files`, file);
@@ -169,7 +169,7 @@ export default function HorizontalLinearStepper({
 
     if (csvUploadId) {
       setCsvUploadId(csvUploadId);
-      setActiveStep(3);
+      setActiveStep(4);
     }
   }, []);
 
@@ -207,7 +207,6 @@ export default function HorizontalLinearStepper({
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setDisableDropZone(true);
-    // setIsFileValidated(true);
     setSelectedSheetName('');
   };
 
@@ -324,12 +323,13 @@ export default function HorizontalLinearStepper({
           );
         })}
       </Stepper>
-      {activeStep === 1 ? (
+      {activeStep === 2 ? (
         <>
           {/* here you need to validation Table */}
           <SpreadSheetValidationTable
             setHasErrors={setHasErrors}
             validationResult={validationResult}
+            isFileValidated={isFileValidated}
           />
           <Box sx={{ display: 'flex', flexDirection: 'row', py: 3, px: 1 }}>
             <Button
@@ -366,14 +366,40 @@ export default function HorizontalLinearStepper({
             )}
           </Box>
         </>
-      ) : activeStep === 0 ? (
+      ) : activeStep === 1 ? (
         <>
           {/* here you need to show the content (Preview) */}
 
           <SpreadSheetTable />
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              py: 3,
+              px: 1,
+            }}
+          >
+            <Button
+              variant="outlined"
+              disabled={isFileValidated} // Disable back button once validated
+              color="inherit"
+              onClick={handleBack}
+              sx={{ mr: 1 }}
+            >
+              Back
+            </Button>
+            <Button variant="contained" onClick={handleNext}>
+              Next
+            </Button>
+          </Box>
+        </>
+      ) : activeStep === 0 ? (
+        <>
+          <UploadCsv />
           <Box sx={{ display: 'flex', flexDirection: 'row', py: 3, px: 1 }}>
             <Box sx={{ flex: '1 1 auto' }} />
-            <Button variant="contained" onClick={handleNext}>
+            <Button disabled={files.length === 0} variant="contained" onClick={handleNext}>
               Next
             </Button>
           </Box>
@@ -428,6 +454,7 @@ export default function HorizontalLinearStepper({
                     disabled={mintDetails?.mintedCount !== mintDetails.total}
                     onClick={() => {
                       setShowStepper(false);
+                      setSelectedFiles([]);
                       push('/dashboard');
                     }}
                     sx={{ mr: 1 }}
@@ -457,8 +484,12 @@ export default function HorizontalLinearStepper({
                   }}
                 >
                   <h3>Minting Completed</h3>
-                  {Object.keys(csvDetails).length > 0 && (
+                  {csvDetails.schools.length > 0 ? (
                     <CsvDetailsTable schools={csvDetails.schools} />
+                  ) : (
+                    <>
+                      <p>loading . . .</p>
+                    </>
                   )}
                   <h4>Total:{csvDetails?.schools?.length || 0}</h4>
                 </Box>
@@ -477,6 +508,7 @@ export default function HorizontalLinearStepper({
                     disabled={mintDetails?.mintedCount !== mintDetails.total}
                     onClick={() => {
                       setShowStepper(false);
+                      setSelectedFiles([]);
                       push('/dashboard');
                     }}
                     sx={{ mr: 1 }}

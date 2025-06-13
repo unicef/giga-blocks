@@ -65,19 +65,17 @@ export default function CsvFormatFile({
   );
 
   useEffect(() => {
-    if (isFileValidated) {
-      const newFiles = selectedFiles?.map((file: any) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
-        })
-      );
-      setFiles((prevFiles: any) => [...prevFiles, ...newFiles]);
-      setIsFileValidated(false);
-    }
+    //  SHOW FILE WHEN FILE UPLOADED NOT WHEN VALIDATED
+    const newFiles = selectedFiles?.map((file: any) =>
+      Object.assign(file, {
+        preview: URL.createObjectURL(file),
+      })
+    );
+    setFiles([...newFiles]);
   }, [isFileValidated, selectedFiles, setIsFileValidated]);
 
   const handleRemoveFile = (inputFile: File | string) => {
-    setFiles((prevFiles: any) => prevFiles.filter((file: any) => file !== inputFile));
+    setFiles([]);
     setDisableDropZone(false);
     setProgress(0);
     setShowErrorMsg('');
