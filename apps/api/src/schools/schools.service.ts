@@ -71,21 +71,23 @@ export class SchoolService {
         ? false
         : undefined;
 
-    const cacheKey = getCacheKey(name, country, minted, page, perPage);
+    const cacheKey = getCacheKey(name, country, minted, Number(page), Number(perPage));
+
     // Check if only the cache-relevant parameters are present
     const isCacheableQuery = Object.keys(query).every(key =>
-      ['page', 'perPage', 'name', 'country', 'minted'].includes(key),
+      ['name', 'country', 'minted', 'page', 'perPage'].includes(key),
     );
+
 
     if (isCacheableQuery) {
       const cachedResult = await this.cacheManager.get<string>(cacheKey);
-      if (cachedResult) return cachedResult;
+      if (cachedResult) {
+        const parsedResult = JSON.parse(cachedResult);
+        console.log(cachedResult?.length, 'cachedResult');
+
+        return parsedResult;
+      }
     }
-
-    // const cachedResult = await this.cacheManager.get<string>(cacheKey);
-
-    // if (cachedResult) return cachedResult;
-
     const gigaMapsConditions: Prisma.SchoolWhereInput[] = [];
 
     //Combines all the filters into a single condition
@@ -198,7 +200,11 @@ export class SchoolService {
       },
     );
 
-    await this.cacheManager.set(cacheKey, result, 5000);
+    if (isCacheableQuery) {
+      // *** IMPORTANT: Stringify the result before setting in cache ***
+      const setStatus = await this.cacheManager.set(cacheKey, JSON.stringify(result), 12000);
+      console.log(`Cache SET status for ${cacheKey}:`, setStatus ? 'SUCCESS' : 'FAILURE');
+    }
 
     return result;
   }
@@ -419,14 +425,21 @@ export class SchoolService {
       _count: { minted: true },
     });
 
-    const schoolCount = await this.prisma.school.count();
+    const offlineCount = await this.prisma.school.count({
+      where: {
+        connectivity: false,
+        deletedAt: null,
+      },
+    });
+
     const contributorCount = await this.prisma.contributor.count();
 
     const metrics = {
       minted: 0,
       notMinted: 0,
       contributorCount: contributorCount,
-      schoolCount: schoolCount,
+      schoolCount: 0,
+      offline: '0%',
     };
 
     result.forEach(row => {
@@ -436,7 +449,11 @@ export class SchoolService {
       if (row.minted === MintStatus.NOTMINTED) {
         metrics.notMinted = row._count.minted;
       }
+      metrics.schoolCount += row._count.minted;
     });
+
+    const offlinePercentage = (offlineCount / metrics.schoolCount) * 100;
+    metrics.offline = `${Math.round(offlinePercentage)}%`;
 
     return metrics;
   }
