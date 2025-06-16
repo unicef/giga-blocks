@@ -1,65 +1,88 @@
-import express from 'express';
-import {Queue} from 'bullmq';
+import express, { Request, Response } from 'express';
+import { Queue } from 'bullmq';
 import IORedis from 'ioredis';
-import dotenv from 'dotenv';
+import {
+  addAlchemyContextToRequest,
+  AlchemyWebhookEvent,
+  validateAlchemySignature,
+} from './utils/index';
 
-const app = express();
-const port = process.env.WEBHOOK_PORT || 3000;
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+async function main(): Promise<void> {
+  const app = express();
+  const port = process.env.WEBHOOK_PORT || 3010;
+  const alchemySigningKey = process.env.ALCHEMY_SIGNING_KEY || '';
 
-const connection = new IORedis({
+  if (!alchemySigningKey) {
+    console.error('ALCHEMY_SIGNING_KEY is not set. Exiting...');
+    process.exit(1);
+  }
+
+  app.use(express.json({ verify: addAlchemyContextToRequest }));
+  // app.use(express.urlencoded({ extended: true }));
+  app.use(validateAlchemySignature(alchemySigningKey));
+
+  const connection = new IORedis({
     host: process.env.REDIS_HOST || 'localhost',
     port: parseInt(process.env.REDIS_PORT || '6379', 10),
     password: process.env.REDIS_PASSWORD || undefined,
-})
+  });
 
-
-const webHookQueue = new Queue('WEBHOOK_QUEUE', {
-  connection: connection,
-  defaultJobOptions: {
-    removeOnComplete: false,
-    removeOnFail: false,
-    attempts: 5,
-    backoff: {
-      type: 'exponential',
-      delay: 1000,
+  const webHookQueue = new Queue('ONCHAIN_DATA_QUEUE', {
+    connection: connection,
+    defaultJobOptions: {
+      removeOnComplete: false,
+      removeOnFail: false,
+      attempts: 5,
+      backoff: {
+        type: 'exponential',
+        delay: 1000,
+      },
+      delay:6000
     },
-  },
-});
+  });
 
-const addTaskToQueue = async(payload:any): Promise<void> => {
-    try{
-        await webHookQueue.add('PROCESS_SUCCESS_TXN',payload,{})
+  const addTaskToQueue = async (transactionDetails: any): Promise<void> => {
+    try {
+      await webHookQueue.add('PROCESS_SUCCESS_TXN',{transactionDetails}, {});
+    } catch (error) {
+      console.error('Error adding task to queue:', error);
     }
-    catch(error){
-        console.error("Error adding task to queue:", error);
+  };
+
+  app.post('/webhook', (req: any, res: any) => {
+    const webhookEvent = req.body as AlchemyWebhookEvent;
+    if (webhookEvent.webhookId) {
+      console.log('Webhook ID:', webhookEvent.webhookId);
     }
+    if (webhookEvent.event && webhookEvent.event.data) {
+      console.log('Event Data:', webhookEvent.event.data);
+      if (
+        webhookEvent.event.data.block &&
+        webhookEvent.event.data.block.number
+      ) {
+        console.log('Block Number:', webhookEvent.event.data.block.number);
+      }
+      if (
+        webhookEvent.event.data.logs &&
+        webhookEvent.event.data.logs.length > 0
+      ) {
+        console.log(
+          'First Log Topics:',
+          webhookEvent.event.data.logs[0].topics
+        );
+      }
+
+      const transactionDetails = {
+        transactionHash: webhookEvent.event.data.block.logs[0].transaction.hash,
+        status: webhookEvent.event.data.block.logs[0].transaction.status,
+      };
+      addTaskToQueue(transactionDetails);
+    }
+    return res.status(200).send('Webhook received successfully!');
+  });
+
+  app.listen(port, () => {
+    console.log(`Webhook server is running on port ${port}`);
+  });
 }
-
-
-app.post('/webhook', (req,res)=>{
-     if (req.body.webhookId) {
-      console.log("Webhook ID:", req.body.webhookId);
-    }
-    if (req.body.event && req.body.event.data) {
-      console.log("Event Data:", req.body.event.data);
-      if (req.body.event.data.block && req.body.event.data.block.number) {
-        console.log("Block Number:", req.body.event.data.block.number);
-      }
-      if (req.body.event.data.logs && req.body.event.data.logs.length > 0) {
-        console.log("First Log Topics:", req.body.event.data.logs[0].topics);
-      }
-
-      const payload ={
-        transactionHash: req.body.event.data.block.logs[0].transaction.hash,
-        status: req.body.event.data.block.logs[0].transaction.status
-      }
-      addTaskToQueue(payload);
-    }
-  return res.status(200).send("Webhook received successfully!");
-})
-
-app.listen(port, () => {
-  console.log(`Webhook server is running on port ${port}`);
-});
+main();

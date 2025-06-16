@@ -140,6 +140,9 @@ importers:
       '@types/axios':
         specifier: ^0.14.0
         version: 0.14.4
+      '@types/express':
+        specifier: ^5.0.3
+        version: 5.0.3
       '@types/geojson':
         specifier: ^7946.0.14
         version: 7946.0.16
@@ -10101,7 +10104,7 @@ packages:
   /@types/serve-index@1.9.4:
     resolution: {integrity: sha512-qLpGZ/c2fhSs5gnYsQxtDEq3Oy8SXPClIXkW5ghvAvsNuVSA8k+gCONcUCS/UjLEYvYps+e8uBtfgXgvhwfNug==}
     dependencies:
-      '@types/express': 4.17.23
+      '@types/express': 5.0.3
     dev: false
 
   /@types/serve-static@1.15.8:
