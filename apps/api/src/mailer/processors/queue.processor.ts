@@ -94,7 +94,7 @@ export class QueueProcessor {
     if (job.attemptsMade === job.opts.attempts) {
       try {
         return this._mailerService.sendMail({
-          to: this._configService.get('EMAIL_ADDRESS'),
+          to: this._configService.get('DEBUG_EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
           subject: `Something went wrong with transactions!! Job Id${job.id}, Job Name: ${job.name}`,
           template: './error',
@@ -124,7 +124,7 @@ export class QueueProcessor {
           },
         });
         return this._mailerService.sendMail({
-          to: this._configService.get('EMAIL_ADDRESS'),
+          to: this._configService.get('DEBUG_EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
           subject: `Something went wrong with transactions!! Job Id${job.id}, Job Name: ${job.name}`,
           template: './error',
@@ -239,7 +239,7 @@ export class QueueProcessor {
           transactionHash: transactionDetails.transactionHash,
         },
       });
-      if(!schoolActivationDetails) {
+      if (!schoolActivationDetails) {
         this._logger.error(
           `No school activation details found for transaction hash: ${transactionDetails.transactionHash}`,
         );
@@ -333,7 +333,7 @@ export class MintQueueProcessor {
       }
       try {
         return this._mailerService.sendMail({
-          to: this._configService.get('EMAIL_ADDRESS'),
+          to: this._configService.get('DEBUG_EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
           subject: `Something went wrong with transactions while minting!!${job.data.ids}, job Name: ${job.name}`,
           template: './error',
@@ -353,7 +353,7 @@ export class MintQueueProcessor {
     if (job.attemptsMade === job.opts.attempts) {
       try {
         return this._mailerService.sendMail({
-          to: this._configService.get('EMAIL_ADDRESS'),
+          to: this._configService.get('DEBUG_EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
           subject: `Something went wrong while updating database!! ${job.data.ids}, jobid: ${job.id}, job Name: ${job.name}`,
           template: './error',
@@ -590,7 +590,7 @@ export class ImageProcessor {
     if (job.attemptsMade === job.opts.attempts) {
       try {
         return this._mailerService.sendMail({
-          to: this._configService.get('EMAIL_ADDRESS'),
+          to: this._configService.get('DEBUG_EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
           subject: `Failed to update NFT image. NFT minted successfully. job Name: ${job.name}, jobId: ${job.id}`,
           template: './error',
@@ -673,7 +673,7 @@ export class ContributeProcessor {
     if (job.attemptsMade === job.opts.attempts) {
       try {
         return this._mailerService.sendMail({
-          to: this._configService.get('EMAIL_ADDRESS'),
+          to: this._configService.get('DEBUG_EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
           subject: 'Something went wrong while updating database!!',
           template: './error',
@@ -733,7 +733,7 @@ export class BulkImageProcessor {
     if (job.attemptsMade === job.opts.attempts) {
       try {
         return this._mailerService.sendMail({
-          to: this._configService.get('EMAIL_ADDRESS'),
+          to: this._configService.get('DEBUG_EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
           subject: `Failed to update NFT image. NFT minted successfully. error:, jobId: ${job.id} job Name: ${job.name}`,
           template: './error',
@@ -845,7 +845,7 @@ export class UpdateProcessor {
     if (job.attemptsMade === job.opts.attempts) {
       try {
         return this._mailerService.sendMail({
-          to: this._configService.get('EMAIL_ADDRESS'),
+          to: this._configService.get('DEBUG_EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
           subject: 'Something went wrong while updating database!!',
           template: './error',
@@ -898,7 +898,7 @@ export class VCProcessor {
     if (job.attemptsMade === job.opts.attempts) {
       try {
         return this._mailerService.sendMail({
-          to: this._configService.get('EMAIL_ADDRESS'),
+          to: this._configService.get('DEBUG_EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
           subject: `Something went wrong while updating database!! ${job.data.did}, error: ${error.message}`,
           template: './error',
