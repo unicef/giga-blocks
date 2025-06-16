@@ -1,39 +1,35 @@
 {
-  "name": "webhook",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/webhook/src",
+  "sourceRoot": "apps/webhook",
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nx/esbuild:esbuild",
+      "executor": "nx:run-commands",
+      "dependsOn": ["mainBuild"],
+      "options": {
+        "commands": [
+          {
+            "command": "cp .env dist/apps/webhook/.env" 
+          }
+        ]
+      }
+    },
+    "mainBuild": {
+      "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "platform": "node",
+        "target": "node",
+        "compiler": "tsc",
+        "generatePackageJson": true,
         "outputPath": "dist/apps/webhook",
-        "format": ["cjs"],
-        "bundle": false,
         "main": "apps/webhook/src/main.ts",
         "tsConfig": "apps/webhook/tsconfig.app.json",
-        "assets": ["apps/webhook/src/assets"],
-        "generatePackageJson": true,
-        "esbuildOptions": {
-          "sourcemap": true,
-          "outExtension": {
-            ".js": ".js"
-          }
-        }
-      },
+        "assets": []   
+           },
       "configurations": {
         "development": {},
-        "production": {
-          "esbuildOptions": {
-            "sourcemap": false,
-            "outExtension": {
-              ".js": ".js"
-            }
-          }
-        }
+        "production": {}
       }
     },
     "serve": {
