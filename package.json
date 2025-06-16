@@ -15,6 +15,7 @@
     "build:admin": "nx build admin",
     "build:api": "nx build api",
     "build:web": "nx build web",
+    "build:webhook": "nx build webhook",
     "serve:admin": "nx serve admin",
     "serve:api": "nx serve api",
     "serve:web": "nx serve web",
@@ -24,7 +25,8 @@
     "clean": "rm -rf dist libs/shared-ui/node_modules node_modules tmp",
     "csvRead": "ts-node apps/api/prisma/csvReader.ts",
     "seed": "ts-node apps/api/prisma/seed.ts",
-    "arweave:fund": "npx ts-node apps/api/src/utils/arweave/config/createAndFundWallet.ts"
+    "arweave:fund": "npx ts-node apps/api/src/utils/arweave/config/createAndFundWallet.ts",
+    "devops:setup": "npm install -g pnpm@8.14.1 && pnpm install && pnpm run api:app:generate && pnpm run api:news:generate && pnpm build"
   },
   "prisma": {
     "seed": "apps/api/prisma/seed.ts"

@@ -9,7 +9,7 @@
       "options": {
         "commands": [
           {
-            "command": "cp .env dist/apps/webhook/.env" 
+            "command": "cp .env dist/apps/webhook/.env && npx ts-node apps/webhook/modifyPackage.ts" 
           }
         ]
       }

@@ -1,0 +1,14 @@
+FROM node:20-alpine3.17 AS base
+WORKDIR /usr/src/webhook
+
+# Install dependencies only when needed
+FROM base AS deps
+WORKDIR /usr/src/webhook
+COPY ./dist/apps/web/package.json ./
+RUN npm install 
+
+FROM base AS builder
+WORKDIR /usr/src/webhook
+COPY ./dist/apps/web/ ./
+COPY --from=deps /usr/src/webhook/node_modules ./node_modules
+CMD [ "npm", "start" ]
