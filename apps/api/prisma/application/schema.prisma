@@ -215,6 +215,20 @@ model School {
   @@map("giga_school")
 }
 
+
+model SchoolActivationDetails{
+  id                       String     @id @default(uuid())
+  schoolId                 String
+  transactionHash          String     @unique()
+  themeId                  String
+  contributorData          Json
+  schoolUpdated            Boolean     @default(false)
+  transactionStatus        Int ?     
+
+  @@map("giga_school_activation")
+
+}
+
 model ContributedData {
   id                String    @id @default(uuid())
   contributed_data  Json

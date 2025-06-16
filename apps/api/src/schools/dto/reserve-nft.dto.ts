@@ -154,3 +154,21 @@ export class DailyQOSDto {
   @IsString()
   giga_school_id: string;
 }
+
+export class TransactionDetails {
+  @ApiProperty({
+    description: 'Transaction Hash',
+    example: '0x1f2f6f7952550D4388f9A3fd91A8CdcFbC439978',
+    required: true,
+  })
+  @IsString()
+  transactionHash: string;
+
+  @ApiProperty({
+    description: 'Status of the transaction',
+    example: 1,
+    required: true,
+  })
+  @IsString()
+  status: number;
+}

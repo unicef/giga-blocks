@@ -34,6 +34,7 @@ import {
   SET_BULK_IMAGE_PROCESS,
   UPDATE_BULK_IMAGE,
   UPDATE_PAID_SCHOOL,
+  PROCESS_SUCCESS_TXN,
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
@@ -60,7 +61,7 @@ import { hexStringToBuffer } from 'src/utils/string-format';
 import { ContributorService } from 'src/contributor/contributor.service';
 import { MailService } from '../mailer.service';
 import { checkTransactionHash } from 'src/utils/ethers/checkTransaction';
-import { SchoolActivation } from 'src/schools/dto/reserve-nft.dto';
+import { SchoolActivation, TransactionDetails } from 'src/schools/dto/reserve-nft.dto';
 // import { checkTxnStatus } from 'src/utils/gasPrice';
 
 @Injectable()
@@ -180,7 +181,9 @@ export class QueueProcessor {
 
     try {
       const txReceipt = await checkTransactionHash(transactionHash);
-     this._logger.log(`Transaction receipt for school ID ${schoolId}: ${JSON.stringify(txReceipt)}`);
+      this._logger.log(
+        `Transaction receipt for school ID ${schoolId}: ${JSON.stringify(txReceipt)}`,
+      );
       if (txReceipt) {
         if (txReceipt.status === 'success') {
           const updatedSchool = await this._prismaService.school.update({
@@ -214,10 +217,75 @@ export class QueueProcessor {
         this._logger.error(`Transaction hash is invalid or not found for school ID: ${schoolId}`);
         throw new Error(`Transaction hash is invalid or not found for school ID: ${schoolId}`);
       }
-
     } catch (error) {
       this._logger.error(`Failed to update paid school: ${error.message}`);
       throw new Error(`Failed to update paid school: ${error.message}`);
+    }
+  }
+
+  @Process(PROCESS_SUCCESS_TXN)
+  public async processSucessTxn(job: Job<{ transactionDetails: TransactionDetails }>) {
+    const transactionDetails = job.data.transactionDetails;
+    this._logger.log(
+      `Processing successful transaction for hash: ${transactionDetails?.transactionHash}`,
+    );
+    const PROCESS_DELAY_MS = 15000;
+
+    await new Promise(resolve => setTimeout(resolve, PROCESS_DELAY_MS));
+
+    try {
+      const schoolActivationDetails = await this._prismaService.schoolActivationDetails.findUnique({
+        where: {
+          transactionHash: transactionDetails.transactionHash,
+        },
+      });
+      if (!schoolActivationDetails) {
+        this._logger.error(
+          `No school activation details found for transaction hash: ${transactionDetails.transactionHash}`,
+        );
+        throw new Error(
+          `No school activation details found for transaction hash: ${transactionDetails.transactionHash}`,
+        );
+      }
+      if (Number(transactionDetails?.status) === 1) {
+        const updateSchool = await this._prismaService.school.update({
+          where: {
+            id: schoolActivationDetails.schoolId,
+          },
+          data: {
+            minted: MintStatus.MINTED,
+            themeId: schoolActivationDetails.themeId,
+          },
+        });
+        this._imageQueue.add(SET_IMAGE_PROCESS, { id: updateSchool.giga_school_id }, jobOptions);
+        this.contributorService.addPayingContributor(
+          schoolActivationDetails.contributorData as any,
+        );
+      } else if (Number(transactionDetails?.status) === 0) {
+        await this._prismaService.school.update({
+          where: {
+            id: schoolActivationDetails.schoolId,
+            minted: MintStatus.ISMINTING,
+          },
+          data: {
+            minted: MintStatus.NOTMINTED,
+            themeId: null,
+          },
+        });
+      }
+
+      this._prismaService.schoolActivationDetails.update({
+        where: {
+          transactionHash: transactionDetails.transactionHash,
+        },
+        data: {
+          schoolUpdated: true,
+          transactionStatus: Number(transactionDetails.status),
+        },
+      });
+    } catch (error) {
+      this._logger.error(`Error processing transaction: ${error.message}`);
+      throw error;
     }
   }
 }
@@ -351,8 +419,11 @@ export class MintQueueProcessor {
       try {
         this._mintQueue.add(SET_THEME, { schoolids: job.data.giga_ids }, jobOptions);
         for (let i = 0; i < job.data.giga_ids.length; i++) {
-          
-          this._bulkImageQueue.add(SET_BULK_IMAGE_PROCESS, { id: job.data.giga_ids[i] }, jobOptions);
+          this._bulkImageQueue.add(
+            SET_BULK_IMAGE_PROCESS,
+            { id: job.data.giga_ids[i] },
+            jobOptions,
+          );
         }
       } catch (error) {
         this._logger.log(`Error generating image: ${error}`);
