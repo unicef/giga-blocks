@@ -78,7 +78,6 @@ export class SchoolService {
       ['name', 'country', 'minted', 'page', 'perPage'].includes(key),
     );
 
-
     if (isCacheableQuery) {
       const cachedResult = await this.cacheManager.get<string>(cacheKey);
       if (cachedResult) {
@@ -692,15 +691,15 @@ export class SchoolService {
         minted: MintStatus.ISMINTING,
       },
     });
-     await this.prisma.schoolActivationDetails.create({
-      data:{
+    await this.prisma.schoolActivationDetails.create({
+      data: {
         schoolId: schoolId,
         themeId: themeId,
         contributorData: JSON.parse(JSON.stringify(contributorData)),
         transactionHash: data.transactionHash,
-      }
-     })
-    // this.queueService.activatePaidSchool(data);
+      },
+    });
+    this.queueService.activatePaidSchool(data);
     return updatedSchool;
   }
 
