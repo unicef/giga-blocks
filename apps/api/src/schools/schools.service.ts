@@ -675,7 +675,15 @@ export class SchoolService {
         minted: MintStatus.ISMINTING,
       },
     });
-    this.queueService.activatePaidSchool(data);
+     await this.prisma.schoolActivationDetails.create({
+      data:{
+        schoolId: schoolId,
+        themeId: themeId,
+        contributorData: JSON.parse(JSON.stringify(contributorData)),
+        transactionHash: data.transactionHash,
+      }
+     })
+    // this.queueService.activatePaidSchool(data);
     return updatedSchool;
   }
 
