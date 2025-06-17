@@ -13,6 +13,8 @@ env:
   ADMIN_MANIFEST_FILE: 'K8s-Manifest/Giga/Stage/Argo-Rollout/admin.yaml'
   WEB_MANIFEST_FILE: 'K8s-Manifest/Giga/Stage/Argo-Rollout/web.yaml'
   API_MANIFEST_FILE: 'K8s-Manifest/Giga/Stage/Argo-Rollout/api.yaml'
+  WEBHOOK_MANIFEST_FILE: 'K8s-Manifest/Giga/Stage/Argo-Rollout/webhook.yaml'
+
 
 jobs:
   deploy:
@@ -98,6 +100,17 @@ jobs:
             rumsan/giga-mono-ntf2-web:stage
             rumsan/giga-mono-ntf2-web:stage-${{ steps.vars.outputs.sha_short }}-${{ steps.vars.outputs.run_id_short }}
 
+      - name: build && push webhook
+        id: build-push-webhook
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: Dockerfile.webhook
+          push: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+          tags: |
+            rumsan/giga-mono-ntf2-webhook:stage
+            rumsan/giga-mono-ntf2-webhook:stage-${{ steps.vars.outputs.sha_short }}-${{ steps.vars.outputs.run_id_short }}
+
     outputs:
       sha_short: ${{ steps.vars.outputs.sha_short }}
       run_id_short: ${{ steps.vars.outputs.run_id_short }}
@@ -130,6 +143,8 @@ jobs:
           sed -i "s|image: rumsan/giga-mono-ntf2-admin:.*|image: rumsan/giga-mono-ntf2-admin:stage-${{ needs.deploy.outputs.sha_short }}-${{ needs.deploy.outputs.run_id_short }}|" ${{ env.ADMIN_MANIFEST_FILE }}
           sed -i "s|image: rumsan/giga-mono-ntf2-api:.*|image: rumsan/giga-mono-ntf2-api:stage-${{ needs.deploy.outputs.sha_short }}-${{ needs.deploy.outputs.run_id_short }}|" ${{ env.API_MANIFEST_FILE }}
           sed -i "s|image: rumsan/giga-mono-ntf2-web:.*|image: rumsan/giga-mono-ntf2-web:stage-${{ needs.deploy.outputs.sha_short }}-${{ needs.deploy.outputs.run_id_short }}|" ${{ env.WEB_MANIFEST_FILE }}
+          sed -i "s|image: rumsan/giga-mono-ntf2-webhook:.*|image: rumsan/giga-mono-ntf2-webhook:stage-${{ needs.deploy.outputs.sha_short }}-${{ needs.deploy.outputs.run_id_short }}|" ${{ env.WEBHOOK_MANIFEST_FILE }}
+
 
       # Commit and push changes using SSH
       - name: Commit and Push Changes
@@ -139,5 +154,6 @@ jobs:
           git add ${{ env.ADMIN_MANIFEST_FILE }}
           git add ${{ env.API_MANIFEST_FILE }}
           git add ${{ env.WEB_MANIFEST_FILE }}
+          git add ${{ env.WEBHOOK_MANIFEST_FILE }}
           git commit -m "runner: Update Giga Stage image tag to stage-${{ needs.deploy.outputs.sha_short }}-${{ needs.deploy.outputs.run_id_short }}"
           git push origin main

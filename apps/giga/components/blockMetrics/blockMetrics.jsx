@@ -16,10 +16,10 @@ import './_blockMetrics.scss';
 import MetricsCard from '../../components/metricsCard/MetricsCard';
 import { useState } from 'react';
 import { useMetrics } from '../../app/hooks/useMetrics';
+import MetricsCardSkeleton from '../../components/metricCardSkeleton/MetricCardSkeleton';
 
 export default function BlockMetrics() {
-
-  const {data: metricsData, isLoading} = useMetrics();
+  const { data: metricsData, isLoading } = useMetrics();
 
   const blockMetrics = [
     {
@@ -49,7 +49,7 @@ export default function BlockMetrics() {
       icon: <UserMultiple size={24} />,
       iconColor: '#0F62FE', // Blue
       iconBg: '#EBF2FF', // Light blue
-      value: metricsData?.contributorCount  || 0,
+      value: metricsData?.contributorCount || 0,
       label: '',
       subtitle: 'Giga Contributors',
       description:
@@ -63,18 +63,23 @@ export default function BlockMetrics() {
         <h2 className="about-metrics__title">Giga Blocks Metrics</h2>
 
         <div className="about-metrics__grid">
-          {blockMetrics?.map((metric) => (
-            <MetricsCard
-              id={metric.id}
-              iconBg={metric.iconBg}
-              iconColor={metric.iconColor}
-              icon={metric.icon}
-              value={metric.value}
-              label={metric.label}
-              subtitle={metric.subtitle}
-              description={metric.description}
-            />
-          ))}
+          {isLoading ? (
+            <MetricsCardSkeleton count={3} />
+          ) : (
+            blockMetrics?.map((metric) => (
+              <MetricsCard
+                key={metric.id}
+                id={metric.id}
+                iconBg={metric.iconBg}
+                iconColor={metric.iconColor}
+                icon={metric.icon}
+                value={metric.value}
+                label={metric.label}
+                subtitle={metric.subtitle}
+                description={metric.description}
+              />
+            ))
+          )}
         </div>
       </div>
     </section>

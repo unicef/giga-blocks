@@ -119,6 +119,16 @@ Table giga_school {
   theme giga_themes
 }
 
+Table giga_school_activation {
+  id String [pk]
+  schoolId String [not null]
+  transactionHash String [unique, not null]
+  themeId String [not null]
+  contributorData Json [not null]
+  schoolUpdated Boolean [not null, default: false]
+  transactionStatus Int
+}
+
 Table giga_contributed_data {
   id String [pk]
   contributed_data Json [not null]
