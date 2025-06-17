@@ -57,6 +57,8 @@ export default function ActivationModal({ isOpen, onClose, schoolName }) {
     );
   };
 
+  const currentPageUrl = `${process.env.NEXT_PUBLIC_WEB_NAME}/schools/${id}`
+
   useEffect(() => {
     if (!contributorData) return;
     if (contributorData?.isVisible === true) setContributorVisible(true);
@@ -94,7 +96,6 @@ export default function ActivationModal({ isOpen, onClose, schoolName }) {
                 className="socialIcon"
                 aria-label="Share on Facebook"
                 onClick={() => {
-                  const currentPageUrl = window.location.href;
                   window.open(
                     `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
                       currentPageUrl
@@ -112,7 +113,6 @@ export default function ActivationModal({ isOpen, onClose, schoolName }) {
                 className="socialIcon"
                 aria-label="Share on LinkedIn"
                 onClick={() => {
-                  const currentPageUrl = window.location.href;
                   window.open(
                     `https://www.linkedin.com/sharing/share-offsite/?text=${encodeURIComponent(
                       currentPageUrl
@@ -129,7 +129,6 @@ export default function ActivationModal({ isOpen, onClose, schoolName }) {
                 className="socialIcon"
                 aria-label="Share on Twitter"
                 onClick={() => {
-                  const currentPageUrl = window.location.href;
                   window.open(
                     `https://twitter.com/intent/tweet?url=${encodeURIComponent(
                       currentPageUrl
