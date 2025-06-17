@@ -14,9 +14,8 @@ export default {
     SCHOOLCOUNT: '/schools/schoolCount',
     UPLOAD: '/schools/uploadFile',
     GIGAID: '/schools/gigaSchoolId',
-    VALIDATECSV: '/schools/validateCsv',
-    TOTALMINTED: '/schools/minted',
-    DETAILS: '/schools/details',
+    UPDATEIMAGE:'/schools/updateImages',
+    GETIMAGEUPDATELIST:'/schools/imageUpdate'
   },
   CONTRIBUTE: {
     GET: '/contribute',
