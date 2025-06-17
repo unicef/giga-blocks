@@ -105,3 +105,13 @@
   height: 16px;
   stroke: currentColor;
 }
+
+.view-all-school-list {
+  margin-top: 1rem;
+
+  span {
+    text-decoration: underline;
+    color: #0f62fe;
+    cursor: pointer;
+  }
+}

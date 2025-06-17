@@ -1,5 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaAppService } from 'src/prisma/prisma.service';
+import { ActivationStatus } from '@prisma/application';
 import {
   ActivationLogDTO,
   UpdateSchoolThemeAndContributorDTO,
@@ -11,16 +12,20 @@ import { QueueService } from 'src/mailer/queue.service';
 export class LinkactivationService {
   constructor(private readonly prisma: PrismaAppService, private queueService: QueueService) {}
 
- private toDateOnly(date: Date | string) {
-  const d = new Date(date);
-  d.setHours(0, 0, 0, 0);
-  return d;
-}
+  private toDateOnly(date: Date | string) {
+    const d = new Date(date);
+    const localYear = d.getFullYear();
+    const localMonth = d.getMonth();
+    const localDay = d.getDate();
+    return new Date(Date.UTC(localYear, localMonth, localDay));
+  }
 
   async createLink(data: ActivationLogDTO, userId: string) {
+    console.log('Creating activation link with data:', data);
     const date = this.toDateOnly(new Date());
-    const startDate = this.toDateOnly(new Date(data.startDate));
-    const endDate = data?.endDate ? this.toDateOnly(new Date(data.endDate)) : null;
+    const startDate = this.toDateOnly(data.startDate);
+    const endDate = data?.endDate ? this.toDateOnly(data.endDate) : null;
+    if (startDate > date) data.status = ActivationStatus.INACTIVE;
     if (startDate < date)
       throw new ConflictException('Start date should be later than current date');
     if (startDate > endDate)
@@ -32,7 +37,7 @@ export class LinkactivationService {
         name: data.name,
         activatedBy: userId,
         startDate: startDate,
-        endDate: endDate|| null,
+        endDate: endDate || null,
       },
     });
   }
@@ -97,6 +102,7 @@ export class LinkactivationService {
       },
       data: {
         status: 'INACTIVE',
+        manually_inactivated: true,
         deActivatedBy: userId,
       },
     });

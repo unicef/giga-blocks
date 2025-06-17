@@ -91,9 +91,9 @@ const Navbar = () => {
             <Link href="/about" passHref legacyBehavior>
               <HeaderMenuItem>About Us</HeaderMenuItem>
             </Link>
-            <Link href="/#" passHref legacyBehavior>
+            {/* <Link href="/#" passHref legacyBehavior>
               <HeaderMenuItem>Blogs</HeaderMenuItem>
-            </Link>
+            </Link> */}
             {isConnected && (
               <Link href={'/dashboard'} passHref legacyBehavior>
                 <HeaderMenuItem>Dashboard</HeaderMenuItem>
@@ -121,11 +121,11 @@ const Navbar = () => {
                       About Us
                     </HeaderMenuItem>
                   </Link>
-                  <Link href="/blog" passHref legacyBehavior>
+                  {/* <Link href="/blog" passHref legacyBehavior>
                     <HeaderMenuItem onClick={() => setIsSideNavExpanded(false)}>
                       Blogs
                     </HeaderMenuItem>
-                  </Link>
+                  </Link> */}
                   {isConnected && (
                     <Link href={'/dashboard'} passHref legacyBehavior>
                       <HeaderMenuItem

@@ -548,7 +548,8 @@ export class SchoolService {
     };
   }
 
-  async getGigaMetrics() {
+  
+ async getGigaMetrics() {
     const result = await this.prisma.school.groupBy({
       by: ['minted'],
       _count: { minted: true },
@@ -849,6 +850,10 @@ export class SchoolService {
     return this.contrubutorService.addPayingContributor(contributorData);
   }
 
+  async updateImages() {
+    return this.queueService.bulkUpdateImageHash();
+  }
+
   async getCountries() {
     return this.prisma.schoolVersion.findMany({
       select: {
@@ -937,5 +942,38 @@ export class SchoolService {
       throw new NotFoundException('School not found');
     }
     return school;
+  }
+
+  async getImageUpdateList(query: any) {
+    const { page, perPage } = query;
+    const paginate: PaginateFunction = paginator({ perPage });
+    const schools = await paginate(
+      this.prisma.school,
+      {
+        where: {
+          imageUpdated: false,
+          NOT: [{ imageHash: null }, { imageHash: '' }],
+        },
+        select: {
+          giga_school_id: true,
+          id: true,
+          name: true,
+          imageHash: true,
+          longitude: true,
+          latitude: true,
+          country: true,
+        },
+      },
+      {
+        page,
+        perPage,
+      },
+    );
+
+    if (!schools || schools.meta.total === 0) {
+      return { statusCode: 200, message: 'No schools found', data: [] };
+    }
+
+    return schools;
   }
 }

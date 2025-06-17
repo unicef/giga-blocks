@@ -197,6 +197,21 @@ export class SchoolController {
     return this.schoolService.getCsvDetails(csvId);
   }
 
+
+   @Public()
+  @Patch('/updateImages')
+  @ApiOperation({ summary: 'Add the images on-chain for all minted school' })
+  async updateImages() {
+    return this.schoolService.updateImages();
+  }
+
+  @Public()
+  @Get('/imageUpdate')
+  @ApiOperation({ summary: 'Get the list of schools for on-chain image update ' })
+  async getImageUpdateList(@Query() query: any) {
+    return this.schoolService.getImageUpdateList(query);
+  }
+
   //arewave
   @Public()
   @Post('getFile')

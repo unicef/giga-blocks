@@ -1,7 +1,13 @@
 // components/schoolDetails/SchoolStats.js
-import { CheckmarkFilled, MeterAlt, NotAvailable,Misuse } from '@carbon/icons-react';
+import {
+  CheckmarkFilled,
+  MeterAlt,
+  NotAvailable,
+  Misuse,
+} from '@carbon/icons-react';
 import { useState, useEffect } from 'react';
 import { useQOSDailyGet, useQOSWeeklyGet } from '../../app/hooks/useQOS';
+import Image from 'next/image';
 
 const getMondayOfCurrentWeek = () => {
   const today = new Date();
@@ -65,7 +71,10 @@ export default function SchoolStats({
     });
   };
 
-  const speeds = weeklyData?.map((item) => item.averageSpeedUpload || 0);
+  const speeds =
+    weeklyData?.length > 0
+      ? weeklyData?.map((item) => item.averageSpeedUpload || 0)
+      : [];
   const maxSpeed = speeds ? Math.max(...speeds, 1) : 1;
 
   // Helper to get day name from YYYY-MM-DD string
@@ -101,7 +110,11 @@ export default function SchoolStats({
 
         <div
           className="school-details__stat-card"
-          style={{ backgroundColor: bgColor, borderColor: cardColor }}
+          style={{
+            backgroundColor: bgColor,
+            borderColor: cardColor,
+            height: '100%',
+          }}
         >
           <div className="school-details__stat-header">
             <div className="school-details__stat-icon download">
@@ -171,24 +184,43 @@ export default function SchoolStats({
           </button>
         </div>
 
-        <div className="school-details__chart">
-          {weeklyData?.map((item, index) => (
-            <div key={index} className="school-details__chart-bar-container">
-              <div
-                className="school-details__chart-bar"
-                style={{
-                  height: `${
-                    ((item.averageSpeedUpload || 0) / maxSpeed) * 100
-                  }px`,
-                  backgroundColor: fontColor,
-                  // borderColor: cardColor,
-                }}
-              />
-              <div className="school-details__chart-label">
-                {getDayName(item.day)}
+        <div
+          className="school-details__chart"
+          style={{ display: 'flex', justifyContent: 'center' }}
+        >
+          {weeklyData?.length > 0 ? (
+            weeklyData.map((item, index) => (
+              <div key={index} className="school-details__chart-bar-container">
+                <div
+                  className="school-details__chart-bar"
+                  style={{
+                    height: `${
+                      ((item.averageSpeedUpload || 0) / maxSpeed) * 100
+                    }px`,
+                    backgroundColor: fontColor,
+                    // borderColor: cardColor,
+                  }}
+                />
+                <div className="school-details__chart-label">
+                  {getDayName(item.day)}
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <>
+              <div className="school-details__chart-no-data">
+                <Image
+                  src="../../images/no-data.svg"
+                  alt="No data available"
+                  width={300}
+                  height={200}
+                />
+                <p style={{ display: 'flex', justifyContent: 'center' }}>
+                  No data available
+                </p>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
