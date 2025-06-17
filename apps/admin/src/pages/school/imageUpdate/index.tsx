@@ -79,7 +79,7 @@ const PendingSchool = () => {
         <span style={{ fontSize: '1.5em', fontWeight: '600' }}>Schools To Be  Updated</span>
         <div style={{ display: 'flex', gap: '15px' }}>
           <Button variant="contained" 
-          disabled={isFetching || isLoading || tableData.length === 0}
+          disabled={ isLoading || tableData.length === 0}
           onClick={onClickUpdateImageHash}>
             Update Image Hash
           </Button>
