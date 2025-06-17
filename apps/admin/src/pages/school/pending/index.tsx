@@ -1,22 +1,9 @@
 'use client';
 import Scrollbar from '@components/scrollbar';
-import {
-  TableHeadUsers,
-  TableNoData,
-  TablePaginationCustom,
-  useTable,
-} from '@components/table';
+import { TableHeadUsers, TableNoData, TablePaginationCustom, useTable } from '@components/table';
 import { useSchoolGet } from '@hooks/school/useSchool';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
-import {
-  Card,
-  Tabs,
-  Divider,
-  TableContainer,
-  Table,
-  TableBody,
-  TextField
-} from '@mui/material';
+import { Card, Tabs, Divider, TableContainer, Table, TableBody, TextField } from '@mui/material';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
 import { ChangeEvent, useEffect, useState } from 'react';
 
@@ -40,13 +27,21 @@ const VerifiedSchool = () => {
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable({defaultOrder: 'asc', defaultOrderBy: 'name'});
+  } = useTable({ defaultOrder: 'asc', defaultOrderBy: 'name' });
 
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
-  const [country, setCountry] = useState<string>()
-  const [connectivity] = useState<string>()
-  const { data, refetch, isFetching } = useSchoolGet({page, perPage: rowsPerPage, minted: 'ISMINTING', country, connectivity, order, orderBy});
+  const [country, setCountry] = useState<string>();
+  const [connectivity] = useState<string>();
+  const { data, refetch, isFetching } = useSchoolGet({
+    page,
+    perPage: rowsPerPage,
+    minted: 'ISMINTING',
+    country,
+    connectivity,
+    order,
+    orderBy,
+  });
 
   let filteredData: any = [];
   useEffect(() => {
@@ -70,13 +65,13 @@ const VerifiedSchool = () => {
   }, [data]);
 
   useEffect(() => {
-    refetch()
-  }, [order, orderBy])
+    refetch();
+  }, [order, orderBy]);
 
   return (
     <DashboardLayout>
       <h2>Minting In Progress</h2>
-          <Card sx={{marginTop: 2}}>
+      <Card sx={{ marginTop: 2 }}>
         <Divider />
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <Scrollbar>
