@@ -17,7 +17,7 @@ import routes from '../../constants/api';
 import SpreadSheetTable from './spreadsheetTable';
 import SpreadSheetValidationTable from './spreadsheetValidationTable';
 import api from '@utils/apiCall';
-import { LinearProgress } from '@mui/material';
+import { CircularProgress, LinearProgress } from '@mui/material';
 import CsvDetailsTable from './csvDetailsTable';
 import { UploadCsv } from './steps/uploadCsv';
 
@@ -47,6 +47,7 @@ export default function HorizontalLinearStepper({
     isFileValidated,
     selectedFiles,
     setLoading,
+    loading,
     tableDatas: rows,
   } = useUploadContext();
 
@@ -218,8 +219,8 @@ export default function HorizontalLinearStepper({
 
   const handleUpload = async () => {
     if (files.length > 0) {
+      setLoading(true);
       const formData = new FormData();
-
       files.forEach((file) => {
         formData.append(`files`, file);
       });
@@ -253,7 +254,6 @@ export default function HorizontalLinearStepper({
 
         const formData = new FormData();
         formData.append('files', filteredFile);
-        setLoading(true);
         await fileUpload
           .post(API_URL, formData, {
             onUploadProgress: (progressEvent: any) => {
@@ -263,12 +263,12 @@ export default function HorizontalLinearStepper({
           })
           .then((response) => {
             setCsvUploadId(response.data?.csvUploadId);
+            setLoading(false);
             localStorage.setItem(currentCsvUploadId, response.data?.csvUploadId);
 
             setFiles([]);
             setProgress(0);
             setDisableDropZone(true);
-            setLoading(false);
             // Handle successful upload
             if (response?.status === 200) {
               enqueueSnackbar('Schools are added in queue. Processing will take some time.');
@@ -293,10 +293,11 @@ export default function HorizontalLinearStepper({
   };
 
   const handleReupload = () => {
-    setShowStepper(false);
+    setActiveStep(0);
     setDisableDropZone(false);
     setSelectedSheetName('');
     setFile([]);
+    setSelectedFiles([]);
   };
 
   return (
@@ -488,7 +489,7 @@ export default function HorizontalLinearStepper({
                     <CsvDetailsTable schools={csvDetails.schools} />
                   ) : (
                     <>
-                      <p>loading . . .</p>
+                      <CircularProgress />
                     </>
                   )}
                   <h4>Total:{csvDetails?.schools?.length || 0}</h4>
@@ -520,33 +521,41 @@ export default function HorizontalLinearStepper({
             )
           ) : (
             <>
-              <SpreadSheetTable invalidate={validationResult} />
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  py: 3,
-                  px: 1,
-                }}
-              >
-                <Button
-                  variant="outlined"
-                  color="inherit"
-                  disabled={activeStep === 0}
-                  onClick={handleBack}
-                  sx={{ mr: 1 }}
-                >
-                  Back
-                </Button>
-                <Button
-                  disabled={rows.length - 1 === validationResult.length || files.length === 0}
-                  variant="contained"
-                  onClick={handleUpload}
-                >
-                  Finish
-                </Button>
-              </Box>
+              {loading ? (
+                <>
+                  <CircularProgress />
+                </>
+              ) : (
+                <>
+                  <SpreadSheetTable invalidate={validationResult} />
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      py: 3,
+                      px: 1,
+                    }}
+                  >
+                    <Button
+                      variant="outlined"
+                      color="inherit"
+                      disabled={activeStep === 0}
+                      onClick={handleBack}
+                      sx={{ mr: 1 }}
+                    >
+                      Back
+                    </Button>
+                    <Button
+                      disabled={rows.length - 1 === validationResult.length || files.length === 0}
+                      variant="contained"
+                      onClick={handleUpload}
+                    >
+                      Finish
+                    </Button>
+                  </Box>
+                </>
+              )}
             </>
           )}
         </>
