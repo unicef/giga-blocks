@@ -146,7 +146,7 @@ export default function NonPayingUser({
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  disabled={isPending || showSuccess || showEmailVerify}
+                  disabled={isPending}
                 />
 
                 {showSuccess && (

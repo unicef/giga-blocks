@@ -21,8 +21,6 @@ const ThemeSelector = ({
 }) => {
   const router = useRouter();
   const updateTheme = useThemeUpdate();
-
-  const [open, setOpen] = useState(false);
   const handleActivateClick = () => {
     if (isVisibleForMinted) {
       updateTheme.mutate(
@@ -32,8 +30,8 @@ const ThemeSelector = ({
         },
         {
           onSuccess: () => {
+            toggleVisibilityForMinted();
             setOpen(true);
-            // toggleVisibilityForMinted();
           },
           onError: (error) => {
             toggleVisibilityForMinted();
@@ -54,9 +52,10 @@ const ThemeSelector = ({
     }
   };
 
+  const [open, setOpen] = useState(false);
+
   const handleRequestClose = () => {
     setOpen(false);
-    toggleVisibilityForMinted();
   };
 
   const isVisibleForMinted = useThemeToggleStore(
@@ -64,8 +63,8 @@ const ThemeSelector = ({
   );
 
   const toggleVisibilityForMinted = useThemeToggleStore(
-    (state) => state.toggleVisibilityForMinted
-  );
+      (state) => state.toggleVisibilityForMinted
+    );
   const setTheme = useThemeStore((state) => state.setTheme);
 
   const handleThemeChange = (themeId) => {

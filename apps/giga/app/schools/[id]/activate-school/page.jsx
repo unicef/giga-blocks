@@ -168,7 +168,6 @@ export default function ActivateSchool() {
               cardColor={cardColor}
               fontColor={fontColor}
               schoolName={data?.name}
-              gasFeeWei={gasFeeWei}
             />
           )}
         </div>
@@ -220,11 +219,7 @@ export default function ActivateSchool() {
           </div> */}
       </div>
 
-      <ActivationModal
-        schoolName={data?.name}
-        isOpen={isModalOpen}
-        onClose={closeModal}
-      />
+      <ActivationModal isOpen={isModalOpen} onClose={closeModal} />
     </>
   );
 }

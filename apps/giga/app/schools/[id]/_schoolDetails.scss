@@ -133,7 +133,7 @@
   }
 
   &__minted-content {
-    padding: $spacing-05 0.4rem;
+    padding: $spacing-05;
   }
 
   &__minted-title {
@@ -150,32 +150,11 @@
   }
 
   &__minted-link {
-    // text-decoration: none;
+    text-decoration: none;
 
     &:hover {
       text-decoration: underline;
     }
-  }
-
-  &__activation-by {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: #eaf3ff;
-    border-radius: 16px;
-    padding: $spacing-03 $spacing-04;
-    width: fit-content;
-    svg {
-      flex-shrink: 0;
-    }
-  }
-
-  &__activation-description {
-    font-size: 14px;
-    font-weight: 600;
-    color: #277aff;
-    width: auto;
-    display: inline-block;
   }
 
   &__social-label {

@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import {
-  BULK_IMAGE_QUEUE,
   CLAIM_NFT,
   CONTRIBUTE_QUEUE,
   IMAGE_QUEUE,
@@ -13,7 +12,6 @@ import {
   SET_MINT_SINGLE_NFT,
   SET_ONCHAIN_DATA,
   SET_PROCESS_VC,
-  UPDATE_BULK_IMAGE,
   UPDATE_CIW,
   UPDATE_PAID_SCHOOL,
   VC_QUEUE,
@@ -42,7 +40,6 @@ export class QueueService {
     @InjectQueue(IMAGE_QUEUE) private readonly _imageQueue: Queue,
     @InjectQueue(CONTRIBUTE_QUEUE) private readonly _contributeQueue: Queue,
     @InjectQueue(VC_QUEUE) private readonly _vcQueue: Queue,
-    @InjectQueue(BULK_IMAGE_QUEUE) private readonly _bulkImageQueue: Queue,
     private readonly _configService: ConfigService,
     private readonly _prismaService: PrismaAppService,
   ) {}
@@ -259,7 +256,7 @@ export class QueueService {
     try {
       jobOptions.backoff = {
         type: 'fixed', // Use 'fixed' for a constant delay
-        delay: 60 * 2000, // 60 seconds * 1000 milliseconds = 1 minute
+        delay: 60 * 1000, // 60 seconds * 1000 milliseconds = 1 minute
       };
       const school = await this._onchainQueue.add(
         UPDATE_PAID_SCHOOL,
@@ -269,44 +266,6 @@ export class QueueService {
       return true;
     } catch (error) {
       this._logger.error(`Error queueing transaction to blockchain `);
-      throw error;
-    }
-  }
-
-  public async bulkUpdateImageHash() {
-    const batchSize = Number(this._configService.get<number>('IMAGE_BATCH_SIZE')) || 200;
-
-    try {
-      const schools = await this._prismaService.school.findMany({
-        where: {
-          imageUpdated: false,
-          NOT: [{ imageHash: null }, { imageHash: '' }],
-        },
-        select: {
-          giga_school_id: true,
-          imageHash: true,
-          id: true,
-        },
-      
-      });
-      console.log(schools.length, 'is the length of schools with imageHash');
-      if (schools.length === 0) {
-        this._logger.warn('No schools found with imageHash to update');
-        return { message: 'No schools found with imageHash to update', statusCode: 200 };
-      }
-      const imageData = schools.map(school => [school.giga_school_id, school.imageHash]);
-      if (imageData.length >= batchSize) {
-        for (let i = 0; i < imageData.length; i += batchSize) {
-          const imagedata = imageData.slice(i, i + batchSize);
-          this._logger.log(`Processing batch from ${i} to ${i + batchSize}`);
-          await this._bulkImageQueue.add(UPDATE_BULK_IMAGE, { imagedata }, jobOptions);
-        }
-      } else {
-        await this._bulkImageQueue.add(UPDATE_BULK_IMAGE, { imagedata: imageData }, jobOptions);
-      }
-      return { message: 'queue added successfully', statusCode: 200 };
-    } catch (error) {
-      this._logger.error(`Error queueing bulk image hash update `);
       throw error;
     }
   }

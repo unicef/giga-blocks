@@ -152,11 +152,10 @@ export const updateImageHash = async (
   // return await contract.updateNftImageHash(schoolId, tokenHash, { gasPrice: weiEthers });
 };
 
-
-export const updateBulkImageHash = async(
+export const updateBulkImageHash = async (
   contractName: string,
   contractAddress: string,
-  imageData:ImageData[]
+  imageData: ImageData[],
 ): Promise<ContractTransactionResponse> => {
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
   const schoolArgs = imageData.map((el, i) => [
@@ -165,8 +164,7 @@ export const updateBulkImageHash = async(
   ]);
   const multicalldata = generateMultiCallData(contractName, 'updateNftImageHash', schoolArgs);
   return await contract.multicall(multicalldata);
-}
-
+};
 
 export const getTokenHash = async (
   contractName: string,
@@ -217,12 +215,11 @@ export const getScriptData = async (
     //get nft contents from tokenId
     const nftcontents = await contentcontract.getNftContentValues(tokenId);
     console.log('nftcontents', nftcontents);
-      //incase of encoded data
-//     let sanitizedResponse = `{${nftcontents}}`.replace(/(\w+):/g, '"$1":'); // Add curly braces and quote property names
-//     console.log('sanitizedResponse', sanitizedResponse);
-//     sanitizedResponse = sanitizedResponse.replace(/,(\s*})/g, '$1'); // Remove trailing commas
-    const formattedResponse =
-     {
+    //incase of encoded data
+    //     let sanitizedResponse = `{${nftcontents}}`.replace(/(\w+):/g, '"$1":'); // Add curly braces and quote property names
+    //     console.log('sanitizedResponse', sanitizedResponse);
+    //     sanitizedResponse = sanitizedResponse.replace(/,(\s*})/g, '$1'); // Remove trailing commas
+    const formattedResponse = {
       // schoolName: nftcontents[0],
       schoolType: nftcontents[1],
       country: nftcontents[2],
@@ -232,7 +229,7 @@ export const getScriptData = async (
       coverage_availabitlity: nftcontents[6],
       electricity_availabilty: nftcontents[7],
       region: nftcontents[8],
-     }
+    };
     console.log('formattedResponse', formattedResponse);
     const tokenHash = await contentcontract.tokenIdToTokenHash(tokenId);
     //get random images from region and tokenId

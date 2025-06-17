@@ -10,7 +10,6 @@ const QUEUE_NAMES = [
   'ONCHAIN_DATA_QUEUE',
   'CONTRIBUTE_QUEUE',
   'VC_QUEUE',
-  'BULK_IMAGE_QUEUE',
 ];
 
 @Controller('queue')

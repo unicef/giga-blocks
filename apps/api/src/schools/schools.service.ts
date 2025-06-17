@@ -331,7 +331,7 @@ export class SchoolService {
             return uploadBatch;
           });
           this.queueService.csvMintdata(txn.id).catch(err => console.log(err));
-          return res.code(200).send({ message: 'Batch processing started' });
+          return res.code(200).send({ message: 'Batch processing started', csvUploadId: txn.id });
         } catch (err) {
           if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
             res
@@ -410,12 +410,142 @@ export class SchoolService {
     return schooldetails;
   }
 
+  async validateCSV(
+    req: fastify.FastifyRequest,
+    res: fastify.FastifyReply<any>,
+    user: any,
+  ): Promise<any> {
+    let validationResult: any = null;
+
+    //@ts-ignore
+    if (!req.isMultipart()) {
+      res.send(
+        new BadRequestException(new AppResponseDto(400, undefined, 'Request is not multipart')),
+      );
+      return;
+    }
+
+    await new Promise(async () => {
+      //@ts-ignore
+      await req.multipart(async (field: string, fileData: any, filename: string) => {
+        try {
+          if (!filename.toLowerCase().endsWith('.csv')) {
+            return res
+              .code(400)
+              .send({ message: 'Invalid file format. Only CSV files are allowed.' });
+          }
+          const dataArray = await handler(fileData);
+          const schoolData = dataArray.schoolArrays;
+          const schools = await this.prisma.school.findMany({
+            where: {
+              giga_school_id: {
+                in: schoolData.map(school => school.school_id_giga),
+              },
+            },
+            select: { giga_school_id: true, minted: true },
+          });
+          // Create a map for quick lookup
+          const dbSchoolMap = new Map(schools.map(s => [s.giga_school_id, s.minted]));
+
+          // Find already minted schools
+          const alreadyMinted = schoolData
+            .filter(school => dbSchoolMap.get(school.school_id_giga) === MintStatus.MINTED)
+            .map(school => school.school_id_giga);
+
+          // Find missing schools (not present in DB at all)
+          const missingSchools = schoolData
+            .filter(school => !dbSchoolMap.has(school.school_id_giga))
+            .map(school => school.school_id_giga);
+
+          // Find schools that are in progress (not minted yet)
+          const inProgressSchools = schoolData
+            .filter(school => dbSchoolMap.get(school.school_id_giga) === MintStatus.ISMINTING)
+            .map(school => school.school_id_giga);
+
+          validationResult = {
+            alreadyMinted,
+            invalidSchools: missingSchools,
+            inProgressSchools,
+          };
+          res
+            .code(200)
+            .send(new AppResponseDto(200, validationResult, 'Validation completed successfully'));
+        } catch (err) {
+          if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
+            res
+              .code(500)
+              .send({ err: 'Internal Server error', message: 'Duplicate giga_school_id' });
+          res.code(500).send({ err: 'Internal Server error', message: err.message });
+        }
+      }, onEnd);
+    });
+
+    // Uploading finished
+    async function onEnd(err: any) {
+      // if (err) {
+      //   res.send(new AppResponseDto(500, err, 'Internal Server error'));
+      //   return;
+      // }
+      // console.log('Validation completed successfully',validationResult);
+      // res
+      //   .code(200)
+      //   .send(new AppResponseDto(200, validationResult, 'Validation completed successfully'));
+    }
+  }
+
   async countSchools(query: ListSchoolDto) {
     return await this.prisma.school.count({
       where: {
         ...query,
       },
     });
+  }
+  async getMintedCount(csvId) {
+    const upload = await this.prisma.cSVUpload.findUnique({
+      where: {
+        id: csvId,
+      },
+      include: {
+        school: true,
+      },
+    });
+    if (!upload) {
+      throw new NotFoundException('Upload not found');
+    }
+    const mintedCount = upload.school.filter(school => school.minted === MintStatus.MINTED).length;
+    const total = upload.school.length;
+    return {
+      mintedCount,
+      total,
+      uploadId: upload.id,
+    };
+  }
+
+  async getCsvDetails(csvId) {
+    const upload = await this.prisma.cSVUpload.findUnique({
+      where: {
+        id: csvId,
+      },
+      include: {
+        school: true,
+      },
+    });
+    if (!upload) {
+      throw new NotFoundException('Upload not found');
+    }
+    const mintedCount = upload.school.filter(school => school.minted === MintStatus.MINTED).length;
+    const mintingCount = upload.school.filter(
+      school => school.minted === MintStatus.ISMINTING,
+    ).length;
+    const notMintedCount = upload.school.filter(
+      school => school.minted === MintStatus.NOTMINTED,
+    ).length;
+    return {
+      mintedCount,
+      notMintedCount,
+      mintingCount,
+      schools: upload.school,
+    };
   }
 
   async getGigaMetrics() {
@@ -719,10 +849,6 @@ export class SchoolService {
     return this.contrubutorService.addPayingContributor(contributorData);
   }
 
-  async updateImages() {
-    return this.queueService.bulkUpdateImageHash();
-  }
-
   async getCountries() {
     return this.prisma.schoolVersion.findMany({
       select: {
@@ -811,38 +937,5 @@ export class SchoolService {
       throw new NotFoundException('School not found');
     }
     return school;
-  }
-
-  async getImageUpdateList(query: any) {
-    const { page, perPage } = query;
-    const paginate: PaginateFunction = paginator({ perPage });
-    const schools = await paginate(
-      this.prisma.school,
-      {
-        where: {
-          imageUpdated: false,
-          NOT: [{ imageHash: null }, { imageHash: '' }],
-        },
-        select: {
-          giga_school_id: true,
-          id: true,
-          name: true,
-          imageHash: true,
-          longitude: true,
-          latitude: true,
-          country: true,
-        },
-      },
-      {
-        page,
-        perPage,
-      },
-    );
-
-    if (!schools || schools.meta.total === 0) {
-      return { statusCode: 200, message: 'No schools found', data: [] };
-    }
-
-    return schools;
   }
 }
