@@ -115,8 +115,12 @@ export default function ActivateSchool() {
     });
   };
 
+  // Track if the user has manually closed the modal
+  const [modalClosedByUser, setModalClosedByUser] = useState(false);
+
   const closeModal = () => {
     setIsModalOpen(false);
+    setModalClosedByUser(true);
   };
 
   const calculateTotal = () => {
@@ -133,10 +137,14 @@ export default function ActivateSchool() {
   }, [baseFee, gasFee, donation]);
 
   useEffect(() => {
-    if (data?.minted === 'MINTED' || data?.minted === 'ISMINTING') {
+    if (
+      (data?.minted === 'MINTED' || data?.minted === 'ISMINTING') &&
+      !isModalOpen &&
+      !modalClosedByUser
+    ) {
       router.push(`/`);
     }
-  }, [data]);
+  }, [data, isModalOpen, modalClosedByUser, router]);
 
   return (
     <>
@@ -172,54 +180,7 @@ export default function ActivateSchool() {
             />
           )}
         </div>
-
-        {/* <div className="previewSection">
-            <div className="previewCard">
-              <h2 className="schoolName">{data?.name}</h2>
-              <p className="schoolLevel">{data?.school_type}</p>
-              <div className="locationRow">
-                <span className="locationIcon">
-                  <Location />
-                </span>
-                <span>{data?.region_name}</span>
-              </div>
-
-              <div className="themeRow">
-                <span className="themeLabel">Selected Theme:</span>
-                <div className="school-details__themes">
-                  <div className="school-details__theme-option">
-                    {selectedThemeName ? (
-                      <>
-                        <div
-                          className="school-details__theme-color"
-                          style={{ backgroundColor: bgColor }}
-                        />
-                        <div
-                          className="school-details__theme-color"
-                          style={{ backgroundColor: cardColor }}
-                        />
-                        <div
-                          className="school-details__theme-color"
-                          style={{ backgroundColor: fontColor }}
-                        />
-                      </>
-                    ) : (
-                      <p>Please select theme to activate school. </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {!linkActivation && (
-                <div className="totalSection">
-                  <div className="totalLabel">Grand Total</div>
-                  <div className="totalAmount">{total} Eth</div>
-                </div>
-              )}
-            </div>
-          </div> */}
       </div>
-
       <ActivationModal
         schoolName={data?.name}
         isOpen={isModalOpen}
