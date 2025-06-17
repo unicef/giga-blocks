@@ -39,7 +39,7 @@ import { ContributorService } from 'src/contributor/contributor.service';
         transport: {
           service: configService.get('SERVICE_PROVIDER'),
           auth: {
-            user: configService.get('EMAIL_USER'), 
+            user: configService.get('EMAIL_USER'),
             pass: configService.get('EMAIL_PASSWORD'),
           },
         },
@@ -88,16 +88,16 @@ import { ContributorService } from 'src/contributor/contributor.service';
     }),
     BullModule.registerQueue({
       name: VC_QUEUE,
-      defaultJobOptions:{
-      removeOnFail:false
-     }
+      defaultJobOptions: {
+        removeOnFail: false,
+      },
     }),
-     BullModule.registerQueue({
+    BullModule.registerQueue({
       name: BULK_IMAGE_QUEUE,
-      defaultJobOptions:{
-      removeOnFail:false
-     }
-    })
+      defaultJobOptions: {
+        removeOnFail: false,
+      },
+    }),
   ],
   providers: [
     MailProcessor,
