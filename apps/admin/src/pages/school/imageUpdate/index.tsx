@@ -81,12 +81,6 @@ const PendingSchool = () => {
     updateImageHash.mutate();
   }
 
- 
-
-  const handleSchoolChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setSchool(e.target.value);
-  };
-
   return (
     <DashboardLayout>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
@@ -122,6 +116,7 @@ const PendingSchool = () => {
                       setSelectedValues={setSelectedValues}
                       rowData={row}
                       checkbox={false}
+                      clickable={false}
                     />
                   ))}
                 <TableNoData isNotFound={tableData.length === 0} isFetching={isFetching} />
