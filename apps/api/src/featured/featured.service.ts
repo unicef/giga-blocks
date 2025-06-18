@@ -55,13 +55,13 @@ export class FeaturedService {
         updatedAt: 'desc',
       },
     });
-    if (!featuredata) return 'No featured country found';
+    if (!featuredata) return { status: 200, message: 'No featured country found' };
     const schoolnumber = await this.prisma.school.count({
-      where:{
+      where: {
         country: featuredata.country_code,
         minted: 'NOTMINTED',
-      }
-    })
+      },
+    });
     const school = await this.prisma.school.findMany({
       where: {
         country: featuredata.country_code,
@@ -86,7 +86,7 @@ export class FeaturedService {
       school: school,
       country_code: featuredata?.country_code,
       details: featuredata?.details,
-      remainingSchools:schoolnumber
+      remainingSchools: schoolnumber,
     };
     return details;
   }

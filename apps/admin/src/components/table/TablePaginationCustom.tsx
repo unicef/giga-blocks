@@ -31,39 +31,10 @@ export default function TablePaginationCustom({
   disablePageNumber,
   ...other
 }: Props & TablePaginationProps) {
-  const handleOnChange = (e: any) => {
-    const pages = Number(e.target.value)
-    if(pages >= 1){
-      setPage(pages - 1)
-    }
-    else{
-      setPage(0)
-    }
-    
-  };
 
   return (
     <Box sx={{ position: 'relative', ...sx }}>
       <TablePagination rowsPerPageOptions={rowsPerPageOptions} component="div" {...other} />
-{/* 
-      {!disablePageNumber && <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4, mt: 0.5 }}>
-        <TextField
-          label="Enter Page Number"
-          variant="outlined"
-          onChange={handleOnChange}
-          sx={{
-            mx: 2.5,
-            '& .MuiInputLabel-root': { fontSize: 12, color: '#212b36' },
-            '& .MuiInputBase-root': { fontSize: 12 },
-          }}
-          type="number"
-          inputProps={{
-            inputMode: 'numeric',
-            pattern: '[0-9]*',
-          }}
-          size="small"
-        />
-      </Box>} */}
 
       {onChangeDense && (
         <FormControlLabel

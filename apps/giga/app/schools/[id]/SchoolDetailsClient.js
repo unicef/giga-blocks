@@ -167,7 +167,7 @@ export default function SchoolDetailsClient({ params }) {
               <Header
                 name={data?.name}
                 school_type={data?.school_type}
-                region_name={data?.region_name}
+                country_name={countryName}
                 locationId={data?.locationId}
                 countryCode={data?.countryCode}
                 fontColor={fontColor}

@@ -41,7 +41,7 @@ export class MailProcessor {
       try {
         return this._mailerService.sendMail({
           replyTo: this._configService.get('REPLY_TO_EMAIL_ADDRESS'),
-          to: this._configService.get('EMAIL_ADDRESS'),
+          to: this._configService.get('DEBUG_EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
           subject: 'Something went wrong with server!!',
           template: './error',

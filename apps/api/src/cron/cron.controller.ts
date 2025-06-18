@@ -10,4 +10,13 @@ export class CronController {
   handleCron() {
     this.cronService.updateLinks();
   }
+
+  @Cron(CronExpression.EVERY_2_HOURS, {
+    name: 'devOnly Job',
+  })
+  updateBalance() {
+    if (process.env.NODE_ENV !== 'development') return;
+      this.cronService.updateBalance();
+    
+  }
 }

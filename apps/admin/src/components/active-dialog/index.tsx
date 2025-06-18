@@ -88,7 +88,6 @@ export default function ActiveDialog() {
       setSnackbarOpen(true);
       return;
     }
-
     const startDateFormatted = startDate.format('YYYY-MM-DD');
     const endDateFormatted = endDate.format('YYYY-MM-DD');
 

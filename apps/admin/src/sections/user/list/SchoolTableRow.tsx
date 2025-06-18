@@ -11,6 +11,7 @@ type Props = {
   selectedValues: any;
   rowData: any;
   checkbox: boolean;
+  clickable?: boolean;
 };
 
 export default function SchoolTableRow({
@@ -19,8 +20,19 @@ export default function SchoolTableRow({
   selectedValues,
   rowData,
   checkbox,
+  clickable,
 }: Props) {
-  const { id, schoolName, country, longitude, latitude, mintedStatus, mintedAt, gasFee,imageHash } = row;
+  const {
+    id,
+    schoolName,
+    country,
+    longitude,
+    latitude,
+    mintedStatus,
+    mintedAt,
+    gasFee,
+    imageHash,
+  } = row;
 
   const { push } = useRouter();
   const schoolNft = process.env.NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS;
@@ -72,7 +84,7 @@ export default function SchoolTableRow({
       <TableRow
         hover
         // selected={selected}
-        sx={{ cursor: 'pointer' }}
+        sx={{ cursor: clickable ? 'pointer' : 'default' }}
       >
         {checkbox && (
           <TableCell padding="checkbox">
@@ -91,39 +103,44 @@ export default function SchoolTableRow({
           </Stack>
         </TableCell>
 
-        <TableCell align="left" onClick={() => handleEditRow(id)}>
+        <TableCell
+          align="left"
+          onClick={clickable ? () => handleEditRow(id) : () => {}}
+          sx={{ cursor: clickable ? 'pointer' : 'default' }}
+          // () => handleEditRow(id)}
+        >
           {country}
         </TableCell>
 
         <TableCell
           align="left"
-          sx={{ textTransform: 'capitalize' }}
-          onClick={() => handleEditRow(id)}
+          sx={{ textTransform: 'capitalize', cursor: clickable ? 'pointer' : 'default' }}
+          onClick={clickable ? () => handleEditRow(id) : () => {}}
         >
           {latitude}
         </TableCell>
 
         <TableCell
           align="left"
-          sx={{ textTransform: 'capitalize' }}
-          onClick={() => handleEditRow(id)}
+          sx={{ textTransform: 'capitalize', cursor: clickable ? 'pointer' : 'default' }}
+          onClick={clickable ? () => handleEditRow(id) : () => {}}
         >
           {longitude}
         </TableCell>
         {imageHash && (
-           <TableCell
-          align="left"
-          sx={{ textTransform: 'capitalize' }}
-          onClick={() => handleEditRow(id)}
-        >
-          {imageHash}
-        </TableCell>
+          <TableCell
+            align="left"
+            sx={{ textTransform: 'capitalize', cursor: clickable ? 'pointer' : 'default' }}
+            onClick={clickable ? () => handleEditRow(id) : () => {}}
+          >
+            {imageHash}
+          </TableCell>
         )}
 
         <TableCell
           align="left"
-          sx={{ textTransform: 'capitalize' }}
-          onClick={() => handleEditRow(id)}
+          sx={{ textTransform: 'capitalize', cursor: clickable ? 'pointer' : 'default' }}
+          onClick={clickable ? () => handleEditRow(id) : () => {}}
         >
           {mintedStatus == 'NOTMINTED' && 'Pending'}
           {mintedStatus == 'ISMINTING' && 'In Progress'}
@@ -139,16 +156,16 @@ export default function SchoolTableRow({
         {mintedStatus == 'MINTED' && (
           <TableCell
             align="left"
-            sx={{ textTransform: 'capitalize' }}
-            onClick={() => handleEditRow(id)}
+            sx={{ textTransform: 'capitalize', cursor: clickable ? 'pointer' : 'default' }}
+            onClick={clickable ? () => handleEditRow(id) : () => {}}
           >
             {formattedDate}
           </TableCell>
         )}
         <TableCell
           align="left"
-          sx={{ textTransform: 'capitalize' }}
-          onClick={() => handleEditRow(id)}
+          sx={{ textTransform: 'capitalize', cursor: clickable ? 'pointer' : 'default' }}
+          onClick={clickable ? () => handleEditRow(id) : () => {}}
         >
           {gasFee}
         </TableCell>

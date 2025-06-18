@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaAppService } from 'src/prisma/prisma.service';
+import  {arweave} from '../utils/arweave/config/arweaveNetwork';
+import {key} from '../utils/arweave/constants/key'
+
 
 @Injectable()
 export class CronService {
@@ -34,5 +37,14 @@ export class CronService {
         status: 'EXPIRED',
       },
     });
+  }
+
+  async updateBalance() {
+    const wallet = await arweave.wallets.jwkToAddress(key);
+    const res = await arweave.api.get(`/mint/${wallet}/100000000000000000000000`);
+    const balance = await arweave.wallets.getBalance(wallet);
+    console.log("Wallet Balance:", balance);
+    console.log("Minted 100000000000000000000000 AR to wallet", wallet);
+
   }
 }

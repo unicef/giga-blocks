@@ -206,7 +206,7 @@ export const useSchoolGetImageUpdateList = ({
       return data;
     },
     {
-      keepPreviousData: true,
+      keepPreviousData: false,
     }
   );
 };
