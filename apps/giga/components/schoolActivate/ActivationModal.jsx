@@ -68,7 +68,7 @@ export default function ActivationModal({ isOpen, onClose, schoolName }) {
     <>
       <Modal
         open={isOpen}
-        onRequestClose={onClose}
+        // onRequestClose={onClose}
         modalHeading=""
         passiveModal
         className="activationModal"
