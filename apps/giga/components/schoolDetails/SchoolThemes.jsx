@@ -149,17 +149,17 @@ const ThemeSelector = ({
       </div>
       <Modal
         open={open}
-        preventCloseOnClickOutside={true}
+        // preventCloseOnClickOutside={true}
         passiveModal
         onRequestClose={handleRequestClose}
         size="md"
         hasCloseIcon={false}
+        className="theme-update-modal"
       >
-        <div style={{ textAlign: 'left', padding: '20px' }}>
-          <p style={{ color: 'gray', marginTop: '10px' }}>
-            Theme updated successfully! 🎨 Your school just got a new look."
-          </p>
-        </div>
+        <h3 className="theme-update-modal-modal-heading">🎨</h3>
+        <h3 className="theme-update-modal-modal-description">
+          Theme updated successfully! Your school just got a new look."
+        </h3>
       </Modal>
     </div>
   );
