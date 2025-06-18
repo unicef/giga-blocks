@@ -64,7 +64,7 @@
 
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   gap: $spacing-05;
 
   @include breakpoint-down(lg) {
@@ -82,8 +82,8 @@
 .team-member-card {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  // align-items: center;
+  // text-align: center;
 
   @include breakpoint-down(md) {
     flex: 0 0 auto;
@@ -96,17 +96,26 @@
   aspect-ratio: 1 / 1;
   border-radius: 8px;
   overflow: hidden;
-  margin-bottom: $spacing-04;
+  // margin-bottom: $spacing-04;
 }
 
 .team-member-image {
-  width: 100%;
+  // width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 .team-member-name {
-  @include type-style('heading-compact-01');
+  // @include type-style('heading-compact-01');
   color: $gray-100;
   margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.team-member-position {
+  color: #525252;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
 }

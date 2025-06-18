@@ -198,3 +198,19 @@
     }
   }
 }
+.cds--list-box__menu {
+  box-shadow: 0 2px 6px var(--cds-shadow, rgba(0, 0, 0, 0.3));
+  position: absolute;
+  z-index: 100;
+  display: none;
+  background-color: var(--cds-layer);
+  inline-size: 100%;
+  inset-inline: 0;
+  overflow-y: auto;
+  transition: max-height 110ms cubic-bezier(0.2, 0, 0.38, 0.9);
+}
+
+.cds--slider-text-input-wrapper {
+  position: relative;
+  display: none;
+}

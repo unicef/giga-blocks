@@ -6,7 +6,9 @@
 
 // Main container
 .dashboard-container {
-  padding: $spacing-10;
+  padding: $spacing-07;
+  margin-top: 120px;
+  min-height: 70vh;
 
   @include breakpoint-down(md) {
     padding: $spacing-05;
@@ -24,36 +26,110 @@
     gap: $spacing-06;
   }
 }
-
-// Profile Section
-.profile-section {
-  flex: 1;
+.dashboard-top-section-unactivate {
   display: flex;
+  gap: $spacing-07;
+  // margin-bottom: $spacing-09;
   align-items: center;
-  gap: $spacing-05;
+
+  @include breakpoint-down(lg) {
+    flex-direction: column;
+    gap: $spacing-06;
+  }
 }
 
-.profile-image-container {
-  width: 142px;
-  height: 142px;
+// Profile Section
+.profile-section-unactivate {
+  // flex: 1;
+  // display: flex;
+  // align-items: center;
+  // gap: $spacing-05;
+}
+
+.profile-image-container-unactivate {
+  // width: 142px;
+  // height: 142px;
   border-radius: 8px;
   overflow: hidden;
 }
 
-.profile-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+// .profile-image-unactivate {
+//   width: 100%;
+//   height: 100%;
+//   object-fit: cover;
+// }
+
+.profile-image-container {
+  // width: 142px;
+  // height: 142px;
+  border-radius: 16px;
+  overflow: hidden;
 }
 
-.profile-name {
+// .profile-image {
+//   width: 100%;
+//   height: 100%;
+//   object-fit: cover;
+// }
+
+.profile-name-unactivate {
   @include type-style('heading-04');
 
   color: $gray-100;
 }
 
-.profile-preference {
+.profile-preference-unactivate {
   margin-top: $spacing-03;
+}
+.reservation-info-unactivate {
+  flex: 1;
+  // padding: $spacing-06;
+  display: flex;
+  flex-direction: column;
+
+  @include breakpoint-down(md) {
+    padding: $spacing-05;
+  }
+}
+
+.reservation-label-unactivate-top {
+  // @include type-style('label-01');
+  color: #161616;
+  margin-bottom: $spacing-02;
+  font-size: 14px;
+}
+
+.reservation-label-unactivate {
+  // @include type-style('label-01');
+  color: #161616;
+  margin-bottom: $spacing-04;
+  font-size: 14px;
+}
+
+.reservation-label-header-unactivate {
+  color: #161616;
+  margin-bottom: $spacing-04;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.reservation-label-header-second-unactivate {
+  color: #161616;
+  margin-bottom: $spacing-02;
+  font-size: 14px;
+  font-weight: 400;
+  margin-top: $spacing-06;
+}
+
+.reservation-label-header-link-unactivate {
+  color: #161616;
+  margin-bottom: $spacing-02;
+  font-size: 14px;
+  font-weight: 400;
+  margin-top: $spacing-02;
+  display: flex;
+  gap: 6px;
+  align-items: center;
 }
 
 // Latest Reservation
@@ -76,7 +152,7 @@
 
 .reservation-info {
   flex: 1;
-  padding: $spacing-06;
+  // padding: $spacing-06;
   display: flex;
   flex-direction: column;
 
@@ -86,9 +162,44 @@
 }
 
 .reservation-label {
-  @include type-style('label-01');
-  color: $gray-70;
-  margin-bottom: $spacing-05;
+  // @include type-style('label-01');
+  color: #161616;
+  margin-bottom: $spacing-04;
+  font-size: 16px;
+}
+
+.reservation-label-header {
+  color: #161616;
+  margin-bottom: $spacing-04;
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.reservation-label-header-second {
+  color: #161616;
+  margin-bottom: $spacing-02;
+  font-size: 14px;
+  font-weight: 400;
+  margin-top: $spacing-06;
+}
+
+.reservation-label-header-link {
+  color: #161616;
+  margin-bottom: $spacing-02;
+  font-size: 14px;
+  font-weight: 400;
+  margin-top: $spacing-02;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.color-link {
+  color: #277aff;
+}
+
+.color-icon {
+  color: #277aff;
 }
 
 .school-name {
@@ -257,4 +368,77 @@
 :global(.cds--checkbox-label) {
   @include type-style('body-compact-01');
   color: $gray-70;
+}
+
+// Dashboard Header
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    font-size: 2rem;
+  }
+
+  .profile-name {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #555;
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    gap: 10px;
+  }
+}
+
+.profile-border {
+  border: 1px solid #a8a8a8;
+  border-radius: 100px;
+}
+
+.dashboard-button {
+  margin-top: $spacing-06;
+}
+.dashboard-button-unactivate {
+  margin-top: $spacing-03;
+}
+
+.dashboard-modal .cds--modal-close {
+  display: none;
+}
+
+.dashboard-modal .dashboard-modal-heading {
+  font-weight: 600;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 1.2rem;
+  padding-top: 0.5rem;
+}
+
+.dashboard-modal .cds--modal-content {
+  padding: 1.5rem;
+}
+
+.dashboard-modal .dashboard-wallet-button {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.dashboard-modal .dashboard-modal-description {
+  padding: 0.8rem;
+  background-color: #dcd9d9;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.cds--modal-container--sm .cds--modal-content > p {
+  -webkit-padding-end: 3% !important;
+  padding-inline-end: 3% !important;
 }

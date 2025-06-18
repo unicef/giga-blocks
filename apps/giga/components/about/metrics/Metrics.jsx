@@ -8,10 +8,14 @@ import {
   UserMultiple,
   JobDaemon,
 } from '@carbon/icons-react';
+import { useMetrics } from '../../../app/hooks/useMetrics';
 import './_metrics.scss';
 import MetricsCard from '../../../components/metricsCard/MetricsCard';
+import MetricsCardSkeleton from '../../../components/metricCardSkeleton/MetricCardSkeleton';
 
 export default function Metrics() {
+  const { data: metricsData, isLoading } = useMetrics();
+
   const metrics = [
     {
       id: 1,
@@ -40,7 +44,7 @@ export default function Metrics() {
       icon: <IbmVpnForVpc size={24} />,
       iconColor: '#D12765', // Pink
       iconBg: '#FCF2F6', // Light pink
-      value: '~50%',
+      value: metricsData?.offline || '~50%',
       label: '',
       subtitle: 'Offline Schools',
       description:
@@ -62,7 +66,7 @@ export default function Metrics() {
       icon: <UserMultiple size={24} />,
       iconColor: '#4589FF', // Blue
       iconBg: '#EDF5FF', // Light blue
-      value: '310',
+      value: metricsData?.contributorCount || 0,
       label: '',
       subtitle: 'Giga Contributors',
       description:
@@ -87,19 +91,23 @@ export default function Metrics() {
         <h2 className="about-metrics__title">Giga Blocks Metrics</h2>
 
         <div className="about-metrics__grid">
-          {metrics.map((metric) => (
-            <MetricsCard
-              key={metric.id}
-              id={metric.id}
-              iconBg={metric.iconBg}
-              iconColor={metric.iconColor}
-              icon={metric.icon}
-              value={metric.value}
-              label={metric.label}
-              subtitle={metric.subtitle}
-              description={metric.description}
-            />
-          ))}
+          {isLoading ? (
+            <MetricsCardSkeleton count={6} />
+          ) : (
+            metrics.map((metric) => (
+              <MetricsCard
+                key={metric.id}
+                id={metric.id}
+                iconBg={metric.iconBg}
+                iconColor={metric.iconColor}
+                icon={metric.icon}
+                value={metric.value}
+                label={metric.label}
+                subtitle={metric.subtitle}
+                description={metric.description}
+              />
+            ))
+          )}
         </div>
       </div>
     </section>

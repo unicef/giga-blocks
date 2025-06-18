@@ -1,0 +1,165 @@
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/type' as *;
+@use '@carbon/styles/scss/colors' as *;
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/breakpoint' as *;
+
+.blog-post {
+  padding: 40px 0;
+  background-color: white;
+
+  @include breakpoint-down(md) {
+    padding: 24px 0;
+  }
+}
+
+.blog-post__container {
+  max-width: 912px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.blog-post__back {
+  margin-bottom: 32px;
+}
+
+.blog-post__back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: $gray-70;
+  text-decoration: none;
+  font-size: 14px;
+
+  &:hover {
+    color: $gray-100;
+    text-decoration: underline;
+  }
+}
+
+.blog-post__header {
+  margin-bottom: 32px;
+}
+
+.blog-post__title {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 24px;
+  color: $gray-100;
+
+  @include breakpoint-down(md) {
+    font-size: 28px;
+  }
+}
+
+.blog-post__author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.blog-post__author-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.blog-post__author-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.blog-post__author-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: $gray-100;
+}
+
+.blog-post__date {
+  font-size: 12px;
+  color: $gray-70;
+}
+
+.blog-post__featured-image {
+  margin-bottom: 32px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.blog-post__image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.blog-post__body {
+  font-size: 16px;
+  line-height: 1.6;
+  color: $gray-90;
+}
+
+.blog-post__intro {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  color: $gray-90;
+}
+
+.blog-post__section {
+  margin-bottom: 32px;
+}
+
+.blog-post__section-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: $gray-100;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.blog-post__section-number {
+  font-weight: 700;
+  color: $gray-100;
+}
+
+.blog-post__image-grid {
+  display: flex;
+  gap: 16px;
+  margin: 32px 0;
+
+  @include breakpoint-down(sm) {
+    flex-direction: column;
+  }
+}
+
+.blog-post__grid-image {
+  flex: 1;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.blog-post__caption {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 150%;
+  letter-spacing: -2%;
+  color: $gray-70;
+  margin-bottom: 32px;
+}
+
+.blog-post__conclusion {
+  font-size: 18px;
+  line-height: 1.6;
+
+  p {
+    margin-bottom: 16px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

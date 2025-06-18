@@ -60,21 +60,62 @@ export class SchoolService {
       download,
       connectionType,
     } = query;
-    const cacheKey = getCacheKey(name, country, page, perPage, minted);
-    const cachedResult = await this.cacheManager.get<string>(cacheKey);
+    // Convert string booleans to actual booleans
+    const waterBool = water?.trim() === 'true' ? true : water === 'false' ? false : undefined;
+    const electricityBool =
+      electricity === 'true' ? true : electricity === 'false' ? false : undefined;
+    const connectivityBool =
+      connectivityStatus?.trim() === 'true'
+        ? true
+        : connectivityStatus === 'false'
+        ? false
+        : undefined;
 
-    if (cachedResult) return cachedResult;
+    const cacheKey = getCacheKey(name, country, minted, Number(page), Number(perPage));
 
+    // Check if only the cache-relevant parameters are present
+    const isCacheableQuery = Object.keys(query).every(key =>
+      ['name', 'country', 'minted', 'page', 'perPage'].includes(key),
+    );
+
+    if (isCacheableQuery) {
+      const cachedResult = await this.cacheManager.get<string>(cacheKey);
+      if (cachedResult) {
+        const parsedResult = JSON.parse(cachedResult);
+        console.log(cachedResult?.length, 'cachedResult');
+
+        return parsedResult;
+      }
+    }
     const gigaMapsConditions: Prisma.SchoolWhereInput[] = [];
 
     //Combines all the filters into a single condition
-    if (water !== undefined) {
-      gigaMapsConditions.push({
-        giga_maps_data: {
-          path: ['water_availability'],
-          equals: water === 'true',
-        },
-      });
+    if (waterBool !== undefined) {
+      const waterConditions: Prisma.SchoolWhereInput = {
+        OR: [
+          {
+            giga_maps_data: {
+              path: ['water_availability'],
+              equals: waterBool,
+            },
+          },
+          {
+            giga_maps_data: {
+              path: ['water_availability'],
+              equals: waterBool ? 'Yes' : 'No',
+            },
+          },
+        ],
+      };
+      if (!waterBool) {
+        waterConditions.OR?.push({
+          giga_maps_data: {
+            path: ['water_availability'],
+            equals: null,
+          },
+        });
+      }
+      gigaMapsConditions.push(waterConditions);
     }
     if (teachers !== undefined) {
       gigaMapsConditions.push({
@@ -110,21 +151,30 @@ export class SchoolService {
     }
     if (connectionType !== undefined) {
       gigaMapsConditions.push({
-        giga_maps_data: {
-          path: ['connectivity_type'],
-          equals: connectionType,
-        },
+        OR: [
+          {
+            giga_maps_data: {
+              path: ['connectivity_type'],
+              string_contains: connectionType,
+            },
+          },
+          {
+            giga_maps_data: {
+              path: ['connectivity_type'],
+              string_contains: connectionType.toLowerCase(),
+            },
+          },
+        ],
       });
     }
-
     const where: Prisma.SchoolWhereInput = {
       deletedAt: null,
       ...(minted !== 'undefined' && { minted }),
       ...(uploadId && { uploadId }),
-      ...(name && { name: { contains: name, mode: 'insensitive' } }),
+      ...(name && { name: { contains: name.trim(), mode: 'insensitive' } }),
       ...(country && { country: { contains: country, mode: 'insensitive' } }),
-      ...(connectivityStatus !== undefined && { connectivity: connectivityStatus === 'true' }),
-      ...(electricity !== undefined && { electricity_available: electricity === 'true' }),
+      ...(connectivityBool !== undefined && { connectivity: connectivityBool }),
+      ...(electricityBool !== undefined && { electricity_available: electricityBool }),
       ...(gigaMapsConditions.length > 0 && {
         AND: gigaMapsConditions,
       }),
@@ -138,6 +188,7 @@ export class SchoolService {
         where,
         include: {
           theme: true,
+          giga_maps_data: false,
         },
       },
       {
@@ -148,7 +199,11 @@ export class SchoolService {
       },
     );
 
-    await this.cacheManager.set(cacheKey, result, 5000);
+    if (isCacheableQuery) {
+      // *** IMPORTANT: Stringify the result before setting in cache ***
+      const setStatus = await this.cacheManager.set(cacheKey, JSON.stringify(result), 12000);
+      console.log(`Cache SET status for ${cacheKey}:`, setStatus ? 'SUCCESS' : 'FAILURE');
+    }
 
     return result;
   }
@@ -211,8 +266,14 @@ export class SchoolService {
       //@ts-ignore
       await req.multipart(async (field: string, fileData: any, filename: string) => {
         try {
+          if (!filename.toLowerCase().endsWith('.csv')) {
+            return res
+              .code(400)
+              .send({ message: 'Invalid file format. Only CSV files are allowed.' });
+          }
           const dataArray = await handler(fileData);
           const schoolData = dataArray.schoolArrays;
+          console.log({ schoolData });
           const schools = await this.prisma.school.findMany({
             where: {
               giga_school_id: {
@@ -221,6 +282,10 @@ export class SchoolService {
               minted: MintStatus.NOTMINTED,
             },
           });
+          console.log(
+            'dbdata',
+            schools.map(school => school.giga_school_id),
+          );
           // Check for missing schools
           const missingSchools = schoolData.filter(
             school => !schools.some(dbSchool => dbSchool.giga_school_id === school.school_id_giga),
@@ -266,7 +331,7 @@ export class SchoolService {
             return uploadBatch;
           });
           this.queueService.csvMintdata(txn.id).catch(err => console.log(err));
-          return res.code(200).send({ message: 'Batch processing started' });
+          return res.code(200).send({ message: 'Batch processing started', csvUploadId: txn.id });
         } catch (err) {
           if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
             res
@@ -306,13 +371,126 @@ export class SchoolService {
     if (!school) {
       throw new NotFoundException('School not found for given school id');
     }
+    const mapsGigaData = school.giga_maps_data as any;
+
+    const giga_maps_data = {
+      Latitude: mapsGigaData?.latitude,
+      Longitude: mapsGigaData?.longitude,
+      'Download Speed (Govt) (mbps)': mapsGigaData?.download_speed_govt,
+      'Location Data Source': mapsGigaData?.source_lat_lon,
+      'Real-Time Connectivity': mapsGigaData?.connectivity_RT,
+      'Education Level': mapsGigaData?.education_level,
+      'Area Type': mapsGigaData?.school_area_type,
+      'Reported Connectivity': mapsGigaData?.connectivity_govt,
+      'Connectivity Type': mapsGigaData?.connectivity_type,
+      'School Data Source': mapsGigaData?.school_data_source,
+      'Fiber Node Distance (m)': mapsGigaData?.fiber_node_distance,
+      'Education Level (Govt)': mapsGigaData?.education_level_govt,
+      'Computer Availability': mapsGigaData?.computer_availability,
+      'Cellular Coverage Type': mapsGigaData?.cellular_coverage_type,
+      'Connectivity Type (Govt)': mapsGigaData?.connectivity_type_govt,
+      'Download Speed Benchmark': mapsGigaData?.download_speed_benchmark,
+      'Electricity Availability': mapsGigaData?.electricity_availability,
+      'Contracted Download Speed (Mbps)': mapsGigaData?.download_speed_benchmark,
+      'School established in (year)': mapsGigaData?.school_established_year,
+      'Connectivity Data Source': mapsGigaData?.connectivity_RT_datasource,
+      'School Data Collection Year': mapsGigaData?.school_data_collection_year,
+      'Cellular Coverage Availability': mapsGigaData?.cellular_coverage_availability,
+      'Connectivity Data Collection Year': mapsGigaData?.connectivity_govt_collection_year,
+    };
+
     const locationdetails = await getLocationId(school.giga_school_id, 'giga_id_school');
     const schooldetails = {
       ...school,
       locationId: locationdetails?.id,
       countryCode: locationdetails?.country_code,
+      giga_maps_data,
+      data_Source: mapsGigaData?.source_lat_lon,
     };
     return schooldetails;
+  }
+
+  async validateCSV(
+    req: fastify.FastifyRequest,
+    res: fastify.FastifyReply<any>,
+    user: any,
+  ): Promise<any> {
+    let validationResult: any = null;
+
+    //@ts-ignore
+    if (!req.isMultipart()) {
+      res.send(
+        new BadRequestException(new AppResponseDto(400, undefined, 'Request is not multipart')),
+      );
+      return;
+    }
+
+    await new Promise(async () => {
+      //@ts-ignore
+      await req.multipart(async (field: string, fileData: any, filename: string) => {
+        try {
+          if (!filename.toLowerCase().endsWith('.csv')) {
+            return res
+              .code(400)
+              .send({ message: 'Invalid file format. Only CSV files are allowed.' });
+          }
+          const dataArray = await handler(fileData);
+          const schoolData = dataArray.schoolArrays;
+          const schools = await this.prisma.school.findMany({
+            where: {
+              giga_school_id: {
+                in: schoolData.map(school => school.school_id_giga),
+              },
+            },
+            select: { giga_school_id: true, minted: true },
+          });
+          // Create a map for quick lookup
+          const dbSchoolMap = new Map(schools.map(s => [s.giga_school_id, s.minted]));
+
+          // Find already minted schools
+          const alreadyMinted = schoolData
+            .filter(school => dbSchoolMap.get(school.school_id_giga) === MintStatus.MINTED)
+            .map(school => school.school_id_giga);
+
+          // Find missing schools (not present in DB at all)
+          const missingSchools = schoolData
+            .filter(school => !dbSchoolMap.has(school.school_id_giga))
+            .map(school => school.school_id_giga);
+
+          // Find schools that are in progress (not minted yet)
+          const inProgressSchools = schoolData
+            .filter(school => dbSchoolMap.get(school.school_id_giga) === MintStatus.ISMINTING)
+            .map(school => school.school_id_giga);
+
+          validationResult = {
+            alreadyMinted,
+            invalidSchools: missingSchools,
+            inProgressSchools,
+          };
+          res
+            .code(200)
+            .send(new AppResponseDto(200, validationResult, 'Validation completed successfully'));
+        } catch (err) {
+          if (err.message.includes('Unique constraint failed on the fields: (`giga_school_id`)'))
+            res
+              .code(500)
+              .send({ err: 'Internal Server error', message: 'Duplicate giga_school_id' });
+          res.code(500).send({ err: 'Internal Server error', message: err.message });
+        }
+      }, onEnd);
+    });
+
+    // Uploading finished
+    async function onEnd(err: any) {
+      // if (err) {
+      //   res.send(new AppResponseDto(500, err, 'Internal Server error'));
+      //   return;
+      // }
+      // console.log('Validation completed successfully',validationResult);
+      // res
+      //   .code(200)
+      //   .send(new AppResponseDto(200, validationResult, 'Validation completed successfully'));
+    }
   }
 
   async countSchools(query: ListSchoolDto) {
@@ -321,6 +499,93 @@ export class SchoolService {
         ...query,
       },
     });
+  }
+  async getMintedCount(csvId) {
+    const upload = await this.prisma.cSVUpload.findUnique({
+      where: {
+        id: csvId,
+      },
+      include: {
+        school: true,
+      },
+    });
+    if (!upload) {
+      throw new NotFoundException('Upload not found');
+    }
+    const mintedCount = upload.school.filter(school => school.minted === MintStatus.MINTED).length;
+    const total = upload.school.length;
+    return {
+      mintedCount,
+      total,
+      uploadId: upload.id,
+    };
+  }
+
+  async getCsvDetails(csvId) {
+    const upload = await this.prisma.cSVUpload.findUnique({
+      where: {
+        id: csvId,
+      },
+      include: {
+        school: true,
+      },
+    });
+    if (!upload) {
+      throw new NotFoundException('Upload not found');
+    }
+    const mintedCount = upload.school.filter(school => school.minted === MintStatus.MINTED).length;
+    const mintingCount = upload.school.filter(
+      school => school.minted === MintStatus.ISMINTING,
+    ).length;
+    const notMintedCount = upload.school.filter(
+      school => school.minted === MintStatus.NOTMINTED,
+    ).length;
+    return {
+      mintedCount,
+      notMintedCount,
+      mintingCount,
+      schools: upload.school,
+    };
+  }
+
+  
+ async getGigaMetrics() {
+    const result = await this.prisma.school.groupBy({
+      by: ['minted'],
+      _count: { minted: true },
+    });
+
+    const offlineCount = await this.prisma.school.count({
+      where: {
+        connectivity: false,
+        deletedAt: null,
+      },
+    });
+
+    const contributorCount = await this.prisma.contributor.count();
+
+    const metrics = {
+      minted: 0,
+      notMinted: 0,
+      contributorCount: contributorCount,
+      schoolCount: 0,
+      offline: '0%',
+    };
+
+    result.forEach(row => {
+      if (row.minted === MintStatus.MINTED) {
+        metrics.minted = row._count.minted;
+      }
+      if (row.minted === MintStatus.NOTMINTED) {
+        metrics.notMinted = row._count.minted;
+      }
+      metrics.schoolCount += row._count.minted;
+    });
+
+    const offlinePercentage = (offlineCount / metrics.schoolCount) * 100;
+    metrics.offline = `${Math.round(offlinePercentage)}%`;
+
+    return metrics;
   }
 
   async listUploads() {
@@ -546,6 +811,29 @@ export class SchoolService {
     return schoolMinted;
   }
 
+  async activatePaidSchool(data: SchoolActivation) {
+    const { schoolId, themeId, contributorData } = data;
+    await this.validateSchoolAndTheme(schoolId, themeId);
+    const updatedSchool = await this.prisma.school.update({
+      where: {
+        id: schoolId,
+      },
+      data: {
+        minted: MintStatus.ISMINTING,
+      },
+    });
+    await this.prisma.schoolActivationDetails.create({
+      data: {
+        schoolId: schoolId,
+        themeId: themeId,
+        contributorData: JSON.parse(JSON.stringify(contributorData)),
+        transactionHash: data.transactionHash,
+      },
+    });
+    // this.queueService.activatePaidSchool(data);
+    return updatedSchool;
+  }
+
   async activateSchool(data: SchoolActivation) {
     const { schoolId, themeId, contributorData } = data;
     await this.validateSchoolAndTheme(schoolId, themeId);
@@ -560,6 +848,18 @@ export class SchoolService {
     });
     this.queueService.processImage(updatedSchool?.giga_school_id);
     return this.contrubutorService.addPayingContributor(contributorData);
+  }
+
+  async updateImages() {
+    return this.queueService.bulkUpdateImageHash();
+  }
+
+  async getCountries() {
+    return this.prisma.schoolVersion.findMany({
+      select: {
+        country_code: true,
+      },
+    });
   }
 
   private async validateSchoolAndTheme(schoolId: string, themeId: string) {
@@ -613,20 +913,20 @@ export class SchoolService {
   }
 
   async claimSchool(claimData: any) {
-    const { email, walletAddress } = claimData;
+    const { email, walletAddress, schoolId } = claimData;
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (!user) {
       throw new NotFoundException('No contributor found for given email');
     }
     const contributor = await this.prisma.contributor.findUnique({ where: { userId: user?.id } });
-    if (!contributor?.nftReserved) {
-      throw new NotFoundException('School not reserved');
+    if (!contributor?.nftReserved || !contributor?.schoolreserved.includes(schoolId)) {
+      throw new NotFoundException('Given Schools is not reserved for given email');
     }
-    if (contributor?.nftClaimed) {
-      throw new ConflictException('School already claimed');
-    }
+    // if (?.nftClaimed) {
+    //   throw new ConflictException('School already claimed');
+    // }
 
-    this.queueService.claimReservedNFT(email, walletAddress).catch(err => {
+    this.queueService.claimReservedNFT(email, walletAddress, schoolId).catch(err => {
       console.log(err);
     });
     return { message: 'queue added successfully', statusCode: 200 };
@@ -642,5 +942,38 @@ export class SchoolService {
       throw new NotFoundException('School not found');
     }
     return school;
+  }
+
+  async getImageUpdateList(query: any) {
+    const { page, perPage } = query;
+    const paginate: PaginateFunction = paginator({ perPage });
+    const schools = await paginate(
+      this.prisma.school,
+      {
+        where: {
+          imageUpdated: false,
+          NOT: [{ imageHash: null }, { imageHash: '' }],
+        },
+        select: {
+          giga_school_id: true,
+          id: true,
+          name: true,
+          imageHash: true,
+          longitude: true,
+          latitude: true,
+          country: true,
+        },
+      },
+      {
+        page,
+        perPage,
+      },
+    );
+
+    if (!schools || schools.meta.total === 0) {
+      return { statusCode: 200, message: 'No schools found', data: [] };
+    }
+
+    return schools;
   }
 }

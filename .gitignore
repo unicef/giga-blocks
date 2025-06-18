@@ -52,7 +52,7 @@ out
 .next
 .nx
 
-**certs
+**/certs
 
 
 docker-compose*
@@ -61,3 +61,5 @@ docker-compose*
 helm/requirements.lock
 helm/charts/*
 helm/values.*.yaml
+
+Docker/

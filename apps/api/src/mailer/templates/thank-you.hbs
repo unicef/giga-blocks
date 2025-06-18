@@ -1,79 +1,68 @@
 <html>
-  <body style='font-family:Poppins,Helvetica,Arial,sans-serif;'>
-    <div style='width: 100%; margin-top: 20px;'>
+  <head>
+    <title>Giga Blocks NFT Claim</title>
+    <link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet' />
+  </head>
+  <body style='font-family:IBM Plex Sans; padding: 40px; justify-content: center;'>
+    <div
+      style='max-width: 900px; background-color: #FFFFFF; padding: 4rem; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);'
+    >
+
+      <!-- Carbon Favorite Icon -->
       <div
-        style='width: 80%; max-width: 500px ; margin: auto; border: 1px solid rgb(214, 214, 214); border-radius: 5px; padding: 30px; gap: 25px;'
+        style='width: 60px; height: 60px; background-color: #316bff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem;'
       >
-        <div style='text-align: center;'>
-          <h1 style='font-size: 30px; font-weight: 600; margin: 0;'><b>nft</b> 2.0</h1>
-          <p style='font-size: 20px; font-weight: 600; width: 70%; margin: auto'>Thank You</p>
 
-          <p style='font-size: 13px; color: #444; margin: 20px 0;'>
-            You have successfully activated the school <b>{{school}}</b> on the Giga Giga Blocks platform.
-            <br />
-            You can view more details <a href="{{link}}" target="_blank" style="color: #007bff; text-decoration: underline;">here</a>.
-          </p>
-
-          {{!-- <p style='font-size: 11px; color: gray; margin-top: 20px;'>
-            <p style='margin-left:30px; margin-right:30px;'>
-              New user has joined the Giga Giga Blocks platform. Please find the details below:
-            </p>
-            <li style='text-align: left; list-style-type:none;'>
-              <b>Name:</b> {{name}}
-            </li>
-            <li style='text-align: left; list-style-type:none;'>
-              <b>Country:</b> {{country}}
-            </li>
-            <li style='text-align: left; list-style-type:none;'>
-              <b>Email:</b> {{email}}
-            </li>
-          </p> --}}
-        </div>
-
-        <div style='border-top: 1px solid rgb(226, 226, 226); padding-top: 20px; margin-top: 30px'>
-          <p style='font-size: 10px; color: gray; text-align: center; margin-top: 25px;'>
-            For our latest updates,
-            <br />
-            <a href="{{link}}" target='_blank' style='color:#bbb;text-decoration:underline'>
-              {{link}}
-            </a>
-          </p>
-        </div>
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          style='fill: rgb(238, 236, 236);'
+          width='32'
+          height='32'
+          viewBox='0 0 32 32'
+        >
+          <path
+            d='M23.49 4A7.43 7.43 0 0 0 16 7.35 7.43 7.43 0 0 0 8.51 4 7.48 7.48 0 0 0 1 11.6c0 4.14 3.44 7.51 8.64 12.25a53.06 53.06 0 0 0 6.13 5.14.9.9 0 0 0 1.06 0 53.06 53.06 0 0 0 6.13-5.14C27.56 19.11 31 15.74 31 11.6A7.48 7.48 0 0 0 23.49 4Z'
+          />
+        </svg>
       </div>
 
-      <table border='0' cellpadding='0' cellspacing='0' width='100%' class='footer'>
-        <tbody>
-          <tr>
-            <td style='padding: 0px 10px 20px;' align='center' valign='top' class='footerLinks'>
-              <p
-                class='text'
-                style="color:#bbb;font-family:'Open Sans',Helvetica,Arial,sans-serif;font-size:12px;font-weight:400;font-style:normal;letter-spacing:normal;line-height:20px;text-transform:none;text-align:center;padding:0;margin:0"
-              >
-                <a href='#' style='color:#bbb;text-decoration:underline' target='_blank'>View Web Version</a>&nbsp;|&nbsp;
-                <a href='#' style='color:#bbb;text-decoration:underline' target='_blank'>Email Preferences</a>&nbsp;|&nbsp;
-                <a href='#' style='color:#bbb;text-decoration:underline' target='_blank'>Privacy Policy</a>
-              </p>
-            </td>
-          </tr>
-          <tr>
-            <td style='padding: 0px 10px 10px;' align='center' valign='top' class='footerEmailInfo'>
-              {{!-- <p
-                class='text'
-                style="color:#bbb;font-family:'Open Sans',Helvetica,Arial,sans-serif;font-size:12px;font-weight:400;font-style:normal;letter-spacing:normal;line-height:20px;text-transform:none;text-align:center;padding:0;margin:0"
-              >
-                If you have any questions please contact us.
-                <a href='mailto:{{emailurl}}' style='color:#bbb;text-decoration:underline' target='_blank'>
-                  {{emailurl}}
-                </a>
-                <br />
-              </p> --}}
-            </td>
-          </tr>
-          <tr>
-            <td style='font-size:1px;line-height:1px' height='30'>&nbsp;</td>
-          </tr>
-        </tbody>
-      </table>
+      {{! <!-- Icon -->
+      <div style="width: 60px; height: 60px; background-color: #316bff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+        <span class="material-icons" style="font-size: 32px; color: white;">favorite</span>
+      </div> }}
+
+      <!-- Heading -->
+      <h2 style='font-size: 42px; margin: 0 0 20px; font-weight: 500;'>
+        🎉 Thank You for Supporting Giga Blocks – Claim Your NFT for
+        {{school}}
+      </h2>
+
+      <!-- Body Text -->
+      <p style='font-size: 24px; line-height: 1.6;'>
+        Thank you for activating
+        {{school}}
+        and contributing to Giga Blocks' mission to connect every school to the internet. Your
+        support brings us closer to a world where every child has access to quality education.<br
+        /><br />
+        As a token of our appreciation, we've prepared a unique NFT representing your contribution
+        to
+        {{school}}.
+      </p>
+
+      <!-- Claim Link -->
+      <p style='font-size: 16px; margin-bottom: 30px;'>
+        👉
+        <a href={{link}} style='color: #316bff; text-decoration: underline;'>[Click Here to Claim
+          Your NFT]</a>
+      </p>
+
+      <!-- Footer -->
+      <p style='font-size: 16px; margin-bottom: 10px;'>Together, we're building a more connected and
+        inclusive future.</p>
+      <p style='font-size: 16px; margin-bottom: 40px;'>Warm regards,<br />The Giga Team</p>
+
+      <!-- Logo -->
+      <strong style='font-size: 16px;'>Giga Blocks</strong>
     </div>
   </body>
 </html>

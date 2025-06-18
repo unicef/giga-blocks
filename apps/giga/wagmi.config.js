@@ -3,7 +3,9 @@
 import { getDefaultConfig } from 'connectkit';
 import { createConfig, http } from 'wagmi';
 import { baseSepolia } from 'wagmi/chains';
-import { coinbaseWallet,injected } from 'wagmi/connectors';
+import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors';
+
+const rpcURL = process.env.NEXT_PUBLIC_NETWORK_PROVIDER
 
 export const config = createConfig(
   getDefaultConfig({
@@ -20,18 +22,19 @@ export const config = createConfig(
       multicall: true,
     },
     connectors: [
-      // walletConnect({
-      //   projectId: '1234',
-      // }),
+      walletConnect({
+        showQrModal: false,
+        projectId: 'fdfb7359857dc4dd413ecda05a551571',
+      }),
       coinbaseWallet(),
       injected(),
     ],
     transports: {
       [baseSepolia.id]: http(
-        'https://base-sepolia.g.alchemy.com/v2/WSfPp7PZYjX8uXeDOFfk_GFBBSCrCyxg'
+        `${rpcURL}`? `${rpcURL}` : 'https://sepolia.infura.io/v3/b6dbb218527148febfaeb8ae2870b60e'
       ),
     },
-    walletConnectProjectId: '',
+    walletConnectProjectId: 'fdfb7359857dc4dd413ecda05a551571',
     // Required App Info
     appName: 'Giga',
 

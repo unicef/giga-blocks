@@ -13,6 +13,13 @@ export default {
     MINTBULK: '/schools/mintBulk',
     SCHOOLCOUNT: '/schools/schoolCount',
     UPLOAD: '/schools/uploadFile',
+    GIGAID: '/schools/gigaSchoolId',
+    UPDATEIMAGE:'/schools/updateImages',
+    GETIMAGEUPDATELIST:'/schools/imageUpdate',
+    VALIDATECSV: '/schools/validateCsv',
+    TOTALMINTED: '/schools/minted',
+    DETAILS: '/schools/details',
+
   },
   CONTRIBUTE: {
     GET: '/contribute',

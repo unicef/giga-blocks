@@ -172,7 +172,7 @@ model SchoolVersion {
 }
 
 model School {
-  id                    String            @id @default(uuid())
+  id                    String            @id @unique @map("id")  
   giga_school_id        String            @unique
   status                SchoolStatus      @default(Open)
   connectivity          Boolean           @default(false)
@@ -187,7 +187,9 @@ model School {
   coverage_availability Boolean           @default(false)
   giga_maps_data        Json?
   imageHash             String?
+  schoolReserved        Boolean           @default(false)
   schoolClaimed         Boolean           @default(false)
+  imageUpdated          Boolean           @default(false)
   createdAt             DateTime          @default(now())
   updatedAt             DateTime          @updatedAt
   deletedAt             DateTime?
@@ -202,6 +204,8 @@ model School {
   ContributedData       ContributedData[]
   version_id            String
   School_Version        SchoolVersion[]
+  verifiedCIW           Boolean      @default(false)
+
   themeId String?
   theme   Theme?  @relation(fields: [themeId], references: [id])
 
@@ -209,6 +213,20 @@ model School {
   @@index(fields: [minted], type: Hash)
   @@index(fields: [country, region_name, id])
   @@map("giga_school")
+}
+
+
+model SchoolActivationDetails{
+  id                       String     @id @default(uuid())
+  schoolId                 String
+  transactionHash          String     @unique()
+  themeId                  String
+  contributorData          Json
+  schoolUpdated            Boolean     @default(false)
+  transactionStatus        Int ?     
+
+  @@map("giga_school_activation")
+
 }
 
 model ContributedData {
@@ -311,21 +329,22 @@ model Qos {
   timestamp            DateTime
   country_id           String
   giga_school_id       String
-  speed_download_probe String
-  speed_upload_probe   String
-  latency_probe        String
-  ce_ingress           String
-  ce_egress            String
-  pe_ingress           String
-  pe_egress            String
-  provider             String
   speed_download       String
   speed_upload         String
+  inbound_traffic      String?
+  outbound_traffic     String?
+  speed_upload_max     String?
+  speed_upload_mean    String?
+  provider             String?
+  speed_download_max   String?
+  speed_download_mean  String?
   latency              String
   signature            String
   gigasync_id          String
   date                 DateTime?
   dynamicData          Json
+  inbound_traffic_sum  String?
+  outbound_traffic_sum String?
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
   deletedAt            DateTime?
@@ -349,6 +368,7 @@ model ActivationLog {
   status          ActivationStatus @default(INACTIVE)
   activatedBy     String
   name            String
+  manually_inactivated Boolean         @default(false)
   activatedUser   User             @relation("ActivatedBy", fields: [activatedBy], references: [id])
   deActivatedBy   String?
   deActivatedUser User?            @relation("DeactivatedBy", fields: [deActivatedBy], references: [id])
@@ -379,6 +399,8 @@ model Contributor {
   @@map("giga_contributor")
 }
 
+
+
 model FeatureCountry {
   id            String   @id @default(uuid())
   country_code  String   @unique
@@ -390,4 +412,29 @@ model FeatureCountry {
   createdByUser User     @relation(fields: [createdBy], references: [id])
 
   @@map("giga_featured")
+}
+
+
+model SessionId{
+  id          String   @id @default(uuid())
+  schoolId    String
+  status      Boolean @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  requestDetails Json
+
+  @@map("giga_id_session_id") 
+}
+
+model InformationWorker{
+  id     String   @id @default(uuid())
+  did    String @unique
+  name   String ?
+  emailSent Boolean @default(false)
+  email  String @unique
+  isArchived  Boolean @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("giga_ciw")
 }

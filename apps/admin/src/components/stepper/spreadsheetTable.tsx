@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {
   Table,
@@ -12,11 +11,16 @@ import {
 } from '@mui/material';
 import { useUploadContext } from '@contexts/uploadContext';
 
-const SpreadSheetTable = () => {
+const SpreadSheetTable = ({ invalidate }: { invalidate?: string[] }) => {
   const { sheetNames, setSelectedSheetName, tableDatas: rows } = useUploadContext();
   const handleSelectedSheetName = (el: string) => {
     setSelectedSheetName(el);
   };
+  const excludedSchools = new Set([...(invalidate ?? [])]);
+
+  const filteredRows = rows.filter((row: string[]) => {
+    return !excludedSchools.has(row[0]);
+  });
 
   return (
     <>
@@ -43,7 +47,7 @@ const SpreadSheetTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows?.slice(1)?.map((row, rowIndex) => (
+            {filteredRows?.slice(1)?.map((row, rowIndex) => (
               <TableRow
                 key={rowIndex}
                 sx={{ backgroundColor: rowIndex % 2 === 1 ? '#f5f5f5' : '#fff' }}

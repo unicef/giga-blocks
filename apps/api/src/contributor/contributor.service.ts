@@ -70,11 +70,18 @@ export class ContributorService {
     return contributors;
   }
 
-  getContributor(userId: string) {
-    return this.prisma.contributor.findUnique({ where: { userId }, include: { user: true } });
+  async getContributor(userId: string) {
+    const contributorDetails = await this.prisma.contributor.findUnique({
+      where: { userId },
+      include: { user: true },
+    });
+    if (!contributorDetails) {
+      throw new Error('Contributor not found');
+    }
+    return contributorDetails;
   }
 
-  async claimNft(email: string, wallet: any) {
+  async claimNft(email: string, wallet: any, schoolId: string) {
     const walletAddress = hexStringToBuffer(wallet);
 
     const user = await this.prisma.user.findUnique({ where: { email } });
@@ -84,6 +91,12 @@ export class ContributorService {
       await this.prisma.contributor.update({
         where: { userId: user?.id },
         data: { nftClaimed: true },
+      });
+      return this.prisma.school.update({
+        where: { id: schoolId },
+        data: {
+          schoolClaimed: true,
+        },
       });
     } else return { message: 'NFT not reserved' };
   }
@@ -179,6 +192,11 @@ export class ContributorService {
     if (!userDetails) {
       throw new Error('Contributor not found');
     }
+    const existingcontributor = await this.prisma.contributor.findUnique({
+      where: { userId: userDetails.id },
+    });
+
+    if (existingcontributor.isVisible === true) return existingcontributor;
     const updatedcontributor = await this.prisma.contributor.update({
       where: { userId: userDetails.id },
       data: {
@@ -188,5 +206,15 @@ export class ContributorService {
       },
     });
     return updatedcontributor;
+  }
+
+  async getContributorByWalletAddress(walletAddress: string) {
+    const contributor = await this.prisma.contributor.findFirst({
+      where: { user: { walletAddress: hexStringToBuffer(walletAddress) } },
+    });
+    if (!contributor) {
+      throw new Error('Contributor not found');
+    }
+    return contributor;
   }
 }

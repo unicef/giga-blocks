@@ -23,6 +23,7 @@ const uploadFile = async file => {
     }
     catch (error) {
         console.log(error)
+        throw new Error(`Failed to upload file to IPFS,${error}`);
     }
 }
 export default uploadFile

@@ -1,4 +1,5 @@
 export const AMQP_CONNECTION = 'AMQP_CONNECTION';
+export const HOST_URL = process.env.NEXT_PUBLIC_D3_BACKEND
 
 export const QUEUES = {
     SCHOOL_QUEUE: 'SCHOOL_QUEUE',
@@ -6,3 +7,4 @@ export const QUEUES = {
     QOS_QUEUE: 'QOS_QUEUE',
     QOS_FETCH_QUEUE: 'QOS_FETCH_QUEUE',
 } 
+

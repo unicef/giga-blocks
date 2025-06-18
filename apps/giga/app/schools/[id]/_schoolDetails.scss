@@ -23,6 +23,7 @@
     color: $gray-70;
     text-decoration: none;
     margin-bottom: $spacing-05;
+    cursor: pointer;
 
     &:hover {
       color: $gray-100;
@@ -34,7 +35,10 @@
   }
 
   &__title {
-    @include type-style('heading-05');
+    font-weight: 500;
+    font-size: 42px;
+    line-height: 130%;
+    letter-spacing: -2%;
     margin-bottom: $spacing-03;
   }
 
@@ -129,7 +133,7 @@
   }
 
   &__minted-content {
-    padding: $spacing-05;
+    padding: $spacing-05 0.4rem;
   }
 
   &__minted-title {
@@ -146,11 +150,32 @@
   }
 
   &__minted-link {
-    text-decoration: none;
+    // text-decoration: none;
 
     &:hover {
       text-decoration: underline;
     }
+  }
+
+  &__activation-by {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #eaf3ff;
+    border-radius: 16px;
+    padding: $spacing-03 $spacing-04;
+    width: fit-content;
+    svg {
+      flex-shrink: 0;
+    }
+  }
+
+  &__activation-description {
+    font-size: 14px;
+    font-weight: 600;
+    color: #277aff;
+    width: auto;
+    display: inline-block;
   }
 
   &__social-label {
@@ -207,8 +232,8 @@
 
   &__theme-color {
     width: 24px;
-    height: 60px;
-    margin-right: 2px;
+    height: 46px;
+    // margin-right: 2px;
 
     &:last-child {
       margin-right: 0;
@@ -484,5 +509,11 @@
     border: 1px solid $gray-20;
     border-radius: 4px;
     overflow: hidden;
+  }
+
+  .verify-ciw {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
   }
 }
