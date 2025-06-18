@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { useAccount } from 'wagmi';
-import { useRouter } from 'next/navigation'; // Import useRouter
+import { useRouter } from 'next/navigation'; 
 import { Queries } from '../libs/graph-query';
 import './_dashboard.scss';
 import CardSkeleton from '../../components/cardSkeleton/CardSkeleton';
@@ -17,9 +17,9 @@ import { Modal, Button } from '@carbon/react';
 
 export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
-  const [copied, setCopied] = useState(false); // State for copy functionality
+  const [copied, setCopied] = useState(false);
   const { address, isConnected, isConnecting } = useAccount();
-  const router = useRouter(); // Initialize useRouter here
+  const router = useRouter();
 
   useEffect(() => {
     if (!isConnecting && !isConnected) {
@@ -39,7 +39,14 @@ export default function Dashboard() {
   const decodedShooldata = data?.collectorOwnedNft?.nfts
     ?.map((d) => {
       try {
-        const decoded = atob(d?.tokenUri?.substring(29));
+        const decodedBytes = atob(d?.tokenUri?.substring(29));
+        // Using TextDecoder to decode the byte array into a UTF-8 string
+        const decoder = new TextDecoder('utf-8');
+        const decoded = decoder.decode(
+          Uint8Array.from(
+            decodedBytes.split('').map((char) => char.charCodeAt(0))
+          )
+        );
         const token = d?.id;
         const parseddata = JSON.parse(decoded);
         return {
@@ -53,7 +60,6 @@ export default function Dashboard() {
     })
     .filter(Boolean);
 
-  // Handle copy functionality
   const handleCopy = () => {
     if (address) {
       navigator.clipboard.writeText(address).then(() => {
@@ -63,7 +69,6 @@ export default function Dashboard() {
     }
   };
 
-  // Handle activate schools button click
   const handleActivateSchoolsClick = () => {
     router.push('/schools/list?minted=NOTMINTED');
   };
