@@ -12,10 +12,18 @@ import { primaryFont } from '../theme/typography';
 // ----------------------------------------------------------------------
 
 export default class MyDocument extends Document {
+  static async getInitialProps(ctx: any) {
+    const initialProps = await Document.getInitialProps(ctx);
+    const nonce = ctx?.req?.headers?.['x-nonce'] || '';
+
+    return { ...initialProps, nonce };
+  }
   render() {
+    const { nonce } = this.props as any;
+
     return (
       <Html lang="en" className={primaryFont.className}>
-        <Head>
+        <Head nonce={nonce}>
           <meta charSet="utf-8" />
           <link rel="manifest" href="/manifest.json" />
 
