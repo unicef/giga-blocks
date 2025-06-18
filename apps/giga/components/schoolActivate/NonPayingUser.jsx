@@ -273,13 +273,13 @@ export default function NonPayingUser({
 
               {showEmailVerify ? (
                 <div className="actionButtons" style={{ marginTop: '12px' }}>
-                  <Button
+                  {/* <Button
                     onClick={handleBack}
                     kind="secondary"
                     disabled={isPending}
                   >
                     Cancel
-                  </Button>
+                  </Button> */}
                   <Button onClick={handleActivate} disabled={isPending}>
                     {isPending ? 'Activating' : 'Activate'}
                   </Button>

@@ -3,7 +3,7 @@ import { ArrowUpRight, Location } from '@carbon/icons-react';
 const Header = ({
   name,
   school_type,
-  region_name,
+  country_name,
   locationId,
   countryCode,
   fontColor,
@@ -19,7 +19,7 @@ const Header = ({
           {school_type && 'Not Available'}
         </p>
         <div className="school-details__location">
-          <Location size={16} /> {region_name}
+          <Location size={16} /> {country_name}
           {countryCode ? (
             <a
               href={`${mapUrl}/schools?country=${countryCode}&school_ids=${locationId}`}

@@ -1,17 +1,12 @@
 'use client';
 import Scrollbar from '@components/scrollbar';
 import { TableHeadUsers, TableNoData, TablePaginationCustom, useTable } from '@components/table';
-import { useSchoolGet, useSchoolGetImageUpdateList, useUpdateSchoolImage } from '@hooks/school/useSchool';
+import {  useSchoolGetImageUpdateList, useUpdateSchoolImage } from '@hooks/school/useSchool';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
-import { Button, Card, Divider, TableContainer, Table, TableBody, TextField } from '@mui/material';
+import { Button, Card, Divider, TableContainer, Table, TableBody } from '@mui/material';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
-import { useRouter } from 'next/router';
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
-import { JsonRpcProvider, Signer } from 'ethers';
-import { mintSignature } from '@components/web3/utils/wallet';
-import { useWeb3React } from '@web3-react/core';
+import {  useEffect, useState } from 'react';
 import { useSnackbar } from '@components/snackbar';
-import useDebounce from '@hooks/useDebounce';
 
 const PendingSchool = () => {
   const TABLE_HEAD = [
@@ -22,12 +17,10 @@ const PendingSchool = () => {
     { id: 'imageHash', label: 'Image Hash', align: 'left' },
   ];
 
-  const { push, query } = useRouter();
 
   const [school, setSchool] = useState<any>();
   const {enqueueSnackbar} = useSnackbar();
 
-  const uploadId = query.uploadId;
 
   const {
     dense,
@@ -44,7 +37,6 @@ const PendingSchool = () => {
 
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
-  const debouncedValue = useDebounce(`${school} `, 300);
   const { data, isLoading, refetch, isFetching } = useSchoolGetImageUpdateList({
     page: Number(page) + 1,
     perPage: rowsPerPage,
@@ -75,24 +67,20 @@ const PendingSchool = () => {
       });
 
     setTableData(filteredData);
-  }, [data, isLoading, uploadId]);
+  }, [data, isLoading]);
 
   const onClickUpdateImageHash = () =>{
     updateImageHash.mutate();
   }
-
- 
-
-  const handleSchoolChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setSchool(e.target.value);
-  };
 
   return (
     <DashboardLayout>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
         <span style={{ fontSize: '1.5em', fontWeight: '600' }}>Schools To Be  Updated</span>
         <div style={{ display: 'flex', gap: '15px' }}>
-          <Button variant="contained" onClick={onClickUpdateImageHash}>
+          <Button variant="contained" 
+          disabled={ isLoading || tableData.length === 0}
+          onClick={onClickUpdateImageHash}>
             Update Image Hash
           </Button>
         </div>
@@ -122,6 +110,7 @@ const PendingSchool = () => {
                       setSelectedValues={setSelectedValues}
                       rowData={row}
                       checkbox={false}
+                      clickable={false}
                     />
                   ))}
                 <TableNoData isNotFound={tableData.length === 0} isFetching={isFetching} />
@@ -130,8 +119,8 @@ const PendingSchool = () => {
           </Scrollbar>
         </TableContainer>
         <TablePaginationCustom
-          count={data?.meta?.total}
-          page={page}
+          count={data?.meta?.total || 0}
+          page={page ||0}
           setPage={setPage}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
