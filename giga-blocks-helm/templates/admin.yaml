@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "admin.fullname" . }}
+  namespace: {{ default .Values.namespace .Release.Namespace }}
+  labels:
+    {{- toYaml .Values.admin.labels | nindent 4 }}
+spec:
+  replicas: {{ .Values.admin.replicas }}
+  selector:
+    matchLabels:
+      {{- toYaml .Values.admin.labels | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- toYaml .Values.admin.labels | nindent 8 }}
+    spec:
+      containers:
+        - name: giga-blocks-admin
+          env:
+            {{- toYaml .Values.admin.environment | nindent 12 }}
+          image: {{ .Values.admin.image.repository }}:{{ .Values.admin.image.tag | default .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.admin.image.pullPolicy }}
+          ports:
+            - containerPort: 3000
+          resources:
+            {{- toYaml .Values.admin.resources | nindent 12 }}
+      {{- if .Values.admin.image.secrets }}
+      imagePullSecrets:
+        {{- toYaml .Values.admin.image.secrets | nindent 8 }}
+      {{- end }}

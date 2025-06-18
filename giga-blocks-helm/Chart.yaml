@@ -1,0 +1,29 @@
+apiVersion: v2
+name: giga-blocks
+description: A Helm chart for the Giga Blocks Kubernetes deployment
+version: 1.0.0
+appVersion: "1.0"
+dependencies:
+  - name: postgresql
+    version: ~15.5.0
+    repository: https://charts.bitnami.com/bitnami
+    alias: postgresql-app
+    condition: postgresql-app.enabled
+  - name: postgresql
+    version: ~15.5.0
+    repository: https://charts.bitnami.com/bitnami
+    alias: postgresql-newsletter
+    condition: postgresql-newsletter.enabled
+  - name: redis
+    version: ~19.6.0
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+  - name: rabbitmq
+    version: ~14.7.0
+    repository: https://charts.bitnami.com/bitnami
+    condition: rabbitmq.enabled
+
+  # We have to specify the common dependency to avoid the conflict between postgresql and redis common templates
+  - name: common
+    version: ~2.21.0
+    repository: https://charts.bitnami.com/bitnami
