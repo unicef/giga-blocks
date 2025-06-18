@@ -145,3 +145,33 @@
     transform: rotate(180deg);
   }
 }
+
+.theme-update-modal .cds--modal-close {
+  display: none;
+}
+
+.theme-update-modal .theme-update-modal-modal-heading {
+  font-weight: 600;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 1.2rem;
+  padding-top: 0.5rem;
+}
+
+.theme-update-modal .cds--modal-content {
+  padding: 1.5rem;
+}
+
+.theme-update-modal .theme-update-modal-modal-description {
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 1.2rem;
+  padding-top: 0.5rem;
+}
+
+// .cds--modal-container--sm .cds--modal-content > p {
+//   -webkit-padding-end: 3% !important;
+//   padding-inline-end: 3% !important;
+// }
