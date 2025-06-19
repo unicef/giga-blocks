@@ -41,5 +41,5 @@ spec:
           secret:
             secretName: {{ .Values.api.secretName }}
             items:
-            - key: env
+            - key: api
               path: env

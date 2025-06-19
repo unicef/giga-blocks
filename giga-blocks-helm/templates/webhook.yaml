@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "webhook.fullname" . }}
+  namespace: {{ default .Values.namespace .Release.Namespace }}
+  labels:
+    {{- toYaml .Values.webhook.labels | nindent 4 }}
+spec:
+  replicas: {{ .Values.webhook.replicas }}
+  selector:
+    matchLabels:
+      {{- toYaml .Values.webhook.labels | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- toYaml .Values.webhook.labels | nindent 8 }}
+    spec:
+      containers:
+        - name: giga-blocks-webhook
+          command:
+            - /bin/sh
+            - -c
+          args:
+            {{- toYaml .Values.webhook.args | nindent 12 }}
+          image: {{ .Values.webhook.image.repository }}:{{ .Values.webhook.image.tag | default .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.webhook.image.pullPolicy }}
+          ports:
+            - containerPort: 3010
+          resources:
+            {{- toYaml .Values.webhook.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /usr/src/vault
+              name: giga-blocks-webhook-secret
+              readOnly: true
+      {{- if .Values.webhook.image.secrets }}
+      imagePullSecrets:
+        {{- toYaml .Values.webhook.image.secrets | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: giga-blocks-webhook-secret
+          secret:
+            secretName: {{ .Values.webhook.secretName }}
+            items:
+            - key: webhook
+              path: env

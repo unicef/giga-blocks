@@ -281,6 +281,58 @@ web:
   livenessProbe: { }
   readinessProbe: { }
 
+
+webhook:
+  fullname: giga-chart-webhook
+  labels:
+    app: giga-chart-webhook
+  image:
+    repository: "rumsan/giga-mono-ntf2-webhook"
+    tag: "stage-b854c5d-157"
+    pullPolicy: Always
+    secrets: 
+      - name: "imagePullCreds"
+  args:
+    - |
+      cp /usr/src/vault/env /usr/src/app/.env
+      set -a
+      source /usr/src/app/.env
+      set +a
+      node main.js
+  # args:
+  #   - |
+  #     cp /usr/src/vault/env /usr/src/app/.env
+  #     set -a
+  #     source /usr/src/app/.env
+  #     set +a
+  #     sleep 500
+  podAnnotations: { }
+  podSecurityContext: { }
+  securityContext: { }
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 3010
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  nodeSelector: { }
+  tolerations: [ ]
+  affinity: { }
+  configVolume: { }
+  secretName: giga-blocks-secret
+  resources:
+    limits:
+      cpu: 1
+      memory: 1000Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  livenessProbe: { }
+  readinessProbe: { }
+
 admin:
   fullname: giga-chart-admin
   labels:
@@ -333,6 +385,9 @@ ingress:
   admin:
     path: "/admin"
     backendService: "giga-chart-admin-svc"
+  webhook:
+    path: "/webhook"
+    backendService: "giga-chart-webhook-svc"
   # docs:
   #   path: "/doc"
   #   backendService: "giga-blocks-docs"

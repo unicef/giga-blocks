@@ -39,4 +39,11 @@ spec:
                 name: {{ $.Values.ingress.web.backendService }}
                 port:
                   number: {{ $.Values.web.service.port }}
+          - path: {{ $.Values.ingress.webhook.path }}
+            pathType: {{ $.Values.ingress.pathType }}
+            backend:
+              service:
+                name: {{ $.Values.ingress.webhook.backendService }}
+                port:
+                  number: {{ $.Values.webhook.service.port }}
 {{- end }}
