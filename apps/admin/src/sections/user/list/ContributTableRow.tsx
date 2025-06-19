@@ -13,7 +13,8 @@ import {
 } from '@mui/material';
 
 // components
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
+import { NextRouter } from 'next/router';
 
 type Props = {
   row: any;
@@ -28,7 +29,7 @@ export default function ContributeTableRow({
   checkbox,
   rowData,
   selectedValues,
-  setSelectedValues
+  setSelectedValues,
 }: Props) {
   const {
     id,
@@ -38,46 +39,43 @@ export default function ContributeTableRow({
     contributedDataValue,
     status,
     validatedUser,
-    date
+    date,
   } = row;
 
-  const { push } = useRouter();
+  const { push } = useRouter() as NextRouter;
 
   const handleEditRow = (row: string) => {
-    push(`/contribute/${row}`)
-  };  
+    push(`/contribute/${row}`);
+  };
 
   const handleCheckboxChange = (event: any, row: any) => {
     const isChecked = event.target.checked;
     if (isChecked) {
-        setSelectedValues((prev: any) => [...prev, row]);
+      setSelectedValues((prev: any) => [...prev, row]);
     } else {
       setSelectedValues((prevSelectedValues: any) =>
         prevSelectedValues.filter((value: any) => value.id !== row.id)
       );
     }
-  }
+  };
 
   return (
     <>
-      <TableRow
-        hover
-        sx={{cursor: 'pointer'}}
-      >
-      {checkbox &&  status =="Pending" && (
-        <TableCell padding="checkbox">
-          <Checkbox
-            checked={selectedValues.some((obj: any) => obj.id === id)}
-            onChange={(e)=>handleCheckboxChange(e,rowData)}
-          />
-        </TableCell>
-      )}
+      <TableRow hover sx={{ cursor: 'pointer' }}>
+        {checkbox && status == 'Pending' && (
+          <TableCell padding="checkbox">
+            <Checkbox
+              checked={selectedValues.some((obj: any) => obj.id === id)}
+              onChange={(e) => handleCheckboxChange(e, rowData)}
+            />
+          </TableCell>
+        )}
         <TableCell
           align="left"
           sx={{ textTransform: 'capitalize' }}
           onClick={() => handleEditRow(id)}
         >
-        <Stack direction="row" alignItems="center" spacing={2}>
+          <Stack direction="row" alignItems="center" spacing={2}>
             <Typography variant="subtitle2" noWrap>
               {name}
             </Typography>
@@ -97,7 +95,7 @@ export default function ContributeTableRow({
           sx={{ textTransform: 'capitalize' }}
           onClick={() => handleEditRow(id)}
         >
-        {contributedDataKey}
+          {contributedDataKey}
         </TableCell>
 
         <TableCell
@@ -105,7 +103,11 @@ export default function ContributeTableRow({
           sx={{ textTransform: 'capitalize' }}
           onClick={() => handleEditRow(id)}
         >
-        {contributedDataValue.toString().toLowerCase() === 'true' ? "Yes" : contributedDataValue.toString() === 'false' ? "No" : contributedDataValue.toString()}
+          {contributedDataValue.toString().toLowerCase() === 'true'
+            ? 'Yes'
+            : contributedDataValue.toString() === 'false'
+            ? 'No'
+            : contributedDataValue.toString()}
         </TableCell>
 
         <TableCell
@@ -131,7 +133,6 @@ export default function ContributeTableRow({
         >
           {date}
         </TableCell>
-
       </TableRow>
     </>
   );

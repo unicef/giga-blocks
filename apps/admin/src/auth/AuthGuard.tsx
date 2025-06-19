@@ -1,7 +1,8 @@
 import React, { ReactNode, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 import { useAuthContext } from './useAuthContext';
 import LoadingScreen from '../components/loading-screen';
+import { NextRouter } from 'next/router';
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -11,7 +12,7 @@ interface AuthGuardProps {
 export default function AuthGuard({ children }: AuthGuardProps) {
   //@ts-ignore
   const { isAuthenticated, isInitialized, user } = useAuthContext();
-  const { pathname, push } = useRouter();
+  const { pathname, push } = useRouter() as NextRouter as NextRouter;
 
   useEffect(() => {
     if (!isInitialized) {

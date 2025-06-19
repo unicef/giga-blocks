@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 // next
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 // @mui
 import { Collapse } from '@mui/material';
 // hooks
@@ -8,6 +8,7 @@ import useActiveLink from '../../../hooks/useActiveLink';
 //
 import { NavListProps } from '../types';
 import NavItem from './NavItem';
+import { NextRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
@@ -18,7 +19,7 @@ type NavListRootProps = {
 };
 
 export default function NavList({ data, depth, hasChild }: NavListRootProps) {
-  const { pathname } = useRouter();
+  const { pathname } = useRouter() as NextRouter as NextRouter;
 
   const { active, isExternalLink } = useActiveLink(data.path);
   const activePath = data.path === pathname;
@@ -40,7 +41,6 @@ export default function NavList({ data, depth, hasChild }: NavListRootProps) {
     setOpen(false);
   };
 
-
   return (
     <>
       <NavItem
@@ -50,7 +50,7 @@ export default function NavList({ data, depth, hasChild }: NavListRootProps) {
         active={active}
         isExternalLink={isExternalLink}
         onClick={handleToggle}
-        activePath= {activePath}
+        activePath={activePath}
       />
 
       {hasChild && (

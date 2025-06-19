@@ -3,7 +3,8 @@ import { Stack, TableRow, TableCell, Typography, Checkbox } from '@mui/material'
 import { TESTNET_CHAINS, DEFAULT_CHAIN_ID } from '@components/web3/chains';
 
 // components
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
+import { NextRouter } from 'next/router';
 
 type Props = {
   row: any;
@@ -20,9 +21,19 @@ export default function SchoolTableRow({
   rowData,
   checkbox,
 }: Props) {
-  const { id, schoolName, country, longitude, latitude, mintedStatus, mintedAt, gasFee,imageHash } = row;
+  const {
+    id,
+    schoolName,
+    country,
+    longitude,
+    latitude,
+    mintedStatus,
+    mintedAt,
+    gasFee,
+    imageHash,
+  } = row;
 
-  const { push } = useRouter();
+  const { push } = useRouter() as NextRouter;
   const schoolNft = process.env.NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS;
   const explorer = TESTNET_CHAINS[DEFAULT_CHAIN_ID]?.blockExplorerUrls[0];
 
@@ -111,13 +122,13 @@ export default function SchoolTableRow({
           {longitude}
         </TableCell>
         {imageHash && (
-           <TableCell
-          align="left"
-          sx={{ textTransform: 'capitalize' }}
-          onClick={() => handleEditRow(id)}
-        >
-          {imageHash}
-        </TableCell>
+          <TableCell
+            align="left"
+            sx={{ textTransform: 'capitalize' }}
+            onClick={() => handleEditRow(id)}
+          >
+            {imageHash}
+          </TableCell>
         )}
 
         <TableCell

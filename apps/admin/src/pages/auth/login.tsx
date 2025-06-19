@@ -2,25 +2,26 @@ import Head from 'next/head';
 import { LoginComp } from '@sections/auth';
 import { LoginProvider } from '../../contexts/auth';
 import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 import { useAuthContext } from 'src/auth/useAuthContext';
 import EmailLogin from './email-login';
+import { NextRouter } from 'next/router';
 
 export default function LoginPage() {
-  const {push} = useRouter()
+  const { push } = useRouter() as NextRouter as NextRouter;
   const { isAuthenticated } = useAuthContext();
   useEffect(() => {
     if (isAuthenticated) {
       push('/dashboard');
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated]);
   return (
-      <LoginProvider>
-        <Head>
-          <title>Giga Blocks</title>
-        </Head>
+    <LoginProvider>
+      <Head>
+        <title>Giga Blocks</title>
+      </Head>
 
-        <EmailLogin />
-      </LoginProvider>
+      <EmailLogin />
+    </LoginProvider>
   );
 }

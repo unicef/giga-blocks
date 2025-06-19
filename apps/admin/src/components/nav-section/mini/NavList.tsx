@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 // next
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 // hooks
 import useActiveLink from '../../../hooks/useActiveLink';
 //
 import { NavListProps } from '../types';
 import { StyledPopover } from './styles';
 import NavItem from './NavItem';
+import { NextRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
@@ -19,7 +20,7 @@ type NavListRootProps = {
 export default function NavList({ data, depth, hasChild }: NavListRootProps) {
   const navRef = useRef(null);
 
-  const { pathname } = useRouter();
+  const { pathname } = useRouter() as NextRouter as NextRouter;
 
   const { active, isExternalLink } = useActiveLink(data.path);
 

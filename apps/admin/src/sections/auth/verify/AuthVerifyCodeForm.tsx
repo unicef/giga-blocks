@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 // next
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -13,6 +13,7 @@ import FormProvider, { RHFCodes } from '@components/hook-form';
 import { useSnackbar } from '@components/snackbar';
 
 import { useLoginContext } from '@contexts/auth';
+import { NextRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +28,7 @@ type FormValuesProps = {
 
 export default function AuthVerifyCodeForm() {
   const { handleOtpVerification } = useLoginContext();
-  const router = useRouter();
+  const router = useRouter() as NextRouter;
   const { enqueueSnackbar } = useSnackbar();
 
   const VerifyCodeSchema = Yup.object().shape({

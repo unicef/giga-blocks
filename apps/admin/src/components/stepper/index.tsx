@@ -10,7 +10,7 @@ import Stepper from '@mui/material/Stepper';
 import { styled } from '@mui/material/styles';
 import fileUpload from '@utils/fileUpload';
 import { AxiosError } from 'axios';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import routes from '../../constants/api';
@@ -20,6 +20,7 @@ import api from '@utils/apiCall';
 import { CircularProgress, LinearProgress } from '@mui/material';
 import CsvDetailsTable from './csvDetailsTable';
 import { UploadCsv } from './steps/uploadCsv';
+import { NextRouter } from 'next/router';
 
 const steps = ['Upload', 'Preview File', 'Validate File', 'Mint'];
 
@@ -67,7 +68,7 @@ export default function HorizontalLinearStepper({
   });
 
   const { enqueueSnackbar } = useSnackbar();
-  const { push } = useRouter();
+  const { push } = useRouter() as NextRouter as NextRouter;
 
   const baseUrl = routes.BASE_URL;
   const API_URL = `${baseUrl}${routes.SCHOOLS.UPLOAD}`;
