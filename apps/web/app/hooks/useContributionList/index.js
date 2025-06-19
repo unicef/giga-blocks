@@ -1,14 +1,14 @@
 'use client';
-import { CONTRIBUTE } from '../../constants/api';
+import { ENDPOINTS } from '../../constants/api';
 import { useQuery } from '@tanstack/react-query';
-import {apiGuest} from '../../utils/api'
+import { apiGuest } from '../../utils/api';
 
 export const useContributeList = () => {
   return useQuery(
     ['get-contribution-data'],
     async () => {
       try {
-        const res = await apiGuest.get(`${CONTRIBUTE.GET}`);
+        const res = await apiGuest.get(`${ENDPOINTS.CONTRIBUTE.GET}`);
         return res.data;
       } catch (err) {
         console.log('Error fetching data:', err);
@@ -23,20 +23,30 @@ export const useContributeList = () => {
 
 export const useContributeDetails = (id) => {
   return useQuery(['get-contribute-details', id], async () => {
-    const { data } = await apiGuest.get(`${CONTRIBUTE.GET}?schoolId=${id}`);
+    const { data } = await apiGuest.get(
+      `${ENDPOINTS.CONTRIBUTE.GET}?schoolId=${id}`
+    );
     return data;
   });
 };
 
-export const useContributionList = (page, perPage, contributorId, order, school) => {
+export const useContributionList = (
+  page,
+  perPage,
+  contributorId,
+  order,
+  school
+) => {
   return useQuery(
     ['get-contribution-list', page, perPage, contributorId, order, school],
     async () => {
       try {
         const res = await apiGuest.get(
           `${
-            CONTRIBUTE.GET
-          }?page=${page}&perPage=${perPage}&contributorId=${contributorId}${order ? `&order=${order}`: ``}${school ? `&school=${school}`: ``}`
+            ENDPOINTS.CONTRIBUTE.GET
+          }?page=${page}&perPage=${perPage}&contributorId=${contributorId}${
+            order ? `&order=${order}` : ``
+          }${school ? `&school=${school}` : ``}`
         );
         return res.data;
       } catch (err) {
@@ -56,7 +66,7 @@ export const useContributionCount = (contributorId) => {
     async () => {
       try {
         const res = await apiGuest.get(
-          `${CONTRIBUTE.GET}?contributorId=${contributorId}`
+          `${ENDPOINTS.CONTRIBUTE.GET}?contributorId=${contributorId}`
         );
         return res.data;
       } catch (err) {
