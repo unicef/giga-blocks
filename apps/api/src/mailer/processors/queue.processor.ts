@@ -50,7 +50,7 @@ import {
 } from 'src/utils/ethers/transactionFunctions';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import { SchoolData } from '../types/mintdata.types';
-import { MintStatus } from '@prisma/application';
+import { ImageGenerationStatus, MintStatus } from '@prisma/application';
 import { jobOptions } from '../config/bullOptions';
 import { ContributeDataService } from 'src/contribute/contribute.service';
 import { SchoolService } from 'src/schools/schools.service';
@@ -592,6 +592,10 @@ export class ImageProcessor {
     this._logger.error(`Failed image ${job.id} of type ${job.name}: ${error.message}`, error.stack);
     if (job.attemptsMade === job.opts.attempts) {
       try {
+        await this._prismaService.school.update({
+          where: { giga_school_id: job.data.id },
+          data: { imageGeneration: ImageGenerationStatus.FAILED },
+        });
         return this._mailerService.sendMail({
           to: this._configService.get('DEBUG_EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
@@ -613,6 +617,10 @@ export class ImageProcessor {
     this._logger.log(`Updating image of school: ${id}`);
 
     try {
+      await this._prismaService.school.update({
+        where: { giga_school_id: id },
+        data: { imageGeneration: ImageGenerationStatus.IN_PROGRESS },
+      });
       const scriptData = await getScriptData(
         this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
         this._configService.get<string>('GIGA_IMAGE_CONTENT_ADDRESS'),
@@ -636,7 +644,11 @@ export class ImageProcessor {
         );
         await this._prismaService.school.update({
           where: { giga_school_id: id },
-          data: { imageHash: uploadResult, imageUpdated: true },
+          data: {
+            imageHash: uploadResult,
+            imageUpdated: true,
+            imageGeneration: ImageGenerationStatus.SUCESS,
+          },
         });
       } else {
         throw new Error('Failed to decode base64 image.');
@@ -730,8 +742,31 @@ export class BulkImageProcessor {
     this._logger.debug(`Completed image ${job.id} of type ${job.name}`);
   }
 
-  @OnQueueFailed({ name: UPDATE_BULK_IMAGE || SET_BULK_IMAGE_PROCESS })
+  @OnQueueFailed({ name: UPDATE_BULK_IMAGE })
   public async onImageFail(job: Job<any>, error: any) {
+    this._logger.error(`Failed image ${job.id} of type ${job.name}: ${error.message}`, error.stack);
+    if (job.attemptsMade === job.opts.attempts) {
+      try {
+        await this._prismaService.school.updateMany({
+          where: { giga_school_id: job.data.id },
+          data: { imageGeneration: ImageGenerationStatus.FAILED },
+        });
+        return this._mailerService.sendMail({
+          to: this._configService.get('DEBUG_EMAIL_ADDRESS'),
+          from: this._configService.get('EMAIL_ADDRESS'),
+          subject: `Failed to update NFT image. NFT minted successfully. error:, jobId: ${job.id} job Name: ${job.name}`,
+          template: './error',
+          context: {
+            error: error.message,
+          },
+        });
+      } catch {
+        this._logger.error('Failed to send confirmation email to admin');
+      }
+    }
+  }
+  @OnQueueFailed({ name: SET_BULK_IMAGE_PROCESS })
+  public async onImageUpdateFail(job: Job<any>, error: any) {
     this._logger.error(`Failed image ${job.id} of type ${job.name}: ${error.message}`, error.stack);
     if (job.attemptsMade === job.opts.attempts) {
       try {
@@ -757,6 +792,10 @@ export class BulkImageProcessor {
     this._logger.log(`Updating image of school: ${id}`);
 
     try {
+      await this._prismaService.school.update({
+        where: { giga_school_id: id },
+        data: { imageGeneration: ImageGenerationStatus.IN_PROGRESS },
+      });
       const scriptData = await getScriptData(
         this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
         this._configService.get<string>('GIGA_IMAGE_CONTENT_ADDRESS'),
@@ -774,7 +813,7 @@ export class BulkImageProcessor {
         const uploadResult = await uploadFile(decodedImage.data);
         await this._prismaService.school.update({
           where: { giga_school_id: id },
-          data: { imageHash: uploadResult },
+          data: { imageHash: uploadResult, imageGeneration: ImageGenerationStatus.SUCESS },
         });
       } else {
         throw new Error('Failed to decode base64 image.');

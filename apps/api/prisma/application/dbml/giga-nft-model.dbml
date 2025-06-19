@@ -102,6 +102,7 @@ Table giga_school {
   schoolReserved Boolean [not null, default: false]
   schoolClaimed Boolean [not null, default: false]
   imageUpdated Boolean [not null, default: false]
+  imageGeneration ImageGenerationStatus [not null, default: 'NOT_STARTED']
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   deletedAt DateTime
@@ -374,6 +375,13 @@ Enum ContributorNameType {
   ENS
   WALLET
   NONE
+}
+
+Enum ImageGenerationStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  FAILED
+  SUCESS
 }
 
 Ref: Auth.id > giga_users.id

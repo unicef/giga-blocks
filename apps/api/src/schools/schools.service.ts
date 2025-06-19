@@ -391,6 +391,7 @@ export class SchoolService {
       'Connectivity Type (Govt)': mapsGigaData?.connectivity_type_govt,
       'Download Speed Benchmark': mapsGigaData?.download_speed_benchmark,
       'Electricity Availability': mapsGigaData?.electricity_availability,
+      'Water Availability': mapsGigaData?.water_availability,
       'Contracted Download Speed (Mbps)': mapsGigaData?.download_speed_benchmark,
       'School established in (year)': mapsGigaData?.school_established_year,
       'Connectivity Data Source': mapsGigaData?.connectivity_RT_datasource,
@@ -548,8 +549,7 @@ export class SchoolService {
     };
   }
 
-  
- async getGigaMetrics() {
+  async getGigaMetrics() {
     const result = await this.prisma.school.groupBy({
       by: ['minted'],
       _count: { minted: true },
