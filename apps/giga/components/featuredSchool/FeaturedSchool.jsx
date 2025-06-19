@@ -9,6 +9,7 @@ import SchoolCard from '../schoolCard/SchoolCard';
 import CardSkeleton from '../../components/cardSkeleton/CardSkeleton';
 import country from '../../app/data/country.json';
 import { useRouter } from 'next/navigation';
+import FeaturedEmptySchool from './FeaturedEmptySchool';
 
 export default function FeaturedSchools() {
   const router = useRouter();
@@ -30,51 +31,67 @@ export default function FeaturedSchools() {
     'Unknown Country';
 
   return (
-    <section className="featured-schools">
-      <div className="featured-schools__container">
-        <div className="featured-schools__header">
-          <h2 className="featured-schools__title">{countryName} Schools</h2>
-          <p className="featured-schools__description">{data?.details}</p>
-        </div>
+    <>
+      {data?.message ? (
+        <FeaturedEmptySchool />
+      ) : (
+        <section className="featured-schools">
+          <div className="featured-schools__container">
+            <div className="featured-schools__header">
+              <h2 className="featured-schools__title">{countryName} Schools</h2>
+              <p className="featured-schools__description">{data?.details}</p>
+            </div>
 
-        <div className="featured-schools__grid">
-          {isLoading ? (
-            <CardSkeleton count={4} />
-          ) : (
-            data?.school
-              ?.slice(0, 4)
-              ?.map((school) => (
-                <SchoolCard
-                  key={school.id}
-                  id={school.id}
-                  schoolName={school.name}
-                  location={school.region_name}
-                  minted={'MINTED'}
-                  hasImage={school.hasImage}
-                  imageHash={school.imageHash}
-                  fontColor={school?.theme?.colorScheme?.fontColor}
-                  bgColor={school?.theme?.colorScheme?.bgColor}
-                />
-              ))
-          )}
-        </div>
+            {isLoading ? (
+              <div className="featured-schools__grid">
+                <CardSkeleton count={4} />
+              </div>
+            ) : data?.school && data.school.length > 0 ? (
+              <div className="featured-schools__grid">
+                {data.school.slice(0, 4).map((school) => (
+                  <SchoolCard
+                    key={school.id}
+                    id={school.id}
+                    schoolName={school.name}
+                    location={school.region_name}
+                    minted={'MINTED'}
+                    hasImage={school.hasImage}
+                    imageHash={school.imageHash}
+                    fontColor={school?.theme?.colorScheme?.fontColor}
+                    bgColor={school?.theme?.colorScheme?.bgColor}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="featured-schools__no-data">
+                <p style={{ fontSize: '1.5rem', fontWeight: '400' }}>
+                  There aren't any schools activated from this region yet.
+                </p>
+                <p style={{ fontSize: '1.5rem', fontWeight: '400' }}>
+                  {' '}
+                  Be the initiator, Activate a school.
+                </p>
+              </div>
+            )}
 
-        <div className="featured-schools__footer">
-          {!isLoading && (
-            <p className="featured-schools__stats">
-              {data?.remainingSchools || ''} schools still remain not activated
-              in {countryName}
-            </p>
-          )}
-          <Button
-            onClick={handleClick}
-            className="featured-schools__cta-button"
-            renderIcon={ArrowRight}
-          >
-            Activate a school
-          </Button>
-        </div>
-      </div>
-    </section>
+            <div className="featured-schools__footer">
+              {!isLoading && (
+                <p className="featured-schools__stats">
+                  {data?.remainingSchools || ''} schools still remain not
+                  activated in {countryName}
+                </p>
+              )}
+              <Button
+                onClick={handleClick}
+                className="featured-schools__cta-button"
+                renderIcon={ArrowRight}
+              >
+                Activate a school
+              </Button>
+            </div>
+          </div>
+        </section>
+      )}
+    </>
   );
 }

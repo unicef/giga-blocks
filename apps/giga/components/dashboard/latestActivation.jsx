@@ -7,8 +7,7 @@ import { ArrowRight } from '@carbon/icons-react';
 import { useRouter } from 'next/navigation';
 
 export default function LatestActivatedSchool({ decodedShooldata }) {
-  const router = useRouter(); // useRouter remains local as it's a hook, not data
-
+  const router = useRouter(); 
   const handleClick = () => {
     router.push('/schools/list?minted=NOTMINTED');
   };
@@ -47,9 +46,9 @@ export default function LatestActivatedSchool({ decodedShooldata }) {
           </span>
         </div>
 
-        {/* <div className="dashboard-button">
+        <div className="dashboard-button">
           <Button renderIcon={ArrowRight}>View Details</Button>
-        </div> */}
+        </div>
       </section>
     </div>
   );

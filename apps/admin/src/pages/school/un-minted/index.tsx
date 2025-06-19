@@ -207,6 +207,7 @@ const VerifiedSchool = () => {
                       setSelectedValues={setSelectedValues}
                       rowData={row}
                       checkbox={true}
+                      clickable={true}
                     />
                   ))}
                 <TableNoData isNotFound={tableData.length === 0} isFetching={isFetching} />

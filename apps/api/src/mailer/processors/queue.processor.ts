@@ -227,7 +227,7 @@ export class QueueProcessor {
   public async processSucessTxn(job: Job<{ transactionDetails: TransactionDetails }>) {
     const transactionDetails = job.data.transactionDetails;
     this._logger.log(
-      `Processing successful transaction for hash: ${transactionDetails?.transactionHash}`,
+      `Processing successful transaction for hash: ${transactionDetails?.transactionHash},${transactionDetails?.status}`,
     );
     const PROCESS_DELAY_MS = 15000;
 
@@ -274,7 +274,10 @@ export class QueueProcessor {
         });
       }
 
-      this._prismaService.schoolActivationDetails.update({
+      this._logger.log(
+        `Successfully processed transaction for hash: ${transactionDetails.transactionHash}`,
+      );
+      const tx = await this._prismaService.schoolActivationDetails.update({
         where: {
           transactionHash: transactionDetails.transactionHash,
         },

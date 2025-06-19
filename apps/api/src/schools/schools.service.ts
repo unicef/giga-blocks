@@ -830,7 +830,7 @@ export class SchoolService {
         transactionHash: data.transactionHash,
       },
     });
-    this.queueService.activatePaidSchool(data);
+    // this.queueService.activatePaidSchool(data);
     return updatedSchool;
   }
 

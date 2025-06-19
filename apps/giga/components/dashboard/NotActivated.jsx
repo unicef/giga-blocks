@@ -1,4 +1,3 @@
-// components/NotActivatedContent/NotActivatedContent.jsx
 'use client';
 
 import Image from 'next/image';

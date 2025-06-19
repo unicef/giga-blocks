@@ -191,7 +191,7 @@ export const useSchoolInfiniteGet = (
         }
         return undefined;
       },
-      keepPreviousData: true,
+      keepPreviousData: false,
       cacheTime: 0,
       staleTime: 60 * 1000, // 1 minute
     }
