@@ -53,6 +53,7 @@ export default function HorizontalLinearStepper({
   } = useUploadContext();
 
   const [hasErrors, setHasErrors] = useState(false);
+  const [proceedToMinting, setProceedToMinting] = useState(false);
   const [showMintingProgressBar, setShowMintingProgressBar] = useState(false);
   const [viewDetails, setViewDetails] = useState(false);
   const [csvDetails, setCsvDetails] = useState({
@@ -97,7 +98,7 @@ export default function HorizontalLinearStepper({
 
   useEffect(() => {
     //send file to validate if activate step is 1
-    if (activeStep === 2 && files.length > 0) {
+    if (activeStep === 2 && files.length > 0 && !isFileValidated) {
       const formData = new FormData();
       files.forEach((file) => {
         formData.append(`files`, file);
@@ -294,11 +295,19 @@ export default function HorizontalLinearStepper({
   };
 
   const handleReupload = () => {
+    setIsFileValidated(false);
     setActiveStep(0);
     setDisableDropZone(false);
     setSelectedSheetName('');
     setFile([]);
     setSelectedFiles([]);
+  };
+
+  const handleBackToDashboard = () => {
+    setIsFileValidated(false);
+    setShowStepper(false);
+    setSelectedFiles([]);
+    push('/dashboard');
   };
 
   return (
@@ -332,6 +341,7 @@ export default function HorizontalLinearStepper({
             setHasErrors={setHasErrors}
             validationResult={validationResult}
             isFileValidated={isFileValidated}
+            setProceedToMinting={setProceedToMinting}
           />
           <Box sx={{ display: 'flex', flexDirection: 'row', py: 3, px: 1 }}>
             <Button
@@ -361,7 +371,7 @@ export default function HorizontalLinearStepper({
                     File Looks all good!
                   </Alert>
                 )} */}
-                <Button variant="contained" onClick={handleNext}>
+                <Button disabled={!proceedToMinting} variant="contained" onClick={handleNext}>
                   Next
                 </Button>
               </Box>
@@ -454,11 +464,7 @@ export default function HorizontalLinearStepper({
                     variant="outlined"
                     color="inherit"
                     disabled={mintDetails?.mintedCount !== mintDetails.total}
-                    onClick={() => {
-                      setShowStepper(false);
-                      setSelectedFiles([]);
-                      push('/dashboard');
-                    }}
+                    onClick={handleBackToDashboard}
                     sx={{ mr: 1 }}
                   >
                     Back
@@ -508,11 +514,7 @@ export default function HorizontalLinearStepper({
                     variant="outlined"
                     color="inherit"
                     disabled={mintDetails?.mintedCount !== mintDetails.total}
-                    onClick={() => {
-                      setShowStepper(false);
-                      setSelectedFiles([]);
-                      push('/dashboard');
-                    }}
+                    onClick={handleBackToDashboard}
                     sx={{ mr: 1 }}
                   >
                     Back
@@ -547,13 +549,19 @@ export default function HorizontalLinearStepper({
                     >
                       Back
                     </Button>
-                    <Button
-                      disabled={rows.length - 1 === validationResult.length || files.length === 0}
-                      variant="contained"
-                      onClick={handleUpload}
-                    >
-                      Finish
-                    </Button>
+                    <Box>
+                      <Button
+                        variant="outlined"
+                        color="inherit"
+                        onClick={handleReupload}
+                        sx={{ mr: 1 }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button variant="contained" onClick={handleUpload}>
+                        Finish
+                      </Button>
+                    </Box>
                   </Box>
                 </>
               )}

@@ -25,7 +25,14 @@ function CsvDetailsTable({ schools }: { schools: any[] }) {
           <TableHead>
             <TableRow>
               {heading?.map((column: string, index: number) => (
-                <TableCell key={index} sx={{ whiteSpace: 'nowrap' }}>
+                <TableCell
+                  key={index}
+                  sx={{
+                    position: 'sticky',
+                    top: 0,
+                    whiteSpace: 'nowrap',
+                  }}
+                >
                   {column}
                 </TableCell>
               ))}
