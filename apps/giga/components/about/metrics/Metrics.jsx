@@ -66,7 +66,7 @@ export default function Metrics() {
       icon: <UserMultiple size={24} />,
       iconColor: '#4589FF', // Blue
       iconBg: '#EDF5FF', // Light blue
-      value: metricsData?.contributorCount || 0,
+      value: (metricsData?.contributorCount)?.toLocaleString() || 0,
       label: '',
       subtitle: 'Giga Contributors',
       description:
