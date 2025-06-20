@@ -1,11 +1,17 @@
 'use client';
 import Scrollbar from '@components/scrollbar';
 import { TableHeadUsers, TableNoData, TablePaginationCustom, useTable } from '@components/table';
-import {  useSchoolGetImageUpdateList, useUpdateSchoolImage } from '@hooks/school/useSchool';
+import { useSchoolGetImageUpdateList, useUpdateSchoolImage } from '@hooks/school/useSchool';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
 import { Button, Card, Divider, TableContainer, Table, TableBody } from '@mui/material';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
-import {  useEffect, useState } from 'react';
+import { useRouter } from 'next/compat/router';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { JsonRpcProvider, Signer } from 'ethers';
+import { mintSignature } from '@components/web3/utils/wallet';
+import { useWeb3React } from '@web3-react/core';
+import useDebounce from '@hooks/useDebounce';
+import { NextRouter } from 'next/router';
 import { useSnackbar } from '@components/snackbar';
 
 const PendingSchool = () => {
@@ -17,10 +23,10 @@ const PendingSchool = () => {
     { id: 'imageHash', label: 'Image Hash', align: 'left' },
   ];
 
+  const { push, query } = useRouter() as NextRouter;
 
   const [school, setSchool] = useState<any>();
-  const {enqueueSnackbar} = useSnackbar();
-
+  const { enqueueSnackbar } = useSnackbar();
 
   const {
     dense,
@@ -43,12 +49,12 @@ const PendingSchool = () => {
   });
   const updateImageHash = useUpdateSchoolImage({
     onSuccess: () => {
-    enqueueSnackbar('Data added in the queue sucessfully!', { variant: 'success' });
-    refetch();
-  },
-  onError: () => {
-    enqueueSnackbar('Failed to add data in the queue', { variant: 'error' });
-  },
+      enqueueSnackbar('Data added in the queue sucessfully!', { variant: 'success' });
+      refetch();
+    },
+    onError: () => {
+      enqueueSnackbar('Failed to add data in the queue', { variant: 'error' });
+    },
   });
 
   let filteredData: any = [];
@@ -69,18 +75,24 @@ const PendingSchool = () => {
     setTableData(filteredData);
   }, [data, isLoading]);
 
-  const onClickUpdateImageHash = () =>{
+  const onClickUpdateImageHash = () => {
     updateImageHash.mutate();
-  }
+  };
+
+  const handleSchoolChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setSchool(e.target.value);
+  };
 
   return (
     <DashboardLayout>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <span style={{ fontSize: '1.5em', fontWeight: '600' }}>Schools To Be  Updated</span>
+        <span style={{ fontSize: '1.5em', fontWeight: '600' }}>Schools To Be Updated</span>
         <div style={{ display: 'flex', gap: '15px' }}>
-          <Button variant="contained" 
-          disabled={ isLoading || tableData.length === 0}
-          onClick={onClickUpdateImageHash}>
+          <Button
+            variant="contained"
+            disabled={isLoading || tableData.length === 0}
+            onClick={onClickUpdateImageHash}
+          >
             Update Image Hash
           </Button>
         </div>
@@ -120,7 +132,7 @@ const PendingSchool = () => {
         </TableContainer>
         <TablePaginationCustom
           count={data?.meta?.total || 0}
-          page={page ||0}
+          page={page || 0}
           setPage={setPage}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}

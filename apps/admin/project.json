@@ -29,7 +29,11 @@
         "development": {
           "outputPath": "apps/admin"
         },
-        "production": {}
+        "production": {
+          "env": {
+            "NODE_ENV": "production"
+          }
+        }
       }
     },
     "serve": {

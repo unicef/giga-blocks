@@ -1,5 +1,5 @@
 'use client';
-import { SCHOOLS, FEATURED } from '../../constants/api';
+import { ENDPOINTS } from '../../constants/api';
 import { useMutation, useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { apiGuest } from '../../utils/api';
 import countryList from '../../data/country.json';
@@ -74,7 +74,7 @@ export const useSchoolGet = (
 
 export const useSchoolDetails = (id) => {
   return useQuery(['get-school-details', id], async () => {
-    const { data } = await apiGuest.get(`${SCHOOLS.GET}/${id}`);
+    const { data } = await apiGuest.get(`${ENDPOINTS.SCHOOLS.GET}/${id}`);
     return data;
   });
 };
@@ -82,7 +82,7 @@ export const useSchoolDetails = (id) => {
 export const useSchoolActivate = () => {
   return useMutation({
     mutationFn: async (payload) => {
-      const { data } = await apiGuest.post(SCHOOLS.ACTIVATE, payload);
+      const { data } = await apiGuest.post(ENDPOINTS.SCHOOLS.ACTIVATE, payload);
       return data;
     },
   });
@@ -91,7 +91,7 @@ export const useSchoolActivate = () => {
 export const useClaimSchool = () => {
   return useMutation({
     mutationFn: async (payload) => {
-      const { data } = await apiGuest.post(SCHOOLS.CLAIM, payload);
+      const { data } = await apiGuest.post(ENDPOINTS.SCHOOLS.CLAIM, payload);
       return data;
     },
   });
@@ -99,14 +99,17 @@ export const useClaimSchool = () => {
 export const useSchoolPaidActivation = () => {
   return useMutation({
     mutationFn: async (payload) => {
-      const { data } = await apiGuest.post(SCHOOLS.PAIDACTIVATION, payload);
+      const { data } = await apiGuest.post(
+        ENDPOINTS.SCHOOLS.PAIDACTIVATION,
+        payload
+      );
       return data;
     },
   });
 };
 export const useFeaturedSchool = () => {
   return useQuery(['get-featured-schools'], async () => {
-    const { data } = await apiGuest.get(`${FEATURED.GET}`);
+    const { data } = await apiGuest.get(`${ENDPOINTS.FEATURED.GET}`);
     return data;
   });
 };
@@ -202,7 +205,7 @@ export const useCountryList = () => {
   return useQuery(
     ['country-list'],
     async () => {
-      const res = await apiGuest.get(`${SCHOOLS.COUNTRIES}`);
+      const res = await apiGuest.get(`${ENDPOINTS.SCHOOLS.COUNTRIES}`);
       const mapped = res.data.map((data) => {
         const found = countryList.find((c) => c.code === data?.country_code);
         return found

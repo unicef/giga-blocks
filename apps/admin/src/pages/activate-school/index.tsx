@@ -45,7 +45,7 @@ const ActivateSchool = () => {
     message: '',
   });
   const tableData = Array.isArray(data) ? data : [];
-  const BASE_URL = process.env.NEXT_PUBLIC_WEB_NAME;
+  const BASE_URL = process.env.NEXT_PUBLIC_WEB_NAME || '';
 
   const handleStatusToggle = (school: any) => {
     const newStatus = school.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
@@ -61,8 +61,11 @@ const ActivateSchool = () => {
           });
           // refetch();
         },
-        onError: (err:any) => {
-          setSnackbar({ open: true, message: `${err?.response?.data?.message || 'Action failed! Please try again.'}  `});
+        onError: (err: any) => {
+          setSnackbar({
+            open: true,
+            message: `${err?.response?.data?.message || 'Action failed! Please try again.'}  `,
+          });
         },
       }
     );

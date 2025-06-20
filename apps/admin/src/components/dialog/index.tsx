@@ -7,7 +7,8 @@ import {
   DialogContent,
   DialogContentText,
 } from '@mui/material';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
+import { NextRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 type SelectedCountryType = {
@@ -17,7 +18,7 @@ type SelectedCountryType = {
 };
 
 export default function AlertDialog({ selectedCountry, open, handleClose }: SelectedCountryType) {
-  const { push } = useRouter();
+  const { push } = useRouter() as NextRouter as NextRouter;
 
   const handleSelectGenerators = () => {
     push({

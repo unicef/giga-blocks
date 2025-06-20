@@ -7,12 +7,13 @@ import { Stack, Alert } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // auth
 // components
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 import { useAuthContext } from 'src/auth/useAuthContext';
 import { useSnackbar } from '@components/snackbar';
 import { APP_NAME } from '../../../config-global';
 import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import { useLoginContext } from '../../../contexts/auth';
+import { NextRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +24,7 @@ type LoginFormValues = {
 export default function AuthWeb2LoginForm() {
   const { isDebug } = useAuthContext();
   const { handleOtpRequest } = useLoginContext();
-  const { push } = useRouter();
+  const { push } = useRouter() as NextRouter;
   const { enqueueSnackbar } = useSnackbar();
 
   const LoginSchema = Yup.object().shape({
@@ -79,7 +80,13 @@ export default function AuthWeb2LoginForm() {
         <RHFTextField name="email" label="Enter registered email *" />
       </Stack>
 
-      <LoadingButton fullWidth style={{background: '#0050e6'}} size="large" type="submit" variant="contained">
+      <LoadingButton
+        fullWidth
+        style={{ background: '#0050e6' }}
+        size="large"
+        type="submit"
+        variant="contained"
+      >
         Login {APP_NAME}
       </LoadingButton>
     </FormProvider>

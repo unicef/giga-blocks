@@ -1,5 +1,5 @@
 import { Box, Drawer, Stack } from '@mui/material';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 import { useEffect } from 'react';
 import Logo from '../../../components/logo';
 import { NavSectionVertical } from '../../../components/nav-section';
@@ -9,6 +9,7 @@ import useResponsive from '../../../hooks/useResponsive';
 import navConfig from './config-navigation';
 import NavAccount from './NavAccount';
 import NavToggleButton from './NavToggleButton';
+import { NextRouter } from 'next/router';
 
 type Props = {
   openNav: boolean;
@@ -16,7 +17,7 @@ type Props = {
 };
 
 export default function NavVertical({ openNav, onCloseNav }: Props) {
-  const { pathname } = useRouter();
+  const { pathname } = useRouter() as NextRouter as NextRouter;
 
   const isDesktop = useResponsive('up', 'lg');
 
