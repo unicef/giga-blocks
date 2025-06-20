@@ -522,9 +522,13 @@ export default function SchoolSearch({ linkActivation }) {
           </div>
         </div>
 
-        <div className="search-page__results-count">
-          {totalCount} Schools found
-        </div>
+        {!isLoading ? (
+          <div className="search-page__results-count">
+            {totalCount?.toLocaleString()} Schools found
+          </div>
+        ) : (
+          <></>
+        )}
 
         <div className="search-page__grid">
           {/* Show skeleton when initial loading or filters are changing */}
