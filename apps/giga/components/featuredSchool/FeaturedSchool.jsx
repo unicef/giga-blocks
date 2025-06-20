@@ -77,7 +77,7 @@ export default function FeaturedSchools() {
             <div className="featured-schools__footer">
               {!isLoading && (
                 <p className="featured-schools__stats">
-                  {data?.remainingSchools || ''} schools still remain not
+                  {(data?.remainingSchools)?.toLocaleString() || ''} schools still remain not
                   activated in {countryName}
                 </p>
               )}

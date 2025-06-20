@@ -27,7 +27,7 @@ export default function BlockMetrics() {
       icon: <CheckmarkOutline size={24} />,
       iconColor: '#8B17CF', // Purple
       iconBg: '#F7EDFD', // Light purple
-      value: metricsData?.minted || 0,
+      value: (metricsData?.minted)?.toLocaleString() || 0,
       label: '',
       subtitle: 'Schools Activated',
       description:
@@ -38,7 +38,7 @@ export default function BlockMetrics() {
       icon: <Location size={24} />,
       iconColor: '#CF17CF', // Pink
       iconBg: '#FDEDFD', // Light pink
-      value: metricsData?.notMinted || 0,
+      value: (metricsData?.notMinted)?.toLocaleString() || 0,
       label: '',
       subtitle: 'Known Schools Inactivated',
       description:
@@ -49,7 +49,7 @@ export default function BlockMetrics() {
       icon: <UserMultiple size={24} />,
       iconColor: '#0F62FE', // Blue
       iconBg: '#EBF2FF', // Light blue
-      value: metricsData?.contributorCount || 0,
+      value:( metricsData?.contributorCount)?.toLocaleString() || 0,
       label: '',
       subtitle: 'Giga Contributors',
       description:
