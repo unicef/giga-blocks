@@ -167,7 +167,9 @@ export const useSchoolInfiniteGet = (
       if (computers && computers > 0) params.set('computers', computers);
       if (download && download > 0) params.set('download', download);
 
-      const res = await apiGuest.get(`${SCHOOLS.GET}?${params.toString()}`);
+      const res = await apiGuest.get(
+        `${ENDPOINTS.SCHOOLS.GET}?${params.toString()}`
+      );
 
       const data = res?.data || [];
 
