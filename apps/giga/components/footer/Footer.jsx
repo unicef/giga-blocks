@@ -17,17 +17,20 @@ export default function Footer() {
           <h3 className="footer__heading">Giga products</h3>
           <ul className="footer__list">
             <li className="footer__item">
-              <Link href="/products/maps" className="footer__link">
+              <Link
+                href="https://maps.giga.global/map"
+                className="footer__link"
+              >
                 Giga Maps
               </Link>
             </li>
             <li className="footer__item">
-              <Link href="/products/isp" className="footer__link">
+              <Link href="https://giga.global/isps/" className="footer__link">
                 Giga ISP
               </Link>
             </li>
             <li className="footer__item">
-              <Link href="/products/meter" className="footer__link">
+              <Link href="https://meter.giga.global/" className="footer__link">
                 Giga Meter
               </Link>
             </li>
@@ -38,17 +41,20 @@ export default function Footer() {
           <h3 className="footer__heading">Organization</h3>
           <ul className="footer__list">
             <li className="footer__item">
-              <Link href="/organization/giga" className="footer__link">
+              <Link href="https://giga.global/" className="footer__link">
                 Giga
               </Link>
             </li>
             <li className="footer__item">
-              <Link href="/organization/unicef" className="footer__link">
+              <Link href="https://www.unicef.org/" className="footer__link">
                 UNICEF
               </Link>
             </li>
             <li className="footer__item">
-              <Link href="/organization/itu" className="footer__link">
+              <Link
+                href="https://www.itu.int/en/Pages/default.aspx"
+                className="footer__link"
+              >
                 ITU
               </Link>
             </li>
@@ -59,17 +65,26 @@ export default function Footer() {
           <h3 className="footer__heading">Resources</h3>
           <ul className="footer__list">
             <li className="footer__item">
-              <Link href="/resources/data" className="footer__link">
+              <Link
+                href="https://maps.giga.global/docs/explore-api"
+                className="footer__link"
+              >
                 Data downloads &API
               </Link>
             </li>
             <li className="footer__item">
-              <Link href="/resources/blog" className="footer__link">
+              <Link
+                href="https://giga.global/stories/"
+                className="footer__link"
+              >
                 Giga Blog
               </Link>
             </li>
             <li className="footer__item">
-              <Link href="/resources/contact" className="footer__link">
+              <Link
+                href="https://giga.global/contact-us/"
+                className="footer__link"
+              >
                 Get in touch
               </Link>
             </li>
