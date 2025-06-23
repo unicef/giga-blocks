@@ -76,6 +76,7 @@ export default function CsvFormatFile({
 
   const handleRemoveFile = (inputFile: File | string) => {
     setFiles([]);
+    setSelectedFiles([]);
     setDisableDropZone(false);
     setProgress(0);
     setShowErrorMsg('');
@@ -84,6 +85,7 @@ export default function CsvFormatFile({
   const handleRemoveAllFiles = () => {
     setOpenConfirm(false);
     setFiles([]);
+    setSelectedFiles([]);
     setDisableDropZone(false);
     setProgress(0);
     setShowErrorMsg('');
