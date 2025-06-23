@@ -20,17 +20,29 @@ export default function Footer() {
               <Link
                 href="https://maps.giga.global/map"
                 className="footer__link"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 Giga Maps
               </Link>
             </li>
             <li className="footer__item">
-              <Link href="https://giga.global/isps/" className="footer__link">
+              <Link
+                href="https://giga.global/isps/"
+                className="footer__link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Giga ISP
               </Link>
             </li>
             <li className="footer__item">
-              <Link href="https://meter.giga.global/" className="footer__link">
+              <Link
+                href="https://meter.giga.global/"
+                className="footer__link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Giga Meter
               </Link>
             </li>
@@ -41,12 +53,22 @@ export default function Footer() {
           <h3 className="footer__heading">Organization</h3>
           <ul className="footer__list">
             <li className="footer__item">
-              <Link href="https://giga.global/" className="footer__link">
+              <Link
+                href="https://giga.global/"
+                className="footer__link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Giga
               </Link>
             </li>
             <li className="footer__item">
-              <Link href="https://www.unicef.org/" className="footer__link">
+              <Link
+                href="https://www.unicef.org/"
+                className="footer__link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 UNICEF
               </Link>
             </li>
@@ -54,6 +76,8 @@ export default function Footer() {
               <Link
                 href="https://www.itu.int/en/Pages/default.aspx"
                 className="footer__link"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 ITU
               </Link>
@@ -68,6 +92,8 @@ export default function Footer() {
               <Link
                 href="https://maps.giga.global/docs/explore-api"
                 className="footer__link"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 Data downloads &API
               </Link>
@@ -76,6 +102,8 @@ export default function Footer() {
               <Link
                 href="https://giga.global/stories/"
                 className="footer__link"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 Giga Blog
               </Link>
@@ -84,6 +112,8 @@ export default function Footer() {
               <Link
                 href="https://giga.global/contact-us/"
                 className="footer__link"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 Get in touch
               </Link>
