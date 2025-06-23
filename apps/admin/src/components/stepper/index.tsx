@@ -245,7 +245,6 @@ export default function HorizontalLinearStepper({
 
         // Filter out rows where first column (school_id) is in invalidIds
         const filteredRows = dataRows.filter((row) => !invalidIds.has(row[0]));
-
         // Re-attach header
         const filteredCSV = [header, ...filteredRows].map((row) => row.join(',')).join('\n');
 
@@ -253,7 +252,6 @@ export default function HorizontalLinearStepper({
         const filteredFile = new File([filteredCSV], file.name, {
           type: 'text/csv',
         });
-
         const formData = new FormData();
         formData.append('files', filteredFile);
         await fileUpload
@@ -524,11 +522,7 @@ export default function HorizontalLinearStepper({
             )
           ) : (
             <>
-              {loading ? (
-                <>
-                  <CircularProgress />
-                </>
-              ) : (
+              {!loading && (
                 <>
                   <SpreadSheetTable invalidate={validationResult} />
                   <Box

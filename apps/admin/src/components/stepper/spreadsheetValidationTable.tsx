@@ -169,6 +169,8 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
       } else {
         setIsFileValidated(false);
       }
+    } else if (isFileValidated) {
+      setProceedToMinting(true);
     }
   }, [validationResult]);
 
