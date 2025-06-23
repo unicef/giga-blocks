@@ -129,11 +129,5 @@ export const users = [
       name: ' User',
       roles: [ROLE.CONTRIBUTOR],
       email: 'user1@mailinator.com',
-    },
-    {
-      name: 'Javier',
-      roles: [ROLE.ADMIN],
-      email: 'jashen@unicef.org',
-      walletAddress: hexStringToBuffer('0x8A41F2e3F540C58cae4c24AE36E3cCf34d33fD46'), // add own wallet address
     }
   ];
