@@ -23,12 +23,14 @@ interface SpreadsheetValidationTableProps {
   setHasErrors: (hasErrors: boolean) => void;
   validationResult?: string[];
   isFileValidated?: boolean;
+  setProceedToMinting: (proceed: boolean) => void;
 }
 
 const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   setHasErrors,
   validationResult = [],
   isFileValidated = true,
+  setProceedToMinting,
 }) => {
   const {
     sheetNames,
@@ -149,13 +151,29 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   }, [rows]);
 
   const getRowHighlight = (schoolId: string, validationResult: string[]) => {
-    if (validationResult?.includes(schoolId))
+    if (validationResult?.includes(schoolId) || !isFileValidated)
       return { color: '#fdecea', icon: <ErrorIcon color="error" /> };
     else return { color: '#e6f4ea', icon: <SuccessIcon color="success" /> };
   };
   useEffect(() => {
     if (errors.length > 0) setIsFileValidated(false);
   }, [errors]);
+
+  useEffect(() => {
+    if (validationResult.length > 0) {
+      const hasError = convertedObject?.[tableHeaders[0]].every((schoolId: any) =>
+        validationResult?.includes(schoolId)
+      );
+      if (!hasError) {
+        setProceedToMinting(true);
+      } else {
+        setIsFileValidated(false);
+      }
+    } else if (isFileValidated) {
+      setProceedToMinting(true);
+    }
+  }, [validationResult]);
+
   return (
     <>
       {errors.length > 0 && (
@@ -183,7 +201,14 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
           <TableHead>
             <TableRow>
               {tableHeaders.map((header, index) => (
-                <TableCell key={index} sx={{ whiteSpace: 'nowrap' }}>
+                <TableCell
+                  key={index}
+                  sx={{
+                    position: 'sticky',
+                    top: 0,
+                    whiteSpace: 'nowrap',
+                  }}
+                >
                   {header}
                 </TableCell>
               ))}

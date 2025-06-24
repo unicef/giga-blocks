@@ -129,5 +129,5 @@ export const users = [
       name: ' User',
       roles: [ROLE.CONTRIBUTOR],
       email: 'user1@mailinator.com',
-    },
+    }
   ];
