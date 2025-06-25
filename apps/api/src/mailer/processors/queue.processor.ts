@@ -785,7 +785,7 @@ export class BulkImageProcessor {
     }
   }
 
-  @Process({ name: SET_BULK_IMAGE_PROCESS, concurrency: 4 })
+  @Process({ name: SET_BULK_IMAGE_PROCESS, concurrency: 6 })
   public async processImages(job: Job<any>) {
     this._logger.log(`Processing bulk image for job: ${job.id}`);
     const id = job.data.id;
