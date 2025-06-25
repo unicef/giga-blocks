@@ -13,7 +13,7 @@ import { useSchoolDetails } from '../../../hooks/useSchool';
 import { useSchoolThemeGet } from '../../../hooks/useTheme';
 import { useThemeStore } from '../../../store/themeStore';
 import { useGigaBuyNft } from '../../../hooks/useContract/giga-contracts';
-import { useAccount } from 'wagmi';
+import { useAccount, useBalance } from 'wagmi';
 import { setTimeout } from 'timers';
 import { getGasPrice } from '../../../utils/gasFee';
 
@@ -35,6 +35,7 @@ export default function ActivateSchool() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { address, isConnected } = useAccount();
   const [gasFeeWei, setGasFeeWei] = useState('0');
+  const {data:balance} = useBalance({address});
 
   const contractAddress = process.env.NEXT_PUBLIC_GIGA_NFT_CONTRACT_ADDRESS;
   const escrowAddress = process.env.NEXT_PUBLIC_GIGA_SCHOOL_ESCROW_ADDRESS;
@@ -177,6 +178,7 @@ export default function ActivateSchool() {
               fontColor={fontColor}
               schoolName={data?.name}
               gasFeeWei={gasFeeWei}
+              balance={balance}
             />
           )}
         </div>

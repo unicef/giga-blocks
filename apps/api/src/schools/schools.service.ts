@@ -329,7 +329,13 @@ export class SchoolService {
               },
             });
             return uploadBatch;
-          });
+          },
+          {
+            timeout: 15000, // Optional timeout for the transaction
+          }
+
+          
+        );
           this.queueService.csvMintdata(txn.id).catch(err => console.log(err));
           return res.code(200).send({ message: 'Batch processing started', csvUploadId: txn.id });
         } catch (err) {
