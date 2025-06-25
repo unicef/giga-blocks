@@ -2,7 +2,7 @@
 
 import { Content, Theme } from '@carbon/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ConnectKitProvider } from 'connectkit';
+import { ConnectKitProvider, useIsMounted } from 'connectkit';
 import { WagmiProvider } from 'wagmi';
 import Navbar from '../components/Navbar/Navbar';
 import config from '../wagmi.config';
@@ -12,7 +12,8 @@ import Footer from '../components/footer/Footer';
 
 export function Providers({ children }) {
   const queryClient = new QueryClient();
-  if (!config) return null;
+  const isMounted = useIsMounted();
+  if (!isMounted) return null;
   return (
     <div>
       <QueryProvider>
