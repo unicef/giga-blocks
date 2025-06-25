@@ -231,7 +231,10 @@ model SchoolActivationDetails{
   themeId                  String
   contributorData          Json
   schoolUpdated            Boolean     @default(false)
-  transactionStatus        Int ?     
+  transactionStatus        Int ?   
+  createdAt                DateTime    @default(now())
+  updatedAt                DateTime?    @updatedAt  
+  deletedAt                DateTime?
 
   @@map("giga_school_activation")
 

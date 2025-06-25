@@ -130,6 +130,9 @@ Table giga_school_activation {
   contributorData Json [not null]
   schoolUpdated Boolean [not null, default: false]
   transactionStatus Int
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime
+  deletedAt DateTime
 }
 
 Table giga_contributed_data {
