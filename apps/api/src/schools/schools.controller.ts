@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { SchoolService } from './schools.service';
 import { QosService } from './qos.service';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ListSchoolDto } from './dto/list-schools.dto';
 import { Public } from '../common/decorators/public.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
@@ -37,6 +37,8 @@ import {
 } from './dto/reserve-nft.dto';
 @Controller('schools')
 @ApiTags('School')
+@ApiBearerAuth('access-token')
+
 export class SchoolController {
   constructor(
     private readonly schoolService: SchoolService,
