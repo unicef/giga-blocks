@@ -17,8 +17,7 @@ import {
 import { useUploadContext } from '@contexts/uploadContext';
 import TableFormatter from '@utils/arrayFormatter';
 import { ErrorIcon, SuccessIcon } from 'src/theme/overrides/CustomIcons';
-import { hi } from 'date-fns/locale';
-
+import { validate as isUUID } from 'uuid';
 interface SpreadsheetValidationTableProps {
   setHasErrors: (hasErrors: boolean) => void;
   validationResult?: string[];
@@ -65,11 +64,17 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   const duplicateCheck = (data: any[]): any[] => {
     const uniqueRows = new Set<string>();
     const duplicateRows: any[] = [];
-
+    const headers = [];
     data.forEach((row: any) => {
       const rowString = JSON.stringify(row);
+      if (!isUUID(row[0])) {
+        headers.push(row[0]);
+      }
+
       if (uniqueRows.has(rowString)) {
         duplicateRows.push(`Duplicate row found: ${JSON.stringify(row)}`);
+      } else if (!isUUID(row[0]) && headers.length > 1) {
+        duplicateRows.push(`Duplicate header found: ${row}`);
       } else {
         uniqueRows.add(rowString);
       }
