@@ -7,6 +7,7 @@ import {
   MINT_QUEUE,
   ONCHAIN_DATA_QUEUE,
   SET_APPROVE_QUEUE,
+  SET_BULK_IMAGE_PROCESS,
   SET_CONTRIBUTE_QUEUE,
   SET_IMAGE_PROCESS,
   SET_MINT_NFT,
@@ -153,6 +154,18 @@ export class QueueService {
     try {
       jobOptions.delay = 1000;
       await this._imageQueue.add(SET_IMAGE_PROCESS, { id }, jobOptions);
+      return { message: 'queue added successfully', statusCode: 200 };
+    } catch (error) {
+      console.log('error', error);
+      this._logger.error(`Error queueing transaction to blockchain `);
+      throw error;
+    }
+  }
+
+  public async processBulkImage(id:string){
+    try {
+      jobOptions.delay = 1000;
+      await this._bulkImageQueue.add(SET_BULK_IMAGE_PROCESS, { id }, jobOptions);
       return { message: 'queue added successfully', statusCode: 200 };
     } catch (error) {
       console.log('error', error);

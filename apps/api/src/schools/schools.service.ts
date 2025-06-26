@@ -310,32 +310,31 @@ export class SchoolService {
           // to the uploadBatch and ignore the missing ones.
           // Still needs to inform the user about the missing schools
           //Need to add to the queue after the uploadBatch is created.
-          const txn = await this.prisma.$transaction(async prisma => {
-            const uploadBatch = await this.prisma.cSVUpload.create({
-              data: {
-                uploadedBy: user.id,
-                fileValue: school_to_be_updated,
-                fileName: filename,
-              },
-            });
-            await prisma.school.updateMany({
-              where: {
-                giga_school_id: {
-                  in: school_to_be_updated.map(school => school),
+          const txn = await this.prisma.$transaction(
+            async prisma => {
+              const uploadBatch = await this.prisma.cSVUpload.create({
+                data: {
+                  uploadedBy: user.id,
+                  fileValue: school_to_be_updated,
+                  fileName: filename,
                 },
-              },
-              data: {
-                uploadId: uploadBatch.id,
-              },
-            });
-            return uploadBatch;
-          },
-          {
-            timeout: 15000, // Optional timeout for the transaction
-          }
-
-          
-        );
+              });
+              await prisma.school.updateMany({
+                where: {
+                  giga_school_id: {
+                    in: school_to_be_updated.map(school => school),
+                  },
+                },
+                data: {
+                  uploadId: uploadBatch.id,
+                },
+              });
+              return uploadBatch;
+            },
+            {
+              timeout: 15000, // Optional timeout for the transaction
+            },
+          );
           this.queueService.csvMintdata(txn.id).catch(err => console.log(err));
           return res.code(200).send({ message: 'Batch processing started', csvUploadId: txn.id });
         } catch (err) {
@@ -981,5 +980,39 @@ export class SchoolService {
     }
 
     return schools;
+  }
+
+  async syncSchoolData(gigaSchoolId: string) {
+    const schools = await this.prisma.school.findUnique({
+      where: {
+        giga_school_id: gigaSchoolId,
+        themeId: null,
+      },
+    });
+
+    if (schools) {
+      const themes = await this.prisma.theme.findMany({});
+
+      const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+      await this.prisma.school.update({
+        where: {
+          giga_school_id: gigaSchoolId,
+        },
+        data: {
+          minted: MintStatus.MINTED,
+          themeId: randomTheme.id,
+        },
+      });
+    } else
+      await this.prisma.school.update({
+        where: {
+          giga_school_id: gigaSchoolId,
+        },
+        data: {
+          minted: MintStatus.MINTED,
+        },
+      });
+
+    return this.queueService.processBulkImage(gigaSchoolId);
   }
 }
