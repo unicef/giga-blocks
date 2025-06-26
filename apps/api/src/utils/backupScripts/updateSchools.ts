@@ -141,9 +141,9 @@ async function callApiWithSchoolId(schoolId: string): Promise<any | null> {
   try {
     console.log({token})
     const endPoint = `${API_ENDPOINT}/schools/syncSchool/${schoolId}`;
-    const response: AxiosResponse<any> = await axiosInstance.patch(endPoint!, {
+    const response: AxiosResponse<any> = await axiosInstance.patch(endPoint!,{}, {
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFhNGU5MGE2LWQwYjQtNDY4MC1iOTYyLTg3MTJlNzRkZWQyYyIsInN1YiI6eyJlbWFpbCI6ImdpZ2ExQG1haWxpbmF0b3IuY29tIiwibmFtZSI6IkdpZ2EgMSIsIndhbGxldEFkZHJlc3MiOiIweGFkODM2OTczOGFmMGU4MGQzYTA0OWU0YjA1MTg1M2ZjZjgxZTVkYTkiLCJyb2xlcyI6WyJBRE1JTiJdfSwiaWF0IjoxNzUwODQ1MTM2LCJleHAiOjE3NTA5MzUxMzZ9.5ooORRX5F0FdVjOzzN_MfNtALyKs7s3Nt-vigW1KjEk`,
+        Authorization: `Bearer ${token}`,
       },
     });
     console.log(`[API Call] Success for schoolId ${schoolId}. Response Status: ${response.status}`);

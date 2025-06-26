@@ -218,8 +218,8 @@ export class SchoolController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Patch('/syncSchool/:schoolId')
   @ApiOperation({summary:'Sync the database with contract in case of any missing data'})
-  async syncSchool(@Param('schoolId') gigaSchoolId:string){
-    return this.schoolService.syncSchoolData(gigaSchoolId);
+  async syncSchool(@Param('schoolId') schoolId:string){
+    return this.schoolService.syncSchoolData(schoolId);
   }
 
   

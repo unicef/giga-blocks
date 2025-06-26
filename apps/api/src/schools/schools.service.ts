@@ -982,10 +982,10 @@ export class SchoolService {
     return schools;
   }
 
-  async syncSchoolData(gigaSchoolId: string) {
+  async syncSchoolData(schoolId: string) {
     const schools = await this.prisma.school.findUnique({
       where: {
-        giga_school_id: gigaSchoolId,
+        giga_school_id: schoolId,
         themeId: null,
       },
     });
@@ -996,7 +996,7 @@ export class SchoolService {
       const randomTheme = themes[Math.floor(Math.random() * themes.length)];
       await this.prisma.school.update({
         where: {
-          giga_school_id: gigaSchoolId,
+          giga_school_id: schoolId,
         },
         data: {
           minted: MintStatus.MINTED,
@@ -1006,13 +1006,13 @@ export class SchoolService {
     } else
       await this.prisma.school.update({
         where: {
-          giga_school_id: gigaSchoolId,
+          giga_school_id: schoolId,
         },
         data: {
           minted: MintStatus.MINTED,
         },
       });
 
-    return this.queueService.processBulkImage(gigaSchoolId);
+    // return this.queueService.processBulkImage(schoolId);
   }
 }
