@@ -1,15 +1,12 @@
-import {
-  PATH_DASHBOARD,
-  PATH_USER,
-  PATH_SCHOOL,
-  PATH_CONTRIBUTE,
-  PATH_VALID,
-  PATH_ACTIVATE,
-  PATH_TRANSACTION,
-  PATH_INFORMATION,
-} from '../../../routes/paths';
 import SvgColor from '../../../components/svg-color';
-import { path } from 'd3';
+import {
+  PATH_ACTIVATE,
+  PATH_DASHBOARD,
+  PATH_INFORMATION,
+  PATH_SCHOOL,
+  PATH_TRANSACTION,
+  PATH_USER,
+} from '../../../routes/paths';
 
 const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH;
 const icon = (name: string) => (
@@ -48,10 +45,10 @@ const navConfig = [
             title: 'Activate School',
             path: PATH_SCHOOL.import,
           },
-          // {
-          //   title: 'Minting School',
-          //   path: PATH_SCHOOL.minting,
-          // },
+          {
+            title: 'Image  Update',
+            path: PATH_SCHOOL.imageUpdate,
+          },
           {
             title: 'Activated School',
             path: PATH_SCHOOL.verified,

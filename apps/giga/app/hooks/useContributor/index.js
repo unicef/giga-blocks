@@ -1,7 +1,7 @@
 'use client';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { apiGuest } from '../../utils/api';
-import { CONTRIBUTOR } from '../../constants/api';
+import { ENDPOINTS } from '../../constants/api';
 
 export const useContributorPatch = () => {
   return useMutation({
@@ -11,10 +11,38 @@ export const useContributorPatch = () => {
         name: name || walletAddress,
       };
       const response = await apiGuest.patch(
-        `${CONTRIBUTOR.PATCH}/${walletAddress}`,
+        `${ENDPOINTS.CONTRIBUTOR.PATCH}/${walletAddress}`,
         payload
       );
       return response.data;
     },
   });
+};
+
+export const useContributorList = () => {
+  return useQuery(
+    ['get-contributor-list'],
+    async () => {
+      const response = await apiGuest.get(`${ENDPOINTS.CONTRIBUTOR.LIST}`);
+      return response.data;
+    },
+    {
+      keepPreviousData: true,
+    }
+  );
+};
+
+export const useContributorGet = (walletAddress) => {
+  return useQuery(
+    ['get-contributor-details', walletAddress],
+    async () => {
+      const response = await apiGuest.get(
+        `${ENDPOINTS.CONTRIBUTOR.GET}/${walletAddress}`
+      );
+      return response.data;
+    },
+    {
+      keepPreviousData: true,
+    }
+  );
 };

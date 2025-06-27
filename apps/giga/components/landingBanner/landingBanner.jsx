@@ -1,66 +1,62 @@
 'use client';
 
-import { Button, Column, Grid, Row, TextInput } from '@carbon/react';
-import { Search, ArrowRight } from '@carbon/icons-react';
+import Image from 'next/image';
+import { Button } from '@carbon/react';
+import { ArrowRight } from '@carbon/icons-react';
+import Link from 'next/link';
 import './_landingBanner.scss';
-import React from 'react';
-import CarbonButton from '../carbonButton';
+import { useRouter } from 'next/navigation';
 
 export default function LandingBanner() {
-  // return (
-  //   <CarbonButton icon={ArrowRight} kind="primary">
-  //     About GigaBlocks
-  //   </CarbonButton>
-  // );
-  return (
-    <div className="hero-section">
-      <Grid>
-        <Column lg={8} md={8} sm={4} className="hero-content">
-          <h1 className="hero-title">
-            <span>We Are Building the</span> <span>World's Largest</span>{' '}
-            <span>Decentralized School</span> <span>Database - Together</span>
-          </h1>
+  const router = useRouter();
+  const handleClick = () => {
+    router.push('/schools/list?minted=NOTMINTED');
 
+    setTimeout(() => {
+      const element = document.getElementById('search');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 300);
+  };
+  return (
+    <section className="hero-section">
+      <div className="hero-container">
+        <div className="hero-content">
+          <h1 className="hero-title">
+            We Are Building the <br /> World's Largest
+            <br /> Decentralized School Database - Together
+          </h1>
           <p className="hero-description">
             Support Giga's Mission. Help us connect every school and provide
-            every student with access to information, opportunity and choice by
-            activating schools and putting their data on-chain, forever.
+            every student with access to
+            <br /> information, opportunity and choice by activating schools and
+            putting their data on-chain, forever.
           </p>
-
-          <div className="search-container">
-            <TextInput
-              id="search-school"
-              labelText=""
-              placeholder="Search School"
-              className="search-input"
-            />
-          </div>
-          <div className="button-group">
-            <Button
-              kind="primary"
-              className="responsive-button"
-              renderIcon={Search}
-            >
-              Search
+          <div className="hero-cta">
+            <Button onClick={handleClick} renderIcon={ArrowRight}>
+              Activate a school
             </Button>
-
-            <Button
-              kind="secondary"
-              renderIcon={ArrowRight}
-              className="responsive-button"
-            >
-              About GigaBlocks
-            </Button>
-            <CarbonButton icon={ArrowRight} kind="primary">
-              About GigaBlocks
-            </CarbonButton>
           </div>
-        </Column>
+        </div>
 
-        <Column lg={8} md={8} sm={4} className="grid-pattern-container">
-          
-        </Column>
-      </Grid>
-    </div>
+        <div className="hero-illustration">
+          {/* <Image
+            src="/images/hero-illustration.png"
+            alt="Illustration of a person carrying data"
+            width={400}
+            height={450}
+            className="hero-image"
+          /> */}
+          <Image
+            src="/images/hero-illustration.svg"
+            alt="Illustration of a person carrying data"
+            width={600}
+            height={530}
+            className="hero-image"
+          />
+        </div>
+      </div>
+    </section>
   );
 }

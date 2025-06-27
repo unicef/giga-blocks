@@ -1,14 +1,15 @@
 import { memo, useEffect } from 'react';
 import NProgress from 'nprogress';
 // next
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 //
 import StyledProgressBar from './styles';
+import { NextRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
 function ProgressBar() {
-  const router = useRouter();
+  const router = useRouter() as NextRouter as NextRouter;
 
   NProgress.configure({ showSpinner: false });
 

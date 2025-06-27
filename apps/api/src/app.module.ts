@@ -27,6 +27,7 @@ import { createKeyv } from '@keyv/redis';
 import { FeaturedModule } from './featured/featured.module';
 import { VerifierModule } from './verifier/verifier.module';
 import { InformationWorkerModule } from './information-worker/information-worker.module';
+import { QueuesModule } from './queues/queues.module';
 
 @Module({
   imports: [
@@ -42,7 +43,7 @@ import { InformationWorkerModule } from './information-worker/information-worker
         return {
           stores: [
             new Keyv({
-              store: new CacheableMemory({ ttl: 60000, lruSize: 5000 }),
+              store: new CacheableMemory({ ttl: 120000, lruSize: 5000 }),
             }),
             createKeyv(redisUrl),
           ],
@@ -109,7 +110,8 @@ import { InformationWorkerModule } from './information-worker/information-worker
     LinkactivationModule,
     FeaturedModule,
     VerifierModule,
-    InformationWorkerModule
+    InformationWorkerModule,
+    QueuesModule
   ],
   providers: [],
 })

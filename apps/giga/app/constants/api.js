@@ -3,7 +3,7 @@ export const BASE_URL =
 
 const GRAPH_URL = process.env.NEXT_PUBLIC_GRAPH_URL;
 
-module.exports = {
+export const ENDPOINTS = {
   BASE_URL,
   GRAPH_URL,
   NEWSLETTER: {
@@ -14,6 +14,7 @@ module.exports = {
     ACTIVATE: '/schools/reserveNft',
     CLAIM: '/schools/claimSchool',
     PAIDACTIVATION: '/schools/activateSchool',
+    COUNTRIES: '/schools/countries',
   },
 
   OTP: {
@@ -35,14 +36,15 @@ module.exports = {
     LOGIN: '/auth/login',
   },
   CONTRIBUTOR: {
-    GET: '/users/contributor',
+    LIST: '/contributor',
     PATCH: '/contributor/update',
+    GET: '/contributor/walletAddress',
   },
   LINKACTIVATION: {
     GET: '/linkactivation/validateLink',
   },
   CONTRIBUTE: {
-    GET: '/contribute',
+    LIST: '/contribute',
     POST: '/contribute',
   },
   MAGICLINK: {
@@ -60,5 +62,13 @@ module.exports = {
   },
   FEATURED: {
     GET: '/featured/school',
+  },
+  QOS: {
+    DAILY: '/schools/qos/daily',
+    WEEKLY: '/schools/qos/weekly',
+    MONTHLY: '/schools/qos/monthly',
+  },
+  METRICS: {
+    GET: '/schools/gigaMetrics',
   },
 };

@@ -1,10 +1,14 @@
+FROM node:20-alpine3.17 AS base
+WORKDIR /usr/src/app
+RUN npm install -g sharp
+
 # Install dependencies only when needed
-FROM node:20-alpine3.17 AS deps
+FROM base AS deps
 WORKDIR /usr/src/app
 COPY ./dist/apps/admin/package.json ./
 RUN yarn install 
 
-FROM node:20-alpine3.17 AS builder
+FROM base AS builder
 WORKDIR /usr/src/app
 COPY ./dist/apps/admin/ ./
 COPY --from=deps /usr/src/app/node_modules ./node_modules

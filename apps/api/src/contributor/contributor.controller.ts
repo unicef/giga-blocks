@@ -18,7 +18,7 @@ export class ContributorController {
 //     }
 
     @Public()
-    @Get('list')
+    @Get('')
     @ApiOperation({ summary: 'List of all contributors' })
     listContributors() {
         return this.contributorService.listContributors();
@@ -57,6 +57,12 @@ export class ContributorController {
     @Get('/getReservedSchools/:email')
     getReservedSchools(@Param('email') email: string) {
         return this.contributorService.getReservedSchools(email);      
+    }
+
+    @Public()
+    @Get('/walletAddress/:walletAddress')
+    getContributorByWalletAddress(@Param('walletAddress') walletAddress: string) {
+        return this.contributorService.getContributorByWalletAddress(walletAddress);
     }
 
     

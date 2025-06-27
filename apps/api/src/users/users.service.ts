@@ -108,11 +108,8 @@ export class UsersService {
     });
   }
 
-  findAll(query: any) {
+  async findAll(query: any) {
     const { page, perPage, order, orderBy } = query;
-
-    console.log(perPage);
-    console.log(query?.role);
 
     const where: Prisma.UserWhereInput = {};
     if (query?.role) {
@@ -216,5 +213,4 @@ export class UsersService {
       where: { walletAddress: walletBuffer, isArchived: false },
     });
   }
-
 }

@@ -24,6 +24,7 @@ import Scrollbar from '@components/scrollbar';
 import { TableHeadUsers, TableNoData, useTable } from '@components/table';
 import NFTTableRow from './list/NFTTableRow';
 import { PATH_DASHBOARD, PATH_SCHOOL } from '@routes/paths';
+import { useSchoolGetByGigaSchoolId } from '@hooks/school/useSchool';
 
 interface Props {
   isEdit?: boolean;
@@ -69,13 +70,16 @@ export default function SchoolDetails({ id }: Props) {
     coverage: '',
     mintedStatus: '',
     tokenId: '',
-    electricity_availabilty: ''
+    electricity_availabilty: '',
   });
 
   const [result] = useQuery({ query: Queries.nftDetailsQuery, variables: { id } });
   const { data, fetching, error } = result;
   const [schoolTableData, setTableData] = useState<any>([]);
   const [collectorTableData, setCollectorTableData] = useState<any>([]);
+  const [gigaSchoolId, setGigaSchoolId] = useState<string | undefined>(undefined);
+
+  const { data: schoolDetails, isLoading } = useSchoolGetByGigaSchoolId(gigaSchoolId);
 
   useEffect(() => {
     setTableData(data?.schoolTransfers);
@@ -99,8 +103,9 @@ export default function SchoolDetails({ id }: Props) {
       coverage: schoolData.coverage_availabitlity,
       mintedStatus: schoolData.minted,
       tokenId: schoolData.tokenId,
-      electricity_availabilty: schoolData.electricity_availabilty
+      electricity_availabilty: schoolData.electricity_availabilty,
     });
+    setGigaSchoolId(schooldata?.schoolTokenIds[0]?.schoolId);
   };
 
   const {
@@ -145,7 +150,7 @@ export default function SchoolDetails({ id }: Props) {
 
   function CustomTabPanel(props: any) {
     const { children, value, index, ...other } = props;
-  
+
     return (
       //@ts-ignore
       <div
@@ -166,8 +171,8 @@ export default function SchoolDetails({ id }: Props) {
 
   return (
     <>
-      {fetching && <p>Loading...</p>}
-      {!fetching && (
+      {fetching && isLoading && <p>Loading...</p>}
+      {!fetching && !isLoading && (
         <>
           <Grid item xs={8}>
             <Container>
@@ -223,19 +228,23 @@ export default function SchoolDetails({ id }: Props) {
                           />
                           <ProfileTextField
                             name="connectivity"
-                            value={profile?.connectivity.toLowerCase() === "true" ? 'Yes' : 'No'}
+                            value={profile?.connectivity.toLowerCase() === 'true' ? 'Yes' : 'No'}
                             label="Connectivity"
                             disabled
                           />
                           <ProfileTextField
                             name="coverage"
-                            value={profile?.coverage.toLowerCase() === "true" ? 'Yes' : 'No' }
+                            value={profile?.coverage.toLowerCase() === 'true' ? 'Yes' : 'No'}
                             label="Coverage"
                             disabled
                           />
                           <ProfileTextField
                             name="coverage"
-                            value={profile?.electricity_availabilty.toLowerCase() === "true" ? 'Yes' : 'No' }
+                            value={
+                              profile?.electricity_availabilty.toLowerCase() === 'true'
+                                ? 'Yes'
+                                : 'No'
+                            }
                             label="Electricity Availabilty"
                             disabled
                           />
@@ -291,100 +300,119 @@ export default function SchoolDetails({ id }: Props) {
               <Box justifyContent={'center'}>
                 <Stack sx={{ mt: 8 }}>
                   <Box display="flex" justifyContent="center">
-                    <Identicon string={profile?.fullname} size={200} />
+                    {schoolDetails?.imageHash ? (
+                      <image href={`https://ipfs.io/ipfs/${schoolDetails?.imageHash}`} />
+                    ) : (
+                      <Identicon
+                        string={schoolDetails?.imageHash}
+                        size={200}
+                        style={{ borderRadius: '50%' }}
+                      />
+                    )}
                   </Box>
                 </Stack>
                 <Stack sx={{ mt: 8 }}>
                   <Box display="flex" justifyContent="center">
-                    <a href={`${process.env.NEXT_PUBLIC_WEB_NAME}/explore/${id}`} target="_blank">View NFT</a>
+                    <a
+                      href={`${process.env.NEXT_PUBLIC_WEB_NAME}/schools/${schoolDetails?.id}`}
+                      target="_blank"
+                    >
+                      View NFT
+                    </a>
                   </Box>
                 </Stack>
               </Box>
             </Container>
           </Grid>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '96%', margin: 'auto', marginTop: '20px' }}>
-          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-            <Tab label="Collector NFT" {...a11yProps(0)} />
-            <Tab label="School NFT" {...a11yProps(1)} />
-          </Tabs>
-        </Box>
-        
-        <CustomTabPanel 
-        //@ts-ignore
-        value={value} 
-        //@ts-ignore
-        index={0} style={{width: '100%'}}>
-        <Grid sx={{ margin: 'auto', marginTop: '10px' }}>
-            <Typography variant="h6" component="h6">
-              Transaction History
-            </Typography>
-            <Card sx={{ marginTop: '20px' }}>
-              <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-                <Scrollbar>
-                  <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
-                    <TableHeadUsers
-                      order={order}
-                      orderBy={orderBy}
-                      headLabel={TABLE_HEAD}
-                      rowCount={schoolTableData?.length}
-                      onSort={onSort}
-                      showCheckBox={true}
-                    />
+          <Box
+            sx={{
+              borderBottom: 1,
+              borderColor: 'divider',
+              width: '96%',
+              margin: 'auto',
+              marginTop: '20px',
+            }}
+          >
+            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+              <Tab label="Collector NFT" {...a11yProps(0)} />
+              <Tab label="School NFT" {...a11yProps(1)} />
+            </Tabs>
+          </Box>
 
-                    <TableBody>
-                      {collectorSortedData &&
-                        collectorSortedData?.map((row: any) => (
-                          <NFTTableRow
-                            key={row.id}
-                            row={row}
-                          />
-                        ))}
-                      <TableNoData isNotFound={schoolTableData?.length === 0} />
-                    </TableBody>
-                  </Table>
-                </Scrollbar>
-              </TableContainer>
-            </Card>
-          </Grid>
-        </CustomTabPanel>
-        <CustomTabPanel
-        //@ts-ignore
-         value={value}
-        //@ts-ignore
-        index={1} style={{width: '100%'}}>
-        <Grid sx={{ margin: 'auto', marginTop: '10px' }}>
-            <Typography variant="h6" component="h6">
-              Transaction History
-            </Typography>
-            <Card sx={{ marginTop: '20px' }}>
-              <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-                <Scrollbar>
-                  <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
-                    <TableHeadUsers
-                      order={order}
-                      orderBy={orderBy}
-                      headLabel={TABLE_HEAD}
-                      rowCount={schoolTableData?.length}
-                      onSort={onSort}
-                      showCheckBox={true}
-                    />
+          <CustomTabPanel
+            //@ts-ignore
+            value={value}
+            //@ts-ignore
+            index={0}
+            style={{ width: '100%' }}
+          >
+            <Grid sx={{ margin: 'auto', marginTop: '10px' }}>
+              <Typography variant="h6" component="h6">
+                Transaction History
+              </Typography>
+              <Card sx={{ marginTop: '20px' }}>
+                <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+                  <Scrollbar>
+                    <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+                      <TableHeadUsers
+                        order={order}
+                        orderBy={orderBy}
+                        headLabel={TABLE_HEAD}
+                        rowCount={schoolTableData?.length}
+                        onSort={onSort}
+                        showCheckBox={true}
+                      />
 
-                    <TableBody>
-                      {schoolSortedData &&
-                        schoolSortedData?.map((row: any) => (
-                          <NFTTableRow
-                            key={row.id}
-                            row={row}
-                          />
-                        ))}
-                      <TableNoData isNotFound={schoolTableData?.length === 0} />
-                    </TableBody>
-                  </Table>
-                </Scrollbar>
-              </TableContainer>
-            </Card>
-          </Grid>
-        </CustomTabPanel>
+                      <TableBody>
+                        {collectorSortedData &&
+                          collectorSortedData?.map((row: any) => (
+                            <NFTTableRow key={row.id} row={row} />
+                          ))}
+                        <TableNoData isNotFound={schoolTableData?.length === 0} />
+                      </TableBody>
+                    </Table>
+                  </Scrollbar>
+                </TableContainer>
+              </Card>
+            </Grid>
+          </CustomTabPanel>
+          <CustomTabPanel
+            //@ts-ignore
+            value={value}
+            //@ts-ignore
+            index={1}
+            style={{ width: '100%' }}
+          >
+            <Grid sx={{ margin: 'auto', marginTop: '10px' }}>
+              <Typography variant="h6" component="h6">
+                Transaction History
+              </Typography>
+              <Card sx={{ marginTop: '20px' }}>
+                <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+                  <Scrollbar>
+                    <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+                      <TableHeadUsers
+                        order={order}
+                        orderBy={orderBy}
+                        headLabel={TABLE_HEAD}
+                        rowCount={schoolTableData?.length}
+                        onSort={onSort}
+                        showCheckBox={true}
+                      />
+
+                      <TableBody>
+                        {schoolSortedData &&
+                          schoolSortedData?.map((row: any) => (
+                            <NFTTableRow key={row.id} row={row} />
+                          ))}
+                        <TableNoData isNotFound={schoolTableData?.length === 0} />
+                      </TableBody>
+                    </Table>
+                  </Scrollbar>
+                </TableContainer>
+              </Card>
+            </Grid>
+          </CustomTabPanel>
         </>
       )}
     </>

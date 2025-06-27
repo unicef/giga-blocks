@@ -14,6 +14,7 @@ import {
   MenuItem,
   Box,
   Button,
+  TextField,
 } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
@@ -47,14 +48,16 @@ const MintedSchools = () => {
     onChangeRowsPerPage,
   } = useTable();
 
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedValues, setSelectedValues] = useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
   const [paginatedData, setPaginatedData] = useState<any>([]);
   const [selectedFilter, setSelectedFilter] = useState<String>('all');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
 
   const [result] = useQuery({
     query: Queries.allNftListQuery,
-    variables: { first: rowsPerPage, skip: rowsPerPage * page },
+    variables: { first: rowsPerPage, skip: rowsPerPage * page, schoolId: debouncedSearchTerm },
     pause: selectedFilter !== 'all',
   });
   const { data, fetching } = result;
@@ -65,6 +68,7 @@ const MintedSchools = () => {
       id: process.env.NEXT_PUBLIC_ADMIN_ADDRESS,
       first: rowsPerPage,
       skip: rowsPerPage * page,
+      schoolId: debouncedSearchTerm,
     },
     pause: selectedFilter !== 'admin',
   });
@@ -76,6 +80,7 @@ const MintedSchools = () => {
       id: process.env.NEXT_PUBLIC_ADMIN_ADDRESS,
       first: rowsPerPage,
       skip: rowsPerPage * page,
+      schoolId: debouncedSearchTerm,
     },
     pause: selectedFilter !== 'others',
   });
@@ -92,12 +97,24 @@ const MintedSchools = () => {
       selectedData = data?.nftDatas || [];
     }
 
+    function repairAndParseJson(jsonString: string) {
+      try {
+        return JSON.parse(jsonString); // Always try parsing directly first.
+      } catch (initialError) {
+        const replaceSchoolNameValueRegex =
+          /("schoolName"\s*:\s*").*?(?="?\s*(?:,\s*[\{"\w]|[\}\]]))?/;
+        const fixedString = jsonString.replace(replaceSchoolNameValueRegex, '$1N/A"');
+        const cleanedFixedString = fixedString.replace(/,\s*([\}\]])/g, '$1');
+        console.log("String after attempting to replace 'schoolName':", cleanedFixedString);
+      }
+    }
+
     const decodedShooldata: any = selectedData.map((data: any) => {
       let decodedData = atob(data?.tokenUri?.substring(29));
       return {
         id: Number(data.tokenId),
         mintedAt: data.mintedAt,
-        ...JSON.parse(decodedData),
+        ...repairAndParseJson(decodedData),
         mintedStatus: 'MINTED',
         gasFee: ethers.formatEther(data.mintingGasFee),
       };
@@ -105,6 +122,16 @@ const MintedSchools = () => {
 
     setTableData(decodedShooldata);
   }, [selectedFilter, data, adminData, otherData, page, rowsPerPage]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  });
 
   const sortedData = tableData?.slice().sort((a: any, b: any) => {
     const isAsc = order === 'asc';
@@ -130,6 +157,15 @@ const MintedSchools = () => {
           <MenuItem value="others">Others</MenuItem>
         </Select>
       </FormControl>
+      <TextField
+        label="Search School By Giga School Id"
+        variant="outlined"
+        size="medium"
+        style ={{ marginLeft: '20px' }}
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        sx={{ minWidth: 250 }}
+      />
       {fetching && (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <CircularProgress />
@@ -159,6 +195,7 @@ const MintedSchools = () => {
                           setSelectedValues={setSelectedValues}
                           rowData={row}
                           checkbox={false}
+                          clickable={true}
                         />
                       ))}
                     <TableNoData isNotFound={tableData.length === 0} />

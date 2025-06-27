@@ -1,4 +1,5 @@
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
+import { NextRouter } from 'next/router';
 
 type ReturnType = {
   active: boolean;
@@ -6,7 +7,7 @@ type ReturnType = {
 };
 
 export default function useActiveLink(path: string, deep = true): ReturnType {
-  const { pathname, asPath } = useRouter();
+  const { pathname, asPath } = useRouter() as NextRouter as NextRouter;
 
   const checkPath = path?.startsWith('#');
 

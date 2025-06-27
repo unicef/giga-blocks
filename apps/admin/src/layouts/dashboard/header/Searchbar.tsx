@@ -2,7 +2,7 @@ import { useState, memo, useEffect } from 'react';
 import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
 // next
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
 import {
@@ -25,6 +25,7 @@ import { IconButtonAnimate } from '../../../components/animate';
 import SearchNotFound from '../../../components/search-not-found';
 //
 import NavConfig from '../nav/config-navigation';
+import { NextRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
@@ -95,7 +96,7 @@ interface Option extends NavListProps {
 }
 
 function Searchbar() {
-  const { push, pathname } = useRouter();
+  const { push, pathname } = useRouter() as NextRouter as NextRouter;
 
   const [open, setOpen] = useState(false);
 

@@ -104,6 +104,7 @@ export default function ClaimNFT() {
       {
         email: emailFromUrl,
         walletAddress,
+        schoolId:id
       },
       {
         onSuccess: () => {
@@ -218,7 +219,7 @@ export default function ClaimNFT() {
               >
                 Verify
               </Button>
-            ) : isConnected ? (
+            ) : isConnected || walletAddress? (
               <Button
                 onClick={handleClaimSchool}
                 className="claim-button"

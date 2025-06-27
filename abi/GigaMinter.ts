@@ -1,11 +1,31 @@
 export const GigaMinterAbi = [
   {
     inputs: [
-      { internalType: 'address', name: '_gigaAdmin', type: 'address' },
-      { internalType: 'address', name: '_schoolNft', type: 'address' },
-      { internalType: 'address', name: '_collectorNft', type: 'address' },
-      { internalType: 'address', name: '_donationReceiver', type: 'address' },
-      { internalType: 'uint256', name: '_baseFee', type: 'uint256' },
+      {
+        internalType: 'address',
+        name: '_gigaAdmin',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: '_schoolNft',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: '_collectorNft',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: '_donationReceiver',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: '_baseFee',
+        type: 'uint256',
+      },
     ],
     stateMutability: 'nonpayable',
     type: 'constructor',
@@ -107,20 +127,38 @@ export const GigaMinterAbi = [
   {
     inputs: [],
     name: 'baseFee',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
-      { internalType: 'string[]', name: '_schoolIds', type: 'string[]' },
-      { internalType: 'address[]', name: '_schoolNftTos', type: 'address[]' },
+      {
+        internalType: 'string[]',
+        name: '_schoolIds',
+        type: 'string[]',
+      },
+      {
+        internalType: 'address[]',
+        name: '_schoolNftTos',
+        type: 'address[]',
+      },
       {
         internalType: 'address[]',
         name: '_collectorNftTos',
         type: 'address[]',
       },
-      { internalType: 'string[9][]', name: '_values', type: 'string[9][]' },
+      {
+        internalType: 'string[9][]',
+        name: '_values',
+        type: 'string[9][]',
+      },
     ],
     name: 'batchBuyNft',
     outputs: [],
@@ -128,12 +166,58 @@ export const GigaMinterAbi = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'address', name: '', type: 'address' }],
+    inputs: [
+      {
+        internalType: 'string[]',
+        name: '_schoolIds',
+        type: 'string[]',
+      },
+      {
+        internalType: 'address[]',
+        name: '_schoolNftTos',
+        type: 'address[]',
+      },
+      {
+        internalType: 'address[]',
+        name: '_collectorNftTos',
+        type: 'address[]',
+      },
+      {
+        internalType: 'string[9][]',
+        name: '_values',
+        type: 'string[9][]',
+      },
+    ],
+    name: 'batchMintNft',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
     name: 'bulkMinters',
     outputs: [
-      { internalType: 'uint256', name: 'totalDonation', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalSchoolsToMint', type: 'uint256' },
-      { internalType: 'address', name: 'minter', type: 'address' },
+      {
+        internalType: 'uint256',
+        name: 'totalDonation',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'totalSchoolsToMint',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: 'minter',
+        type: 'address',
+      },
       {
         internalType: 'uint256',
         name: 'remainingSchoolsToMint',
@@ -145,10 +229,26 @@ export const GigaMinterAbi = [
   },
   {
     inputs: [
-      { internalType: 'string', name: '_schoolId', type: 'string' },
-      { internalType: 'address', name: '_schoolNftTo', type: 'address' },
-      { internalType: 'address', name: '_collectorNftTo', type: 'address' },
-      { internalType: 'string[9]', name: '_values', type: 'string[9]' },
+      {
+        internalType: 'string',
+        name: '_schoolId',
+        type: 'string',
+      },
+      {
+        internalType: 'address',
+        name: '_schoolNftTo',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: '_collectorNftTo',
+        type: 'address',
+      },
+      {
+        internalType: 'string[9]',
+        name: '_values',
+        type: 'string[9]',
+      },
     ],
     name: 'buyNft',
     outputs: [],
@@ -158,23 +258,51 @@ export const GigaMinterAbi = [
   {
     inputs: [],
     name: 'collectorNft',
-    outputs: [{ internalType: 'contract INft', name: '', type: 'address' }],
+    outputs: [
+      {
+        internalType: 'contract INft',
+        name: '',
+        type: 'address',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'donationReceiver',
-    outputs: [{ internalType: 'address payable', name: '', type: 'address' }],
+    outputs: [
+      {
+        internalType: 'address payable',
+        name: '',
+        type: 'address',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
-      { internalType: 'string', name: '_schoolId', type: 'string' },
-      { internalType: 'address', name: '_schoolNftTo', type: 'address' },
-      { internalType: 'address', name: '_collectorNftTo', type: 'address' },
-      { internalType: 'string[9]', name: '_values', type: 'string[9]' },
+      {
+        internalType: 'string',
+        name: '_schoolId',
+        type: 'string',
+      },
+      {
+        internalType: 'address',
+        name: '_schoolNftTo',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: '_collectorNftTo',
+        type: 'address',
+      },
+      {
+        internalType: 'string[9]',
+        name: '_values',
+        type: 'string[9]',
+      },
     ],
     name: 'mintForDonor',
     outputs: [],
@@ -183,10 +311,26 @@ export const GigaMinterAbi = [
   },
   {
     inputs: [
-      { internalType: 'string', name: '_schoolId', type: 'string' },
-      { internalType: 'address', name: '_schoolNftTo', type: 'address' },
-      { internalType: 'address', name: '_collectorNftTo', type: 'address' },
-      { internalType: 'string[9]', name: '_values', type: 'string[9]' },
+      {
+        internalType: 'string',
+        name: '_schoolId',
+        type: 'string',
+      },
+      {
+        internalType: 'address',
+        name: '_schoolNftTo',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: '_collectorNftTo',
+        type: 'address',
+      },
+      {
+        internalType: 'string[9]',
+        name: '_values',
+        type: 'string[9]',
+      },
     ],
     name: 'mintNft',
     outputs: [],
@@ -194,16 +338,34 @@ export const GigaMinterAbi = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'bytes[]', name: 'data', type: 'bytes[]' }],
+    inputs: [
+      {
+        internalType: 'bytes[]',
+        name: 'data',
+        type: 'bytes[]',
+      },
+    ],
     name: 'multicall',
-    outputs: [{ internalType: 'bytes[]', name: 'results', type: 'bytes[]' }],
+    outputs: [
+      {
+        internalType: 'bytes[]',
+        name: 'results',
+        type: 'bytes[]',
+      },
+    ],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
     inputs: [],
     name: 'owner',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
@@ -217,19 +379,37 @@ export const GigaMinterAbi = [
   {
     inputs: [],
     name: 'schoolNft',
-    outputs: [{ internalType: 'contract INft', name: '', type: 'address' }],
+    outputs: [
+      {
+        internalType: 'contract INft',
+        name: '',
+        type: 'address',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'uint256', name: '_schools', type: 'uint256' }],
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_schools',
+        type: 'uint256',
+      },
+    ],
     name: 'sendDonation',
     outputs: [],
     stateMutability: 'payable',
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'uint256', name: '_newBaseFee', type: 'uint256' }],
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_newBaseFee',
+        type: 'uint256',
+      },
+    ],
     name: 'setBaseFee',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -251,12 +431,24 @@ export const GigaMinterAbi = [
   {
     inputs: [],
     name: 'totalDonations',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'address', name: 'newOwner', type: 'address' }],
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
+    ],
     name: 'transferOwnership',
     outputs: [],
     stateMutability: 'nonpayable',

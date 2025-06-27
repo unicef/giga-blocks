@@ -19,11 +19,11 @@ interface ExtendedContract extends BaseContract {
     tokenId: string | ContractTransactionResponse,
   ) => ContractTransactionResponse;
   getImage?: (imageName: string | ContractTransactionResponse) => ContractTransactionResponse;
-  getMetadataContent?: (tokenId: string | ContractTransactionResponse) => any;
+  getNftContentValues?: (tokenId: string | ContractTransactionResponse) => any;
   tokenIdToTokenHash?: (tokenId: string | ContractTransactionResponse) => any;
   addHashes?: (date: string, hashes: string[]) => ContractTransactionResponse;
-  reserveNft?:(schoolId:string,email:string) => ContractTransactionResponse;
-  transfeReservedNft?:(walletAddress:string,email:string) => ContractTransactionResponse;
+  reserveNft?: (schoolId: string, email: string) => ContractTransactionResponse;
+  transfeReservedNft?: (walletAddress: string, email: string) => ContractTransactionResponse;
 }
 
 export const mintNFT = async (
@@ -46,7 +46,7 @@ export const mintNFT = async (
   ]);
 
   const multicalldata = generateMultiCallData(contractName, 'mintNft', schoolArgs);
-  return await contract.multicall(multicalldata, { gasPrice:weiEthers });
+  return await contract.multicall(multicalldata, { gasPrice: weiEthers });
 
   // return await contract.multicall(multicalldata, { gasPrice: weiEthers });
 };
@@ -61,7 +61,12 @@ export const mintSingleNFT = async (
   const collectorescrowAddress = config.get('NEXT_PUBLIC_GIGA_COLLECTOR_ESCROW_ADDRESS');
   const schoolescrowAddress = config.get('NEXT_PUBLIC_GIGA_SCHOOL_ESCROW_ADDRESS');
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
-  return await contract.mintNft(giga_id, schoolescrowAddress, collectorescrowAddress, schoolDataArray);
+  return await contract.mintNft(
+    giga_id,
+    schoolescrowAddress,
+    collectorescrowAddress,
+    schoolDataArray,
+  );
 };
 
 const generateMultiCallData = (contractName, functionName, callData) => {
@@ -112,7 +117,7 @@ export const getSchoolData = async (
   tokenId: string | ContractTransactionResponse,
 ): Promise<ContractTransactionResponse> => {
   const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
-  return await contract.getMetadataContent(tokenId);
+  return await contract.getNftContentValues(tokenId);
 };
 
 export const getRandomImages = async (
@@ -147,6 +152,19 @@ export const updateImageHash = async (
   // return await contract.updateNftImageHash(schoolId, tokenHash, { gasPrice: weiEthers });
 };
 
+export const updateBulkImageHash = async(
+  contractName: string,
+  contractAddress: string,
+  imageData:ImageData[]
+): Promise<ContractTransactionResponse> => {
+  const contract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
+  const schoolArgs = imageData.map((el, i) => [
+    el[0], // gigaSchoolId
+    el[1], // imageHash
+  ]);
+  const multicalldata = generateMultiCallData(contractName, 'updateNftImageHash', schoolArgs);
+  return await contract.multicall(multicalldata);
+};
 export const getTokenHash = async (
   contractName: string,
   contractAddress: string,
@@ -182,39 +200,59 @@ export const getScriptData = async (
   imagecontractAddress: string,
   schoolId: string,
 ): Promise<any> => {
-  const contentcontract: ExtendedContract = getContractWithSigner(
-    'NFTContent',
-    contentcontractAddress,
-  );
-  const imagecontract: ExtendedContract = getContractWithSigner(
-    'ImageContent',
-    imagecontractAddress,
-  );
-  //get tokenId from schoolId
-  const tokenId = await contentcontract.schoolIdToTokenId(schoolId);
-  //get nft contents from tokenId
-  const nftcontents = await contentcontract.getMetadataContent(tokenId);
-  let sanitizedResponse = `{${nftcontents}}`.replace(/(\w+):/g, '"$1":'); // Add curly braces and quote property names
-  sanitizedResponse = sanitizedResponse.replace(/,(\s*})/g, '$1'); // Remove trailing commas
-  const formattedResponse = JSON.parse(sanitizedResponse);
-  const tokenHash = await contentcontract.tokenIdToTokenHash(tokenId);
-  //get random images from region and tokenId
-  const randomImages = await imagecontract.getRandomImages(formattedResponse?.region, tokenHash);
-  //get image data from image name
-  const image1 = await imagecontract.getImage(randomImages[0]);
-  const image2 = await imagecontract.getImage(randomImages[1]);
-  //converts image bytes  into base64 encoded image
-  // const baseImage1 = await getEncodedImage(image1);
-  // const baseImage2 = await getEncodedImage(image2);
-  const data = {
-    tokenId,
-    nftcontents: formattedResponse,
-    baseImage1: image1,
-    baseImage2: image2,
-    tokenHash,
-  };
-  if (!image1 || !image1) throw new Error('Error in fetching images');
-  return data;
+  try {
+    const contentcontract: ExtendedContract = getContractWithSigner(
+      'NFTContent',
+      contentcontractAddress,
+    );
+    const imagecontract: ExtendedContract = getContractWithSigner(
+      'ImageContent',
+      imagecontractAddress,
+    );
+    //get tokenId from schoolId
+    const tokenId = await contentcontract.schoolIdToTokenId(schoolId);
+    //get nft contents from tokenId
+    const nftcontents = await contentcontract.getNftContentValues(tokenId);
+    console.log('nftcontents', nftcontents);
+      //incase of encoded data
+//     let sanitizedResponse = `{${nftcontents}}`.replace(/(\w+):/g, '"$1":'); // Add curly braces and quote property names
+//     console.log('sanitizedResponse', sanitizedResponse);
+//     sanitizedResponse = sanitizedResponse.replace(/,(\s*})/g, '$1'); // Remove trailing commas
+    const formattedResponse =
+     {
+      // schoolName: nftcontents[0],
+      schoolType: nftcontents[1],
+      country: nftcontents[2],
+      longitude: nftcontents[3],
+      latitude: nftcontents[4],
+      connectivity: nftcontents[5],
+      coverage_availabitlity: nftcontents[6],
+      electricity_availabilty: nftcontents[7],
+      region: nftcontents[8],
+     }
+    console.log('formattedResponse', formattedResponse);
+    const tokenHash = await contentcontract.tokenIdToTokenHash(tokenId);
+    //get random images from region and tokenId
+    const randomImages = await imagecontract.getRandomImages(formattedResponse?.region, tokenHash);
+    //get image data from image name
+    const image1 = await imagecontract.getImage(randomImages[0]);
+    const image2 = await imagecontract.getImage(randomImages[1]);
+    //converts image bytes  into base64 encoded image
+    // const baseImage1 = await getEncodedImage(image1);
+    // const baseImage2 = await getEncodedImage(image2);
+    const data = {
+      tokenId,
+      nftcontents: formattedResponse,
+      baseImage1: image1,
+      baseImage2: image2,
+      tokenHash,
+    };
+    if (!image1 || !image1) throw new Error('Error in fetching images');
+    return data;
+  } catch (error) {
+    console.error('Error in getScriptData:', error);
+    throw new Error(`Error in getScriptData,${error?.message}`);
+  }
 };
 
 export const addArweaveHash = async (contractName, contractAddress, hashes) => {
@@ -225,9 +263,7 @@ export const addArweaveHash = async (contractName, contractAddress, hashes) => {
   return qosContract.addHashes(date.toString(), hashes);
 };
 
-
-
-export const reserveNft = async(schoolId:string,email:string) =>{
+export const reserveNft = async (schoolId: string, email: string) => {
   const config = new ConfigService();
   const contractAddress = config.get('NEXT_PUBLIC_GIGA_COLLECTOR_ESCROW_ADDRESS');
   const contract: ExtendedContract = getContractWithSigner('Escrow', contractAddress);
@@ -237,16 +273,15 @@ export const reserveNft = async(schoolId:string,email:string) =>{
     schoolId,
   );
   const tokenId = res.toString();
-  return contract.reserveNft(tokenId,email)
+  return contract.reserveNft(tokenId, email);
+};
 
-}
-
-export const claimNft = async (walletAddress: string, email:string) =>{
+export const claimNft = async (walletAddress: string, email: string) => {
   const config = new ConfigService();
   const contractAddress = config.get('NEXT_PUBLIC_GIGA_COLLECTOR_ESCROW_ADDRESS');
   const contract: ExtendedContract = getContractWithSigner('Escrow', contractAddress);
-  return contract.transfeReservedNft(walletAddress,email)
-}
+  return contract.transfeReservedNft(walletAddress, email);
+};
 
 const processSchoolData = async (schoolDataArray: any[], tokenIds: any[]) =>
   schoolDataArray.reduce(

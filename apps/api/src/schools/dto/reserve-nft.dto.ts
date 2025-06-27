@@ -70,10 +70,18 @@ export class claimReservedNFT {
   })
   @IsString()
   walletAddress: string;
+
+  @ApiProperty({
+    description: 'School ID to mint',
+    example: 'uuid',
+    required: true,
+  })
+  @IsOptional()
+  @IsString()
+  schoolId: string;
 }
 
-export class SchoolActivation{
-
+export class SchoolActivation {
   @ApiProperty({
     description: 'School ID to mint',
     example: 'uuid',
@@ -91,14 +99,76 @@ export class SchoolActivation{
   themeId: string;
 
   @ApiProperty({
-    description:'Contributor Details',
-    example:{
-      name:'Joe',
-      isVisible:true,
-      walletAddress:'0x1f2f6f7952550D4388f9A3fd91A8CdcFbC439978'
-    }
+    description: 'ID of theme',
+    example: 'uuid',
+    required: false,
+  })
+  @IsString()
+  transactionHash: string;
+
+  @ApiProperty({
+    description: 'Contributor Details',
+    example: {
+      name: 'Joe',
+      isVisible: true,
+      walletAddress: '0x1f2f6f7952550D4388f9A3fd91A8CdcFbC439978',
+    },
   })
   @ValidateNested()
   @Type(() => CreateContributor)
   contributorData: CreateContributor;
+}
+
+export class WeeklyQOSDto {
+  @ApiProperty({
+    description: 'Giga School ID to fetch QOS data  ',
+    example: 'uuid',
+    required: true,
+  })
+  @IsString()
+  giga_school_id: string;
+
+  @ApiProperty({
+    description: 'Start date of the week',
+    example: '2024-05-26',
+    required: true,
+  })
+  @IsString()
+  startDate: string;
+
+  @ApiProperty({
+    description: 'End date of the week',
+    example: '2024-06-02',
+    required: true,
+  })
+  @IsString()
+  endDate: string;
+}
+
+export class DailyQOSDto {
+  @ApiProperty({
+    description: 'Giga School ID to fetch QOS data  ',
+    example: 'uuid',
+    required: true,
+  })
+  @IsString()
+  giga_school_id: string;
+}
+
+export class TransactionDetails {
+  @ApiProperty({
+    description: 'Transaction Hash',
+    example: '0x1f2f6f7952550D4388f9A3fd91A8CdcFbC439978',
+    required: true,
+  })
+  @IsString()
+  transactionHash: string;
+
+  @ApiProperty({
+    description: 'Status of the transaction',
+    example: 1,
+    required: true,
+  })
+  @IsString()
+  status: number;
 }

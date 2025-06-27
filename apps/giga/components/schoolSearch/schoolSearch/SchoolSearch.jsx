@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  ChevronLeft,
-  ChevronRight,
-  Filter,
-  PageFirst,
-  PageLast,
-} from '@carbon/icons-react';
+import { Filter } from '@carbon/icons-react';
 import {
   Button,
   ComboBox,
@@ -17,115 +11,292 @@ import {
   SelectItem,
   Slider,
 } from '@carbon/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useSchoolGet } from '../../../app/hooks/useSchool';
+import {
+  useCountryList,
+  useSchoolInfiniteGet,
+} from '../../../app/hooks/useSchool';
+import { useResetFilters } from '../../../app/hooks/useHashStorageFilters';
+
 import SchoolCard from '../../schoolCard/SchoolCard';
 import './_schoolSearch.scss';
-import countryList from '../../../app/data/country.json';
 import CardSkeleton from '../../cardSkeleton/CardSkeleton';
 
 export default function SchoolSearch({ linkActivation }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { filters, setFilters, resetFilters } = useResetFilters();
 
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
+  const [perPage, setPerPage] = useState(40);
   const [searchTerm, setSearchTerm] = useState('');
-  const [country, setCountry] = useState('');
-  const [minted, setMinted] = useState(undefined);
-
-  useEffect(() => {
-    const pageParam = parseInt(searchParams.get('page') || '1', 10);
-    const perPageParam = parseInt(searchParams.get('perPage') || '10', 10);
-    const nameParam = searchParams.get('name') || '';
-    const countryParam = searchParams.get('country') || '';
-    const mintedParam = searchParams.get('minted') || undefined;
-
-    setPage(pageParam);
-    setPerPage(perPageParam);
-    setSearchTerm(nameParam);
-    setCountry(countryParam);
-    setMinted(mintedParam);
-  }, [searchParams]);
-
-  const { data: schools, isLoading } = useSchoolGet(
-    page,
-    perPage,
-    searchTerm,
-    country,
-    minted
-  );
-
-  const totalPages = schools?.meta?.lastPage || 1;
-  const filteredSchools = schools?.rows || [];
-  const items = countryList;
-
-  const handlePageChange = (newPage) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('page', newPage.toString());
-    params.set('perPage', perPage.toString());
-    router.push(`/schools?${params.toString()}`, { scroll: false });
-  };
-
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('page', '1');
-    params.set('perPage', perPage.toString());
-    params.set('name', value);
-    router.push(`/schools?${params.toString()}`, {
-      scroll: false,
-      // shallow: true,
-    });
-  };
-
-  // Filters (you can later sync these with URL too)
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(null);
 
-  const [numStudents, setNumStudents] = useState([0, 1000]);
-  const [numTeachers, setNumTeachers] = useState([0, 1000]);
-  const [numComputers, setNumComputers] = useState([0, 1000]);
-  const [downloadSpeed, setDownloadSpeed] = useState([0, 1000]);
-  const [connectivityStatus, setConnectivityStatus] = useState('all');
-  const [activationStatus, setActivationStatus] = useState('all');
+  const [students, setStudents] = useState([0, 1000]);
+  const [teachers, setTeachers] = useState([0, 1000]);
+  const [computers, setComputers] = useState([0, 1000]);
+  const [download, setDownload] = useState([0, 1000]);
+  const [connected, setConnected] = useState('all');
   const [connectionType, setConnectionType] = useState('all');
-  const [electricityAvailability, setElectricityAvailability] = useState('all');
-  const [waterAvailability, setWaterAvailability] = useState('all');
-  const mintedStatus = searchParams.get('minted') || 'ALL';
+  const [electricity, setElectricity] = useState('all');
+  const [water, setWater] = useState('all');
+
+  // Use values from filters state
+  const country = filters.country || '';
+  const minted = filters.minted || undefined;
+  const mintedStatus = filters.minted || 'ALL';
+
+  // Sync slider values with filters
+  useEffect(() => {
+    // Initialize sliders from URL/filters
+    if (filters.students) setStudents([0, { value: filters.students }]);
+    if (filters.teachers) setTeachers([0, { value: filters.teachers }]);
+    if (filters.computers) setComputers([0, { value: filters.computers }]);
+    if (filters.download) setDownload([0, { value: filters.download }]);
+
+    // Initialize radio buttons from URL/filters
+    if (filters.connectivityStatus) setConnected(filters.connectivityStatus);
+    if (filters.connectionType) setConnectionType(filters.connectionType);
+    if (filters.electricity) setElectricity(filters.electricity);
+    if (filters.water) setWater(filters.water);
+  }, [filters]);
+
+  // Sync filters with URL and local state
+  useEffect(() => {
+    // Extract values from URL params
+    const urlParams = {
+      name: searchParams.get('name') || '',
+      country: searchParams.get('country') || '',
+      minted: searchParams.get('minted') || undefined,
+      water: searchParams.get('water') || undefined,
+      electricity: searchParams.get('electricity') || undefined,
+      connectivityStatus: searchParams.get('connectivityStatus') || undefined,
+      connectionType: searchParams.get('connectionType') || undefined,
+      students: searchParams.get('students') || undefined,
+      teachers: searchParams.get('teachers') || undefined,
+      computers: searchParams.get('computers') || undefined,
+      download: searchParams.get('download') || undefined,
+    };
+
+    // Clean up undefined values
+    Object.keys(urlParams).forEach((key) => {
+      if (urlParams[key] === undefined || urlParams[key] === '') {
+        delete urlParams[key];
+      }
+    });
+
+    // Update search term
+    if (urlParams.name) setSearchTerm(urlParams.name);
+
+    // Update filters based on URL params
+    setFilters((prev) => ({
+      ...prev,
+      ...urlParams,
+    }));
+  }, [searchParams, setFilters]);
+
+  // Debounce searchTerm for API calls
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 1000);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
+
+  // Infinite query
+  const {
+    data: schools,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useSchoolInfiniteGet(
+    perPage,
+    debouncedSearchTerm,
+    country,
+    minted,
+    water,
+    electricity,
+    connected,
+    connectionType,
+    students[1].value,
+    teachers[1].value,
+    computers[1].value,
+    download,
+    true
+  );
+
+  // Combine all pages' rows
+  const filteredSchools = schools?.pages.flatMap((page) => page.rows) || [];
+  const totalCount = schools?.pages[0]?.meta?.total || 0;
+
+  // Infinite scroll observer
+  const loaderRef = useRef(null); // <-- for the loader div
+  const debounceRef = useRef(false);
+
+  const handleObserver = useCallback(
+    (entries) => {
+      const target = entries[0];
+      if (
+        target.isIntersecting &&
+        hasNextPage &&
+        !isFetchingNextPage &&
+        !debounceRef.current
+      ) {
+        debounceRef.current = true;
+        fetchNextPage().finally(() => {
+          setTimeout(() => {
+            debounceRef.current = false;
+          }, 500); // 500ms debounce, adjust as needed
+        });
+      }
+    },
+    [fetchNextPage, hasNextPage, isFetchingNextPage]
+  );
+  useEffect(() => {
+    const option = { root: null, rootMargin: '20px', threshold: 1.0 };
+    const observer = new window.IntersectionObserver(handleObserver, option);
+    const currentLoader = loaderRef.current;
+    if (currentLoader) observer.observe(currentLoader);
+    return () => {
+      if (currentLoader) observer.unobserve(currentLoader);
+      observer.disconnect();
+    };
+  }, [handleObserver]);
+
+  const { data: countrylist } = useCountryList();
+
+  // Add state to track filter changes
+  const [isFilterChanging, setIsFilterChanging] = useState(false);
+
+  // Show loader when filters are changing and hide after data loads
+  useEffect(() => {
+    if (isFilterChanging && !isLoading) {
+      // Only hide the loader when data is finished loading
+      setIsFilterChanging(false);
+    }
+  }, [isLoading, isFilterChanging]);
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    setFilters((prev) => ({ ...prev, name: value }));
+
+    setIsFilterChanging(true); // Show loader on search change
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('name', value);
+    router.push(`/schools/list?${params.toString()}`, {
+      scroll: false,
+    });
+  };
 
   const toggleFilter = () => setIsFilterOpen(!isFilterOpen);
-  const resetFilters = () => {
-    setNumStudents([0, 1000]);
-    setNumTeachers([0, 1000]);
-    setNumComputers([0, 1000]);
-    setDownloadSpeed([0, 1000]);
-    setConnectivityStatus('all');
-    setActivationStatus('all');
+
+  const handleResetFilters = () => {
+    // Reset all local state
+    setStudents([0, 1000]);
+    setTeachers([0, 1000]);
+    setComputers([0, 1000]);
+    setDownload([0, 1000]);
+    setConnected('all');
     setConnectionType('all');
-    setElectricityAvailability('all');
-    setWaterAvailability('all');
+    setElectricity('all');
+    setWater('all');
+    setSelectedCountry(null);
+    setSearchTerm('');
+    setDebouncedSearchTerm('');
+
+    // Reset all filters in usePagination
+    resetFilters();
+
+    // Use a completely new URLSearchParams object to ensure all params are cleared
+    const emptyParams = new URLSearchParams();
+
+    // Immediately replace the URL with a clean one
+    router.replace(`/schools/list`, {
+      scroll: false,
+      shallow: true,
+    });
+
+    // Force a browser refresh to ensure all filters are cleared
+    setTimeout(() => {
+      window.location.href = '/schools/list';
+    }, 100);
   };
 
   const handleSubmit = () => {
-    console.log({
-      searchTerm,
-      numStudents,
-      numTeachers,
-      numComputers,
-      downloadSpeed,
-      connectivityStatus,
-      activationStatus,
-      connectionType,
-      electricityAvailability,
-      waterAvailability,
-    });
+    // Update filters with current values
+    setFilters((prev) => ({
+      ...prev,
+      water: water !== 'all' ? water : undefined,
+      electricity: electricity !== 'all' ? electricity : undefined,
+      connectivityStatus: connected !== 'all' ? connected : undefined,
+      connectionType: connectionType !== 'all' ? connectionType : undefined,
+      students: students[1].value > 0 ? students[1].value : undefined,
+      teachers: teachers[1].value > 0 ? teachers[1].value : undefined,
+      computers: computers[1].value > 0 ? computers[1].value : undefined,
+      download: download[1].value > 0 ? download[1].value : undefined,
+    }));
+
+    // Also update URL for direct navigation/sharing
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (water !== 'all') {
+      params.set('water', water);
+    } else {
+      params.delete('water');
+    }
+
+    if (electricity !== 'all') {
+      params.set('electricity', electricity);
+    } else {
+      params.delete('electricity');
+    }
+
+    if (connected !== 'all') {
+      params.set('connectivityStatus', connected);
+    } else {
+      params.delete('connectivityStatus');
+    }
+
+    if (connectionType !== 'all') {
+      params.set('connectionType', connectionType);
+    } else {
+      params.delete('connectionType');
+    }
+
+    if (students[1].value > 0) params.set('students', students[1].value);
+    else params.delete('students');
+
+    if (teachers[1].value > 0) params.set('teachers', teachers[1].value);
+    else params.delete('teachers');
+
+    if (computers[1].value > 0) params.set('computers', computers[1].value);
+    else params.delete('computers');
+
+    if (download[1].value > 0) params.set('download', download[1].value);
+    else params.delete('download');
+
+    router.push(`/schools/list?${params.toString()}`, { scroll: false });
     setIsFilterOpen(false);
   };
 
+  // Set selectedCountry from URL param on mount or when country/countrylist changes
+  useEffect(() => {
+    if (countrylist && country) {
+      const found = countrylist.find((item) => item.code === country);
+      setSelectedCountry(found || null);
+    }
+    // If no country param, clear selection
+    if (countrylist && !country) {
+      setSelectedCountry(null);
+    }
+  }, [country, countrylist]);
+
   return (
-    <div className="search-page">
+    <div id="search" className="search-page">
       <div className="search-page__container">
         <div className="search-page__title">
           Not sure where to start ? <br /> Try browsing schools in need of
@@ -140,29 +311,46 @@ export default function SchoolSearch({ linkActivation }) {
             onChange={handleSearchChange}
           />
 
-          <ComboBox
-            id="carbon-combobox"
-            items={items}
-            itemToString={(item) => (item ? item.country : '')}
-            titleText="Country"
-            selectedItem={selectedCountry}
-            onChange={({ selectedItem }) => {
-              setSelectedCountry(selectedItem);
-              const params = new URLSearchParams(searchParams.toString());
-              params.set('page', '1');
-              params.set('perPage', perPage.toString());
-              if (selectedItem?.code) {
-                params.set('country', selectedItem.code);
-              } else {
-                params.delete('country');
-              }
-              router.push(`/schools?${params.toString()}`, {
-                scroll: false,
-                shallow: true,
-              });
-            }}
-          />
+          {countrylist && (
+            <ComboBox
+              id="carbon-combobox"
+              items={countrylist}
+              itemToString={(item) => (item ? item.country : '')}
+              titleText="Country"
+              selectedItem={selectedCountry}
+              onChange={({ selectedItem }) => {
+                setSelectedCountry(selectedItem);
+                setIsFilterChanging(true); // Show loader on country change
 
+                if (selectedItem?.code) {
+                  setFilters((prev) => ({
+                    ...prev,
+                    country: selectedItem.code,
+                  }));
+
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.set('country', selectedItem.code);
+                  router.push(`/schools/list?${params.toString()}`, {
+                    scroll: false,
+                    shallow: true,
+                  });
+                } else {
+                  setFilters((prev) => {
+                    const newFilters = { ...prev };
+                    delete newFilters.country;
+                    return newFilters;
+                  });
+
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.delete('country');
+                  router.push(`/schools/list?${params.toString()}`, {
+                    scroll: false,
+                    shallow: true,
+                  });
+                }
+              }}
+            />
+          )}
           <Select
             className="filter-select"
             id="minted-select"
@@ -170,6 +358,18 @@ export default function SchoolSearch({ linkActivation }) {
             value={mintedStatus}
             onChange={(e) => {
               const value = e.target.value;
+              setIsFilterChanging(true); // Show loader on minted status change
+
+              if (value === 'MINTED' || value === 'NOTMINTED') {
+                setFilters((prev) => ({ ...prev, minted: value }));
+              } else {
+                setFilters((prev) => {
+                  const newFilters = { ...prev };
+                  delete newFilters.minted;
+                  return newFilters;
+                });
+              }
+
               const params = new URLSearchParams(searchParams.toString());
               params.set('page', '1');
               params.set('perPage', perPage.toString());
@@ -180,7 +380,7 @@ export default function SchoolSearch({ linkActivation }) {
                 params.delete('minted');
               }
 
-              router.push(`/schools?${params.toString()}`, {
+              router.push(`/schools/list?${params.toString()}`, {
                 scroll: false,
                 shallow: true,
               });
@@ -196,7 +396,7 @@ export default function SchoolSearch({ linkActivation }) {
             className="filter-button controlled-accordion-btn"
             kind="ghost"
           >
-            <Filter size={20} />
+            <Filter size={18} />
           </Button>
         </div>
 
@@ -208,26 +408,26 @@ export default function SchoolSearch({ linkActivation }) {
                 {
                   label: 'Number of Students',
                   id: 'students-slider',
-                  value: numStudents,
-                  setter: setNumStudents,
+                  value: students,
+                  setter: setStudents,
                 },
                 {
                   label: 'Number of Teachers',
                   id: 'teachers-slider',
-                  value: numTeachers,
-                  setter: setNumTeachers,
+                  value: teachers,
+                  setter: setTeachers,
                 },
                 {
                   label: 'Number of Computers',
                   id: 'computers-slider',
-                  value: numComputers,
-                  setter: setNumComputers,
+                  value: computers,
+                  setter: setComputers,
                 },
                 {
                   label: 'Download Speed',
                   id: 'download-slider',
-                  value: downloadSpeed,
-                  setter: setDownloadSpeed,
+                  value: download,
+                  setter: setDownload,
                 },
               ].map(({ label, id, value, setter }) => (
                 <div className="filter-accordion__slider" key={id}>
@@ -245,85 +445,122 @@ export default function SchoolSearch({ linkActivation }) {
               ))}
             </div>
             <div className="filter-accordion__radio-groups">
-              {/* RADIO GROUPS.) */}
+              <RadioButtonGroup
+                legendText="Connectivity Status"
+                name="connected"
+                value={connected}
+                onChange={(value) => setConnected(value)}
+              >
+                <RadioButton id="connect-all" labelText="All" value="all" />
+                <RadioButton
+                  id="connect-yes"
+                  labelText="Connected"
+                  value="true"
+                />
+                <RadioButton
+                  id="connect-no"
+                  labelText="Not Connected"
+                  value="false"
+                />
+              </RadioButtonGroup>
+
+              <RadioButtonGroup
+                legendText="Connection Type"
+                name="connectionType"
+                value={connectionType}
+                onChange={(value) => setConnectionType(value)}
+              >
+                <RadioButton id="type-all" labelText="All" value="all" />
+                <RadioButton id="type-adsl" labelText="ADSL" value="ADSL" />
+                <RadioButton id="type-fiber" labelText="Fiber" value="Fiber" />
+              </RadioButtonGroup>
+
+              <RadioButtonGroup
+                legendText="Electricity Availability"
+                name="electricity"
+                value={electricity}
+                onChange={(value) => setElectricity(value)}
+              >
+                <RadioButton id="elec-all" labelText="All" value="all" />
+                <RadioButton id="elec-yes" labelText="Available" value="true" />
+                <RadioButton
+                  id="elec-no"
+                  labelText="Not Available"
+                  value="false"
+                />
+              </RadioButtonGroup>
+
+              <RadioButtonGroup
+                legendText="Water Availability"
+                name="water"
+                value={water}
+                onChange={(value) => setWater(value)}
+              >
+                <RadioButton id="water-all" labelText="All" value="all" />
+                <RadioButton
+                  id="water-yes"
+                  labelText="Available"
+                  value="true"
+                />
+                <RadioButton
+                  id="water-no"
+                  labelText="Not Available"
+                  value="false"
+                />
+              </RadioButtonGroup>
             </div>
 
             <div className="filter-accordion__actions">
               <Button kind="secondary" onClick={() => setIsFilterOpen(false)}>
                 Cancel
               </Button>
-              <Button kind="tertiary" onClick={resetFilters}>
+              <Button kind="tertiary" onClick={handleResetFilters}>
                 Reset All
               </Button>
-              <Button onClick={handleSubmit}>Activate</Button>
+              <Button onClick={handleSubmit}>Search</Button>
             </div>
           </div>
         </div>
 
-        <div className="search-page__results-count">
-          {schools?.meta?.total} Schools found
-        </div>
-
-        {isLoading ? (
-          <div className="search-page__grid">
-            <CardSkeleton count={10} />
+        {!isLoading ? (
+          <div className="search-page__results-count">
+            {totalCount?.toLocaleString()} Schools found
           </div>
         ) : (
-          <div className="search-page__grid">
-            {filteredSchools?.map((school) => (
-              <SchoolCard
-                key={school.id}
-                id={school.id}
-                schoolName={school.name}
-                location={school.region_name}
-                minted={school.minted}
-                hasImage={school.hasImage}
-                imageHash={school.imageHash}
-                linkActivation={linkActivation}
-                fontColor={school?.theme?.colorScheme?.fontColor}
-                bgColor={school?.theme?.colorScheme?.bgColor}
-              />
-            ))}
-          </div>
+          <></>
         )}
 
-        <div className="search-page__pagination">
-          <button
-            className="search-page__pagination-button"
-            onClick={() => handlePageChange(1)}
-            disabled={page === 1}
-          >
-            <PageFirst />
-          </button>
-
-          <button
-            className="search-page__pagination-button"
-            onClick={() => handlePageChange(page - 1)}
-            disabled={page === 1}
-          >
-            <ChevronLeft />
-          </button>
-
-          <span className="search-page__pagination-info">
-            Page {page} of {totalPages}
-          </span>
-
-          <button
-            className="search-page__pagination-button"
-            onClick={() => handlePageChange(page + 1)}
-            disabled={page === totalPages}
-          >
-            <ChevronRight />
-          </button>
-
-          <button
-            className="search-page__pagination-button"
-            onClick={() => handlePageChange(totalPages)}
-            disabled={page === totalPages}
-          >
-            <PageLast />
-          </button>
+        <div className="search-page__grid">
+          {/* Show skeleton when initial loading or filters are changing */}
+          {isLoading || isFilterChanging ? (
+            <CardSkeleton count={10} />
+          ) : (
+            <>
+              {filteredSchools?.map((school, idx) => (
+                <SchoolCard
+                  key={school?.id}
+                  id={school?.id}
+                  schoolName={school?.name}
+                  location={school?.countryName}
+                  minted={school?.minted}
+                  hasImage={school?.hasImage}
+                  imageHash={school?.imageHash}
+                  linkActivation={linkActivation}
+                  fontColor={'#161616'}
+                  bgColor={school?.theme?.colorScheme?.cardColor}
+                />
+              ))}
+              {/* Infinite query loading skeleton */}
+              {isFetchingNextPage && <CardSkeleton count={10} />}
+            </>
+          )}
         </div>
+
+        {/* Loader for infinite scroll */}
+        <div
+          ref={loaderRef}
+          style={{ height: 10, display: hasNextPage ? 'block' : 'none' }}
+        />
       </div>
     </div>
   );

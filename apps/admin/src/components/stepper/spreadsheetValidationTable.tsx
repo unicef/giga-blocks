@@ -11,16 +11,26 @@ import {
   Paper,
   Button,
   Alert,
+  Box,
+  CircularProgress,
 } from '@mui/material';
 import { useUploadContext } from '@contexts/uploadContext';
 import TableFormatter from '@utils/arrayFormatter';
+import { ErrorIcon, SuccessIcon } from 'src/theme/overrides/CustomIcons';
+import { hi } from 'date-fns/locale';
 
 interface SpreadsheetValidationTableProps {
   setHasErrors: (hasErrors: boolean) => void;
+  validationResult?: string[];
+  isFileValidated?: boolean;
+  setProceedToMinting: (proceed: boolean) => void;
 }
 
 const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   setHasErrors,
+  validationResult = [],
+  isFileValidated = true,
+  setProceedToMinting,
 }) => {
   const {
     sheetNames,
@@ -28,6 +38,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     selectedSheetName,
     setSelectedSheetName,
     tableDatas: rows,
+    setIsFileValidated,
   } = useUploadContext();
   const [errors, setErrors] = useState<string[]>([]);
   const [allSheetErrors, setAllSheetErrors] = useState<{ sheetName: string; errors: string[] }[]>();
@@ -139,6 +150,30 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     updateConvertedObject();
   }, [rows]);
 
+  const getRowHighlight = (schoolId: string, validationResult: string[]) => {
+    if (validationResult?.includes(schoolId) || !isFileValidated)
+      return { color: '#fdecea', icon: <ErrorIcon color="error" /> };
+    else return { color: '#e6f4ea', icon: <SuccessIcon color="success" /> };
+  };
+  useEffect(() => {
+    if (errors.length > 0) setIsFileValidated(false);
+  }, [errors]);
+
+  useEffect(() => {
+    if (validationResult.length > 0) {
+      const hasError = convertedObject?.[tableHeaders[0]].every((schoolId: any) =>
+        validationResult?.includes(schoolId)
+      );
+      if (!hasError) {
+        setProceedToMinting(true);
+      } else {
+        setIsFileValidated(false);
+      }
+    } else if (isFileValidated) {
+      setProceedToMinting(true);
+    }
+  }, [validationResult]);
+
   return (
     <>
       {errors.length > 0 && (
@@ -166,14 +201,26 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
           <TableHead>
             <TableRow>
               {tableHeaders.map((header, index) => (
-                <TableCell key={index} sx={{ whiteSpace: 'nowrap' }}>
+                <TableCell
+                  key={index}
+                  sx={{
+                    position: 'sticky',
+                    top: 0,
+                    whiteSpace: 'nowrap',
+                  }}
+                >
                   {header}
                 </TableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {convertedObject &&
+            {!isFileValidated && validationResult.length === 0 ? (
+              <>
+                <CircularProgress />
+              </>
+            ) : (
+              convertedObject &&
               convertedObject[tableHeaders[0]]?.map((_: any, rowIndex: number) => (
                 <TableRow
                   key={rowIndex}
@@ -190,20 +237,33 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
                     } else {
                       isInvalid = typeof value !== 'string';
                     }
-
+                    const highlightColor = getRowHighlight(value, validationResult)?.color;
+                    const Icon = getRowHighlight(value, validationResult)?.icon;
                     const cellStyles = {
                       border: isInvalid ? '1px solid red' : '',
-                      backgroundColor: isInvalid ? 'rgba(255, 0, 0, 0.1)' : '',
+                      backgroundColor: highlightColor
+                        ? highlightColor
+                        : isInvalid
+                        ? 'rgba(255, 0, 0, 0.1)'
+                        : '',
                     };
 
                     return (
                       <TableCell key={header} sx={cellStyles}>
-                        {value}
+                        {Icon ? (
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            {Icon}
+                            {value}
+                          </Box>
+                        ) : (
+                          value
+                        )}
                       </TableCell>
                     );
                   })}
                 </TableRow>
-              ))}
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>

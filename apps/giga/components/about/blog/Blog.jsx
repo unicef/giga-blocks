@@ -6,7 +6,7 @@ import { ArrowRight } from '@carbon/icons-react';
 import Link from 'next/link';
 import './_blog.scss';
 
-export default function Blog() {
+export default function Blog({ showHeader = true, className = '' }) {
   // Blog post data
   const blogPosts = [
     {
@@ -15,7 +15,7 @@ export default function Blog() {
       excerpt:
         'Out of an estimated 6 million schools worldwide. No one knows the exact number, but our mapping efforts help governments locate and support them.',
       image: '/images/school-image.png',
-      slug: '/blog/how-does-art-work-in-giga',
+      slug: '/blog/1',
     },
     {
       id: 2,
@@ -23,22 +23,24 @@ export default function Blog() {
       excerpt:
         'Out of an estimated 6 million schools worldwide. No one knows the exact number, but our mapping efforts help governments locate and support them.',
       image: '/images/school_header.png',
-      slug: '/blog/technicalities-of-school-data-on-chain',
+      slug: '/blog/2',
     },
   ];
 
   return (
-    <section className="about-blog">
+    <section className={`about-blog ${className}`}>
       <div className="about-blog__container">
-        <div className="about-blog__header">
-          <h2 className="about-blog__title">
-            Understand the role of art and the tech behind putting school data
-            on-chain.
-          </h2>
-          <p className="about-blog__subtitle">
-            Explore our latest thoughts and updates below
-          </p>
-        </div>
+        {showHeader && (
+          <div className="about-blog__header">
+            <h2 className="about-blog__title">
+              Understand the role of art and the tech behind putting school data
+              on-chain.
+            </h2>
+            <p className="about-blog__subtitle">
+              Explore our latest thoughts and updates below
+            </p>
+          </div>
+        )}
 
         <div className="about-blog__posts">
           {blogPosts.map((post) => (

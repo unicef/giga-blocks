@@ -13,7 +13,7 @@ import {
   TableBody,
   CircularProgress,
 } from '@mui/material';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 import { useSnackbar } from '@components/snackbar';
 import FormProvider, { ProfileTextField } from '@components/hook-form';
 import CustomBreadcrumbs from '@components/custom-breadcrumbs';
@@ -22,6 +22,7 @@ import { useValidDataGetById, useValidateUpdate } from '@hooks/validate/useValid
 import Scrollbar from '@components/scrollbar';
 import { TableHeadUsers, TableNoData, TablePaginationCustom, useTable } from '@components/table';
 import ContributionDetailTableRow from './ContributionDetailTableRow';
+import { NextRouter } from 'next/router';
 
 interface Props {
   isEdit?: boolean;
@@ -29,13 +30,13 @@ interface Props {
   id?: string | string[] | undefined;
 }
 interface Profile {
-  fullname: string,
-  schoolName: string,
-  createdAt: string,
-  status: string,
-  contributed_data: string,
-  coverage: string,
-  mintedStatus: string,
+  fullname: string;
+  schoolName: string;
+  createdAt: string;
+  status: string;
+  contributed_data: string;
+  coverage: string;
+  mintedStatus: string;
 }
 
 export default function ValidateDetail({ id }: Props) {
@@ -54,14 +55,7 @@ export default function ValidateDetail({ id }: Props) {
   const { enqueueSnackbar } = useSnackbar();
   const [tableData, setTableData] = useState<any>();
 
-  const {
-    dense,
-    page,
-    order,
-    orderBy,
-    rowsPerPage,
-    onSort,
-  } = useTable();
+  const { dense, page, order, orderBy, rowsPerPage, onSort } = useTable();
 
   const TABLE_HEAD = [
     { id: 'key', label: 'Key', align: 'left' },
@@ -72,28 +66,32 @@ export default function ValidateDetail({ id }: Props) {
     mutate,
     isSuccess: isValidationSuccess,
     isError: isValidationError,
-    isLoading: isValidationLoading
+    isLoading: isValidationLoading,
   } = useValidateUpdate();
 
-  const router = useRouter();
+  const router = useRouter() as NextRouter;
 
   useEffect(() => {
     if (isSuccess && data?.data) {
       const keyValue = Object?.entries(data?.data);
-      var jsonString ;
-      if(keyValue) 
-      {jsonString = `${keyValue[0][0]}: ${keyValue[0][1]}`;
-      const outputArray = Object?.keys(data?.data)?.map((key) => ({ key, value: data?.data[key] }));
-      setTableData(outputArray);
-      setProfile({
-        fullname: data?.contributedUser?.name,
-        schoolName: data?.school.name,
-        createdAt: new Date(data?.createdAt)?.toLocaleDateString(),
-        status: String(data?.approvedStatus),
-        contributed_data: jsonString,
-        coverage: data?.coverage_availability,
-        mintedStatus: data?.minted,
-      });}
+      var jsonString;
+      if (keyValue) {
+        jsonString = `${keyValue[0][0]}: ${keyValue[0][1]}`;
+        const outputArray = Object?.keys(data?.data)?.map((key) => ({
+          key,
+          value: data?.data[key],
+        }));
+        setTableData(outputArray);
+        setProfile({
+          fullname: data?.contributedUser?.name,
+          schoolName: data?.school.name,
+          createdAt: new Date(data?.createdAt)?.toLocaleDateString(),
+          status: String(data?.approvedStatus),
+          contributed_data: jsonString,
+          coverage: data?.coverage_availability,
+          mintedStatus: data?.minted,
+        });
+      }
     }
   }, [isSuccess, isError, data]);
 
@@ -120,129 +118,135 @@ export default function ValidateDetail({ id }: Props) {
 
   return (
     <>
-    {!isFetching ?
-      (<>
-      <Grid item xs={12} lg={8} >
-        <Container>
-          <CustomBreadcrumbs
-            heading="Validation Detail"
-            links={[
-              { name: 'Dashboard', href: PATH_DASHBOARD.root },
-              { name: 'Valid Data', href: PATH_VALID.root },
-              { name: 'Detail' },
-            ]}
-          />
-          <FormProvider methods={methods}>
-            <Grid container spacing={3} >
-              <Grid item xs={12} md={12} lg={12}>
-                <Card sx={{ p: 3 }}>
-                  <Box rowGap={3} columnGap={2} display="grid">
-                    <ProfileTextField
-                      name="location"
-                      value={profile?.schoolName || ''}
-                      label="School Name"
-                      disabled
-                    />
-                    <Box
-                      display="grid"
-                      rowGap={3}
-                      columnGap={8}
-                      gridTemplateColumns={{
-                        xs: 'repeat(1, 1fr)',
-                        sm: 'repeat(2, 1fr)',
-                      }}
-                    >
-                      <ProfileTextField
-                        name="latitude"
-                        value={profile?.createdAt || ''}
-                        label="Created At"
-                        disabled
-                      />
-                      <ProfileTextField
-                        name="longitude"
-                        value={profile?.status || ''}
-                        label="Approved Status"
-                        disabled
-                      />
-                    </Box>
-                  </Box>
+      {!isFetching ? (
+        <>
+          <Grid item xs={12} lg={8}>
+            <Container>
+              <CustomBreadcrumbs
+                heading="Validation Detail"
+                links={[
+                  { name: 'Dashboard', href: PATH_DASHBOARD.root },
+                  { name: 'Valid Data', href: PATH_VALID.root },
+                  { name: 'Detail' },
+                ]}
+              />
+              <FormProvider methods={methods}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={12} lg={12}>
+                    <Card sx={{ p: 3 }}>
+                      <Box rowGap={3} columnGap={2} display="grid">
+                        <ProfileTextField
+                          name="location"
+                          value={profile?.schoolName || ''}
+                          label="School Name"
+                          disabled
+                        />
+                        <Box
+                          display="grid"
+                          rowGap={3}
+                          columnGap={8}
+                          gridTemplateColumns={{
+                            xs: 'repeat(1, 1fr)',
+                            sm: 'repeat(2, 1fr)',
+                          }}
+                        >
+                          <ProfileTextField
+                            name="latitude"
+                            value={profile?.createdAt || ''}
+                            label="Created At"
+                            disabled
+                          />
+                          <ProfileTextField
+                            name="longitude"
+                            value={profile?.status || ''}
+                            label="Approved Status"
+                            disabled
+                          />
+                        </Box>
+                      </Box>
 
-                  <Stack alignItems="flex-start" sx={{ mt: 3 }}>
+                      <Stack alignItems="flex-start" sx={{ mt: 3 }}>
+                        <Button
+                          onClick={back}
+                          variant="contained"
+                          style={{ width: '300px', background: '#474747' }}
+                        >
+                          Back
+                        </Button>
+                      </Stack>
+                    </Card>
+                  </Grid>
+                </Grid>
+              </FormProvider>
+            </Container>
+          </Grid>
+          <Grid item xs={4} sm={12} lg={4} style={{ margin: 'auto', marginTop: 0 }}>
+            <Container>
+              <Box justifyContent={'center'}>
+                <Stack alignItems="center" sx={{ mt: 1 }}>
+                  {profile && profile?.status === 'false' && (
                     <Button
-                      onClick={back}
                       variant="contained"
+                      color={'info'}
                       style={{ width: '300px', background: '#474747' }}
+                      onClick={onValidate}
+                      disabled={isValidationLoading}
                     >
-                      Back
+                      {isValidationLoading ? 'Approving..' : 'Approve'}
                     </Button>
-                  </Stack>
-                </Card>
-              </Grid>
-            </Grid>
-          </FormProvider>
-        </Container>
-      </Grid>
-      <Grid item xs={4} sm={12} lg={4} style={{margin: 'auto', marginTop: 0}}>
-        <Container>
-          <Box justifyContent={'center'}>
-            <Stack alignItems="center" sx={{ mt: 1 }}>
-              {profile && profile?.status === 'false' &&
-              <Button
-                variant="contained"
-                color={'info'}
-                style={{ width: '300px', background: '#474747' }}
-                onClick={onValidate}
-                disabled={isValidationLoading}
-              >
-              {isValidationLoading ? 'Approving..' : 'Approve'} 
-              </Button>}
-            </Stack>
-          </Box>
-        </Container>
-      </Grid>
-      <Grid xs={11} sx={{ margin: 'auto', marginTop: '50px' }}>
-        <Typography variant="h6" component="h6">
-          Contribution Detail
-        </Typography>
-        <Card sx={{ marginTop: '20px' }}>
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
-                <TableHeadUsers
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={tableData?.length}
-                  onSort={onSort}
-                  showCheckBox={true}
-                />
+                  )}
+                </Stack>
+              </Box>
+            </Container>
+          </Grid>
+          <Grid xs={11} sx={{ margin: 'auto', marginTop: '50px' }}>
+            <Typography variant="h6" component="h6">
+              Contribution Detail
+            </Typography>
+            <Card sx={{ marginTop: '20px' }}>
+              <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+                <Scrollbar>
+                  <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+                    <TableHeadUsers
+                      order={order}
+                      orderBy={orderBy}
+                      headLabel={TABLE_HEAD}
+                      rowCount={tableData?.length}
+                      onSort={onSort}
+                      showCheckBox={true}
+                    />
 
-                <TableBody>
-                  {sortedData &&
-                    sortedData.length > page*rowsPerPage && sortedData?.map((row: any) => (
-                      <ContributionDetailTableRow
-                        key={row?.id}
-                        row={row}
-                      />
-                    ))}
-                  {!isFetching ? (
-                      <TableNoData isNotFound={sortedData?.length < page*rowsPerPage} />
-                    ) : (
-                      <CircularProgress color="inherit"  />
-                    )}
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
-        </Card>
-      </Grid>
-    </>):(
-
-      <div style={{width: '100%', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-      <CircularProgress color="inherit" />
-      </div>
-    )
-    }
+                    <TableBody>
+                      {sortedData &&
+                        sortedData.length > page * rowsPerPage &&
+                        sortedData?.map((row: any) => (
+                          <ContributionDetailTableRow key={row?.id} row={row} />
+                        ))}
+                      {!isFetching ? (
+                        <TableNoData isNotFound={sortedData?.length < page * rowsPerPage} />
+                      ) : (
+                        <CircularProgress color="inherit" />
+                      )}
+                    </TableBody>
+                  </Table>
+                </Scrollbar>
+              </TableContainer>
+            </Card>
+          </Grid>
+        </>
+      ) : (
+        <div
+          style={{
+            width: '100%',
+            height: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <CircularProgress color="inherit" />
+        </div>
+      )}
     </>
   );
 }
