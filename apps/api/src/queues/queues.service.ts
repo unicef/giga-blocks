@@ -38,7 +38,30 @@ export class QueuesService {
   async getAllJobs(queueName: string) {
     const queue = this.getQueue(queueName);
     // Get all jobs in the queue (waiting, active, completed, failed, delayed, paused)
-    return queue.getJobs(['waiting', 'active', 'completed', 'failed', 'delayed', 'paused']);
+    const jobs = await queue.getJobs([
+      'waiting',
+      'active',
+      'completed',
+      'failed',
+      'delayed',
+      'paused',
+    ]);
+
+    return Promise.all(
+      jobs.map(async job => ({
+        id: job.id,
+        name: job.name,
+        data: job.data,
+        attemptsMade: job.attemptsMade,
+        failedReason: job.failedReason,
+        timestamp: job.timestamp,
+        processedOn: job.processedOn,
+        finishedOn: job.finishedOn,
+        progress: job.progress,
+        returnvalue: job.returnvalue,
+        status: await job.getState(),
+      })),
+    );
   }
 
   async getFailedJobs(queueName: string) {
