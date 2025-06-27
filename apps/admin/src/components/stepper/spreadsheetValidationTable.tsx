@@ -202,7 +202,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
         ))}
 
       <TableContainer component={Paper} sx={{ my: 4, height: 400 }}>
-        <Table sx={{ mx: 1 }}>
+        <Table sx={{ mx: 1, height: '100%' }}>
           <TableHead>
             <TableRow>
               {tableHeaders.map((header, index) => (
@@ -221,9 +221,16 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
           </TableHead>
           <TableBody>
             {!isFileValidated && validationResult.length === 0 ? (
-              <>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '100%',
+                }}
+              >
                 <CircularProgress />
-              </>
+              </Box>
             ) : (
               convertedObject &&
               convertedObject[tableHeaders[0]]?.map((_: any, rowIndex: number) => (

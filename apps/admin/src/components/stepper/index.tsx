@@ -447,7 +447,11 @@ export default function HorizontalLinearStepper({
                       },
                     }}
                   />
-                  <p>Minting in progress...</p>
+                  <p>
+                    {mintDetails.mintedCount === mintDetails.total
+                      ? 'Minted Completed'
+                      : 'Minting in progress...'}
+                  </p>
                 </Box>
                 <Box
                   sx={{
@@ -511,8 +515,7 @@ export default function HorizontalLinearStepper({
                   <Button
                     variant="outlined"
                     color="inherit"
-                    disabled={mintDetails?.mintedCount !== mintDetails.total}
-                    onClick={handleBackToDashboard}
+                    onClick={() => setViewDetails(false)}
                     sx={{ mr: 1 }}
                   >
                     Back
