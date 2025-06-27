@@ -64,8 +64,10 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   const duplicateCheck = (data: any[]): any[] => {
     const uniqueRows = new Set<string>();
     const duplicateRows: any[] = [];
-    const headers = [];
-    data.forEach((row: any) => {
+    const headers = [...data[0]];
+    const rows = data.slice(1);
+
+    rows.forEach((row: any) => {
       const rowString = JSON.stringify(row);
       if (!isUUID(row[0])) {
         headers.push(row[0]);
@@ -73,7 +75,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
 
       if (uniqueRows.has(rowString)) {
         duplicateRows.push(`Duplicate row found: ${JSON.stringify(row)}`);
-      } else if (!isUUID(row[0]) && headers.length > 1) {
+      } else if (duplicateRows.length === 0 && headers.length > 1) {
         duplicateRows.push(`Invalid header`);
       } else {
         uniqueRows.add(rowString);
