@@ -19,7 +19,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import RetryButton from './retry-button';
-import { useQueueJobsQuery } from '@hooks/queues/useQueues';
+import { useQueueFailedJobsQuery, useQueueJobsQuery } from '@hooks/queues/useQueues';
 
 const queueTypes = [
   { label: 'Mail Queue', value: 'MAIL_QUEUE' },
@@ -58,7 +58,7 @@ const renderNestedData = (data: any, depth = 0): React.ReactNode => {
 const QueueList: React.FC = () => {
   const [queueType, setQueueType] = useState(queueTypes[0].value);
 
-  const { data, isLoading } = useQueueJobsQuery(queueType);
+  const { data, isLoading } = useQueueFailedJobsQuery(queueType);
   console.log({ data });
 
   interface Job {

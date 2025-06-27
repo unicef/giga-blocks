@@ -7,6 +7,11 @@ export const fetchJobs = async (endpoint: string) => {
 
   return data;
 };
+export const fetchFailedJobs = async (endpoint: string) => {
+  const { data } = await api.get(`/queue/${endpoint}/failed`);
+
+  return data;
+};
 
 export const retryJob = async (endpoint: string, jobId: number | string) => {
   const { data } = await api.post(`/queue/${endpoint}/retry/${jobId}`);
@@ -16,6 +21,15 @@ export const useQueueJobsQuery = (queueType: string) => {
   return useQuery({
     queryKey: ['jobs', queueType],
     queryFn: () => fetchJobs(queueType),
+    refetchInterval(query) {
+      return 4000;
+    },
+  });
+};
+export const useQueueFailedJobsQuery = (queueType: string) => {
+  return useQuery({
+    queryKey: ['jobs', queueType],
+    queryFn: () => fetchFailedJobs(queueType),
     refetchInterval(query) {
       return 4000;
     },

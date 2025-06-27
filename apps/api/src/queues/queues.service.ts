@@ -66,7 +66,22 @@ export class QueuesService {
 
   async getFailedJobs(queueName: string) {
     const queue = this.getQueue(queueName);
-    return queue.getFailed();
+    const jobs = await queue.getFailed();
+    return Promise.all(
+      jobs.map(async job => ({
+        id: job.id,
+        name: job.name,
+        data: job.data,
+        attemptsMade: job.attemptsMade,
+        failedReason: job.failedReason,
+        timestamp: job.timestamp,
+        processedOn: job.processedOn,
+        finishedOn: job.finishedOn,
+        progress: job.progress,
+        returnvalue: job.returnvalue,
+        status: await job.getState(),
+      })),
+    );
   }
 
   async getCompletedJobs(queueName: string) {
