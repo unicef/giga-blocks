@@ -22,13 +22,13 @@ import RetryButton from './retry-button';
 import { useQueueJobsQuery } from '@hooks/queues/useQueues';
 
 const queueTypes = [
-  { label: 'MAIL_QUEUE', value: 'MAIL_QUEUE' },
-  { label: 'MINT_QUEUE', value: 'MINT_QUEUE' },
-  { label: 'IMAGE_QUEUE', value: 'IMAGE_QUEUE' },
-  { label: 'ONCHAIN_DATA_QUEUE', value: 'ONCHAIN_DATA_QUEUE' },
-  { label: 'CONTRIBUTE_QUEUE', value: 'CONTRIBUTE_QUEUE' },
-  { label: 'VC_QUEUE', value: 'VC_QUEUE' },
-  { label: 'BULK_IMAGE_QUEUE', value: 'BULK_IMAGE_QUEUE' },
+  { label: 'Mail Queue', value: 'MAIL_QUEUE' },
+  { label: 'Mint Queue', value: 'MINT_QUEUE' },
+  { label: 'Image Queue', value: 'IMAGE_QUEUE' },
+  { label: 'Onchain Data Queue', value: 'ONCHAIN_DATA_QUEUE' },
+  { label: 'Contribute Queue', value: 'CONTRIBUTE_QUEUE' },
+  { label: 'VC Queue', value: 'VC_QUEUE' },
+  { label: 'Bulk Image Queue', value: 'BULK_IMAGE_QUEUE' },
 ];
 
 const renderNestedData = (data: any, depth = 0): React.ReactNode => {
