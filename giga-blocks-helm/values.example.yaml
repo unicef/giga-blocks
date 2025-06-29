@@ -388,6 +388,7 @@ ingress:
   webhook:
     path: "/webhook"
     backendService: "giga-chart-webhook-svc"
-  # docs:
-  #   path: "/doc"
-  #   backendService: "giga-blocks-docs"
+  #doc:
+  #  path: "/doc"
+  #  backendService: "giga-blocks-docs"
+  #  servicePort: 80

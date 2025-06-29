@@ -21,8 +21,18 @@ spec:
             {{- toYaml .Values.admin.environment | nindent 12 }}
           image: {{ .Values.admin.image.repository }}:{{ .Values.admin.image.tag | default .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.admin.image.pullPolicy }}
+          {{- with .Values.admin.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.admin.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           ports:
-            - containerPort: 3000
+            - name: http
+              containerPort: 3000
+              protocol: TCP
           resources:
             {{- toYaml .Values.admin.resources | nindent 12 }}
       {{- if .Values.admin.image.secrets }}

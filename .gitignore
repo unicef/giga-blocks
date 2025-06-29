@@ -61,5 +61,11 @@ docker-compose*
 helm/requirements.lock
 helm/charts/*
 helm/values.*.yaml
+giga-blocks-helm/requirements.lock
+giga-blocks-helm/Chart.lock
+giga-blocks-helm/charts/*
+giga-blocks-helm/values.*.yaml
+values.*.yaml
 
 Docker/
+files/
