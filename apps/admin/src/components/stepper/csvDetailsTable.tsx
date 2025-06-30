@@ -31,6 +31,7 @@ function CsvDetailsTable({ schools }: { schools: any[] }) {
                     position: 'sticky',
                     top: 0,
                     whiteSpace: 'nowrap',
+                    zIndex: 1,
                   }}
                 >
                   {column}
@@ -50,6 +51,7 @@ function CsvDetailsTable({ schools }: { schools: any[] }) {
                     sx={{
                       display: 'flex',
                       alignItems: 'center',
+                      gap: 1,
                     }}
                   >
                     {school?.minted === MintStatus.MINTED ? (

@@ -17,18 +17,23 @@ import {
 import { useUploadContext } from '@contexts/uploadContext';
 import TableFormatter from '@utils/arrayFormatter';
 import { ErrorIcon, SuccessIcon } from 'src/theme/overrides/CustomIcons';
-import { hi } from 'date-fns/locale';
+import { validate as isUUID } from 'uuid';
 
+type ValidationResult = {
+  alreadyMinted: string[];
+  invalidSchools: string[];
+  inProgressSchools: string[];
+};
 interface SpreadsheetValidationTableProps {
   setHasErrors: (hasErrors: boolean) => void;
-  validationResult?: string[];
+  validationResult?: ValidationResult | null;
   isFileValidated?: boolean;
   setProceedToMinting: (proceed: boolean) => void;
 }
 
 const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   setHasErrors,
-  validationResult = [],
+  validationResult = null,
   isFileValidated = true,
   setProceedToMinting,
 }) => {
@@ -65,11 +70,19 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   const duplicateCheck = (data: any[]): any[] => {
     const uniqueRows = new Set<string>();
     const duplicateRows: any[] = [];
+    const headers = [...data[0]];
+    const rows = data.slice(1);
 
-    data.forEach((row: any) => {
+    rows.forEach((row: any) => {
       const rowString = JSON.stringify(row);
+      if (!isUUID(row[0])) {
+        headers.push(row[0]);
+      }
+
       if (uniqueRows.has(rowString)) {
         duplicateRows.push(`Duplicate row found: ${JSON.stringify(row)}`);
+      } else if (duplicateRows.length === 0 && headers.length > 1) {
+        duplicateRows.push(`Invalid header`);
       } else {
         uniqueRows.add(rowString);
       }
@@ -150,9 +163,13 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     updateConvertedObject();
   }, [rows]);
 
-  const getRowHighlight = (schoolId: string, validationResult: string[]) => {
-    if (validationResult?.includes(schoolId) || !isFileValidated)
+  const getRowHighlight = (schoolId: string, validationResult: ValidationResult | null) => {
+    if (validationResult?.alreadyMinted?.includes(schoolId))
       return { color: '#fdecea', icon: <ErrorIcon color="error" /> };
+    if (validationResult?.invalidSchools?.includes(schoolId))
+      return { color: '#fff3cd', icon: <ErrorIcon color="warning" /> };
+    if (validationResult?.inProgressSchools?.includes(schoolId))
+      return { color: '#e3f2fd', icon: <CircularProgress size={18} color="primary" /> };
     else return { color: '#e6f4ea', icon: <SuccessIcon color="success" /> };
   };
   useEffect(() => {
@@ -160,9 +177,14 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   }, [errors]);
 
   useEffect(() => {
-    if (validationResult.length > 0) {
+    if (validationResult) {
+      const validationResultIds = [
+        ...validationResult.alreadyMinted,
+        ...validationResult.invalidSchools,
+        ...validationResult.inProgressSchools,
+      ];
       const hasError = convertedObject?.[tableHeaders[0]].every((schoolId: any) =>
-        validationResult?.includes(schoolId)
+        validationResultIds?.includes(schoolId)
       );
       if (!hasError) {
         setProceedToMinting(true);
@@ -197,7 +219,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
         ))}
 
       <TableContainer component={Paper} sx={{ my: 4, height: 400 }}>
-        <Table sx={{ mx: 1 }}>
+        <Table sx={{ mx: 1, height: '100%' }}>
           <TableHead>
             <TableRow>
               {tableHeaders.map((header, index) => (
@@ -207,6 +229,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
                     position: 'sticky',
                     top: 0,
                     whiteSpace: 'nowrap',
+                    zIndex: 1,
                   }}
                 >
                   {header}
@@ -215,10 +238,17 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {!isFileValidated && validationResult.length === 0 ? (
-              <>
+            {!isFileValidated && !validationResult ? (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '100%',
+                }}
+              >
                 <CircularProgress />
-              </>
+              </Box>
             ) : (
               convertedObject &&
               convertedObject[tableHeaders[0]]?.map((_: any, rowIndex: number) => (
