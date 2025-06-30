@@ -327,6 +327,7 @@ export class SchoolService {
                 },
                 data: {
                   uploadId: uploadBatch.id,
+                  minted: MintStatus.ISMINTING,
                 },
               });
               return uploadBatch;
