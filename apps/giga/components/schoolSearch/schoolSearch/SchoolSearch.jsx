@@ -22,6 +22,7 @@ import { useResetFilters } from '../../../app/hooks/useHashStorageFilters';
 import SchoolCard from '../../schoolCard/SchoolCard';
 import './_schoolSearch.scss';
 import CardSkeleton from '../../cardSkeleton/CardSkeleton';
+import Image from 'next/image';
 
 export default function SchoolSearch({ linkActivation }) {
   const router = useRouter();
@@ -302,6 +303,15 @@ export default function SchoolSearch({ linkActivation }) {
           Not sure where to start ? <br /> Try browsing schools in need of
           activation!
         </div>
+        <div className="search-page__mobile-filter">
+          <Button
+            onClick={toggleFilter}
+            className="filter-button-mobile controlled-accordion-btn"
+            kind="ghost"
+          >
+            <Filter size={18} /> <span>Filter</span>
+          </Button>
+        </div>
         <div className="search-page__filters">
           <Search
             className="search-input"
@@ -351,53 +361,55 @@ export default function SchoolSearch({ linkActivation }) {
               }}
             />
           )}
-          <Select
-            className="filter-select"
-            id="minted-select"
-            labelText="Select Activated Status"
-            value={mintedStatus}
-            onChange={(e) => {
-              const value = e.target.value;
-              setIsFilterChanging(true); // Show loader on minted status change
+          <div className="filter-actions-wrap">
+            <Select
+              className="filter-select"
+              id="minted-select"
+              labelText="Select Activated Status"
+              value={mintedStatus}
+              onChange={(e) => {
+                const value = e.target.value;
+                setIsFilterChanging(true); // Show loader on minted status change
 
-              if (value === 'MINTED' || value === 'NOTMINTED') {
-                setFilters((prev) => ({ ...prev, minted: value }));
-              } else {
-                setFilters((prev) => {
-                  const newFilters = { ...prev };
-                  delete newFilters.minted;
-                  return newFilters;
+                if (value === 'MINTED' || value === 'NOTMINTED') {
+                  setFilters((prev) => ({ ...prev, minted: value }));
+                } else {
+                  setFilters((prev) => {
+                    const newFilters = { ...prev };
+                    delete newFilters.minted;
+                    return newFilters;
+                  });
+                }
+
+                const params = new URLSearchParams(searchParams.toString());
+                params.set('page', '1');
+                params.set('perPage', perPage.toString());
+
+                if (value === 'MINTED' || value === 'NOTMINTED') {
+                  params.set('minted', value);
+                } else {
+                  params.delete('minted');
+                }
+
+                router.push(`/schools/list?${params.toString()}`, {
+                  scroll: false,
+                  shallow: true,
                 });
-              }
+              }}
+            >
+              <SelectItem value="ALL" text="All" />
+              <SelectItem value="MINTED" text="Activated" />
+              <SelectItem value="NOTMINTED" text="Not Activated" />
+            </Select>
 
-              const params = new URLSearchParams(searchParams.toString());
-              params.set('page', '1');
-              params.set('perPage', perPage.toString());
-
-              if (value === 'MINTED' || value === 'NOTMINTED') {
-                params.set('minted', value);
-              } else {
-                params.delete('minted');
-              }
-
-              router.push(`/schools/list?${params.toString()}`, {
-                scroll: false,
-                shallow: true,
-              });
-            }}
-          >
-            <SelectItem value="ALL" text="All" />
-            <SelectItem value="MINTED" text="Activated" />
-            <SelectItem value="NOTMINTED" text="Not Activated" />
-          </Select>
-
-          <Button
-            onClick={toggleFilter}
-            className="filter-button controlled-accordion-btn"
-            kind="ghost"
-          >
-            <Filter size={18} />
-          </Button>
+            <Button
+              onClick={toggleFilter}
+              className="filter-button controlled-accordion-btn"
+              kind="ghost"
+            >
+              <Filter size={18} />
+            </Button>
+          </div>
         </div>
 
         {/* Filter Accordion */}
@@ -534,7 +546,7 @@ export default function SchoolSearch({ linkActivation }) {
           {/* Show skeleton when initial loading or filters are changing */}
           {isLoading || isFilterChanging ? (
             <CardSkeleton count={10} />
-          ) : (
+          ) : filteredSchools.length > 0 ? (
             <>
               {filteredSchools?.map((school, idx) => (
                 <SchoolCard
@@ -553,6 +565,21 @@ export default function SchoolSearch({ linkActivation }) {
               {/* Infinite query loading skeleton */}
               {isFetchingNextPage && <CardSkeleton count={10} />}
             </>
+          ) : (
+            <div className="search-page__no-results">
+              <Image
+                src="/images/unactivate-dashboard.png"
+                alt="No schools found"
+                width={250}
+                height={250}
+                className="search-page__no-results-image"
+              />
+              <h3>No schools found</h3>
+              <p>
+                There are no schools matching your search criteria. Please try
+                adjusting your filters.
+              </p>
+            </div>
           )}
         </div>
 

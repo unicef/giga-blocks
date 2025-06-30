@@ -90,6 +90,7 @@
       max-width: 100%;
       padding-right: 0;
       margin-bottom: $spacing-06;
+      order: 2;
     }
   }
 
@@ -264,7 +265,9 @@
     margin-bottom: $spacing-06;
 
     @include breakpoint-down(lg) {
-      grid-template-columns: 1fr;
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-05;
     }
   }
 
