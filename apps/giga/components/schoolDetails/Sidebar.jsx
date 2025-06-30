@@ -15,6 +15,8 @@ const Sidebar = ({
   claim,
   owner,
   schoolName,
+  isVerfierDisabled,
+  handleCIWClick = () => {},
 }) => {
   const [imageError, setImageError] = useState(false);
   const pathname = usePathname();
@@ -30,7 +32,8 @@ const Sidebar = ({
         <div className="school-details__minted-container">
           <div className="verify-ciw">
             <p
-              onClick={()=>{}}
+              disabled={isVerfierDisabled}
+              onClick={()=>{handleCIWClick()}}
               style={{
                 display: 'flex',
                 justifyContent: 'end',
