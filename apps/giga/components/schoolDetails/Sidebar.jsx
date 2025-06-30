@@ -29,8 +29,8 @@ const Sidebar = ({
       {minted === 'MINTED' ? (
         <div className="school-details__minted-container">
           <div className="verify-ciw">
-            {/* <p
-              onClick={toggleVisibilityForMinted}
+            <p
+              onClick={()=>{}}
               style={{
                 display: 'flex',
                 justifyContent: 'end',
@@ -40,9 +40,9 @@ const Sidebar = ({
               }}
             >
               Verify CIW
-            </p> */}
+            </p>
 
-            {!isClaimPath && address?.toLowerCase() === owner?.toLowerCase() ? (
+            {minted === 'MINTED' && !isClaimPath && address?.toLowerCase() === owner?.toLowerCase() ? (
               <p
                 onClick={toggleVisibilityForMinted}
                 style={{
