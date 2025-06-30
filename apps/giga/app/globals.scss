@@ -88,3 +88,44 @@ body {
   padding-block-start: 0;
   padding-inline: 0;
 }
+
+//not-found css//
+
+.notfound-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 90vh;
+  padding: 20px;
+  background: white;
+}
+
+.notfound-title {
+  font-size: 72px;
+  font-weight: bold;
+  margin: 0;
+  color: #000;
+}
+
+.notfound-subtitle {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+.notfound-button {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #1a73e8;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.notfound-button:hover {
+  background-color: #1558c0;
+}

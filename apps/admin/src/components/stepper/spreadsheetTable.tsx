@@ -10,13 +10,22 @@ import {
   Button,
 } from '@mui/material';
 import { useUploadContext } from '@contexts/uploadContext';
+type ValidationResult = {
+  alreadyMinted: string[];
+  invalidSchools: string[];
+  inProgressSchools: string[];
+};
 
-const SpreadSheetTable = ({ invalidate }: { invalidate?: string[] }) => {
+const SpreadSheetTable = ({ invalidate }: { invalidate?: ValidationResult | null }) => {
   const { sheetNames, setSelectedSheetName, tableDatas: rows } = useUploadContext();
   const handleSelectedSheetName = (el: string) => {
     setSelectedSheetName(el);
   };
-  const excludedSchools = new Set([...(invalidate ?? [])]);
+  const excludedSchools = new Set([
+    ...(invalidate?.alreadyMinted || []),
+    ...(invalidate?.invalidSchools || []),
+    ...(invalidate?.inProgressSchools || []),
+  ]);
 
   const filteredRows = rows.filter((row: string[]) => {
     return !excludedSchools.has(row[0]);

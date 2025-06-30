@@ -24,6 +24,12 @@ import { NextRouter } from 'next/router';
 
 const steps = ['Upload', 'Preview File', 'Validate File', 'Mint'];
 
+type ValidationResult = {
+  alreadyMinted: string[];
+  invalidSchools: string[];
+  inProgressSchools: string[];
+};
+
 export default function HorizontalLinearStepper({
   propsTableData,
   setFile,
@@ -34,7 +40,7 @@ export default function HorizontalLinearStepper({
   const [activeStep, setActiveStep] = useState(0);
   const [csvUploadId, setCsvUploadId] = useState('');
   const [files, setFiles] = useState<(File | string)[]>([]);
-  const [validationResult, setValidationResult] = useState<any[]>([]);
+  const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
   const [progress, setProgress] = useState<number>(0);
   const {
     setShowStepper,
@@ -108,12 +114,11 @@ export default function HorizontalLinearStepper({
         .then((response) => {
           if (response?.status === 200) {
             setIsFileValidated(true);
-            enqueueSnackbar('File is validated successfully!');
-            setValidationResult([
-              ...(response.data?.data?.alreadyMinted || []),
-              ...(response.data?.data?.invalidSchools || []),
-              ...(response.data?.data?.inProgressSchools || []),
-            ]);
+            setValidationResult({
+              alreadyMinted: response.data?.data?.alreadyMinted || [],
+              invalidSchools: response.data?.data?.invalidSchools || [],
+              inProgressSchools: response.data?.data?.inProgressSchools || [],
+            });
           }
         })
         .catch((error: AxiosError) => {
@@ -241,7 +246,11 @@ export default function HorizontalLinearStepper({
         const dataRows = rows.slice(1);
 
         // Collect all invalid IDs from validationResult
-        const invalidIds = new Set([...(validationResult || [])]);
+        const invalidIds = new Set([
+          ...(validationResult?.alreadyMinted || []),
+          ...(validationResult?.invalidSchools || []),
+          ...(validationResult?.inProgressSchools || []),
+        ]);
 
         // Filter out rows where first column (school_id) is in invalidIds
         const filteredRows = dataRows.filter((row) => !invalidIds.has(row[0]));
@@ -447,7 +456,11 @@ export default function HorizontalLinearStepper({
                       },
                     }}
                   />
-                  <p>Minting in progress...</p>
+                  <p>
+                    {mintDetails.mintedCount === mintDetails.total
+                      ? 'Minted Completed'
+                      : 'Minting in progress...'}
+                  </p>
                 </Box>
                 <Box
                   sx={{
@@ -511,8 +524,7 @@ export default function HorizontalLinearStepper({
                   <Button
                     variant="outlined"
                     color="inherit"
-                    disabled={mintDetails?.mintedCount !== mintDetails.total}
-                    onClick={handleBackToDashboard}
+                    onClick={() => setViewDetails(false)}
                     sx={{ mr: 1 }}
                   >
                     Back
