@@ -53,7 +53,7 @@ export default function QRCodeModal({ isOpen, onClose, value,universalLink }) {
         )}
         OR 
         Use the privado app for verification 
-        < a href = {universalLink} target="_blank" rel="noopener noreferrer" style={{ color: 'blue', textDecoration: 'underline' }}/>
+        < a href = {`https://wallet.privado.id/#i_m=${universalLink}`} target="_blank" rel="noopener noreferrer" style={{ color: 'blue', textDecoration: 'underline' }}/>
         
         <Button kind="secondary" onClick={onClose} style={{ marginTop: '30px' }}>
           Close
