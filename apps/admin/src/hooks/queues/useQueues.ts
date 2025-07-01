@@ -30,9 +30,6 @@ export const useQueueFailedJobsQuery = (queueType: string) => {
   return useQuery({
     queryKey: ['jobs', queueType],
     queryFn: () => fetchFailedJobs(queueType),
-    refetchInterval(query) {
-      return 4000;
-    },
   });
 };
 

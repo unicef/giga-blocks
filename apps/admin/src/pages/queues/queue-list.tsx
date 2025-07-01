@@ -26,7 +26,6 @@ const queueTypes = [
   { label: 'Mint Queue', value: 'MINT_QUEUE' },
   { label: 'Image Queue', value: 'IMAGE_QUEUE' },
   { label: 'Onchain Data Queue', value: 'ONCHAIN_DATA_QUEUE' },
-  { label: 'Contribute Queue', value: 'CONTRIBUTE_QUEUE' },
   { label: 'VC Queue', value: 'VC_QUEUE' },
   { label: 'Bulk Image Queue', value: 'BULK_IMAGE_QUEUE' },
 ];
@@ -58,7 +57,7 @@ const renderNestedData = (data: any, depth = 0): React.ReactNode => {
 const QueueList: React.FC = () => {
   const [queueType, setQueueType] = useState(queueTypes[0].value);
 
-  const { data, isLoading } = useQueueFailedJobsQuery(queueType);
+  const { data, isFetching } = useQueueFailedJobsQuery(queueType);
   console.log({ data });
 
   interface Job {
@@ -96,24 +95,36 @@ const QueueList: React.FC = () => {
       </Tabs>
 
       <Box mt={4}>
-        {isLoading ? (
-          <Box display="flex" justifyContent="center" alignItems="center" minHeight={200}>
-            <CircularProgress />
-          </Box>
-        ) : (
-          <Table>
-            <TableHead>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Job ID</TableCell>
+              <TableCell>Job Name</TableCell>
+              <TableCell>Processed On</TableCell>
+              <TableCell>Finished On</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {isFetching ? (
               <TableRow>
-                <TableCell>Job ID</TableCell>
-                <TableCell>Job Name</TableCell>
-                <TableCell>Processed On</TableCell>
-                <TableCell>Finished On</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Actions</TableCell>
+                <TableCell colSpan={6} sx={{ p: 3 }}>
+                  <Box display="flex" justifyContent="center" alignItems="center">
+                    <CircularProgress />
+                  </Box>
+                </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {data?.map((job: any) => (
+            ) : data?.length === 0 ? (
+              <>
+                <TableRow>
+                  <TableCell colSpan={6} sx={{ p: 3, textAlign: 'center' }}>
+                    No jobs found in {queueType}
+                  </TableCell>
+                </TableRow>
+              </>
+            ) : (
+              data?.map((job: any) => (
                 <TableRow key={job.id} hover onClick={() => openJobDetails(job)}>
                   <TableCell>{job.id}</TableCell>
                   <TableCell>{job.name}</TableCell>
@@ -127,10 +138,10 @@ const QueueList: React.FC = () => {
                     </Button>
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        )}
+              ))
+            )}
+          </TableBody>
+        </Table>
       </Box>
 
       {/* Job Details Dialog */}
