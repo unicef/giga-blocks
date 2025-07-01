@@ -32,6 +32,7 @@ import routes from '../constants/api';
 import { useWeb3React } from '@web3-react/core';
 import { DEFAULT_CHAIN_ID } from '@components/web3/chains';
 import { NextRouter } from 'next/router';
+import {useToast} from 'src/libs/toastProvider';
 
 // ----------------------------------------------------------------------
 
@@ -67,6 +68,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   const [authState, setAuthState] = useState<AuthState>(initialState);
   const { push, replace } = useRouter() as NextRouter as NextRouter;
   const web3 = useWeb3React();
+  const {showToast} = useToast();
 
   const baseUrl = routes.BASE_URL;
 
@@ -86,7 +88,8 @@ function AuthProvider({ children }: AuthProviderProps) {
           }));
         } else if (localToken && !isValidToken(localToken)) {
           localStorage.clear();
-          window.location.href = PATH_AUTH.login;
+          replace(PATH_AUTH.login);
+          showToast('Session expired. Please log in again.', 'error');
         }
         // } else if (localRefreshToken) {
         //   try {
