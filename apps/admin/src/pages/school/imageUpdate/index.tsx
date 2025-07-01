@@ -3,15 +3,17 @@ import Scrollbar from '@components/scrollbar';
 import { TableHeadUsers, TableNoData, TablePaginationCustom, useTable } from '@components/table';
 import { useSchoolGetImageUpdateList, useUpdateSchoolImage } from '@hooks/school/useSchool';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
-import { Button, Card, Divider, TableContainer, Table, TableBody } from '@mui/material';
+import {
+  Button,
+  Card,
+  Divider,
+  TableContainer,
+  Table,
+  TableBody,
+  CircularProgress,
+} from '@mui/material';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
-import { useRouter } from 'next/compat/router';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
-import { JsonRpcProvider, Signer } from 'ethers';
-import { mintSignature } from '@components/web3/utils/wallet';
-import { useWeb3React } from '@web3-react/core';
-import useDebounce from '@hooks/useDebounce';
-import { NextRouter } from 'next/router';
 import { useSnackbar } from '@components/snackbar';
 
 const PendingSchool = () => {
@@ -23,10 +25,9 @@ const PendingSchool = () => {
     { id: 'imageHash', label: 'Image Hash', align: 'left' },
   ];
 
-  const { push, query } = useRouter() as NextRouter;
-
   const [school, setSchool] = useState<any>();
   const { enqueueSnackbar } = useSnackbar();
+  const [loader, setLoader] = useState<boolean>(false);
 
   const {
     dense,
@@ -51,6 +52,7 @@ const PendingSchool = () => {
     onSuccess: () => {
       enqueueSnackbar('Data added in the queue sucessfully!', { variant: 'success' });
       refetch();
+      setLoader(false);
     },
     onError: () => {
       enqueueSnackbar('Failed to add data in the queue', { variant: 'error' });
@@ -83,6 +85,13 @@ const PendingSchool = () => {
     setSchool(e.target.value);
   };
 
+  useEffect(() => {
+    if (updateImageHash.isPending) {
+      enqueueSnackbar('Updating image hash, please wait...', { variant: 'info' });
+      setLoader(true);
+    }
+  }, [updateImageHash]);
+
   return (
     <DashboardLayout>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
@@ -90,57 +99,66 @@ const PendingSchool = () => {
         <div style={{ display: 'flex', gap: '15px' }}>
           <Button
             variant="contained"
-            disabled={isLoading || tableData.length === 0}
+            disabled={isLoading || tableData.length === 0 || loader || isFetching}
             onClick={onClickUpdateImageHash}
           >
             Update Image Hash
           </Button>
         </div>
       </div>
-      <Card sx={{ marginTop: 2 }}>
-        <Divider />
-        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <Scrollbar>
-            <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
-              <TableHeadUsers
-                order={order}
-                orderBy={orderBy}
-                headLabel={TABLE_HEAD}
-                rowCount={tableData?.length}
-                onSort={onSort}
-                showCheckBox={true}
-                numSelected={selectedValues?.length}
-              />
 
-              <TableBody>
-                {tableData &&
-                  tableData?.map((row: any) => (
-                    <SchoolTableRow
-                      key={row.id}
-                      row={row}
-                      selectedValues={selectedValues}
-                      setSelectedValues={setSelectedValues}
-                      rowData={row}
-                      checkbox={false}
-                      clickable={false}
-                    />
-                  ))}
-                <TableNoData isNotFound={tableData.length === 0} isFetching={isFetching} />
-              </TableBody>
-            </Table>
-          </Scrollbar>
-        </TableContainer>
-        <TablePaginationCustom
-          count={data?.meta?.total || 0}
-          page={page || 0}
-          setPage={setPage}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-          dense={dense}
-          onChangeDense={onChangeDense}
-        />
-      </Card>
+      {!loader && !isFetching ? (
+        <>
+          <Card sx={{ marginTop: 2 }}>
+            <Divider />
+            <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+              <Scrollbar>
+                <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+                  <TableHeadUsers
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={TABLE_HEAD}
+                    rowCount={tableData?.length}
+                    onSort={onSort}
+                    showCheckBox={true}
+                    numSelected={selectedValues?.length}
+                  />
+
+                  <TableBody>
+                    {tableData &&
+                      tableData?.map((row: any) => (
+                        <SchoolTableRow
+                          key={row.id}
+                          row={row}
+                          selectedValues={selectedValues}
+                          setSelectedValues={setSelectedValues}
+                          rowData={row}
+                          checkbox={false}
+                          clickable={false}
+                        />
+                      ))}
+                    <TableNoData isNotFound={tableData.length === 0} isFetching={isFetching} />
+                  </TableBody>
+                </Table>
+              </Scrollbar>
+            </TableContainer>
+            <TablePaginationCustom
+              count={data?.meta?.total || 0}
+              page={page || 0}
+              setPage={setPage}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+              dense={dense}
+              onChangeDense={onChangeDense}
+            />
+          </Card>
+        </>
+      ) : (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <CircularProgress />
+        </div>
+      )}
     </DashboardLayout>
   );
 };
