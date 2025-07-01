@@ -287,13 +287,14 @@ export class QueueService {
   }
 
   public async bulkUpdateImageHash() {
-    const batchSize = Number(this._configService.get<number>('IMAGE_BATCH_SIZE')) || 200;
+    const batchSize = Number(this._configService.get<number>('IMAGE_BATCH_SIZE')) || 500;
 
     try {
       const schools = await this._prismaService.school.findMany({
         where: {
           imageUpdated: false,
           NOT: [{ imageHash: null }, { imageHash: '' }],
+          imageUpdating:true
         },
         select: {
           giga_school_id: true,

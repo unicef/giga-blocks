@@ -865,6 +865,15 @@ export class SchoolService {
   }
 
   async updateImages() {
+    await this.prisma.school.updateMany({
+       where: {
+          imageUpdated: false,
+          NOT: [{ imageHash: null }, { imageHash: '' }],
+        },
+        data:{
+          imageUpdating:true
+        }
+    })
     return this.queueService.bulkUpdateImageHash();
   }
 
@@ -967,6 +976,7 @@ export class SchoolService {
         where: {
           imageUpdated: false,
           NOT: [{ imageHash: null }, { imageHash: '' }],
+          imageUpdating: false,
         },
         select: {
           giga_school_id: true,

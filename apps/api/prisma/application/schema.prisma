@@ -197,6 +197,7 @@ model School {
   schoolReserved        Boolean           @default(false)
   schoolClaimed         Boolean           @default(false)
   imageUpdated          Boolean           @default(false)
+  imageUpdating         Boolean           @default(false)
   imageGeneration       ImageGenerationStatus @default(NOT_STARTED)
   createdAt             DateTime          @default(now())
   updatedAt             DateTime          @updatedAt
