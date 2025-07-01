@@ -140,7 +140,7 @@ export default function HorizontalLinearStepper({
         setShowMintingProgressBar(true);
         setMintDetails(res.data);
         //clear from local storage
-        if (res?.data?.mintedCount === res?.data?.total) {
+        if (res?.data?.mintedCount === res?.data?.total || res?.data?.mintingCount === 0) {
           localStorage.removeItem(currentCsvUploadId);
           setDisableDropZone(false);
         }

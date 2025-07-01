@@ -327,6 +327,7 @@ export class SchoolService {
                 },
                 data: {
                   uploadId: uploadBatch.id,
+                  minted: MintStatus.ISMINTING,
                 },
               });
               return uploadBatch;
@@ -507,23 +508,31 @@ export class SchoolService {
     });
   }
   async getMintedCount(csvId) {
-    const upload = await this.prisma.cSVUpload.findUnique({
-      where: {
-        id: csvId,
-      },
-      include: {
-        school: true,
-      },
-    });
-    if (!upload) {
-      throw new NotFoundException('Upload not found');
-    }
-    const mintedCount = upload.school.filter(school => school.minted === MintStatus.MINTED).length;
-    const total = upload.school.length;
+    const [total, mintedCount, mintingCount] = await this.prisma.$transaction([
+      this.prisma.school.count({
+        where: {
+          uploadId: csvId,
+        },
+      }),
+      this.prisma.school.count({
+        where: {
+          uploadId: csvId,
+          minted: MintStatus.MINTED,
+        },
+      }),
+      this.prisma.school.count({
+        where: {
+          uploadId: csvId,
+          minted: MintStatus.ISMINTING,
+        },
+      }),
+    ]);
+
     return {
       mintedCount,
+      mintingCount,
       total,
-      uploadId: upload.id,
+      uploadId: csvId,
     };
   }
 
