@@ -15,7 +15,7 @@ const ROOTS_VALID = '/valid';
 const ROOTS_ACTIVATE_SCHOOL = '/activate-school';
 const ROOTS_TRANSACTION = '/transaction';
 const ROOTS_INFORMATION_WORKER = '/information-worker';
-
+const ROOTS_QUQUE = '/queues';
 // ----------------------------------------------------------------------
 
 export const PATH_AUTH = {
@@ -70,6 +70,9 @@ export const PATH_TRANSACTION = {
 };
 export const PATH_INFORMATION = {
   root: ROOTS_INFORMATION_WORKER,
+};
+export const PATH_QUEUE = {
+  root: ROOTS_QUQUE,
 };
 export const PATH_SCHOOL = {
   root: ROOTS_SCHOOL,
