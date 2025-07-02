@@ -158,7 +158,7 @@ const ThemeSelector = ({
       >
         <h3 className="theme-update-modal-modal-heading">🎨</h3>
         <h3 className="theme-update-modal-modal-description">
-          Theme updated successfully! Your school just got a new look."
+          Theme updated successfully! Your school just got a new look.
         </h3>
       </Modal>
     </div>

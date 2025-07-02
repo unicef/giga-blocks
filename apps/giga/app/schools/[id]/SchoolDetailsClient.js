@@ -127,11 +127,11 @@ export default function SchoolDetailsClient({ params }) {
   // const { data: authRequest } = useGetAuthRequest(id);
 
   const handleCIWClick = () => {
-    console.log('CIW Clicked', authRequest.request);
+    // console.log('CIW Clicked', authRequest.request);
     // const qrValue = JSON.stringify(authRequest?.request);
-    setQrCodeValue("qrValue");
+    setQrCodeValue('qrValue');
     // setUniversalLink(authRequest?.universalLink);
-    setUniversalLink("https://test.com");
+    setUniversalLink('https://test.com');
     setIsQRCodeModalOpen(true);
   };
 
