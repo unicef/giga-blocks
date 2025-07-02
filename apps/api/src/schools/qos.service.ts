@@ -16,7 +16,7 @@ export class QosService {
         date: 'desc',
       },
       select: {
-        speed_download_mean: true,
+        download_speed: true,
         date: true,
       },
     });
@@ -33,9 +33,9 @@ export class QosService {
       record => record.date.toISOString().split('T')[0] === latestDate,
     );
 
-    // Calculate the average speed_download_mean for the latest date
+    // Calculate the average speed_download for the latest date
     const totalSpeedDownload = latestDateRecords.reduce(
-      (sum, record) => sum + Number(record.speed_download_mean || 0),
+      (sum, record) => sum + Number(record.download_speed || 0),
       0,
     );
     const averageDownloadSpeed = totalSpeedDownload / latestDateRecords.length;
@@ -59,7 +59,7 @@ export class QosService {
       },
     },
     select: {
-      speed_upload_mean: true,
+      upload_speed: true,
       date: true,
     },
   });
@@ -70,7 +70,7 @@ export class QosService {
     if (!acc[day]) {
       acc[day] = { total: 0, count: 0 };
     }
-    acc[day].total += Number(record.speed_upload_mean) || 0;
+    acc[day].total += Number(record.upload_speed) || 0;
     acc[day].count += 1;
     return acc;
   }, {} as Record<string, { total: number; count: number }>);
@@ -122,7 +122,7 @@ export class QosService {
       },
       select: {
         date: true,
-        speed_upload_mean: true,
+        upload_speed: true,
       },
     });
 
@@ -134,7 +134,7 @@ export class QosService {
       if (!acc[month]) {
         acc[month] = { total: 0, count: 0 };
       }
-      acc[month].total += Number(record.speed_upload_mean) || 0;
+      acc[month].total += Number(record.upload_speed) || 0;
       acc[month].count += 1;
       return acc;
     }, {} as Record<string, { total: number; count: number }>);
