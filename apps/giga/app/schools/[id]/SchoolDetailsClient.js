@@ -124,19 +124,20 @@ export default function SchoolDetailsClient({ params }) {
 
   const [minLoaderDone, setMinLoaderDone] = useState(false);
 
-  const { data: authRequest } = useGetAuthRequest(id);
+  // const { data: authRequest } = useGetAuthRequest(id);
 
   const handleCIWClick = () => {
-    console.log('CIW Clicked', authRequest.request);
-    const qrValue = JSON.stringify(authRequest?.request);
-    setQrCodeValue(qrValue);
-    setUniversalLink(authRequest?.universalLink);
+    // console.log('CIW Clicked', authRequest.request);
+    // const qrValue = JSON.stringify(authRequest?.request);
+    setQrCodeValue('qrValue');
+    // setUniversalLink(authRequest?.universalLink);
+    setUniversalLink('https://test.com');
     setIsQRCodeModalOpen(true);
   };
 
-  useEffect(() => {
-    if (!authRequest?.request) setIsVerifierDisabled(true);
-  }, [authRequest]);
+  // useEffect(() => {
+  //   if (!authRequest?.request) setIsVerifierDisabled(true);
+  // }, [authRequest]);
 
   useEffect(() => {
     setMinLoaderDone(false);
