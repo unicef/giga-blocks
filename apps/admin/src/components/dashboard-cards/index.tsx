@@ -3,17 +3,14 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
-import { useSchoolCount, useSchoolGet, useMintedSchoolCount } from '@hooks/school/useSchool';
-import { useContributeGet } from '@hooks/contribute/useContribute';
+import { useSchoolCount } from '@hooks/school/useSchool';
 import { useUserGet } from '@hooks/user/useUser';
 import { useQuery } from 'urql';
 import { Queries } from 'src/libs/graph-query';
 import { ethers } from 'ethers';
 
 export default function OutlinedCard() {
-  const { data: mintedCount } = useMintedSchoolCount('MINTED');
   const { data: schoolCount } = useSchoolCount();
-  const { data: contributionData } = useContributeGet({ page: 0, perPage: 10 });
   const { data: userData } = useUserGet(1, 10, 'CONTRIBUTOR');
 
   const [result] = useQuery({
