@@ -36,6 +36,7 @@ DROP COLUMN "speed_upload_max",
 DROP COLUMN "speed_upload_mean",
 DROP COLUMN "timestamp",
 ADD COLUMN     "country_iso3_code" TEXT NOT NULL,
+ADD COLUMN     "data_source" TEXT,
 ADD COLUMN     "download_speed" TEXT NOT NULL,
 ADD COLUMN     "upload_speed" TEXT NOT NULL,
 ALTER COLUMN "latency" DROP NOT NULL;

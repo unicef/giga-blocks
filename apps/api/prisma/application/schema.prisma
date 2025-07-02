@@ -346,6 +346,7 @@ model Qos {
   date                 DateTime?
   country_iso3_code    String
   dynamicData          Json
+  data_source          String?
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
   deletedAt            DateTime?
