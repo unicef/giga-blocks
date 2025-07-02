@@ -308,7 +308,7 @@
                   <div class="mt-1 ml-2">
                     <div class="mb-1 font-medium text-gray-600"><a href="#model-Qos-fields">Fields</a></div>
                       <ul class="pl-3 ml-1 border-l-2 border-gray-400">
-                      <li><a href="#model-Qos-id">id</a></li><li><a href="#model-Qos-timestamp">timestamp</a></li><li><a href="#model-Qos-country_id">country_id</a></li><li><a href="#model-Qos-giga_school_id">giga_school_id</a></li><li><a href="#model-Qos-speed_download">speed_download</a></li><li><a href="#model-Qos-speed_upload">speed_upload</a></li><li><a href="#model-Qos-inbound_traffic">inbound_traffic</a></li><li><a href="#model-Qos-outbound_traffic">outbound_traffic</a></li><li><a href="#model-Qos-speed_upload_max">speed_upload_max</a></li><li><a href="#model-Qos-speed_upload_mean">speed_upload_mean</a></li><li><a href="#model-Qos-provider">provider</a></li><li><a href="#model-Qos-speed_download_max">speed_download_max</a></li><li><a href="#model-Qos-speed_download_mean">speed_download_mean</a></li><li><a href="#model-Qos-latency">latency</a></li><li><a href="#model-Qos-signature">signature</a></li><li><a href="#model-Qos-gigasync_id">gigasync_id</a></li><li><a href="#model-Qos-date">date</a></li><li><a href="#model-Qos-dynamicData">dynamicData</a></li><li><a href="#model-Qos-inbound_traffic_sum">inbound_traffic_sum</a></li><li><a href="#model-Qos-outbound_traffic_sum">outbound_traffic_sum</a></li><li><a href="#model-Qos-createdAt">createdAt</a></li><li><a href="#model-Qos-updatedAt">updatedAt</a></li><li><a href="#model-Qos-deletedAt">deletedAt</a></li>
+                      <li><a href="#model-Qos-id">id</a></li><li><a href="#model-Qos-country_id">country_id</a></li><li><a href="#model-Qos-giga_school_id">giga_school_id</a></li><li><a href="#model-Qos-download_speed">download_speed</a></li><li><a href="#model-Qos-upload_speed">upload_speed</a></li><li><a href="#model-Qos-latency">latency</a></li><li><a href="#model-Qos-country_iso3_code">country_iso3_code</a></li><li><a href="#model-Qos-dynamicData">dynamicData</a></li><li><a href="#model-Qos-createdAt">createdAt</a></li><li><a href="#model-Qos-updatedAt">updatedAt</a></li><li><a href="#model-Qos-deletedAt">deletedAt</a></li>
                       </ul>
                   </div>
                   <div class="mt-2 ml-2">
@@ -12057,26 +12057,6 @@
       </td>
     </tr>
     
-    <tr id="model-Qos-timestamp">
-      <td class="px-4 py-2 border">
-       timestamp 
-      </td>
-      <td class="px-4 py-2 border">
-       DateTime
-      </td>
-      <td class="px-4 py-2 border">
-        <ul>
-          <li> - </li>
-        </ul>
-      </td>
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-      <td class="px-4 py-2 border">
-        -
-      </td>
-    </tr>
-    
     <tr id="model-Qos-country_id">
       <td class="px-4 py-2 border">
        country_id 
@@ -12117,9 +12097,9 @@
       </td>
     </tr>
     
-    <tr id="model-Qos-speed_download">
+    <tr id="model-Qos-download_speed">
       <td class="px-4 py-2 border">
-       speed_download 
+       download_speed 
       </td>
       <td class="px-4 py-2 border">
        String
@@ -12137,9 +12117,9 @@
       </td>
     </tr>
     
-    <tr id="model-Qos-speed_upload">
+    <tr id="model-Qos-upload_speed">
       <td class="px-4 py-2 border">
-       speed_upload 
+       upload_speed 
       </td>
       <td class="px-4 py-2 border">
        String
@@ -12151,146 +12131,6 @@
       </td>
       <td class="px-4 py-2 border">
         <strong>Yes</strong>
-      </td>
-      <td class="px-4 py-2 border">
-        -
-      </td>
-    </tr>
-    
-    <tr id="model-Qos-inbound_traffic">
-      <td class="px-4 py-2 border">
-       inbound_traffic 
-      </td>
-      <td class="px-4 py-2 border">
-       String?
-      </td>
-      <td class="px-4 py-2 border">
-        <ul>
-          <li> - </li>
-        </ul>
-      </td>
-      <td class="px-4 py-2 border">
-        No
-      </td>
-      <td class="px-4 py-2 border">
-        -
-      </td>
-    </tr>
-    
-    <tr id="model-Qos-outbound_traffic">
-      <td class="px-4 py-2 border">
-       outbound_traffic 
-      </td>
-      <td class="px-4 py-2 border">
-       String?
-      </td>
-      <td class="px-4 py-2 border">
-        <ul>
-          <li> - </li>
-        </ul>
-      </td>
-      <td class="px-4 py-2 border">
-        No
-      </td>
-      <td class="px-4 py-2 border">
-        -
-      </td>
-    </tr>
-    
-    <tr id="model-Qos-speed_upload_max">
-      <td class="px-4 py-2 border">
-       speed_upload_max 
-      </td>
-      <td class="px-4 py-2 border">
-       String?
-      </td>
-      <td class="px-4 py-2 border">
-        <ul>
-          <li> - </li>
-        </ul>
-      </td>
-      <td class="px-4 py-2 border">
-        No
-      </td>
-      <td class="px-4 py-2 border">
-        -
-      </td>
-    </tr>
-    
-    <tr id="model-Qos-speed_upload_mean">
-      <td class="px-4 py-2 border">
-       speed_upload_mean 
-      </td>
-      <td class="px-4 py-2 border">
-       String?
-      </td>
-      <td class="px-4 py-2 border">
-        <ul>
-          <li> - </li>
-        </ul>
-      </td>
-      <td class="px-4 py-2 border">
-        No
-      </td>
-      <td class="px-4 py-2 border">
-        -
-      </td>
-    </tr>
-    
-    <tr id="model-Qos-provider">
-      <td class="px-4 py-2 border">
-       provider 
-      </td>
-      <td class="px-4 py-2 border">
-       String?
-      </td>
-      <td class="px-4 py-2 border">
-        <ul>
-          <li> - </li>
-        </ul>
-      </td>
-      <td class="px-4 py-2 border">
-        No
-      </td>
-      <td class="px-4 py-2 border">
-        -
-      </td>
-    </tr>
-    
-    <tr id="model-Qos-speed_download_max">
-      <td class="px-4 py-2 border">
-       speed_download_max 
-      </td>
-      <td class="px-4 py-2 border">
-       String?
-      </td>
-      <td class="px-4 py-2 border">
-        <ul>
-          <li> - </li>
-        </ul>
-      </td>
-      <td class="px-4 py-2 border">
-        No
-      </td>
-      <td class="px-4 py-2 border">
-        -
-      </td>
-    </tr>
-    
-    <tr id="model-Qos-speed_download_mean">
-      <td class="px-4 py-2 border">
-       speed_download_mean 
-      </td>
-      <td class="px-4 py-2 border">
-       String?
-      </td>
-      <td class="px-4 py-2 border">
-        <ul>
-          <li> - </li>
-        </ul>
-      </td>
-      <td class="px-4 py-2 border">
-        No
       </td>
       <td class="px-4 py-2 border">
         -
@@ -12302,67 +12142,7 @@
        latency 
       </td>
       <td class="px-4 py-2 border">
-       String
-      </td>
-      <td class="px-4 py-2 border">
-        <ul>
-          <li> - </li>
-        </ul>
-      </td>
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-      <td class="px-4 py-2 border">
-        -
-      </td>
-    </tr>
-    
-    <tr id="model-Qos-signature">
-      <td class="px-4 py-2 border">
-       signature 
-      </td>
-      <td class="px-4 py-2 border">
-       String
-      </td>
-      <td class="px-4 py-2 border">
-        <ul>
-          <li> - </li>
-        </ul>
-      </td>
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-      <td class="px-4 py-2 border">
-        -
-      </td>
-    </tr>
-    
-    <tr id="model-Qos-gigasync_id">
-      <td class="px-4 py-2 border">
-       gigasync_id 
-      </td>
-      <td class="px-4 py-2 border">
-       String
-      </td>
-      <td class="px-4 py-2 border">
-        <ul>
-          <li> - </li>
-        </ul>
-      </td>
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-      <td class="px-4 py-2 border">
-        -
-      </td>
-    </tr>
-    
-    <tr id="model-Qos-date">
-      <td class="px-4 py-2 border">
-       date 
-      </td>
-      <td class="px-4 py-2 border">
-       DateTime?
+       String?
       </td>
       <td class="px-4 py-2 border">
         <ul>
@@ -12371,6 +12151,26 @@
       </td>
       <td class="px-4 py-2 border">
         No
+      </td>
+      <td class="px-4 py-2 border">
+        -
+      </td>
+    </tr>
+    
+    <tr id="model-Qos-country_iso3_code">
+      <td class="px-4 py-2 border">
+       country_iso3_code 
+      </td>
+      <td class="px-4 py-2 border">
+       String
+      </td>
+      <td class="px-4 py-2 border">
+        <ul>
+          <li> - </li>
+        </ul>
+      </td>
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
       <td class="px-4 py-2 border">
         -
@@ -12391,46 +12191,6 @@
       </td>
       <td class="px-4 py-2 border">
         <strong>Yes</strong>
-      </td>
-      <td class="px-4 py-2 border">
-        -
-      </td>
-    </tr>
-    
-    <tr id="model-Qos-inbound_traffic_sum">
-      <td class="px-4 py-2 border">
-       inbound_traffic_sum 
-      </td>
-      <td class="px-4 py-2 border">
-       String?
-      </td>
-      <td class="px-4 py-2 border">
-        <ul>
-          <li> - </li>
-        </ul>
-      </td>
-      <td class="px-4 py-2 border">
-        No
-      </td>
-      <td class="px-4 py-2 border">
-        -
-      </td>
-    </tr>
-    
-    <tr id="model-Qos-outbound_traffic_sum">
-      <td class="px-4 py-2 border">
-       outbound_traffic_sum 
-      </td>
-      <td class="px-4 py-2 border">
-       String?
-      </td>
-      <td class="px-4 py-2 border">
-        <ul>
-          <li> - </li>
-        </ul>
-      </td>
-      <td class="px-4 py-2 border">
-        No
       </td>
       <td class="px-4 py-2 border">
         -
@@ -30241,18 +30001,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-DateTimeFilter">DateTimeFilter</a> | DateTime
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-StringFilter">StringFilter</a> | String
@@ -30277,7 +30025,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-StringFilter">StringFilter</a> | String
       </td>
@@ -30289,97 +30037,13 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-StringFilter">StringFilter</a> | String
       </td>
 
       <td class="px-4 py-2 border">
         No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -30387,47 +30051,23 @@ add the nft related data only in this</div>
       <td class="px-4 py-2 border">
         latency </td>
       <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringFilter">StringFilter</a> | String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringFilter">StringFilter</a> | String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringFilter">StringFilter</a> | String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-DateTimeNullableFilter">DateTimeNullableFilter</a> | DateTime | Null
+        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
       </td>
 
       <td class="px-4 py-2 border">
         <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        country_iso3_code </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-StringFilter">StringFilter</a> | String
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
       </td>
     </tr>
     
@@ -30440,30 +30080,6 @@ add the nft related data only in this</div>
 
       <td class="px-4 py-2 border">
         No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -30533,18 +30149,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
@@ -30569,7 +30173,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -30581,93 +30185,9 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
       </td>
 
       <td class="px-4 py-2 border">
@@ -30679,43 +30199,19 @@ add the nft related data only in this</div>
       <td class="px-4 py-2 border">
         latency </td>
       <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
-      <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        country_iso3_code </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
 
       <td class="px-4 py-2 border">
@@ -30728,30 +30224,6 @@ add the nft related data only in this</div>
         dynamicData </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
       </td>
 
       <td class="px-4 py-2 border">
@@ -30861,18 +30333,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-DateTimeFilter">DateTimeFilter</a> | DateTime
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-StringFilter">StringFilter</a> | String
@@ -30897,7 +30357,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-StringFilter">StringFilter</a> | String
       </td>
@@ -30909,97 +30369,13 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-StringFilter">StringFilter</a> | String
       </td>
 
       <td class="px-4 py-2 border">
         No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -31007,47 +30383,23 @@ add the nft related data only in this</div>
       <td class="px-4 py-2 border">
         latency </td>
       <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringFilter">StringFilter</a> | String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringFilter">StringFilter</a> | String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringFilter">StringFilter</a> | String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-DateTimeNullableFilter">DateTimeNullableFilter</a> | DateTime | Null
+        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
       </td>
 
       <td class="px-4 py-2 border">
         <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        country_iso3_code </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-StringFilter">StringFilter</a> | String
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
       </td>
     </tr>
     
@@ -31060,30 +30412,6 @@ add the nft related data only in this</div>
 
       <td class="px-4 py-2 border">
         No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableFilter">StringNullableFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -31153,18 +30481,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
@@ -31189,7 +30505,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -31201,93 +30517,9 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
       </td>
 
       <td class="px-4 py-2 border">
@@ -31299,43 +30531,19 @@ add the nft related data only in this</div>
       <td class="px-4 py-2 border">
         latency </td>
       <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
-      <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        country_iso3_code </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
 
       <td class="px-4 py-2 border">
@@ -31348,30 +30556,6 @@ add the nft related data only in this</div>
         dynamicData </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
       </td>
 
       <td class="px-4 py-2 border">
@@ -31517,18 +30701,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-DateTimeWithAggregatesFilter">DateTimeWithAggregatesFilter</a> | DateTime
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-StringWithAggregatesFilter">StringWithAggregatesFilter</a> | String
@@ -31553,7 +30725,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-StringWithAggregatesFilter">StringWithAggregatesFilter</a> | String
       </td>
@@ -31565,97 +30737,13 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-StringWithAggregatesFilter">StringWithAggregatesFilter</a> | String
       </td>
 
       <td class="px-4 py-2 border">
         No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableWithAggregatesFilter">StringNullableWithAggregatesFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableWithAggregatesFilter">StringNullableWithAggregatesFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableWithAggregatesFilter">StringNullableWithAggregatesFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableWithAggregatesFilter">StringNullableWithAggregatesFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableWithAggregatesFilter">StringNullableWithAggregatesFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableWithAggregatesFilter">StringNullableWithAggregatesFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableWithAggregatesFilter">StringNullableWithAggregatesFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -31663,47 +30751,23 @@ add the nft related data only in this</div>
       <td class="px-4 py-2 border">
         latency </td>
       <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringWithAggregatesFilter">StringWithAggregatesFilter</a> | String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringWithAggregatesFilter">StringWithAggregatesFilter</a> | String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringWithAggregatesFilter">StringWithAggregatesFilter</a> | String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-DateTimeNullableWithAggregatesFilter">DateTimeNullableWithAggregatesFilter</a> | DateTime | Null
+        <a href="#type-inputType-StringNullableWithAggregatesFilter">StringNullableWithAggregatesFilter</a> | String | Null
       </td>
 
       <td class="px-4 py-2 border">
         <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        country_iso3_code </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-StringWithAggregatesFilter">StringWithAggregatesFilter</a> | String
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
       </td>
     </tr>
     
@@ -31716,30 +30780,6 @@ add the nft related data only in this</div>
 
       <td class="px-4 py-2 border">
         No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableWithAggregatesFilter">StringNullableWithAggregatesFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-StringNullableWithAggregatesFilter">StringNullableWithAggregatesFilter</a> | String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -49693,18 +48733,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        DateTime
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         String
@@ -49729,7 +48757,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         String
       </td>
@@ -49741,97 +48769,13 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         String
       </td>
 
       <td class="px-4 py-2 border">
         No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -49839,47 +48783,23 @@ add the nft related data only in this</div>
       <td class="px-4 py-2 border">
         latency </td>
       <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
-      <td class="px-4 py-2 border">
-        DateTime | Null
+        String | Null
       </td>
 
       <td class="px-4 py-2 border">
         <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        country_iso3_code </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
       </td>
     </tr>
     
@@ -49892,30 +48812,6 @@ add the nft related data only in this</div>
 
       <td class="px-4 py-2 border">
         No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -49985,18 +48881,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        DateTime
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         String
@@ -50021,7 +48905,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         String
       </td>
@@ -50033,97 +48917,13 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         String
       </td>
 
       <td class="px-4 py-2 border">
         No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -50131,47 +48931,23 @@ add the nft related data only in this</div>
       <td class="px-4 py-2 border">
         latency </td>
       <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
-      <td class="px-4 py-2 border">
-        DateTime | Null
+        String | Null
       </td>
 
       <td class="px-4 py-2 border">
         <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        country_iso3_code </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
       </td>
     </tr>
     
@@ -50184,30 +48960,6 @@ add the nft related data only in this</div>
 
       <td class="px-4 py-2 border">
         No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -50277,18 +49029,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
@@ -50313,7 +49053,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
       </td>
@@ -50325,97 +49065,13 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
         No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -50423,47 +49079,23 @@ add the nft related data only in this</div>
       <td class="px-4 py-2 border">
         latency </td>
       <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
-      <td class="px-4 py-2 border">
-        DateTime | <a href="#type-inputType-NullableDateTimeFieldUpdateOperationsInput">NullableDateTimeFieldUpdateOperationsInput</a> | Null
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
       </td>
 
       <td class="px-4 py-2 border">
         <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        country_iso3_code </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
       </td>
     </tr>
     
@@ -50476,30 +49108,6 @@ add the nft related data only in this</div>
 
       <td class="px-4 py-2 border">
         No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -50569,18 +49177,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
@@ -50605,7 +49201,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
       </td>
@@ -50617,97 +49213,13 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
         No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -50715,47 +49227,23 @@ add the nft related data only in this</div>
       <td class="px-4 py-2 border">
         latency </td>
       <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
-      <td class="px-4 py-2 border">
-        DateTime | <a href="#type-inputType-NullableDateTimeFieldUpdateOperationsInput">NullableDateTimeFieldUpdateOperationsInput</a> | Null
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
       </td>
 
       <td class="px-4 py-2 border">
         <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        country_iso3_code </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
       </td>
     </tr>
     
@@ -50768,30 +49256,6 @@ add the nft related data only in this</div>
 
       <td class="px-4 py-2 border">
         No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -50861,18 +49325,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        DateTime
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         String
@@ -50897,7 +49349,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         String
       </td>
@@ -50909,97 +49361,13 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         String
       </td>
 
       <td class="px-4 py-2 border">
         No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -51007,47 +49375,23 @@ add the nft related data only in this</div>
       <td class="px-4 py-2 border">
         latency </td>
       <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
-      <td class="px-4 py-2 border">
-        DateTime | Null
+        String | Null
       </td>
 
       <td class="px-4 py-2 border">
         <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        country_iso3_code </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
       </td>
     </tr>
     
@@ -51060,30 +49404,6 @@ add the nft related data only in this</div>
 
       <td class="px-4 py-2 border">
         No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -51153,18 +49473,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
@@ -51189,7 +49497,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
       </td>
@@ -51201,97 +49509,13 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
         No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -51299,47 +49523,23 @@ add the nft related data only in this</div>
       <td class="px-4 py-2 border">
         latency </td>
       <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
-      <td class="px-4 py-2 border">
-        DateTime | <a href="#type-inputType-NullableDateTimeFieldUpdateOperationsInput">NullableDateTimeFieldUpdateOperationsInput</a> | Null
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
       </td>
 
       <td class="px-4 py-2 border">
         <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        country_iso3_code </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
       </td>
     </tr>
     
@@ -51352,30 +49552,6 @@ add the nft related data only in this</div>
 
       <td class="px-4 py-2 border">
         No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -51445,18 +49621,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
@@ -51481,7 +49645,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
       </td>
@@ -51493,97 +49657,13 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
         No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -51591,47 +49671,23 @@ add the nft related data only in this</div>
       <td class="px-4 py-2 border">
         latency </td>
       <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
-      <td class="px-4 py-2 border">
-        DateTime | <a href="#type-inputType-NullableDateTimeFieldUpdateOperationsInput">NullableDateTimeFieldUpdateOperationsInput</a> | Null
+        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
       </td>
 
       <td class="px-4 py-2 border">
         <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        country_iso3_code </td>
+      <td class="px-4 py-2 border">
+        String | <a href="#type-inputType-StringFieldUpdateOperationsInput">StringFieldUpdateOperationsInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
       </td>
     </tr>
     
@@ -51644,30 +49700,6 @@ add the nft related data only in this</div>
 
       <td class="px-4 py-2 border">
         No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String | <a href="#type-inputType-NullableStringFieldUpdateOperationsInput">NullableStringFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -67297,18 +65329,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
@@ -67333,7 +65353,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -67345,91 +65365,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -67453,31 +65389,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
+        country_iso3_code </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -67490,30 +65402,6 @@ add the nft related data only in this</div>
     <tr>
       <td class="px-4 py-2 border">
         dynamicData </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -67589,18 +65477,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
@@ -67625,7 +65501,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -67637,91 +65513,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -67745,55 +65537,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
+        country_iso3_code </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -67869,18 +65613,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
@@ -67905,7 +65637,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -67917,91 +65649,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -68025,55 +65673,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
+        country_iso3_code </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -136487,18 +134087,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        DateTime
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         String
@@ -136523,7 +134111,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         String
       </td>
@@ -136535,97 +134123,13 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         String
       </td>
 
       <td class="px-4 py-2 border">
         <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
       </td>
     </tr>
     
@@ -136637,43 +134141,19 @@ add the nft related data only in this</div>
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
-      <td class="px-4 py-2 border">
-        DateTime
-      </td>
-
-      <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        country_iso3_code </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -136686,30 +134166,6 @@ add the nft related data only in this</div>
 
       <td class="px-4 py-2 border">
         <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
       </td>
     </tr>
     
@@ -139495,18 +136951,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        DateTime
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         String
@@ -139531,7 +136975,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         String
       </td>
@@ -139543,97 +136987,13 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         String
       </td>
 
       <td class="px-4 py-2 border">
         <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
       </td>
     </tr>
     
@@ -139645,43 +137005,19 @@ add the nft related data only in this</div>
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
-      <td class="px-4 py-2 border">
-        DateTime
-      </td>
-
-      <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        country_iso3_code </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -139694,30 +137030,6 @@ add the nft related data only in this</div>
 
       <td class="px-4 py-2 border">
         <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
       </td>
     </tr>
     
@@ -143675,18 +140987,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        DateTime
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         String
@@ -143711,7 +141011,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         String
       </td>
@@ -143723,97 +141023,13 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         String
       </td>
 
       <td class="px-4 py-2 border">
         <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
       </td>
     </tr>
     
@@ -143825,43 +141041,19 @@ add the nft related data only in this</div>
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
-      <td class="px-4 py-2 border">
-        DateTime
-      </td>
-
-      <td class="px-4 py-2 border">
         No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        country_iso3_code </td>
+      <td class="px-4 py-2 border">
+        String
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -143874,30 +141066,6 @@ add the nft related data only in this</div>
 
       <td class="px-4 py-2 border">
         <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
       </td>
     </tr>
     
@@ -151215,18 +148383,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        Int
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         Int
@@ -151251,7 +148407,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         Int
       </td>
@@ -151263,91 +148419,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
-      <td class="px-4 py-2 border">
-        Int
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        Int
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        Int
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        Int
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        Int
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        Int
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        Int
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         Int
       </td>
@@ -151371,31 +148443,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        Int
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        Int
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
+        country_iso3_code </td>
       <td class="px-4 py-2 border">
         Int
       </td>
@@ -151408,30 +148456,6 @@ add the nft related data only in this</div>
     <tr>
       <td class="px-4 py-2 border">
         dynamicData </td>
-      <td class="px-4 py-2 border">
-        Int
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        Int
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
       <td class="px-4 py-2 border">
         Int
       </td>
@@ -151519,18 +148543,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        DateTime
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         String
@@ -151555,7 +148567,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         String
       </td>
@@ -151567,91 +148579,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         String
       </td>
@@ -151675,55 +148603,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
-      <td class="px-4 py-2 border">
-        DateTime
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
+        country_iso3_code </td>
       <td class="px-4 py-2 border">
         String
       </td>
@@ -151799,18 +148679,6 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        timestamp </td>
-      <td class="px-4 py-2 border">
-        DateTime
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
         country_id </td>
       <td class="px-4 py-2 border">
         String
@@ -151835,7 +148703,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_download </td>
+        download_speed </td>
       <td class="px-4 py-2 border">
         String
       </td>
@@ -151847,91 +148715,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        speed_upload </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_max </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_upload_mean </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        provider </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_max </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        speed_download_mean </td>
+        upload_speed </td>
       <td class="px-4 py-2 border">
         String
       </td>
@@ -151955,55 +148739,7 @@ add the nft related data only in this</div>
     
     <tr>
       <td class="px-4 py-2 border">
-        signature </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gigasync_id </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        date </td>
-      <td class="px-4 py-2 border">
-        DateTime
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        inbound_traffic_sum </td>
-      <td class="px-4 py-2 border">
-        String
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        outbound_traffic_sum </td>
+        country_iso3_code </td>
       <td class="px-4 py-2 border">
         String
       </td>
