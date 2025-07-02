@@ -162,7 +162,7 @@ export class QueueService {
     }
   }
 
-  public async processBulkImage(id:string){
+  public async processBulkImage(id: string) {
     try {
       jobOptions.delay = 1000;
       await this._bulkImageQueue.add(SET_BULK_IMAGE_PROCESS, { id }, jobOptions);
@@ -294,14 +294,13 @@ export class QueueService {
         where: {
           imageUpdated: false,
           NOT: [{ imageHash: null }, { imageHash: '' }],
-          imageUpdating:true
+          imageUpdating: true,
         },
         select: {
           giga_school_id: true,
           imageHash: true,
           id: true,
         },
-      
       });
       console.log(schools.length, 'is the length of schools with imageHash');
       if (schools.length === 0) {
@@ -309,8 +308,10 @@ export class QueueService {
         return { message: 'No schools found with imageHash to update', statusCode: 200 };
       }
       const imageData = schools.map(school => [school.giga_school_id, school.imageHash]);
+      const DELAY_BETWEEN_JOBS_MS = 500;
       if (imageData.length >= batchSize) {
         for (let i = 0; i < imageData.length; i += batchSize) {
+          jobOptions.delay = i * (DELAY_BETWEEN_JOBS_MS / batchSize);
           const imagedata = imageData.slice(i, i + batchSize);
           this._logger.log(`Processing batch from ${i} to ${i + batchSize}`);
           await this._bulkImageQueue.add(UPDATE_BULK_IMAGE, { imagedata }, jobOptions);
