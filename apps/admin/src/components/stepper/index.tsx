@@ -10,7 +10,7 @@ import Stepper from '@mui/material/Stepper';
 import { styled } from '@mui/material/styles';
 import fileUpload from '@utils/fileUpload';
 import { AxiosError } from 'axios';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import routes from '../../constants/api';
@@ -20,8 +20,15 @@ import api from '@utils/apiCall';
 import { CircularProgress, LinearProgress } from '@mui/material';
 import CsvDetailsTable from './csvDetailsTable';
 import { UploadCsv } from './steps/uploadCsv';
+import { NextRouter } from 'next/router';
 
 const steps = ['Upload', 'Preview File', 'Validate File', 'Mint'];
+
+type ValidationResult = {
+  alreadyMinted: string[];
+  invalidSchools: string[];
+  inProgressSchools: string[];
+};
 
 export default function HorizontalLinearStepper({
   propsTableData,
@@ -33,7 +40,7 @@ export default function HorizontalLinearStepper({
   const [activeStep, setActiveStep] = useState(0);
   const [csvUploadId, setCsvUploadId] = useState('');
   const [files, setFiles] = useState<(File | string)[]>([]);
-  const [validationResult, setValidationResult] = useState<any[]>([]);
+  const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
   const [progress, setProgress] = useState<number>(0);
   const {
     setShowStepper,
@@ -52,6 +59,7 @@ export default function HorizontalLinearStepper({
   } = useUploadContext();
 
   const [hasErrors, setHasErrors] = useState(false);
+  const [proceedToMinting, setProceedToMinting] = useState(false);
   const [showMintingProgressBar, setShowMintingProgressBar] = useState(false);
   const [viewDetails, setViewDetails] = useState(false);
   const [csvDetails, setCsvDetails] = useState({
@@ -67,7 +75,7 @@ export default function HorizontalLinearStepper({
   });
 
   const { enqueueSnackbar } = useSnackbar();
-  const { push } = useRouter();
+  const { push } = useRouter() as NextRouter as NextRouter;
 
   const baseUrl = routes.BASE_URL;
   const API_URL = `${baseUrl}${routes.SCHOOLS.UPLOAD}`;
@@ -96,7 +104,7 @@ export default function HorizontalLinearStepper({
 
   useEffect(() => {
     //send file to validate if activate step is 1
-    if (activeStep === 2 && files.length > 0) {
+    if (activeStep === 2 && files.length > 0 && !isFileValidated) {
       const formData = new FormData();
       files.forEach((file) => {
         formData.append(`files`, file);
@@ -106,12 +114,11 @@ export default function HorizontalLinearStepper({
         .then((response) => {
           if (response?.status === 200) {
             setIsFileValidated(true);
-            enqueueSnackbar('File is validated successfully!');
-            setValidationResult([
-              ...(response.data?.data?.alreadyMinted || []),
-              ...(response.data?.data?.invalidSchools || []),
-              ...(response.data?.data?.inProgressSchools || []),
-            ]);
+            setValidationResult({
+              alreadyMinted: response.data?.data?.alreadyMinted || [],
+              invalidSchools: response.data?.data?.invalidSchools || [],
+              inProgressSchools: response.data?.data?.inProgressSchools || [],
+            });
           }
         })
         .catch((error: AxiosError) => {
@@ -133,7 +140,7 @@ export default function HorizontalLinearStepper({
         setShowMintingProgressBar(true);
         setMintDetails(res.data);
         //clear from local storage
-        if (res?.data?.mintedCount === res?.data?.total) {
+        if (res?.data?.mintedCount === res?.data?.total || res?.data?.mintingCount === 0) {
           localStorage.removeItem(currentCsvUploadId);
           setDisableDropZone(false);
         }
@@ -239,11 +246,14 @@ export default function HorizontalLinearStepper({
         const dataRows = rows.slice(1);
 
         // Collect all invalid IDs from validationResult
-        const invalidIds = new Set([...(validationResult || [])]);
+        const invalidIds = new Set([
+          ...(validationResult?.alreadyMinted || []),
+          ...(validationResult?.invalidSchools || []),
+          ...(validationResult?.inProgressSchools || []),
+        ]);
 
         // Filter out rows where first column (school_id) is in invalidIds
         const filteredRows = dataRows.filter((row) => !invalidIds.has(row[0]));
-
         // Re-attach header
         const filteredCSV = [header, ...filteredRows].map((row) => row.join(',')).join('\n');
 
@@ -251,7 +261,6 @@ export default function HorizontalLinearStepper({
         const filteredFile = new File([filteredCSV], file.name, {
           type: 'text/csv',
         });
-
         const formData = new FormData();
         formData.append('files', filteredFile);
         await fileUpload
@@ -293,11 +302,19 @@ export default function HorizontalLinearStepper({
   };
 
   const handleReupload = () => {
+    setIsFileValidated(false);
     setActiveStep(0);
     setDisableDropZone(false);
     setSelectedSheetName('');
     setFile([]);
     setSelectedFiles([]);
+  };
+
+  const handleBackToDashboard = () => {
+    setIsFileValidated(false);
+    setShowStepper(false);
+    setSelectedFiles([]);
+    push('/dashboard');
   };
 
   return (
@@ -331,6 +348,7 @@ export default function HorizontalLinearStepper({
             setHasErrors={setHasErrors}
             validationResult={validationResult}
             isFileValidated={isFileValidated}
+            setProceedToMinting={setProceedToMinting}
           />
           <Box sx={{ display: 'flex', flexDirection: 'row', py: 3, px: 1 }}>
             <Button
@@ -360,7 +378,7 @@ export default function HorizontalLinearStepper({
                     File Looks all good!
                   </Alert>
                 )} */}
-                <Button variant="contained" onClick={handleNext}>
+                <Button disabled={!proceedToMinting} variant="contained" onClick={handleNext}>
                   Next
                 </Button>
               </Box>
@@ -438,7 +456,11 @@ export default function HorizontalLinearStepper({
                       },
                     }}
                   />
-                  <p>Minting in progress...</p>
+                  <p>
+                    {mintDetails.mintedCount === mintDetails.total
+                      ? 'Minted Completed'
+                      : 'Minting in progress...'}
+                  </p>
                 </Box>
                 <Box
                   sx={{
@@ -453,11 +475,7 @@ export default function HorizontalLinearStepper({
                     variant="outlined"
                     color="inherit"
                     disabled={mintDetails?.mintedCount !== mintDetails.total}
-                    onClick={() => {
-                      setShowStepper(false);
-                      setSelectedFiles([]);
-                      push('/dashboard');
-                    }}
+                    onClick={handleBackToDashboard}
                     sx={{ mr: 1 }}
                   >
                     Back
@@ -506,12 +524,7 @@ export default function HorizontalLinearStepper({
                   <Button
                     variant="outlined"
                     color="inherit"
-                    disabled={mintDetails?.mintedCount !== mintDetails.total}
-                    onClick={() => {
-                      setShowStepper(false);
-                      setSelectedFiles([]);
-                      push('/dashboard');
-                    }}
+                    onClick={() => setViewDetails(false)}
                     sx={{ mr: 1 }}
                   >
                     Back
@@ -521,11 +534,7 @@ export default function HorizontalLinearStepper({
             )
           ) : (
             <>
-              {loading ? (
-                <>
-                  <CircularProgress />
-                </>
-              ) : (
+              {!loading && (
                 <>
                   <SpreadSheetTable invalidate={validationResult} />
                   <Box
@@ -546,13 +555,19 @@ export default function HorizontalLinearStepper({
                     >
                       Back
                     </Button>
-                    <Button
-                      disabled={rows.length - 1 === validationResult.length || files.length === 0}
-                      variant="contained"
-                      onClick={handleUpload}
-                    >
-                      Finish
-                    </Button>
+                    <Box>
+                      <Button
+                        variant="outlined"
+                        color="inherit"
+                        onClick={handleReupload}
+                        sx={{ mr: 1 }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button variant="contained" onClick={handleUpload}>
+                        Finish
+                      </Button>
+                    </Box>
                   </Box>
                 </>
               )}

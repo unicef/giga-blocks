@@ -17,35 +17,25 @@ import Iconify from '@components/iconify';
 import MenuPopover from '@components/menu-popover';
 import ConfirmDialog from '@components/confirm-dialog';
 import { CustomAvatar } from '@components/custom-avatar';
-import { useRouter } from 'next/router';
-
+import { useRouter } from 'next/compat/router';
+import { NextRouter } from 'next/router';
 
 type Props = {
   row: any;
 };
 
-export default function UserListRow({
-  row,
-}: Props) {
-  const {
-  id,
-  name,
-  email,
-  wallet
-  } = row;
+export default function UserListRow({ row }: Props) {
+  const { id, name, email, wallet } = row;
 
-  const {push} = useRouter()
+  const { push } = useRouter() as NextRouter;
 
-  const handleEditRow = (row:string) => {
-    push(`/user/${row}`)
-  }
+  const handleEditRow = (row: string) => {
+    push(`/user/${row}`);
+  };
 
   return (
     <>
-      <TableRow hover 
-      sx={{cursor: 'pointer'}}
-      >
-
+      <TableRow hover sx={{ cursor: 'pointer' }}>
         <TableCell onClick={() => handleEditRow(id)}>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Typography variant="subtitle2" noWrap>
@@ -58,11 +48,13 @@ export default function UserListRow({
           {email}
         </TableCell>
 
-        <TableCell align="left" sx={{ textTransform: 'capitalize' }} onClick={() => handleEditRow(id)}>
+        <TableCell
+          align="left"
+          sx={{ textTransform: 'capitalize' }}
+          onClick={() => handleEditRow(id)}
+        >
           {wallet}
         </TableCell>
-
-        
       </TableRow>
     </>
   );

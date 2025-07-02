@@ -39,12 +39,14 @@ export default function Page404() {
         </m.div>
 
         <m.div variants={varBounce().in}>
-          <PageNotFoundIllustration
-            sx={{
-              height: 260,
-              my: { xs: 5, sm: 10 },
-            }}
-          />
+          {typeof window !== 'undefined' && (
+            <PageNotFoundIllustration
+              sx={{
+                height: 260,
+                my: { xs: 5, sm: 10 },
+              }}
+            />
+          )}
         </m.div>
 
         <Button component={NextLink} href="/" size="large" variant="contained">

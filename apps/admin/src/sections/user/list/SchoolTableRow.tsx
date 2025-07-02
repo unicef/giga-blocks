@@ -3,7 +3,8 @@ import { Stack, TableRow, TableCell, Typography, Checkbox } from '@mui/material'
 import { TESTNET_CHAINS, DEFAULT_CHAIN_ID } from '@components/web3/chains';
 
 // components
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
+import { NextRouter } from 'next/router';
 
 type Props = {
   row: any;
@@ -34,7 +35,7 @@ export default function SchoolTableRow({
     imageHash,
   } = row;
 
-  const { push } = useRouter();
+  const { push } = useRouter() as NextRouter;
   const schoolNft = process.env.NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS;
   const explorer = TESTNET_CHAINS[DEFAULT_CHAIN_ID]?.blockExplorerUrls[0];
 
@@ -95,7 +96,7 @@ export default function SchoolTableRow({
           </TableCell>
         )}
 
-        <TableCell onClick={() => handleEditRow(id)}>
+        <TableCell onClick={clickable ? () => handleEditRow(id) : () => {}}>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Typography variant="subtitle2" noWrap>
               {truncateString(schoolName, 25)}
@@ -107,7 +108,6 @@ export default function SchoolTableRow({
           align="left"
           onClick={clickable ? () => handleEditRow(id) : () => {}}
           sx={{ cursor: clickable ? 'pointer' : 'default' }}
-          // () => handleEditRow(id)}
         >
           {country}
         </TableCell>

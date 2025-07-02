@@ -6,6 +6,7 @@ import { CustomExceptionFilter } from './utils/exceptions/exception.filter';
 import { setupSwagger } from './swagger';
 import { AuthGuard } from './auth/guards/auth.global.guard';
 import fmp from 'fastify-multipart';
+import * as helmet from 'helmet';
 
 async function bootstrap() {
   const logger = new Logger('bootstrap');
@@ -16,8 +17,15 @@ async function bootstrap() {
   await app.register(fmp);
   const reflector = app.get(Reflector);
   const port = process.env.PORT || 3000;
-  // await app.register(helmet);
-  app.enableCors();
+
+  app.use(helmet.contentSecurityPolicy({ directives: { defaultSrc: ["'self'"] } }));
+  app.use(helmet.frameguard({ action: 'deny' }));
+  app.use(helmet.hsts({ maxAge: 31536000, includeSubDomains: true }));
+  app.use(helmet.noSniff());
+  app.use(helmet.hidePoweredBy());
+  app.enableCors({
+    origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : '*',
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

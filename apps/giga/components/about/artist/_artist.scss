@@ -5,9 +5,9 @@
 @use '@carbon/styles/scss/breakpoint' as *;
 
 .artist-section {
-  margin: 80px 32px;
-  background-color: #f5eeff;
-  border-radius: 16px;
+  margin: 80px 2rem;
+  // background-color: #f5eeff;
+  // border-radius: 16px;
 
   @include breakpoint-down(md) {
     padding: $spacing-06 0;
@@ -26,10 +26,10 @@
   }
 }
 
-.artist-content {
-  flex: 1;
-  padding: 40px;
-}
+// .artist-content {
+//   flex: 1;
+//   padding: 40px;
+// }
 
 .artist-header {
   margin-bottom: $spacing-07;
@@ -71,9 +71,9 @@
 
 .artist-image-container {
   flex-shrink: 0;
-  width: 200px;
-  height: 200px;
-  border-radius: 8px;
+  // width: 200px;
+  // height: 200px;
+  border-radius: 16px;
   overflow: hidden;
 
   @include breakpoint-down(sm) {
@@ -83,11 +83,11 @@
   }
 }
 
-.artist-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+// .artist-image {
+//   width: 100%;
+//   height: 100%;
+//   object-fit: cover;
+// }
 
 .artist-info {
   flex: 1;
@@ -153,4 +153,20 @@
 .illustration-image {
   max-width: 100%;
   height: auto;
+}
+
+.artist-about__button {
+  background-color: #393939;
+  color: white;
+  // width: 100%;
+  gap: 3rem;
+
+  &:hover {
+    // background-color: #4c4c4c;
+  }
+
+  svg {
+    fill: white;
+  }
+  margin-top: $spacing-05;
 }

@@ -17,6 +17,11 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
+ app.get('/webhook/health', (req: any, res: any) => {
+  return res.status(200).send({ status: 'ok' });
+});
+
+
   app.use(express.json({ verify: addAlchemyContextToRequest }));
   // app.use(express.urlencoded({ extended: true }));
   app.use(validateAlchemySignature(alchemySigningKey));

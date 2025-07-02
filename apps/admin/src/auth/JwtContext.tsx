@@ -7,7 +7,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 
 import { PATH_AUTH, ROOTS_DASHBOARD } from '@routes/paths';
 
@@ -28,10 +28,11 @@ import { AuthState, ExtendedAuthState } from './types';
 import { metaMask } from '@components/web3/connectors/metaMask';
 import { useAuthContext } from './useAuthContext';
 import axios from 'axios';
-import  routes  from "../constants/api";
+import routes from '../constants/api';
 import { useWeb3React } from '@web3-react/core';
 import { DEFAULT_CHAIN_ID } from '@components/web3/chains';
-
+import { NextRouter } from 'next/router';
+import {useToast} from 'src/libs/toastProvider';
 
 // ----------------------------------------------------------------------
 
@@ -65,10 +66,11 @@ interface AuthProviderProps {
 
 function AuthProvider({ children }: AuthProviderProps) {
   const [authState, setAuthState] = useState<AuthState>(initialState);
-  const { push, replace } = useRouter();
+  const { push, replace } = useRouter() as NextRouter as NextRouter;
   const web3 = useWeb3React();
+  const {showToast} = useToast();
 
-  const baseUrl = routes.BASE_URL
+  const baseUrl = routes.BASE_URL;
 
   useEffect(() => {
     const initialize = async () => {
@@ -83,10 +85,12 @@ function AuthProvider({ children }: AuthProviderProps) {
             isInitialized: true,
             token: localToken,
             user: localUser,
-          }));}
-          else if(localToken && !isValidToken(localToken)) {
-            localStorage.clear()
-            window.location.href = PATH_AUTH.login;          }
+          }));
+        } else if (localToken && !isValidToken(localToken)) {
+          localStorage.clear();
+          replace(PATH_AUTH.login);
+          showToast('Session expired. Please log in again.', 'error');
+        }
         // } else if (localRefreshToken) {
         //   try {
         //     axios.post(`${baseUrl}${routes.REFRESH.POST}`, JSON.stringify({ refresh: localRefreshToken }))
@@ -160,14 +164,14 @@ function AuthProvider({ children }: AuthProviderProps) {
   const activateMetaMask = async () => {
     const walletState = localStorage.getItem('auth');
     if (walletState === 'metaMask') metaMask.activate(Number(DEFAULT_CHAIN_ID));
-  }
+  };
 
   useEffect(() => {
-    if(web3.provider) return;
-    const timerInterval = setInterval(activateMetaMask,10);
-    return()=>{
-      clearInterval(timerInterval)
-    }
+    if (web3.provider) return;
+    const timerInterval = setInterval(activateMetaMask, 10);
+    return () => {
+      clearInterval(timerInterval);
+    };
   }, [activateMetaMask]);
 
   const contextProps = useMemo(

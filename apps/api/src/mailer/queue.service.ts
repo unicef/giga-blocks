@@ -7,6 +7,7 @@ import {
   MINT_QUEUE,
   ONCHAIN_DATA_QUEUE,
   SET_APPROVE_QUEUE,
+  SET_BULK_IMAGE_PROCESS,
   SET_CONTRIBUTE_QUEUE,
   SET_IMAGE_PROCESS,
   SET_MINT_NFT,
@@ -161,6 +162,18 @@ export class QueueService {
     }
   }
 
+  public async processBulkImage(id: string) {
+    try {
+      jobOptions.delay = 1000;
+      await this._bulkImageQueue.add(SET_BULK_IMAGE_PROCESS, { id }, jobOptions);
+      return { message: 'queue added successfully', statusCode: 200 };
+    } catch (error) {
+      console.log('error', error);
+      this._logger.error(`Error queueing transaction to blockchain `);
+      throw error;
+    }
+  }
+
   public async contributeData(ids: UpdateContributeDatumDto, userId: string) {
     try {
       await this._contributeQueue.add(SET_CONTRIBUTE_QUEUE, { ids, userId }, jobOptions);
@@ -274,20 +287,20 @@ export class QueueService {
   }
 
   public async bulkUpdateImageHash() {
-    const batchSize = Number(this._configService.get<number>('IMAGE_BATCH_SIZE')) || 200;
+    const batchSize = Number(this._configService.get<number>('IMAGE_BATCH_SIZE')) || 500;
 
     try {
       const schools = await this._prismaService.school.findMany({
         where: {
           imageUpdated: false,
           NOT: [{ imageHash: null }, { imageHash: '' }],
+          imageUpdating: true,
         },
         select: {
           giga_school_id: true,
           imageHash: true,
           id: true,
         },
-      
       });
       console.log(schools.length, 'is the length of schools with imageHash');
       if (schools.length === 0) {
@@ -295,8 +308,10 @@ export class QueueService {
         return { message: 'No schools found with imageHash to update', statusCode: 200 };
       }
       const imageData = schools.map(school => [school.giga_school_id, school.imageHash]);
+      const DELAY_BETWEEN_JOBS_MS = 500;
       if (imageData.length >= batchSize) {
         for (let i = 0; i < imageData.length; i += batchSize) {
+          jobOptions.delay = i * (DELAY_BETWEEN_JOBS_MS / batchSize);
           const imagedata = imageData.slice(i, i + batchSize);
           this._logger.log(`Processing batch from ${i} to ${i + batchSize}`);
           await this._bulkImageQueue.add(UPDATE_BULK_IMAGE, { imagedata }, jobOptions);

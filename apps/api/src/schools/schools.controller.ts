@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { SchoolService } from './schools.service';
 import { QosService } from './qos.service';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ListSchoolDto } from './dto/list-schools.dto';
 import { Public } from '../common/decorators/public.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
@@ -37,6 +37,8 @@ import {
 } from './dto/reserve-nft.dto';
 @Controller('schools')
 @ApiTags('School')
+@ApiBearerAuth('access-token')
+
 export class SchoolController {
   constructor(
     private readonly schoolService: SchoolService,
@@ -211,6 +213,16 @@ export class SchoolController {
   async getImageUpdateList(@Query() query: any) {
     return this.schoolService.getImageUpdateList(query);
   }
+
+  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Patch('/syncSchool/:schoolId')
+  @ApiOperation({summary:'Sync the database with contract in case of any missing data'})
+  async syncSchool(@Param('schoolId') schoolId:string){
+    return this.schoolService.syncSchoolData(schoolId);
+  }
+
+  
 
   //arewave
   @Public()

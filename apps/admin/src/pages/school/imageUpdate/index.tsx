@@ -1,11 +1,19 @@
 'use client';
 import Scrollbar from '@components/scrollbar';
 import { TableHeadUsers, TableNoData, TablePaginationCustom, useTable } from '@components/table';
-import {  useSchoolGetImageUpdateList, useUpdateSchoolImage } from '@hooks/school/useSchool';
+import { useSchoolGetImageUpdateList, useUpdateSchoolImage } from '@hooks/school/useSchool';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
-import { Button, Card, Divider, TableContainer, Table, TableBody } from '@mui/material';
+import {
+  Button,
+  Card,
+  Divider,
+  TableContainer,
+  Table,
+  TableBody,
+  CircularProgress,
+} from '@mui/material';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
-import {  useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useSnackbar } from '@components/snackbar';
 
 const PendingSchool = () => {
@@ -17,10 +25,9 @@ const PendingSchool = () => {
     { id: 'imageHash', label: 'Image Hash', align: 'left' },
   ];
 
-
   const [school, setSchool] = useState<any>();
-  const {enqueueSnackbar} = useSnackbar();
-
+  const { enqueueSnackbar } = useSnackbar();
+  const [loader, setLoader] = useState<boolean>(false);
 
   const {
     dense,
@@ -43,12 +50,13 @@ const PendingSchool = () => {
   });
   const updateImageHash = useUpdateSchoolImage({
     onSuccess: () => {
-    enqueueSnackbar('Data added in the queue sucessfully!', { variant: 'success' });
-    refetch();
-  },
-  onError: () => {
-    enqueueSnackbar('Failed to add data in the queue', { variant: 'error' });
-  },
+      enqueueSnackbar('Data added in the queue sucessfully!', { variant: 'success' });
+      refetch();
+      setLoader(false);
+    },
+    onError: () => {
+      enqueueSnackbar('Failed to add data in the queue', { variant: 'error' });
+    },
   });
 
   let filteredData: any = [];
@@ -69,66 +77,88 @@ const PendingSchool = () => {
     setTableData(filteredData);
   }, [data, isLoading]);
 
-  const onClickUpdateImageHash = () =>{
+  const onClickUpdateImageHash = () => {
     updateImageHash.mutate();
-  }
+  };
+
+  const handleSchoolChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setSchool(e.target.value);
+  };
+
+  useEffect(() => {
+    if (updateImageHash.isPending) {
+      enqueueSnackbar('Updating image hash, please wait...', { variant: 'info' });
+      setLoader(true);
+    }
+  }, [updateImageHash]);
 
   return (
     <DashboardLayout>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <span style={{ fontSize: '1.5em', fontWeight: '600' }}>Schools To Be  Updated</span>
+        <span style={{ fontSize: '1.5em', fontWeight: '600' }}>Schools To Be Updated</span>
         <div style={{ display: 'flex', gap: '15px' }}>
-          <Button variant="contained" 
-          disabled={ isLoading || tableData.length === 0}
-          onClick={onClickUpdateImageHash}>
+          <Button
+            variant="contained"
+            disabled={isLoading || tableData.length === 0 || loader || isFetching}
+            onClick={onClickUpdateImageHash}
+          >
             Update Image Hash
           </Button>
         </div>
       </div>
-      <Card sx={{ marginTop: 2 }}>
-        <Divider />
-        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <Scrollbar>
-            <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
-              <TableHeadUsers
-                order={order}
-                orderBy={orderBy}
-                headLabel={TABLE_HEAD}
-                rowCount={tableData?.length}
-                onSort={onSort}
-                showCheckBox={true}
-                numSelected={selectedValues?.length}
-              />
 
-              <TableBody>
-                {tableData &&
-                  tableData?.map((row: any) => (
-                    <SchoolTableRow
-                      key={row.id}
-                      row={row}
-                      selectedValues={selectedValues}
-                      setSelectedValues={setSelectedValues}
-                      rowData={row}
-                      checkbox={false}
-                      clickable={false}
-                    />
-                  ))}
-                <TableNoData isNotFound={tableData.length === 0} isFetching={isFetching} />
-              </TableBody>
-            </Table>
-          </Scrollbar>
-        </TableContainer>
-        <TablePaginationCustom
-          count={data?.meta?.total || 0}
-          page={page ||0}
-          setPage={setPage}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-          dense={dense}
-          onChangeDense={onChangeDense}
-        />
-      </Card>
+      {!loader && !isFetching ? (
+        <>
+          <Card sx={{ marginTop: 2 }}>
+            <Divider />
+            <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+              <Scrollbar>
+                <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+                  <TableHeadUsers
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={TABLE_HEAD}
+                    rowCount={tableData?.length}
+                    onSort={onSort}
+                    showCheckBox={true}
+                    numSelected={selectedValues?.length}
+                  />
+
+                  <TableBody>
+                    {tableData &&
+                      tableData?.map((row: any) => (
+                        <SchoolTableRow
+                          key={row.id}
+                          row={row}
+                          selectedValues={selectedValues}
+                          setSelectedValues={setSelectedValues}
+                          rowData={row}
+                          checkbox={false}
+                          clickable={false}
+                        />
+                      ))}
+                    <TableNoData isNotFound={tableData.length === 0} isFetching={isFetching} />
+                  </TableBody>
+                </Table>
+              </Scrollbar>
+            </TableContainer>
+            <TablePaginationCustom
+              count={data?.meta?.total || 0}
+              page={page || 0}
+              setPage={setPage}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+              dense={dense}
+              onChangeDense={onChangeDense}
+            />
+          </Card>
+        </>
+      ) : (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <CircularProgress />
+        </div>
+      )}
     </DashboardLayout>
   );
 };

@@ -37,14 +37,6 @@ export default function Mission() {
 
           {/* Mission Quote Block */}
           <div className="quote-section quote-section--left">
-            <div className="quote-section__image">
-              <Image
-                src="/images/earth.png"
-                alt="Children working with a globe"
-                width={200}
-                height={200}
-              />
-            </div>
             <div className="quote-section__text">
               <p>
                 Giga Blocks seeks to lay the groundwork for an equitable
@@ -52,6 +44,14 @@ export default function Mission() {
                 roadblock to every child’s pursuit of information, opportunity
                 and choice.
               </p>
+            </div>
+            <div className="quote-section__image">
+              <Image
+                src="/images/mission-giga-block.svg"
+                alt="Children working with a globe"
+                width={220}
+                height={220}
+              />
             </div>
           </div>
 
@@ -81,7 +81,7 @@ export default function Mission() {
                 the greatest challenges in education: the digital divide.
               </p>
               <Image
-                src="/images/earth-hand.png"
+                src="/images/about-giga-block.svg"
                 alt="Hand holding globe"
                 width={200}
                 height={200}
@@ -98,22 +98,25 @@ export default function Mission() {
                 We envision a world in which every student can step into a
                 classroom, whether it’s in a bustling city or a remote village,
                 knowing that the internet is a guaranteed gateway to learning,
-                discovery, and personal growth.
+                discovery, and personal growth. By rooting each school’s record
+                in an open, secure ledger, we remove the barriers that often
+                prevent communities from receiving the connectivity support they
+                desperately need. Over time, this visibility will encourage
+                policy reforms, foster private-public partnerships, and create a
+                virtuous cycle of technological innovation that leaves no school
+                behind.
               </p>
               <p className="mission-vision__text">
-                Our vision extends beyond simply providing internet access; we
+                 Our vision extends beyond simply providing internet access; we
                 aim to cultivate a global learning network where resources,
-                knowledge, and support flow freely. Ultimately, Giga Blocks
-                seeks to lay the groundwork for an equitable education system
-                where technology acts as a catalyst and not a roadblock to every
-                child’s pursuit of information, opportunity and choice.
-              </p>
-              <p className="mission-vision__text">
-                Our vision extends beyond simply providing internet access; we
-                aim to cultivate a global learning network where resources,
-                knowledge, and support flow freely. Ultimately, Giga Blocks
-                seeks to lay the groundwork for an equitable education system
-                where technology acts as a catalyst and not a roadblock to every
+                knowledge, and support flow freely. By bridging the digital gap,
+                students gain access to online libraries, educational platforms,
+                and real-time collaborations that expand their horizons. In
+                turn, local economies can flourish as more connected communities
+                become equipped to adapt, innovate, and thrive in our
+                increasingly digital world. Ultimately, Giga Blocks seeks to lay
+                the groundwork for an equitable education system where
+                technology acts as a catalyst and not a roadblock to every
                 child’s pursuit of information, opportunity and choice.
               </p>
             </div>

@@ -10,7 +10,6 @@ import Iconify from '../../iconify';
 //
 import { NavItemProps } from '../types';
 import { StyledItem, StyledIcon, StyledDotIcon } from './styles';
-import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
@@ -26,11 +25,18 @@ export default function NavItem({
   const { translate } = useLocales();
 
   const { title, path, icon, info, children, disabled, caption, roles } = item;
-  
+
   const subItem = depth !== 1;
 
   const renderContent = (
-    <StyledItem style={{background: activePath ? '#F6F6F6' : ''}} depth={depth} active={active} disabled={disabled} caption={!!caption} {...other}>
+    <StyledItem
+      style={{ background: activePath ? '#F6F6F6' : '' }}
+      depth={depth}
+      active={active}
+      disabled={disabled}
+      caption={!!caption}
+      {...other}
+    >
       {icon && <StyledIcon>{icon}</StyledIcon>}
 
       {subItem && (

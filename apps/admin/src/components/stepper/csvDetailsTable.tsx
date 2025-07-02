@@ -25,7 +25,15 @@ function CsvDetailsTable({ schools }: { schools: any[] }) {
           <TableHead>
             <TableRow>
               {heading?.map((column: string, index: number) => (
-                <TableCell key={index} sx={{ whiteSpace: 'nowrap' }}>
+                <TableCell
+                  key={index}
+                  sx={{
+                    position: 'sticky',
+                    top: 0,
+                    whiteSpace: 'nowrap',
+                    zIndex: 1,
+                  }}
+                >
                   {column}
                 </TableCell>
               ))}
@@ -43,6 +51,7 @@ function CsvDetailsTable({ schools }: { schools: any[] }) {
                     sx={{
                       display: 'flex',
                       alignItems: 'center',
+                      gap: 1,
                     }}
                   >
                     {school?.minted === MintStatus.MINTED ? (

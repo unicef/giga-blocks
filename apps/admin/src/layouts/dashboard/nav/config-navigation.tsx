@@ -3,6 +3,7 @@ import {
   PATH_ACTIVATE,
   PATH_DASHBOARD,
   PATH_INFORMATION,
+  PATH_QUEUE,
   PATH_SCHOOL,
   PATH_TRANSACTION,
   PATH_USER,
@@ -120,6 +121,15 @@ const navConfig = [
       {
         title: 'Information Worker',
         path: PATH_INFORMATION.root,
+        icon: ICONS.user,
+      },
+    ],
+  },
+  {
+    items: [
+      {
+        title: 'Queue',
+        path: PATH_QUEUE.root,
         icon: ICONS.user,
       },
     ],
