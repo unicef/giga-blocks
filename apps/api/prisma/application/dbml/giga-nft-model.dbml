@@ -224,6 +224,7 @@ Table giga_qos {
   download_speed String [not null]
   upload_speed String [not null]
   latency String
+  date String
   country_iso3_code String [not null]
   dynamicData Json [not null]
   createdAt DateTime [default: `now()`, not null]

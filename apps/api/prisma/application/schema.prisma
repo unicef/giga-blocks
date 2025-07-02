@@ -343,6 +343,7 @@ model Qos {
   download_speed       String
   upload_speed         String
   latency              String?
+  date                 String?
   country_iso3_code    String
   dynamicData          Json
   createdAt            DateTime  @default(now())

@@ -1,7 +1,6 @@
 /*
   Warnings:
 
-  - You are about to drop the column `date` on the `giga_qos` table. All the data in the column will be lost.
   - You are about to drop the column `gigasync_id` on the `giga_qos` table. All the data in the column will be lost.
   - You are about to drop the column `inbound_traffic` on the `giga_qos` table. All the data in the column will be lost.
   - You are about to drop the column `inbound_traffic_sum` on the `giga_qos` table. All the data in the column will be lost.
@@ -22,8 +21,7 @@
 
 */
 -- AlterTable
-ALTER TABLE "giga_qos" DROP COLUMN "date",
-DROP COLUMN "gigasync_id",
+ALTER TABLE "giga_qos" DROP COLUMN "gigasync_id",
 DROP COLUMN "inbound_traffic",
 DROP COLUMN "inbound_traffic_sum",
 DROP COLUMN "outbound_traffic",
@@ -40,4 +38,5 @@ DROP COLUMN "timestamp",
 ADD COLUMN     "country_iso3_code" TEXT NOT NULL,
 ADD COLUMN     "download_speed" TEXT NOT NULL,
 ADD COLUMN     "upload_speed" TEXT NOT NULL,
-ALTER COLUMN "latency" DROP NOT NULL;
+ALTER COLUMN "latency" DROP NOT NULL,
+ALTER COLUMN "date" SET DATA TYPE TEXT;
