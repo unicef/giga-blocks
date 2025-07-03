@@ -135,9 +135,9 @@ export default function HorizontalLinearStepper({
   useEffect(() => {
     const fetchMintedStatus = async () => {
       try {
+        setShowMintingProgressBar(true);
         const res = await api.get(TOTAL_MINTED_API_URL);
         console.log(res.data);
-        setShowMintingProgressBar(true);
         setMintDetails(res.data);
         //clear from local storage
         if (res?.data?.mintedCount === res?.data?.total || res?.data?.mintingCount === 0) {
@@ -452,7 +452,7 @@ export default function HorizontalLinearStepper({
                       my: 1,
                       backgroundColor: '#e0e0e0', // background track
                       '& .MuiLinearProgress-bar': {
-                        backgroundColor: '#00ff00', // progress bar
+                        backgroundColor: '#00AB55', // progress bar
                       },
                     }}
                   />
@@ -482,7 +482,7 @@ export default function HorizontalLinearStepper({
                   </Button>
                   <Button
                     variant="contained"
-                    style={{ background: '#00ff00' }}
+                    style={{ background: '#00AB55' }}
                     color="success"
                     onClick={() => setViewDetails(true)}
                   >
@@ -565,7 +565,7 @@ export default function HorizontalLinearStepper({
                         Cancel
                       </Button>
                       <Button variant="contained" onClick={handleUpload}>
-                        Finish
+                        Mint
                       </Button>
                     </Box>
                   </Box>
