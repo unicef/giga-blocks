@@ -312,7 +312,7 @@ export class SchoolService {
           //Need to add to the queue after the uploadBatch is created.
           const txn = await this.prisma.$transaction(
             async prisma => {
-              const uploadBatch = await this.prisma.cSVUpload.create({
+              const uploadBatch = await prisma.cSVUpload.create({
                 data: {
                   uploadedBy: user.id,
                   fileValue: school_to_be_updated,

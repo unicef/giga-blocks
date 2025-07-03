@@ -21,6 +21,9 @@
 
 */
 -- AlterTable
+ALTER TABLE "giga_arweave_data" ADD COLUMN     "onChainUpdated" BOOLEAN NOT NULL DEFAULT false;
+
+-- AlterTable
 ALTER TABLE "giga_qos" DROP COLUMN "gigasync_id",
 DROP COLUMN "inbound_traffic",
 DROP COLUMN "inbound_traffic_sum",
@@ -35,6 +38,7 @@ DROP COLUMN "speed_upload",
 DROP COLUMN "speed_upload_max",
 DROP COLUMN "speed_upload_mean",
 DROP COLUMN "timestamp",
+ADD COLUMN     "arewaveUploaded" BOOLEAN NOT NULL DEFAULT false,
 ADD COLUMN     "country_iso3_code" TEXT NOT NULL,
 ADD COLUMN     "data_source" TEXT,
 ADD COLUMN     "download_speed" TEXT NOT NULL,

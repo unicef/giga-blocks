@@ -226,6 +226,7 @@ Table giga_qos {
   latency String
   date DateTime
   country_iso3_code String [not null]
+  arewaveUploaded Boolean [not null, default: false]
   dynamicData Json [not null]
   data_source String
   createdAt DateTime [default: `now()`, not null]
@@ -236,7 +237,9 @@ Table giga_qos {
 Table giga_arweave_data {
   id String [pk]
   date DateTime [unique, not null]
-  arweaveHash String[] [not null]
+  arweaveHash String [not null]
+  country_id String [not null]
+  onChainUpdated Boolean [not null, default: false]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   deletedAt DateTime

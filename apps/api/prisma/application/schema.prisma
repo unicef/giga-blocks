@@ -345,6 +345,7 @@ model Qos {
   latency              String?
   date                 DateTime?
   country_iso3_code    String
+  arewaveUploaded      Boolean   @default(false)
   dynamicData          Json
   data_source          String?
   createdAt            DateTime  @default(now())
@@ -355,12 +356,14 @@ model Qos {
 }
 
 model ArweaveHash {
-  id          String    @id @default(uuid())
-  date        DateTime  @unique
-  arweaveHash String[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
+  id             String    @id @default(uuid())
+  date           DateTime  @unique
+  arweaveHash    String
+  country_id     String
+  onChainUpdated Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
 
   @@map("giga_arweave_data")
 }
