@@ -86,7 +86,7 @@ const PendingSchool = () => {
   };
 
   useEffect(() => {
-    if (updateImageHash.isPending) {
+    if (updateImageHash.isLoading) {
       enqueueSnackbar('Updating image hash, please wait...', { variant: 'info' });
       setLoader(true);
     }

@@ -15,7 +15,7 @@ const RetryButton: React.FC<RetryButtonProps> = ({ queueType, jobId }) => {
       variant="outlined"
       color="error"
       onClick={() => retryMutation.mutate(jobId)}
-      disabled={retryMutation.isPending}
+      disabled={retryMutation?.isLoading}
     >
       {false ? 'Retrying...' : 'Retry'}
     </Button>
