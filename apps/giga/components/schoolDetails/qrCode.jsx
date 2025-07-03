@@ -1,19 +1,14 @@
-// components/QRCodeModal/QRCodeModal.jsx
-'use client'; // This is essential!
+'use client'; 
 
 import { Modal, Button } from '@carbon/react';
-import { useQRCode } from 'next-qrcode'; // Direct import of the hook
+import { useQRCode } from 'next-qrcode';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 export default function QRCodeModal({ isOpen, onClose, value, universalLink }) {
   const [isClient, setIsClient] = useState(false);
   const { Canvas } = useQRCode();
-  console.log('QRCodeModal isOpen:', universalLink);
-  console.log('QRCodeModal rendered with value:', value);
-
   useEffect(() => {
-    // This effect runs only on the client side after hydration
     setIsClient(true);
   }, []);
 
@@ -23,7 +18,6 @@ export default function QRCodeModal({ isOpen, onClose, value, universalLink }) {
     <Modal
       open={isOpen}
       onRequestClose={onClose}
-      // modalHeading="Scan QR Code"
       passiveModal
       hasForm={false}
       preventCloseOnClickOutside={true}
@@ -57,7 +51,6 @@ export default function QRCodeModal({ isOpen, onClose, value, universalLink }) {
       </div>
       <p className="qrcode-modal__instruction">OR</p>
       <p className="qrcode-modal__instruction">Scan using Mobile Wallet</p>
-      {/* Render the QR code only if 'isClient' is true and 'value' exists */}
       <div
         style={{
           display: 'flex',
@@ -80,16 +73,11 @@ export default function QRCodeModal({ isOpen, onClose, value, universalLink }) {
             }}
           />
         ) : (
-          // Display a placeholder while waiting for client-side render or if no value
           <p>
             {value ? 'Initializing QR code...' : 'No QR code data available.'}
           </p>
         )}
       </div>
-
-      {/* <Button kind="secondary" onClick={onClose} style={{ marginTop: '30px' }}>
-        Close
-      </Button> */}
     </Modal>
   );
 }

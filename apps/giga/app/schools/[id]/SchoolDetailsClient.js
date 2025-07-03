@@ -34,7 +34,7 @@ export default function SchoolDetailsClient({ params }) {
   const [isQRCodeModalOpen, setIsQRCodeModalOpen] = useState(false);
   const [qrCodeValue, setQrCodeValue] = useState('');
   const [universalLink, setUniversalLink] = useState('');
-  const [isVerfierDisabled, setIsVerifierDisabled] = useState(false);
+  const [isVerfierDisabled, setIsVerifierDisabled] = useState(true);
 
   const isMinted = minted === 'MINTED';
   const isVisibleForMinted = useThemeToggleStore(
@@ -124,20 +124,19 @@ export default function SchoolDetailsClient({ params }) {
 
   const [minLoaderDone, setMinLoaderDone] = useState(false);
 
-  // const { data: authRequest } = useGetAuthRequest(id);
+  const { data: authRequest } = useGetAuthRequest(id);
 
   const handleCIWClick = () => {
-    // console.log('CIW Clicked', authRequest.request);
-    // const qrValue = JSON.stringify(authRequest?.request);
-    setQrCodeValue('qrValue');
-    // setUniversalLink(authRequest?.universalLink);
-    setUniversalLink('https://test.com');
+    const qrValue = JSON.stringify(authRequest?.request);
+    setQrCodeValue(qrValue);
+    setUniversalLink(`https://wallet.privado.id#i_m=${authRequest?.universalLink}`);
     setIsQRCodeModalOpen(true);
   };
 
-  // useEffect(() => {
-  //   if (!authRequest?.request) setIsVerifierDisabled(true);
-  // }, [authRequest]);
+  useEffect(() => {
+    if (!authRequest?.request) setIsVerifierDisabled(true);
+    else setIsVerifierDisabled(false);
+  }, [authRequest]);
 
   useEffect(() => {
     setMinLoaderDone(false);
