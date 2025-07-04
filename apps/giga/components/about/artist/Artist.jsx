@@ -23,8 +23,8 @@ export default function Artist() {
               <Image
                 src="/images/artist.svg"
                 alt="Cole Sternberg"
-                width={350}
-                height={350}
+                width={380}
+                height={400}
                 className="artist-image"
               />
             </div>
