@@ -183,9 +183,10 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
         ...validationResult.invalidSchools,
         ...validationResult.inProgressSchools,
       ];
-      const hasError = convertedObject?.[tableHeaders[0]].every((schoolId: any) =>
-        validationResultIds?.includes(schoolId)
-      );
+      const hasError =
+        convertedObject?.[tableHeaders[0]].every((schoolId: any) =>
+          validationResultIds?.includes(schoolId)
+        ) ?? true;
       if (!hasError) {
         setProceedToMinting(true);
       } else {
