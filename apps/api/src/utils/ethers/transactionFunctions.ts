@@ -255,11 +255,8 @@ export const getScriptData = async (
   }
 };
 
-export const addArweaveHash = async (contractName, contractAddress, hashes) => {
+export const addArweaveHash = async (contractName, contractAddress, hashes,date) => {
   const qosContract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
-
-  const date = new Date();
-
   return qosContract.addHashes(date.toString(), hashes);
 };
 

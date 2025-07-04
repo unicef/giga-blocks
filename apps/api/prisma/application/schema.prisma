@@ -357,7 +357,7 @@ model Qos {
 
 model ArweaveHash {
   id             String    @id @default(uuid())
-  date           DateTime  @unique
+  date           DateTime  
   arweaveHash    String
   country_id     String
   onChainUpdated Boolean   @default(false)

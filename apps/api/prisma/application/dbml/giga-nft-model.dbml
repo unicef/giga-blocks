@@ -236,7 +236,7 @@ Table giga_qos {
 
 Table giga_arweave_data {
   id String [pk]
-  date DateTime [unique, not null]
+  date DateTime [not null]
   arweaveHash String [not null]
   country_id String [not null]
   onChainUpdated Boolean [not null, default: false]
