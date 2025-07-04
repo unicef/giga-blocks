@@ -35,7 +35,14 @@ export default function SchoolDetails({ id }: Props) {
 
   const decodeData = (schooldata: any) => {
     const encodeddata = schooldata?.schoolTokenUri;
-    const decodedData = atob(encodeddata.tokenUri.substring(29));
+    const decodedBytes = atob(encodeddata?.tokenUri?.substring(29));
+    const decoder = new TextDecoder('utf-8');
+    const decodedData = decoder.decode(
+          Uint8Array.from(
+            decodedBytes.split('').map((char) => char.charCodeAt(0))
+          )
+        );
+
     const schoolData = {
       tokenId: encodeddata?.id,
       ...JSON.parse(decodedData),
