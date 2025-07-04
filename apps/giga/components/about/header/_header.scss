@@ -79,6 +79,6 @@
   height: auto;
 
   @include breakpoint-down(md) {
-    max-width: 90%;
+    max-width: 100%;
   }
 }
