@@ -502,7 +502,12 @@ export default function HorizontalLinearStepper({
                     px: 1,
                   }}
                 >
-                  <h3>Minting Completed</h3>
+                  <h3>
+                    {' '}
+                    {mintDetails.mintedCount === mintDetails.total
+                      ? 'Minted Completed'
+                      : 'Minting in progress...'}
+                  </h3>
                   {csvDetails.schools.length > 0 ? (
                     <CsvDetailsTable schools={csvDetails.schools} />
                   ) : (

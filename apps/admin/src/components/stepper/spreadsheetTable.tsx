@@ -8,6 +8,7 @@ import {
   TableRow,
   Paper,
   Button,
+  CircularProgress,
 } from '@mui/material';
 import { useUploadContext } from '@contexts/uploadContext';
 type ValidationResult = {
@@ -63,6 +64,13 @@ const SpreadSheetTable = ({ invalidate }: { invalidate?: ValidationResult | null
             </TableRow>
           </TableHead>
           <TableBody>
+            {rows?.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={rows[0]?.length} sx={{ textAlign: 'center' }}>
+                  <CircularProgress size={24} />
+                </TableCell>
+              </TableRow>
+            )}
             {filteredRows?.slice(1)?.map((row, rowIndex) => (
               <TableRow
                 key={rowIndex}
