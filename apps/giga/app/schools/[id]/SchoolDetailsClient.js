@@ -35,6 +35,7 @@ export default function SchoolDetailsClient({ params }) {
   const [qrCodeValue, setQrCodeValue] = useState('');
   const [universalLink, setUniversalLink] = useState('');
   const [isVerfierDisabled, setIsVerifierDisabled] = useState(true);
+  const baseUrl = process.env.NEXT_PUBLIC_WEB_NAME;
 
   const isMinted = minted === 'MINTED';
   const isVisibleForMinted = useThemeToggleStore(
@@ -129,7 +130,7 @@ export default function SchoolDetailsClient({ params }) {
   const handleCIWClick = () => {
     const qrValue = JSON.stringify(authRequest?.request);
     setQrCodeValue(qrValue);
-    setUniversalLink(`https://wallet.privado.id#i_m=${authRequest?.universalLink}`);
+    setUniversalLink(`https://wallet.privado.id#i_m=${authRequest?.universalLink}&back_url=${baseUrl}/schools/${id}&finish_url=${baseUrl}/schools/${id}`);
     setIsQRCodeModalOpen(true);
   };
 
@@ -225,6 +226,7 @@ export default function SchoolDetailsClient({ params }) {
               schoolName={data?.name}
               handleCIWClick={handleCIWClick}
               isVerfierDisabled={isVerfierDisabled}
+              verifiedCIW = {data?.verifiedCIW}
             />
           </div>
         </div>
