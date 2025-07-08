@@ -239,7 +239,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {!isFileValidated && !validationResult ? (
+            {(!isFileValidated && !validationResult) || !convertedObject ? (
               <Box
                 sx={{
                   display: 'flex',
@@ -248,7 +248,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
                   height: '100%',
                 }}
               >
-                <CircularProgress />
+                <CircularProgress size={20} />
               </Box>
             ) : (
               convertedObject &&
