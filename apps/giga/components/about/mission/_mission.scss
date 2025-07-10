@@ -18,43 +18,54 @@
   padding: 0 $spacing-05;
 }
 
-.mission-vision__grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto auto;
-  gap: $spacing-06;
+// .mission-vision__grid {
+//   display: grid;
+//   grid-template-columns: 1fr 1fr;
+//   grid-template-rows: auto auto auto;
+//   gap: $spacing-06;
 
-  @include breakpoint-down(md) {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-  }
-}
+//   @media (min-width: 1024px) {
+//     display: flex;
+//     flex-direction: column;
+//     gap: $spacing-05;
+//   }
+// }
 
 .mission-section {
   grid-column: 1;
   grid-row: 1;
   background-color: #f5f5f5;
   border-radius: 8px;
-  padding: $spacing-07;
+  padding: 1.5rem;
+  min-height: 483px;
 }
 
 .quote-section--left {
   grid-column: 1;
   grid-row: 2;
   display: flex;
-  background-color: #f6ebff;
+  background-color: #fdf8ec;
   border-radius: 8px;
   overflow: hidden;
+  padding: 1rem;
+  gap: 4rem;
+  margin-bottom: 20px;
 
   @include breakpoint-down(md) {
     flex-direction: column;
   }
 
   .quote-section__image {
-    flex: 0 0 40%;
+    // flex: 0 0 40%;
     display: flex;
     justify-content: center;
-    align-items: center;
+    // align-items: center;
+    .responsive-image-giga-blocks {
+      @media (max-width: 676px) {
+        width: 350px;
+        height: 350px;
+      }
+    }
   }
 
   .quote-section__text {
@@ -65,7 +76,7 @@
 
     p {
       font-weight: 400;
-      font-size: 21px;
+      font-size: 1.5rem;
       line-height: 1.5;
     }
   }
@@ -98,6 +109,7 @@
   @include type-style('heading-04');
   color: $gray-100;
   margin-bottom: $spacing-06;
+  font-size: 2.7rem;
 }
 
 .mission-vision__content {
@@ -109,6 +121,7 @@
   color: $gray-70;
   margin-bottom: $spacing-05;
   line-height: 1.6;
+  font-size: 0.98rem;
 
   &:last-child {
     margin-bottom: 0;
@@ -242,40 +255,56 @@
 
   .vision-visual__overlay {
     bottom: 0;
-    background-color: #dff1ff;
+    background-color: #f1f9f5;
     width: 100%;
     padding: $spacing-05;
     display: flex;
     align-items: self-start;
     justify-content: space-between;
     border-radius: 12px;
+    gap: 2rem;
 
-    @include breakpoint-down(sm) {
+    // @include breakpoint-down(sm) {
+    //   flex-direction: column;
+    //   gap: $spacing-03;
+    // }
+
+    @media (max-width: 678px) {
+      display: flex;
       flex-direction: column;
-      gap: $spacing-03;
+      gap: $spacing-05;
     }
 
     p {
-      font-weight: 200;
-      font-size: 28px;
+      font-weight: 400;
+      font-size: 1.5rem;
       line-height: 1.5;
       color: #333;
     }
   }
 }
 
+// .vision-section {
+//   grid-column: 2;
+//   grid-row: 2 / span 2;
+//   background-color: #f5f5f5;
+//   border-radius: 8px;
+//   padding: $spacing-07;
+//   align-self: stretch;
+
+//   @include breakpoint-down(md) {
+//     grid-column: 1;
+//     grid-row: auto;
+//   }
+// }
+
 .vision-section {
-  grid-column: 2;
-  grid-row: 2 / span 2;
+  grid-column: 1;
+  grid-row: 1;
   background-color: #f5f5f5;
   border-radius: 8px;
-  padding: $spacing-07;
-  align-self: stretch;
-
-  @include breakpoint-down(md) {
-    grid-column: 1;
-    grid-row: auto;
-  }
+  padding: 1.5rem;
+  min-height: 564px;
 }
 
 /* ----------- MOBILE ONLY SHOW Mission & Vision ----------- */
@@ -292,6 +321,45 @@
   .vision-section-bottom,
   .mission-vision__image-container,
   .vision-visual {
-    display: none !important;
+    display: block !important;
   }
+}
+
+//new css for test //
+
+.mission-vision__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  // grid-template-rows: repeat(4, 1fr);
+  gap: 12px;
+
+  @media (max-width: 1024px) {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-05;
+  }
+
+  @media (max-width: 820px) {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-05;
+  }
+}
+
+.div1 {
+  grid-column: span 2 / span 2;
+  grid-row: span 4 / span 4;
+}
+
+.div2 {
+  grid-column: span 2 / span 2;
+  grid-row: span 2 / span 2;
+  grid-column-start: 3;
+}
+
+.div4 {
+  grid-column: span 2 / span 2;
+  grid-row: span 2 / span 2;
+  grid-column-start: 3;
+  grid-row-start: 3;
 }

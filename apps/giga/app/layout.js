@@ -1,3 +1,4 @@
+import { headers } from 'next/headers';
 import './globals.scss';
 import { Providers } from './providers';
 
@@ -56,8 +57,10 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const nonce = headers().get('x-nonce') || '';
   return (
     <html lang="en">
+      <head nonce={nonce}></head>
       <body>
         <Providers>{children}</Providers>
       </body>

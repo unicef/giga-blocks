@@ -785,7 +785,7 @@ export class BulkImageProcessor {
     }
   }
 
-  @Process({ name: SET_BULK_IMAGE_PROCESS, concurrency: 4 })
+  @Process({ name: SET_BULK_IMAGE_PROCESS, concurrency: 6 })
   public async processImages(job: Job<any>) {
     this._logger.log(`Processing bulk image for job: ${job.id}`);
     const id = job.data.id;
@@ -845,12 +845,23 @@ export class BulkImageProcessor {
           },
           data: {
             imageUpdated: true,
+            imageUpdating: false,
           },
         });
         this._logger.log(`Schools updated: ${schools.count}`);
       }
       if (txReceipt.status !== 1) {
-        throw new Error('Error updating image hash');
+        const schools = await this._prismaService.school.updateMany({
+          where: {
+            giga_school_id: {
+              in: imagedata.map(data => data[0]),
+            },
+          },
+          data: {
+            imageUpdating: false,
+          },
+        });
+        throw new Error(`Error updating image hash:${schools}`);
       }
       this._logger.log(`Image hash updated successfully for school: ${imagedata[0]}`);
     } catch (error) {

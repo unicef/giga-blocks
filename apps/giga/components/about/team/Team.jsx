@@ -70,8 +70,8 @@ export default function Team() {
                     <Image
                       src={member.image || '/placeholder.svg'}
                       alt={`Photo of ${member.name}`}
-                      width={167}
-                      height={167}
+                      width={185}
+                      height={185}
                       className="team-member-image"
                     />
                   </div>
@@ -81,10 +81,41 @@ export default function Team() {
                   </div>
                 </div>
               ))}
+              <p className="many-more-members-tablet">and many more.</p>
             </div>
+            <p className="many-more-members-desktop">and many more.</p>
           </div>
         </div>
       </section>
+
+      {/* <section className="team-section">
+        <div className="team-container">
+          <div className="team-header">
+            <h2 className="team-title">Giga Team</h2>
+            <p className="team-subtitle">
+              Some of the people who were involved in the creation of this
+              project.
+            </p>
+          </div>
+          <div class="parent">
+            {teamMembers.map((member) => (
+              <div key={member.id} className="">
+                <Image
+                  src={member.image || '/placeholder.svg'}
+                  alt={`Photo of ${member.name}`}
+                  width={180}
+                  height={250}
+                  className=""
+                />
+                <div>
+                  <p className="">{member.name}</p>
+                  <p className="">{member.position}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section> */}
       {/* <section className="team-section">
         <div className="team-container">
           <div className="team-header">

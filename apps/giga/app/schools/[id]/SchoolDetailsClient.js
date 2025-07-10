@@ -189,7 +189,7 @@ export default function SchoolDetailsClient({ params }) {
                 longitude={data?.longitude}
                 latitude={data?.latitude}
                 gigaMapsData={giga_maps_data}
-                dataSource = {data?.data_Source}
+                dataSource={data?.data_Source}
                 fontColor={fontColor}
                 cardColor={cardColor}
                 bgColor={bgColor}

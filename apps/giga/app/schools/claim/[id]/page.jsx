@@ -16,7 +16,10 @@ import { useSearchParams } from 'next/navigation';
 import { useThemeGet } from '../../../hooks/useTheme';
 import ClaimNFT from '../../../../components/ClaimNFT/ClaimNft';
 import DetailsLoading from '../../../../components/detailsLoading/DetailsLoading';
+import { useReadNftContentSchoolIdToTokenId } from '../../../hooks/useContract/nftContent';
+import { useReadNftOwnerOf } from '../../../hooks/useContract/gigaNft';
 import { useRouter } from 'next/navigation';
+import countryList from '../../../data/country.json';
 
 export default function SchoolDetails({ params }) {
   const { id } = params;
@@ -30,12 +33,23 @@ export default function SchoolDetails({ params }) {
   const isVisibleForMinted = useThemeToggleStore(
     (state) => state.isVisibleForMinted
   );
+
+  const nftContentAddress = process.env.NEXT_PUBLIC_GIGA_NFT_CONTENT_ADDRESS;
+  const collectorNftAddress =
+    process.env.NEXT_PUBLIC_GIGA_COLLECTOR_NFT_ADDRESS;
   const [selectedTheme, setSelectedTheme] = useState('white');
+  const [countryName, setCountryName] = useState('');
+
   const defaultFontColor = '#000';
   const defaultBgColor = '#fff';
   const defaultCardColor = '#fff';
 
   useEffect(() => {
+    if (!data) return;
+    const countryName = countryList.find(
+      (c) => c.code === data?.country
+    )?.country;
+    setCountryName(countryName);
     useThemeStore.getState().resetTheme();
 
     if (!data) return;
@@ -48,6 +62,23 @@ export default function SchoolDetails({ params }) {
 
     useThemeStore.getState().setTheme(fontColor, cardColor, bgColor);
   }, [data]);
+
+  const { data: tokenId, isLoading: isTokenLoading } =
+    useReadNftContentSchoolIdToTokenId({
+      address: nftContentAddress,
+      args: data?.giga_school_id ? [data?.giga_school_id] : undefined,
+      query: {
+        enabled: !!data?.giga_school_id,
+      },
+    });
+
+  const { data: owner } = useReadNftOwnerOf({
+    address: collectorNftAddress,
+    args: tokenId ? [Number(tokenId)] : undefined,
+    query: {
+      enabled: !!tokenId && !isTokenLoading,
+    },
+  });
 
   const themeStore = useThemeStore();
   const hasCustomTheme =
@@ -105,7 +136,7 @@ export default function SchoolDetails({ params }) {
             <Header
               name={data?.name}
               school_type={data?.school_type}
-              region_name={data?.region_name}
+              country_name={countryName}
               locationId={data?.locationId}
               countryCode={data?.countryCode}
               fontColor={fontColor}
@@ -123,9 +154,11 @@ export default function SchoolDetails({ params }) {
             )}
 
             <SchoolStats
+              bgColor={bgColor}
               cardColor={cardColor}
               fontColor={fontColor}
               weeklyData={weeklyData}
+              connectivity={data?.connectivity}
               connectionType={data?.giga_maps_data?.connectivity_type}
               giga_school_id={data?.giga_school_id}
             />
@@ -134,18 +167,24 @@ export default function SchoolDetails({ params }) {
               connectivity={data?.connectivity}
               coverage_availability={data?.coverage_availability}
               electricity_available={data?.electricity_available}
-              region_name={data?.region_name}
+              country_name={countryName}
               longitude={data?.longitude}
               latitude={data?.latitude}
               gigaMapsData={giga_maps_data}
+              dataSource={data?.data_Source}
               fontColor={fontColor}
               cardColor={cardColor}
+              bgColor={bgColor}
             />
           </div>
           <Sidebar
             fontColor={fontColor}
+            bgColor={bgColor}
+            cardColor={cardColor}
+            owner={owner}
             minted={minted}
             imageHash={data?.imageHash}
+            id={id}
             schoolName={data?.name}
           />
         </div>

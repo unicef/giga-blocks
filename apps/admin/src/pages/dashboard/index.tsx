@@ -1,6 +1,5 @@
 import { Box, Button, Container, Grid, Typography } from '@mui/material';
 import DashboardLayout from '@layouts/dashboard';
-import { useAllSchool } from '@hooks/school/useSchool';
 import { MapView } from '../../components/maps';
 import CardData from '../../components/dashboard-cards';
 import Card from '@mui/material/Card';
@@ -17,7 +16,6 @@ import { Lightning } from '@carbon/react/icons';
 Dashboard.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default function Dashboard() {
-  const { data = [] } = useAllSchool();
   const { mintDetails, setMintDetails } = useUploadContext();
   const [viewDetails, setViewDetails] = React.useState<boolean>(false);
   const [csvDetails, setCsvDetails] = React.useState({

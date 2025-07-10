@@ -310,26 +310,32 @@ export class SchoolService {
           // to the uploadBatch and ignore the missing ones.
           // Still needs to inform the user about the missing schools
           //Need to add to the queue after the uploadBatch is created.
-          const txn = await this.prisma.$transaction(async prisma => {
-            const uploadBatch = await this.prisma.cSVUpload.create({
-              data: {
-                uploadedBy: user.id,
-                fileValue: school_to_be_updated,
-                fileName: filename,
-              },
-            });
-            await prisma.school.updateMany({
-              where: {
-                giga_school_id: {
-                  in: school_to_be_updated.map(school => school),
+          const txn = await this.prisma.$transaction(
+            async prisma => {
+              const uploadBatch = await this.prisma.cSVUpload.create({
+                data: {
+                  uploadedBy: user.id,
+                  fileValue: school_to_be_updated,
+                  fileName: filename,
                 },
-              },
-              data: {
-                uploadId: uploadBatch.id,
-              },
-            });
-            return uploadBatch;
-          });
+              });
+              await prisma.school.updateMany({
+                where: {
+                  giga_school_id: {
+                    in: school_to_be_updated.map(school => school),
+                  },
+                },
+                data: {
+                  uploadId: uploadBatch.id,
+                  minted: MintStatus.ISMINTING,
+                },
+              });
+              return uploadBatch;
+            },
+            {
+              timeout: 15000, // Optional timeout for the transaction
+            },
+          );
           this.queueService.csvMintdata(txn.id).catch(err => console.log(err));
           return res.code(200).send({ message: 'Batch processing started', csvUploadId: txn.id });
         } catch (err) {
@@ -502,23 +508,31 @@ export class SchoolService {
     });
   }
   async getMintedCount(csvId) {
-    const upload = await this.prisma.cSVUpload.findUnique({
-      where: {
-        id: csvId,
-      },
-      include: {
-        school: true,
-      },
-    });
-    if (!upload) {
-      throw new NotFoundException('Upload not found');
-    }
-    const mintedCount = upload.school.filter(school => school.minted === MintStatus.MINTED).length;
-    const total = upload.school.length;
+    const [total, mintedCount, mintingCount] = await this.prisma.$transaction([
+      this.prisma.school.count({
+        where: {
+          uploadId: csvId,
+        },
+      }),
+      this.prisma.school.count({
+        where: {
+          uploadId: csvId,
+          minted: MintStatus.MINTED,
+        },
+      }),
+      this.prisma.school.count({
+        where: {
+          uploadId: csvId,
+          minted: MintStatus.ISMINTING,
+        },
+      }),
+    ]);
+
     return {
       mintedCount,
+      mintingCount,
       total,
-      uploadId: upload.id,
+      uploadId: csvId,
     };
   }
 
@@ -851,6 +865,15 @@ export class SchoolService {
   }
 
   async updateImages() {
+    await this.prisma.school.updateMany({
+       where: {
+          imageUpdated: false,
+          NOT: [{ imageHash: null }, { imageHash: '' }],
+        },
+        data:{
+          imageUpdating:true
+        }
+    })
     return this.queueService.bulkUpdateImageHash();
   }
 
@@ -953,6 +976,7 @@ export class SchoolService {
         where: {
           imageUpdated: false,
           NOT: [{ imageHash: null }, { imageHash: '' }],
+          imageUpdating: false,
         },
         select: {
           giga_school_id: true,
@@ -975,5 +999,39 @@ export class SchoolService {
     }
 
     return schools;
+  }
+
+  async syncSchoolData(schoolId: string) {
+    const schools = await this.prisma.school.findUnique({
+      where: {
+        giga_school_id: schoolId,
+        themeId: null,
+      },
+    });
+
+    if (schools) {
+      const themes = await this.prisma.theme.findMany({});
+
+      const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+      await this.prisma.school.update({
+        where: {
+          giga_school_id: schoolId,
+        },
+        data: {
+          minted: MintStatus.MINTED,
+          themeId: randomTheme.id,
+        },
+      });
+    } else
+      await this.prisma.school.update({
+        where: {
+          giga_school_id: schoolId,
+        },
+        data: {
+          minted: MintStatus.MINTED,
+        },
+      });
+
+    // return this.queueService.processBulkImage(schoolId);
   }
 }

@@ -281,6 +281,9 @@ importers:
       hcaptcha:
         specifier: ^0.1.1
         version: 0.1.1
+      helmet:
+        specifier: ^8.1.0
+        version: 8.1.0
       i18next:
         specifier: ^22.4.9
         version: 22.5.1
@@ -16041,7 +16044,7 @@ packages:
       debug: 3.2.7
       eslint: 8.46.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.31.0)(eslint@8.46.0)
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.27.5)(eslint@8.46.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -17872,6 +17875,11 @@ packages:
   /helmet@7.2.0:
     resolution: {integrity: sha512-ZRiwvN089JfMXokizgqEPXsl2Guk094yExfoDXR0cBYWxtBbaSww/w+vT4WEJsBW2iTUi1GgZ6swmoug3Oy4Xw==}
     engines: {node: '>=16.0.0'}
+    dev: false
+
+  /helmet@8.1.0:
+    resolution: {integrity: sha512-jOiHyAZsmnr8LqoPGmCjYAaiuWwjAPLgY8ZX2XrmHawt99/u1y6RgrZMTeoPfpUbV96HOalYgz1qzkRbw54Pmg==}
+    engines: {node: '>=18.0.0'}
     dev: false
 
   /hexoid@1.0.0:

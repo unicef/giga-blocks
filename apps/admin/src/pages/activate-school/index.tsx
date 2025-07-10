@@ -57,7 +57,7 @@ const ActivateSchool = () => {
         onSuccess: () => {
           setSnackbar({
             open: true,
-            message: `School ${newStatus === 'ACTIVE' ? 'Activated' : 'Deactivated'}`,
+            message: `Event link  ${newStatus === 'ACTIVE' ? 'Activated' : 'Deactivated'} Successfully!`,
           });
           // refetch();
         },
@@ -120,7 +120,7 @@ const ActivateSchool = () => {
                           <Switch
                             checked={row.status === 'ACTIVE'}
                             onChange={() => handleStatusToggle(row)}
-                            disabled={activating || deactivating}
+                            // disabled={activating || deactivating}
                             color="primary"
                           />
                           <p style={{ fontSize: '12px' }}>

@@ -5,8 +5,9 @@ import { Information } from '@carbon/icons-react';
 import { ConnectKitButton } from 'connectkit';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './_activation.scss';
+import { useBalance, useAccount } from 'wagmi';
 
 export default function StandardActivationForm({
   baseFee,
@@ -21,8 +22,11 @@ export default function StandardActivationForm({
   cardColor,
   schoolName,
   gasFeeWei,
+  balance,
 }) {
   const [donationError, setDonationError] = useState('');
+  const [balanceError, setBalanceError] = useState(false);
+
   const handleDonationChange = (e) => {
     const value = e.target.value;
     // Allow only empty string or a valid positive number (integer or decimal, no special chars)
@@ -40,6 +44,16 @@ export default function StandardActivationForm({
   const handleBack = () => {
     router.back();
   };
+
+  useEffect(() => {
+    const totalBalanceRequired =
+      parseFloat(baseFee) + parseFloat(gasFee) + parseFloat(donation || 0);
+    if (balance && parseFloat(balance.formatted) < totalBalanceRequired) {
+      setBalanceError(true);
+    } else {
+      setBalanceError(false);
+    }
+  },[baseFee, gasFee, donation, balance]);
 
   return (
     <div
@@ -149,6 +163,11 @@ export default function StandardActivationForm({
                   ).toFixed(4)}{' '}
                   Eth
                 </span>
+                <br/>
+                { balanceError &&
+                <span className=" detail-value" style={{ color: 'red' }}>
+                  Insufficient Balance. Available balance in wallet {(balance?.formatted)?.trim(0,2)} Eth
+                </span>}
               </div>
             </div>
 
@@ -163,7 +182,7 @@ export default function StandardActivationForm({
               {isConnected ? (
                 <Button
                   onClick={handleActivate}
-                  disabled={!selectedThemeName || donationError}
+                  disabled={!selectedThemeName || donationError || balanceError}
                   className="activate-button"
                 >
                   Activate
