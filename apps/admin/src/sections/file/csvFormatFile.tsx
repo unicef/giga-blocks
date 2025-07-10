@@ -52,6 +52,11 @@ export default function CsvFormatFile({
 
   const handleDrop = useCallback(
     async (uploadedFiles: File[]) => {
+      if (uploadedFiles[0].size <= 0) {
+        setShowErrorMsg(JSON.stringify(['File is empty']));
+        return;
+      }
+      setShowErrorMsg('');
       setSelectedFiles(uploadedFiles);
       const arrayBuffer = await readFileAsync(uploadedFiles[0]); // only accepting single
       const workbook = XLSX.read(arrayBuffer, {

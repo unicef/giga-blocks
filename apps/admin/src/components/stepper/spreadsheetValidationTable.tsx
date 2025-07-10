@@ -75,14 +75,11 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
 
     rows.forEach((row: any) => {
       const rowString = JSON.stringify(row);
-      if (!isUUID(row[0])) {
-        headers.push(row[0]);
-      }
 
       if (uniqueRows.has(rowString)) {
         duplicateRows.push(`Duplicate row found: ${JSON.stringify(row)}`);
-      } else if (duplicateRows.length === 0 && headers.length > 1) {
-        duplicateRows.push(`Invalid header`);
+      } else if (duplicateRows.length === 0 && !isUUID(row[0])) {
+        duplicateRows.push(`Invalid id`);
       } else {
         uniqueRows.add(rowString);
       }
@@ -148,6 +145,16 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
           {
             sheetName: 'school.csv',
             errors: [`${missingElements.join(', ')} is missing, please follow the sample file.`],
+          },
+        ]);
+        setHasErrors(true);
+      }
+
+      if (convertedObject?.school_id_giga?.length === 0) {
+        setAllSheetErrors([
+          {
+            sheetName: '',
+            errors: ['school_id_giga cannot be empty.'],
           },
         ]);
         setHasErrors(true);
