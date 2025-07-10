@@ -78,7 +78,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
 
       if (uniqueRows.has(rowString)) {
         duplicateRows.push(`Duplicate row found: ${JSON.stringify(row)}`);
-      } else if (duplicateRows.length === 0 && !isUUID(row[0])) {
+      } else if (duplicateRows.length === 0 && !isUUID(row[0]?.trim())) {
         duplicateRows.push(`Invalid id`);
       } else {
         uniqueRows.add(rowString);
