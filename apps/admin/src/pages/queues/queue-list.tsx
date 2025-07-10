@@ -119,7 +119,7 @@ const QueueList: React.FC = () => {
               <>
                 <TableRow>
                   <TableCell colSpan={6} sx={{ p: 3, textAlign: 'center' }}>
-                    No jobs found in {queueType}
+                    No  Failed Jobs found in {queueType}
                   </TableCell>
                 </TableRow>
               </>

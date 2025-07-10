@@ -1,6 +1,5 @@
 import { Container } from '@mui/material';
 import DashboardLayout from '@layouts/dashboard';
-import { useAllSchool } from '@hooks/school/useSchool';
 import { MapView } from '../../components/maps';
 import CardData from '../../components/dashboard-cards';
 import Card from '@mui/material/Card';
@@ -8,7 +7,7 @@ import Card from '@mui/material/Card';
 Dashboard.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default function Dashboard() {
-  const { data = [] } = useAllSchool();
+  // const { data = [] } = useAllSchool();
   // const latitudeArray = Array.isArray(data) ? data.map((item) => item.latitude) : [];
   // const longitudeArray = data?.map((item: { longitude: any }) => item.longitude);
   return (

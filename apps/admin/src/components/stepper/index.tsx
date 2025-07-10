@@ -135,9 +135,9 @@ export default function HorizontalLinearStepper({
   useEffect(() => {
     const fetchMintedStatus = async () => {
       try {
+        setShowMintingProgressBar(true);
         const res = await api.get(TOTAL_MINTED_API_URL);
         console.log(res.data);
-        setShowMintingProgressBar(true);
         setMintDetails(res.data);
         //clear from local storage
         if (res?.data?.mintedCount === res?.data?.total || res?.data?.mintingCount === 0) {
@@ -438,29 +438,37 @@ export default function HorizontalLinearStepper({
                     px: 1,
                   }}
                 >
-                  <h3>Minting</h3>
-                  <h5>
-                    School Minted:{mintDetails.mintedCount}/{mintDetails.total}
-                  </h5>
-                  <LinearProgress
-                    value={(mintDetails.mintedCount / mintDetails.total) * 100 || 0}
-                    variant="determinate"
-                    sx={{
-                      width: '20%',
-                      height: 8,
-                      borderRadius: 4,
-                      my: 1,
-                      backgroundColor: '#e0e0e0', // background track
-                      '& .MuiLinearProgress-bar': {
-                        backgroundColor: '#00ff00', // progress bar
-                      },
-                    }}
-                  />
-                  <p>
-                    {mintDetails.mintedCount === mintDetails.total
-                      ? 'Minted Completed'
-                      : 'Minting in progress...'}
-                  </p>
+                  {mintDetails.total > 0 ? (
+                    <>
+                      <h3>Minting</h3>
+                      <h5>
+                        School Minted:{mintDetails.mintedCount}/{mintDetails.total}
+                      </h5>
+                      <LinearProgress
+                        value={(mintDetails.mintedCount / mintDetails.total) * 100 || 0}
+                        variant="determinate"
+                        sx={{
+                          width: '20%',
+                          height: 8,
+                          borderRadius: 4,
+                          my: 1,
+                          backgroundColor: '#e0e0e0', // background track
+                          '& .MuiLinearProgress-bar': {
+                            backgroundColor: '#00AB55', // progress bar
+                          },
+                        }}
+                      />
+                      <p>
+                        {mintDetails.mintedCount === mintDetails.total
+                          ? 'Minted Completed'
+                          : 'Minting in progress...'}
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <CircularProgress />
+                    </>
+                  )}
                 </Box>
                 <Box
                   sx={{
@@ -478,11 +486,11 @@ export default function HorizontalLinearStepper({
                     onClick={handleBackToDashboard}
                     sx={{ mr: 1 }}
                   >
-                    Back
+                    Finish
                   </Button>
                   <Button
                     variant="contained"
-                    style={{ background: '#00ff00' }}
+                    style={{ background: '#00AB55' }}
                     color="success"
                     onClick={() => setViewDetails(true)}
                   >
@@ -502,7 +510,12 @@ export default function HorizontalLinearStepper({
                     px: 1,
                   }}
                 >
-                  <h3>Minting Completed</h3>
+                  <h3>
+                    {' '}
+                    {mintDetails.total > 0 && mintDetails.mintedCount === mintDetails.total
+                      ? 'Minted Completed'
+                      : 'Minting in progress...'}
+                  </h3>
                   {csvDetails.schools.length > 0 ? (
                     <CsvDetailsTable schools={csvDetails.schools} />
                   ) : (
@@ -565,7 +578,7 @@ export default function HorizontalLinearStepper({
                         Cancel
                       </Button>
                       <Button variant="contained" onClick={handleUpload}>
-                        Finish
+                        Mint
                       </Button>
                     </Box>
                   </Box>

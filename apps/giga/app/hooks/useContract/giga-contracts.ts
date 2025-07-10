@@ -26,6 +26,7 @@ export const useGigaBuyNft = () => {
       contractAddress: `0x${string}`;
       activationDetails: any;
       onComplete?: () => void;
+      onError?: (error: any) => void;
     }) => {
       const weiValue = parseUnits(totalValue.toString(), etherUnits.wei);
 
@@ -43,9 +44,10 @@ export const useGigaBuyNft = () => {
         variables.onComplete();
       }
     },
-    onError: async (error) => {
+    onError: async (error,variables) => {
       console.error('Error in transaction:', error);
-      toast.error('NFT Purchase Failed !!');
+      variables?.onError(error);
+
     },
   });
   return functionCall;

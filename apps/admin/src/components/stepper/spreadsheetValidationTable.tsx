@@ -183,9 +183,10 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
         ...validationResult.invalidSchools,
         ...validationResult.inProgressSchools,
       ];
-      const hasError = convertedObject?.[tableHeaders[0]].every((schoolId: any) =>
-        validationResultIds?.includes(schoolId)
-      );
+      const hasError =
+        convertedObject?.[tableHeaders[0]].every((schoolId: any) =>
+          validationResultIds?.includes(schoolId)
+        ) ?? true;
       if (!hasError) {
         setProceedToMinting(true);
       } else {
@@ -238,7 +239,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {!isFileValidated && !validationResult ? (
+            {(!isFileValidated && !validationResult) || !convertedObject ? (
               <Box
                 sx={{
                   display: 'flex',
@@ -247,7 +248,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
                   height: '100%',
                 }}
               >
-                <CircularProgress />
+                <CircularProgress size={20} />
               </Box>
             ) : (
               convertedObject &&
