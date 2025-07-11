@@ -308,6 +308,7 @@ export default function HorizontalLinearStepper({
     setSelectedSheetName('');
     setFile([]);
     setSelectedFiles([]);
+    setHasErrors(false);
   };
 
   const handleBackToDashboard = () => {
