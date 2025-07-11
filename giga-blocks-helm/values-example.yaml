@@ -1,56 +1,64 @@
 replicaCount: 1
-
-imagePullSecrets: [ ]
+imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 environment: &env "dev"
-namespace: giga-blocks
-
+namespace: rahat
 # Chart Postgresql dependency
-global:
-  postgresql-app:
-    architecture: standalone
-    name: giga-blocks
-    service:
-      ports:
-        postgresql: &dbport_app "5432"
-    auth:
-      enablePostgresUser: true
-      username: &dbuser_app "dbuser"
-      database: &db_app "app"
-      existingSecret: giga-blocks-secret
-      secretKeys:
-        adminPasswordKey: postgresql-app-adminpassword
-        userPasswordKey: postgresql-app-userpassword
+# global:
+#   postgresql-app:
+#     architecture: standalone
+#     name: giga-helm
+#     service:
+#       ports:
+#         postgresql: &dbport_app "5432"
+#     auth:
+#       enablePostgresUser: true
+#       username: &dbuser_app "rumsan"
+#       database: &db_app "app"
+#       existingSecret: giga-helm-secret
+#       secretKeys:
+#         adminPasswordKey: postgresql-app-adminpassword
+#         userPasswordKey: postgresql-app-userpassword
 
-  postgresql-newsletter:
-    architecture: standalone
-    name: giga-blocks
-    service:
-      ports:
-        postgresql: &dbport_news "5432"
-    auth:
-      enablePostgresUser: true
-      username: &dbuser_news "dbuser2"
-      database: &db_news "newsletter"
-      existingSecret: giga-blocks-secret
-      secretKeys:
-        adminPasswordKey: postgresql-newsletter-adminpassword
-        userPasswordKey: postgresql-newsletter-userpassword
-
+#   postgresql-newsletter:
+#     architecture: standalone
+#     name: giga-helm
+#     service:
+#       ports:
+#         postgresql: &dbport_news "5432"
+#     auth:
+#       enablePostgresUser: true
+#       username: &dbuser_news "rumsan"
+#       database: &db_news "newsletter"
+#       existingSecret: giga-helm-secret
+#       secretKeys:
+#         adminPasswordKey: postgresql-newsletter-adminpassword
+#         userPasswordKey: postgresql-newsletter-userpassword
 postgresql-app:
   enabled: true
   serviceAccount:
     create: false
   auth:
     enablePostgresUser: true
-    username: &dbuser_app "dbuser"
-    database: &db_app "app"
-    existingSecret: giga-blocks-secret
+    username: "rumsan"
+    database: "app"
+    existingSecret: giga-helm-secret
     secretKeys:
       adminPasswordKey: postgresql-app-adminpassword
       userPasswordKey: postgresql-app-userpassword
   primary:
+    # configuration: |-
+    #   shared_buffers = '3GB'
+    #   work_mem = '64MB'
+    #   maintenance_work_mem = '1GB'
+    #   wal_buffers = '16MB'
+    #   max_wal_size = '4GB'
+    #   min_wal_size = '2GB'
+    #   checkpoint_timeout = '15min'
+    #   max_worker_processes = 60
+    #   max_connections = 500
+    #   max_prepared_transactions = 100
     networkPolicy:
       enabled: false
     pgHbaConfiguration: |-
@@ -58,12 +66,12 @@ postgresql-app:
       host all all localhost trust
       host all all 0.0.0.0/0 trust
     resources:
-      limits:
-        cpu: 1
-        memory: 1Gi
       requests:
-        cpu: 10m
-        memory: 50Mi
+        memory: "5Gi"
+        cpu: "500m"
+      limits:
+        memory: "7Gi"
+        cpu: "1500m"
     persistence:
       enabled: true
       accessMode: ReadWriteOnce
@@ -89,17 +97,16 @@ postgresql-app:
       chmod:
         enabled: false
   serviceName: "{{ .Release.Name }}-postgresql-app"
-
-
+# PostgreSQL Newsletter Database Configuration
 postgresql-newsletter:
   enabled: true
   serviceAccount:
     create: false
   auth:
     enablePostgresUser: true
-    username: &dbuser_news "dbuser2"
-    database: &db_news "newsletter"
-    existingSecret: giga-blocks-secret
+    username: "rumsan"
+    database: "newsletter"
+    existingSecret: giga-helm-secret
     secretKeys:
       adminPasswordKey: postgresql-newsletter-adminpassword
       userPasswordKey: postgresql-newsletter-userpassword
@@ -142,13 +149,12 @@ postgresql-newsletter:
       chmod:
         enabled: false
   serviceName: "{{ .Release.Name }}-postgresql-newsletter"
-
 # Redis
 redis:
   enabled: true
   architecture: standalone
   auth:
-    existingSecret: giga-blocks-secret
+    existingSecret: giga-helm-secret
     existingSecretPasswordKey: redis-password
   networkPolicy:
     enabled: false
@@ -159,18 +165,17 @@ redis:
     resources:
       requests:
         cpu: "100m"
-        memory: "128Mi"
+        memory: "350Mi"
       limits:
         cpu: "500m"
-        memory: "512Mi"
+        memory: "800Mi"
   serviceName: "{{ .Release.Name }}-redis"
-
 # Rabbitmq
 rabbitmq:
   enabled: true
   auth:
     username: user
-    existingPasswordSecret: giga-blocks-secret
+    existingPasswordSecret: giga-helm-secret
     secretKeys:
       rabbitmqPasswordKey: rabbitmq-password
   persistence:
@@ -178,23 +183,22 @@ rabbitmq:
     size: 8Gi
   resources:
     requests:
-      memory: "512Mi"
-      cpu: "500m"
+      cpu: "100m"
+      memory: "150Mi"
     limits:
-      memory: "1024Mi"
-      cpu: "1000m"
+      cpu: "500m"
+      memory: "300Mi"
   serviceName: "{{ .Release.Name }}-rabbitmq"
-
 api:
-  fullname: giga-chart-api
+  fullname: giga-helm-api
   labels:
-    app: giga-chart-api
+    app: giga-helm-api
   image:
     repository: "rumsan/giga-mono-ntf2-api"
-    tag: "stage-1d88a04"
+    tag: "stage-bd6afb6-161"
     pullPolicy: Always
-    secrets: 
-      - name: "imagePullCreds"
+    secrets:
+      - name: "rumsan-docker-creds"
   args:
     - |
       cp /usr/src/vault/env /usr/src/app/.env
@@ -203,9 +207,9 @@ api:
   #   - |
   #     cp /usr/src/vault/env /usr/src/app/.env
   #     sleep 500
-  podAnnotations: { }
-  podSecurityContext: { }
-  securityContext: { }
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
   replicas: 1
   service:
     type: ClusterIP
@@ -216,18 +220,18 @@ api:
     minReplicas: 1
     maxReplicas: 2
     targetCPUUtilizationPercentage: 80
-  nodeSelector: { }
-  tolerations: [ ]
-  affinity: { }
-  configVolume: { }
-  secretName: giga-blocks-secret
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  configVolume: {}
+  secretName: giga-helm-secret
   resources:
-    limits:
-      cpu: 1
-      memory: 1000Mi
     requests:
-      cpu: 100m
-      memory: 128Mi
+      cpu: "250m"
+      memory: "550Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1500Mi"
   livenessProbe:
     httpGet:
       path: /api/v1/auth/ping
@@ -244,20 +248,19 @@ api:
     timeoutSeconds: 10
     successThreshold: 1
     failureThreshold: 3
-
 web:
-  fullname: giga-chart-web
+  fullname: giga-helm-web
   labels:
-    app: giga-chart-web
+    app: giga-helm-web
   image:
     repository: "rumsan/giga-helm-web"
-    tag: "stage"
+    tag: "stage-bd6afb6-161"
     pullPolicy: Always
-    secrets: 
-      - name: "imagePullCreds"
-  podAnnotations: { }
-  podSecurityContext: { }
-  securityContext: { }
+    secrets:
+      - name: "rumsan-docker-creds"
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
   service:
     type: ClusterIP
     port: 8000
@@ -267,31 +270,67 @@ web:
     minReplicas: 1
     maxReplicas: 2
     targetCPUUtilizationPercentage: 80
-  nodeSelector: { }
-  tolerations: [ ]
-  affinity: { }
-  configVolume: { }
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  configVolume: {}
   resources:
-    limits:
-      cpu: 1
-      memory: 1000Mi
     requests:
-      cpu: 100m
-      memory: 128Mi
-  livenessProbe: { }
-  readinessProbe: { }
-
-
-webhook:
-  fullname: giga-chart-webhook
+      cpu: 500m
+      memory: 700Mi
+    limits:
+      cpu: 1500m
+      memory: 1400Mi
+  livenessProbe: {}
+  readinessProbe: {}
+admin:
+  fullname: giga-helm-admin
   labels:
-    app: giga-chart-webhook
+    app: giga-helm-admin
+  environment:
+    - name: NEXT_PUBLIC_ADMIN_BASE_PATH
+      value: "/admin"
+  image:
+    repository: "rumsan/giga-helm-admin"
+    tag: "stage-bd6afb6-161"
+    pullPolicy: Always
+    secrets:
+      - name: "rumsan-docker-creds"
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 3000
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  configVolume: {}
+  resources:
+    requests:
+      cpu: 500m
+      memory: 700Mi
+    limits:
+      cpu: 1500m
+      memory: 1400Mi
+  livenessProbe: {}
+  readinessProbe: {}
+webhook:
+  fullname: giga-helm-webhook
+  labels:
+    app: giga-helm-webhook
   image:
     repository: "rumsan/giga-mono-ntf2-webhook"
-    tag: "stage-b854c5d-157"
+    tag: "stage-bd6afb6-161"
     pullPolicy: Always
-    secrets: 
-      - name: "imagePullCreds"
+    secrets:
+      - name: "rumsan-docker-creds"
   args:
     - |
       cp /usr/src/vault/env /usr/src/app/.env
@@ -306,9 +345,9 @@ webhook:
   #     source /usr/src/app/.env
   #     set +a
   #     sleep 500
-  podAnnotations: { }
-  podSecurityContext: { }
-  securityContext: { }
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
   service:
     type: ClusterIP
     port: 8000
@@ -318,11 +357,11 @@ webhook:
     minReplicas: 1
     maxReplicas: 2
     targetCPUUtilizationPercentage: 80
-  nodeSelector: { }
-  tolerations: [ ]
-  affinity: { }
-  configVolume: { }
-  secretName: giga-blocks-secret
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  configVolume: {}
+  secretName: giga-helm-secret
   resources:
     limits:
       cpu: 1
@@ -330,65 +369,22 @@ webhook:
     requests:
       cpu: 100m
       memory: 128Mi
-  livenessProbe: { }
-  readinessProbe: { }
-
-admin:
-  fullname: giga-chart-admin
-  labels:
-    app: giga-chart-admin
-  environment:
-    - name: NEXT_PUBLIC_ADMIN_BASE_PATH
-      value: "/admin"
-  image:
-    repository: "rumsan/giga-helm-admin"
-    tag: "stage"
-    pullPolicy: Always
-    secrets: 
-      - name: "imagePullCreds"
-  podAnnotations: { }
-  podSecurityContext: { }
-  securityContext: { }
-  service:
-    type: ClusterIP
-    port: 8000
-    targetPort: 3000
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 2
-    targetCPUUtilizationPercentage: 80
-  nodeSelector: { }
-  tolerations: [ ]
-  affinity: { }
-  configVolume: { }
-  resources:
-    limits:
-      cpu: 1
-      memory: 1000Mi
-    requests:
-      cpu: 100m
-      memory: 128Mi
-  livenessProbe: { }
-  readinessProbe: { }
-
+  livenessProbe: {}
+  readinessProbe: {}
 ingress:
   enabled: true
   pathType: Prefix
-  host: "giga-blocks.local"
+  host: "helm-giga.rumsan.net"
   web:
     path: "/"
-    backendService: "giga-chart-web-svc"
+    backendService: "giga-helm-web-svc"
   api:
     path: "/api/v1"
-    backendService: "giga-chart-api-svc"
+    backendService: "giga-helm-api-svc"
   admin:
     path: "/admin"
-    backendService: "giga-chart-admin-svc"
+    backendService: "giga-helm-admin-svc"
   webhook:
     path: "/webhook"
-    backendService: "giga-chart-webhook-svc"
-  #doc:
-  #  path: "/doc"
-  #  backendService: "giga-blocks-docs"
-  #  servicePort: 80
+    backendService: "giga-helm-webhook-svc"
+

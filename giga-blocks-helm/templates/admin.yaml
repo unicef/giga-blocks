@@ -16,23 +16,13 @@ spec:
         {{- toYaml .Values.admin.labels | nindent 8 }}
     spec:
       containers:
-        - name: giga-blocks-admin
+        - name: giga-chart-admin
           env:
             {{- toYaml .Values.admin.environment | nindent 12 }}
           image: {{ .Values.admin.image.repository }}:{{ .Values.admin.image.tag | default .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.admin.image.pullPolicy }}
-          {{- with .Values.admin.livenessProbe }}
-          livenessProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.admin.readinessProbe }}
-          readinessProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
           ports:
-            - name: http
-              containerPort: 3000
-              protocol: TCP
+            - containerPort: 3000
           resources:
             {{- toYaml .Values.admin.resources | nindent 12 }}
       {{- if .Values.admin.image.secrets }}

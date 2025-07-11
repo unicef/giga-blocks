@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "admin.fullname" . }}
+  name: {{ include "admin.fullname" . }}-svc
   namespace: {{ default .Values.namespace .Release.Namespace }}
   labels:
     {{- toYaml .Values.admin.labels | nindent 4 }}

@@ -16,7 +16,7 @@ spec:
         {{- toYaml .Values.webhook.labels | nindent 8 }}
     spec:
       containers:
-        - name: giga-blocks-webhook
+        - name: giga-helm-webhook
           command:
             - /bin/sh
             - -c
@@ -30,14 +30,14 @@ spec:
             {{- toYaml .Values.webhook.resources | nindent 12 }}
           volumeMounts:
             - mountPath: /usr/src/vault
-              name: giga-blocks-webhook-secret
+              name: giga-helm-webhook-secret
               readOnly: true
       {{- if .Values.webhook.image.secrets }}
       imagePullSecrets:
         {{- toYaml .Values.webhook.image.secrets | nindent 8 }}
       {{- end }}
       volumes:
-        - name: giga-blocks-webhook-secret
+        - name: giga-helm-webhook-secret
           secret:
             secretName: {{ .Values.webhook.secretName }}
             items:
