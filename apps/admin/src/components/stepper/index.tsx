@@ -440,7 +440,9 @@ export default function HorizontalLinearStepper({
                   <Button
                     variant="outlined"
                     color="inherit"
-                    disabled={mintDetails?.mintedCount !== mintDetails.total}
+                    disabled={
+                      mintDetails.total === 0 || mintDetails?.mintedCount !== mintDetails.total
+                    }
                     onClick={handleBackToDashboard}
                     sx={{ mr: 1 }}
                   >
