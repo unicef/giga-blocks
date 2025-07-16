@@ -32,7 +32,7 @@
   // margin-bottom: $spacing-09;
   align-items: center;
 
-  @include breakpoint-down(lg) {
+  @include breakpoint-down(md) {
     flex-direction: column;
     gap: $spacing-06;
   }
@@ -375,7 +375,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 
   h3 {
     font-size: 1.5rem;
@@ -392,6 +392,29 @@
     align-items: center;
     padding: 8px 16px;
     gap: 10px;
+  }
+
+  @include breakpoint-down(md) {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 2rem;
+
+    h3 {
+      font-weight: 600;
+      color: #333;
+      font-size: 2.6rem;
+    }
+
+    .profile-name {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #555;
+      display: flex;
+      align-items: center;
+      padding: 8px 16px;
+      gap: 10px;
+      width: 50%;
+    }
   }
 }
 

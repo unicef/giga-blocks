@@ -76,11 +76,12 @@
 }
 
 .cds--accordion__title {
-  font-size: 16px;
+  font-size: 1.5rem;
   font-weight: 400;
 }
 .cds--accordion__content > p {
   line-height: 24px;
+  color: #525252;
 }
 
 .cds--accordion__item--active > .cds--accordion__wrapper {
@@ -95,4 +96,29 @@
 
 .cds--accordion__item {
   border-block-color: #525252 !important;
+}
+
+/* Hide default arrow */
+.cds--accordion__arrow {
+  display: none;
+}
+
+/* Add + before title */
+.cds--accordion__heading::before {
+  content: '+';
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+  display: inline-block;
+  font-weight: 500;
+}
+
+/* Change + to − when expanded */
+.cds--accordion__heading[aria-expanded='true']::before {
+  content: '−';
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.cds--accordion__content {
+  padding: 0 !important;
 }

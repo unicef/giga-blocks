@@ -7,7 +7,7 @@ import {
   LogoFacebook,
   LogoInstagram,
   LogoLinkedin,
-  LogoTwitter,
+  LogoX,
 } from '@carbon/icons-react';
 import './_activation.scss';
 import {
@@ -57,7 +57,7 @@ export default function ActivationModal({ isOpen, onClose, schoolName }) {
     );
   };
 
-  const currentPageUrl = `${process.env.NEXT_PUBLIC_WEB_NAME}/schools/${id}`
+  const currentPageUrl = `${process.env.NEXT_PUBLIC_WEB_NAME}/schools/${id}`;
 
   useEffect(() => {
     if (!contributorData) return;
@@ -139,7 +139,7 @@ export default function ActivationModal({ isOpen, onClose, schoolName }) {
                   );
                 }}
               >
-                <LogoTwitter size={24} />
+                <LogoX size={24} />
               </button>
             </div>
           </div>
