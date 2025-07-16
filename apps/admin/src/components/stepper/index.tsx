@@ -21,6 +21,8 @@ import { CircularProgress, LinearProgress } from '@mui/material';
 import CsvDetailsTable from './csvDetailsTable';
 import { UploadCsv } from './steps/uploadCsv';
 import { NextRouter } from 'next/router';
+import MintingProgressBar from './MintingProgressBar';
+import MintDetails from './MintDetails';
 
 const steps = ['Upload', 'Preview File', 'Validate File', 'Mint'];
 
@@ -56,6 +58,8 @@ export default function HorizontalLinearStepper({
     setLoading,
     loading,
     tableDatas: rows,
+    setMintDetails,
+    mintDetails,
   } = useUploadContext();
 
   const [hasErrors, setHasErrors] = useState(false);
@@ -67,11 +71,6 @@ export default function HorizontalLinearStepper({
     notMintedCount: 0,
     mintingCount: 0,
     schools: [],
-  });
-
-  const [mintDetails, setMintDetails] = useState({
-    mintedCount: 0,
-    total: 0,
   });
 
   const { enqueueSnackbar } = useSnackbar();
@@ -308,6 +307,7 @@ export default function HorizontalLinearStepper({
     setSelectedSheetName('');
     setFile([]);
     setSelectedFiles([]);
+    setHasErrors(false);
   };
 
   const handleBackToDashboard = () => {
@@ -428,48 +428,7 @@ export default function HorizontalLinearStepper({
           {showMintingProgressBar ? (
             !viewDetails ? (
               <>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    py: 3,
-                    px: 1,
-                  }}
-                >
-                  {mintDetails.total > 0 ? (
-                    <>
-                      <h3>Minting</h3>
-                      <h5>
-                        School Minted:{mintDetails.mintedCount}/{mintDetails.total}
-                      </h5>
-                      <LinearProgress
-                        value={(mintDetails.mintedCount / mintDetails.total) * 100 || 0}
-                        variant="determinate"
-                        sx={{
-                          width: '20%',
-                          height: 8,
-                          borderRadius: 4,
-                          my: 1,
-                          backgroundColor: '#e0e0e0', // background track
-                          '& .MuiLinearProgress-bar': {
-                            backgroundColor: '#00AB55', // progress bar
-                          },
-                        }}
-                      />
-                      <p>
-                        {mintDetails.mintedCount === mintDetails.total
-                          ? 'Minted Completed'
-                          : 'Minting in progress...'}
-                      </p>
-                    </>
-                  ) : (
-                    <>
-                      <CircularProgress />
-                    </>
-                  )}
-                </Box>
+                <MintingProgressBar />
                 <Box
                   sx={{
                     display: 'flex',
@@ -482,7 +441,9 @@ export default function HorizontalLinearStepper({
                   <Button
                     variant="outlined"
                     color="inherit"
-                    disabled={mintDetails?.mintedCount !== mintDetails.total}
+                    disabled={
+                      mintDetails.total === 0 || mintDetails?.mintedCount !== mintDetails.total
+                    }
                     onClick={handleBackToDashboard}
                     sx={{ mr: 1 }}
                   >
@@ -500,49 +461,7 @@ export default function HorizontalLinearStepper({
               </>
             ) : (
               <>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    py: 3,
-                    px: 1,
-                  }}
-                >
-                  <h3>
-                    {' '}
-                    {mintDetails.total > 0 && mintDetails.mintedCount === mintDetails.total
-                      ? 'Minted Completed'
-                      : 'Minting in progress...'}
-                  </h3>
-                  {csvDetails.schools.length > 0 ? (
-                    <CsvDetailsTable schools={csvDetails.schools} />
-                  ) : (
-                    <>
-                      <CircularProgress />
-                    </>
-                  )}
-                  <h4>Total:{csvDetails?.schools?.length || 0}</h4>
-                </Box>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    py: 3,
-                    px: 1,
-                  }}
-                >
-                  <Button
-                    variant="outlined"
-                    color="inherit"
-                    onClick={() => setViewDetails(false)}
-                    sx={{ mr: 1 }}
-                  >
-                    Back
-                  </Button>
-                </Box>
+                <MintDetails csvDetails={csvDetails} setViewDetails={setViewDetails} />
               </>
             )
           ) : (

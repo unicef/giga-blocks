@@ -75,6 +75,8 @@ async function main(): Promise<void> {
           'First Log Topics:',
           webhookEvent.event.data.logs[0].topics
         );
+        console.log("Status",
+          webhookEvent.event.data.block.logs[0].transaction.status)
       }
 
       const transactionDetails = {
