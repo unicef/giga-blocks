@@ -155,14 +155,14 @@ export default function ActivateSchool() {
   }, [data, isModalOpen, modalClosedByUser, router]);
 
   useEffect(() => {
-  if (showError) {
-    const timer = setTimeout(() => setShowError(false), 2000); // 2 seconds
-    return () => 
-      {clearTimeout(timer)
-       router.push(`/schools/${id}`)
+    if (showError) {
+      const timer = setTimeout(() => setShowError(false), 2000); // 2 seconds
+      return () => {
+        clearTimeout(timer);
+        router.push(`/schools/${id}`);
       };
-  }
-}, [showError]);
+    }
+  }, [showError]);
 
   return (
     <>
