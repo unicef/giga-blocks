@@ -214,7 +214,11 @@ export const useCountryList = () => {
           ? { code: found.code, country: found.country }
           : { code, country: code };
       });
-      return mapped;
+      const sorted = mapped.sort((a, b) =>
+        a.country.localeCompare(b.country)
+      );
+
+      return sorted;
     },
     {
       keepPreviousData: true,
