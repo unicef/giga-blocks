@@ -76,7 +76,15 @@ export const useSchoolDetails = (id) => {
   return useQuery(['get-school-details', id], async () => {
     const { data } = await apiGuest.get(`${ENDPOINTS.SCHOOLS.GET}/${id}`);
     return data;
-  });
+  },
+
+{
+    enabled: !!id,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    retry: 1,
+});
 };
 
 export const useSchoolActivate = () => {

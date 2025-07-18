@@ -19,7 +19,7 @@ import { useReadNftOwnerOf } from '../../hooks/useContract/gigaNft';
 import { useRouter } from 'next/navigation';
 import { InlineNotification } from '@carbon/react';
 import countryList from '../../data/country.json';
-import Custom404 from '../../not-found';
+import SchoolNotFound from '../../school-not-found';
 
 export default function SchoolDetailsClient({ params }) {
   const { id } = params;
@@ -126,7 +126,7 @@ export default function SchoolDetailsClient({ params }) {
     return () => clearTimeout(timer);
   }, [id]);
 
-  if (isLoading && !data) return <Custom404 />;
+  if (!isLoading && !data) return <SchoolNotFound />;
 
   if (isLoading || !data || !minLoaderDone) return <DetailsLoading />;
 
