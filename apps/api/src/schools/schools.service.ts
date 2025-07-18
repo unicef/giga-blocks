@@ -1028,6 +1028,6 @@ export class SchoolService {
         },
       });
 
-    // return this.queueService.processBulkImage(schoolId);
+    return this.queueService.processBulkImage(schoolId);
   }
 }
