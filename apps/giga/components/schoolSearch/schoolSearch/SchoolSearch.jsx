@@ -44,6 +44,8 @@ export default function SchoolSearch({ linkActivation }) {
   const [electricity, setElectricity] = useState('all');
   const [water, setWater] = useState('all');
 
+  console.log('STUDENTS', students);
+
   // Use values from filters state
   const country = filters.country || '';
   const minted = filters.minted || undefined;
@@ -128,6 +130,8 @@ export default function SchoolSearch({ linkActivation }) {
     download,
     true
   );
+
+  console.log(students[1].value, '======');
 
   // Combine all pages' rows
   const filteredSchools = schools?.pages.flatMap((page) => page.rows) || [];
@@ -448,10 +452,27 @@ export default function SchoolSearch({ linkActivation }) {
                       id={id}
                       min={0}
                       max={1000}
-                      value={value[1]}
+                      value={value[1].value}
                       onRelease={(val) => setter((prev) => [prev[0], val])}
                       labelText={label}
+                      hideTextInput={true}
                     />
+                    {/* <Slider
+                      labelText={label}
+                      id={id}
+                      value={value[1]}
+                      min={0}
+                      max={100}
+                      step={1}
+                      stepMultiplier={10}
+                      noValidate
+                      invalidText="Invalid message goes here"
+                      hideTextInput={true}
+                      onRelease={(val) => {
+                        return setter((prev) => [prev[0], val.value]);
+                      }}
+                      // onChange={(val) => setter((prev) => [prev[0], val])}
+                    /> */}
                   </div>
                 </div>
               ))}

@@ -26,11 +26,13 @@
 
   @include breakpoint-down(md) {
     gap: $spacing-07;
+    display: grid;
   }
 
-  @include breakpoint-down(sm) {
-    flex-direction: column;
-    gap: $spacing-06;
+  @media (min-width: 676px) and (max-width: 830px) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-07;
   }
 }
 
@@ -126,4 +128,6 @@
   font-weight: 400;
   font-size: 12px;
   color: #a8a8a8;
+  margin-top: $spacing-09;
+  margin-bottom: $spacing-06;
 }

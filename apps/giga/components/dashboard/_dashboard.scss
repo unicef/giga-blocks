@@ -66,6 +66,16 @@
   overflow: hidden;
 }
 
+.profile-image-container {
+  .profile-image {
+    @media (max-width: 676px) {
+      width: 100%;
+      // height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
 // .profile-image {
 //   width: 100%;
 //   height: 100%;
@@ -157,7 +167,7 @@
   flex-direction: column;
 
   @include breakpoint-down(md) {
-    padding: $spacing-05;
+    padding: $spacing-02;
   }
 }
 
@@ -259,7 +269,7 @@
   gap: $spacing-06;
 
   @include breakpoint-down(lg) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 
   @include breakpoint-down(md) {
