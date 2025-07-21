@@ -43,7 +43,6 @@ export default function SchoolSearch({ linkActivation }) {
   const [connectionType, setConnectionType] = useState('all');
   const [electricity, setElectricity] = useState('all');
   const [water, setWater] = useState('all');
-  const [val, setVal] = useState(87);
 
   console.log('STUDENTS', students);
 
