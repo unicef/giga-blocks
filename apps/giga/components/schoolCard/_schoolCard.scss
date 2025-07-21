@@ -115,9 +115,9 @@
   @include breakpoint-down(md) {
     height: auto;
 
-    &__image {
-      height: 200px;
-    }
+    // &__image {
+    //   height: 200px;
+    // }
   }
 
   @include breakpoint-down(sm) {
