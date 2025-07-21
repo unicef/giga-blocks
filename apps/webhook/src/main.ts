@@ -39,7 +39,7 @@ async function main(): Promise<void> {
       removeOnFail: false,
       attempts: 5,
       backoff: {
-        type: 'fixed',
+        type: 'exponential',
         delay: 1000,
       },
       delay:6000
