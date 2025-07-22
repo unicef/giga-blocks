@@ -184,7 +184,11 @@ export class SchoolService {
       {
         where,
         include: {
-          theme: true,
+          theme: {
+            select:{
+              colorScheme: true,
+            }
+          },
           giga_maps_data: false,
         },
       },
