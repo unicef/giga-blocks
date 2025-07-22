@@ -35,10 +35,10 @@ export default function SchoolSearch({ linkActivation }) {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(null);
 
-  const [students, setStudents] = useState([0, { value: 1000 }]);
-  const [teachers, setTeachers] = useState([0, { value: 1000 }]);
-  const [computers, setComputers] = useState([0, { value: 1000 }]);
-  const [download, setDownload] = useState([0, { value: 1000 }]);
+  const [students, setStudents] = useState([0, { value: 0 }]);
+  const [teachers, setTeachers] = useState([0, { value: 0 }]);
+  const [computers, setComputers] = useState([0, { value: 0 }]);
+  const [download, setDownload] = useState([0, { value: 0 }]);
   const [connected, setConnected] = useState('all');
   const [connectionType, setConnectionType] = useState('all');
   const [electricity, setElectricity] = useState('all');
