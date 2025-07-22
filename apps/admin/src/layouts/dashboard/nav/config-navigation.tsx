@@ -36,7 +36,7 @@ const navConfig = [
     items: [
       {
         title: 'School',
-        path: PATH_SCHOOL.contributed,
+        path: PATH_SCHOOL.import,
         children: [
           // {
           //   title: 'Unminted School',

@@ -19,8 +19,8 @@ export default function LoginLayout({ children, illustration, title }: Props) {
           disabledEffect
           visibleByDefault
           alt="auth"
-          src={illustration || `${basePath}/assets/login/logo-horizontal.svg`}
-          sx={{ width: 520 }}
+          src={illustration || `${basePath}/assets/login/logo-horizontal.png`}
+          sx={{ width: 550 }}
         />
         <Typography variant="h1" sx={{ maxWidth: 720, textAlign: 'center' }}>
         {APP_NAME}

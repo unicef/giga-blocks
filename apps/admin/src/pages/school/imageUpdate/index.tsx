@@ -155,7 +155,9 @@ const PendingSchool = () => {
           </Card>
         </>
       ) : (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center',
+          minHeight: '50vh', width: '100%'
+         }}>
           <CircularProgress />
         </div>
       )}
