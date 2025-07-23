@@ -279,7 +279,8 @@
   },
   "pnpm": {
     "overrides": {
-      "stylus": "0.0.1-security"
+      "stylus": "https://github.com/stylus/stylus.git#0.59.0"
+
     }
   }
 }
