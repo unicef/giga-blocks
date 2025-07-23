@@ -276,5 +276,10 @@
   },
   "nx": {
     "includedScripts": []
+  },
+  "pnpm": {
+    "overrides": {
+      "stylus": "0.0.1-security"
+    }
   }
 }
