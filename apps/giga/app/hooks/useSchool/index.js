@@ -83,8 +83,8 @@ export const useSchoolDetails = (id) => {
     {
       enabled: !!id,
       refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      refetchOnMount: false,
+      // refetchOnReconnect: false,
+      // refetchOnMount: false,
       retry: 1,
     }
   );
