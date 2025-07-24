@@ -942,7 +942,22 @@ export class SchoolService {
       throw new NotFoundException('No contributor found for given email');
     }
     const contributor = await this.prisma.contributor.findUnique({ where: { userId: user?.id } });
-    if (!contributor?.nftReserved || !contributor?.schoolreserved.includes(schoolId)) {
+    const schoolReserved = await this.prisma.contributorSchoolReservation.findUnique({
+      where: {
+        contributorId_schoolId: {
+          contributorId: contributor?.id,
+          schoolId: schoolId,
+        },
+      },
+      select: {
+        contributor: true,
+        school: true,
+      },
+
+    })
+    // if (!contributor?.nftReserved || !contributor?.schoolreserved.includes(schoolId)) 
+    if(!schoolReserved || schoolReserved?.contributor?.id !== contributor?.id)
+      {
       throw new NotFoundException('Given Schools is not reserved for given email');
     }
     // if (?.nftClaimed) {
@@ -1033,5 +1048,39 @@ export class SchoolService {
       });
 
     return this.queueService.processBulkImage(schoolId);
+  }
+
+  async getReservedSchools(query: any) {
+    const { page, perPage } = query;
+    const paginate: PaginateFunction = paginator({ perPage });
+
+    const result = await paginate(
+      this.prisma.school,
+      {
+        where: {
+          schoolClaimed: false,
+          minted: MintStatus.MINTED,
+          schoolReserved: true,
+        },
+        include: {
+          theme: {
+            select: {
+              colorScheme: true,
+            },
+          },
+          giga_maps_data: false,
+        },
+      },
+      {
+        page,
+        perPage,
+      },
+    );
+
+    if (result.meta.total === 0) {
+      return { statusCode: 200, message: 'No reserved schools found', data: [] };
+    }
+
+    return result;
   }
 }
