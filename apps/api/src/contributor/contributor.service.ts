@@ -43,6 +43,7 @@ export class ContributorService {
             nftReserved: true,
             nftClaimed: false,
             totalNftMinted: +1,
+            name: name,
           },
         });
 
@@ -155,6 +156,11 @@ export class ContributorService {
     let walletAddress;
     let name = data?.name;
     if (!data?.name) name = data?.walletAddress || data?.email;
+    const nameType = name?.endsWith('.eth')
+      ? ContributorNameType.ENS
+      : ethers.isAddress(name)
+      ? ContributorNameType.WALLET
+      : ContributorNameType.REGULAR;
     if (data?.walletAddress) walletAddress = hexStringToBuffer(data.walletAddress);
     const existinguser = await this.prisma.user.findUnique({
       where: { walletAddress: walletAddress },
@@ -176,6 +182,8 @@ export class ContributorService {
             nftReserved: false,
             nftClaimed: true,
             totalNftMinted: +1,
+            name: name,
+            nameType: nameType,
           },
         });
       }
@@ -202,6 +210,24 @@ export class ContributorService {
             country: true,
             minted: true,
             imageHash: true,
+            theme: {
+              select: {
+                colorScheme: true,
+              },
+            },
+          },
+        },
+        contributor: {
+          select: {
+            nftClaimed: true,
+            isVisible: true,
+            name: true,
+            nftReserved: true,
+            user: {
+              select: {
+                name: true,
+              },
+            },
           },
         },
       },
