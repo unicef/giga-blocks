@@ -276,11 +276,5 @@
   },
   "nx": {
     "includedScripts": []
-  },
-  "pnpm": {
-    "overrides": {
-      "stylus": "https://github.com/stylus/stylus.git#0.59.0"
-
-    }
   }
 }

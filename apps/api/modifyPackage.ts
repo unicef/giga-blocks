@@ -29,7 +29,6 @@ try {
     prisma: '^5.1.0',
     'ts-node': '^10.9.1',
     '@prisma/client': '^5.1.0',
-    'stylus': 'https://github.com/stylus/stylus.git#0.59.0' //need to remove the patch in later version
   };
 
   packageData.prisma = {

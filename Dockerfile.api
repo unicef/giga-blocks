@@ -1,7 +1,6 @@
 # Install dependencies only when needed
 FROM node:20-alpine3.17 AS deps
 WORKDIR /usr/src/app
-Run apk add --update --no-cache git
 COPY ./dist/apps/api/package.json ./
 RUN npm install 
 
@@ -10,8 +9,7 @@ RUN apk add --update --no-cache chromium nss \
       freetype \
       harfbuzz \
       ca-certificates \
-      ttf-freefont \
-      git
+      ttf-freefont 
       
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 WORKDIR /usr/src/app
