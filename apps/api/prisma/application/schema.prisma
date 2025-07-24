@@ -218,6 +218,8 @@ model School {
   themeId String?
   theme   Theme?  @relation(fields: [themeId], references: [id])
 
+  reservation            ContributorSchoolReservation ?
+
   @@index(fields: [name], type: Gist)
   @@index(fields: [minted], type: Hash)
   @@index(fields: [country, region_name, id])
@@ -404,17 +406,33 @@ model Contributor {
   id             String   @id @default(uuid())
   userId         String   @unique
   user           User?    @relation(fields: [userId], references: [id])
-  schoolreserved String[]
   totalNftMinted Int
   name           String?
   nameType       ContributorNameType @default(NONE)
+  schoolReservation ContributorSchoolReservation[]
   isVisible      Boolean  @default(false)
   nftReserved    Boolean  @default(false)
   nftClaimed     Boolean  @default(false)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
+
   @@map("giga_contributor")
+}
+
+
+model ContributorSchoolReservation {
+  id                String        @id @default(uuid())
+  contributorId     String
+  contributor       Contributor   @relation(fields:[contributorId], references:[id])
+  schoolId          String        @unique 
+  school            School        @relation(fields:[schoolId], references:[id])
+  reservedAt        DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  deletedAt         DateTime?
+
+  @@unique([contributorId, schoolId])
+  @@map("giga_contributor_reservation")
 }
 
 
