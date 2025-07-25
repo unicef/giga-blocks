@@ -1094,6 +1094,7 @@ export class SchoolService {
         page,
         perPage,
         orderBy: 'reservedAt',
+        order: 'desc',
       },
     );
 
