@@ -19,6 +19,7 @@ export default {
     VALIDATECSV: '/schools/validateCsv',
     TOTALMINTED: '/schools/minted',
     DETAILS: '/schools/details',
+    GETRESERVEDSCHOOLLIST: '/schools/reservedNftList',
 
   },
   CONTRIBUTE: {

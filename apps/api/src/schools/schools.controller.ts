@@ -225,7 +225,7 @@ export class SchoolController {
   // @Roles('ADMIN')
   // @UseGuards(JwtAuthGuard, RoleGuard)
   @Public()
-  @Get('/reserveNftList')
+  @Get('/reservedNftList')
   @ApiOperation({ summary: 'Get the list of reserved schools' })
   async getReservedSchools(@Query() query: ListReservedSchoolDto) {
     return this.schoolService.getReservedSchools(query);
