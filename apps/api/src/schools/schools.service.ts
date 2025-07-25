@@ -1050,7 +1050,7 @@ export class SchoolService {
 
   async getReservedSchools(query: any) {
     const { page, perPage } = query;
-    const paginate: PaginateFunction = paginator({ perPage });
+    const paginate: PaginateFunction = paginator({ page,perPage });
 
     const result = await paginate(
       this.prisma.contributorSchoolReservation,
