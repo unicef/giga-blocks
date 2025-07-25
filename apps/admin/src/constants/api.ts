@@ -55,4 +55,7 @@ export default {
     ACTIVATE: 'linkactivation/activate',
     DEACTIVATE: 'linkactivation/deactivate',
   },
+  METRICS: {
+    GET: '/schools/gigaMetrics',
+  },
 };
