@@ -185,9 +185,9 @@ export class SchoolService {
         where,
         include: {
           theme: {
-            select:{
+            select: {
               colorScheme: true,
-            }
+            },
           },
           giga_maps_data: false,
         },
@@ -866,14 +866,14 @@ export class SchoolService {
 
   async updateImages() {
     await this.prisma.school.updateMany({
-       where: {
-          imageUpdated: false,
-          NOT: [{ imageHash: null }, { imageHash: '' }],
-        },
-        data:{
-          imageUpdating:true
-        }
-    })
+      where: {
+        imageUpdated: false,
+        NOT: [{ imageHash: null }, { imageHash: '' }],
+      },
+      data: {
+        imageUpdating: true,
+      },
+    });
     return this.queueService.bulkUpdateImageHash();
   }
 
@@ -953,11 +953,9 @@ export class SchoolService {
         contributor: true,
         school: true,
       },
-
-    })
-    // if (!contributor?.nftReserved || !contributor?.schoolreserved.includes(schoolId)) 
-    if(!schoolReserved || schoolReserved?.contributor?.id !== contributor?.id)
-      {
+    });
+    // if (!contributor?.nftReserved || !contributor?.schoolreserved.includes(schoolId))
+    if (!schoolReserved || schoolReserved?.contributor?.id !== contributor?.id) {
       throw new NotFoundException('Given Schools is not reserved for given email');
     }
     // if (?.nftClaimed) {
@@ -1055,25 +1053,47 @@ export class SchoolService {
     const paginate: PaginateFunction = paginator({ perPage });
 
     const result = await paginate(
-      this.prisma.school,
+      this.prisma.contributorSchoolReservation,
       {
         where: {
-          schoolClaimed: false,
-          minted: MintStatus.MINTED,
-          schoolReserved: true,
+          school: {
+            schoolReserved: true,
+          },
         },
         include: {
-          theme: {
+          id: false,
+          contributorId: false,
+          schoolId: false,
+          school: {
             select: {
-              colorScheme: true,
+              name: true,
+              country: true,
+              imageHash: true,
+              schoolClaimed: true,
+              schoolReserved: true,
+              theme: {
+                select: {
+                  colorScheme: true,
+                },
+              },
             },
           },
-          giga_maps_data: false,
+          contributor: {
+            select: {
+              user: {
+                select: {
+                  name: true,
+                  email: true,
+                },
+              },
+            },
+          },
         },
       },
       {
         page,
         perPage,
+        orderBy: 'reservedAt',
       },
     );
 
