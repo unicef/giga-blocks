@@ -39,6 +39,7 @@ const InformationWorker = () => {
     email: '',
     did: '',
   });
+  const [errors, setErrors] = useState<{ name?: string; email?: string; did?: string }>({});
 
   const tips = [
     {
@@ -74,6 +75,7 @@ const InformationWorker = () => {
   const handleClose = () => {
     setOpenModal(false);
     setFormData({ name: '', email: '', did: '' });
+    setErrors({});
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,6 +84,16 @@ const InformationWorker = () => {
   };
 
   const handleSubmit = () => {
+    const newErrors: { name?: string; email?: string; did?: string } = {};
+
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    if (!formData.did.trim()) newErrors.did = 'DID is required';
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) return;
+
     postInformationWorker(
       { ...formData },
       {
@@ -238,6 +250,8 @@ const InformationWorker = () => {
             onChange={handleChange}
             required
             fullWidth
+            error={!!errors.name}
+            helperText={errors.name}
           />
           <TextField
             margin="dense"
@@ -247,6 +261,8 @@ const InformationWorker = () => {
             onChange={handleChange}
             required
             fullWidth
+            error={!!errors.email}
+            helperText={errors.email}
           />
           <TextField
             margin="dense"
@@ -256,6 +272,9 @@ const InformationWorker = () => {
             value={formData.did}
             onChange={handleChange}
             fullWidth
+            error={!!errors.did}
+            helperText={errors.did}
+            placeholder="did:polygonid:polygon:..."
           />
         </DialogContent>
         <DialogActions>
