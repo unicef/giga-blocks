@@ -401,7 +401,7 @@ export default function HorizontalLinearStepper({
           >
             <Button
               variant="outlined"
-              disabled={isFileValidated} // Disable back button once validated
+              // disabled={isFileValidated} // Disable back button once validated
               color="inherit"
               onClick={handleBack}
               sx={{ mr: 1 }}

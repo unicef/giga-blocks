@@ -13,6 +13,7 @@ import {
   Alert,
   Box,
   CircularProgress,
+  Typography,
 } from '@mui/material';
 import { useUploadContext } from '@contexts/uploadContext';
 import TableFormatter from '@utils/arrayFormatter';
@@ -48,6 +49,25 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   const [errors, setErrors] = useState<string[]>([]);
   const [allSheetErrors, setAllSheetErrors] = useState<{ sheetName: string; errors: string[] }[]>();
   const [convertedObject, setConvertedObject] = useState<Record<string, any> | null>(null);
+
+  const TABLE_LEGEND_ITEMS = [
+    {
+      color: '#fdecea',
+      label: 'Already Minted School',
+    },
+    {
+      color: '#e6f4ea',
+      label: 'Valid School',
+    },
+    {
+      color: '#fff3cd',
+      label: 'Invalid School (Warning)',
+    },
+    {
+      color: '#e3f2fd',
+      label: 'Minting School',
+    },
+  ];
 
   const validateData = (data: Record<string, any>, fileType: string): string[] => {
     let hasIncorrectFileType = false;
@@ -308,6 +328,27 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
           </TableBody>
         </Table>
       </TableContainer>
+      <Box sx={{ p: 2, borderTop: '1px solid #eee', mt: 2 }}>
+        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+          Legend:
+        </Typography>
+        <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+          {TABLE_LEGEND_ITEMS.map((item) => (
+            <Box key={item.label} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box
+                sx={{
+                  width: 16,
+                  height: 16,
+                  borderRadius: '50%',
+                  bgcolor: item.color,
+                  border: '1px solid #ccc',
+                }}
+              />
+              <Typography variant="body2">{item.label}</Typography>
+            </Box>
+          ))}
+        </Box>
+      </Box>
     </>
   );
 };
