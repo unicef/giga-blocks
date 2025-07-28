@@ -13,7 +13,7 @@ const Header = ({
     <div className="school-details__header">
       <div className="school-details__info">
         <h1 className="school-details__title" style={{ color: fontColor }}>
-          {name}
+          {name ? name.replace(/,/g, ', ') : ''}
         </h1>
         <p className="school-details__level">
           {school_type && 'Not Available'}

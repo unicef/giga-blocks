@@ -96,7 +96,7 @@ export default function SchoolTableRow({
           </TableCell>
         )}
 
-        <TableCell onClick={() => handleEditRow(id)}>
+        <TableCell onClick={clickable ? () => handleEditRow(id) : () => {}}>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Typography variant="subtitle2" noWrap>
               {truncateString(schoolName, 25)}
@@ -108,7 +108,6 @@ export default function SchoolTableRow({
           align="left"
           onClick={clickable ? () => handleEditRow(id) : () => {}}
           sx={{ cursor: clickable ? 'pointer' : 'default' }}
-          // () => handleEditRow(id)}
         >
           {country}
         </TableCell>

@@ -57,7 +57,7 @@ const ActivateSchool = () => {
         onSuccess: () => {
           setSnackbar({
             open: true,
-            message: `School ${newStatus === 'ACTIVE' ? 'Activated' : 'Deactivated'}`,
+            message: `Event link  ${newStatus === 'ACTIVE' ? 'Activated' : 'Deactivated'} Successfully!`,
           });
           // refetch();
         },

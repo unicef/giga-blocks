@@ -19,6 +19,7 @@ export default {
     VALIDATECSV: '/schools/validateCsv',
     TOTALMINTED: '/schools/minted',
     DETAILS: '/schools/details',
+    GETRESERVEDSCHOOLLIST: '/schools/reservedNftList',
 
   },
   CONTRIBUTE: {
@@ -58,6 +59,9 @@ export default {
     GET: '/information-worker',
     POST: '/information-worker',
     SEND_EMAIL: 'information-worker/send-email',
+  },
+  METRICS: {
+    GET: '/schools/gigaMetrics',
   },
 };
 

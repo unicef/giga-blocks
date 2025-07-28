@@ -63,6 +63,11 @@ import { ContributorService } from 'src/contributor/contributor.service';
       defaultJobOptions: {
         removeOnFail: false,
       },
+       settings:{
+        stalledInterval: 30000, // Check for stalled jobs every 30 seconds
+        maxStalledCount: 5, // Allow up to 5 retries for stalled jobs
+
+      }
     }),
     BullModule.registerQueue({
       name: IMAGE_QUEUE,
@@ -75,7 +80,7 @@ import { ContributorService } from 'src/contributor/contributor.service';
       },
       settings:{
         stalledInterval: 30000, // Check for stalled jobs every 30 seconds
-        maxStalledCount: 5, // Allow up to 3 retries for stalled jobs
+        maxStalledCount: 5, // Allow up to 5 retries for stalled jobs
         
       }
     }),
@@ -101,12 +106,10 @@ import { ContributorService } from 'src/contributor/contributor.service';
       name: BULK_IMAGE_QUEUE,
       defaultJobOptions: {
         removeOnFail: false,
-        
-
       },
       settings:{
         stalledInterval: 30000, // Check for stalled jobs every 30 seconds
-        maxStalledCount: 5, // Allow up to 3 retries for stalled jobs
+        maxStalledCount: 5, // Allow up to 5 retries for stalled jobs
 
       }
     }),

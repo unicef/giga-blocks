@@ -3,6 +3,7 @@ import {
   PATH_ACTIVATE,
   PATH_DASHBOARD,
   PATH_INFORMATION,
+  PATH_QUEUE,
   PATH_SCHOOL,
   PATH_TRANSACTION,
   PATH_USER,
@@ -35,7 +36,7 @@ const navConfig = [
     items: [
       {
         title: 'School',
-        path: PATH_SCHOOL.contributed,
+        path: PATH_SCHOOL.import,
         children: [
           // {
           //   title: 'Unminted School',
@@ -53,6 +54,10 @@ const navConfig = [
             title: 'Activated School',
             path: PATH_SCHOOL.verified,
           },
+          {
+            title:'Reserved School',
+            path: PATH_SCHOOL.reserved,
+          }
         ],
         icon: ICONS.user,
       },
@@ -120,6 +125,15 @@ const navConfig = [
       {
         title: 'Information Worker',
         path: PATH_INFORMATION.root,
+        icon: ICONS.user,
+      },
+    ],
+  },
+  {
+    items: [
+      {
+        title: 'Queue',
+        path: PATH_QUEUE.root,
         icon: ICONS.user,
       },
     ],

@@ -161,3 +161,10 @@ body {
 .cds--modal-content > p {
   padding-inline-end: 0;
 }
+
+// modal css  //
+
+.cds--modal-container {
+  position: static;
+  block-size: auto;
+}

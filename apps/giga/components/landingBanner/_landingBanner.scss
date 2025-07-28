@@ -19,9 +19,14 @@
   justify-content: space-between;
   gap: $spacing-07;
 
+  @media (min-width: 676px) and (max-width: 830px) {
+    padding: 0;
+  }
+
   @include breakpoint-down(md) {
     flex-direction: column;
     gap: $spacing-06;
+    padding: 0;
   }
 }
 
@@ -60,12 +65,12 @@
   }
 }
 
-.hero-cta {
-  @include breakpoint-down(md) {
-    display: flex;
-    justify-content: center;
-  }
-}
+// .hero-cta {
+//   @include breakpoint-down(md) {
+//     display: flex;
+//     justify-content: center;
+//   }
+// }
 
 .hero-button {
   background-color: #0f62fe;
@@ -89,11 +94,63 @@
 
   @include breakpoint-down(md) {
     width: 100%;
-    max-width: 350px;
+    // max-width: 350px;
   }
 }
 
 .hero-image {
   max-width: 100%;
   // height: auto;
+  @media (max-width: 991px) {
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* Row and column layout */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  // margin: 0 -15px;
+  @media (max-width: 991px) {
+    gap: 3rem;
+    padding: 2rem 20px;
+  }
+  @media (min-width: 676px) and (max-width: 830px) {
+    padding: 2rem 32px;
+  }
+}
+
+.column {
+  // padding: 0 15px;
+  width: 100%;
+}
+
+/* Responsive column widths */
+@media (min-width: 992px) {
+  .col-lg-5 {
+    width: 41.666667%;
+  }
+
+  .col-lg-7 {
+    width: 58.333333%;
+  }
+}
+
+/* Make sure content is properly aligned on mobile */
+@media (max-width: 991px) {
+  .hero-content {
+    // margin-top: 2rem;
+    text-align: left;
+  }
+
+  .hero-title {
+    text-align: left;
+    font-size: 42px;
+    font-weight: 600;
+  }
+
+  .hero-illustration {
+    text-align: center;
+  }
 }

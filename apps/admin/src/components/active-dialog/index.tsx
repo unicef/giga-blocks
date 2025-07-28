@@ -133,6 +133,7 @@ export default function ActiveDialog() {
             </DialogContentText>
 
             {/* Name Input Field */}
+            {nameError && <div style={{ color: 'red', marginBottom: '16px' }}>{nameError}</div>}
             <TextField
               label="Event Name"
               fullWidth
@@ -141,11 +142,14 @@ export default function ActiveDialog() {
               onChange={handleNameChange}
               sx={{ mb: 2 }}
               error={!!nameError}
-              required
             />
-            {nameError && <div style={{ color: 'red', marginBottom: '16px' }}>{nameError}</div>}
 
             {/* Date Pickers in a Row */}
+            {(endDateError || startDateError) && (
+              <div style={{ color: 'red', marginBottom: '16px' }}>
+                {endDateError || startDateError}
+              </div>
+            )}
             <div style={{ display: 'flex', gap: '16px' }}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker

@@ -7,9 +7,9 @@ import { ArrowRight } from '@carbon/icons-react';
 import { useRouter } from 'next/navigation';
 
 export default function LatestActivatedSchool({ decodedShooldata }) {
-  const router = useRouter(); 
+  const router = useRouter();
   const handleClick = () => {
-    router.push('/schools/list?minted=NOTMINTED');
+    router.push(`/schools/${decodedShooldata?.[0]?.gigaSchoolId}`);
   };
 
   return (
@@ -47,7 +47,9 @@ export default function LatestActivatedSchool({ decodedShooldata }) {
         </div>
 
         <div className="dashboard-button">
-          <Button renderIcon={ArrowRight}>View Details</Button>
+          <Button renderIcon={ArrowRight} onClick={handleClick}>
+            View Details
+          </Button>
         </div>
       </section>
     </div>

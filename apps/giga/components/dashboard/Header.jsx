@@ -3,7 +3,13 @@
 
 import { Copy, TaskComplete } from '@carbon/icons-react';
 
-export default function DashboardHeader({ address, isConnected, isConnecting, copied, handleCopy }) {
+export default function DashboardHeader({
+  address,
+  isConnected,
+  isConnecting,
+  copied,
+  handleCopy,
+}) {
   return (
     <div className="dashboard-header">
       <h3>My Dashboard</h3>

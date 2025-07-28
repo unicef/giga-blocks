@@ -34,7 +34,6 @@ try {
   packageData.prisma = {
     seed: 'prisma/seed.ts',
   };
-
   // Write the updated package.json back to the file
   fs.writeFileSync(packagePath, JSON.stringify(packageData, null, 2), 'utf8');
 

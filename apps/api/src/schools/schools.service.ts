@@ -60,7 +60,6 @@ export class SchoolService {
       download,
       connectionType,
     } = query;
-    // Convert string booleans to actual booleans
     const waterBool = water?.trim() === 'true' ? true : water === 'false' ? false : undefined;
     const electricityBool =
       electricity === 'true' ? true : electricity === 'false' ? false : undefined;
@@ -73,7 +72,6 @@ export class SchoolService {
 
     const cacheKey = getCacheKey(name, country, minted, Number(page), Number(perPage));
 
-    // Check if only the cache-relevant parameters are present
     const isCacheableQuery = Object.keys(query).every(key =>
       ['name', 'country', 'minted', 'page', 'perPage'].includes(key),
     );
@@ -89,7 +87,6 @@ export class SchoolService {
     }
     const gigaMapsConditions: Prisma.SchoolWhereInput[] = [];
 
-    //Combines all the filters into a single condition
     if (waterBool !== undefined) {
       const waterConditions: Prisma.SchoolWhereInput = {
         OR: [
@@ -187,7 +184,11 @@ export class SchoolService {
       {
         where,
         include: {
-          theme: true,
+          theme: {
+            select: {
+              colorScheme: true,
+            },
+          },
           giga_maps_data: false,
         },
       },
@@ -200,8 +201,7 @@ export class SchoolService {
     );
 
     if (isCacheableQuery) {
-      // *** IMPORTANT: Stringify the result before setting in cache ***
-      const setStatus = await this.cacheManager.set(cacheKey, JSON.stringify(result), 12000);
+      const setStatus = await this.cacheManager.set(cacheKey, JSON.stringify(result), 360000);
       console.log(`Cache SET status for ${cacheKey}:`, setStatus ? 'SUCCESS' : 'FAILURE');
     }
 
@@ -327,6 +327,7 @@ export class SchoolService {
                 },
                 data: {
                   uploadId: uploadBatch.id,
+                  minted: MintStatus.ISMINTING,
                 },
               });
               return uploadBatch;
@@ -507,23 +508,31 @@ export class SchoolService {
     });
   }
   async getMintedCount(csvId) {
-    const upload = await this.prisma.cSVUpload.findUnique({
-      where: {
-        id: csvId,
-      },
-      include: {
-        school: true,
-      },
-    });
-    if (!upload) {
-      throw new NotFoundException('Upload not found');
-    }
-    const mintedCount = upload.school.filter(school => school.minted === MintStatus.MINTED).length;
-    const total = upload.school.length;
+    const [total, mintedCount, mintingCount] = await this.prisma.$transaction([
+      this.prisma.school.count({
+        where: {
+          uploadId: csvId,
+        },
+      }),
+      this.prisma.school.count({
+        where: {
+          uploadId: csvId,
+          minted: MintStatus.MINTED,
+        },
+      }),
+      this.prisma.school.count({
+        where: {
+          uploadId: csvId,
+          minted: MintStatus.ISMINTING,
+        },
+      }),
+    ]);
+
     return {
       mintedCount,
+      mintingCount,
       total,
-      uploadId: upload.id,
+      uploadId: csvId,
     };
   }
 
@@ -856,6 +865,15 @@ export class SchoolService {
   }
 
   async updateImages() {
+    await this.prisma.school.updateMany({
+      where: {
+        imageUpdated: false,
+        NOT: [{ imageHash: null }, { imageHash: '' }],
+      },
+      data: {
+        imageUpdating: true,
+      },
+    });
     return this.queueService.bulkUpdateImageHash();
   }
 
@@ -924,7 +942,20 @@ export class SchoolService {
       throw new NotFoundException('No contributor found for given email');
     }
     const contributor = await this.prisma.contributor.findUnique({ where: { userId: user?.id } });
-    if (!contributor?.nftReserved || !contributor?.schoolreserved.includes(schoolId)) {
+    const schoolReserved = await this.prisma.contributorSchoolReservation.findUnique({
+      where: {
+        contributorId_schoolId: {
+          contributorId: contributor?.id,
+          schoolId: schoolId,
+        },
+      },
+      select: {
+        contributor: true,
+        school: true,
+      },
+    });
+    // if (!contributor?.nftReserved || !contributor?.schoolreserved.includes(schoolId))
+    if (!schoolReserved || schoolReserved?.contributor?.id !== contributor?.id) {
       throw new NotFoundException('Given Schools is not reserved for given email');
     }
     // if (?.nftClaimed) {
@@ -958,6 +989,7 @@ export class SchoolService {
         where: {
           imageUpdated: false,
           NOT: [{ imageHash: null }, { imageHash: '' }],
+          imageUpdating: false,
         },
         select: {
           giga_school_id: true,
@@ -1013,6 +1045,63 @@ export class SchoolService {
         },
       });
 
-    // return this.queueService.processBulkImage(schoolId);
+    return this.queueService.processBulkImage(schoolId);
+  }
+
+  async getReservedSchools(query: any) {
+    const { page, perPage } = query;
+    const paginate: PaginateFunction = paginator({ page,perPage });
+
+    const result = await paginate(
+      this.prisma.contributorSchoolReservation,
+      {
+        where: {
+          school: {
+            schoolReserved: true,
+          },
+        },
+        include: {
+          id: false,
+          contributorId: false,
+          schoolId: false,
+          school: {
+            select: {
+              name: true,
+              country: true,
+              imageHash: true,
+              schoolClaimed: true,
+              schoolReserved: true,
+              theme: {
+                select: {
+                  colorScheme: true,
+                },
+              },
+            },
+          },
+          contributor: {
+            select: {
+              user: {
+                select: {
+                  name: true,
+                  email: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      {
+        page,
+        perPage,
+        orderBy: 'reservedAt',
+        order: 'desc',
+      },
+    );
+
+    if (result.meta.total === 0) {
+      return { statusCode: 200, message: 'No reserved schools found', data: [] };
+    }
+
+    return result;
   }
 }
