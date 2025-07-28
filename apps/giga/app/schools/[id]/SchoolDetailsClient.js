@@ -19,6 +19,7 @@ import { useReadNftOwnerOf } from '../../hooks/useContract/gigaNft';
 import { useRouter } from 'next/navigation';
 import { InlineNotification } from '@carbon/react';
 import countryList from '../../data/country.json';
+import SchoolNotFound from '../../school-not-found';
 
 export default function SchoolDetailsClient({ params }) {
   const { id } = params;
@@ -61,7 +62,11 @@ export default function SchoolDetailsClient({ params }) {
   const themeStore = useThemeStore();
 
   const handleBack = () => {
-    router.back();
+    if (window.history.length > 2) {
+      router.back();
+    } else {
+      router.push('/');
+    }
   };
 
   const onCloseNotification = () => {
@@ -124,6 +129,8 @@ export default function SchoolDetailsClient({ params }) {
     const timer = setTimeout(() => setMinLoaderDone(true), 1200);
     return () => clearTimeout(timer);
   }, [id]);
+
+  if (!isLoading && !data) return <SchoolNotFound />;
 
   if (isLoading || !data || !minLoaderDone) return <DetailsLoading />;
 

@@ -16,6 +16,8 @@ import { useGigaBuyNft } from '../../../hooks/useContract/giga-contracts';
 import { useAccount, useBalance } from 'wagmi';
 import { setTimeout } from 'timers';
 import { getGasPrice } from '../../../utils/gasFee';
+import { InlineNotification } from '@carbon/react';
+import CardSkeleton from '../../../../components/cardSkeleton/CardSkeleton';
 
 export default function ActivateSchool() {
   const { id } = useParams();
@@ -35,7 +37,10 @@ export default function ActivateSchool() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { address, isConnected } = useAccount();
   const [gasFeeWei, setGasFeeWei] = useState('0');
-  const {data:balance} = useBalance({address});
+  const { data: balance } = useBalance({ address });
+  const [showError, setShowError] = useState(false);
+  const [loader, setLoader] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const contractAddress = process.env.NEXT_PUBLIC_GIGA_NFT_CONTRACT_ADDRESS;
   const escrowAddress = process.env.NEXT_PUBLIC_GIGA_SCHOOL_ESCROW_ADDRESS;
@@ -43,7 +48,7 @@ export default function ActivateSchool() {
   const { fontColor, cardColor, bgColor, selectedThemeName, themeId } =
     useThemeStore();
 
-  const { data } = useSchoolDetails(id);
+  const { data, isLoading: dataLoading } = useSchoolDetails(id);
   const { data: themeData, isLoading: themeLoading } =
     useSchoolThemeGet(themeFromParams);
 
@@ -113,6 +118,10 @@ export default function ActivateSchool() {
       contractAddress,
       activationDetails,
       onComplete: () => setIsModalOpen(true),
+      onError: (error) => {
+        setShowError(true);
+        setErrorMessage('An error occurred while activating the school.');
+      },
     });
   };
 
@@ -138,56 +147,94 @@ export default function ActivateSchool() {
   }, [baseFee, gasFee, donation]);
 
   useEffect(() => {
+    if (!data) return;
     if (
       (data?.minted === 'MINTED' || data?.minted === 'ISMINTING') &&
       !isModalOpen &&
       !modalClosedByUser
     ) {
       router.push(`/`);
+    } else setLoader(false);
+  }, [data, isModalOpen, modalClosedByUser, router, loader]);
+
+  useEffect(() => {
+    if (showError) {
+      const timer = setTimeout(() => setShowError(false), 2000); // 2 seconds
+      return () => {
+        clearTimeout(timer);
+        router.push(`/schools/${id}`);
+      };
     }
-  }, [data, isModalOpen, modalClosedByUser, router]);
+  }, [showError]);
 
   return (
     <>
-      <div className="content">
-        <div className="formSection">
-          {linkActivation ? (
-            <NonPayingUser
-              email={email}
-              setEmail={setEmail}
-              linkActivation={linkActivation}
-              themeName={selectedThemeName}
-              themeId={themeId}
-              schoolName={data?.name}
-              selectedThemeName={selectedThemeName}
-              bgColor={bgColor}
-              cardColor={cardColor}
-              fontColor={fontColor}
-            />
-          ) : (
-            <PayingUser
-              baseFee={baseFee}
-              gasFee={gasFee}
-              donation={donation}
-              setDonation={setDonation}
-              handleActivate={handleActivate}
-              isConnected={isConnected}
-              selectedThemeName={selectedThemeName}
-              bgColor={bgColor}
-              cardColor={cardColor}
-              fontColor={fontColor}
-              schoolName={data?.name}
-              gasFeeWei={gasFeeWei}
-              balance={balance}
-            />
-          )}
-        </div>
-      </div>
-      <ActivationModal
-        schoolName={data?.name}
-        isOpen={isModalOpen}
-        onClose={closeModal}
-      />
+      {!dataLoading && !loader ? (
+        <>
+          <div className="content">
+            <div className="formSection">
+              {showError && (
+                <div
+                  style={{
+                    position: 'fixed',
+                    top: 24,
+                    right: 24,
+                    zIndex: 9999,
+                    minWidth: 320,
+                    maxWidth: 400,
+                  }}
+                >
+                  <InlineNotification
+                    kind="error"
+                    title="Error"
+                    subtitle={errorMessage}
+                    onClose={() => setShowError(false)}
+                    lowContrast
+                    style={{ marginTop: '16px', position: 'right' }}
+                  />
+                </div>
+              )}
+              {linkActivation ? (
+                <NonPayingUser
+                  email={email}
+                  setEmail={setEmail}
+                  linkActivation={linkActivation}
+                  themeName={selectedThemeName}
+                  themeId={themeId}
+                  schoolName={data?.name}
+                  selectedThemeName={selectedThemeName}
+                  bgColor={bgColor}
+                  cardColor={cardColor}
+                  fontColor={fontColor}
+                />
+              ) : (
+                <PayingUser
+                  baseFee={baseFee}
+                  gasFee={gasFee}
+                  donation={donation}
+                  setDonation={setDonation}
+                  handleActivate={handleActivate}
+                  isConnected={isConnected}
+                  selectedThemeName={selectedThemeName}
+                  bgColor={bgColor}
+                  cardColor={cardColor}
+                  fontColor={fontColor}
+                  schoolName={data?.name}
+                  gasFeeWei={gasFeeWei}
+                  balance={balance}
+                />
+              )}
+            </div>
+          </div>
+          <ActivationModal
+            schoolName={data?.name}
+            isOpen={isModalOpen}
+            onClose={closeModal}
+          />
+        </>
+      ) : (
+        <CardSkeleton count={3} />
+      )}
     </>
   );
 }

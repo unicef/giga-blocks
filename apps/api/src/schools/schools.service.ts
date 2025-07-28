@@ -60,7 +60,6 @@ export class SchoolService {
       download,
       connectionType,
     } = query;
-    // Convert string booleans to actual booleans
     const waterBool = water?.trim() === 'true' ? true : water === 'false' ? false : undefined;
     const electricityBool =
       electricity === 'true' ? true : electricity === 'false' ? false : undefined;
@@ -73,7 +72,6 @@ export class SchoolService {
 
     const cacheKey = getCacheKey(name, country, minted, Number(page), Number(perPage));
 
-    // Check if only the cache-relevant parameters are present
     const isCacheableQuery = Object.keys(query).every(key =>
       ['name', 'country', 'minted', 'page', 'perPage'].includes(key),
     );
@@ -89,7 +87,6 @@ export class SchoolService {
     }
     const gigaMapsConditions: Prisma.SchoolWhereInput[] = [];
 
-    //Combines all the filters into a single condition
     if (waterBool !== undefined) {
       const waterConditions: Prisma.SchoolWhereInput = {
         OR: [
@@ -187,7 +184,11 @@ export class SchoolService {
       {
         where,
         include: {
-          theme: true,
+          theme: {
+            select:{
+              colorScheme: true,
+            }
+          },
           giga_maps_data: false,
         },
       },
@@ -200,8 +201,7 @@ export class SchoolService {
     );
 
     if (isCacheableQuery) {
-      // *** IMPORTANT: Stringify the result before setting in cache ***
-      const setStatus = await this.cacheManager.set(cacheKey, JSON.stringify(result), 12000);
+      const setStatus = await this.cacheManager.set(cacheKey, JSON.stringify(result), 360000);
       console.log(`Cache SET status for ${cacheKey}:`, setStatus ? 'SUCCESS' : 'FAILURE');
     }
 
@@ -1032,6 +1032,6 @@ export class SchoolService {
         },
       });
 
-    // return this.queueService.processBulkImage(schoolId);
+    return this.queueService.processBulkImage(schoolId);
   }
 }

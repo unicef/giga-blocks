@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { useAccount } from 'wagmi';
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from 'next/navigation';
 import { Queries } from '../libs/graph-query';
 import './_dashboard.scss';
 import CardSkeleton from '../../components/cardSkeleton/CardSkeleton';
@@ -31,6 +31,7 @@ export default function Dashboard() {
 
   const [result] = useQuery({
     query: Queries.collectorOwnedNftsQuery,
+    // variables: { id: '0x9cDD4206943973909582A7e984cB83272580fc58' },
     variables: { id: address },
   });
 

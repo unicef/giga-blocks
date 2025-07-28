@@ -5,12 +5,12 @@
 @use '@carbon/styles/scss/breakpoint' as *;
 
 .artist-section {
-  margin: 80px 2rem;
-  // background-color: #f5eeff;
-  // border-radius: 16px;
+  padding: 0 1rem;
+  // // background-color: #f5eeff;
+  // // border-radius: 16px;
 
   @include breakpoint-down(md) {
-    padding: $spacing-06 0;
+    padding: 0 1rem;
   }
 }
 

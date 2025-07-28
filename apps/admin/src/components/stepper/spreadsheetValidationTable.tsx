@@ -75,14 +75,14 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
 
     rows.forEach((row: any) => {
       const rowString = JSON.stringify(row);
-      if (!isUUID(row[0])) {
+      if (!isUUID(row[0]?.trim())) {
         headers.push(row[0]);
       }
 
       if (uniqueRows.has(rowString)) {
         duplicateRows.push(`Duplicate row found: ${JSON.stringify(row)}`);
       } else if (duplicateRows.length === 0 && headers.length > 1) {
-        duplicateRows.push(`Invalid header`);
+        duplicateRows.push(`Invalid id`);
       } else {
         uniqueRows.add(rowString);
       }
@@ -152,6 +152,16 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
         ]);
         setHasErrors(true);
       }
+
+      if (convertedObject?.school_id_giga?.length === 0) {
+        setAllSheetErrors([
+          {
+            sheetName: '',
+            errors: ['school_id_giga cannot be empty.'],
+          },
+        ]);
+        setHasErrors(true);
+      }
     }
   }, [convertedObject]);
 
@@ -183,9 +193,10 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
         ...validationResult.invalidSchools,
         ...validationResult.inProgressSchools,
       ];
-      const hasError = convertedObject?.[tableHeaders[0]].every((schoolId: any) =>
-        validationResultIds?.includes(schoolId)
-      );
+      const hasError =
+        convertedObject?.[tableHeaders[0]].every((schoolId: any) =>
+          validationResultIds?.includes(schoolId)
+        ) ?? true;
       if (!hasError) {
         setProceedToMinting(true);
       } else {
@@ -238,7 +249,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {!isFileValidated && !validationResult ? (
+            {(!isFileValidated && !validationResult) || !convertedObject ? (
               <Box
                 sx={{
                   display: 'flex',
@@ -247,7 +258,7 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
                   height: '100%',
                 }}
               >
-                <CircularProgress />
+                <CircularProgress size={20} />
               </Box>
             ) : (
               convertedObject &&

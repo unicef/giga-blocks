@@ -3,7 +3,7 @@
 
 import SchoolCard from '../../components/schoolCard/SchoolCard';
 import CardSkeleton from '../../components/cardSkeleton/CardSkeleton';
-import countryList from '../../app/data/country.json'
+import countryList from '../../app/data/country.json';
 
 export default function MySchoolsSection({ decodedShooldata, fetching }) {
   return (
@@ -15,13 +15,16 @@ export default function MySchoolsSection({ decodedShooldata, fetching }) {
         ) : (
           <>
             {decodedShooldata?.map((school, index) => (
-              <div key={index} className="school-card">
+              <div key={index}>
                 <SchoolCard
                   key={school.gigaSchoolId}
                   id={school?.gigaSchoolId}
                   schoolName={school.schoolName}
                   imageHash={school.image}
-                  location={ countryList.find(c => c.code === school.country)?.country || school.country}
+                  location={
+                    countryList.find((c) => c.code === school.country)
+                      ?.country || school.country
+                  }
                   minted={'MINTED'}
                 />
               </div>

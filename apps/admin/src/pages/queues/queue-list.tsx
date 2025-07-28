@@ -58,7 +58,6 @@ const QueueList: React.FC = () => {
   const [queueType, setQueueType] = useState(queueTypes[0].value);
 
   const { data, isFetching } = useQueueFailedJobsQuery(queueType);
-  console.log({ data });
 
   interface Job {
     id: string;
@@ -119,21 +118,30 @@ const QueueList: React.FC = () => {
               <>
                 <TableRow>
                   <TableCell colSpan={6} sx={{ p: 3, textAlign: 'center' }}>
-                    No  Failed Jobs found in {queueType}
+                    No Failed Jobs found in {queueType}
                   </TableCell>
                 </TableRow>
               </>
             ) : (
               data?.map((job: any) => (
-                <TableRow key={job.id} hover onClick={() => openJobDetails(job)}>
-                  <TableCell>{job.id}</TableCell>
-                  <TableCell>{job.name}</TableCell>
-                  <TableCell>{new Date(job.processedOn).toLocaleString()}</TableCell>
-                  <TableCell>{new Date(job.finishedOn).toLocaleString()}</TableCell>
-                  <TableCell>{job.status}</TableCell>
+                <TableRow key={job.id} hover>
+                  <TableCell onClick={() => openJobDetails(job)}>{job.id}</TableCell>
+                  <TableCell onClick={() => openJobDetails(job)}>{job.name}</TableCell>
+                  <TableCell onClick={() => openJobDetails(job)}>
+                    {new Date(job.processedOn).toLocaleString()}
+                  </TableCell>
+                  <TableCell onClick={() => openJobDetails(job)}>
+                    {new Date(job.finishedOn).toLocaleString()}
+                  </TableCell>
+                  <TableCell onClick={() => openJobDetails(job)}>{job.status}</TableCell>
                   <TableCell>
                     <RetryButton queueType={queueType} jobId={job.id} />
-                    <Button variant="outlined" size="small" sx={{ ml: 1 }}>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      sx={{ ml: 1 }}
+                      onClick={() => openJobDetails(job)}
+                    >
                       Details
                     </Button>
                   </TableCell>
