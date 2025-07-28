@@ -19,6 +19,7 @@ import {
   Typography,
   Box,
   Grid,
+  CardContent,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import Scrollbar from '@components/scrollbar';
@@ -137,6 +138,7 @@ const InformationWorker = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     mr: 2,
+                    marginleft: '4px',
                   }}
                 >
                   {tip.number}
@@ -193,7 +195,26 @@ const InformationWorker = () => {
       {/* Add Worker Modal */}
       <Dialog open={openModal} onClose={handleClose} fullWidth maxWidth="sm">
         <DialogTitle>Add Information Worker</DialogTitle>
-        <DialogContent>
+        <DialogContent dividers>
+          <Card
+            sx={{
+              backgroundColor: '#e6e5f8ff',
+              borderRadius: 2,
+              mb: 3, //
+              boxShadow: 'none',
+            }}
+          >
+            <CardContent sx={{ py: 2 }}>
+              <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>
+                Prerequisites (Complete these first)
+              </Typography>
+              <ol style={{ paddingLeft: '20px', margin: 0 }}>
+                <li>Visit the Privado ID issuer UI</li>
+                <li>Create VC using the worker's DID and School ID</li>
+                <li>Note down the VC details and worker Information</li>
+              </ol>
+            </CardContent>
+          </Card>
           <TextField
             autoFocus
             margin="dense"
@@ -201,6 +222,7 @@ const InformationWorker = () => {
             name="name"
             value={formData.name}
             onChange={handleChange}
+            required
             fullWidth
           />
           <TextField
@@ -209,12 +231,14 @@ const InformationWorker = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
+            required
             fullWidth
           />
           <TextField
             margin="dense"
             label="DID"
             name="did"
+            required
             value={formData.did}
             onChange={handleChange}
             fullWidth
