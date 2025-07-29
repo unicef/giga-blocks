@@ -20,6 +20,22 @@ interface Props {
   onChangeFolderName?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
+async function isFileEmptyOrWhitespace(file: File): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      if (text.trim().length === 0) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    };
+    reader.onerror = (err) => reject(err);
+    reader.readAsText(file);
+  });
+}
+
 export default function CsvFormatFile({
   title = 'Upload Files (.csv only)',
   onCreate,
@@ -52,8 +68,8 @@ export default function CsvFormatFile({
 
   const handleDrop = useCallback(
     async (uploadedFiles: File[]) => {
-      if (uploadedFiles[0].size <= 0) {
-        setShowErrorMsg(JSON.stringify(['File is empty']));
+      if (await isFileEmptyOrWhitespace(uploadedFiles[0])) {
+        setShowErrorMsg(JSON.stringify(['File has no content']));
         return;
       }
       setShowErrorMsg('');
