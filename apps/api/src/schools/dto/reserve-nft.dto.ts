@@ -171,4 +171,12 @@ export class TransactionDetails {
   })
   @IsString()
   status: number;
+
+  @ApiProperty({
+    description: 'Status of the transaction',
+    example: 1,
+    required: true,
+  })
+  @IsString()
+  tokenId: number;
 }

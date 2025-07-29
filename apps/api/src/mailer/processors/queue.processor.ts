@@ -45,6 +45,7 @@ import {
   mintNFT,
   mintSingleNFT,
   reserveNft,
+  tokenIdToSchoolId,
   updateBulkImageHash,
   updateImageHash,
 } from 'src/utils/ethers/transactionFunctions';
@@ -232,11 +233,12 @@ export class QueueProcessor {
     const PROCESS_DELAY_MS = 15000;
 
     await new Promise(resolve => setTimeout(resolve, PROCESS_DELAY_MS));
+     const schoolId = await tokenIdToSchoolId(transactionDetails?.tokenId.toString());
 
     try {
       const schoolActivationDetails = await this._prismaService.schoolActivationDetails.findUnique({
         where: {
-          transactionHash: transactionDetails.transactionHash,
+          schoolId: String(schoolId)
         },
       });
       if (!schoolActivationDetails) {
@@ -279,10 +281,11 @@ export class QueueProcessor {
       );
       const tx = await this._prismaService.schoolActivationDetails.update({
         where: {
-          transactionHash: transactionDetails.transactionHash,
+          schoolId: String(schoolId),
         },
         data: {
           schoolUpdated: true,
+          transactionHash:transactionDetails?.transactionHash,
           transactionStatus: Number(transactionDetails.status),
         },
       });
