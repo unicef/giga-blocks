@@ -72,7 +72,7 @@ const InformationWorker = () => {
 
   useEffect(() => {
     if (data) {
-      setContributorTableData(data?.rows);
+      setContributorTableData(data?.informationWorker?.rows);
     }
   }, [data]);
 
@@ -135,7 +135,7 @@ const InformationWorker = () => {
           <Button variant="contained" style={{ background: '#474747' }} onClick={handleOpen}>
             Add CIW
           </Button>
-          <Button variant="contained" onClick={openEmailModal} disabled={data?.meta?.total == 0}>
+          <Button variant="contained" onClick={openEmailModal} disabled={data?.informationWorker?.meta?.total == 0 || data?.emailSentFalseCount == 0}>
             Send Email
           </Button>
         </div>
@@ -219,7 +219,7 @@ const InformationWorker = () => {
                   <TableNoData
                     isNotFound={
                       // !isLoading &&
-                      data?.meta?.total === 0
+                      data?.informationWorker?.meta?.total === 0
                     }
                   />
                 )}
@@ -227,7 +227,7 @@ const InformationWorker = () => {
             </Table>
             <div style={{ justifyContent: 'right', marginTop: '20px' }}>
               <TablePaginationCustom
-                count={data?.meta?.total || 0}
+                count={data?.informationWorker?.meta?.total || 0}
                 page={page || 0}
                 rowsPerPage={rowsPerPage}
                 onPageChange={onChangePage}

@@ -29,8 +29,8 @@ export class InformationWorkerService {
           {
             page,
             perPage,
-            orderBy:'createdAt',
-            order:'desc'
+            orderBy:'emailSent',
+            order:'asc'
           }
         )
     

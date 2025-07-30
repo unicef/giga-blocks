@@ -4,13 +4,24 @@ import routes from '../../constants/api';
 import api from '@utils/apiCall';
 import { useSnackbar } from '@components/snackbar';
 
-export const useGetInformationWorker = ({page,perPage}:{
-  page?:number,
-  perPage:number
-}) => {
+export const useGetInformationWorker = ({ page, perPage }: { page?: number; perPage: number }) => {
   return useQuery(['get-information-worker'], async () => {
-    const { data } = await api.get(`${routes.INFORMATION_WORKER.GET}?page=${page}&perPage=${perPage}`);
-    return data;
+    const { data } = await api.get(
+      `${routes.INFORMATION_WORKER.GET}?page=${page}&perPage=${perPage}`
+    );
+
+    let emailSentFalseCount = 0;
+    if (Array.isArray(data.rows)) {
+      data.rows.forEach((item: any) => {
+        if (item.emailSent === false) {
+          emailSentFalseCount++;
+        }
+      });
+    }
+    return {
+      informationWorker: data,
+      emailSentFalseCount,
+    };
   });
 };
 
