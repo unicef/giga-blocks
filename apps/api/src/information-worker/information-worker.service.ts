@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CreateInformationWorkerDto } from './dto/create-information-worker.dto';
 import { UpdateInformationWorkerDto } from './dto/update-information-worker.dto';
 import { PrismaAppService } from 'src/prisma/prisma.service';
-import getIssuedVC from 'src/utils/did-issuer';
+import {getIssuedVC} from 'src/utils/did-issuer';
 import { QueueService } from 'src/mailer/queue.service';
 
 @Injectable()
@@ -40,7 +40,7 @@ export class InformationWorkerService {
   async sendEmail() {
     this._logger.log('Sending email to the new CIW');
     const res = await getIssuedVC();
-    for (let i = 0; i < res.length; i++) {
+    for (let i = 0; i < res?.length; i++) {
       this.queueService.processVC(res[i]);
     }
 
