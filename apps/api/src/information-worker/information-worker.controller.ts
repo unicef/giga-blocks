@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { InformationWorkerService } from './information-worker.service';
 import { CreateInformationWorkerDto } from './dto/create-information-worker.dto';
 import { UpdateInformationWorkerDto } from './dto/update-information-worker.dto';
@@ -17,8 +17,8 @@ export class InformationWorkerController {
   }
 
   @Get()
-  findAll() {
-    return this.informationWorkerService.findAll();
+  findAll(@Query()query:any) {
+    return this.informationWorkerService.findAll(query);
   }
 
   @Get(':id')

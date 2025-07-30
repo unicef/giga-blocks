@@ -23,7 +23,7 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import Scrollbar from '@components/scrollbar';
-import { TableNoData } from '@components/table';
+import { TableNoData, TablePaginationCustom, useTable } from '@components/table';
 import {
   useGetInformationWorker,
   usePostInformationWorker,
@@ -40,6 +40,8 @@ const InformationWorker = () => {
     did: '',
   });
   const [errors, setErrors] = useState<{ name?: string; email?: string; did?: string }>({});
+  const IssuerUI = process.env.NEXT_PUBLIC_ISSUER_UI;
+  const { page, setPage, rowsPerPage, onChangePage, onChangeRowsPerPage } = useTable();
 
   const tips = [
     {
@@ -61,13 +63,16 @@ const InformationWorker = () => {
     },
   ];
 
-  const { data } = useGetInformationWorker();
+  const { data } = useGetInformationWorker({
+    page: Number(page) + 1,
+    perPage: rowsPerPage,
+  });
   const { mutate: postInformationWorker, isLoading: isSubmitting } = usePostInformationWorker();
   const { mutate: sendEmail } = useSendEmail();
 
   useEffect(() => {
     if (data) {
-      setContributorTableData(data);
+      setContributorTableData(data?.rows);
     }
   }, [data]);
 
@@ -76,6 +81,10 @@ const InformationWorker = () => {
     setOpenModal(false);
     setFormData({ name: '', email: '', did: '' });
     setErrors({});
+  };
+
+  const handleClick = () => {
+    window.open(IssuerUI, '_blank', 'noopener,noreferrer');
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,7 +121,6 @@ const InformationWorker = () => {
 
   const confirmSendEmail = () => {
     sendEmail();
-    console.log('email sent');
     closeEmailModal();
   };
 
@@ -121,10 +129,13 @@ const InformationWorker = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
         <span style={{ fontSize: '1.5em', fontWeight: '600' }}>Information Worker</span>
         <div style={{ display: 'flex', gap: '15px' }}>
-          <Button variant="contained" style={{ background: '#474747' }} onClick={handleOpen}>
-            Add
+          <Button variant="contained" style={{ background: '#638efaff' }} onClick={handleClick}>
+            Issue VC
           </Button>
-          <Button variant="contained" onClick={openEmailModal}>
+          <Button variant="contained" style={{ background: '#474747' }} onClick={handleOpen}>
+            Add CIW
+          </Button>
+          <Button variant="contained" onClick={openEmailModal} disabled={data?.meta?.total == 0}>
             Send Email
           </Button>
         </div>
@@ -208,12 +219,22 @@ const InformationWorker = () => {
                   <TableNoData
                     isNotFound={
                       // !isLoading &&
-                      contributorTableData?.length === 0
+                      data?.meta?.total === 0
                     }
                   />
                 )}
               </TableBody>
             </Table>
+            <div style={{ justifyContent: 'right', marginTop: '20px' }}>
+              <TablePaginationCustom
+                count={data?.meta?.total || 0}
+                page={page || 0}
+                rowsPerPage={rowsPerPage}
+                onPageChange={onChangePage}
+                onRowsPerPageChange={onChangeRowsPerPage}
+                setPage={setPage}
+              />
+            </div>
           </Scrollbar>
         </TableContainer>
       </Card>

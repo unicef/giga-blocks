@@ -4,6 +4,9 @@ import { UpdateInformationWorkerDto } from './dto/update-information-worker.dto'
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import {getIssuedVC} from 'src/utils/did-issuer';
 import { QueueService } from 'src/mailer/queue.service';
+import { PaginateFunction } from 'src/utils/paginate';
+import { paginator } from 'src/utils/paginator';
+import { orderBy } from 'lodash';
 
 @Injectable()
 export class InformationWorkerService {
@@ -16,8 +19,22 @@ export class InformationWorkerService {
     });
   }
 
-  findAll() {
-    return this.prisma.informationWorker.findMany();
+  async findAll(query:any) {
+    const {page, perPage} = query
+
+        const paginate: PaginateFunction = paginator({ page,perPage });
+        const result = await paginate(
+          this.prisma.informationWorker,
+          {},
+          {
+            page,
+            perPage,
+            orderBy:'createdAt',
+            order:'desc'
+          }
+        )
+    
+    return result;
   }
 
   findOne(id: string) {
@@ -44,6 +61,9 @@ export class InformationWorkerService {
       this.queueService.processVC(res[i]);
     }
 
-    return 'Process added to the queue';
+    return {
+      message:'Process added to the queue sucessfully',
+      statusCode: 200
+    }
   }
 }
