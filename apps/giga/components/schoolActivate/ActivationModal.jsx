@@ -61,8 +61,11 @@ export default function ActivationModal({ isOpen, onClose, schoolName }) {
 
   useEffect(() => {
     if (!contributorData) return;
-    if (contributorData?.isVisible === true) setContributorVisible(true);
-  });
+    if (contributorData?.isVisible === true) {
+      setContributorVisible(true);
+      setContributorName(contributorData?.name || '');
+    }
+  }, [contributorData]);
 
   return (
     <>

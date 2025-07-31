@@ -12,6 +12,7 @@ import { useUploadContext } from '@contexts/uploadContext';
 import MintDetails from '@components/stepper/MintDetails';
 import NotMinting from '@components/stepper/NotMinting';
 import { Lightning } from '@carbon/react/icons';
+import { NextRouter, useRouter } from 'next/router';
 
 Dashboard.getLayout = (page: React.ReactElement) => <DashboardLayout>{page}</DashboardLayout>;
 
@@ -26,6 +27,7 @@ export default function Dashboard() {
   });
   const [csvUploadId, setCsvUploadId] = React.useState<string | null>(null);
   const baseUrl = routes.BASE_URL;
+  const { push } = useRouter() as NextRouter as NextRouter;
   const currentCsvUploadId = 'currentCsvUploadId';
   const CSV_DETAILS_API_URL = `${baseUrl}${routes.SCHOOLS.DETAILS}/${csvUploadId}`;
   const TOTAL_MINTED_API_URL = `${baseUrl}${routes.SCHOOLS.TOTALMINTED}/${csvUploadId}`;
@@ -51,15 +53,19 @@ export default function Dashboard() {
     }
   }, []);
 
+  const handleViewDetails = () => {
+    push('/school/import');
+  };
+
   useEffect(() => {
     const fetchMintedStatus = async () => {
       try {
         const res = await api.get(TOTAL_MINTED_API_URL);
         setMintDetails(res.data);
         //clear from local storage
-        if (res?.data?.mintedCount === res?.data?.total) {
-          localStorage.removeItem(currentCsvUploadId);
-        }
+        // if (res?.data?.mintedCount === res?.data?.total) {
+        //   localStorage.removeItem(currentCsvUploadId);
+        // }
       } catch (err) {
         console.error('Error fetching minted status', err);
       }
@@ -125,7 +131,9 @@ export default function Dashboard() {
                     variant="contained"
                     style={{ background: '#00AB55' }}
                     color="success"
-                    onClick={() => setViewDetails(true)}
+                    onClick={() => handleViewDetails()
+                      // setViewDetails(true)
+                    }
                   >
                     View Details
                   </Button>
