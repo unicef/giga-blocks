@@ -21,7 +21,7 @@ export default function BlogPost() {
             <h1 className="blog-post__title">How does art work in Giga?</h1>
             <div className="blog-post__author">
               <Image
-                src="/images/teams/team-8.png"
+                src="/images/artist.svg"
                 alt="Katherina Lanecherie"
                 width={40}
                 height={40}

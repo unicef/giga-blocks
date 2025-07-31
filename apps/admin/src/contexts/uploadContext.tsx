@@ -13,6 +13,10 @@ type UploadContextType = {
   typeOfFile: string;
   selectedFiles: any;
   loading: boolean;
+  mintDetails: {
+    mintedCount: number;
+    total: number;
+  };
   setDuplicates: React.Dispatch<React.SetStateAction<string[]>>;
   setSheetNames: React.Dispatch<React.SetStateAction<string[]>>;
   setTableDatas: React.Dispatch<React.SetStateAction<string[][]>>;
@@ -24,8 +28,9 @@ type UploadContextType = {
   setProductType: React.Dispatch<React.SetStateAction<string>>;
   setFileName: React.Dispatch<React.SetStateAction<string>>;
   setTypeOfFile: React.Dispatch<React.SetStateAction<string>>;
-  setSelectedFiles : any;
+  setSelectedFiles: any;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setMintDetails: React.Dispatch<React.SetStateAction<{ mintedCount: number; total: number }>>;
 };
 
 const UploadContext = createContext<UploadContextType | undefined>(undefined);
@@ -56,9 +61,13 @@ const UploadContextProvider: React.FC<UploadContextProviderProps> = ({ children 
   const [duplicates, setDuplicates] = useState<string[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [mintDetails, setMintDetails] = useState({
+    mintedCount: 0,
+    total: 0,
+  });
 
-  const contextValue: UploadContextType = useMemo(() => (
-    {
+  const contextValue: UploadContextType = useMemo(
+    () => ({
       sheetNames,
       tableDatas,
       allData,
@@ -71,6 +80,8 @@ const UploadContextProvider: React.FC<UploadContextProviderProps> = ({ children 
       typeOfFile,
       selectedFiles,
       loading,
+      mintDetails,
+      setMintDetails,
       setDuplicates,
       setSheetNames,
       setTableDatas,
@@ -83,23 +94,26 @@ const UploadContextProvider: React.FC<UploadContextProviderProps> = ({ children 
       setFileName,
       setTypeOfFile,
       setSelectedFiles,
-      setLoading
-    }
-  ), [sheetNames,
-    tableDatas,
-    allData,
-    selectedFiles,
-    selectedSheetName,
-    showStepper,
-    isFileValidated,
-    disableDropZone,
-    productType,
-    fileName,
-    typeOfFile,
-    loading,
-    setShowStepper,
-    setSelectedFiles
-  ]) 
+      setLoading,
+    }),
+    [
+      sheetNames,
+      tableDatas,
+      allData,
+      selectedFiles,
+      selectedSheetName,
+      showStepper,
+      isFileValidated,
+      disableDropZone,
+      productType,
+      fileName,
+      typeOfFile,
+      loading,
+      mintDetails,
+      setShowStepper,
+      setSelectedFiles,
+    ]
+  );
 
   return <UploadContext.Provider value={contextValue}>{children}</UploadContext.Provider>;
 };

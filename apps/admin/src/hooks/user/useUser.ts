@@ -38,3 +38,16 @@ export const useUserGetById = (id:string | undefined | string[]) => {
     }
   )
 }
+
+export const useMetrics =() =>{
+return useQuery({
+    queryKey: [routes.METRICS.GET],
+
+    queryFn: async () => {
+      const { data } = await api.get(routes.METRICS.GET);
+      return data;
+    },
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });}

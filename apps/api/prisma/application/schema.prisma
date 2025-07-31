@@ -218,16 +218,24 @@ model School {
   themeId String?
   theme   Theme?  @relation(fields: [themeId], references: [id])
 
+  reservation            ContributorSchoolReservation ?
+
   @@index(fields: [name], type: Gist)
   @@index(fields: [minted], type: Hash)
   @@index(fields: [country, region_name, id])
+  @@index([giga_maps_data("water_availability")], type: Gin, map: "idx_school_giga_maps_water_availability")
+  @@index([giga_maps_data("num_teachers")], type: Gin, map: "idx_school_giga_maps_num_teachers")
+  @@index([giga_maps_data("num_students")], type: Gin, map: "idx_school_giga_maps_num_students")
+  @@index([giga_maps_data("num_computers")], type: Gin, map: "idx_school_giga_maps_num_computers")
+  @@index([giga_maps_data("download_speed_benchmark")], type: Gin, map: "idx_school_giga_maps_download_speed")
+  @@index([giga_maps_data("connectivity_type")], type: Gin, map: "idx_school_giga_maps_connectivity_type")
   @@map("giga_school")
 }
 
 
 model SchoolActivationDetails{
   id                       String     @id @default(uuid())
-  schoolId                 String
+  schoolId                 String     @unique()
   transactionHash          String     @unique()
   themeId                  String
   contributorData          Json
@@ -391,17 +399,33 @@ model Contributor {
   id             String   @id @default(uuid())
   userId         String   @unique
   user           User?    @relation(fields: [userId], references: [id])
-  schoolreserved String[]
   totalNftMinted Int
   name           String?
   nameType       ContributorNameType @default(NONE)
+  schoolReservation ContributorSchoolReservation[]
   isVisible      Boolean  @default(false)
   nftReserved    Boolean  @default(false)
   nftClaimed     Boolean  @default(false)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
+
   @@map("giga_contributor")
+}
+
+
+model ContributorSchoolReservation {
+  id                String        @id @default(uuid())
+  contributorId     String
+  contributor       Contributor   @relation(fields:[contributorId], references:[id])
+  schoolId          String        @unique 
+  school            School        @relation(fields:[schoolId], references:[id])
+  reservedAt        DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  deletedAt         DateTime?
+
+  @@unique([contributorId, schoolId])
+  @@map("giga_contributor_reservation")
 }
 
 

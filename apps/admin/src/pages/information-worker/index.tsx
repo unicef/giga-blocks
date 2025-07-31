@@ -17,6 +17,9 @@ import {
   DialogActions,
   TextField,
   Typography,
+  Box,
+  Grid,
+  CardContent,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import Scrollbar from '@components/scrollbar';
@@ -32,6 +35,26 @@ const InformationWorker = () => {
     email: '',
     did: '',
   });
+
+  const tips = [
+    {
+      number: 1,
+      title: 'Create VC in Privado ID',
+      description:
+        "Visit the Privado ID issuer UI and create a Verifiable Credential using the worker's DID and School ID",
+    },
+    {
+      number: 2,
+      title: 'Add Worker Here',
+      description:
+        'Add the worker details in this dashboard and system will automatically send the VC to the worker via email',
+    },
+    {
+      number: 3,
+      title: 'Send VC Email',
+      description: 'System automatically sends the Verifiable Credential to the worker via email',
+    },
+  ];
 
   //   const { data, isLoading } = useInformationWorkers();
 
@@ -80,6 +103,57 @@ const InformationWorker = () => {
           </Button>
         </div>
       </div>
+      <Card
+        sx={{
+          p: 3,
+          // backgroundColor: '#f5f7fe',
+          borderRadius: 2,
+          borderLeft: '6px solid #3dc7f1ff', // Only left border colored
+          borderTop: 'none',
+          borderRight: 'none',
+          borderBottom: 'none',
+          // border: '4px solid #3dc7f1ff',
+          mb: 3,
+        }}
+      >
+        <Box display="flex" alignItems="center" mb={2}>
+          <Typography variant="h5" fontWeight={700} ml={1}>
+            Admin WorkFlow for Adding Information Workers
+          </Typography>
+        </Box>
+
+        <Grid container spacing={3}>
+          {tips.map((tip) => (
+            <Grid item xs={12} md={4} key={tip.number}>
+              <Box display="flex" alignItems="flex-start">
+                <Box
+                  sx={{
+                    width: 45,
+                    height: 30,
+                    backgroundColor: '#6dcff6ff',
+                    borderRadius: '50%',
+                    color: '#48abf2ff',
+                    fontWeight: 'bold',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mr: 2,
+                    marginleft: '4px',
+                  }}
+                >
+                  {tip.number}
+                </Box>
+                <Box>
+                  <Typography fontWeight={600}>{tip.title}</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {tip.description}
+                  </Typography>
+                </Box>
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+      </Card>
 
       <Card>
         <Divider />
@@ -121,7 +195,26 @@ const InformationWorker = () => {
       {/* Add Worker Modal */}
       <Dialog open={openModal} onClose={handleClose} fullWidth maxWidth="sm">
         <DialogTitle>Add Information Worker</DialogTitle>
-        <DialogContent>
+        <DialogContent dividers>
+          <Card
+            sx={{
+              backgroundColor: '#e6e5f8ff',
+              borderRadius: 2,
+              mb: 3, //
+              boxShadow: 'none',
+            }}
+          >
+            <CardContent sx={{ py: 2 }}>
+              <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>
+                Prerequisites (Complete these first)
+              </Typography>
+              <ol style={{ paddingLeft: '20px', margin: 0 }}>
+                <li>Visit the Privado ID issuer UI</li>
+                <li>Create VC using the worker's DID and School ID</li>
+                <li>Note down the VC details and worker Information</li>
+              </ol>
+            </CardContent>
+          </Card>
           <TextField
             autoFocus
             margin="dense"
@@ -129,6 +222,7 @@ const InformationWorker = () => {
             name="name"
             value={formData.name}
             onChange={handleChange}
+            required
             fullWidth
           />
           <TextField
@@ -137,12 +231,14 @@ const InformationWorker = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
+            required
             fullWidth
           />
           <TextField
             margin="dense"
             label="DID"
             name="did"
+            required
             value={formData.did}
             onChange={handleChange}
             fullWidth

@@ -441,3 +441,14 @@
   //   background-color: #0f62fe;
   // }
 }
+
+//ToolTip//
+
+@media (max-width: 880px) {
+  .cds--popover--top:not(.cds--popover--auto-align)
+    > .cds--popover
+    > .cds--popover-content {
+    transform: translate(-95%, calc(-100% - var(--cds-popover-offset, 0rem)));
+    padding: 0.5rem;
+  }
+}

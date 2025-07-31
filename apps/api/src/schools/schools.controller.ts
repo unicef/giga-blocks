@@ -14,7 +14,7 @@ import {
 import { SchoolService } from './schools.service';
 import { QosService } from './qos.service';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { ListSchoolDto } from './dto/list-schools.dto';
+import { ListReservedSchoolDto, ListSchoolDto } from './dto/list-schools.dto';
 import { Public } from '../common/decorators/public.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
 import { RoleGuard } from 'src/auth/guards/role.guard';
@@ -220,6 +220,15 @@ export class SchoolController {
   @ApiOperation({summary:'Sync the database with contract in case of any missing data'})
   async syncSchool(@Param('schoolId') schoolId:string){
     return this.schoolService.syncSchoolData(schoolId);
+  }
+
+  // @Roles('ADMIN')
+  // @UseGuards(JwtAuthGuard, RoleGuard)
+  @Public()
+  @Get('/reservedNftList')
+  @ApiOperation({ summary: 'Get the list of reserved schools' })
+  async getReservedSchools(@Query() query: ListReservedSchoolDto) {
+    return this.schoolService.getReservedSchools(query);
   }
 
   

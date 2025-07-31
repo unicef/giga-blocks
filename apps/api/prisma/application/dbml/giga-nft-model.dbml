@@ -121,11 +121,12 @@ Table giga_school {
   verifiedCIW Boolean [not null, default: false]
   themeId String
   theme giga_themes
+  reservation giga_contributor_reservation
 }
 
 Table giga_school_activation {
   id String [pk]
-  schoolId String [not null]
+  schoolId String [unique, not null]
   transactionHash String [unique, not null]
   themeId String [not null]
   contributorData Json [not null]
@@ -264,10 +265,10 @@ Table giga_contributor {
   id String [pk]
   userId String [unique, not null]
   user giga_users
-  schoolreserved String[] [not null]
   totalNftMinted Int [not null]
   name String
   nameType ContributorNameType [not null, default: 'NONE']
+  schoolReservation giga_contributor_reservation [not null]
   isVisible Boolean [not null, default: false]
   nftReserved Boolean [not null, default: false]
   nftClaimed Boolean [not null, default: false]
@@ -276,6 +277,21 @@ Table giga_contributor {
 
   Note: 'userId map 
 add the nft related data only in this'
+}
+
+Table giga_contributor_reservation {
+  id String [pk]
+  contributorId String [not null]
+  contributor giga_contributor [not null]
+  schoolId String [unique, not null]
+  school giga_school [not null]
+  reservedAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deletedAt DateTime
+
+  indexes {
+    (contributorId, schoolId) [unique]
+  }
 }
 
 Table giga_featured {
@@ -414,5 +430,9 @@ Ref: giga_link_activation.activatedBy > giga_users.id
 Ref: giga_link_activation.deActivatedBy > giga_users.id
 
 Ref: giga_contributor.userId > giga_users.id
+
+Ref: giga_contributor_reservation.contributorId > giga_contributor.id
+
+Ref: giga_contributor_reservation.schoolId - giga_school.id
 
 Ref: giga_featured.createdBy > giga_users.id

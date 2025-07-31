@@ -13,6 +13,7 @@ import {
   Alert,
   Box,
   CircularProgress,
+  Typography,
 } from '@mui/material';
 import { useUploadContext } from '@contexts/uploadContext';
 import TableFormatter from '@utils/arrayFormatter';
@@ -49,6 +50,25 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   const [allSheetErrors, setAllSheetErrors] = useState<{ sheetName: string; errors: string[] }[]>();
   const [convertedObject, setConvertedObject] = useState<Record<string, any> | null>(null);
 
+  const TABLE_LEGEND_ITEMS = [
+    {
+      color: '#fdecea',
+      label: 'Already Minted School',
+    },
+    {
+      color: '#e6f4ea',
+      label: 'Valid School',
+    },
+    {
+      color: '#fff3cd',
+      label: 'Invalid School (Warning)',
+    },
+    {
+      color: '#e3f2fd',
+      label: 'Minting School',
+    },
+  ];
+
   const validateData = (data: Record<string, any>, fileType: string): string[] => {
     let hasIncorrectFileType = false;
     const hasCommaInName = data?.Name?.some((name: string) => name.includes(','));
@@ -75,14 +95,14 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
 
     rows.forEach((row: any) => {
       const rowString = JSON.stringify(row);
-      if (!isUUID(row[0])) {
+      if (!isUUID(row[0]?.trim())) {
         headers.push(row[0]);
       }
 
       if (uniqueRows.has(rowString)) {
         duplicateRows.push(`Duplicate row found: ${JSON.stringify(row)}`);
       } else if (duplicateRows.length === 0 && headers.length > 1) {
-        duplicateRows.push(`Invalid header`);
+        duplicateRows.push(`Invalid id`);
       } else {
         uniqueRows.add(rowString);
       }
@@ -148,6 +168,16 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
           {
             sheetName: 'school.csv',
             errors: [`${missingElements.join(', ')} is missing, please follow the sample file.`],
+          },
+        ]);
+        setHasErrors(true);
+      }
+
+      if (convertedObject?.school_id_giga?.length === 0) {
+        setAllSheetErrors([
+          {
+            sheetName: '',
+            errors: ['school_id_giga cannot be empty.'],
           },
         ]);
         setHasErrors(true);
@@ -298,6 +328,27 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
           </TableBody>
         </Table>
       </TableContainer>
+      <Box sx={{ p: 2, borderTop: '1px solid #eee', mt: 2 }}>
+        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+          Legend:
+        </Typography>
+        <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+          {TABLE_LEGEND_ITEMS.map((item) => (
+            <Box key={item.label} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box
+                sx={{
+                  width: 16,
+                  height: 16,
+                  borderRadius: '50%',
+                  bgcolor: item.color,
+                  border: '1px solid #ccc',
+                }}
+              />
+              <Typography variant="body2">{item.label}</Typography>
+            </Box>
+          ))}
+        </Box>
+      </Box>
     </>
   );
 };

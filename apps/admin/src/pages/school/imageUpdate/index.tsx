@@ -11,10 +11,13 @@ import {
   Table,
   TableBody,
   CircularProgress,
+  Typography,
+  Box
 } from '@mui/material';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useSnackbar } from '@components/snackbar';
+import Iconify from '@components/iconify';
 
 const PendingSchool = () => {
   const TABLE_HEAD = [
@@ -109,8 +112,40 @@ const PendingSchool = () => {
 
       {!loader && !isFetching ? (
         <>
-          <Card sx={{ marginTop: 2 }}>
-            <Divider />
+          <Card
+            sx={{
+              backgroundColor: 'rgba(211, 218, 249, 0.5)',
+              p: 2, 
+              mb: 3, 
+              boxShadow: 'none', 
+              display: 'flex',
+              alignItems: 'center', 
+            }}
+          >
+            <Iconify
+              icon="eva:checkmark-circle-outline" 
+              sx={{ color: '#007bff', fontSize: '24px', mr: 2 }} 
+            />
+            <Box>
+              <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#007bff' }}>
+                Complete The Activation
+              </Typography>
+              <Typography variant="body2" sx={{ color: '#007bff' }}>
+                Push each school's unique image hash to the blockchain to finalize its on-chain
+                record and ensure full transparency.
+              </Typography>
+            </Box>
+          </Card>
+
+          <Card sx={{ marginTop: 4 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', padding: 2 }}>
+                Activated School Pending Hash Update
+              </Typography>
+              <Typography variant="body2" sx={{ paddingLeft: 2, marginBottom: 2 }}>
+               Click "Update Image Hash" to push the image hash of each school to the blockchain.
+              </Typography>
+            {/* <Divider /> */}
+            <Card sx={{ padding: 2, marginLeft:2, marginRight: 2, marginBottom: 2 }}>
             <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
               <Scrollbar>
                 <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
@@ -142,6 +177,7 @@ const PendingSchool = () => {
                 </Table>
               </Scrollbar>
             </TableContainer>
+            </Card>
             <TablePaginationCustom
               count={data?.meta?.total || 0}
               page={page || 0}
@@ -155,7 +191,15 @@ const PendingSchool = () => {
           </Card>
         </>
       ) : (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '50vh',
+            width: '100%',
+          }}
+        >
           <CircularProgress />
         </div>
       )}

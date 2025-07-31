@@ -1,25 +1,23 @@
-name: Stage Root CI/CD
+name: Stage Helm CI/CD
+
 on:
   push:
-    branches:
-      - 'stage'
+    branches: ['stage']
   pull_request:
-    branches:
-      - 'stage'
+    branches: ['stage']
   workflow_dispatch:
 
 env:
   CI: false
-  ADMIN_MANIFEST_FILE: 'K8s-Manifest/Giga/Stage/Argo-Rollout/admin.yaml'
-  WEB_MANIFEST_FILE: 'K8s-Manifest/Giga/Stage/Argo-Rollout/web.yaml'
-  API_MANIFEST_FILE: 'K8s-Manifest/Giga/Stage/Argo-Rollout/api.yaml'
-  WEBHOOK_MANIFEST_FILE: 'K8s-Manifest/Giga/Stage/Argo-Rollout/webhook.yaml'
-
+  HELM_VALUES_FILE: 'K8s-Manifest/Giga/Helm/values.yaml'
 
 jobs:
   deploy:
     name: build && push image to Docker hub
     runs-on: ubuntu-latest
+    outputs:
+      sha_short: ${{ steps.vars.outputs.sha_short }}
+      run_id_short: ${{ steps.vars.outputs.run_id_short }}
     steps:
       - uses: actions/checkout@v3
 
@@ -37,7 +35,7 @@ jobs:
           secrets: |
             github/data/general/docker/rumsan username | DOCKERHUB_USERNAME ;
             github/data/general/docker/rumsan password | DOCKERHUB_TOKEN ;
-            github/data/giga/stage env | ENV ;
+            github/data/giga/stage-helm env | ENV ;
 
       - name: create environment file
         run: |
@@ -50,7 +48,7 @@ jobs:
       - name: install dependencies and build apps
         run: |
           npm install -g pnpm@8.14.1
-          pnpm install 
+          pnpm install
           pnpm run api:app:generate
           pnpm run api:news:generate
           pnpm build
@@ -64,62 +62,53 @@ jobs:
           username: ${{ env.DOCKERHUB_USERNAME }}
           password: ${{ env.DOCKERHUB_TOKEN }}
 
-      # API Image
       - name: build && push api
-        id: build-push-api
         uses: docker/build-push-action@v3
         with:
           context: .
           file: Dockerfile.api
           push: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
           tags: |
-            rumsan/giga-mono-ntf2-api:stage
-            rumsan/giga-mono-ntf2-api:stage-${{ steps.vars.outputs.sha_short }}-${{ steps.vars.outputs.run_id_short }}
+            rumsan/giga-helm-api:stage
+            rumsan/giga-helm-api:stage-${{ steps.vars.outputs.sha_short }}-${{ steps.vars.outputs.run_id_short }}
 
-      # Admin Image
       - name: build && push admin
-        id: build-push-admin
         uses: docker/build-push-action@v3
         with:
           context: .
           file: Dockerfile.admin
           push: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
           tags: |
-            rumsan/giga-mono-ntf2-admin:stage
-            rumsan/giga-mono-ntf2-admin:stage-${{ steps.vars.outputs.sha_short }}-${{ steps.vars.outputs.run_id_short }}
+            rumsan/giga-helm-admin:stage
+            rumsan/giga-helm-admin:stage-${{ steps.vars.outputs.sha_short }}-${{ steps.vars.outputs.run_id_short }}
 
-      #  Web Image
       - name: build && push web
-        id: build-push-web
         uses: docker/build-push-action@v3
         with:
           context: .
           file: Dockerfile.giga
           push: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
           tags: |
-            rumsan/giga-mono-ntf2-web:stage
-            rumsan/giga-mono-ntf2-web:stage-${{ steps.vars.outputs.sha_short }}-${{ steps.vars.outputs.run_id_short }}
+            rumsan/giga-helm-web:stage
+            rumsan/giga-helm-web:stage-${{ steps.vars.outputs.sha_short }}-${{ steps.vars.outputs.run_id_short }}
 
       - name: build && push webhook
-        id: build-push-webhook
         uses: docker/build-push-action@v3
         with:
           context: .
           file: Dockerfile.webhook
           push: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
           tags: |
-            rumsan/giga-mono-ntf2-webhook:stage
-            rumsan/giga-mono-ntf2-webhook:stage-${{ steps.vars.outputs.sha_short }}-${{ steps.vars.outputs.run_id_short }}
-
-    outputs:
-      sha_short: ${{ steps.vars.outputs.sha_short }}
-      run_id_short: ${{ steps.vars.outputs.run_id_short }}
+            rumsan/giga-helm-webhook:stage
+            rumsan/giga-helm-webhook:stage-${{ steps.vars.outputs.sha_short }}-${{ steps.vars.outputs.run_id_short }}
 
   update-manifest:
     name: Update Kubernetes Manifest
     needs: deploy
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    env:
+      IMAGE_TAG: stage-${{ needs.deploy.outputs.sha_short }}-${{ needs.deploy.outputs.run_id_short }}
     steps:
       - name: Import Secrets
         uses: hashicorp/vault-action@v2.4.0
@@ -130,30 +119,30 @@ jobs:
             github/data/general/Stage-Manifest repo | MANIFEST_REPO ;
             github/data/general/Stage-Manifest ssh-key | SSH_KEY ;
 
-      # Checkout the manifest repository using SSH
       - name: Checkout Stage Manifest Repo
         uses: actions/checkout@v4
         with:
           repository: ${{ env.MANIFEST_REPO }}
           ssh-key: ${{ env.SSH_KEY }}
 
-      # Update the image tag in the manifest
-      - name: Update Image Tag in Manifest
+      - name: Install yq
         run: |
-          sed -i "s|image: rumsan/giga-mono-ntf2-admin:.*|image: rumsan/giga-mono-ntf2-admin:stage-${{ needs.deploy.outputs.sha_short }}-${{ needs.deploy.outputs.run_id_short }}|" ${{ env.ADMIN_MANIFEST_FILE }}
-          sed -i "s|image: rumsan/giga-mono-ntf2-api:.*|image: rumsan/giga-mono-ntf2-api:stage-${{ needs.deploy.outputs.sha_short }}-${{ needs.deploy.outputs.run_id_short }}|" ${{ env.API_MANIFEST_FILE }}
-          sed -i "s|image: rumsan/giga-mono-ntf2-web:.*|image: rumsan/giga-mono-ntf2-web:stage-${{ needs.deploy.outputs.sha_short }}-${{ needs.deploy.outputs.run_id_short }}|" ${{ env.WEB_MANIFEST_FILE }}
-          sed -i "s|image: rumsan/giga-mono-ntf2-webhook:.*|image: rumsan/giga-mono-ntf2-webhook:stage-${{ needs.deploy.outputs.sha_short }}-${{ needs.deploy.outputs.run_id_short }}|" ${{ env.WEBHOOK_MANIFEST_FILE }}
+          sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
+          sudo chmod +x /usr/bin/yq
 
+      - name: Update specific image.tag values in Helm values.yaml
+        run: |
+          echo "Updating admin, api, web, webhook image tags to ${IMAGE_TAG}"
+          yq eval '.admin.image.tag = strenv(IMAGE_TAG) |
+                   .api.image.tag = strenv(IMAGE_TAG) |
+                   .web.image.tag = strenv(IMAGE_TAG) |
+                   .webhook.image.tag = strenv(IMAGE_TAG)' -i "${{ env.HELM_VALUES_FILE }}"
+        
 
-      # Commit and push changes using SSH
       - name: Commit and Push Changes
         run: |
           git config user.name "sandab-rumsan"
           git config user.email "sandab@rumsan.net"
-          git add ${{ env.ADMIN_MANIFEST_FILE }}
-          git add ${{ env.API_MANIFEST_FILE }}
-          git add ${{ env.WEB_MANIFEST_FILE }}
-          git add ${{ env.WEBHOOK_MANIFEST_FILE }}
-          git commit -m "runner: Update Giga Stage image tag to stage-${{ needs.deploy.outputs.sha_short }}-${{ needs.deploy.outputs.run_id_short }}"
+          git add "${{ env.HELM_VALUES_FILE }}"
+          git commit -m "runner: Update all image tags to $IMAGE_TAG" || echo "No changes to commit"
           git push origin main

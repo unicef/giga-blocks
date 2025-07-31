@@ -36,7 +36,7 @@ const navConfig = [
     items: [
       {
         title: 'School',
-        path: PATH_SCHOOL.contributed,
+        path: PATH_SCHOOL.import,
         children: [
           // {
           //   title: 'Unminted School',
@@ -54,6 +54,10 @@ const navConfig = [
             title: 'Activated School',
             path: PATH_SCHOOL.verified,
           },
+          {
+            title:'Reserved School',
+            path: PATH_SCHOOL.reserved,
+          }
         ],
         icon: ICONS.user,
       },

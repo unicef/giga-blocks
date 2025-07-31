@@ -4,14 +4,14 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { Grid } from '@mui/material';
 import { useSchoolCount } from '@hooks/school/useSchool';
-import { useUserGet } from '@hooks/user/useUser';
+import { useMetrics } from '@hooks/user/useUser';
 import { useQuery } from 'urql';
 import { Queries } from 'src/libs/graph-query';
 import { ethers } from 'ethers';
 
 export default function OutlinedCard() {
   const { data: schoolCount } = useSchoolCount();
-  const { data: userData } = useUserGet(1, 10, 'CONTRIBUTOR');
+  const { data: metricsData } = useMetrics();
 
   const [result] = useQuery({
     query: Queries.totalNftCount,
@@ -54,7 +54,9 @@ export default function OutlinedCard() {
           <CardContent>
             <Typography variant="body2">Total Contributors</Typography>
             <Typography variant="h5" component="div">
-              {userData?.meta?.total ? Number(userData?.meta?.total).toLocaleString() : 'N/A'}
+              {metricsData?.contributorCount
+                ? Number(metricsData?.contributorCount)?.toLocaleString()
+                : 'N/A'}
             </Typography>
           </CardContent>
         </Card>
