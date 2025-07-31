@@ -44,7 +44,7 @@ export default function Metrics() {
       icon: <IbmVpnForVpc size={24} />,
       iconColor: '#D12765', // Pink
       iconBg: '#FCF2F6', // Light pink
-      value: metricsData?.offline || '~50%',
+      value:  '~50%',
       label: '',
       subtitle: 'Offline Schools',
       description:

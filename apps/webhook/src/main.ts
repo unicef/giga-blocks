@@ -69,6 +69,8 @@ async function main(): Promise<void> {
       ) {
         console.log('Block Number:', webhookEvent.event.data.block.number);
       }
+      console.log('logs', webhookEvent.event.data.block.logs)
+      console.log("tokenid", Number(webhookEvent.event.data.block.logs[0].topics[1]))
       if (
         webhookEvent.event.data.logs &&
         webhookEvent.event.data.logs.length > 0
@@ -81,9 +83,11 @@ async function main(): Promise<void> {
           webhookEvent.event.data.block.logs[0].transaction.status)
       }
 
+
       const transactionDetails = {
         transactionHash: webhookEvent.event.data.block.logs[0].transaction.hash,
         status: webhookEvent.event.data.block.logs[0].transaction.status,
+        tokenId: Number(webhookEvent.event.data.block.logs[0].topics[1])
       };
       addTaskToQueue(transactionDetails);
     }

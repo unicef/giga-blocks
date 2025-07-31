@@ -126,7 +126,7 @@ Table giga_school {
 
 Table giga_school_activation {
   id String [pk]
-  schoolId String [not null]
+  schoolId String [unique, not null]
   transactionHash String [unique, not null]
   themeId String [not null]
   contributorData Json [not null]

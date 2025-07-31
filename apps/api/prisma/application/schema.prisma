@@ -235,7 +235,7 @@ model School {
 
 model SchoolActivationDetails{
   id                       String     @id @default(uuid())
-  schoolId                 String
+  schoolId                 String     @unique()
   transactionHash          String     @unique()
   themeId                  String
   contributorData          Json
