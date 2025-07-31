@@ -130,6 +130,38 @@ body {
   background-color: #1558c0;
 }
 
+//QrCode scss pivado //
+
+.qrcode-modal .cds--modal-content {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+// .qrcode-modal .cds--modal-close {
+//   display: none;
+// }
+
+.qrcode-modal__heading {
+  font-weight: 600;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.qrcode-modal__instruction {
+  text-align: center;
+  font-size: 0.75rem;
+  margin: 0.75rem 0 0 0;
+}
+
+.qrcode-modal__button {
+  text-align: center;
+}
+
+.cds--modal-content > p {
+  padding-inline-end: 0;
+}
+
 // modal css  //
 
 .cds--modal-container {

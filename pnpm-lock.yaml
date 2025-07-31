@@ -323,6 +323,9 @@ importers:
       next:
         specifier: 14.2.30
         version: 14.2.30(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(react-dom@18.2.0)(react@18.2.0)(sass@1.89.2)
+      next-qrcode:
+        specifier: ^2.5.1
+        version: 2.5.1(react@18.2.0)
       next-secure-headers:
         specifier: ^2.2.0
         version: 2.2.0
@@ -21275,6 +21278,16 @@ packages:
   /new-github-issue-url@0.2.1:
     resolution: {integrity: sha512-md4cGoxuT4T4d/HDOXbrUHkTKrp/vp+m3aOA7XXVYwNsUNMK49g3SQicTSeV5GIz/5QVGAeYRAOlyp9OvlgsYA==}
     engines: {node: '>=10'}
+    dev: false
+
+  /next-qrcode@2.5.1(react@18.2.0):
+    resolution: {integrity: sha512-ibiS1+p+myjurC1obVIgo7UCjFhxm0SNYTkikahQVmnyzlfREOdUCf2f77Vbz6W6q2zfx5Eww2/20vbgkLNdLw==}
+    engines: {node: '>=8', npm: '>=5'}
+    peerDependencies:
+      react: '>=17.0.0'
+    dependencies:
+      qrcode: 1.5.4
+      react: 18.2.0
     dev: false
 
   /next-secure-headers@2.2.0:

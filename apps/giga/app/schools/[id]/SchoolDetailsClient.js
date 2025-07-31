@@ -9,6 +9,7 @@ import ThemeSelector from '../../../components/schoolDetails/SchoolThemes';
 import Sidebar from '../../../components/schoolDetails/Sidebar';
 import DetailsLoading from '../../../components/detailsLoading/DetailsLoading';
 import { useSchoolDetails } from '../../hooks/useSchool';
+import { useGetAuthRequest } from '../../hooks/useCIW';
 import './_schoolDetails.scss';
 import { useThemeToggleStore } from '../../store/themeToggleStore';
 import { useThemeStore } from '../../store/themeStore';
@@ -19,6 +20,7 @@ import { useReadNftOwnerOf } from '../../hooks/useContract/gigaNft';
 import { useRouter } from 'next/navigation';
 import { InlineNotification } from '@carbon/react';
 import countryList from '../../data/country.json';
+import QRCodeModal from '../../../components/schoolDetails/qrCode';
 import SchoolNotFound from '../../school-not-found';
 
 export default function SchoolDetailsClient({ params }) {
@@ -30,6 +32,11 @@ export default function SchoolDetailsClient({ params }) {
   const { data: themeOptions, isLoading: themeLoading } = useThemeGet();
   const [notification, setNotification] = useState(null);
   const [countryName, setCountryName] = useState('');
+  const [isQRCodeModalOpen, setIsQRCodeModalOpen] = useState(false);
+  const [qrCodeValue, setQrCodeValue] = useState('');
+  const [universalLink, setUniversalLink] = useState('');
+  const [isVerfierDisabled, setIsVerifierDisabled] = useState(true);
+  const baseUrl = process.env.NEXT_PUBLIC_WEB_NAME;
 
   const isMinted = minted === 'MINTED';
   const isVisibleForMinted = useThemeToggleStore(
@@ -121,8 +128,21 @@ export default function SchoolDetailsClient({ params }) {
     ? theme?.colorScheme?.bgColor
     : themeOptions?.find((t) => t.name === selectedTheme)?.colorScheme.bgColor;
 
-  // Add a minimum loader time (e.g., 1200ms) to improve perceived loading on fast networks
   const [minLoaderDone, setMinLoaderDone] = useState(false);
+
+  const { data: authRequest } = useGetAuthRequest(id);
+
+  const handleCIWClick = () => {
+    const qrValue = JSON.stringify(authRequest?.request);
+    setQrCodeValue(qrValue);
+    setUniversalLink(`https://wallet.privado.id#i_m=${authRequest?.universalLink}&back_url=${baseUrl}/schools/${id}&finish_url=${baseUrl}/schools/${id}`);
+    setIsQRCodeModalOpen(true);
+  };
+
+  useEffect(() => {
+    if (!authRequest?.request) setIsVerifierDisabled(true);
+    else setIsVerifierDisabled(false);
+  }, [authRequest]);
 
   useEffect(() => {
     setMinLoaderDone(false);
@@ -211,10 +231,20 @@ export default function SchoolDetailsClient({ params }) {
               imageHash={data?.imageHash}
               id={id}
               schoolName={data?.name}
+              handleCIWClick={handleCIWClick}
+              isVerfierDisabled={isVerfierDisabled}
+              verifiedCIW = {data?.verifiedCIW}
             />
           </div>
         </div>
       </div>
+
+      <QRCodeModal
+        isOpen={isQRCodeModalOpen}
+        onClose={() => setIsQRCodeModalOpen(false)}
+        value={qrCodeValue}
+        universalLink={universalLink}
+      />
     </>
   );
 }
