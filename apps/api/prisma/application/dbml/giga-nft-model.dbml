@@ -220,25 +220,16 @@ Table giga_themes {
 
 Table giga_qos {
   id String [pk]
-  timestamp DateTime [not null]
   country_id String [not null]
   giga_school_id String [not null]
-  speed_download String [not null]
-  speed_upload String [not null]
-  inbound_traffic String
-  outbound_traffic String
-  speed_upload_max String
-  speed_upload_mean String
-  provider String
-  speed_download_max String
-  speed_download_mean String
-  latency String [not null]
-  signature String [not null]
-  gigasync_id String [not null]
+  download_speed String [not null]
+  upload_speed String [not null]
+  latency String
   date DateTime
+  country_iso3_code String [not null]
+  arewaveUploaded Boolean [not null, default: false]
   dynamicData Json [not null]
-  inbound_traffic_sum String
-  outbound_traffic_sum String
+  data_source String
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   deletedAt DateTime
@@ -246,8 +237,10 @@ Table giga_qos {
 
 Table giga_arweave_data {
   id String [pk]
-  date DateTime [unique, not null]
-  arweaveHash String[] [not null]
+  date DateTime [not null]
+  arweaveHash String [not null]
+  country_id String [not null]
+  onChainUpdated Boolean [not null, default: false]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   deletedAt DateTime

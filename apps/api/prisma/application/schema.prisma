@@ -346,25 +346,16 @@ model Theme {
 
 model Qos {
   id                   String    @id @default(uuid())
-  timestamp            DateTime
   country_id           String
   giga_school_id       String
-  speed_download       String
-  speed_upload         String
-  inbound_traffic      String?
-  outbound_traffic     String?
-  speed_upload_max     String?
-  speed_upload_mean    String?
-  provider             String?
-  speed_download_max   String?
-  speed_download_mean  String?
-  latency              String
-  signature            String
-  gigasync_id          String
+  download_speed       String
+  upload_speed         String
+  latency              String?
   date                 DateTime?
+  country_iso3_code    String
+  arewaveUploaded      Boolean   @default(false)
   dynamicData          Json
-  inbound_traffic_sum  String?
-  outbound_traffic_sum String?
+  data_source          String?
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
   deletedAt            DateTime?
@@ -373,12 +364,14 @@ model Qos {
 }
 
 model ArweaveHash {
-  id          String    @id @default(uuid())
-  date        DateTime  @unique
-  arweaveHash String[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
+  id             String    @id @default(uuid())
+  date           DateTime  
+  arweaveHash    String
+  country_id     String
+  onChainUpdated Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
 
   @@map("giga_arweave_data")
 }
