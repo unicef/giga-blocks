@@ -25,7 +25,7 @@ jobs:
         id: vars
         run: |
           echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-          echo "run_id_short=${GITHUB_RUN_ID:0:3}" >> $GITHUB_OUTPUT
+          echo "run_id_short=${GITHUB_RUN_ID:0:5}" >> $GITHUB_OUTPUT
 
       - name: Import Secrets
         uses: hashicorp/vault-action@v2.4.0
