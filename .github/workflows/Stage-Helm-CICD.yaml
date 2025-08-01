@@ -1,10 +1,10 @@
 name: Stage Helm CI/CD
 
 on:
-  push:
-    branches: ['stage']
-  pull_request:
-    branches: ['stage']
+  # push:
+  #   branches: ['stage']
+  # pull_request:
+  #   branches: ['stage']
   workflow_dispatch:
 
 env:
