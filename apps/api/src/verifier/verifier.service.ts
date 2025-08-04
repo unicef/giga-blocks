@@ -46,12 +46,13 @@ export class VerifierService {
   }
 
   async callback(req) {
+    console.log("here at the callback")
     let authResponse;
 
     const sessionId = req?.query.sessionId;
     const raw = req.body;
     const tokenStr = raw.toString().trim();
-    const keyDir = 'apps/api/src/verifier/keys';
+    const keyDir = './keys';
 
     const resolvers = {
       // ['polygon:amoy']: new resolver.EthStateResolver(
@@ -70,7 +71,7 @@ export class VerifierService {
 
     const verifier = await auth.Verifier.newVerifier({
       stateResolver: resolvers,
-      circuitsDir: path.join(process.cwd(), keyDir),
+      circuitsDir: path.join(__dirname, keyDir),
       ipfsGatewayURL: 'https://ipfs.io',
     });
     try {

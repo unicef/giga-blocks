@@ -31,6 +31,11 @@
             "input": "apps/api/src/mailer/templates",
             "glob": "**/*",
             "output": "templates"
+          },
+          {
+            "input": "apps/api/src/verifier/keys",
+            "glob": "**/*",
+            "output": "keys"
           }
         ],
         "isolatedConfig": true,
