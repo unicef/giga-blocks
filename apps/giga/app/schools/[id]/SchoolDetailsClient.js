@@ -19,7 +19,6 @@ import { useReadNftOwnerOf } from '../../hooks/useContract/gigaNft';
 import { useRouter } from 'next/navigation';
 import { InlineNotification } from '@carbon/react';
 import countryList from '../../data/country.json';
-import SchoolNotFound from '../../school-not-found';
 
 export default function SchoolDetailsClient({ params }) {
   const { id } = params;
@@ -62,11 +61,7 @@ export default function SchoolDetailsClient({ params }) {
   const themeStore = useThemeStore();
 
   const handleBack = () => {
-    if (window.history.length > 2) {
-      router.back();
-    } else {
-      router.push('/');
-    }
+    router.back();
   };
 
   const onCloseNotification = () => {
@@ -130,8 +125,6 @@ export default function SchoolDetailsClient({ params }) {
     return () => clearTimeout(timer);
   }, [id]);
 
-  if (!isLoading && !data) return <SchoolNotFound />;
-
   if (isLoading || !data || !minLoaderDone) return <DetailsLoading />;
 
   return (
@@ -167,6 +160,8 @@ export default function SchoolDetailsClient({ params }) {
               linkActivation={linkActivation}
               loading={themeLoading}
               showNotification={showNotification}
+              SchoolName={data?.name}
+              country_name={countryName}
             />
           )}
           <div className="school-details__content">

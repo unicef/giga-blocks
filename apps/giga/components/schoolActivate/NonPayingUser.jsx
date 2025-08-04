@@ -10,6 +10,8 @@ import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import Image from 'next/image';
+import { Information } from '@carbon/icons-react';
+import NonPayingActivationModal from './NonPayingActivationModal';
 
 export default function NonPayingUser({
   email,
@@ -32,6 +34,7 @@ export default function NonPayingUser({
   const [showEmailVerify, setShowEmailVerify] = useState(false);
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [openModal, setModalOpen] = useState(false);
 
   const { mutate, isPending } = useSendMagicLink();
   const { mutate: verifyMagicLink } = useVerifyMagicLink();
@@ -109,7 +112,9 @@ export default function NonPayingUser({
         onSuccess: () => {
           setShowActivateSuccess(true);
           setShowEmailVerify(false);
-          router.push(`/schools/${id}`);
+          setModalOpen(true);
+
+          // router.push(`/schools/${id}`);
         },
         onError: () => {
           const message =
@@ -270,6 +275,34 @@ export default function NonPayingUser({
                 </span>
               </div> */}
               </div>
+              <div className="non-paying-guide">
+                <Information size={16} fill="#0F62FE" />
+                <p className="text-guide">
+                  After you activate, Please go to your wallet to confirm the
+                  transaction
+                </p>
+              </div>
+
+              <div className="non-paying-guide-container">
+                <div className="guide-header">
+                  <Information size={16} fill="#0F62FE" />
+                  <p className="text-guide">What happens next?</p>
+                </div>
+                <ul>
+                  <li className="guide-list-style">
+                    We'll send a magic link to your email
+                  </li>
+                  <li className="guide-list-style">
+                    Click the link to verify your identity
+                  </li>
+                  <li className="guide-list-style">
+                    Your school will be activated automatically
+                  </li>
+                  <li className="guide-list-style">
+                    You'll receive an NFT claim link via email
+                  </li>
+                </ul>
+              </div>
 
               {showEmailVerify ? (
                 <div className="actionButtons" style={{ marginTop: '12px' }}>
@@ -302,6 +335,13 @@ export default function NonPayingUser({
           </div>
         </div>
       </div>
+      {openModal && (
+        <NonPayingActivationModal
+          open={openModal}
+          setOpen={setModalOpen}
+          schoolName={schoolName}
+        />
+      )}
     </>
   );
 }

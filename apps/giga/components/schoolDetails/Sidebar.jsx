@@ -208,10 +208,20 @@ const Sidebar = ({
             </div>
           </div>
         </div>
-      ) : (
+      ) : minted === 'NOTMINTED' ? (
         <div className="school-details__minted-image-wrapper">
           <Image
             src={`/images/placeholder.png`}
+            alt="School generated image"
+            fill
+            style={{ objectFit: 'cover' }}
+            onError={() => setImageError(true)}
+          />
+        </div>
+      ) : (
+        <div className="school-details__minted-image-wrapper">
+          <Image
+            src={`/images/School-Image-Loading.svg`}
             alt="School generated image"
             fill
             style={{ objectFit: 'cover' }}

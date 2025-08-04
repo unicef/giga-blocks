@@ -7,7 +7,9 @@ import {
   LogoFacebook,
   LogoInstagram,
   LogoLinkedin,
-  LogoX,
+  LogoTwitter,
+  Wallet,
+  ArrowRight,
 } from '@carbon/icons-react';
 import './_activation.scss';
 import {
@@ -18,8 +20,15 @@ import { useAccount } from 'wagmi';
 import { useParams, useRouter } from 'next/navigation';
 import Confetti from 'react-confetti';
 import toast from 'react-hot-toast';
+import useWindowDimensions from '../../app/hooks/useWindowDimensions';
 
-export default function ActivationModal({ isOpen, onClose, schoolName }) {
+export default function ActivationModal({
+  isOpen,
+  onClose,
+  schoolName,
+  schoolLocation,
+  createdAt,
+}) {
   const { id } = useParams();
   const [showNameOnList, setShowNameOnList] = useState(true);
   const [contributorName, setContributorName] = useState('');
@@ -57,18 +66,18 @@ export default function ActivationModal({ isOpen, onClose, schoolName }) {
     );
   };
 
-  const currentPageUrl = `${process.env.NEXT_PUBLIC_WEB_NAME}/schools/${id}`;
-
   useEffect(() => {
     if (!contributorData) return;
     if (contributorData?.isVisible === true) setContributorVisible(true);
   });
 
+  const { width, height } = useWindowDimensions();
+
   return (
     <>
       <Modal
         open={isOpen}
-        // onRequestClose={onClose}
+        onRequestClose={onClose}
         modalHeading=""
         passiveModal
         className="activationModal"
@@ -77,16 +86,33 @@ export default function ActivationModal({ isOpen, onClose, schoolName }) {
       >
         <div className="activationModalContent">
           <div className="activationHeader">
+            <h1>🎉</h1>
             <h2 className="activationTitle">
-              School Activated
-              <span className="checkmarkIcon">
-                <CheckmarkFilled size={24} />
-              </span>
+              Congratulations, You have activated {schoolName}
             </h2>
             <p className="activationMessage">
-              Thank you for your contribution. Image generation is in progress.
-              You can see the list of schools activated in your dashboard
+              Thank you for your contribution. Every activated school gains a
+              permanent seat on the blockchain, one step closer to reliable
+              internet access.
             </p>
+          </div>
+
+          <div className="activation-modal-school-details">
+            <div className="activation-nft-text">
+              <strong>NFT Details</strong>
+              <div className="activation-nft-claim-details">
+                <p>School: </p>
+                <p>{schoolName}</p>
+              </div>
+              <div className="activation-nft-claim-details">
+                <p>Location:</p>
+                <p>{schoolLocation}</p>
+              </div>
+              <div className="activation-nft-claim-details">
+                <p>Activation Date:</p>
+                <p>{new Date(createdAt).toLocaleDateString()}</p>
+              </div>
+            </div>
           </div>
 
           <div className="shareSection">
@@ -96,6 +122,7 @@ export default function ActivationModal({ isOpen, onClose, schoolName }) {
                 className="socialIcon"
                 aria-label="Share on Facebook"
                 onClick={() => {
+                  const currentPageUrl = window.location.href;
                   window.open(
                     `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
                       currentPageUrl
@@ -109,37 +136,11 @@ export default function ActivationModal({ isOpen, onClose, schoolName }) {
               {/* <button className="socialIcon" aria-label="Share on Instagram">
                 <LogoInstagram size={24} />
               </button> */}
-              <button
-                className="socialIcon"
-                aria-label="Share on LinkedIn"
-                onClick={() => {
-                  window.open(
-                    `https://www.linkedin.com/sharing/share-offsite/?text=${encodeURIComponent(
-                      currentPageUrl
-                    )}&title=${encodeURIComponent(
-                      schoolName
-                    )}&summary=Cool%20Nft%20Minted`,
-                    '_blank'
-                  );
-                }}
-              >
+              <button className="socialIcon" aria-label="Share on LinkedIn">
                 <LogoLinkedin size={24} />
               </button>
-              <button
-                className="socialIcon"
-                aria-label="Share on Twitter"
-                onClick={() => {
-                  window.open(
-                    `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-                      currentPageUrl
-                    )}&text=${encodeURIComponent(
-                      `Check out ${schoolName} on Giga! #NFTs #Education`
-                    )}`,
-                    '_blank'
-                  );
-                }}
-              >
-                <LogoX size={24} />
+              <button className="socialIcon" aria-label="Share on Twitter">
+                <LogoTwitter size={24} />
               </button>
             </div>
           </div>
@@ -167,9 +168,18 @@ export default function ActivationModal({ isOpen, onClose, schoolName }) {
             </div>
           )}
 
-          <Button className="visitButton" onClick={handleVisitClick}>
-            Visit School Details
-          </Button>
+          <div className="activation-modal-buttons">
+            <Button
+              className="visitButton"
+              renderIcon={ArrowRight}
+              onClick={handleVisitClick}
+            >
+              Visit School Details
+            </Button>
+            <Button kind="ghost" className="contributor-button">
+              View Giga Contributors list
+            </Button>
+          </div>
         </div>
       </Modal>
       {/* Render Confetti absolutely over the modal when open */}
@@ -182,7 +192,14 @@ export default function ActivationModal({ isOpen, onClose, schoolName }) {
             zIndex: 9999,
           }}
         >
-          <Confetti numberOfPieces={500} recycle={true} />
+          <Confetti
+            width={width}
+            height={Math.max(height, 800)} // Minimum height of 800px
+            numberOfPieces={900}
+            recycle={true}
+            gravity={0.15}
+            tweenDuration={8000}
+          />
         </div>
       )}
     </>

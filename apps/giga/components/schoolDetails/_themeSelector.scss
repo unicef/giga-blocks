@@ -146,6 +146,11 @@
   }
 }
 
+.theme-update-modal .cds--modal-container {
+  width: 480px;
+  background: #ffffff;
+}
+
 .theme-update-modal .cds--modal-close {
   display: none;
 }
@@ -175,3 +180,73 @@
 //   -webkit-padding-end: 3% !important;
 //   padding-inline-end: 3% !important;
 // }
+
+//theme palette //
+
+.theme-update-modal-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  background-color: #0f62fe;
+  border-radius: 24px;
+  margin: 0 auto;
+}
+
+.theme-update-modal {
+  &-details {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #525252;
+  }
+
+  &-theme-preview {
+    display: flex;
+    justify-content: center;
+    border-radius: 6px;
+    border: 2px solid #ffffff;
+
+    .theme-preview-container {
+      display: flex;
+      width: 72px;
+      height: 40px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .theme-preview-color {
+      flex: 1;
+      height: 100%;
+    }
+  }
+}
+
+.theme-update-modal-details {
+  padding-inline-end: 0 !important;
+}
+
+.theme-color-selector {
+  display: flex;
+  justify-content: space-between;
+  background: #f4f4f4;
+  padding: 16px;
+  border-radius: 8px;
+  align-items: center;
+}
+
+.theme-selector-school-name {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.theme-selector-location {
+  display: flex;
+  align-items: center;
+}
+
+.theme-update-button {
+  margin-top: 1rem;
+  width: 70%;
+}

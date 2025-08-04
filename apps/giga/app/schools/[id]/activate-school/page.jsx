@@ -49,6 +49,7 @@ export default function ActivateSchool() {
     useThemeStore();
 
   const { data, isLoading: dataLoading } = useSchoolDetails(id);
+
   const { data: themeData, isLoading: themeLoading } =
     useSchoolThemeGet(themeFromParams);
 
@@ -228,6 +229,8 @@ export default function ActivateSchool() {
           </div>
           <ActivationModal
             schoolName={data?.name}
+            schoolLocation={data?.country}
+            createdAt={data?.updatedAt}
             isOpen={isModalOpen}
             onClose={closeModal}
           />
