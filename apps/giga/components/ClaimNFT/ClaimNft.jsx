@@ -16,7 +16,7 @@ import { ConnectKitButton } from 'connectkit';
 import Confetti from 'react-confetti';
 import CongratulationModal from '../congratulationModal/CongratulationModal';
 
-export default function ClaimNFT() {
+export default function ClaimNFT({ name, countryName, tokenId, updatedAt }) {
   const { id } = useParams();
   const router = useRouter();
   const { address, isConnected } = useAccount();
@@ -29,7 +29,7 @@ export default function ClaimNFT() {
   const [showSchoolClaim, setShowSchoolClaim] = useState(false);
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [showClaimModal, setShowClaimModal] = useState(false);
+  const [showClaimModal, setShowClaimModal] = useState(true);
   const containerRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
@@ -104,7 +104,7 @@ export default function ClaimNFT() {
       {
         email: emailFromUrl,
         walletAddress,
-        schoolId:id
+        schoolId: id,
       },
       {
         onSuccess: () => {
@@ -219,7 +219,7 @@ export default function ClaimNFT() {
               >
                 Verify
               </Button>
-            ) : isConnected || walletAddress? (
+            ) : isConnected || walletAddress ? (
               <Button
                 onClick={handleClaimSchool}
                 className="claim-button"
@@ -237,6 +237,10 @@ export default function ClaimNFT() {
         open={showClaimModal}
         onClose={() => setShowClaimModal(false)}
         id={id}
+        name={name}
+        countryName={countryName}
+        tokenId={tokenId}
+        activatedAt={updatedAt}
       />
     </>
   );
