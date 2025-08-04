@@ -26,6 +26,7 @@ export default function StandardActivationForm({
 }) {
   const [donationError, setDonationError] = useState('');
   const [balanceError, setBalanceError] = useState(false);
+  const [isActivating, setIsActivating] = useState(false);
 
   const handleDonationChange = (e) => {
     const value = e.target.value;
@@ -53,7 +54,13 @@ export default function StandardActivationForm({
     } else {
       setBalanceError(false);
     }
-  },[baseFee, gasFee, donation, balance]);
+  }, [baseFee, gasFee, donation, balance]);
+
+  // Create a wrapper function for handleActivate
+  const handleActivateWithState = () => {
+    setIsActivating(true);
+    handleActivate();
+  };
 
   return (
     <div
@@ -163,12 +170,22 @@ export default function StandardActivationForm({
                   ).toFixed(4)}{' '}
                   Eth
                 </span>
-                <br/>
-                { balanceError &&
-                <span className=" detail-value" style={{ color: 'red' }}>
-                  Insufficient Balance. Available balance in wallet {(balance?.formatted)?.trim(0,2)} Eth
-                </span>}
+                <br />
+                {balanceError && (
+                  <span className=" detail-value" style={{ color: 'red' }}>
+                    Insufficient Balance. Available balance in wallet{' '}
+                    {balance?.formatted?.trim(0, 2)} Eth
+                  </span>
+                )}
               </div>
+            </div>
+
+            <div className="non-paying-guide">
+              <Information size={16} fill="#0F62FE" />
+              <p className="text-guide">
+                After you activate, Please go to your wallet to confirm the
+                transaction
+              </p>
             </div>
 
             <div className="action-buttons">
@@ -176,16 +193,22 @@ export default function StandardActivationForm({
                 onClick={handleBack}
                 kind="secondary"
                 className="cancel-button"
+                disabled={isActivating}
               >
                 Cancel
               </Button>
               {isConnected ? (
                 <Button
-                  onClick={handleActivate}
-                  disabled={!selectedThemeName || donationError || balanceError}
+                  onClick={handleActivateWithState}
+                  disabled={
+                    !selectedThemeName ||
+                    donationError ||
+                    balanceError ||
+                    isActivating
+                  }
                   className="activate-button"
                 >
-                  Activate
+                  {isActivating ? 'Activating...' : 'Activate'}
                 </Button>
               ) : (
                 <ConnectKitButton.Custom>

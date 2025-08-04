@@ -21,7 +21,6 @@ import { useRouter } from 'next/navigation';
 import { InlineNotification } from '@carbon/react';
 import countryList from '../../data/country.json';
 import QRCodeModal from '../../../components/schoolDetails/qrCode';
-import SchoolNotFound from '../../school-not-found';
 
 export default function SchoolDetailsClient({ params }) {
   const { id } = params;
@@ -69,11 +68,7 @@ export default function SchoolDetailsClient({ params }) {
   const themeStore = useThemeStore();
 
   const handleBack = () => {
-    if (window.history.length > 2) {
-      router.back();
-    } else {
-      router.push('/');
-    }
+    router.back();
   };
 
   const onCloseNotification = () => {
@@ -135,7 +130,9 @@ export default function SchoolDetailsClient({ params }) {
   const handleCIWClick = () => {
     const qrValue = JSON.stringify(authRequest?.request);
     setQrCodeValue(qrValue);
-    setUniversalLink(`https://wallet.privado.id#i_m=${authRequest?.universalLink}&back_url=${baseUrl}/schools/${id}&finish_url=${baseUrl}/schools/${id}`);
+    setUniversalLink(
+      `https://wallet.privado.id#i_m=${authRequest?.universalLink}&back_url=${baseUrl}/schools/${id}&finish_url=${baseUrl}/schools/${id}`
+    );
     setIsQRCodeModalOpen(true);
   };
 
@@ -149,8 +146,6 @@ export default function SchoolDetailsClient({ params }) {
     const timer = setTimeout(() => setMinLoaderDone(true), 1200);
     return () => clearTimeout(timer);
   }, [id]);
-
-  if (!isLoading && !data) return <SchoolNotFound />;
 
   if (isLoading || !data || !minLoaderDone) return <DetailsLoading />;
 
@@ -187,6 +182,8 @@ export default function SchoolDetailsClient({ params }) {
               linkActivation={linkActivation}
               loading={themeLoading}
               showNotification={showNotification}
+              SchoolName={data?.name}
+              country_name={countryName}
             />
           )}
           <div className="school-details__content">
@@ -233,7 +230,7 @@ export default function SchoolDetailsClient({ params }) {
               schoolName={data?.name}
               handleCIWClick={handleCIWClick}
               isVerfierDisabled={isVerfierDisabled}
-              verifiedCIW = {data?.verifiedCIW}
+              verifiedCIW={data?.verifiedCIW}
             />
           </div>
         </div>

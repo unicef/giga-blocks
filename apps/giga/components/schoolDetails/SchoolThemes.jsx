@@ -9,6 +9,7 @@ import { useThemeUpdate } from '../../app/hooks/useTheme/index';
 import Image from 'next/image';
 import './_themeSelector.scss';
 import { useState } from 'react';
+import { ColorPalette, Location, ArrowRight } from '@carbon/icons-react';
 
 const ThemeSelector = ({
   themeOptions,
@@ -17,7 +18,9 @@ const ThemeSelector = ({
   linkActivation,
   id,
   loading,
-  showNotification, // Receive the notification function
+  showNotification,
+  SchoolName,
+  country_name,
 }) => {
   const router = useRouter();
   const updateTheme = useThemeUpdate();
@@ -78,6 +81,18 @@ const ThemeSelector = ({
       }
     }
   };
+
+  // Get the selected theme name
+  const getSelectedThemeName = () => {
+    const selected = themeOptions?.find((t) => t.id === selectedTheme);
+    return selected?.name || 'Default';
+  };
+
+  // Get the selected theme colors
+  const selectedThemeColors = themeOptions?.find(
+    (t) => t.id === selectedTheme
+  )?.colorScheme;
+
   return (
     <div className="theme-selector">
       <div className="theme-selector__content">
@@ -149,17 +164,74 @@ const ThemeSelector = ({
       </div>
       <Modal
         open={open}
-        // preventCloseOnClickOutside={true}
+        preventCloseOnClickOutside={true}
         passiveModal
         onRequestClose={handleRequestClose}
         size="md"
         hasCloseIcon={false}
         className="theme-update-modal"
       >
-        <h3 className="theme-update-modal-modal-heading">🎨</h3>
+        <div className="theme-update-modal-icon">
+          <ColorPalette size={24} fill="#ffffff" />
+        </div>
         <h3 className="theme-update-modal-modal-description">
-          Theme updated successfully! Your school just got a new look.
+          Theme Updated Successfully! 🎉
         </h3>
+
+        <p className="theme-update-modal-details">
+          {SchoolName ? SchoolName : 'School'} is now using the{' '}
+          <strong>{getSelectedThemeName()}</strong> theme
+        </p>
+
+        <div className="theme-color-selector">
+          <div className="theme-selector-school-name">
+            <div> {SchoolName}</div>
+            <div className="theme-selector-location">
+              <Location />
+              {country_name}
+            </div>
+          </div>
+          {selectedThemeColors && (
+            <div className="theme-update-modal-theme-preview">
+              <div className="theme-preview-container">
+                <div
+                  className="theme-preview-color"
+                  style={{
+                    backgroundColor: selectedThemeColors.fontColor,
+                    borderTopLeftRadius: '4px',
+                    borderBottomLeftRadius: '4px',
+                  }}
+                ></div>
+                <div
+                  className="theme-preview-color"
+                  style={{
+                    backgroundColor: selectedThemeColors.cardColor,
+                  }}
+                ></div>
+                <div
+                  className="theme-preview-color"
+                  style={{
+                    backgroundColor: selectedThemeColors.bgColor,
+                    borderTopRightRadius: '4px',
+                    borderBottomRightRadius: '4px',
+                  }}
+                ></div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <Button
+          className="theme-update-button"
+          kind="primary"
+          renderIcon={ArrowRight}
+          onClick={() => {
+            handleRequestClose(); // Close the modal
+            router.push(`/schools/${id}`); // Navigate to the school details page
+          }}
+        >
+          View Updated School Page
+        </Button>
       </Modal>
     </div>
   );
