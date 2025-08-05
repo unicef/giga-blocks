@@ -1,68 +1,101 @@
 <html>
   <head>
-    <title>Giga Blocks NFT Claim</title>
-    <link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet' />
+    <title>Giga Blocks Email Verification</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet" />
   </head>
-  <body style='font-family:IBM Plex Sans; padding: 20px 20px; justify-content: center;'>
-    <div
-      style='max-width: 900px; background-color: #FFFFFF; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);'
-    >
+  <body style="font-family: 'IBM Plex Sans', sans-serif; background-color: #ffffff; padding: 40px 20px; display: flex; justify-content: center;">
+    <div style="max-width: 900px;">
 
-      <!-- Carbon Favorite Icon -->
-      <div
-        style='width: 60px; height: 60px; background-color: #316bff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem;'
-      >
-
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          style='fill: rgb(238, 236, 236);'
-          width='32'
-          height='32'
-          viewBox='0 0 32 32'
-        >
-          <path
-            d='M23.49 4A7.43 7.43 0 0 0 16 7.35 7.43 7.43 0 0 0 8.51 4 7.48 7.48 0 0 0 1 11.6c0 4.14 3.44 7.51 8.64 12.25a53.06 53.06 0 0 0 6.13 5.14.9.9 0 0 0 1.06 0 53.06 53.06 0 0 0 6.13-5.14C27.56 19.11 31 15.74 31 11.6A7.48 7.48 0 0 0 23.49 4Z'
-          />
-        </svg>
+      <!-- Header -->
+      <div style="background-color: #000000; color: #ffffff; padding: 24px; text-align: center;">
+        <h1 style="font-size: 24px; margin:0">Giga Blocks</h1>
+        <h3 style="font-size: 32px; margin:10px 0;"><span style="margin-right:0.5rem;">🎉</span>Your School Activation is Ready!</h3>
+        <p style="font-size: 14px; margin:0">Claim your unique NFT and celebrate your impact</p>
       </div>
 
-      {{! <!-- Icon -->
-      <div style="width: 60px; height: 60px; background-color: #316bff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
-        <span class="material-icons" style="font-size: 32px; color: white;">favorite</span>
-      </div> }}
+      <!-- Main Content -->
+      <div style="padding: 32px 0;">
+       <div style="text-align:center"> <h3 style="font-size: 24px;font-weight:600; margin-bottom: 8px;">Thank You for activating {{school}}</h3>
+        <p style="font-size: 16px; font-weight: 400;">
+         You've helped connected 1,247 students to the internet and contributed to Giga's <br/> mission of connecting every school in the world.
+        </p>
+        </div>
 
-      <!-- Heading -->
-      <h2 style='font-size: 42px; margin: 0 0 20px; font-weight: 500;'>
-        🎉 Thank You for Supporting Giga Blocks – Claim Your NFT for
-        {{school}}
-      </h2>
+        <!-- Verification Box -->
+      <div style="text-align:center; margin:1rem 0 2rem;">
+         <button
+      style="
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: transparent;
+        color: #393939;
+        border: 1px solid #333333;
+        border-radius: 6px;
+        cursor: pointer;
+             margin-right: 1rem;
+      "
+    >
+     View School Profile
+    </button>
+          <button
+      style="
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: transparent;
+        color: #393939;
+        border: 1px solid #333333;
+        border-radius: 6px;
+        cursor: pointer;
+      "
+    >
+    Share Impact
+    </button>
+      </div>
+        
+         <div style="background:#F4F4F4 ; border-radius: 12px; margin: 32px 0; padding: 24px; text-align: center;">
+          <p style="font-weight: 600; font-size: 24px;">Your unique NFT is Ready</p>
+          <p style="font-size: 14px; color: #161616; font-weight:400;">
+           We've created a one-of-a-kind digital artwork represting your school activation.<br /> This NFT is yours to keep as a token of your contribution to global education.
+          </p>
 
-      <!-- Body Text -->
-      <p style='font-size: 24px; line-height: 1.6;'>
-        Thank you for activating
-        {{school}}
-        and contributing to Giga Blocks' mission to connect every school to the internet. Your
-        support brings us closer to a world where every child has access to quality education.<br
-        /><br />
-        As a token of our appreciation, we've prepared a unique NFT representing your contribution
-        to
-        {{school}}.
-      </p>
+          <!-- Button -->
+          <a href="{{link}}" style="display: inline-block; background-color: #0F62FE; color: #ffffff; font-weight: bold; padding: 16px 32px; border-radius: 4px; text-decoration: none; margin:10px 0;">
+Claim Your NFT Now 
+</a> 
+        </div>
+        
+              <div style="padding: 12px 0;">
+       <div style="text-align:center">
+        <p style="font-size: 16px; font-weight: 400;">
+        Want to help more schools?
+        </p>
+            </button>
+          <button
+      style="
+        padding: 12px 24px;
+        font-size: 16px;
+        background-color: #393939;
+        color: #ffffff;
+        border-radius: 6px;
+        cursor: pointer;
+             font-weight:600;
+      "
 
-      <!-- Claim Link -->
-      <p style='font-size: 16px; margin-bottom: 30px;'>
-        👉
-        <a href={{link}} style='color: #316bff; text-decoration: underline;'>[Click Here to Claim
-          Your NFT]</a>
-      </p>
+    >
+    <a href = "{{listLink}}" >
+  Activate Another School
+  </a>
+    </button>
+        </div></div>
 
       <!-- Footer -->
-      <p style='font-size: 16px; margin-bottom: 10px;'>Together, we're building a more connected and
-        inclusive future.</p>
-      <p style='font-size: 16px; margin-bottom: 40px;'>Warm regards,<br />The Giga Team</p>
-
-      <!-- Logo -->
-      <strong style='font-size: 16px;'>Giga Blocks</strong>
+      <div style="margin-top: 32px; font-size: 13px; color: #888; background: #F4F4F4; padding: 16px; margin-bottom: 1rem; text-align: center;">
+        <p style="font-size:14px; color: #161616; font-weight: 400;">Need Help? </p>
+        <p><a href="https://giga-blocks.com/help" style="color: #316bff; text-decoration:none;">Help Center</a> | <a href="mailto:support@giga-blocks.com" style="color: #316bff; text-decoration:none;">Email Support</a></p>
+        <hr>
+        <p style="font-weight:400; font-size:14px; line-height:160%; color:#161616;">Join us on <a href="https://twitter.com/giga" style="color: #0F62FE;">Twitter</a>, <a href="https://discord.gg/giga" style="color: #0F62FE;">Discord</a>, or <a href="https://giga-blocks.com" style="color: #316bff;">Visit Our Website</a></p>
+        <p style="margin-top: 2.5rem; color:#525252; line-height:160%; font-size:14px;">Giga Blocks<br />A project by UNICEF's Giga Initiative to connect every school to the internet.</p>
+      </div>
     </div>
   </body>
 </html>
