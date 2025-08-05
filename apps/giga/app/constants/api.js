@@ -71,4 +71,7 @@ export const ENDPOINTS = {
   METRICS: {
     GET: '/schools/gigaMetrics',
   },
+  CIW:{
+    AUTHREQUEST:'/verifier/sign-in'
+  }
 };

@@ -215,3 +215,27 @@ export const useSchoolGetImageUpdateList = ({
     }
   );
 };
+
+export const useReservedSchoolList = ({
+  page,
+  perPage
+}:{
+  page?: number;
+  perPage: number;
+}) =>{
+  return useQuery(
+    ['get-reserved-school-list',page, perPage],
+    async () => {
+      const { data } = await api.get(`${routes.SCHOOLS.GETRESERVEDSCHOOLLIST}?page=${page}&perPage=${perPage}`);
+      return data;
+    },
+    {
+      keepPreviousData: true,
+      staleTime: 1 * 60 * 1000,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+    }
+
+  )
+}

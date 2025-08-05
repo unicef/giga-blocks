@@ -22,7 +22,7 @@ Installing packages in root of repo
 
 ```
 pnpm i
-```
+``` 
 
 Make sure postgresql and redis-server are running.
 Copy .env.example to .env. And Make prisma migrations first:

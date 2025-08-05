@@ -24,6 +24,7 @@ interface ExtendedContract extends BaseContract {
   addHashes?: (date: string, hashes: string[]) => ContractTransactionResponse;
   reserveNft?: (schoolId: string, email: string) => ContractTransactionResponse;
   transfeReservedNft?: (walletAddress: string, email: string) => ContractTransactionResponse;
+  tokenIdToSchoolId?:(tokenId:string | ContractTransactionResponse,) =>ContractTransactionResponse;
 }
 
 export const mintNFT = async (
@@ -255,11 +256,8 @@ export const getScriptData = async (
   }
 };
 
-export const addArweaveHash = async (contractName, contractAddress, hashes) => {
+export const addArweaveHash = async (contractName, contractAddress, hashes,date) => {
   const qosContract: ExtendedContract = getContractWithSigner(contractName, contractAddress);
-
-  const date = new Date();
-
   return qosContract.addHashes(date.toString(), hashes);
 };
 
@@ -295,3 +293,12 @@ const processSchoolData = async (schoolDataArray: any[], tokenIds: any[]) =>
     },
     { schoolData: [], tokenId: [] },
   );
+
+  export const tokenIdToSchoolId = async(tokenId:string) =>{
+    const config = new ConfigService();
+    const contractAddress = config.get('GIGA_NFT_CONTENT_ADDRESS');
+    const contract: ExtendedContract = getContractWithSigner('NFTContent', contractAddress);
+    const schoolId = await contract.tokenIdToSchoolId(tokenId);
+    return schoolId
+
+  }

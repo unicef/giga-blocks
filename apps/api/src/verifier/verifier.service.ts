@@ -4,7 +4,7 @@ import { UpdateVerifierDto } from './dto/update-verifier.dto';
 import { HOST_URL } from 'src/constants';
 import { auth, resolver, protocol } from '@iden3/js-iden3-auth';
 import { v4 as uuidv4 } from 'uuid';
-import * as  getRawBody from 'raw-body';
+import * as getRawBody from 'raw-body';
 import { PrismaAppService } from 'src/prisma/prisma.service';
 import * as path from 'path';
 import { UUID } from 'crypto';
@@ -16,17 +16,28 @@ export class VerifierService {
   async getAuthRequest(schoolId: UUID, data: any) {
     const hosturl = HOST_URL;
     const sessionId = uuidv4();
-    const audience = process.env.AUDIENCE_DID
+    const audience = process.env.AUDIENCE_DID;
     const redirect_uri = `${hosturl}/verifier/callback?sessionId=${sessionId}`;
 
     const request = auth.createAuthorizationRequest('verification', audience, redirect_uri);
+
+    const schoolData = await this.prisma.school.findUnique({
+      where: { id: schoolId },
+    });
+
+
     const proofRequest = {
       id: 1,
       circuitId: 'credentialAtomicQuerySigV2',
       query: {
         allowedIssuers: ['*'],
         type: process.env.SCHEMA_TYPE,
-        context:process.env.SCHEMA_CONTEXT_URL
+        context: process.env.SCHEMA_CONTEXT_URL,
+        credentialSubject: {
+          'country': {
+            $eq: schoolData?.country,
+          },
+        },
       },
     };
     const scope = data?.scope ?? [];
@@ -46,12 +57,13 @@ export class VerifierService {
   }
 
   async callback(req) {
+    console.log('here at the callback');
     let authResponse;
 
     const sessionId = req?.query.sessionId;
     const raw = req.body;
     const tokenStr = raw.toString().trim();
-    const keyDir = 'apps/api/src/verifier/keys';
+    const keyDir = './keys';
 
     const resolvers = {
       // ['polygon:amoy']: new resolver.EthStateResolver(
@@ -59,7 +71,7 @@ export class VerifierService {
       //   '0x1a4cC30f2aA0377b0c3bc9848766D90cb4404124',
       // ),
       [process.env.RESOLVER_NETWORK]: new resolver.EthStateResolver(
-       process.env.RESOLVER_URL,
+        process.env.RESOLVER_URL,
         process.env.RESOLVER_ADDRESS,
       ),
     };
@@ -70,7 +82,7 @@ export class VerifierService {
 
     const verifier = await auth.Verifier.newVerifier({
       stateResolver: resolvers,
-      circuitsDir: path.join(process.cwd(), keyDir),
+      circuitsDir: path.join(__dirname, keyDir),
       ipfsGatewayURL: 'https://ipfs.io',
     });
     try {

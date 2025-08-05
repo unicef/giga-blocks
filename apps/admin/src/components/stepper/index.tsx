@@ -142,6 +142,7 @@ export default function HorizontalLinearStepper({
         if (res?.data?.mintedCount === res?.data?.total || res?.data?.mintingCount === 0) {
           localStorage.removeItem(currentCsvUploadId);
           setDisableDropZone(false);
+          setFiles([]);
         }
       } catch (err) {
         console.error('Error fetching minted status', err);
@@ -401,7 +402,7 @@ export default function HorizontalLinearStepper({
           >
             <Button
               variant="outlined"
-              disabled={isFileValidated} // Disable back button once validated
+              // disabled={isFileValidated} // Disable back button once validated
               color="inherit"
               onClick={handleBack}
               sx={{ mr: 1 }}

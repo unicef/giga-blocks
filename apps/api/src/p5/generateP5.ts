@@ -3,7 +3,7 @@ import puppeteer from 'puppeteer';
 
 interface scriptData {
   tokenId: number;
-  nftcontents:any;
+  nftcontents: any;
   baseImage1: string;
   baseImage2: string;
   tokenHash: string;
@@ -26,24 +26,23 @@ async function generateP5Image(
   const coverage_availability_value = scriptData.nftcontents.coverage_availabitlity || true;
   const electricity_availability_value = scriptData.nftcontents.electricity_availabilty || true;
   //need to identify the tokenData
-  let tokenData:any ={};
+  let tokenData: any = {};
   tokenData.hash = scriptData.tokenHash;
   tokenData.tokenId = Number(scriptData.tokenId);
-  
 
   page
-  // .on("console", (message) =>
-  //   console.log(
-  //     `${message.type().substr(0, 3).toUpperCase()} ${message.text()}`
-  //   )
-  // )
-  // .on("pageerror", ({ message }) => console.log(message))
-  // .on("response", (response) =>
-  //   console.log(`${response.status()} ${response.url()}`)
-  // )
-  .on("requestfailed", (request:any) =>
-    console.log(`${request.failure().errorText} ${request.url()}`)
-  );
+    // .on("console", (message) =>
+    //   console.log(
+    //     `${message.type().substr(0, 3).toUpperCase()} ${message.text()}`
+    //   )
+    // )
+    // .on("pageerror", ({ message }) => console.log(message))
+    // .on("response", (response) =>
+    //   console.log(`${response.status()} ${response.url()}`)
+    // )
+    .on('requestfailed', (request: any) =>
+      console.log(`${request.failure().errorText} ${request.url()}`),
+    );
 
   const dataUrl = `
     <!DOCTYPE html>
@@ -70,8 +69,8 @@ async function generateP5Image(
     </html>`;
 
   await page.setContent(dataUrl, { waitUntil: 'domcontentloaded' });
-  
- // Wait for the canvas to render
+
+  // Wait for the canvas to render
   await page.waitForTimeout(5000);
 
   // page.on("console", (message) =>
@@ -83,12 +82,20 @@ async function generateP5Image(
   // .on("response", (response) =>
   //   console.log(`${response.status()} ${response.url()}`)
   // )
-  page.on("requestfailed", (request:any) =>
-    console.log(`${request.failure().errorText} ${request.url()}`)
+  page.on('requestfailed', (request: any) =>
+    console.log(`${request.failure().errorText} ${request.url()}`),
   );
 
-
   await page.setViewport({ width: 670, height: 800 });
+  await page.addStyleTag({
+    content: `
+    html, body {
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: hidden !important; /* Prevents scrollbars if content slightly overflows */
+    }
+  `,
+  });
   const screenshot = await page.screenshot({ encoding: 'base64' });
 
   await browser.close();

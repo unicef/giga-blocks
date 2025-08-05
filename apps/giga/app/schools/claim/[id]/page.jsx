@@ -53,7 +53,7 @@ export default function SchoolDetails({ params }) {
     useThemeStore.getState().resetTheme();
 
     if (!data) return;
-    if (data.schoolClaimed === true) router.push(`/schools/${id}`);
+    // if (data.schoolClaimed === true) router.push(`/schools/${id}`);
 
     const { colorScheme } = data.theme || {};
     const fontColor = colorScheme?.fontColor || defaultFontColor;
@@ -129,7 +129,12 @@ export default function SchoolDetails({ params }) {
         <Link href="/schools" className="school-details__back">
           <ArrowLeft size={20} /> Back
         </Link>
-        <ClaimNFT />
+        <ClaimNFT
+          countryName={countryName}
+          name={data?.name}
+          tokenId={tokenId}
+          updatedAt={data?.updatedAt}
+        />
 
         <div className="school-details__content">
           <div className="school-details__main">
