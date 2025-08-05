@@ -1,0 +1,147 @@
+trigger:
+  branches:
+    include:
+    - stg
+  paths:
+    exclude:
+    - apps/**
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  imageTag: '$(Build.BuildId)'
+  system.debug: true
+  CI: false
+
+stages:
+- stage: Build
+  displayName: 'GIGA Blocks root build'
+  jobs:
+  - job: Build
+    displayName: 'GIGA Blocks root build job'
+
+    steps:
+    - checkout: self
+      fetchTags: true
+
+    - task: DownloadSecureFile@1
+      inputs:
+        secureFile: '.env.stg.giga-blocks'
+
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(Agent.TempDirectory)'
+        Contents: '.env.stg.giga-blocks'
+        TargetFolder: '$(Build.SourcesDirectory)'
+
+    - script: |
+        mv .env.stg.giga-blocks .env
+      displayName: 'create .env file'
+
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '20.x'
+      displayName: 'Use Node.js'
+
+    - script: |
+        npm install -g pnpm@8.14.1
+        pnpm install
+        pnpm run api:app:generate
+        pnpm run api:news:generate
+        pnpm build
+      displayName: 'install dependencies and build apps'
+
+    - task: Docker@2
+      displayName: Login to container Registry
+      inputs:
+        command: login
+        containerRegistry: $(ACR_SERVICE_CONNECTION)
+
+    - task: Docker@2
+      displayName: Build and push API image to container registry
+      inputs:
+        command: buildAndPush
+        repository: 'giga-blocks-root-api'
+        dockerfile: './Dockerfile.api'
+        containerRegistry: $(ACR_SERVICE_CONNECTION)
+        tags: |
+          $(imageTag)
+
+    - task: Docker@2
+      displayName: Build and push admin image to container registry
+      inputs:
+        command: buildAndPush
+        repository: 'giga-blocks-root-admin'
+        dockerfile: './Dockerfile.admin'
+        containerRegistry: $(ACR_SERVICE_CONNECTION)
+        tags: |
+          $(imageTag)
+
+    - task: Docker@2
+      displayName: Build and push web image to container registry
+      inputs:
+        command: buildAndPush
+        repository: 'giga-blocks-root-web'
+        dockerfile: './Dockerfile.giga'
+        containerRegistry: $(ACR_SERVICE_CONNECTION)
+        tags: |
+          $(imageTag)
+
+    - task: Docker@2
+      displayName: Build and push webhook image to container registry
+      inputs:
+        command: buildAndPush
+        repository: 'giga-blocks-root-webhook'
+        dockerfile: './Dockerfile.webhook'
+        containerRegistry: $(ACR_SERVICE_CONNECTION)
+        tags: |
+          $(imageTag)
+
+- stage: Deploy
+  displayName: 'GIGA Blocks v2 deploy'
+  jobs:
+  - job: Deploy
+    displayName: GIGA Blocks v2 deploy job
+    steps:
+    - task: HelmDeploy@0
+      displayName: 'Add the Postgresql dependency repository'
+      enabled: true
+      inputs:
+        connectionType: Kubernetes Service Connection
+        kubernetesServiceEndpoint: $(K8S_SERVICE_CONNECTION)
+        command: 'repo'
+        arguments: 'add postgresql https://charts.bitnami.com/bitnami'
+        namespace: $(KUBERNETES_NAMESPACE)
+
+    - task: DownloadSecureFile@1
+      inputs:
+        secureFile: 'giga-blocks-v2.values.stg.yaml'
+
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(Agent.TempDirectory)'
+        Contents: 'giga-blocks-v2.values.stg.yaml'
+        TargetFolder: '$(Build.SourcesDirectory)/giga-blocks-helm'
+
+    - script: |
+        mv giga-blocks-helm/giga-blocks-v2.values.stg.yaml giga-blocks-helm/values.stg.yaml
+
+    - task: HelmDeploy@0
+      displayName: 'Deploy the staging Giga Blocks v2 application'
+      inputs:
+        connectionType: Kubernetes Service Connection
+        kubernetesServiceEndpoint: $(K8S_SERVICE_CONNECTION)
+        command: upgrade
+        chartType: FilePath
+        chartPath: $(Build.SourcesDirectory)/giga-blocks-helm
+        releaseName: "giga-blocks"
+        valueFile: giga-blocks-helm/values.stg.yaml
+        namespace: $(KUBERNETES_NAMESPACE)
+        arguments: >
+          --dependency-update
+          --wait
+          --set api.image.tag=$(imageTag)
+          --set web.image.tag=$(imageTag)
+          --set admin.image.tag=$(imageTag)
+          --set webhook.image.tag=$(imageTag)
