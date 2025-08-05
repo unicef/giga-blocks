@@ -206,7 +206,12 @@ export const useSchoolGetImageUpdateList = ({
       return data;
     },
     {
-      keepPreviousData: false,
+      keepPreviousData: true,
+      enabled: !!page && !!perPage,
+      staleTime: 1 * 60 * 1000,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
     }
   );
 };

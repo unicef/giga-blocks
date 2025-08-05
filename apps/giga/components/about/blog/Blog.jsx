@@ -37,7 +37,7 @@ export default function Blog({ showHeader = true, className = '' }) {
               on-chain.
             </h2>
             <p className="about-blog__subtitle">
-              Explore our latest thoughts and updates below
+              Explore our latest thoughts and updates from our blogs.
             </p>
           </div>
         )}

@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
-  const dev = process.env.NEXT_PUBLIC_ENVIRONMENT === 'development';
+  // const dev = process.env.NEXT_PUBLIC_ENVIRONMENT === 'development';
+  const dev = true; // For testing purposes, set to true
 
   const cspHeader = `
     default-src 'self';

@@ -36,10 +36,12 @@
   @include type-style('heading-04');
   color: $gray-100;
   margin-bottom: $spacing-05;
-  max-width: 800px;
-
+  font-size: 2.8rem;
+  // max-width: 800px;
   @include breakpoint-down(md) {
     @include type-style('heading-03');
+    font-size: 2.5rem;
+    font-weight: 600;
   }
 }
 

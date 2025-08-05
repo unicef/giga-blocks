@@ -48,7 +48,9 @@ async function main(): Promise<void> {
 
   const addTaskToQueue = async (transactionDetails: any): Promise<void> => {
     try {
+      console.log('Adding task to queue with transaction details:', transactionDetails);
       await webHookQueue.add('PROCESS_SUCCESS_TXN',{transactionDetails}, {});
+      console.log('Task added to queue successfully');
     } catch (error) {
       console.error('Error adding task to queue:', error);
     }
@@ -75,6 +77,8 @@ async function main(): Promise<void> {
           'First Log Topics:',
           webhookEvent.event.data.logs[0].topics
         );
+        console.log("Status",
+          webhookEvent.event.data.block.logs[0].transaction.status)
       }
 
       const transactionDetails = {

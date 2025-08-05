@@ -43,7 +43,7 @@ import { QueuesModule } from './queues/queues.module';
         return {
           stores: [
             new Keyv({
-              store: new CacheableMemory({ ttl: 120000, lruSize: 5000 }),
+              store: new CacheableMemory({ ttl: 360000, lruSize: 5000 }),
             }),
             createKeyv(redisUrl),
           ],
