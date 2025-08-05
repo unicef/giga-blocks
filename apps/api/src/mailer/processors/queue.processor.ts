@@ -159,8 +159,9 @@ export class QueueProcessor {
     this._logger.log(`Sending transaction to blockchain`);
     const email = job.data.email;
     const walletAddress = job.data.walletAddress;
+    const schoolId = job.data.schoolId;
     try {
-      const tx = await claimNft(walletAddress, email);
+      const tx = await claimNft(walletAddress, email,schoolId);
       const txReceipt = await tx.wait();
       if (txReceipt.status == 1) {
         this.contributorService.claimNft(job.data.email, job.data.walletAddress, job.data.schoolId);
