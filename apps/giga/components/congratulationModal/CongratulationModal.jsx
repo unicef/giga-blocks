@@ -55,7 +55,7 @@ export default function CongratulationModal({
         preventCloseOnClickOutside={false}
         passiveModal
         hasCloseIcon={false}
-        onRequestClose={() => setOpen(true)}
+        onRequestClose={onClose}
         className="nft-claimed-non-paying-modal"
       >
         <div className="school-nft-claimed-non-paying">
@@ -64,8 +64,7 @@ export default function CongratulationModal({
           </div>
           <h2 className="congrats-text">NFT Claimed Successfully 🎉</h2>
           <p className="sub-text">
-            Your Juneli English Boarding School NFT has been transferred to your
-            wallet
+            Your {name} NFT has been transferred to your wallet
           </p>
 
           <div className="nft-claim-box">
@@ -85,7 +84,7 @@ export default function CongratulationModal({
               </div>
               <div className="nft-claim-details">
                 <p>Token ID:</p>
-                <p>{tokenId}</p>
+                <p>{Number(tokenId)}</p>
               </div>
             </div>
           </div>

@@ -29,7 +29,7 @@ export default function ClaimNFT({ name, countryName, tokenId, updatedAt }) {
   const [showSchoolClaim, setShowSchoolClaim] = useState(false);
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [showClaimModal, setShowClaimModal] = useState(true);
+  const [showClaimModal, setShowClaimModal] = useState(false);
   const containerRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
@@ -123,6 +123,11 @@ export default function ClaimNFT({ name, countryName, tokenId, updatedAt }) {
       }
     );
   };
+
+  const handleClose =() =>{
+    setShowClaimModal(false);
+    router.push(`/schools/${id}`)
+  }
 
   return (
     <>
@@ -235,7 +240,7 @@ export default function ClaimNFT({ name, countryName, tokenId, updatedAt }) {
       </div>
       <CongratulationModal
         open={showClaimModal}
-        onClose={() => setShowClaimModal(false)}
+        onClose={() => handleClose()}
         id={id}
         name={name}
         countryName={countryName}
