@@ -16,6 +16,7 @@ import { useSearchParams } from 'next/navigation';
 import { useThemeGet } from '../../../hooks/useTheme';
 import ClaimNFT from '../../../../components/ClaimNFT/ClaimNft';
 import DetailsLoading from '../../../../components/detailsLoading/DetailsLoading';
+import SchoolNotFound from '../../../school-not-found';
 import { useReadNftContentSchoolIdToTokenId } from '../../../hooks/useContract/nftContent';
 import { useReadNftOwnerOf } from '../../../hooks/useContract/gigaNft';
 import { useRouter } from 'next/navigation';
@@ -53,7 +54,8 @@ export default function SchoolDetails({ params }) {
     useThemeStore.getState().resetTheme();
 
     if (!data) return;
-    if (data.schoolClaimed === true || data.minted !='MINTED') router.push(`/schools/${id}`);
+    if (data.schoolClaimed === true || data.minted != 'MINTED')
+      router.push(`/schools/${id}`);
 
     const { colorScheme } = data.theme || {};
     const fontColor = colorScheme?.fontColor || defaultFontColor;
@@ -116,6 +118,8 @@ export default function SchoolDetails({ params }) {
     ? theme?.colorScheme?.bgColor || '#fff'
     : themeOptions?.find((t) => t.name === selectedTheme)?.colorScheme
         .bgColor || '#fff';
+
+  if (!isLoading && !data) return <SchoolNotFound />;
 
   if (isLoading || !data) return <DetailsLoading />;
   return (
