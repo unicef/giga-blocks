@@ -34,7 +34,7 @@ export default function SchoolCard({
       <div className="school-card__image">
         {minted === 'MINTED' ? (
           <Image
-            src={`https://ipfs.io/ipfs/${imageHash}`}
+            src={`https://ipfs.io/ipfs/${imageHash?.replace("ipfs://","")}`}
             alt={`Image of ${schoolName}`}
             width={400}
             height={300}
