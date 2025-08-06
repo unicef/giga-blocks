@@ -66,6 +66,10 @@ export default function ActivationModal({
     );
   };
 
+  const handleContributors =() =>{
+    router.push('/about#contributors')
+  }
+
   useEffect(() => {
     if (!contributorData) return;
     if (contributorData?.isVisible === true) {
@@ -179,7 +183,7 @@ export default function ActivationModal({
             >
               Visit School Details
             </Button>
-            <Button kind="ghost" className="contributor-button">
+            <Button kind="ghost" className="contributor-button" onClick={handleContributors}>
               View Giga Contributors list
             </Button>
           </div>
