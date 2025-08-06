@@ -101,7 +101,7 @@ const Sidebar = ({
           <div className="school-details__minted-image-wrapper">
             {!imageError ? (
               <Image
-                src={`https://ipfs.io/ipfs/${imageHash}`}
+                src={`https://ipfs.io/ipfs/${imageHash?.replace('ipfs://','')}`}
                 alt="School generated image"
                 fill
                 style={{ objectFit: 'cover' }}
