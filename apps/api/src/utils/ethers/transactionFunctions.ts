@@ -23,7 +23,7 @@ interface ExtendedContract extends BaseContract {
   tokenIdToTokenHash?: (tokenId: string | ContractTransactionResponse) => any;
   addHashes?: (date: string, hashes: string[]) => ContractTransactionResponse;
   reserveNft?: (schoolId: string, email: string) => ContractTransactionResponse;
-  transfeReservedNft?: (walletAddress: string, email: string) => ContractTransactionResponse;
+  transfeReservedNft?: (walletAddress: string, email: string, tokenId:string) => ContractTransactionResponse;
   tokenIdToSchoolId?:(tokenId:string | ContractTransactionResponse,) =>ContractTransactionResponse;
 }
 
@@ -274,11 +274,17 @@ export const reserveNft = async (schoolId: string, email: string) => {
   return contract.reserveNft(tokenId, email);
 };
 
-export const claimNft = async (walletAddress: string, email: string) => {
+export const claimNft = async (walletAddress: string, email: string,schoolId:string) => {
   const config = new ConfigService();
   const contractAddress = config.get('NEXT_PUBLIC_GIGA_COLLECTOR_ESCROW_ADDRESS');
   const contract: ExtendedContract = getContractWithSigner('Escrow', contractAddress);
-  return contract.transfeReservedNft(walletAddress, email);
+  const res = await getTokenIdSchool(
+    'NFTContent',
+    config.get('GIGA_NFT_CONTENT_ADDRESS'),
+    schoolId,
+  );
+  const tokenId = res.toString(); 
+   return contract.transfeReservedNft(walletAddress, email,tokenId);
 };
 
 const processSchoolData = async (schoolDataArray: any[], tokenIds: any[]) =>
