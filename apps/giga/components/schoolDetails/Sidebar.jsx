@@ -32,51 +32,55 @@ const Sidebar = ({
       {minted === 'MINTED' ? (
         <div className="school-details__minted-container">
           <div className="verify-ciw">
-            {!verifiedCIW ? (
-              <p
-                disabled={isVerfierDisabled}
-                onClick={() => {
-                  handleCIWClick();
-                }}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'end',
-                  marginBottom: '12px',
-                  color: isVerfierDisabled ? 'gray' : fontColor,
-                  cursor: isVerfierDisabled ? 'not-allowed' : 'pointer',
-                  opacity: isVerfierDisabled ? 0.6 : 1,
-                  pointerEvents: isVerfierDisabled ? 'none' : 'auto',
-                }}
-              >
-                Verify CIW
-              </p>
-            ) : (
-              <p
-                style={{
-                  display: 'flex',
-                  justifyContent: 'end',
-                  marginBottom: '12px',
-                }}
-              >
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  style={{ marginRight: 6 }}
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle cx="10" cy="10" r="10" fill="#4BB543" />
-                  <path
-                    d="M6 10.5L9 13.5L14 8.5"
-                    stroke="white"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                Verified CIW
-              </p>
+            {!isClaimPath && (
+              <>
+                {!verifiedCIW ? (
+                  <p
+                    disabled={isVerfierDisabled}
+                    onClick={() => {
+                      handleCIWClick();
+                    }}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'end',
+                      marginBottom: '12px',
+                      color: isVerfierDisabled ? 'gray' : fontColor,
+                      cursor: isVerfierDisabled ? 'not-allowed' : 'pointer',
+                      opacity: isVerfierDisabled ? 0.6 : 1,
+                      pointerEvents: isVerfierDisabled ? 'none' : 'auto',
+                    }}
+                  >
+                    Verify CIW
+                  </p>
+                ) : (
+                  <p
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'end',
+                      marginBottom: '12px',
+                    }}
+                  >
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      style={{ marginRight: 6 }}
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle cx="10" cy="10" r="10" fill="#4BB543" />
+                      <path
+                        d="M6 10.5L9 13.5L14 8.5"
+                        stroke="white"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    Verified CIW
+                  </p>
+                )}
+              </>
             )}
 
             {minted === 'MINTED' &&

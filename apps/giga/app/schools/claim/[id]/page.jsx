@@ -53,7 +53,7 @@ export default function SchoolDetails({ params }) {
     useThemeStore.getState().resetTheme();
 
     if (!data) return;
-    // if (data.schoolClaimed === true) router.push(`/schools/${id}`);
+    if (data.schoolClaimed === true || data.minted !='MINTED') router.push(`/schools/${id}`);
 
     const { colorScheme } = data.theme || {};
     const fontColor = colorScheme?.fontColor || defaultFontColor;
