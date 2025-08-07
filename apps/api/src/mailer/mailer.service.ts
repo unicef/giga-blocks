@@ -130,13 +130,17 @@ export class MailService {
     }
   }
 
-  public async sendMagicLink({ email, link }: { email: string; link: string }) {
+  public async sendMagicLink({ email, link ,baseUrl}: { email: string; link: string , baseUrl:string}) {
     try {
+      const aboutLink = `${baseUrl}/about`;
+      const schoolList = `${baseUrl}/schools`;
       await this._mailQueue.add(
         SEND_MAGIC_LINK,
         {
           email,
           link,
+          aboutLink,
+          schoolList
         },
         jobOptions,
       );
