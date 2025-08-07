@@ -164,7 +164,9 @@ export class MailProcessor {
   }
 
   @Process(THANK_YOU_MAIL)
-  public async thankyoumail(job: Job<{ email: string; school: string; link: string }>) {
+  public async thankyoumail(
+    job: Job<{ email: string; school: string; link: string; schoolDetailLink: string,studentNumber:string }>,
+  ) {
     this._logger.log(`Sending thank you email to '${job.data.email}`);
     const weblink = this._configService.get('NEXT_PUBLIC_WEB_NAME');
     const listLink = `${weblink}/schools/list`;
@@ -178,6 +180,8 @@ export class MailProcessor {
         link: job.data.link,
         school: job.data.school,
         listLink,
+        schoolLink: job.data.schoolDetailLink,
+        studentnum:Number(job.data.studentNumber).toLocaleString(),
         emailurl: this._configService.get('REPLY_TO_EMAIL_ADDRESS'),
       },
     });

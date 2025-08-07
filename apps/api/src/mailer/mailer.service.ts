@@ -150,10 +150,14 @@ export class MailService {
     email,
     school,
     link,
+    schoolDetailLink,
+    studentNumber,
   }: {
     email: string;
     school: string;
     link: string;
+    schoolDetailLink: string;
+    studentNumber: string;
   }) {
     try {
       await this._mailQueue.add(
@@ -162,6 +166,8 @@ export class MailService {
           email,
           school,
           link,
+          schoolDetailLink,
+          studentNumber,
         },
         jobOptions,
       );
