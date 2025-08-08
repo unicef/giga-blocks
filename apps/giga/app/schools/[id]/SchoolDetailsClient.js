@@ -233,6 +233,7 @@ export default function SchoolDetailsClient({ params }) {
               cardColor={cardColor}
               minted={minted}
               owner={owner}
+              isTokenLoading={isTokenLoading}
               imageHash={data?.imageHash}
               id={id}
               schoolName={data?.name}
