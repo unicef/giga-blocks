@@ -8,6 +8,7 @@ import SchoolStats from '../../../components/schoolDetails/SchoolStats';
 import ThemeSelector from '../../../components/schoolDetails/SchoolThemes';
 import Sidebar from '../../../components/schoolDetails/Sidebar';
 import DetailsLoading from '../../../components/detailsLoading/DetailsLoading';
+import SchoolNotFound from '../../school-not-found';
 import { useSchoolDetails } from '../../hooks/useSchool';
 import { useGetAuthRequest } from '../../hooks/useCIW';
 import './_schoolDetails.scss';
@@ -68,7 +69,11 @@ export default function SchoolDetailsClient({ params }) {
   const themeStore = useThemeStore();
 
   const handleBack = () => {
-    router.back();
+    if (window.history.length > 2) {
+      router.back();
+    } else {
+      router.push('/');
+    }
   };
 
   const onCloseNotification = () => {
@@ -146,6 +151,9 @@ export default function SchoolDetailsClient({ params }) {
     const timer = setTimeout(() => setMinLoaderDone(true), 1200);
     return () => clearTimeout(timer);
   }, [id]);
+
+    if (!isLoading && !data) return <SchoolNotFound />;
+
 
   if (isLoading || !data || !minLoaderDone) return <DetailsLoading />;
 

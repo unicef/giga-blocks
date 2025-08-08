@@ -939,9 +939,12 @@ export class SchoolService {
     const { email, walletAddress, schoolId } = claimData;
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (!user) {
-      throw new NotFoundException('No contributor found for given email');
+      throw new NotFoundException('No user found for given email');
     }
     const contributor = await this.prisma.contributor.findUnique({ where: { userId: user?.id } });
+    if (!contributor) {
+      throw new NotFoundException('No contributor found for given email');
+    }
     const schoolReserved = await this.prisma.contributorSchoolReservation.findUnique({
       where: {
         contributorId_schoolId: {
@@ -1050,7 +1053,7 @@ export class SchoolService {
 
   async getReservedSchools(query: any) {
     const { page, perPage } = query;
-    const paginate: PaginateFunction = paginator({ page,perPage });
+    const paginate: PaginateFunction = paginator({ page, perPage });
 
     const result = await paginate(
       this.prisma.contributorSchoolReservation,

@@ -17,7 +17,7 @@ export class InformationWorkerController {
   }
 
   @Get()
-  findAll(@Query()query:any) {
+  findAll(@Query() query: any) {
     return this.informationWorkerService.findAll(query);
   }
 
