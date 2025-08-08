@@ -12,6 +12,7 @@ import {
   Alert,
   Card,
   Divider,
+  IconButton,
   Snackbar,
   Switch,
   Table,
@@ -19,9 +20,10 @@ import {
   TableCell,
   TableContainer,
   TableRow,
+  Tooltip,
 } from '@mui/material';
 import { useState } from 'react';
-
+import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 const TABLE_HEAD = [
   { id: 'link', label: 'Link', align: 'left' },
   { id: 'name', label: 'Name', align: 'left' },
@@ -40,12 +42,22 @@ const ActivateSchool = () => {
   const { data, isFetching } = useActivateSchool();
   const { mutate: activateSchool, isLoading: activating } = useActivatePatchSchool();
   const { mutate: deactivateSchool, isLoading: deactivating } = useDeactivatePatchSchool();
+  const [copiedUrl, setCopiedUrl] = useState(null);
   const [snackbar, setSnackbar] = useState<{ open: boolean; message: string }>({
     open: false,
     message: '',
   });
   const tableData = Array.isArray(data) ? data : [];
   const BASE_URL = process.env.NEXT_PUBLIC_WEB_NAME || '';
+
+  const handleCopy = async (id: any, textToCopy: string) => {
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      setCopiedUrl(id);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
 
   const handleStatusToggle = (school: any) => {
     const newStatus = school.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
@@ -57,7 +69,9 @@ const ActivateSchool = () => {
         onSuccess: () => {
           setSnackbar({
             open: true,
-            message: `Event link  ${newStatus === 'ACTIVE' ? 'Activated' : 'Deactivated'} Successfully!`,
+            message: `Event link  ${
+              newStatus === 'ACTIVE' ? 'Activated' : 'Deactivated'
+            } Successfully!`,
           });
           // refetch();
         },
@@ -107,6 +121,26 @@ const ActivateSchool = () => {
                           target="_blank"
                           href={`${BASE_URL}/schools/list?linkActivation=${row.id}`}
                         >{`${BASE_URL}/schools/list?linkActivation=${row.id}`}</a>
+                        {copiedUrl === row.id ? (
+                          <span style={{ marginLeft: 8, fontSize: 12, color: 'green' }}>
+                            Copied!
+                          </span>
+                        ) : (
+                          <Tooltip title="Copy to clipboard">
+                            <IconButton
+                              onClick={() =>
+                                handleCopy(
+                                  row.id,
+                                  `${BASE_URL}/schools/list?linkActivation=${row.id}`
+                                )
+                              }
+                              size="small"
+                              sx={{ marginLeft: 1 }}
+                            >
+                              <ContentCopyOutlinedIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        )}
                       </TableCell>
                       <TableCell align="left">{row.name}</TableCell>
                       <TableCell align="left">
