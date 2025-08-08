@@ -34,7 +34,7 @@ export const useUserGetById = (id:string | undefined | string[]) => {
   }
   ,
     {
-      keepPreviousData: true,
+      keepPreviousData: false,
     }
   )
 }
