@@ -6,8 +6,10 @@
 
 .latest-schools {
   background-color: #ebf2ff; // Light blue/gray background
-  border-radius: 16px;
-  padding: 16px;
+  border-radius: 1px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  // padding: 16px;
 
   @include breakpoint-down(md) {
     padding: $spacing-05;
@@ -23,7 +25,7 @@
 .latest-schools__container {
   padding: 80px 32px;
   background: white;
-  border-radius: 16px;
+  // border-radius: 16px;
 
   @include breakpoint-down(md) {
     padding: $spacing-05;
@@ -59,7 +61,7 @@
 
 .latest-schools__grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: $spacing-05;
   margin-bottom: $spacing-07;
 
