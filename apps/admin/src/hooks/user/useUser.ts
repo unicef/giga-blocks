@@ -28,7 +28,7 @@ export const useUserGet = (page:number, perPage:number, role?:string, debouncedN
 };
 
 export const useUserGetById = (id:string | undefined | string[]) => {
-  return useQuery(['get-single-user'], async () => {
+  return useQuery(['get-single-user',id], async () => {
     const {data} = await api.get(`${routes.USER.GET}/${id}`)
     return data
   }
