@@ -154,7 +154,7 @@ export default function ActivateSchool() {
       !isModalOpen &&
       !modalClosedByUser
     ) {
-      router.push(`/`);
+      router.push(`/schools`);
     } else setLoader(false);
   }, [data, isModalOpen, modalClosedByUser, router, loader]);
 
