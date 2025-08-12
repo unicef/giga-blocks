@@ -247,6 +247,7 @@ export default function ClaimNFT({ name, countryName, tokenId, updatedAt }) {
         countryName={countryName}
         tokenId={tokenId}
         activatedAt={updatedAt}
+        walletAddress={walletAddress}
       />
     </>
   );
