@@ -236,3 +236,13 @@ export const useCountryList = () => {
     }
   );
 };
+
+export const useLatestActivatedSchool = () =>{
+  return useQuery(['get-latest-activated-schools'], async () => {
+    const { data } = await apiGuest.get(`${ENDPOINTS.SCHOOLS.LATESTACTIVATED}`);
+    return data;
+  },
+{
+  keepPreviousData:true
+});
+}

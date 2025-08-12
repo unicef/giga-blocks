@@ -25,11 +25,10 @@ export default function CongratulationModal({
   countryName,
   tokenId,
   activatedAt,
+  walletAddress
 }) {
   const router = useRouter();
   const [copied, setCopied] = useState(false);
-  const { address } = useAccount();
-  const walletAddress = '0x1234567890abcdef';
   const [hovered, setHovered] = useState(false);
   const { width, height } = useWindowDimensions();
 
@@ -40,8 +39,8 @@ export default function CongratulationModal({
   };
 
   const handleCopy = () => {
-    if (address) {
-      navigator.clipboard.writeText(address).then(() => {
+    if (walletAddress) {
+      navigator.clipboard.writeText(walletAddress).then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 1000);
       });
@@ -151,7 +150,7 @@ export default function CongratulationModal({
                 position: 'relative',
               }}
             >
-              {address?.slice(0, 4) + '...' + address?.slice(35, 43)}
+              {walletAddress?.slice(0, 4) + '...' + walletAddress?.slice(35, 43)}
               {copied ? (
                 <TaskComplete
                   size={24}
