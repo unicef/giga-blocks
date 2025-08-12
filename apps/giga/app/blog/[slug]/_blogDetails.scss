@@ -101,9 +101,9 @@
 }
 
 .blog-post__intro {
-  font-size: 18px;
+  // font-size: 18px;
   line-height: 1.6;
-  margin-bottom: 24px;
+  margin-bottom: 1rem;
   color: $gray-90;
 }
 
@@ -118,7 +118,7 @@
   color: $gray-100;
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  // gap: 8px;
 }
 
 .blog-post__section-number {
@@ -162,4 +162,12 @@
       margin-bottom: 0;
     }
   }
+}
+
+.main-text {
+  font-weight: bold;
+}
+
+.secondary-text {
+  color: #777;
 }
