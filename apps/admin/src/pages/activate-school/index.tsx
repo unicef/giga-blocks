@@ -24,6 +24,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
+import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 const TABLE_HEAD = [
   { id: 'link', label: 'Link', align: 'left' },
   { id: 'name', label: 'Name', align: 'left' },
@@ -122,9 +123,11 @@ const ActivateSchool = () => {
                           href={`${BASE_URL}/schools/list?linkActivation=${row.id}`}
                         >{`${BASE_URL}/schools/list?linkActivation=${row.id}`}</a>
                         {copiedUrl === row.id ? (
-                          <span style={{ marginLeft: 8, fontSize: 12, color: 'green' }}>
-                            Copied!
-                          </span>
+                          <Tooltip title="Copied">
+                            <IconButton size="small" sx={{ marginLeft: 1 }}>
+                              <CheckCircleOutlineOutlinedIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
                         ) : (
                           <Tooltip title="Copy to clipboard">
                             <IconButton
