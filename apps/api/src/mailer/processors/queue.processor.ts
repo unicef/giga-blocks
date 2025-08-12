@@ -641,16 +641,18 @@ export class ImageProcessor {
 
       if (decodedImage) {
         const uploadResult = await uploadFile(decodedImage.data);
+        const imageLink = `ipfs://${uploadResult}`
+
         await updateImageHash(
           'NFTContent',
           this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-          uploadResult,
+          imageLink,
           id,
         );
         await this._prismaService.school.update({
           where: { giga_school_id: id },
           data: {
-            imageHash: uploadResult,
+            imageHash: imageLink,
             imageUpdated: true,
             imageGeneration: ImageGenerationStatus.SUCESS,
           },
@@ -816,9 +818,10 @@ export class BulkImageProcessor {
 
       if (decodedImage) {
         const uploadResult = await uploadFile(decodedImage.data);
+        const imageLink = `ipfs://${uploadResult}`
         await this._prismaService.school.update({
           where: { giga_school_id: id },
-          data: { imageHash: uploadResult, imageGeneration: ImageGenerationStatus.SUCESS },
+          data: { imageHash: imageLink, imageGeneration: ImageGenerationStatus.SUCESS },
         });
       } else {
         throw new Error('Failed to decode base64 image.');

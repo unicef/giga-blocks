@@ -124,10 +124,10 @@ export default function ClaimNFT({ name, countryName, tokenId, updatedAt }) {
     );
   };
 
-  const handleClose =() =>{
+  const handleClose = () => {
     setShowClaimModal(false);
-    router.push(`/schools/${id}`)
-  }
+    router.push(`/schools/${id}`);
+  };
 
   return (
     <>
@@ -177,10 +177,11 @@ export default function ClaimNFT({ name, countryName, tokenId, updatedAt }) {
               {showSuccess && (
                 <InlineNotification
                   kind="success"
-                  subtitle="Magic link has been sent to your email."
+                  subtitle={`Magic link sent to: ${email}. Please check your inbox and spam folder. 
+                  If you didn’t receive the link, try again after 24 hours.`}
                   lowContrast
                   onCloseButtonClick={() => setShowSuccess(false)}
-                  timeout={5000}
+                  timeout={3000}
                   style={{ marginTop: '16px' }}
                 />
               )}
@@ -246,6 +247,7 @@ export default function ClaimNFT({ name, countryName, tokenId, updatedAt }) {
         countryName={countryName}
         tokenId={tokenId}
         activatedAt={updatedAt}
+        walletAddress={walletAddress}
       />
     </>
   );

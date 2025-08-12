@@ -14,9 +14,9 @@ export const useSchoolGet = (
   electricity,
   connectivityStatus,
   connectionType,
-  students,
-  teachers,
-  computers,
+  // students,
+  // teachers,
+  // computers,
   download,
   enabled = true
 ) => {
@@ -32,9 +32,9 @@ export const useSchoolGet = (
       electricity,
       connectivityStatus,
       connectionType,
-      students,
-      teachers,
-      computers,
+      // students,
+      // teachers,
+      // computers,
       download,
     ],
     async () => {
@@ -54,9 +54,9 @@ export const useSchoolGet = (
       if (connectionType && connectionType !== 'all')
         params.set('connectionType', connectionType);
 
-      if (students && students > 0) params.set('students', students);
-      if (teachers && teachers > 0) params.set('teachers', teachers);
-      if (computers && computers > 0) params.set('computers', computers);
+      // if (students && students > 0) params.set('students', students);
+      // if (teachers && teachers > 0) params.set('teachers', teachers);
+      // if (computers && computers > 0) params.set('computers', computers);
       if (download && download > 0) params.set('download', download);
 
       const { data } = await apiGuest.get(
@@ -134,9 +134,9 @@ export const useSchoolInfiniteGet = (
   electricity,
   connectivityStatus,
   connectionType,
-  students,
-  teachers,
-  computers,
+  // students,
+  // teachers,
+  // computers,
   download,
   enabled = true
 ) => {
@@ -151,9 +151,9 @@ export const useSchoolInfiniteGet = (
       electricity,
       connectivityStatus,
       connectionType,
-      students,
-      teachers,
-      computers,
+      // students,
+      // teachers,
+      // computers,
       download,
     ],
     async ({ pageParam = 1 }) => {
@@ -173,9 +173,9 @@ export const useSchoolInfiniteGet = (
       if (connectionType && connectionType !== 'all')
         params.set('connectionType', connectionType);
 
-      if (students && students > 0) params.set('students', students);
-      if (teachers && teachers > 0) params.set('teachers', teachers);
-      if (computers && computers > 0) params.set('computers', computers);
+      // if (students && students > 0) params.set('students', students);
+      // if (teachers && teachers > 0) params.set('teachers', teachers);
+      // if (computers && computers > 0) params.set('computers', computers);
       if (download && download > 0) params.set('download', download);
 
       const res = await apiGuest.get(
@@ -236,3 +236,13 @@ export const useCountryList = () => {
     }
   );
 };
+
+export const useLatestActivatedSchool = () =>{
+  return useQuery(['get-latest-activated-schools'], async () => {
+    const { data } = await apiGuest.get(`${ENDPOINTS.SCHOOLS.LATESTACTIVATED}`);
+    return data;
+  },
+{
+  keepPreviousData:true
+});
+}

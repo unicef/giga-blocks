@@ -5,9 +5,8 @@ import { Modal, Checkbox, Button, TextInput } from '@carbon/react';
 import {
   CheckmarkFilled,
   LogoFacebook,
-  LogoInstagram,
   LogoLinkedin,
-  LogoTwitter,
+  LogoX,
   Wallet,
   ArrowRight,
 } from '@carbon/icons-react';
@@ -65,6 +64,12 @@ export default function ActivationModal({
       }
     );
   };
+
+  const handleContributors = () => {
+    router.push('/about#contributors');
+  };
+
+  const currentPageUrl = `${process.env.NEXT_PUBLIC_WEB_NAME}/schools/${id}`;
 
   useEffect(() => {
     if (!contributorData) return;
@@ -125,7 +130,6 @@ export default function ActivationModal({
                 className="socialIcon"
                 aria-label="Share on Facebook"
                 onClick={() => {
-                  const currentPageUrl = window.location.href;
                   window.open(
                     `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
                       currentPageUrl
@@ -139,11 +143,29 @@ export default function ActivationModal({
               {/* <button className="socialIcon" aria-label="Share on Instagram">
                 <LogoInstagram size={24} />
               </button> */}
-              <button className="socialIcon" aria-label="Share on LinkedIn">
+              <button
+                className="socialIcon"
+                aria-label="Share on LinkedIn"
+                onClick={() => {
+                  window.open(
+                    `https://www.linkedin.com/sharing/share-offsite/?text=${encodeURIComponent(
+                    currentPageUrl
+                  )}`
+                  )
+                }}
+              >
                 <LogoLinkedin size={24} />
               </button>
-              <button className="socialIcon" aria-label="Share on Twitter">
-                <LogoTwitter size={24} />
+              <button className="socialIcon" aria-label="Share on Twitter"
+              onClick={()=>{
+                window.open(
+                  `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                    currentPageUrl
+                  )}`
+                )
+              }}
+              >
+                <LogoX size={24} />
               </button>
             </div>
           </div>
@@ -179,7 +201,11 @@ export default function ActivationModal({
             >
               Visit School Details
             </Button>
-            <Button kind="ghost" className="contributor-button">
+            <Button
+              kind="ghost"
+              className="contributor-button"
+              onClick={handleContributors}
+            >
               View Giga Contributors list
             </Button>
           </div>

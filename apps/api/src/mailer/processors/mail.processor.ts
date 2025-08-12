@@ -148,7 +148,7 @@ export class MailProcessor {
   }
 
   @Process(SEND_MAGIC_LINK)
-  public async emailValidationMail(job: Job<{ email: string; link: string }>) {
+  public async emailValidationMail(job: Job<{ email: string; link: string, aboutLink:string, schoolList:string }>) {
     this._logger.log(`Sending email validation email to '${job.data.email}'`);
     return this._mailerService.sendMail({
       to: job.data.email,
@@ -159,12 +159,16 @@ export class MailProcessor {
         email: job.data.email,
         link: job.data.link,
         emailurl: this._configService.get('REPLY_TO_EMAIL_ADDRESS'),
+        aboutLink:job.data.aboutLink,
+        schoolList:job.data.schoolList
       },
     });
   }
 
   @Process(THANK_YOU_MAIL)
-  public async thankyoumail(job: Job<{ email: string; school: string; link: string }>) {
+  public async thankyoumail(
+    job: Job<{ email: string; school: string; link: string; schoolDetailLink: string,studentNumber:string }>,
+  ) {
     this._logger.log(`Sending thank you email to '${job.data.email}`);
     const weblink = this._configService.get('NEXT_PUBLIC_WEB_NAME');
     const listLink = `${weblink}/schools/list`;
@@ -178,6 +182,8 @@ export class MailProcessor {
         link: job.data.link,
         school: job.data.school,
         listLink,
+        schoolLink: job.data.schoolDetailLink,
+        studentnum:Number(job.data.studentNumber).toLocaleString(),
         emailurl: this._configService.get('REPLY_TO_EMAIL_ADDRESS'),
       },
     });

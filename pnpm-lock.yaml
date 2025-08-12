@@ -53,6 +53,9 @@ importers:
       '@keyv/redis':
         specifier: ^4.3.1
         version: 4.6.0(keyv@5.4.0)
+      '@mui/icons-material':
+        specifier: ^7.3.1
+        version: 7.3.1(@mui/material@5.11.10)(@types/react@18.2.21)(react@18.2.0)
       '@mui/lab':
         specifier: 5.0.0-alpha.120
         version: 5.0.0-alpha.120(@emotion/react@11.10.6)(@emotion/styled@11.10.6)(@mui/material@5.11.10)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)
@@ -2191,6 +2194,11 @@ packages:
   /@babel/runtime@7.27.6:
     resolution: {integrity: sha512-vbavdySgbTTrmFE+EsiqUTzlOr5bzlnJtUv9PynGCAKvfQqjIXbvFdumPM/GxMDfyuGMJaJAU6TO4zc1Jf1i8Q==}
     engines: {node: '>=6.9.0'}
+
+  /@babel/runtime@7.28.2:
+    resolution: {integrity: sha512-KHp2IflsnGywDjBWDkR9iEqiWSpc8GIi0lgTT3mOElT0PP1tG26P4tmFI2YvAdzgq9RGyoHZQEIEdZy6Ec5xCA==}
+    engines: {node: '>=6.9.0'}
+    dev: false
 
   /@babel/template@7.27.2:
     resolution: {integrity: sha512-LPDZ85aEJyYSd18/DkjNh4/y1ntkE5KwUHWTiqgRxruuZL2F1yuHligVHLvcHY2vMHXttKFpJn6LwfI7cw7ODw==}
@@ -4953,6 +4961,23 @@ packages:
 
   /@mui/core-downloads-tracker@5.18.0:
     resolution: {integrity: sha512-jbhwoQ1AY200PSSOrNXmrFCaSDSJWP7qk6urkTmIirvRXDROkqe+QwcLlUiw/PrREwsIF/vm3/dAXvjlMHF0RA==}
+    dev: false
+
+  /@mui/icons-material@7.3.1(@mui/material@5.11.10)(@types/react@18.2.21)(react@18.2.0):
+    resolution: {integrity: sha512-upzCtG6awpL6noEZlJ5Z01khZ9VnLNLaj7tb6iPbN6G97eYfUTs8e9OyPKy3rEms3VQWmVBfri7jzeaRxdFIzA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@mui/material': ^7.3.1
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.28.2
+      '@mui/material': 5.11.10(@emotion/react@11.10.6)(@emotion/styled@11.10.6)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)
+      '@types/react': 18.2.21
+      react: 18.2.0
     dev: false
 
   /@mui/lab@5.0.0-alpha.120(@emotion/react@11.10.6)(@emotion/styled@11.10.6)(@mui/material@5.11.10)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0):

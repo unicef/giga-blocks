@@ -56,9 +56,13 @@ export class ContributorService {
       });
     }
     const school = await this.prisma.school.findFirst({ where: { id: data?.schoolReserved } });
-    const schoolLink = `${Link}/schools/claim/${school?.id}`;
+    const mapsData = school?.giga_maps_data as any;
+    const studentNumber = mapsData?.num_students;
+    const claimLink = `${Link}/schools/claim/${school?.id}`;
+    const schoolLink = `${Link}/schools/${school?.id}`;
 
-    await this.mailService.sendThankYouMail({ email, school: school.name, link: schoolLink });
+
+    await this.mailService.sendThankYouMail({ email, school: school.name, link: claimLink, schoolDetailLink:schoolLink,studentNumber });
   }
 
   async listContributors() {
