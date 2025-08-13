@@ -15,6 +15,7 @@ export const ENDPOINTS = {
     CLAIM: '/schools/claimSchool',
     PAIDACTIVATION: '/schools/activateSchool',
     COUNTRIES: '/schools/countries',
+    LATESTACTIVATED:'/schools/latest'
   },
 
   OTP: {

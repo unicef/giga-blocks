@@ -76,7 +76,8 @@ export default function SchoolSearch({ linkActivation }) {
     if (filters.download) setStagedDownload([0, { value: filters.download }]);
     else setStagedDownload([0, { value: 0 }]);
 
-    if (filters.connectivityStatus) setStagedConnected(filters.connectivityStatus);
+    if (filters.connectivityStatus)
+      setStagedConnected(filters.connectivityStatus);
     else setStagedConnected('all');
     if (filters.connectionType) setStagedConnectionType(filters.connectionType);
     else setStagedConnectionType('all');
@@ -84,7 +85,6 @@ export default function SchoolSearch({ linkActivation }) {
     else setStagedElectricity('all');
     if (filters.water) setStagedWater(filters.water);
     else setStagedWater('all');
-
   }, [filters]);
 
   useEffect(() => {
@@ -143,7 +143,7 @@ export default function SchoolSearch({ linkActivation }) {
     // students[1].value,
     // teachers[1].value,
     // computers[1].value,
-    download[1].value, 
+    download[1].value,
     true
   );
 
@@ -191,7 +191,6 @@ export default function SchoolSearch({ linkActivation }) {
   // Add state to track filter changes
   const [isFilterChanging, setIsFilterChanging] = useState(false);
 
-  
   useEffect(() => {
     if (isFilterChanging && !isLoading) {
       setIsFilterChanging(false);
@@ -201,9 +200,9 @@ export default function SchoolSearch({ linkActivation }) {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    setFilters((prev) => ({ ...prev, name: value })); 
+    setFilters((prev) => ({ ...prev, name: value }));
 
-    setIsFilterChanging(true); 
+    setIsFilterChanging(true);
     const params = new URLSearchParams(searchParams.toString());
     params.set('name', value);
     router.push(`/schools/list?${params.toString()}`, {
@@ -213,7 +212,7 @@ export default function SchoolSearch({ linkActivation }) {
 
   const toggleFilter = () => {
     setIsFilterOpen(!isFilterOpen);
-    
+
     if (!isFilterOpen) {
       // setStagedStudents(students);
       // setStagedTeachers(teachers);
@@ -279,13 +278,17 @@ export default function SchoolSearch({ linkActivation }) {
       const newFilters = { ...prev };
 
       newFilters.water = stagedWater !== 'all' ? stagedWater : undefined;
-      newFilters.electricity = stagedElectricity !== 'all' ? stagedElectricity : undefined;
-      newFilters.connectivityStatus = stagedConnected !== 'all' ? stagedConnected : undefined;
-      newFilters.connectionType = stagedConnectionType !== 'all' ? stagedConnectionType : undefined;
+      newFilters.electricity =
+        stagedElectricity !== 'all' ? stagedElectricity : undefined;
+      newFilters.connectivityStatus =
+        stagedConnected !== 'all' ? stagedConnected : undefined;
+      newFilters.connectionType =
+        stagedConnectionType !== 'all' ? stagedConnectionType : undefined;
       // newFilters.students = stagedStudents[1].value > 0 ? stagedStudents[1].value : undefined;
       // newFilters.teachers = stagedTeachers[1].value > 0 ? stagedTeachers[1].value : undefined;
       // newFilters.computers = stagedComputers[1].value > 0 ? stagedComputers[1].value : undefined;
-      newFilters.download = stagedDownload[1].value > 0 ? stagedDownload[1].value : undefined;
+      newFilters.download =
+        stagedDownload[1].value > 0 ? stagedDownload[1].value : undefined;
 
       Object.keys(newFilters).forEach((key) => {
         if (newFilters[key] === undefined) {
@@ -330,11 +333,12 @@ export default function SchoolSearch({ linkActivation }) {
     // if (stagedComputers[1].value > 0) params.set('computers', stagedComputers[1].value);
     // else params.delete('computers');
 
-    if (stagedDownload[1].value > 0) params.set('download', stagedDownload[1].value);
+    if (stagedDownload[1].value > 0)
+      params.set('download', stagedDownload[1].value);
     else params.delete('download');
 
     router.push(`/schools/list?${params.toString()}`, { scroll: false });
-    setIsFilterOpen(false); 
+    setIsFilterOpen(false);
   };
 
   useEffect(() => {
@@ -420,7 +424,7 @@ export default function SchoolSearch({ linkActivation }) {
               value={mintedStatus}
               onChange={(e) => {
                 const value = e.target.value;
-                setIsFilterChanging(true); 
+                setIsFilterChanging(true);
 
                 if (value === 'MINTED' || value === 'NOTMINTED') {
                   setFilters((prev) => ({ ...prev, minted: value }));
@@ -466,48 +470,6 @@ export default function SchoolSearch({ linkActivation }) {
         {/* Filter Accordion */}
         <div className={`filter-accordion ${isFilterOpen ? 'open' : ''}`}>
           <div className="filter-accordion__content">
-            <div className="filter-accordion__sliders">
-              {[
-                // {
-                //   label: 'Number of Students',
-                //   id: 'students-slider',
-                //   value: stagedStudents, // Use staged state
-                //   setter: setStagedStudents, // Set staged state
-                // },
-                // {
-                //   label: 'Number of Teachers',
-                //   id: 'teachers-slider',
-                //   value: stagedTeachers,
-                //   setter: setStagedTeachers,
-                // },
-                // {
-                //   label: 'Number of Computers',
-                //   id: 'computers-slider',
-                //   value: stagedComputers,
-                //   setter: setStagedComputers,
-                // },
-                {
-                  label: 'Download Speed',
-                  id: 'download-slider',
-                  value: stagedDownload,
-                  setter: setStagedDownload,
-                },
-              ].map(({ label, id, value, setter }) => (
-                <div className="filter-accordion__slider" key={id}>
-                  <div className="filter-accordion__slider-container">
-                    <Slider
-                      id={id}
-                      min={0}
-                      max={1000}
-                      value={value[1].value} // Access the value from staged state
-                      onRelease={(val) => setter((prev) => [prev[0], val])} // Set staged state
-                      labelText={label}
-                      hideTextInput={true}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
             <div className="filter-accordion__radio-groups">
               <RadioButtonGroup
                 legendText="Connectivity Status"
@@ -572,6 +534,48 @@ export default function SchoolSearch({ linkActivation }) {
                   value="false"
                 />
               </RadioButtonGroup>
+            </div>
+            <div className="filter-accordion__sliders">
+              {[
+                // {
+                //   label: 'Number of Students',
+                //   id: 'students-slider',
+                //   value: stagedStudents, // Use staged state
+                //   setter: setStagedStudents, // Set staged state
+                // },
+                // {
+                //   label: 'Number of Teachers',
+                //   id: 'teachers-slider',
+                //   value: stagedTeachers,
+                //   setter: setStagedTeachers,
+                // },
+                // {
+                //   label: 'Number of Computers',
+                //   id: 'computers-slider',
+                //   value: stagedComputers,
+                //   setter: setStagedComputers,
+                // },
+                {
+                  label: 'Download Speed',
+                  id: 'download-slider',
+                  value: stagedDownload,
+                  setter: setStagedDownload,
+                },
+              ].map(({ label, id, value, setter }) => (
+                <div className="filter-accordion__slider" key={id}>
+                  <div className="filter-accordion__slider-container">
+                    <Slider
+                      id={id}
+                      min={0}
+                      max={1000}
+                      value={value[1].value} // Access the value from staged state
+                      onRelease={(val) => setter((prev) => [prev[0], val])} // Set staged state
+                      labelText={label}
+                      hideTextInput={true}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
 
             <div className="filter-accordion__actions">

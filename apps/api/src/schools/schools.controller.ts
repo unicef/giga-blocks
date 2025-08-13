@@ -222,16 +222,21 @@ export class SchoolController {
     return this.schoolService.syncSchoolData(schoolId);
   }
 
-  // @Roles('ADMIN')
-  // @UseGuards(JwtAuthGuard, RoleGuard)
-  @Public()
+  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Get('/reservedNftList')
   @ApiOperation({ summary: 'Get the list of reserved schools' })
   async getReservedSchools(@Query() query: ListReservedSchoolDto) {
     return this.schoolService.getReservedSchools(query);
   }
 
-  
+
+  @Public()
+  @ApiOperation({summary:'Get the list of latest activated schools'})
+  @Get('/latest')
+  async getLatestSchools(){
+    return this.schoolService.getLatestActivatedSchool()
+  }
 
   //arewave
   @Public()

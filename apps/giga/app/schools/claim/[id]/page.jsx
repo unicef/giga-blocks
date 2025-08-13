@@ -40,6 +40,7 @@ export default function SchoolDetails({ params }) {
     process.env.NEXT_PUBLIC_GIGA_COLLECTOR_NFT_ADDRESS;
   const [selectedTheme, setSelectedTheme] = useState('white');
   const [countryName, setCountryName] = useState('');
+  const [showClaimedModal, setShowClaimedModal] = useState(false);
 
   const defaultFontColor = '#000';
   const defaultBgColor = '#fff';
@@ -55,7 +56,8 @@ export default function SchoolDetails({ params }) {
 
     if (!data) return;
     if (data.schoolClaimed === true || data.minted != 'MINTED')
-      router.push(`/schools/${id}`);
+      setShowClaimedModal(true);
+    // router.push(`/schools/${id}`);
 
     const { colorScheme } = data.theme || {};
     const fontColor = colorScheme?.fontColor || defaultFontColor;
@@ -81,6 +83,11 @@ export default function SchoolDetails({ params }) {
       enabled: !!tokenId && !isTokenLoading,
     },
   });
+
+  const handleClaimedClose = () => {
+    setShowClaimedModal(false);
+    router.push(`/schools/${id}`);
+  };
 
   const themeStore = useThemeStore();
   const hasCustomTheme =
@@ -138,6 +145,8 @@ export default function SchoolDetails({ params }) {
           name={data?.name}
           tokenId={tokenId}
           updatedAt={data?.updatedAt}
+          showClaimedModal={showClaimedModal}
+          handleClaimedClose={handleClaimedClose}
         />
 
         <div className="school-details__content">

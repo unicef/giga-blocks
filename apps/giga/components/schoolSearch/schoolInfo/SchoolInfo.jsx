@@ -4,10 +4,12 @@ import { ArrowUpRight, CheckmarkOutline, Wallet } from '@carbon/icons-react';
 import Image from 'next/image';
 import './_schoolInfo.scss';
 import CtaSection from '../../CtaSection';
+import LatestSchool from '../latestSchool/latestSchool';
 
 export default function SchoolsInfo() {
   return (
     <div className="schools-info">
+      <LatestSchool/>
       <section className="hero-section">
         <div className="hero-content">
           <div className="hero-text">

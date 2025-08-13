@@ -44,7 +44,7 @@ const SchoolSearchPage = () => {
           </h3>
           <p className="dashboard-modal-activate-description">
             Want to continue? 
-            <span onClick={() => (window.location.href = '/school/list')}>
+            <span onClick={() => (window.location.href = '/schools/list')}>
               Browse the directory
             </span>
              or 

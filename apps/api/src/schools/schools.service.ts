@@ -1107,4 +1107,33 @@ export class SchoolService {
 
     return result;
   }
+
+  async getLatestActivatedSchool(){
+    const schools = await this.prisma.school.findMany({
+      where: {
+        minted:'MINTED'
+      },
+      select:{
+        name:true,
+        country:true,
+        imageHash:true,
+        theme:{
+          select:
+          {
+            colorScheme:true
+          }
+        },
+        id:true,
+        updatedAt:true
+    
+
+      },
+      take:5,
+      orderBy:{'updatedAt':'desc'},
+
+      
+    })
+    return schools
+  }
+  
 }
