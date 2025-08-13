@@ -69,7 +69,8 @@ export default function SchoolDetailsClient({ params }) {
   const themeStore = useThemeStore();
 
   const handleBack = () => {
-    if (window.history.length > 2) {
+    if (document.referrer.includes('/claim')) router.push('/schools/list');
+    else if (window.history.length > 2) {
       router.back();
     } else {
       router.push('/');

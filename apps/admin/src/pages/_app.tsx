@@ -63,6 +63,7 @@ export default function MyApp(props: MyAppProps) {
           <CacheProvider value={emotionCache}>
             <Head>
               <meta name="viewport" content="initial-scale=1, width=device-width" />
+              <link rel="icon" href="/images/icon.ico" sizes="any" />
             </Head>
             <ToastProvider>
               <AuthProvider>

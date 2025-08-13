@@ -15,8 +15,16 @@ import { useThemeStore } from '../../app/store/themeStore';
 import { ConnectKitButton } from 'connectkit';
 import Confetti from 'react-confetti';
 import CongratulationModal from '../congratulationModal/CongratulationModal';
+import ClaimedModal from '../ClaimNFT/AlreadyClaimedModal';
 
-export default function ClaimNFT({ name, countryName, tokenId, updatedAt }) {
+export default function ClaimNFT({
+  name,
+  countryName,
+  tokenId,
+  updatedAt,
+  showClaimedModal,
+  handleClaimedClose = () => {},
+}) {
   const { id } = useParams();
   const router = useRouter();
   const { address, isConnected } = useAccount();
@@ -248,6 +256,11 @@ export default function ClaimNFT({ name, countryName, tokenId, updatedAt }) {
         tokenId={tokenId}
         activatedAt={updatedAt}
         walletAddress={walletAddress}
+      />
+      <ClaimedModal
+        open={showClaimedModal}
+        onClose={handleClaimedClose}
+        id={id}
       />
     </>
   );

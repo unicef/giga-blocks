@@ -75,7 +75,17 @@ export default function UserNewEditForm({ id }: Props) {
           )}
         </FormProvider>
       ) : (
-        <CircularProgress />
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '50vh',
+            width: '50vw',
+          }}
+        >
+          <CircularProgress />
+        </div>
       )}
     </Container>
   );

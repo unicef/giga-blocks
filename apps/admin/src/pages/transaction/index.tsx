@@ -1,7 +1,7 @@
 'use client';
 import Scrollbar from '@components/scrollbar';
 import { TableHeadUsers, useTable, TableNoData, TablePaginationCustom } from '@components/table';
-import { DEFAULT_CHAIN_ID, TESTNET_CHAINS } from '@components/web3/chains';
+import { DEFAULT_CHAIN_ID, CHAINS_DETAILS } from '@components/web3/chains';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
 import {
   Box,
@@ -59,7 +59,7 @@ const Transaction = () => {
   const { data, fetching } = result;
   const combinedTransfers = [...(data?.schoolTransfers || []), ...(data?.collectorTransfers || [])];
 
-  const explorer = TESTNET_CHAINS[DEFAULT_CHAIN_ID]?.blockExplorerUrls[0];
+  const explorer = CHAINS_DETAILS[DEFAULT_CHAIN_ID]?.blockExplorerUrls[0];
 
   useEffect(() => {
     const startItem = (page + 1) * rowsPerPage - rowsPerPage;

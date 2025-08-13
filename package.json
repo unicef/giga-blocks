@@ -14,6 +14,7 @@
     "api:news:generate": "prisma generate --schema apps/api/prisma/newsletter/schema.prisma",
     "build:admin": "nx build admin",
     "build:api": "nx build api",
+    "build:giga": "nx build apps/giga",
     "build:web": "nx build web",
     "build:webhook": "nx build webhook",
     "serve:admin": "nx serve admin",
