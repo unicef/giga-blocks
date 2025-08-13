@@ -66,7 +66,24 @@ export default function ActivationModal({
   };
 
   const handleContributors = () => {
-    router.push('/about#contributors');
+    patchContributor.mutate(
+      {
+        walletAddress,
+        isVisible: showNameOnList,
+        name: contributorName,
+      },
+      {
+        onSuccess: () => {
+          onClose();
+          router.push('/about#contributors');
+        },
+        onError: (err) => {
+          onClose();
+          toast.error('Failed to update contributor:', err);
+          router.push('/about#contributors');
+        },
+      }
+    );
   };
 
   const currentPageUrl = `${process.env.NEXT_PUBLIC_WEB_NAME}/schools/${id}`;
@@ -149,21 +166,23 @@ export default function ActivationModal({
                 onClick={() => {
                   window.open(
                     `https://www.linkedin.com/sharing/share-offsite/?text=${encodeURIComponent(
-                    currentPageUrl
-                  )}`
-                  )
+                      currentPageUrl
+                    )}`
+                  );
                 }}
               >
                 <LogoLinkedin size={24} />
               </button>
-              <button className="socialIcon" aria-label="Share on Twitter"
-              onClick={()=>{
-                window.open(
-                  `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-                    currentPageUrl
-                  )}`
-                )
-              }}
+              <button
+                className="socialIcon"
+                aria-label="Share on Twitter"
+                onClick={() => {
+                  window.open(
+                    `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                      currentPageUrl
+                    )}`
+                  );
+                }}
               >
                 <LogoX size={24} />
               </button>
