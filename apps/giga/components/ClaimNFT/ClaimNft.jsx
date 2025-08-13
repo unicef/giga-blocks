@@ -138,7 +138,7 @@ export default function ClaimNFT({ name, countryName, tokenId, updatedAt }) {
               🎉
             </span>
             <div className="thank-you-text">
-              <h2>Thankyou for contributing to Giga Blocks.</h2>
+              <h2>Thank you for contributing to Giga Blocks.</h2>
               <p>You've already activated this school. Claim your NFT</p>
               <p className="brand-name">Giga Blocks</p>
             </div>

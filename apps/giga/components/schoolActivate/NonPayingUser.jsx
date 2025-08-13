@@ -275,13 +275,13 @@ export default function NonPayingUser({
                 </span>
               </div> */}
               </div>
-              <div className="non-paying-guide">
+              {/* <div className="non-paying-guide">
                 <Information size={16} fill="#0F62FE" />
                 <p className="text-guide">
                   After you activate, Please go to your wallet to confirm the
                   transaction
                 </p>
-              </div>
+              </div> */}
 
               <div className="non-paying-guide-container">
                 <div className="guide-header">

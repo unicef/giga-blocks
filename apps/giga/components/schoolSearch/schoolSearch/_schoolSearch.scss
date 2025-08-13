@@ -278,6 +278,10 @@
     border: 1px solid $gray-20;
     border-radius: 8px;
     margin-bottom: $spacing-06;
+    top: 153px;
+    background-color: #ffffff;
+    position: sticky;
+    z-index: 9999;
   }
 
   &__content {
@@ -366,6 +370,15 @@
     }
   }
 }
+
+.search-page__filters {
+  top: 73px;
+  height: 80px;
+  z-index: 9999;
+  position: sticky;
+  background-color: #ffffff;
+}
+
 .cds--list-box__menu {
   box-shadow: 0 2px 6px var(--cds-shadow, rgba(0, 0, 0, 0.3));
   position: absolute;

@@ -1,10 +1,10 @@
 export const blogPosts = [
   {
+    id: '098',
     slug: 'the-art-of-visibility-giga-a-garden-by-cole-sternberg',
     title: 'The Art of Visibility. “Giga: a garden” by Cole Sternberg',
-    author: 'Katherina Lanecherie',
-    date: 'March 22, 2023',
-    authorImage: '/images/artist.svg',
+    author: 'Cole Sternberg',
+    authorImage: '/images/cole-sternberg.jpg',
     featuredImage: '/images/blog-header.png',
     images: ['/images/blog-left.png', '/images/blog-right.png'],
     content: `
@@ -94,11 +94,11 @@ export const blogPosts = [
       `,
   },
   {
+    id: '888',
     slug: 'giga-blocks-technical-architecture-deep-dive',
     title: 'Giga Blocks: Technical Architecture Deep Dive ',
-    author: 'Katherina Lanecherie',
-    date: 'March 22, 2023',
-    authorImage: '/images/artist.svg',
+    author: 'Gerben Kijne',
+    authorImage: '/images/teams/Gerben.png',
     featuredImage: '/images/blog-header.png',
     images: ['/images/blog-left.png', '/images/blog-right.png'],
     content: `
