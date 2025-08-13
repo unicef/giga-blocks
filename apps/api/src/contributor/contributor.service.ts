@@ -61,8 +61,13 @@ export class ContributorService {
     const claimLink = `${Link}/schools/claim/${school?.id}`;
     const schoolLink = `${Link}/schools/${school?.id}`;
 
-
-    await this.mailService.sendThankYouMail({ email, school: school.name, link: claimLink, schoolDetailLink:schoolLink,studentNumber });
+    await this.mailService.sendThankYouMail({
+      email,
+      school: school.name,
+      link: claimLink,
+      schoolDetailLink: schoolLink,
+      studentNumber,
+    });
   }
 
   async listContributors() {
@@ -156,7 +161,7 @@ export class ContributorService {
     });
   }
 
-  async addPayingContributor(data: CreateContributor) {
+  async addPayingContributor(data: CreateContributor, updateNft?: boolean) {
     let walletAddress;
     let name = data?.name;
     if (!data?.name) name = data?.walletAddress || data?.email;
@@ -179,17 +184,30 @@ export class ContributorService {
         },
       });
       if (user) {
-        await this.prisma.contributor.create({
-          data: {
-            userId: user?.id,
-            isVisible: data.isVisible || false,
-            nftReserved: false,
-            nftClaimed: true,
-            totalNftMinted: +1,
-            name: name,
-            nameType: nameType,
-          },
-        });
+        if (updateNft)
+          await this.prisma.contributor.create({
+            data: {
+              userId: user?.id,
+              isVisible: data.isVisible || false,
+              nftReserved: false,
+              nftClaimed: true,
+              totalNftMinted: +1,
+              name: name,
+              nameType: nameType,
+            },
+          });
+        else
+          await this.prisma.contributor.create({
+            data: {
+              userId: user?.id,
+              isVisible: data.isVisible || false,
+              nftReserved: false,
+              nftClaimed: true,
+              name: name,
+              totalNftMinted: 0,
+              nameType: nameType,
+            },
+          });
       }
     } else await this.updateContributor(existinguser.id, data);
     return { sucess: true, message: 'Contributor added successfully' };
@@ -252,7 +270,9 @@ export class ContributorService {
       data: { name: data.name },
     });
     if (!userDetails) {
-      throw new Error('Contributor not found');
+      this.addPayingContributor(data,false)
+
+      // throw new Error('Contributor not found');
     }
     const existingcontributor = await this.prisma.contributor.findUnique({
       where: { userId: userDetails.id },
