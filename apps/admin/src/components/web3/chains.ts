@@ -56,84 +56,56 @@ const getAlchemyUrlFor = (network: string) =>
 
 type ChainConfig = { [chainId: number]: BasicChainInformation | ExtendedChainInformation }
 
-export const MAINNET_CHAINS: any = {
-  1: {
-    urls: [getInfuraUrlFor('mainnet'), getAlchemyUrlFor('eth-mainnet'), 'https://cloudflare-eth.com'].filter(Boolean),
-    name: 'Mainnet',
-  },
-  10: {
-    urls: [getInfuraUrlFor('optimism-mainnet'), 'https://mainnet.optimism.io'].filter(Boolean),
-    name: 'Optimism',
-    nativeCurrency: ETH,
-    blockExplorerUrls: ['https://optimistic.etherscan.io'],
-  },
-  42161: {
-    urls: [getInfuraUrlFor('arbitrum-mainnet'), 'https://arb1.arbitrum.io/rpc'].filter(Boolean),
-    name: 'Arbitrum One',
-    nativeCurrency: ETH,
-    blockExplorerUrls: ['https://arbiscan.io'],
-  },
-  137: {
-    urls: [getInfuraUrlFor('polygon-mainnet'), 'https://polygon-rpc.com'].filter(Boolean),
-    name: 'Polygon Mainnet',
-    nativeCurrency: MATIC,
-    blockExplorerUrls: ['https://polygonscan.com'],
-  },
-  42220: {
-    urls: ['https://forno.celo.org'],
-    name: 'Celo',
-    nativeCurrency: CELO,
-    blockExplorerUrls: ['https://explorer.celo.org'],
-  },
-}
+// export const MAINNET_CHAINS: any = {
+//   1: {
+//     urls: [getInfuraUrlFor('mainnet'), getAlchemyUrlFor('eth-mainnet'), 'https://cloudflare-eth.com'].filter(Boolean),
+//     name: 'Mainnet',
+//   },
+//   10: {
+//     urls: [getInfuraUrlFor('optimism-mainnet'), 'https://mainnet.optimism.io'].filter(Boolean),
+//     name: 'Optimism',
+//     nativeCurrency: ETH,
+//     blockExplorerUrls: ['https://optimistic.etherscan.io'],
+//   },
+//   42161: {
+//     urls: [getInfuraUrlFor('arbitrum-mainnet'), 'https://arb1.arbitrum.io/rpc'].filter(Boolean),
+//     name: 'Arbitrum One',
+//     nativeCurrency: ETH,
+//     blockExplorerUrls: ['https://arbiscan.io'],
+//   },
+//   137: {
+//     urls: [getInfuraUrlFor('polygon-mainnet'), 'https://polygon-rpc.com'].filter(Boolean),
+//     name: 'Polygon Mainnet',
+//     nativeCurrency: MATIC,
+//     blockExplorerUrls: ['https://polygonscan.com'],
+//   },
+//   42220: {
+//     urls: ['https://forno.celo.org'],
+//     name: 'Celo',
+//     nativeCurrency: CELO,
+//     blockExplorerUrls: ['https://explorer.celo.org'],
+//   },
+// }
 
-export const TESTNET_CHAINS: any = {
-  5: {
-    urls: [getInfuraUrlFor('goerli')].filter(Boolean),
-    name: 'Görli',
-  },
-  420: {
-    urls: [getInfuraUrlFor('optimism-goerli'), 'https://goerli.optimism.io'].filter(Boolean),
-    name: 'Optimism Goerli',
-    nativeCurrency: ETH,
-    blockExplorerUrls: ['https://goerli-explorer.optimism.io'],
-  },
-  421613: {
-    urls: [getInfuraUrlFor('arbitrum-goerli'), 'https://goerli-rollup.arbitrum.io/rpc'].filter(Boolean),
-    name: 'Arbitrum Goerli',
-    nativeCurrency: ETH,
-    blockExplorerUrls: ['https://testnet.arbiscan.io'],
-  },
-  80001: {
-    urls: [getInfuraUrlFor('polygon-mumbai')].filter(Boolean),
-    name: 'Polygon Mumbai',
-    nativeCurrency: MATIC,
-    blockExplorerUrls: ['https://mumbai.polygonscan.com'],
-  },
-  44787: {
-    urls: ['https://alfajores-forno.celo-testnet.org'],
-    name: 'Celo Alfajores',
-    nativeCurrency: CELO,
-    blockExplorerUrls: ['https://alfajores-blockscout.celo-testnet.org'],
-  },
-  11155111: {
-    urls: ['https://eth-sepolia.g.alchemy.com/v2/WSfPp7PZYjX8uXeDOFfk_GFBBSCrCyxg'],
-    name: 'Sepolia',
-    nativeCurrency: ETH,
-    blockExplorerUrls: ['https://sepolia.etherscan.io/'],
+export const CHAINS_DETAILS: any = {
 
-  },
   84532:{
     name:' Base Sepolia',
     urls:['https://base-sepolia.infura.io/v3/66012456f3cc45cbbd8a6fdb0249f6eb'],
     nativeCurrency: ETH,
     blockExplorerUrls: ['https://sepolia.basescan.org/'],
+  },
+  8453:{
+    name: 'Base',
+    urls:['https://mainnet.base.org'],
+    nativeCurrency: ETH,
+    blockExplorerUrls:['https://basescan.org/'],
+
   }
 }
 
 export const CHAINS: ChainConfig = {
-  ...MAINNET_CHAINS,
-  ...TESTNET_CHAINS,
+  ...CHAINS_DETAILS,
 }
 
 export const DEFAULT_CHAIN_ID = process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID || 11155111;
