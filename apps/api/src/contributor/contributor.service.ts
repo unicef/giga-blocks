@@ -265,15 +265,20 @@ export class ContributorService {
       : ethers.isAddress(name)
       ? ContributorNameType.WALLET
       : ContributorNameType.REGULAR;
+    const hexWalletAddress = hexStringToBuffer(walletAddress);
+    const existinguser = await this.prisma.user.findUnique({
+      where: { walletAddress: hexWalletAddress },
+    });
+    if (!existinguser) {
+      data.walletAddress = walletAddress;
+      return this.addPayingContributor(data, false);
+      // throw new Error('Contributor not found');
+    }
     const userDetails = await this.prisma.user.update({
       where: { walletAddress: hexStringToBuffer(walletAddress) },
       data: { name: data.name },
     });
-    if (!userDetails) {
-      this.addPayingContributor(data,false)
 
-      // throw new Error('Contributor not found');
-    }
     const existingcontributor = await this.prisma.contributor.findUnique({
       where: { userId: userDetails.id },
     });
