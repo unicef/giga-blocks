@@ -10,6 +10,9 @@ const nextConfig = {
   nx: {
     svgr: false,
   },
+  images:{
+    domains:['ipfs.io'],
+  },
   basePath: `${basePath}`, 
 };
 
