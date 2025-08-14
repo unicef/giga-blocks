@@ -14,6 +14,7 @@ import { useThemeToggleStore } from '../../app/store/themeToggleStore';
 import { usePathname } from 'next/navigation';
 import { useAccount } from 'wagmi';
 import { ProgressBar, ProgressIndicatorSkeleton } from '@carbon/react';
+import { EXPLORER_URL } from '../../app/constants/api';
 
 const Sidebar = ({
   imageHash,
@@ -26,6 +27,7 @@ const Sidebar = ({
   schoolName,
   isVerfierDisabled,
   verifiedCIW,
+  contractAddress,
   handleCIWClick = () => {},
 }) => {
   const [imageError, setImageError] = useState(false);
@@ -45,10 +47,9 @@ const Sidebar = ({
     setIsFullscreen(false);
   };
 
-  const urlToAdmin = owner?.slice(0, 4) + '...' + owner?.slice(35, 43);
-  const etherscanUrl =
-    'https://beta-giga.rumsan.net/schools/508f32dd-bd56-3a56-9c38-05ef2e6097d7';
-
+  const chainId = process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID
+  const urlToAdmin = contractAddress?.slice(0, 4) + '...' + contractAddress?.slice(35, 43);
+  const etherscanUrl = EXPLORER_URL[chainId]
   return (
     <div className="school-details__sidebar">
       {minted === 'MINTED' ? (
@@ -195,7 +196,7 @@ const Sidebar = ({
               <p className="school-details__minted-link-address">
                 Contract Address:
                 <Link
-                  href={etherscanUrl}
+                  href={`${etherscanUrl}/address/${contractAddress}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{

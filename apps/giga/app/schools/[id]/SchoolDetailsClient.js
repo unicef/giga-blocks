@@ -258,6 +258,7 @@ export default function SchoolDetailsClient({ params }) {
               handleCIWClick={handleCIWClick}
               isVerfierDisabled={isVerfierDisabled}
               verifiedCIW={data?.verifiedCIW}
+              contractAddress= {collectorNftAddress}
             />
           </div>
         </div>
