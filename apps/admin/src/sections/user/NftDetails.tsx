@@ -12,6 +12,7 @@ import {
   Table,
   Tabs,
   Tab,
+  Link,
 } from '@mui/material';
 import { useSnackbar } from '@components/snackbar';
 import FormProvider, { ProfileTextField } from '@components/hook-form';
@@ -25,6 +26,9 @@ import { TableHeadUsers, TableNoData, useTable } from '@components/table';
 import NFTTableRow from './list/NFTTableRow';
 import { PATH_DASHBOARD, PATH_SCHOOL } from '@routes/paths';
 import { useSchoolGetByGigaSchoolId } from '@hooks/school/useSchool';
+import Image from 'next/image';
+import { CHAINS_DETAILS } from '@components/web3/chains';
+import LaunchIcon from '@mui/icons-material/Launch';
 
 interface Props {
   isEdit?: boolean;
@@ -143,7 +147,10 @@ export default function SchoolDetails({ id }: Props) {
   });
 
   const chain = process.env.NEXT_PUBLIC_DEFAULT_CHAIN;
+  const chainId = process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID || 84532;
   const address = process.env.NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS;
+  const collectorAddress = process.env.NEXT_PUBLIC_GIGA_COLLECTOR_NFT_ADDRESS;
+  const explorerUrl = CHAINS_DETAILS[chainId]?.blockExplorerUrls[0];
 
   function a11yProps(index: number) {
     return {
@@ -303,9 +310,26 @@ export default function SchoolDetails({ id }: Props) {
             <Container>
               <Box justifyContent={'center'}>
                 <Stack sx={{ mt: 8 }}>
-                  <Box display="flex" justifyContent="center">
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    position="relative"
+                    width="350px"
+                    height="350px"
+                    sx={{
+                      overflow: 'hidden',
+                    }}
+                  >
                     {schoolDetails?.imageHash ? (
-                      <image href={`https://ipfs.io/ipfs/${schoolDetails?.imageHash}`} />
+                      <Image
+                        src={`https://ipfs.io/ipfs/${schoolDetails?.imageHash?.replace(
+                          'ipfs://',
+                          ''
+                        )}`}
+                        alt="School generated image"
+                        fill
+                        style={{ objectFit: 'cover' }}
+                      />
                     ) : (
                       <Identicon
                         string={schoolDetails?.imageHash}
@@ -417,6 +441,69 @@ export default function SchoolDetails({ id }: Props) {
               </Card>
             </Grid>
           </CustomTabPanel>
+
+          <Box
+            sx={{
+              borderBottom: 1,
+              borderColor: 'divider',
+              width: '96%',
+              margin: 'auto',
+              marginTop: '20px',
+            }}
+          >
+            <Typography variant="h6" component="h6" paddingLeft="9px">
+              Contract Details
+            </Typography>
+            <Card sx={{ marginTop: '20px', padding: '16px' }}>
+              <Stack spacing={2}>
+                <Box display="flex" alignItems="center" gap={1}>
+                  <Typography variant="body1">View Collector Contract:</Typography>
+                  <Link
+                    href={`${explorerUrl}/address/${collectorAddress}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      textDecoration: 'none',
+                      '&:hover': {
+                        textDecoration: 'underline',
+                      },
+                    }}
+                  >
+                    <Typography variant="subtitle1" color="primary">
+                      {collectorAddress?.slice(0, 6) + '.......' + collectorAddress?.slice(-4)}
+                    </Typography>
+                    <LaunchIcon fontSize="small" color="primary" />
+                  </Link>
+                </Box>
+                <Box display="flex" alignItems="center" gap={1}>
+                  <Typography variant="body1">View School Contract:</Typography>
+                  <Link
+                    href={`${explorerUrl}/address/${address}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      textDecoration: 'none',
+                      '&:hover': {
+                        textDecoration: 'underline',
+                      },
+                    }}
+                  >
+                    <Typography variant="subtitle1" color="primary">
+                      {address?.slice(0, 6) + '.......' + address?.slice(-4)}
+                      {/* {address} */}
+                    </Typography>
+                    <LaunchIcon fontSize="small" color="primary" />
+                  </Link>
+                </Box>
+              </Stack>
+            </Card>
+          </Box>
         </>
       )}
     </>
