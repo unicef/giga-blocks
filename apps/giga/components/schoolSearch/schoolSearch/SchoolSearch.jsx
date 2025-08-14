@@ -252,13 +252,20 @@ export default function SchoolSearch({ linkActivation }) {
 
     const emptyParams = new URLSearchParams();
 
-    router.replace(`/schools/list`, {
-      scroll: false,
-      shallow: true,
-    });
+    linkActivation
+      ? router.replace(`/schools/list?linkActivation=${linkActivation}`, {
+          scroll: false,
+          shallow: true,
+        })
+      : router.replace(`/schools/list`, {
+          scroll: false,
+          shallow: true,
+        });
 
     setTimeout(() => {
-      window.location.href = '/schools/list';
+      linkActivation
+        ? (window.location.href = `/schools/list?linkActivation=${linkActivation}`)
+        : (window.location.href = '/schools/list');
     }, 100);
   };
 

@@ -71,7 +71,10 @@ export default function SchoolDetailsClient({ params }) {
   const handleBack = () => {
     if (document.referrer.includes('/claim')) router.push('/schools/list');
     else if (window.history.length > 2) {
-      router.back();
+      router.back({
+        scroll:false,
+        shallow:true
+      });
     } else {
       router.push('/');
     }

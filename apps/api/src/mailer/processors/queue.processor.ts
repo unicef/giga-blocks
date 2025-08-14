@@ -263,7 +263,7 @@ export class QueueProcessor {
         });
         this._imageQueue.add(SET_IMAGE_PROCESS, { id: updateSchool.giga_school_id }, jobOptions);
         this.contributorService.addPayingContributor(
-          schoolActivationDetails.contributorData as any,
+          schoolActivationDetails.contributorData as any, true
         );
       } else if (Number(transactionDetails?.status) === 0) {
         await this._prismaService.school.update({

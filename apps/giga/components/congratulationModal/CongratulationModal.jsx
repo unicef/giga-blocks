@@ -35,7 +35,7 @@ export default function CongratulationModal({
   const currentPageUrl = `${process.env.NEXT_PUBLIC_WEB_NAME}/schools/${id}`;
 
   const handleActivateAnotherSchool = () => {
-    router.push(`/schools/list`);
+    router.push(`/schools/list?minted=NOTMINTED`);
   };
 
   const handleCopy = () => {
