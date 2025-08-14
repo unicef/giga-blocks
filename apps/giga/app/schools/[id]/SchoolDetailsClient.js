@@ -69,11 +69,15 @@ export default function SchoolDetailsClient({ params }) {
   const themeStore = useThemeStore();
 
   const handleBack = () => {
-    if (document.referrer.includes('/claim')) router.push('/schools/list');
-    else if (window.history.length > 2) {
+    if (document.referrer.includes('/claim'))
+      router.push('/schools/list', {
+        scroll: false,
+        shallow: true,
+      });
+    else if (window.history.length >= 2) {
       router.back({
-        scroll:false,
-        shallow:true
+        scroll: false,
+        shallow: true,
       });
     } else {
       router.push('/');
@@ -261,7 +265,7 @@ export default function SchoolDetailsClient({ params }) {
               handleCIWClick={handleCIWClick}
               isVerfierDisabled={isVerfierDisabled}
               verifiedCIW={data?.verifiedCIW}
-              contractAddress= {collectorNftAddress}
+              contractAddress={collectorNftAddress}
             />
           </div>
         </div>
