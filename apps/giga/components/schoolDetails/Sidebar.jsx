@@ -47,9 +47,11 @@ const Sidebar = ({
     setIsFullscreen(false);
   };
 
-  const chainId = process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID
-  const urlToAdmin = contractAddress?.slice(0, 4) + '...' + contractAddress?.slice(35, 43);
-  const etherscanUrl = EXPLORER_URL[chainId]
+
+  const chainId = process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID;
+  const urlToAdmin =
+    contractAddress?.slice(0, 4) + '...' + contractAddress?.slice(35, 43);
+  const etherscanUrl = EXPLORER_URL[chainId];
   return (
     <div className="school-details__sidebar">
       {minted === 'MINTED' ? (
@@ -81,7 +83,7 @@ const Sidebar = ({
                       display: 'flex',
                       justifyContent: 'end',
                       marginBottom: '12px',
-                      alignItems:'center'
+                      alignItems: 'center',
                     }}
                   >
                     <svg
@@ -107,10 +109,10 @@ const Sidebar = ({
               </>
             )}
 
-            {minted === 'MINTED' &&
+            {address != undefined &&
             !isClaimPath &&
-            address?.toLowerCase() === owner?.toLowerCase() &&
-            !isTokenLoading ? (
+            !isTokenLoading &&
+            address?.toLowerCase() === owner?.toLowerCase() ? (
               <p
                 onClick={toggleVisibilityForMinted}
                 style={{
