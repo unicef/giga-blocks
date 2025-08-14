@@ -4,7 +4,7 @@ export const blogPosts = [
     slug: 'the-art-of-visibility-giga-a-garden-by-cole-sternberg',
     title: 'The Art of Visibility. “Giga: a garden” by Cole Sternberg',
     author: 'Cole Sternberg',
-    authorImage: '/images/cole-sternberg.jpg',
+    authorImage: '/images/sternberg-cole.jpg',
     featuredImage: '/images/blog-header.png',
     images: ['/images/blog-left.png', '/images/blog-right.png'],
     content: `
