@@ -3,7 +3,7 @@ import './_latestSchool.scss';
 import SchoolCard from '../../schoolCard/SchoolCard';
 import { useLatestActivatedSchool } from '../../../app/hooks/useSchool';
 import CardSkeleton from '../../cardSkeleton/CardSkeleton';
-
+import countryList from '../../../app/data/country.json';
 export default function LatestSchool() {
   const { data: schoolData, isLoading } = useLatestActivatedSchool();
   return (
@@ -27,10 +27,15 @@ export default function LatestSchool() {
                 key={school.id}
                 id={school.id}
                 schoolName={school.name}
-                location={school.country}
+                location={
+                  countryList.find((c) => c.code === school.country)?.country ||
+                  school.country
+                }
                 minted={'MINTED'}
                 hashImage={true}
                 imageHash={school.imageHash}
+                fontColor={'#161616'}
+                bgColor={school.theme.colorScheme.cardColor}
               />
             ))}
           </div>

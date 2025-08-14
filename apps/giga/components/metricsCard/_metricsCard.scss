@@ -59,10 +59,11 @@
 
 .metric-card__subtitle {
   @include type-style('heading-01');
-  color: $gray-70;
   margin: 0;
   font-weight: 400;
   font-size: 16px;
+  color: #161616;
+  font-weight: 400;
 }
 
 .metric-card__description {

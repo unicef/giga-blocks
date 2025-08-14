@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowLeft } from '@carbon/icons-react';
+import { ArrowLeft, Time } from '@carbon/icons-react';
 import { useEffect, useState } from 'react';
 import Header from '../../../components/schoolDetails/SchoolHeader';
 import SchoolOverview from '../../../components/schoolDetails/SchoolOverview';
@@ -181,6 +181,24 @@ export default function SchoolDetailsClient({ params }) {
             <ArrowLeft size={20} /> Back
           </p>
 
+          {minted === 'ISMINTING' && (
+            <div className="school-minting-disclaimer">
+              <p>
+                <Time size={20} style={{ marginTop: '5px' }} />
+                Your NFT is being minted! This may take a moment—feel free to
+                check back shortly. We appreciate your patience!
+              </p>
+              <p
+                style={{
+                  fontSize: '16px',
+                  fontWeight: '700',
+                  marginTop: '.5rem',
+                }}
+              >
+                Giga Blocks
+              </p>
+            </div>
+          )}
           {(minted === 'NOTMINTED' || isVisibleForMinted) && (
             <ThemeSelector
               themeOptions={themeOptions}
@@ -240,6 +258,7 @@ export default function SchoolDetailsClient({ params }) {
               handleCIWClick={handleCIWClick}
               isVerfierDisabled={isVerfierDisabled}
               verifiedCIW={data?.verifiedCIW}
+              contractAddress= {collectorNftAddress}
             />
           </div>
         </div>

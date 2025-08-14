@@ -9,8 +9,85 @@ import LatestSchool from '../latestSchool/latestSchool';
 export default function SchoolsInfo() {
   return (
     <div className="schools-info">
-      <LatestSchool/>
-      <section className="hero-section">
+      <LatestSchool />
+
+      <section>
+        <div className="school-activated-content">
+          <h1>
+            Every activated school gains a permanent seat on the blockchain, one
+            step closer to reliable internet access.
+          </h1>
+          <p>
+            Found a school close to your heart? Activate it now to secure its
+            future.
+          </p>
+        </div>
+
+        <div class="image-cards">
+          <div class="image-card" style={{ zIndex: 1 }}>
+            <Image
+              src="/images/school-activated-picture/school-activated-02.png"
+              alt="School image"
+              width={500}
+              height={300}
+            />
+          </div>
+          <div
+            class="image-card"
+            style={{
+              zIndex: 2,
+              marginTop: '80px',
+              border: '4px solid #ffffff',
+            }}
+          >
+            <Image
+              src="/images/school-activated-picture/school-activated-01.png"
+              alt="School image"
+              width={500}
+              height={300}
+            />
+          </div>
+          <div
+            class="image-card"
+            style={{
+              marginTop: '160px',
+              zIndex: 3,
+              border: '4px solid #ffffff',
+            }}
+          >
+            <Image
+              src="/images/school-activated-picture/school-activated-03.png"
+              alt="School image"
+              width={500}
+              height={300}
+            />
+          </div>
+          <div
+            class="image-card"
+            style={{
+              zIndex: 2,
+              marginTop: '80px',
+              border: '4px solid #ffffff',
+            }}
+          >
+            <Image
+              src="/images/school-activated-picture/school-activated-01.png"
+              alt="School image"
+              width={500}
+              height={300}
+            />
+          </div>
+          <div class="image-card" style={{ zIndex: 1 }}>
+            <Image
+              src="/images/school-activated-picture/school-activated-02.png"
+              alt="School image"
+              width={500}
+              height={300}
+            />
+          </div>
+        </div>
+      </section>
+      {/* <section className="hero-section">
         <div className="hero-content">
           <div className="hero-text">
             <h1 className="hero-title">
@@ -32,7 +109,7 @@ export default function SchoolsInfo() {
             />
           </div>
         </div>
-      </section>
+      </section> */}
 
       <section className="activation-guide">
         <div className="activation-content">

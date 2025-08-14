@@ -10,43 +10,49 @@ export default function Team() {
       id: 1,
       name: 'Chris Fabian',
       position: 'Giga co-lead',
-      image: '/images/teams/team-1.png',
+      image: '/images/teams/Chris.png',
     },
     {
       id: 2,
       name: 'Naroa Zurutuza',
       position: 'CTO',
-      image: '/images/teams/team-2.png',
+      image: '/images/teams/Naroa.png',
     },
     {
       id: 3,
       name: 'Gerben Kijne',
       position: 'Blockchain Product Lead',
-      image: '/images/teams/team-3.png',
+      image: '/images/teams/Gerben.png',
     },
     {
       id: 4,
       name: 'Vladimir Trkulja',
       position: 'Blockchain Advisor',
-      image: '/images/teams/team-4.png',
+      image: '/images/teams/Vladimir.png',
     },
     {
       id: 5,
       name: 'Javier Shen',
       position: 'Blockchain Engineer',
-      image: '/images/teams/team-5.png',
+      image: '/images/teams/Javier.png',
     },
     {
       id: 6,
       name: 'Jitesh Nayak',
       position: 'Design Lead',
-      image: '/images/teams/team-6.png',
+      image: '/images/teams/Jitesh.png',
     },
     {
       id: 7,
       name: 'Akunna Ibe',
       position: 'Communications',
-      image: '/images/teams/team-7.png',
+      image: '/images/teams/Akunna.png',
+    },
+    {
+      id: 8,
+      name: 'Alajos Rapp',
+      position: 'Dev-ops',
+      image: '/images/teams/Alajos.png',
     },
   ];
 
@@ -81,8 +87,8 @@ export default function Team() {
                   </div>
                 </div>
               ))}
-              <p className="many-more-members-tablet">and many more.</p>
             </div>
+            <p className="many-more-members-tablet">and many more.</p>
             <p className="many-more-members-desktop">and many more.</p>
           </div>
         </div>

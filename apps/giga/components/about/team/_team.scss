@@ -64,7 +64,7 @@
 
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: $spacing-05;
 
   // @include breakpoint-down(lg) {
@@ -83,7 +83,7 @@
     grid-template-columns: repeat(4, 1fr);
   }
   @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
 }
 
@@ -108,9 +108,9 @@
 }
 
 .team-member-image {
-  // width: 100%;
+  width: 100%;
   height: 100%;
-  object-fit: cover;
+  // object-fit: cover;
   border-radius: 8px;
 }
 
@@ -141,8 +141,9 @@
 
 .many-more-members-tablet {
   display: none; // Hide by default for tablet (<=1025px)
-  @media (max-width: 1300px) {
+  @media (max-width: 1025px) {
     display: block;
-    margin-top: 9rem;
+    margin-top: 1rem;
+    float: right;
   }
 }
