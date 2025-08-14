@@ -81,6 +81,7 @@ const Sidebar = ({
                       display: 'flex',
                       justifyContent: 'end',
                       marginBottom: '12px',
+                      alignItems:'center'
                     }}
                   >
                     <svg
