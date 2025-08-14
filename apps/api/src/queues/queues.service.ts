@@ -51,7 +51,7 @@ export class QueuesService {
       jobs.map(async job => ({
         id: job.id,
         name: job.name,
-        data: job.data,
+        // data: job.data,
         attemptsMade: job.attemptsMade,
         failedReason: job.failedReason,
         timestamp: job.timestamp,
@@ -71,7 +71,7 @@ export class QueuesService {
       jobs.map(async job => ({
         id: job.id,
         name: job.name,
-        data: job.data,
+        // data: job.data,
         attemptsMade: job.attemptsMade,
         failedReason: job.failedReason,
         timestamp: job.timestamp,

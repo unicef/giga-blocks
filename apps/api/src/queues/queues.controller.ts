@@ -1,7 +1,10 @@
-import { Controller, Get, Post, Delete, Param } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Param, UseGuards } from '@nestjs/common';
 import { QueuesService } from './queues.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
+import { RoleGuard } from 'src/auth/guards/role.guard';
 
 const QUEUE_NAMES = [
   'MAIL_QUEUE',
@@ -15,6 +18,7 @@ const QUEUE_NAMES = [
 
 @Controller('queue')
 @ApiTags('Queues')
+@ApiBearerAuth('access-token')
 export class QueuesController {
   constructor(private readonly queueService: QueuesService) {}
 
@@ -42,7 +46,9 @@ export class QueuesController {
     return this.queueService.getCompletedJobs(queueName);
   }
 
-  @Public()
+  // @Public()
+  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOperation({ summary: 'Retry a failed job by jobId for a specific queue' })
   @Post(':queueName/retry/:jobId')
   async retryJob(@Param('queueName') queueName: string, @Param('jobId') jobId: string) {
@@ -50,7 +56,8 @@ export class QueuesController {
     return this.queueService.retryJob(queueName, jobId);
   }
 
-  @Public()
+  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOperation({ summary: 'Remove a job by jobId for a specific queue' })
   @Delete(':queueName/:jobId')
   async removeJob(@Param('queueName') queueName: string, @Param('jobId') jobId: string) {

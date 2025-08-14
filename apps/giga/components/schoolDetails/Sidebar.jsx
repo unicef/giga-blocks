@@ -183,7 +183,7 @@ const Sidebar = ({
               changes.{' '}
               <a
                 style={{ color: fontColor }}
-                href="https://beta-giga.rumsan.net/blog/artist"
+                href="https://beta-giga.rumsan.net/artist/1"
                 className="school-details__minted-link"
               >
                 Learn More
