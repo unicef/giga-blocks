@@ -171,7 +171,7 @@ export class MailProcessor {
   ) {
     this._logger.log(`Sending thank you email to '${job.data.email}`);
     const weblink = this._configService.get('NEXT_PUBLIC_WEB_NAME');
-    const listLink = `${weblink}/schools/list`;
+    const listLink = `${weblink}/schools/list?minted=NOTMINTED`;
 
     return this._mailerService.sendMail({
       to: job.data.email,
