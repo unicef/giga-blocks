@@ -159,9 +159,14 @@ export default function NonPayingUser({
                     kind="success"
                     subtitle="Magic link has been sent to your email."
                     lowContrast
+                    hideCloseButton={true}
                     onCloseButtonClick={() => setShowSuccess(false)}
                     timeout={5000}
-                    style={{ marginTop: '16px' }}
+                    style={{
+                      marginTop: '16px',
+                      zIndex: 100,
+                      pointerEvents: 'auto',
+                    }}
                   />
                 )}
                 {showEmailVerify && (
@@ -169,9 +174,14 @@ export default function NonPayingUser({
                     kind="success"
                     subtitle="Email verified successfully. You can activate the school now."
                     lowContrast
-                    onCloseButtonClick={() => setShowSuccess(false)}
+                    onCloseButtonClick={() => setShowEmailVerify(false)}
                     timeout={5000}
-                    style={{ marginTop: '16px' }}
+                    hideCloseButton={true}
+                    style={{
+                      marginTop: '16px',
+                      zIndex: 100,
+                      pointerEvents: 'auto',
+                    }}
                   />
                 )}
                 {showActivateSuccess && (
@@ -179,9 +189,14 @@ export default function NonPayingUser({
                     kind="success"
                     subtitle="School has been activated successfully."
                     lowContrast
-                    onCloseButtonClick={() => setShowSuccess(false)}
+                    onCloseButtonClick={() => setShowActivateSuccess(false)}
                     timeout={5000}
-                    style={{ marginTop: '16px' }}
+                    hideCloseButton={true}
+                    style={{
+                      marginTop: '16px',
+                      zIndex: 100,
+                      pointerEvents: 'auto',
+                    }}
                   />
                 )}
 
