@@ -142,7 +142,7 @@ export default function StandardActivationForm({
                         />
                       </>
                     ) : (
-                      <span className=" detail-value">
+                      <span className=" detail-value" style={{color:'red', cursor:'text'}}>
                         Please select theme to activate school.{' '}
                       </span>
                     )}
