@@ -56,8 +56,7 @@ export default function SchoolDetails({ params }) {
 
     if (!data) return;
     if (data.schoolClaimed === true || data.minted != 'MINTED')
-      setShowClaimedModal(true);
-    // router.push(`/schools/${id}`);
+      router.push(`/schools/${id}`);
 
     const { colorScheme } = data.theme || {};
     const fontColor = colorScheme?.fontColor || defaultFontColor;
