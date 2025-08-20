@@ -55,7 +55,8 @@ export default function SchoolDetails({ params }) {
     useThemeStore.getState().resetTheme();
 
     if (!data) return;
-    if (data.schoolClaimed === true || data.minted != 'MINTED')
+    if (data.schoolClaimed === true) setShowClaimedModal(true);
+    if (data.schoolReserved === false || data.minted != 'MINTED')
       router.push(`/schools/${id}`);
 
     const { colorScheme } = data.theme || {};
