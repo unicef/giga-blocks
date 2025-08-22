@@ -199,7 +199,7 @@ const Sidebar = ({
             </p>
 
             <div className="school-details__minted-border">
-              {isTokenLoading && owner !== undefined ? (
+              {!isTokenLoading && owner !== undefined ? (
                 <>
                   <div className="school-details__minted-link-container">
                     <div className="school-details__minted-link-icon">
@@ -229,7 +229,7 @@ const Sidebar = ({
                       <Password />
                     </div>
                     <p className="school-details__minted-link-address">
-                      Token ID: #12
+                      Token ID: {Number(tokenId)}
                     </p>
                   </div>
                   <div
