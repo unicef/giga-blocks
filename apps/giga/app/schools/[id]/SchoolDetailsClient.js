@@ -270,6 +270,7 @@ export default function SchoolDetailsClient({ params }) {
               isVerfierDisabled={isVerfierDisabled}
               verifiedCIW={data?.verifiedCIW}
               contractAddress={collectorNftAddress}
+              tokenId={tokenId}
             />
           </div>
         </div>

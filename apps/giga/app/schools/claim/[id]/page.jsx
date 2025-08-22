@@ -203,6 +203,8 @@ export default function SchoolDetails({ params }) {
             imageHash={data?.imageHash}
             id={id}
             schoolName={data?.name}
+            isTokenLoading={isTokenLoading}
+            tokenId={tokenId}
           />
         </div>
       </div>

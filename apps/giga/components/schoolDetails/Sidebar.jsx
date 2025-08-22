@@ -7,13 +7,20 @@ import {
   CustomerService,
   IbmCloudDirectLink_1Connect,
   ArrowUpRight,
+  Password,
+  UserAvatar,
 } from '@carbon/icons-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useThemeToggleStore } from '../../app/store/themeToggleStore';
 import { usePathname } from 'next/navigation';
 import { useAccount } from 'wagmi';
-import { ProgressBar, ProgressIndicatorSkeleton } from '@carbon/react';
+import {
+  ProgressBar,
+  SkeletonIcon,
+  SkeletonPlaceholder,
+  SkeletonText,
+} from '@carbon/react';
 import { EXPLORER_URL } from '../../app/constants/api';
 
 const Sidebar = ({
@@ -28,6 +35,7 @@ const Sidebar = ({
   isVerfierDisabled,
   verifiedCIW,
   contractAddress,
+  tokenId,
   handleCIWClick = () => {},
 }) => {
   const [imageError, setImageError] = useState(false);
@@ -46,7 +54,6 @@ const Sidebar = ({
   const closeFullscreen = () => {
     setIsFullscreen(false);
   };
-
 
   const chainId = process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID;
   const urlToAdmin =
@@ -178,7 +185,6 @@ const Sidebar = ({
             <h3 className="school-details__minted-title">
               Art by Cole Sternberg
             </h3>
-            <div></div>
             <p className="school-details__minted-description">
               This image was procedurally generated using the data for this
               school and will dynamically change as the underlying school data
@@ -192,56 +198,61 @@ const Sidebar = ({
               </a>
             </p>
 
-            <div className="school-details__minted-link-container">
-              <div className="school-details__minted-link-icon">
-                <IbmCloudDirectLink_1Connect />
-              </div>
-              <p className="school-details__minted-link-address">
-                Contract Address:
-                <Link
-                  href={`${etherscanUrl}/address/${contractAddress}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    color: '#0F62FE',
-                    fontWeight: '400',
-                    fontSize: '14px',
-                    lineHeight: '160%',
-                    textDecoration: 'none',
-                  }}
-                >
-                  {urlToAdmin}
-                </Link>
-                <ArrowUpRight fill="#0F62FE" />
-              </p>
+            <div className="school-details__minted-border">
+              {isTokenLoading && owner !== undefined ? (
+                <>
+                  <div className="school-details__minted-link-container">
+                    <div className="school-details__minted-link-icon">
+                      <IbmCloudDirectLink_1Connect />
+                    </div>
+                    <p className="school-details__minted-link-address">
+                      Contract Address:
+                      <Link
+                        href={`${etherscanUrl}/address/${contractAddress}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          color: '#0F62FE',
+                          fontWeight: '400',
+                          fontSize: '14px',
+                          lineHeight: '160%',
+                          textDecoration: 'none',
+                        }}
+                      >
+                        {urlToAdmin}
+                      </Link>
+                      <ArrowUpRight fill="#0F62FE" />
+                    </p>
+                  </div>
+                  <div className="school-details__minted-link-container">
+                    <div className="school-details__minted-link-icon">
+                      <Password />
+                    </div>
+                    <p className="school-details__minted-link-address">
+                      Token ID: #12
+                    </p>
+                  </div>
+                  <div
+                    className="school-details__minted-link-container"
+                    style={{ margin: 0 }}
+                  >
+                    <div className="school-details__minted-link-icon">
+                      <UserAvatar />
+                    </div>
+                    <p className="school-details__minted-link-address">
+                      Activated by:{' '}
+                      {owner?.slice(0, 4) + '...' + owner?.slice(35, 43)}
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <SkeletonPlaceholder style={{ width: '100%' }} />
+                  </div>
+                </>
+              )}
             </div>
-            {!isTokenLoading && owner != undefined ? (
-              <div className="school-details__activation-by">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#277AFF"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="lucide lucide-circle-user-icon lucide-circle-user"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <circle cx="12" cy="10" r="3" />
-                  <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
-                </svg>
-
-                <div className="school-details__activation-description">
-                  Activated by :{' '}
-                  {owner?.slice(0, 4) + '...' + owner?.slice(35, 43)}
-                </div>
-              </div>
-            ) : (
-              <ProgressBar className="school-details__progress-bar" />
-            )}
 
             <div>
               <p className="school-details__social-label">
