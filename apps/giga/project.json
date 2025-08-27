@@ -15,7 +15,11 @@
         "development": {
           "outputPath": "apps/giga"
         },
-        "production": {}
+        "production": {
+          "env":{
+            "NODE_ENV": "production"
+          }
+        }
       }
     },
     "serve": {

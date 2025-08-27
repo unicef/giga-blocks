@@ -12,8 +12,9 @@ import {
   Request,
 } from '@nestjs/common';
 import { SchoolService } from './schools.service';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { ListSchoolDto } from './dto/list-schools.dto';
+import { QosService } from './qos.service';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ListReservedSchoolDto, ListSchoolDto } from './dto/list-schools.dto';
 import { Public } from '../common/decorators/public.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.auth.guard';
 import { RoleGuard } from 'src/auth/guards/role.guard';
@@ -27,14 +28,231 @@ import { QUEUES } from 'src/constants';
 import { getFileData } from 'src/utils/arweave/get';
 import { ActivationGuard } from 'src/auth/guards/activation.guard';
 import { ThemeActivationDto } from './dto/theme-activation.dto';
-import { claimReservedNFT, ReserveNFTDto, SchoolActivation } from './dto/reserve-nft.dto';
+import {
+  claimReservedNFT,
+  ReserveNFTDto,
+  SchoolActivation,
+  WeeklyQOSDto,
+  DailyQOSDto,
+} from './dto/reserve-nft.dto';
 @Controller('schools')
 @ApiTags('School')
+@ApiBearerAuth('access-token')
+
 export class SchoolController {
   constructor(
     private readonly schoolService: SchoolService,
+    private readonly qosService: QosService,
     private readonly rabbitMQService: RabbitMQService,
   ) {}
+
+  @Public()
+  @ApiQuery({ name: 'minted', enum: MintStatus, required: false })
+  @ApiOperation({ summary: 'Get the count of schools' })
+  @Get('schoolCount')
+  countSchools(@Query('minted') minted: MintStatus) {
+    const query: ListSchoolDto = {
+      minted,
+    };
+    return this.schoolService.countSchools(query);
+  }
+
+  @Public()
+  @ApiOperation({ summary: 'Get the giga metrics' })
+  @Get('gigaMetrics')
+  async getGigaMetrics() {
+    return this.schoolService.getGigaMetrics();
+  }
+
+  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiOperation({ summary: 'Upload the school csv for bulk mint' })
+  @Post('/uploadFile')
+  async uploadFile(
+    @Req() req: fastify.FastifyRequest,
+    @Res() res: fastify.FastifyReply<any>,
+    @Request() request: any,
+  ): Promise<any> {
+    return await this.schoolService.uploadFile(req, res, request.user);
+  }
+
+  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiOperation({ summary: 'Upload the school csv for bulk mint' })
+  @Post('/validateCsv')
+  async validateCSV(
+    @Req() req: fastify.FastifyRequest,
+    @Res() res: fastify.FastifyReply<any>,
+    @Request() request: any,
+  ): Promise<any> {
+    return await this.schoolService.validateCSV(req, res, request.user);
+  }
+
+  @Public()
+  @Get()
+  @ApiOperation({ summary: 'Get all schools' })
+  findAll(@Query() query: ListSchoolDto) {
+    return this.schoolService.findAll(query);
+  }
+
+  @Public()
+  @Get(':id')
+  @ApiOperation({ summary: 'Get a school' })
+  findOne(@Param('id') id: string) {
+    return this.schoolService.findOne(`${id}`);
+  }
+
+  @Public()
+  @Get('listUpload')
+  @ApiOperation({ summary: 'Get all uploads' })
+  listUploads() {
+    return this.schoolService.listUploads();
+  }
+
+  @Public()
+  @Get('themes')
+  @ApiOperation({ summary: 'Get all themes added in giga system' })
+  getAllThemes() {
+    return this.schoolService.getAllTheme();
+  }
+
+  @Public()
+  @Get('theme/:name')
+  @ApiOperation({ summary: 'Get a theme by name' })
+  getSingleTheme(@Param('name') name: string) {
+    return this.schoolService.getSingleTheme(name);
+  }
+
+  @Public()
+  @Patch('updateTheme/:schoolId')
+  @ApiOperation({ summary: 'Theme update for a school' })
+  updateTheme(@Param('schoolId') schoolId: string, @Body() themeActivationDto: ThemeActivationDto) {
+    return this.schoolService.updateTheme(schoolId, themeActivationDto.themeId);
+  }
+
+  @Public()
+  @Post('reserveNft')
+  @ApiOperation({ summary: 'Reserve a school' })
+  async reserveNft(@Body() reserveData: ReserveNFTDto) {
+    return this.schoolService.reserveNft(reserveData);
+  }
+
+  @Public()
+  @Post('/claimSchool')
+  @ApiOperation({ summary: 'Claim the reserved school' })
+  async claimSchool(@Body() claimData: claimReservedNFT) {
+    return this.schoolService.claimSchool(claimData);
+  }
+
+  @Public()
+  @Get('gigaSchoolId/:gigaSchoolId')
+  @ApiOperation({ summary: 'Get the school by gigaSchoolId' })
+  async getGigaSchoolId(@Param('gigaSchoolId') gigaSchoolId: string) {
+    return await this.schoolService.getGigaSchoolId(gigaSchoolId);
+  }
+
+  @Public()
+  @Post('/activateSchool')
+  @ApiOperation({ summary: 'Activate the school by paying user' })
+  async activateSchool(@Body() data: SchoolActivation, transactionhash: string) {
+    return this.schoolService.activatePaidSchool(data);
+  }
+
+  @Public()
+  @Get('/qos/daily')
+  @ApiOperation({ summary: 'Get the daily qos data of school' })
+  async getDailyQos(@Query() data: DailyQOSDto) {
+    return this.qosService.getlatestQOS(data);
+  }
+
+  @Public()
+  @Get('/qos/weekly')
+  @ApiOperation({ summary: 'Get the weekly qos data of school' })
+  async getWeeklyQos(@Query() query: WeeklyQOSDto) {
+    return this.qosService.getWeeklyQOS(query);
+  }
+
+  @Public()
+  @Get('/qos/monthly')
+  @ApiOperation({ summary: 'Get the monthly qos data of school' })
+  async getMonthlyQos(@Query() query: WeeklyQOSDto) {
+    return this.qosService.getMonthlyQOS(query);
+  }
+  @Public()
+  @Get('/countries')
+  @ApiOperation({ summary: 'Get all countries stored in giga db' })
+  async getCountries() {
+    return this.schoolService.getCountries();
+  }
+
+  @Public()
+  @Get('/minted/:csvId')
+  @ApiOperation({ summary: 'Get minted count of csv school id' })
+  async getMintedCount(@Param('csvId') csvId: string) {
+    return this.schoolService.getMintedCount(csvId);
+  }
+
+  @Public()
+  @Get('/details/:csvId')
+  @ApiOperation({ summary: 'Get minted count of csv school id' })
+  async getCsvDetails(@Param('csvId') csvId: string) {
+    return this.schoolService.getCsvDetails(csvId);
+  }
+
+
+   @Public()
+  @Patch('/updateImages')
+  @ApiOperation({ summary: 'Add the images on-chain for all minted school' })
+  async updateImages() {
+    return this.schoolService.updateImages();
+  }
+
+  @Public()
+  @Get('/imageUpdate')
+  @ApiOperation({ summary: 'Get the list of schools for on-chain image update ' })
+  async getImageUpdateList(@Query() query: any) {
+    return this.schoolService.getImageUpdateList(query);
+  }
+
+  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Patch('/syncSchool/:schoolId')
+  @ApiOperation({summary:'Sync the database with contract in case of any missing data'})
+  async syncSchool(@Param('schoolId') schoolId:string){
+    return this.schoolService.syncSchoolData(schoolId);
+  }
+
+  // @Roles('ADMIN')
+  // @UseGuards(JwtAuthGuard, RoleGuard)
+  @Public()
+  @Get('/reservedNftList')
+  @ApiOperation({ summary: 'Get the list of reserved schools' })
+  async getReservedSchools(@Query() query: ListReservedSchoolDto) {
+    return this.schoolService.getReservedSchools(query);
+  }
+
+  
+
+  //arewave
+  @Public()
+  @Post('getFile')
+  @ApiOperation({ summary: 'Get the file from arweave' })
+  async getFile(@Body() fileHash: any) {
+    const data = await getFileData(fileHash);
+    return data.data[0];
+  }
+
+  // @Public()
+  // @Get('/getContractDetail/:tokenId')
+  // findContract(@Param('tokenId') tokenId: string) {
+  //   return this.schoolService.findContract(tokenId);
+  // }
+
+  // @Public()
+  // @Get('byCountry/:country')
+  // findByCountry(@Param('country') country: string) {
+  //   return this.schoolService.byCountry(`${country}`);
+  // }
 
   // @Roles('ADMIN')
   // @UseGuards(JwtAuthGuard, RoleGuard)
@@ -72,83 +290,6 @@ export class SchoolController {
   //   return this.schoolService.mintNft(MintData);
   // }
 
-  @Public()
-  @ApiQuery({ name: 'minted', enum: MintStatus, required: false })
-  @ApiOperation({ summary: 'Get the count of schools' })
-  @Get('schoolCount')
-  countSchools(@Query('minted') minted: MintStatus) {
-    const query: ListSchoolDto = {
-      minted,
-    };
-    return this.schoolService.countSchools(query);
-  }
-
-  @Roles('ADMIN')
-  @UseGuards(JwtAuthGuard, RoleGuard)
-  @ApiOperation({ summary: 'Upload the school csv for bulk mint' })
-  @Post('/uploadFile')
-  async uploadFile(
-    @Req() req: fastify.FastifyRequest,
-    @Res() res: fastify.FastifyReply<any>,
-    @Request() request: any,
-  ): Promise<any> {
-    return await this.schoolService.uploadFile(req, res, request.user);
-  }
-
-  @Public()
-  @Get()
-  @ApiOperation({ summary: 'Get all schools' })
-  findAll(@Query() query: ListSchoolDto) {
-    return this.schoolService.findAll(query);
-  }
-
-  @Public()
-  @Get(':id')
-  @ApiOperation({ summary: 'Get a school' })
-  findOne(@Param('id') id: string) {
-    return this.schoolService.findOne(`${id}`);
-  }
-
-  // @Public()
-  // @Get('/getContractDetail/:tokenId')
-  // findContract(@Param('tokenId') tokenId: string) {
-  //   return this.schoolService.findContract(tokenId);
-  // }
-
-  // @Public()
-  // @Get('byCountry/:country')
-  // findByCountry(@Param('country') country: string) {
-  //   return this.schoolService.byCountry(`${country}`);
-  // }
-
-  @Public()
-  @Get('listUpload')
-  @ApiOperation({ summary: 'Get all uploads' })
-  listUploads() {
-    return this.schoolService.listUploads();
-  }
-
-  @Public()
-  @Get('themes')
-  @ApiOperation({ summary: 'Get all themes added in giga system' })
-  getAllThemes() {
-    return this.schoolService.getAllTheme();
-  }
-
-  @Public()
-  @Get('theme/:name')
-  @ApiOperation({ summary: 'Get a theme by name' })
-  getSingleTheme(@Param('name') name: string) {
-    return this.schoolService.getSingleTheme(name);
-  }
-
-  @Public()
-  @Patch('updateTheme/:schoolId')
-  @ApiOperation({ summary: 'Theme update for a school' })
-  updateTheme(@Param('schoolId') schoolId: string, @Body() themeActivationDto: ThemeActivationDto) {
-    return this.schoolService.updateTheme(schoolId, themeActivationDto.themeId);
-  }
-
   // Test rabbit mq
   // @Public()
   // @Get('send')
@@ -160,48 +301,4 @@ export class SchoolController {
   //   );
   //   return { response };
   // }
-
-  @Public()
-  @Post('reserveNft')
-  @ApiOperation({ summary: 'Reserve a school' })
-  async reserveNft(@Body() reserveData: ReserveNFTDto) {
-    return this.schoolService.reserveNft(reserveData);
-  }
-
-  @Public()
-  @Post('/claimSchool')
-  @ApiOperation({ summary: 'Claim the reserved school' })
-  async claimSchool(@Body() claimData: claimReservedNFT) {
-    return this.schoolService.claimSchool(claimData);
-  }
-
-  @Public()
-  @Get('gigaSchoolId/:gigaSchoolId')
-  @ApiOperation({ summary: 'Get the school by gigaSchoolId' })
-  async getGigaSchoolId(@Param('gigaSchoolId') gigaSchoolId: string) {
-    return await this.schoolService.getGigaSchoolId(gigaSchoolId);
-  }
-
-  @Public()
-  @Post('/activateSchool')
-  @ApiOperation({ summary: 'Activate the school by paying user' })
-  async activateSchool(@Body() data: SchoolActivation) {
-    return this.schoolService.activateSchool(data);
-  }
-
-  //arewave
-  @Public()
-  @Post('getFile')
-  @ApiOperation({ summary: 'Get the file from arweave' })
-  async getFile(@Body() fileHash: any) {
-    const data = await getFileData(fileHash);
-    return data.data[0];
-  }
-
-  //   @UseGuards(ActivationGuard)
-  //   @Public()
-  //   @Get('/testEmailActivation/:uuid')
-  //   async activateWithEmail(@Param('uuid') uuid: string) {
-  //     console.log(uuid);
-  //   }
 }

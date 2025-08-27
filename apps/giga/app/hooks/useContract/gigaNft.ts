@@ -227,13 +227,6 @@ export const nftAbi = [
   },
   {
     type: 'function',
-    inputs: [],
-    name: 'getName',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
     inputs: [
       { name: '_nftContent', internalType: 'address', type: 'address' },
       { name: '_name', internalType: 'string', type: 'string' },
@@ -327,7 +320,10 @@ export const nftAbi = [
       { name: '_nftDatavalues', internalType: 'string[9]', type: 'string[9]' },
     ],
     name: 'safeMint',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    outputs: [
+      { name: 'tokenId', internalType: 'uint256', type: 'uint256' },
+      { name: 'tokenHash', internalType: 'bytes32', type: 'bytes32' },
+    ],
     stateMutability: 'nonpayable',
   },
   {
@@ -471,14 +467,6 @@ export const useReadNftGetApproved = /*#__PURE__*/ createUseReadContract({
 export const useReadNftGetImplementation = /*#__PURE__*/ createUseReadContract({
   abi: nftAbi,
   functionName: 'getImplementation',
-})
-
-/**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link nftAbi}__ and `functionName` set to `"getName"`
- */
-export const useReadNftGetName = /*#__PURE__*/ createUseReadContract({
-  abi: nftAbi,
-  functionName: 'getName',
 })
 
 /**

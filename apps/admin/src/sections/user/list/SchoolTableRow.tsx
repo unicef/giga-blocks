@@ -3,7 +3,8 @@ import { Stack, TableRow, TableCell, Typography, Checkbox } from '@mui/material'
 import { TESTNET_CHAINS, DEFAULT_CHAIN_ID } from '@components/web3/chains';
 
 // components
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
+import { NextRouter } from 'next/router';
 
 type Props = {
   row: any;
@@ -11,6 +12,7 @@ type Props = {
   selectedValues: any;
   rowData: any;
   checkbox: boolean;
+  clickable?: boolean;
 };
 
 export default function SchoolTableRow({
@@ -19,10 +21,21 @@ export default function SchoolTableRow({
   selectedValues,
   rowData,
   checkbox,
+  clickable,
 }: Props) {
-  const { id, schoolName, country, longitude, latitude, mintedStatus, mintedAt, gasFee } = row;
+  const {
+    id,
+    schoolName,
+    country,
+    longitude,
+    latitude,
+    mintedStatus,
+    mintedAt,
+    gasFee,
+    imageHash,
+  } = row;
 
-  const { push } = useRouter();
+  const { push } = useRouter() as NextRouter;
   const schoolNft = process.env.NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS;
   const explorer = TESTNET_CHAINS[DEFAULT_CHAIN_ID]?.blockExplorerUrls[0];
 
@@ -72,7 +85,7 @@ export default function SchoolTableRow({
       <TableRow
         hover
         // selected={selected}
-        sx={{ cursor: 'pointer' }}
+        sx={{ cursor: clickable ? 'pointer' : 'default' }}
       >
         {checkbox && (
           <TableCell padding="checkbox">
@@ -83,7 +96,7 @@ export default function SchoolTableRow({
           </TableCell>
         )}
 
-        <TableCell onClick={() => handleEditRow(id)}>
+        <TableCell onClick={clickable ? () => handleEditRow(id) : () => {}}>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Typography variant="subtitle2" noWrap>
               {truncateString(schoolName, 25)}
@@ -91,30 +104,43 @@ export default function SchoolTableRow({
           </Stack>
         </TableCell>
 
-        <TableCell align="left" onClick={() => handleEditRow(id)}>
+        <TableCell
+          align="left"
+          onClick={clickable ? () => handleEditRow(id) : () => {}}
+          sx={{ cursor: clickable ? 'pointer' : 'default' }}
+        >
           {country}
         </TableCell>
 
         <TableCell
           align="left"
-          sx={{ textTransform: 'capitalize' }}
-          onClick={() => handleEditRow(id)}
+          sx={{ textTransform: 'capitalize', cursor: clickable ? 'pointer' : 'default' }}
+          onClick={clickable ? () => handleEditRow(id) : () => {}}
         >
           {latitude}
         </TableCell>
 
         <TableCell
           align="left"
-          sx={{ textTransform: 'capitalize' }}
-          onClick={() => handleEditRow(id)}
+          sx={{ textTransform: 'capitalize', cursor: clickable ? 'pointer' : 'default' }}
+          onClick={clickable ? () => handleEditRow(id) : () => {}}
         >
           {longitude}
         </TableCell>
+        {imageHash && (
+          <TableCell
+            align="left"
+            sx={{ textTransform: 'capitalize', cursor: clickable ? 'pointer' : 'default' }}
+            onClick={clickable ? () => handleEditRow(id) : () => {}}
+          >
+            {imageHash}
+          </TableCell>
+        )}
 
         <TableCell
           align="left"
-          sx={{ textTransform: 'capitalize' }}
-          onClick={() => handleEditRow(id)}
+          sx={{ textTransform: 'capitalize', cursor: clickable ? 'pointer' : 'default' }}
+          onClick={clickable ? () => handleEditRow(id) : () => {}}
         >
           {mintedStatus == 'NOTMINTED' && 'Pending'}
           {mintedStatus == 'ISMINTING' && 'In Progress'}
@@ -130,16 +156,16 @@ export default function SchoolTableRow({
         {mintedStatus == 'MINTED' && (
           <TableCell
             align="left"
-            sx={{ textTransform: 'capitalize' }}
-            onClick={() => handleEditRow(id)}
+            sx={{ textTransform: 'capitalize', cursor: clickable ? 'pointer' : 'default' }}
+            onClick={clickable ? () => handleEditRow(id) : () => {}}
           >
             {formattedDate}
           </TableCell>
         )}
         <TableCell
           align="left"
-          sx={{ textTransform: 'capitalize' }}
-          onClick={() => handleEditRow(id)}
+          sx={{ textTransform: 'capitalize', cursor: clickable ? 'pointer' : 'default' }}
+          onClick={clickable ? () => handleEditRow(id) : () => {}}
         >
           {gasFee}
         </TableCell>

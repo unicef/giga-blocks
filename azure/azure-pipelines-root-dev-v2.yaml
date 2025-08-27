@@ -10,15 +10,9 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  containerRegistryServiceConnection: $(ACR_SERVICE_CONNECTION)
   imageTag: '$(Build.BuildId)'
   system.debug: true
-  kubernetesServiceConnection: $(K8S_SERVICE_CONNECTION)
-  kubernetesNamespace: $(KUBERNETES_NAMESPACE)
   CI: false
-  acrName: $(ACR_NAME)
-  acrUser: $(ACR_USER)
-  acrPassword: $(ACR_PASSWORD)
 
 stages:
 - stage: Build
@@ -58,69 +52,96 @@ stages:
         pnpm build
       displayName: 'install dependencies and build apps'
 
-    #- task: Docker@2
-    #  displayName: Login to container Registry
-    #  inputs:
-    #    command: login
-    #    containerRegistry: $(containerRegistryServiceConnection)
+    - task: Docker@2
+      displayName: Login to container Registry
+      inputs:
+        command: login
+        containerRegistry: $(ACR_SERVICE_CONNECTION)
+
+    - task: Docker@2
+      displayName: Build and push API image to container registry
+      inputs:
+        command: buildAndPush
+        repository: 'giga-blocks-root-api'
+        dockerfile: './Dockerfile.api'
+        containerRegistry: $(ACR_SERVICE_CONNECTION)
+        tags: |
+          $(imageTag)
+
+    - task: Docker@2
+      displayName: Build and push admin image to container registry
+      inputs:
+        command: buildAndPush
+        repository: 'giga-blocks-root-admin'
+        dockerfile: './Dockerfile.admin'
+        containerRegistry: $(ACR_SERVICE_CONNECTION)
+        tags: |
+          $(imageTag)
+
+    - task: Docker@2
+      displayName: Build and push web image to container registry
+      inputs:
+        command: buildAndPush
+        repository: 'giga-blocks-root-web'
+        dockerfile: './Dockerfile.giga'
+        containerRegistry: $(ACR_SERVICE_CONNECTION)
+        tags: |
+          $(imageTag)
+
+    - task: Docker@2
+      displayName: Build and push webhook image to container registry
+      inputs:
+        command: buildAndPush
+        repository: 'giga-blocks-root-webhook'
+        dockerfile: './Dockerfile.webhook'
+        containerRegistry: $(ACR_SERVICE_CONNECTION)
+        tags: |
+          $(imageTag)
+
+- stage: Deploy
+  displayName: 'GIGA Blocks v2 deploy'
+  jobs:
+  - job: Deploy
+    displayName: GIGA Blocks v2 deploy job
+    steps:
+    - task: HelmDeploy@0
+      displayName: 'Add the Postgresql dependency repository'
+      enabled: true
+      inputs:
+        connectionType: Kubernetes Service Connection
+        kubernetesServiceEndpoint: $(K8S_SERVICE_CONNECTION)
+        command: 'repo'
+        arguments: 'add postgresql https://charts.bitnami.com/bitnami'
+        namespace: $(KUBERNETES_NAMESPACE)
+
+    - task: DownloadSecureFile@1
+      inputs:
+        secureFile: 'giga-blocks-v2.values.dev.yaml'
+
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(Agent.TempDirectory)'
+        Contents: 'giga-blocks-v2.values.dev.yaml'
+        TargetFolder: '$(Build.SourcesDirectory)/giga-blocks-helm'
+
     - script: |
-        echo "$(acrPassword)" | docker login $(acrName) -u $(acrUser) --password-stdin
-      displayName: Docker login to ACR
+        mv giga-blocks-helm/giga-blocks-v2.values.dev.yaml giga-blocks-helm/values.dev.yaml
 
-    #- task: Docker@2
-    #  displayName: Build and push API image to container registry
-    #  inputs:
-    #    command: buildAndPush
-    #    repository: 'giga-blocks-root-api'
-    #    dockerfile: './Dockerfile.api'
-    #    containerRegistry: $(containerRegistryServiceConnection)
-    #    tags: |
-    #      $(imageTag)
-    - script: |
-        docker build -f ./Dockerfile.api -t $(acrName)/giga-blocks-root-api:$(imageTag) .
-        docker push $(acrName)/giga-blocks-root-api:$(imageTag)
-      displayName: Build and Push API Image to ACR
-
-    #- task: Docker@2
-    #  displayName: Build and push admin image to container registry
-    #  inputs:
-    #    command: buildAndPush
-    #    repository: 'giga-blocks-root-admin'
-    #    dockerfile: './Dockerfile.admin'
-    #    containerRegistry: $(containerRegistryServiceConnection)
-    #    tags: |
-    #      $(imageTag)
-
-    - script: |
-        docker build -f ./Dockerfile.admin -t $(acrName)/giga-blocks-root-admin:$(imageTag) .
-        docker push $(acrName)/giga-blocks-root-admin:$(imageTag)
-      displayName: Build and Push admin Image to ACR
-
-    #- task: Docker@2
-    #  displayName: Build and push web image to container registry
-    #  inputs:
-    #    command: buildAndPush
-    #    repository: 'giga-blocks-root-web'
-    #    dockerfile: './Dockerfile.web'
-    #    containerRegistry: $(containerRegistryServiceConnection)
-    #    tags: |
-    #      $(imageTag)
-    - script: |
-        docker build -f ./Dockerfile.web -t $(acrName)/giga-blocks-root-web:$(imageTag) .
-        docker push $(acrName)/giga-blocks-root-web:$(imageTag)
-      displayName: Build and Push web Image to ACR
-
-
-    #- task: Docker@2
-    #  displayName: Build and push giga image to container registry
-    #  inputs:
-    #    command: buildAndPush
-    #    repository: 'giga-blocks-root-giga'
-    #    dockerfile: './Dockerfile.giga'
-    #    containerRegistry: $(containerRegistryServiceConnection)
-    #    tags: |
-    #      $(imageTag)
-    - script: |
-        docker build -f ./Dockerfile.giga -t $(acrName)/giga-blocks-root-giga:$(imageTag) .
-        docker push $(acrName)/giga-blocks-root-giga:$(imageTag)
-      displayName: Build and Push giga Image to ACR
+    - task: HelmDeploy@0
+      displayName: 'Deploy the development Giga Blocks v2 application'
+      inputs:
+        connectionType: Kubernetes Service Connection
+        kubernetesServiceEndpoint: $(K8S_SERVICE_CONNECTION)
+        command: upgrade
+        chartType: FilePath
+        chartPath: $(Build.SourcesDirectory)/giga-blocks-helm
+        releaseName: "giga-blocks"
+        valueFile: giga-blocks-helm/values.dev.yaml
+        namespace: $(KUBERNETES_NAMESPACE)
+        arguments: >
+          --dependency-update
+          --wait
+          --set api.image.tag=$(imageTag)
+          --set web.image.tag=$(imageTag)
+          --set admin.image.tag=$(imageTag)
+          --set webhook.image.tag=$(imageTag)

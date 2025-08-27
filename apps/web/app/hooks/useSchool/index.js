@@ -1,5 +1,5 @@
 'use client';
-import { SCHOOLS, FEATURED } from '../../constants/api';
+import { ENDPOINTS, FEATURED } from '../../constants/api';
 import { useQuery } from '@tanstack/react-query';
 import { apiGuest } from '../../utils/api';
 
@@ -8,7 +8,7 @@ export const useSchoolGet = (page, perPage, searchText) => {
     ['get-school-data', page, perPage, searchText],
     async () => {
       const { data } = await apiGuest.get(
-        `${SCHOOLS.GET}?page=${page}&perPage=${perPage}&name=${searchText}`
+        `${ENDPOINTS.SCHOOLS.GET}?page=${page}&perPage=${perPage}&name=${searchText}`
       );
       return data;
     },
@@ -20,7 +20,7 @@ export const useSchoolGet = (page, perPage, searchText) => {
 
 export const useSchoolDetails = (id) => {
   return useQuery(['get-school-details', id], async () => {
-    const { data } = await apiGuest.get(`${SCHOOLS.GET}/${id}`);
+    const { data } = await apiGuest.get(`${ENDPOINTS.SCHOOLS.GET}/${id}`);
     return data;
   });
 };

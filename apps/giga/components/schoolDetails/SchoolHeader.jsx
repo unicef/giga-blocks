@@ -3,36 +3,35 @@ import { ArrowUpRight, Location } from '@carbon/icons-react';
 const Header = ({
   name,
   school_type,
-  region_name,
+  country_name,
   locationId,
   countryCode,
   fontColor,
 }) => {
-  const mapUrl = process.env.NEXT_PUBLIC_GIGA_MAPS_API
+  const mapUrl = process.env.NEXT_PUBLIC_GIGA_MAPS_API;
   return (
     <div className="school-details__header">
       <div className="school-details__info">
-        <h1 className="school-details__title">{name}</h1>
+        <h1 className="school-details__title" style={{ color: fontColor }}>
+          {name ? name.replace(/,/g, ', ') : ''}
+        </h1>
         <p className="school-details__level">
           {school_type && 'Not Available'}
         </p>
         <div className="school-details__location">
-          <Location size={16} /> {region_name}
-         {countryCode ?
-          <a
-            href={`${mapUrl}/schools?country=${countryCode}&school_ids=${locationId}`}
-            className="school-details__map-link"
-            target="_blank"
-            style={{ color: fontColor }}
-          >
-            Locate on map <ArrowUpRight size={16} />
+          <Location size={16} /> {country_name}
+          {countryCode ? (
+            <a
+              href={`${mapUrl}/schools?country=${countryCode}&school_ids=${locationId}`}
+              className="school-details__map-link"
+              target="_blank"
+              style={{ color: fontColor }}
+            >
+              Locate on map <ArrowUpRight size={16} />
             </a>
-:
-            <div>
-              Location:
-              No location details found
-            </div>
-         }
+          ) : (
+            <div>Location: No location details found</div>
+          )}
         </div>
       </div>
     </div>

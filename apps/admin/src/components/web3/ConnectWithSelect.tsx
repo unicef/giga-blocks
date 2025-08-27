@@ -8,7 +8,7 @@ import { Button } from '@mui/material';
 import { loginSignature } from './utils/wallet';
 import { JsonRpcProvider, Signer } from 'ethers';
 import { useLoginWallet, useNonceGet } from '@hooks/web3/useMetamask';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 import { useSnackbar } from '@components/snackbar';
 import {
   saveAccessToken,
@@ -18,6 +18,7 @@ import {
 } from '@utils/sessionManager';
 import { DEFAULT_CHAIN_ID } from './chains';
 import { metaMaskLogin } from './utils/metamask';
+import { NextRouter } from 'next/router';
 
 function ChainSelect({
   activeChainId,
@@ -60,17 +61,17 @@ export default function ConnectWithSelect({
   const [desiredChainId, setDesiredChainId] = useState<any>(undefined);
   const [enableGetNonce, setEnableGetNonce] = useState<boolean>(false);
   const [refetchNonce, setRefetchNonce] = useState<boolean>(false);
-  const [invalidNonce, setInvalidNonce] = useState<boolean>(false)
+  const [invalidNonce, setInvalidNonce] = useState<boolean>(false);
 
   const {
     data: nonceData,
     isSuccess: isNonceSuccess,
     isError: isNonceError,
-    refetch: nonceRefetch
+    refetch: nonceRefetch,
   } = useNonceGet(enableGetNonce);
-  
+
   const { enqueueSnackbar } = useSnackbar();
-  const { push } = useRouter();
+  const { push } = useRouter() as NextRouter as NextRouter;
   const { setAuthState } = useAuthContext();
 
   const {
@@ -96,31 +97,31 @@ export default function ConnectWithSelect({
           return Error('Signature is null');
         }
         mutate({ walletAddress: address, signature });
-        setRefetchNonce(false)
+        setRefetchNonce(false);
       } catch (err) {
         enqueueSnackbar(err.message, { variant: 'error' });
       }
     } else {
-      setRefetchNonce(true)
+      setRefetchNonce(true);
       enqueueSnackbar('Fetching nonce, please wait...', { variant: 'warning' });
     }
   };
 
-  useEffect( () => {
-    if(refetchNonce || invalidNonce){
+  useEffect(() => {
+    if (refetchNonce || invalidNonce) {
       getSignature();
     }
-  }, [refetchNonce, isNonceSuccess, invalidNonce])
+  }, [refetchNonce, isNonceSuccess, invalidNonce]);
 
   useEffect(() => {
     isNonceError && enqueueSnackbar("Couldn't get Nonce", { variant: 'error' });
   }, [isNonceError]);
 
   useEffect(() => {
-    if(isError){
+    if (isError) {
       //@ts-ignore
-      enqueueSnackbar(loginWalletError.response.data.message, { variant: 'error' }); 
-      setInvalidNonce(true)
+      enqueueSnackbar(loginWalletError.response.data.message, { variant: 'error' });
+      setInvalidNonce(true);
     }
     if (isLoginWalletSuccess) {
       const currentUser = {
@@ -154,7 +155,7 @@ export default function ConnectWithSelect({
     setEnableGetNonce(false);
     try {
       setError(undefined);
-      await metaMaskLogin(connector)
+      await metaMaskLogin(connector);
     } catch (error) {
       setError(error);
     }
@@ -173,7 +174,7 @@ export default function ConnectWithSelect({
             <Button
               sx={{ marginRight: '15px' }}
               variant="contained"
-              style={{background: '#0050e6'}}
+              style={{ background: '#0050e6' }}
               onClick={() => {
                 getSignature();
               }}

@@ -1,13 +1,15 @@
 'use client';
 
 import { ArrowLeft } from '@carbon/icons-react';
-import { Button } from '@carbon/react';
+import { Button, Modal } from '@carbon/react';
 import { useThemeToggleStore } from '../../app/store/themeToggleStore';
 import { useThemeStore } from '../../app/store/themeStore';
 import { useRouter } from 'next/navigation';
 import { useThemeUpdate } from '../../app/hooks/useTheme/index';
 import Image from 'next/image';
 import './_themeSelector.scss';
+import { useState } from 'react';
+import { ColorPalette, Location, ArrowRight } from '@carbon/icons-react';
 
 const ThemeSelector = ({
   themeOptions,
@@ -16,15 +18,37 @@ const ThemeSelector = ({
   linkActivation,
   id,
   loading,
+  showNotification,
+  SchoolName,
+  country_name,
 }) => {
   const router = useRouter();
   const updateTheme = useThemeUpdate();
+
+  const [open, setOpen] = useState(false);
   const handleActivateClick = () => {
     if (isVisibleForMinted) {
-      updateTheme.mutate({
-        schoolId: id,
-        themeId: selectedTheme,
-      });
+      updateTheme.mutate(
+        {
+          schoolId: id,
+          themeId: selectedTheme,
+        },
+        {
+          onSuccess: () => {
+            setOpen(true);
+            // toggleVisibilityForMinted();
+          },
+          onError: (error) => {
+            toggleVisibilityForMinted();
+            console.error('Error updating theme:', error);
+            showNotification(
+              'error',
+              'Error Updating Theme',
+              'Failed to update the school theme. Please try again.'
+            );
+          },
+        }
+      );
     } else {
       const url = linkActivation
         ? `${id}/activate-school?linkActivation=${linkActivation}`
@@ -32,8 +56,18 @@ const ThemeSelector = ({
       router.push(url);
     }
   };
+
+  const handleRequestClose = () => {
+    setOpen(false);
+    toggleVisibilityForMinted();
+  };
+
   const isVisibleForMinted = useThemeToggleStore(
     (state) => state.isVisibleForMinted
+  );
+
+  const toggleVisibilityForMinted = useThemeToggleStore(
+    (state) => state.toggleVisibilityForMinted
   );
   const setTheme = useThemeStore((state) => state.setTheme);
 
@@ -47,6 +81,18 @@ const ThemeSelector = ({
       }
     }
   };
+
+  // Get the selected theme name
+  const getSelectedThemeName = () => {
+    const selected = themeOptions?.find((t) => t.id === selectedTheme);
+    return selected?.name || 'Default';
+  };
+
+  // Get the selected theme colors
+  const selectedThemeColors = themeOptions?.find(
+    (t) => t.id === selectedTheme
+  )?.colorScheme;
+
   return (
     <div className="theme-selector">
       <div className="theme-selector__content">
@@ -59,18 +105,9 @@ const ThemeSelector = ({
           <div className="theme-selector__brand">Giga Blocks</div>
         </div>
 
-        <div className="theme-selector__illustration">
-          <Image
-            src="/images/globe-people.png"
-            alt="People working with a globe"
-            width={200}
-            height={100}
-          />
-        </div>
-
         <div className="theme-selector__options">
           <p className="theme-selector__prompt">
-            Pick a theme color that suits you the most before you activate.
+            Preview themes below and choose one before you activate
           </p>
 
           <div className="theme-selector__themes">
@@ -85,7 +122,11 @@ const ThemeSelector = ({
                 >
                   <div
                     className="theme-selector__theme-color"
-                    style={{ backgroundColor: theme.colorScheme?.fontColor }}
+                    style={{
+                      backgroundColor: theme.colorScheme?.fontColor,
+                      borderTopLeftRadius: '4px',
+                      borderBottomLeftRadius: '4px',
+                    }}
                   />
                   <div
                     className="theme-selector__theme-color"
@@ -93,7 +134,11 @@ const ThemeSelector = ({
                   />
                   <div
                     className="theme-selector__theme-color"
-                    style={{ backgroundColor: theme.colorScheme?.bgColor }}
+                    style={{
+                      backgroundColor: theme.colorScheme?.bgColor,
+                      borderTopRightRadius: '4px',
+                      borderBottomRightRadius: '4px',
+                    }}
                   />
                 </button>
               ))}
@@ -109,6 +154,85 @@ const ThemeSelector = ({
           </Button>
         </div>
       </div>
+      <div className="theme-selector__illustration">
+        <Image
+          src="/images/earth-illustration.png"
+          alt="People working with a globe"
+          width={582}
+          height={582}
+        />
+      </div>
+      <Modal
+        open={open}
+        preventCloseOnClickOutside={true}
+        passiveModal
+        onRequestClose={handleRequestClose}
+        size="md"
+        hasCloseIcon={false}
+        className="theme-update-modal"
+      >
+        <div className="theme-update-modal-icon">
+          <ColorPalette size={24} fill="#ffffff" />
+        </div>
+        <h3 className="theme-update-modal-modal-description">
+          Theme Updated Successfully! 🎉
+        </h3>
+
+        <p className="theme-update-modal-details">
+          {SchoolName ? SchoolName : 'School'} is now using the{' '}
+          <strong>{getSelectedThemeName()}</strong> theme
+        </p>
+
+        <div className="theme-color-selector">
+          <div className="theme-selector-school-name">
+            <div> {SchoolName}</div>
+            <div className="theme-selector-location">
+              <Location />
+              {country_name}
+            </div>
+          </div>
+          {selectedThemeColors && (
+            <div className="theme-update-modal-theme-preview">
+              <div className="theme-preview-container">
+                <div
+                  className="theme-preview-color"
+                  style={{
+                    backgroundColor: selectedThemeColors.fontColor,
+                    borderTopLeftRadius: '4px',
+                    borderBottomLeftRadius: '4px',
+                  }}
+                ></div>
+                <div
+                  className="theme-preview-color"
+                  style={{
+                    backgroundColor: selectedThemeColors.cardColor,
+                  }}
+                ></div>
+                <div
+                  className="theme-preview-color"
+                  style={{
+                    backgroundColor: selectedThemeColors.bgColor,
+                    borderTopRightRadius: '4px',
+                    borderBottomRightRadius: '4px',
+                  }}
+                ></div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <Button
+          className="theme-update-button"
+          kind="primary"
+          renderIcon={ArrowRight}
+          onClick={() => {
+            handleRequestClose(); // Close the modal
+            router.push(`/schools/${id}`); // Navigate to the school details page
+          }}
+        >
+          View Updated School Page
+        </Button>
+      </Modal>
     </div>
   );
 };

@@ -14,7 +14,8 @@ const ROOTS_CONTRIBUTE = '/contribute';
 const ROOTS_VALID = '/valid';
 const ROOTS_ACTIVATE_SCHOOL = '/activate-school';
 const ROOTS_TRANSACTION = '/transaction';
-
+const ROOTS_INFORMATION_WORKER = '/information-worker';
+const ROOTS_QUQUE = '/queues';
 // ----------------------------------------------------------------------
 
 export const PATH_AUTH = {
@@ -67,11 +68,18 @@ export const PATH_ACTIVATE = {
 export const PATH_TRANSACTION = {
   root: ROOTS_TRANSACTION,
 };
-
+export const PATH_INFORMATION = {
+  root: ROOTS_INFORMATION_WORKER,
+};
+export const PATH_QUEUE = {
+  root: ROOTS_QUQUE,
+};
 export const PATH_SCHOOL = {
   root: ROOTS_SCHOOL,
   verified: path(ROOTS_SCHOOL, '/minted'),
   contributed: path(ROOTS_SCHOOL, '/un-minted'),
   minting: path(ROOTS_SCHOOL, '/pending'),
   import: path(ROOTS_SCHOOL, '/import'),
+  imageUpdate: path(ROOTS_SCHOOL, '/imageUpdate'),
+  reserved: path(ROOTS_SCHOOL, '/reservedSchool'),
 };

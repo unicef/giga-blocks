@@ -10,7 +10,8 @@ import Identicon from 'react-identicons';
 import { useMintSchools } from '@hooks/school/useSchool';
 import { PATH_DASHBOARD, PATH_SCHOOL } from '@routes/paths';
 import { useSnackbar } from 'notistack';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
+import { NextRouter } from 'next/router';
 
 interface Props {
   isEdit?: boolean;
@@ -27,20 +28,16 @@ export default function SchoolDetails({ id }: Props) {
     connectivity: false,
     coverage: false,
     mintedStatus: '',
-    electricity_availabilty: false
+    electricity_availabilty: false,
   });
 
   const { data, isSuccess, isError, refetch } = useSchoolGetById(id);
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const {
-    mutate,
-    isError: isMintError,
-    isSuccess: isMintSuccess,
-  } = useMintSchools();
+  const { mutate, isError: isMintError, isSuccess: isMintSuccess } = useMintSchools();
 
-  const router = useRouter()
+  const router = useRouter() as NextRouter;
 
   const [nftData, setNftData] = useState({
     id: '',
@@ -66,7 +63,7 @@ export default function SchoolDetails({ id }: Props) {
         connectivity: data?.connectivity,
         coverage: data?.coverage_availability,
         mintedStatus: data?.minted,
-        electricity_availabilty: data?.electricity_available
+        electricity_availabilty: data?.electricity_available,
       });
   }, [isSuccess, isError, data]);
 
@@ -104,13 +101,19 @@ export default function SchoolDetails({ id }: Props) {
   };
 
   useEffect(() => {
-    isMintSuccess && enqueueSnackbar('Minted successfully'); refetch();
-    isMintSuccess &&  back();
-    isMintError && enqueueSnackbar('Minting unsuccessful'); refetch();
-  }, [isMintSuccess, isMintError])
+    isMintSuccess && enqueueSnackbar('Minted successfully');
+    refetch();
+    isMintSuccess && back();
+    isMintError && enqueueSnackbar('Minting unsuccessful');
+    refetch();
+  }, [isMintSuccess, isMintError]);
 
   const back = () => {
-    {profile.mintedStatus === 'NOTMINTED' ? router.push('/school/un-minted?') : router.push('/school/pending')}
+    {
+      profile.mintedStatus === 'NOTMINTED'
+        ? router.push('/school/un-minted?')
+        : router.push('/school/pending');
+    }
   };
 
   return (
@@ -166,19 +169,19 @@ export default function SchoolDetails({ id }: Props) {
                       />
                       <ProfileTextField
                         name="connectivity"
-                        value={profile?.connectivity === true ? 'Yes' : 'No' }
+                        value={profile?.connectivity === true ? 'Yes' : 'No'}
                         label="Connectivity"
                         disabled
                       />
                       <ProfileTextField
                         name="coverage"
-                        value={profile?.coverage === true ? 'Yes' : 'No' }
+                        value={profile?.coverage === true ? 'Yes' : 'No'}
                         label="Coverage Availability"
                         disabled
                       />
                       <ProfileTextField
                         name="electricity_availabilty"
-                        value={profile?.electricity_availabilty === true ? 'Yes' : 'No' }
+                        value={profile?.electricity_availabilty === true ? 'Yes' : 'No'}
                         label="Electricity Availability"
                         disabled
                       />
@@ -186,7 +189,11 @@ export default function SchoolDetails({ id }: Props) {
                   </Box>
 
                   <Stack alignItems="flex-start" sx={{ mt: 3 }}>
-                    <Button variant="contained" style={{ width: '300px', background: '#474747' }} onClick={back}>
+                    <Button
+                      variant="contained"
+                      style={{ width: '300px', background: '#474747' }}
+                      onClick={back}
+                    >
                       Back
                     </Button>
                   </Stack>
@@ -209,21 +216,25 @@ export default function SchoolDetails({ id }: Props) {
                 >
                   Mint
                 </Button>
-              ) : profile.mintedStatus === 'ISMINTING' ? <Button
-              variant="contained"
-              color={'info'}
-              style={{ width: '300px', background: '#474747' }}
-              disabled
-            >
-              Minting
-            </Button> : <Button
-              variant="contained"
-              color={'success'}
-              style={{ width: '300px', background: '#474747' }}
-              onClick={mintSchool}
-            >
-              Minted
-            </Button>}
+              ) : profile.mintedStatus === 'ISMINTING' ? (
+                <Button
+                  variant="contained"
+                  color={'info'}
+                  style={{ width: '300px', background: '#474747' }}
+                  disabled
+                >
+                  Minting
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color={'success'}
+                  style={{ width: '300px', background: '#474747' }}
+                  onClick={mintSchool}
+                >
+                  Minted
+                </Button>
+              )}
             </Stack>
             <Stack sx={{ mt: 8 }}>
               <Box display="flex" justifyContent="center">

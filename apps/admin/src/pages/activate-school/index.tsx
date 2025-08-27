@@ -45,7 +45,7 @@ const ActivateSchool = () => {
     message: '',
   });
   const tableData = Array.isArray(data) ? data : [];
-  const BASE_URL = process.env.NEXT_PUBLIC_WEB_NAME;
+  const BASE_URL = process.env.NEXT_PUBLIC_WEB_NAME || '';
 
   const handleStatusToggle = (school: any) => {
     const newStatus = school.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
@@ -57,12 +57,15 @@ const ActivateSchool = () => {
         onSuccess: () => {
           setSnackbar({
             open: true,
-            message: `School ${newStatus === 'ACTIVE' ? 'Activated' : 'Deactivated'}`,
+            message: `Event link  ${newStatus === 'ACTIVE' ? 'Activated' : 'Deactivated'} Successfully!`,
           });
           // refetch();
         },
-        onError: () => {
-          setSnackbar({ open: true, message: 'Action failed! Please try again.' });
+        onError: (err: any) => {
+          setSnackbar({
+            open: true,
+            message: `${err?.response?.data?.message || 'Action failed! Please try again.'}  `,
+          });
         },
       }
     );
@@ -102,8 +105,8 @@ const ActivateSchool = () => {
                       <TableCell scope="row">
                         <a
                           target="_blank"
-                          href={`${BASE_URL}/schools?linkActivation=${row.id}`}
-                        >{`${BASE_URL}/schools?linkActivation=${row.id}`}</a>
+                          href={`${BASE_URL}/schools/list?linkActivation=${row.id}`}
+                        >{`${BASE_URL}/schools/list?linkActivation=${row.id}`}</a>
                       </TableCell>
                       <TableCell align="left">{row.name}</TableCell>
                       <TableCell align="left">
@@ -117,7 +120,7 @@ const ActivateSchool = () => {
                           <Switch
                             checked={row.status === 'ACTIVE'}
                             onChange={() => handleStatusToggle(row)}
-                            disabled={activating || deactivating}
+                            // disabled={activating || deactivating}
                             color="primary"
                           />
                           <p style={{ fontSize: '12px' }}>
@@ -139,6 +142,7 @@ const ActivateSchool = () => {
         open={snackbar.open}
         autoHideDuration={900}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} sx={{ width: '100%' }}>
           {snackbar.message}

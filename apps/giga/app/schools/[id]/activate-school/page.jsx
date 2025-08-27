@@ -8,17 +8,20 @@ import PayingUser from '../../../../components/schoolActivate/PayingUser';
 import ActivationModal from '../../../../components/schoolActivate/ActivationModal';
 import './_activate.scss';
 import '../_schoolDetails.scss';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useSchoolDetails } from '../../../hooks/useSchool';
 import { useSchoolThemeGet } from '../../../hooks/useTheme';
 import { useThemeStore } from '../../../store/themeStore';
 import { useGigaBuyNft } from '../../../hooks/useContract/giga-contracts';
-import { useAccount } from 'wagmi';
+import { useAccount, useBalance } from 'wagmi';
 import { setTimeout } from 'timers';
 import { getGasPrice } from '../../../utils/gasFee';
+import { InlineNotification } from '@carbon/react';
+import CardSkeleton from '../../../../components/cardSkeleton/CardSkeleton';
 
 export default function ActivateSchool() {
   const { id } = useParams();
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   const themeFromParams = searchParams.get('themeName');
@@ -33,6 +36,11 @@ export default function ActivateSchool() {
   const [email, setEmail] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { address, isConnected } = useAccount();
+  const [gasFeeWei, setGasFeeWei] = useState('0');
+  const { data: balance } = useBalance({ address });
+  const [showError, setShowError] = useState(false);
+  const [loader, setLoader] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const contractAddress = process.env.NEXT_PUBLIC_GIGA_NFT_CONTRACT_ADDRESS;
   const escrowAddress = process.env.NEXT_PUBLIC_GIGA_SCHOOL_ESCROW_ADDRESS;
@@ -40,17 +48,24 @@ export default function ActivateSchool() {
   const { fontColor, cardColor, bgColor, selectedThemeName, themeId } =
     useThemeStore();
 
-  const { data } = useSchoolDetails(id);
+  const { data, isLoading: dataLoading } = useSchoolDetails(id);
+
   const { data: themeData, isLoading: themeLoading } =
     useSchoolThemeGet(themeFromParams);
 
+  const handleBack = () => {
+    router.back();
+  };
+
   useEffect(() => {
     const fetchGasFee = async () => {
-      const gasFee = await getGasPrice();
-      setGasFee(gasFee);
+      const { gasPriceInEth, gasPriceWei } = await getGasPrice();
+      setGasFee(gasPriceInEth);
+      setGasFeeWei(gasPriceWei);
 
       const timeoutId = setTimeout(() => {
-        setGasFee(gasFee);
+        setGasFee(gasPriceInEth);
+        setGasFeeWei(gasPriceWei);
       }, 1000);
 
       return () => clearTimeout(timeoutId);
@@ -100,14 +115,23 @@ export default function ActivateSchool() {
     await mintSchool.mutateAsync({
       args,
       totalValue: total,
+      gasFee: gasFeeWei,
       contractAddress,
       activationDetails,
       onComplete: () => setIsModalOpen(true),
+      onError: (error) => {
+        setShowError(true);
+        setErrorMessage('An error occurred while activating the school.');
+      },
     });
   };
 
+  // Track if the user has manually closed the modal
+  const [modalClosedByUser, setModalClosedByUser] = useState(false);
+
   const closeModal = () => {
     setIsModalOpen(false);
+    setModalClosedByUser(true);
   };
 
   const calculateTotal = () => {
@@ -123,92 +147,97 @@ export default function ActivateSchool() {
     calculateTotal();
   }, [baseFee, gasFee, donation]);
 
+  useEffect(() => {
+    if (!data) return;
+    if (
+      (data?.minted === 'MINTED' || data?.minted === 'ISMINTING') &&
+      !isModalOpen &&
+      !modalClosedByUser
+    ) {
+      router.push(`/`);
+    } else setLoader(false);
+  }, [data, isModalOpen, modalClosedByUser, router, loader]);
+
+  useEffect(() => {
+    if (showError) {
+      const timer = setTimeout(() => setShowError(false), 2000); // 2 seconds
+      return () => {
+        clearTimeout(timer);
+        router.push(`/schools/${id}`);
+      };
+    }
+  }, [showError]);
+
   return (
-    <div className="container">
-      <div className="backButton">
-        <Link href="/" className="backLink">
-          <ArrowLeft size={20} />
-          <span>Back</span>
-        </Link>
-      </div>
-
-      <div className="content">
-        <div className="formSection">
-          <h1 className="title">Activate School</h1>
-          <p className="subtitle">
-            Click a theme below to preview and select it for the activated
-            school view.
-          </p>
-
-          {linkActivation ? (
-            <NonPayingUser
-              email={email}
-              setEmail={setEmail}
-              linkActivation={linkActivation}
-              themeName={selectedThemeName}
-              themeId={themeId}
-            />
-          ) : (
-            <PayingUser
-              baseFee={baseFee}
-              gasFee={gasFee}
-              donation={donation}
-              setDonation={setDonation}
-              handleActivate={handleActivate}
-              isConnected={isConnected}
-              selectedThemeName={selectedThemeName}
-            />
-          )}
-        </div>
-
-        <div className="previewSection">
-          <div className="previewCard">
-            <h2 className="schoolName">{data?.name}</h2>
-            <p className="schoolLevel">{data?.school_type}</p>
-            <div className="locationRow">
-              <span className="locationIcon">
-                <Location />
-              </span>
-              <span>{data?.region_name}</span>
-            </div>
-
-            <div className="themeRow">
-              <span className="themeLabel">Selected Theme:</span>
-              <div className="school-details__themes">
-                <div className="school-details__theme-option">
-                  {selectedThemeName ? (
-                    <>
-                      <div
-                        className="school-details__theme-color"
-                        style={{ backgroundColor: bgColor }}
-                      />
-                      <div
-                        className="school-details__theme-color"
-                        style={{ backgroundColor: cardColor }}
-                      />
-                      <div
-                        className="school-details__theme-color"
-                        style={{ backgroundColor: fontColor }}
-                      />
-                    </>
-                  ) : (
-                    <p>Please select theme to activate school. </p>
-                  )}
+    <>
+      {!dataLoading && !loader ? (
+        <>
+          <div className="content">
+            <div className="formSection">
+              {showError && (
+                <div
+                  style={{
+                    position: 'fixed',
+                    top: 24,
+                    right: 24,
+                    zIndex: 9999,
+                    minWidth: 320,
+                    maxWidth: 400,
+                  }}
+                >
+                  <InlineNotification
+                    kind="error"
+                    title="Error"
+                    subtitle={errorMessage}
+                    onClose={() => setShowError(false)}
+                    lowContrast
+                    style={{ marginTop: '16px', position: 'right' }}
+                  />
                 </div>
-              </div>
+              )}
+              {linkActivation ? (
+                <NonPayingUser
+                  email={email}
+                  setEmail={setEmail}
+                  linkActivation={linkActivation}
+                  themeName={selectedThemeName}
+                  themeId={themeId}
+                  schoolName={data?.name}
+                  selectedThemeName={selectedThemeName}
+                  bgColor={bgColor}
+                  cardColor={cardColor}
+                  fontColor={fontColor}
+                />
+              ) : (
+                <PayingUser
+                  baseFee={baseFee}
+                  gasFee={gasFee}
+                  donation={donation}
+                  setDonation={setDonation}
+                  handleActivate={handleActivate}
+                  isConnected={isConnected}
+                  selectedThemeName={selectedThemeName}
+                  bgColor={bgColor}
+                  cardColor={cardColor}
+                  fontColor={fontColor}
+                  schoolName={data?.name}
+                  gasFeeWei={gasFeeWei}
+                  balance={balance}
+                />
+              )}
             </div>
-
-            {!linkActivation && (
-              <div className="totalSection">
-                <div className="totalLabel">Grand Total</div>
-                <div className="totalAmount">{total} Eth</div>
-              </div>
-            )}
           </div>
-        </div>
-      </div>
-
-      <ActivationModal isOpen={isModalOpen} onClose={closeModal} />
-    </div>
+          <ActivationModal
+            schoolName={data?.name}
+            schoolLocation={data?.country}
+            createdAt={data?.updatedAt}
+            isOpen={isModalOpen}
+            onClose={closeModal}
+          />
+        </>
+      ) : (
+        <CardSkeleton count={3} />
+      )}
+    </>
   );
 }

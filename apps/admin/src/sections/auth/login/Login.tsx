@@ -1,10 +1,11 @@
 'use client';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 import { Button, Stack, Typography } from '@mui/material';
 import LoginLayout from '@layouts/login';
+import { NextRouter } from 'next/router';
 
 export default function Login() {
-  const { push } = useRouter();
+  const { push } = useRouter() as NextRouter;
   return (
     <LoginLayout>
       <Stack spacing={5}>
@@ -12,12 +13,16 @@ export default function Login() {
           Sign in options
         </Typography>
         <Stack direction="row" justifyContent="space-between">
-          <Button variant="contained" style={{background: '#0050e6'}} onClick={() => push('/auth/email-login')}>
+          <Button
+            variant="contained"
+            style={{ background: '#0050e6' }}
+            onClick={() => push('/auth/email-login')}
+          >
             Sign in Using Email
           </Button>
           <Button
             variant="contained"
-            style={{background: '#0050e6'}}
+            style={{ background: '#0050e6' }}
             onClick={() => push('/auth/metamask-login')}
           >
             Sign in Using Metamask

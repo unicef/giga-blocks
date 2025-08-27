@@ -1,6 +1,7 @@
 'use client';
 import Scrollbar from '@components/scrollbar';
 import { TableHeadUsers, useTable, TableNoData, TablePaginationCustom } from '@components/table';
+import { DEFAULT_CHAIN_ID, TESTNET_CHAINS } from '@components/web3/chains';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
 import {
   Box,
@@ -11,6 +12,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -57,6 +59,8 @@ const Transaction = () => {
   const { data, fetching } = result;
   const combinedTransfers = [...(data?.schoolTransfers || []), ...(data?.collectorTransfers || [])];
 
+  const explorer = TESTNET_CHAINS[DEFAULT_CHAIN_ID]?.blockExplorerUrls[0];
+
   useEffect(() => {
     const startItem = (page + 1) * rowsPerPage - rowsPerPage;
     const endItem = page * rowsPerPage + rowsPerPage;
@@ -101,10 +105,7 @@ const Transaction = () => {
                       </TableCell>
                       <TableCell scope="row">{row.tokenId}</TableCell>
                       <TableCell scope="row">
-                        <Link
-                          href={`${process.env.NEXT_PUBLIC_TRANSACTION_HASH}/tx/${row.transactionHash}`}
-                          target="_blank"
-                        >
+                        <Link href={`${explorer}/tx/${row.transactionHash}`} target="_blank">
                           {row.transactionHash.slice(0, 4) + '...' + row.transactionHash.slice(-8)}
                         </Link>
                       </TableCell>
@@ -119,41 +120,43 @@ const Transaction = () => {
           </Scrollbar>
         </TableContainer>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: '16px' }}>
-          <FormControl sx={{ width: '150px' }}>
-            <InputLabel id="rows-per-page-select-label">Rows Per Page</InputLabel>
-            <Select
-              labelId="rows-per-page-select-label"
-              id="rows-per-page-select"
-              value={rowsPerPage}
-              onChange={(e) => onChangeRowsPerPage(e as React.ChangeEvent<HTMLInputElement>)} // Update rowsPerPage
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Button
+              variant="contained"
+              onClick={() => {
+                setPage((prevPage) => prevPage - 1); // Decrement the page number
+              }}
+              disabled={fetching || combinedTransfers.length === 0 || page === 0} // Disable if fetching or no data
+              size="medium"
             >
-              <MenuItem value={5}>5</MenuItem>
-              <MenuItem value={10}>10</MenuItem>
-              <MenuItem value={20}>20</MenuItem>
-              <MenuItem value={50}>50</MenuItem>
-            </Select>
-          </FormControl>
-          <Button
-            variant="contained"
-            onClick={() => {
-              setPage((prevPage) => prevPage + 1); // Increment the page number
-            }}
-            disabled={fetching || combinedTransfers.length === 0} // Disable if fetching or no data
-          >
-            Next
-          </Button>
+              Previous
+            </Button>
+            <FormControl sx={{ width: '150px' }} size="medium">
+              <InputLabel id="rows-per-page-select-label">Rows Per Page</InputLabel>
+              <Select
+                labelId="rows-per-page-select-label"
+                id="rows-per-page-select"
+                value={rowsPerPage}
+                onChange={(e) => onChangeRowsPerPage(e as React.ChangeEvent<HTMLInputElement>)} // Update rowsPerPage
+              >
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={20}>20</MenuItem>
+                <MenuItem value={50}>50</MenuItem>
+                <MenuItem value={100}>100</MenuItem>
+              </Select>
+            </FormControl>
+            <Button
+              variant="contained"
+              onClick={() => {
+                setPage((prevPage) => prevPage + 1); // Increment the page number
+              }}
+              disabled={fetching || combinedTransfers.length === 0} // Disable if fetching or no data
+              size="medium"
+            >
+              Next
+            </Button>
+          </Stack>
         </Box>
-
-        {/* <TablePaginationCustom
-          count={combinedTransfers?.length || 0}
-          setPage={setPage}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-          dense={dense}
-          onChangeDense={onChangeDense}
-        /> */}
       </Card>
     </DashboardLayout>
   );

@@ -5,7 +5,8 @@
 @use '@carbon/styles/scss/breakpoint' as *;
 
 .theme-selector {
-  background-color: #e8f0ff; // Light blue background
+  position: relative;
+  background: linear-gradient(to right, #0b4ac1, #0f62fe);
   border-radius: 16px;
   padding: $spacing-05;
   width: 100%;
@@ -18,9 +19,8 @@
 
 .theme-selector__content {
   display: flex;
-  align-items: center;
   justify-content: space-evenly;
-  gap: $spacing-05;
+  gap: 64px;
 
   @include breakpoint-down(md) {
     flex-direction: column;
@@ -33,7 +33,6 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
 
   @include breakpoint-down(md) {
     width: 100%;
@@ -46,7 +45,7 @@
   font-size: 20px;
   line-height: 140%;
   letter-spacing: 0%;
-
+  color: white;
   margin-bottom: $spacing-06;
 
   @include breakpoint-down(md) {
@@ -56,24 +55,21 @@
 
 .theme-selector__brand {
   @include type-style('heading-03');
-  color: $gray-100;
+  color: white;
   font-weight: 600;
 }
 
 .theme-selector__illustration {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
+  position: absolute;
+  top: 66px;
+  left: 150px;
   img {
     max-width: auto;
     height: auto;
   }
 
-  @include breakpoint-down(md) {
-    width: 100%;
-    justify-content: center;
-    margin: $spacing-05 0;
+  @include breakpoint-down(lg) {
+    display: none;
   }
 }
 
@@ -91,7 +87,10 @@
 }
 
 .theme-selector__prompt {
-  @include type-style('body-01');
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 150%;
+  letter-spacing: 0%;
   color: $gray-100;
   margin-bottom: $spacing-05;
 }
@@ -103,10 +102,8 @@
 }
 
 .theme-selector__theme-option {
-  width: 60px;
+  width: 72px;
   height: 60px;
-  border-radius: 8px;
-  background-color: #f5f5f5;
   border: 2px solid transparent;
   padding: 4px;
   cursor: pointer;
@@ -114,6 +111,7 @@
   justify-content: center;
   align-items: center;
   transition: all 0.2s ease;
+  background: white;
 
   &.selected {
     border-color: #4589ff;
@@ -127,7 +125,7 @@
 .theme-selector__theme-color {
   width: 100%;
   height: 100%;
-  border-radius: 4px;
+  // border-radius: 4px;
 }
 
 .theme-selector__activate-btn {
@@ -146,4 +144,109 @@
   .rotate-180 {
     transform: rotate(180deg);
   }
+}
+
+.theme-update-modal .cds--modal-container {
+  width: 480px;
+  background: #ffffff;
+}
+
+.theme-update-modal .cds--modal-close {
+  display: none;
+}
+
+.theme-update-modal .theme-update-modal-modal-heading {
+  font-weight: 600;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 1.2rem;
+  padding-top: 0.5rem;
+}
+
+.theme-update-modal .cds--modal-content {
+  padding: 1.5rem;
+}
+
+.theme-update-modal .theme-update-modal-modal-description {
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 1.2rem;
+  padding-top: 0.5rem;
+}
+
+// .cds--modal-container--sm .cds--modal-content > p {
+//   -webkit-padding-end: 3% !important;
+//   padding-inline-end: 3% !important;
+// }
+
+//theme palette //
+
+.theme-update-modal-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  background-color: #0f62fe;
+  border-radius: 24px;
+  margin: 0 auto;
+}
+
+.theme-update-modal {
+  &-details {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #525252;
+  }
+
+  &-theme-preview {
+    display: flex;
+    justify-content: center;
+    border-radius: 6px;
+    border: 2px solid #ffffff;
+
+    .theme-preview-container {
+      display: flex;
+      width: 72px;
+      height: 40px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .theme-preview-color {
+      flex: 1;
+      height: 100%;
+    }
+  }
+}
+
+.theme-update-modal-details {
+  padding-inline-end: 0 !important;
+}
+
+.theme-color-selector {
+  display: flex;
+  justify-content: space-between;
+  background: #f4f4f4;
+  padding: 16px;
+  border-radius: 8px;
+  align-items: center;
+}
+
+.theme-selector-school-name {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.theme-selector-location {
+  display: flex;
+  align-items: center;
+}
+
+.theme-update-button {
+  margin-top: 1rem;
+  width: 70%;
 }

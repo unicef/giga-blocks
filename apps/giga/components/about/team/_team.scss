@@ -64,26 +64,34 @@
 
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   gap: $spacing-05;
 
-  @include breakpoint-down(lg) {
-    grid-template-columns: repeat(3, 1fr);
+  // @include breakpoint-down(lg) {
+  //   grid-template-columns: repeat(5, 1fr);
+  // }
+
+  @media (max-width: 1300px) {
+    grid-template-columns: repeat(6, 1fr);
   }
 
-  @include breakpoint-down(md) {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: $spacing-04;
-    padding-bottom: $spacing-03;
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  @media (max-width: 820px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 .team-member-card {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  // align-items: center;
+  // text-align: center;
 
   @include breakpoint-down(md) {
     flex: 0 0 auto;
@@ -96,17 +104,45 @@
   aspect-ratio: 1 / 1;
   border-radius: 8px;
   overflow: hidden;
-  margin-bottom: $spacing-04;
+  // margin-bottom: $spacing-04;
 }
 
 .team-member-image {
-  width: 100%;
+  // width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 8px;
 }
 
 .team-member-name {
-  @include type-style('heading-compact-01');
+  // @include type-style('heading-compact-01');
   color: $gray-100;
   margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.team-member-position {
+  color: #525252;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.many-more-members-desktop {
+  display: block; // Show by default for desktop (>1025px)
+  text-align: end;
+  margin-top: 1rem;
+
+  @media (max-width: 1300px) {
+    display: none; // Hide for screens 1025px and below
+  }
+}
+
+.many-more-members-tablet {
+  display: none; // Hide by default for tablet (<=1025px)
+  @media (max-width: 1300px) {
+    display: block;
+    margin-top: 9rem;
+  }
 }

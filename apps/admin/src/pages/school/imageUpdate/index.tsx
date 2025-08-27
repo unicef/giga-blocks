@@ -1,0 +1,210 @@
+'use client';
+import Scrollbar from '@components/scrollbar';
+import { TableHeadUsers, TableNoData, TablePaginationCustom, useTable } from '@components/table';
+import { useSchoolGetImageUpdateList, useUpdateSchoolImage } from '@hooks/school/useSchool';
+import DashboardLayout from '@layouts/dashboard/DashboardLayout';
+import {
+  Button,
+  Card,
+  Divider,
+  TableContainer,
+  Table,
+  TableBody,
+  CircularProgress,
+  Typography,
+  Box
+} from '@mui/material';
+import SchoolTableRow from '@sections/user/list/SchoolTableRow';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { useSnackbar } from '@components/snackbar';
+import Iconify from '@components/iconify';
+
+const PendingSchool = () => {
+  const TABLE_HEAD = [
+    { id: 'name', label: 'School name', align: 'left' },
+    { id: 'country', label: 'Location', align: 'left' },
+    { id: 'latitude', label: 'Latitude', align: 'left' },
+    { id: 'longitude', label: 'Longitude', align: 'left' },
+    { id: 'imageHash', label: 'Image Hash', align: 'left' },
+  ];
+
+  const [school, setSchool] = useState<any>();
+  const { enqueueSnackbar } = useSnackbar();
+  const [loader, setLoader] = useState<boolean>(false);
+
+  const {
+    dense,
+    page,
+    setPage,
+    order,
+    orderBy,
+    rowsPerPage,
+    onChangePage,
+    onSort,
+    onChangeDense,
+    onChangeRowsPerPage,
+  } = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
+
+  const [selectedValues, setSelectedValues] = useState<any>([]);
+  const [tableData, setTableData] = useState<any>([]);
+  const { data, isLoading, refetch, isFetching } = useSchoolGetImageUpdateList({
+    page: Number(page) + 1,
+    perPage: rowsPerPage,
+  });
+  const updateImageHash = useUpdateSchoolImage({
+    onSuccess: () => {
+      enqueueSnackbar('Data added in the queue sucessfully!', { variant: 'success' });
+      refetch();
+      setLoader(false);
+    },
+    onError: () => {
+      enqueueSnackbar('Failed to add data in the queue', { variant: 'error' });
+    },
+  });
+
+  let filteredData: any = [];
+  useEffect(() => {
+    !isLoading &&
+      data?.rows &&
+      data?.rows?.map((row: any) => {
+        filteredData.push({
+          id: row.id,
+          schoolName: row.name,
+          longitude: row.longitude,
+          latitude: row.latitude,
+          country: row.country,
+          imageHash: row.imageHash,
+        });
+      });
+
+    setTableData(filteredData);
+  }, [data, isLoading]);
+
+  const onClickUpdateImageHash = () => {
+    updateImageHash.mutate();
+  };
+
+  const handleSchoolChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setSchool(e.target.value);
+  };
+
+  useEffect(() => {
+    if (updateImageHash.isLoading) {
+      enqueueSnackbar('Updating image hash, please wait...', { variant: 'info' });
+      setLoader(true);
+    }
+  }, [updateImageHash]);
+
+  return (
+    <DashboardLayout>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+        <span style={{ fontSize: '1.5em', fontWeight: '600' }}>Schools To Be Updated</span>
+        <div style={{ display: 'flex', gap: '15px' }}>
+          <Button
+            variant="contained"
+            disabled={isLoading || tableData.length === 0 || loader || isFetching}
+            onClick={onClickUpdateImageHash}
+          >
+            Update Image Hash
+          </Button>
+        </div>
+      </div>
+
+      {!loader && !isFetching ? (
+        <>
+          <Card
+            sx={{
+              backgroundColor: 'rgba(211, 218, 249, 0.5)',
+              p: 2, 
+              mb: 3, 
+              boxShadow: 'none', 
+              display: 'flex',
+              alignItems: 'center', 
+            }}
+          >
+            <Iconify
+              icon="eva:checkmark-circle-outline" 
+              sx={{ color: '#007bff', fontSize: '24px', mr: 2 }} 
+            />
+            <Box>
+              <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#007bff' }}>
+                Complete The Activation
+              </Typography>
+              <Typography variant="body2" sx={{ color: '#007bff' }}>
+                Push each school's unique image hash to the blockchain to finalize its on-chain
+                record and ensure full transparency.
+              </Typography>
+            </Box>
+          </Card>
+
+          <Card sx={{ marginTop: 4 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', padding: 2 }}>
+                Activated School Pending Hash Update
+              </Typography>
+              <Typography variant="body2" sx={{ paddingLeft: 2, marginBottom: 2 }}>
+               Click "Update Image Hash" to push the image hash of each school to the blockchain.
+              </Typography>
+            {/* <Divider /> */}
+            <Card sx={{ padding: 2, marginLeft:2, marginRight: 2, marginBottom: 2 }}>
+            <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+              <Scrollbar>
+                <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+                  <TableHeadUsers
+                    order={order}
+                    orderBy={orderBy}
+                    headLabel={TABLE_HEAD}
+                    rowCount={tableData?.length}
+                    onSort={onSort}
+                    showCheckBox={true}
+                    numSelected={selectedValues?.length}
+                  />
+
+                  <TableBody>
+                    {tableData &&
+                      tableData?.map((row: any) => (
+                        <SchoolTableRow
+                          key={row.id}
+                          row={row}
+                          selectedValues={selectedValues}
+                          setSelectedValues={setSelectedValues}
+                          rowData={row}
+                          checkbox={false}
+                          clickable={false}
+                        />
+                      ))}
+                    <TableNoData isNotFound={tableData.length === 0} isFetching={isFetching} />
+                  </TableBody>
+                </Table>
+              </Scrollbar>
+            </TableContainer>
+            </Card>
+            <TablePaginationCustom
+              count={data?.meta?.total || 0}
+              page={page || 0}
+              setPage={setPage}
+              rowsPerPage={rowsPerPage}
+              onPageChange={onChangePage}
+              onRowsPerPageChange={onChangeRowsPerPage}
+              dense={dense}
+              onChangeDense={onChangeDense}
+            />
+          </Card>
+        </>
+      ) : (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '50vh',
+            width: '100%',
+          }}
+        >
+          <CircularProgress />
+        </div>
+      )}
+    </DashboardLayout>
+  );
+};
+
+export default PendingSchool;

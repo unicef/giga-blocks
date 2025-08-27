@@ -10,7 +10,7 @@
   padding: 16px;
 
   @include breakpoint-down(md) {
-    padding: $spacing-06;
+    padding: $spacing-05;
     margin: $spacing-06 0;
   }
 
@@ -24,6 +24,10 @@
   padding: 80px 32px;
   background: white;
   border-radius: 16px;
+
+  @include breakpoint-down(md) {
+    padding: $spacing-05;
+  }
 }
 
 .featured-schools__header {
@@ -60,7 +64,7 @@
   margin-bottom: $spacing-07;
 
   @include breakpoint-down(md) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     margin-bottom: $spacing-06;
   }
 
@@ -146,5 +150,53 @@
 
   svg {
     fill: white;
+  }
+}
+
+.empty-featured-schools__image {
+  object-fit: cover;
+}
+
+.empty-featured-schools {
+  background-color: #ebf2ff; // Light blue/gray background
+  border-radius: 16px;
+  padding: 16px;
+
+  @include breakpoint-down(md) {
+    padding: $spacing-06;
+    margin: $spacing-06 0;
+  }
+
+  @include breakpoint-down(sm) {
+    padding: $spacing-05;
+    margin: $spacing-05 0;
+  }
+
+  &__container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 80px 32px;
+    background: white;
+    border-radius: 16px;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 700px;
+    text-align: center;
+  }
+
+  &__image {
+    margin-bottom: 1.5rem;
+  }
+
+  &__description {
+    font-size: 1.5rem;
+    line-height: 1.5;
+    color: #525252;
+    width: 100%;
   }
 }

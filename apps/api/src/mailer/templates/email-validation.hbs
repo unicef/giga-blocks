@@ -1,57 +1,224 @@
 <html>
+  <head>
+    <title>Giga Blocks Email Verification</title>
+    <link
+      href='https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap'
+      rel='stylesheet'
+    />
+  </head>
   <body
-    style='margin: 0; padding: 0; background-color: #fce7f3; font-family: Poppins, Helvetica, Arial, sans-serif;'
+    style="font-family: 'IBM Plex Sans', sans-serif; background-color: #f9fafb; padding: 40px 20px; display: flex; justify-content: center;"
   >
-    <div style='width: 100%; padding: 40px 20px; box-sizing: border-box;'>
-      <div
-        style='max-width: 600px; margin: auto; background-color: #fce7f3; border-radius: 12px; text-align: center; padding: 40px 30px;'
-      >
+    <div style='max-width: 900px;'>
 
-        <!-- Heart Icon -->
-        <div
-          style='background-color: #db2777; color: white; font-size: 32px; width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: auto;'
-        >
-          ❤️
+      <!-- Header -->
+      <div style='background-color: #000000; color: #ffffff; padding: 24px; text-align: center;'>
+        <h1 style='font-size: 24px; margin:0'>Giga Blocks</h1>
+        <h3 style='font-size: 32px; margin:10px 0;'>Verify Your Email Address</h3>
+        <p style='font-size: 14px; margin:0'>Confirm your identity to continue with Giga Blocks</p>
+      </div>
+
+      <!-- Main Content -->
+      <div style='padding: 32px 0;'>
+        <div style='text-align:center'>
+          <h3 style='font-size: 20px; margin-bottom: 8px;'>You're almost there!</h3>
+          <p style='font-size: 16px; font-weight: 400;'>
+            Let's verify your email to complete your journey with Giga Blocks and support Giga's
+            initiative.
+          </p>
         </div>
 
-        <!-- Info Message -->
-        <p style='font-size: 14px; color: #374151; margin: 0 auto 20px; max-width: 90%;'>
-          Thank you for supporting global education by activating this school on Giga Block. As a
-          token of appreciation, you can now claim your commemorative NFT.
-        </p>
+        <!-- Verification Box -->
+        <div
+          style='background:#F4F4F4 ; border-radius: 12px; margin: 32px 0; padding: 24px; text-align: center;'
+        >
+          <p style='font-weight: 600; font-size: 18px;'>Ready to continue?</p>
+          <p style='font-size: 14px; color: #555;'>
+            Click the button below to verify your email address and ensure a secure experience while
+            supporting global education.
+          </p>
 
-        <!-- Verification Link -->
-        <p style='margin-top: 10px;'>
+          <!-- Button -->
           <a
             href='{{link}}'
-            style='color: #2563eb; font-size: 14px; font-weight: 500; text-decoration: underline;'
+            style='display: inline-block; background-color: #316bff; color: #ffffff; font-weight: bold; padding: 12px 24px; border-radius: 8px; text-decoration: none; margin:10px 0; font-family: sans-serif;'
           >
-            Click here to verify your email
+            Verify My Email Address
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              width='16'
+              height='16'
+              fill='white'
+              style='vertical-align: middle; margin-left: 8px;'
+              viewBox='0 0 24 24'
+            >
+              <path d='M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3z' />
+              <path
+                d='M5 5h4V3H5c-1.1 0-2 .9-2 2v4h2V5zM19 19h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4zM5 19v-4H3v4c0 1.1.9 2 2 2h4v-2H5z'
+              />
+            </svg>
           </a>
-        </p>
 
+          <p style='font-size: 12px; color: #888;'>This link will expire in 1 hour for security
+            purposes.</p>
+        </div>
+
+        <!-- Security Notice -->
+
+        <div
+          style='font-size: 14px; margin-bottom: 24px; display: flex; border:1px solid #E0E0E0; padding:16px; border-radius:12px;'
+        >
+          <div style='margin:2px 6px 0 0;'><svg
+              xmlns='http://www.w3.org/2000/svg'
+              width='16'
+              height='16'
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='currentColor'
+              stroke-width='2'
+              stroke-linecap='round'
+              stroke-linejoin='round'
+              class='lucide lucide-shield-icon lucide-shield'
+            ><path
+                d='M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z'
+              /></svg></div>
+          <div>
+            <strong>Security Notice:</strong>
+            This email was sent to
+            <a href='mailto:{{email}}' style='color: #316bff;'>{{email}}</a>
+            because someone initiated an email verification on Giga Blocks. If this wasn't you, feel
+            free to ignore this message — no action is needed, and the link will expire
+            automatically.</div>
+        </div>
+
+        <!-- What happens next -->
+
+        <div
+          style='font-size: 14px; margin-bottom: 24px; display: flex; border:1px solid #E0E0E0; padding:16px; border-radius:12px;'
+        >
+          <div style='margin:2px 6px 0 0;'><svg
+              xmlns='http://www.w3.org/2000/svg'
+              width='16'
+              height='16'
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='currentColor'
+              stroke-width='2'
+              stroke-linecap='round'
+              stroke-linejoin='round'
+              class='lucide lucide-clock-icon lucide-clock'
+            ><path d='M12 6v6l4 2' /><circle cx='12' cy='12' r='10' /></svg></div>
+          <div>
+            <strong>What happens next? </strong>
+            Once you click the verification link, you'll be redirected to Giga Blocks where you can
+            continue your activity.</div>
+        </div>
+
+        <!-- Trouble Section -->
+        <div
+          style='font-size: 14px; border:1px solid #E0E0E0; padding: 16px; border-radius: 12px; line-height: 1.6;'
+        >
+          <p><strong>Having Trouble?</strong></p>
+          <div style='font-size: 14px; margin-bottom: 24px; display: flex; border-radius:12px;'>
+            <div style='margin:2px 6px 0 0;'><svg
+                xmlns='http://www.w3.org/2000/svg'
+                width='16'
+                height='16'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='currentColor'
+                stroke-width='2'
+                stroke-linecap='round'
+                stroke-linejoin='round'
+                class='lucide lucide-triangle-alert-icon lucide-triangle-alert'
+              ><path
+                  d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3'
+                /><path d='M12 9v4' /><path d='M12 17h.01' /></svg></div>
+            <div>
+              <strong>Button not working?</strong>
+              <p style='margin: 0 0 5px;'>Copy and paste this URL into your browser:</p><p
+                style='margin: 0; background: #F1F2F3; padding: 5px 10px'
+              >{{link}}</p></div>
+          </div>
+          <div style='font-size: 14px; margin-bottom: 24px; display: flex; border-radius:12px;'>
+            <div style='margin:4px 6px 0 0;'><svg
+                xmlns='http://www.w3.org/2000/svg'
+                width='16'
+                height='16'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='#525252'
+                stroke-width='3'
+                stroke-linecap='round'
+                stroke-linejoin='round'
+                class='lucide lucide-mail-icon lucide-mail'
+              ><path d='m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7' /><rect
+                  x='2'
+                  y='4'
+                  width='20'
+                  height='16'
+                  rx='2'
+                /></svg></div>
+            <div>
+              <strong>Didn't request this?</strong>
+              <p style='margin: 0 0 5px;'>No worries! Simply ignore this email. The link will expire
+                automatically in 1 hour</p></div>
+          </div>
+          <div style='font-size: 14px; margin-bottom: 24px; display: flex; border-radius:12px;'>
+            <div style='margin:4px 6px 0 0;'><svg
+                xmlns='http://www.w3.org/2000/svg'
+                width='16'
+                height='16'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='#525252'
+                stroke-width='3'
+                stroke-linecap='round'
+                stroke-linejoin='round'
+                class='lucide lucide-clock4-icon lucide-clock-4'
+              ><path d='M12 6v6l4 2' /><circle cx='12' cy='12' r='10' /></svg></div>
+            <div>
+              <strong>Link expired?</strong>
+              <p style='margin: 0 0 5px;'>Return to the Giga Blocks website and request a new
+                verification email.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer CTA -->
+      <div style='margin-top: 40px; text-align: center;'>
+        <p>Want to Learn More About Giga Blocks?</p>
+        <div style='margin: 2rem 0;'>
+          <a
+            href='https://giga-blocks.com/about'
+            style='margin: 4px; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; text-decoration: none; font-size: 14px; color: #111; font-weight:900; '
+          >About the Giga Initiative</a>
+          <a
+            href='https://giga-blocks.com/how-it-works'
+            style='margin: 4px; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; text-decoration: none; font-size: 14px; color: #111; font-weight:900; '
+          >How It Works</a>
+          <a
+            href='https://giga-blocks.com/schools'
+            style='margin: 4px; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; text-decoration: none; font-size: 14px; color: #111; font-weight:900; '
+          >Browse All Schools</a>
+        </div>
       </div>
 
       <!-- Footer -->
-      <div style='text-align: center; font-size: 12px; color: #888; margin-top: 40px;'>
-        <p style='margin: 4px 0;'>
-          <a href='#' style='color: #888; text-decoration: underline;' target='_blank'>View Web
-            Version</a>
-          &nbsp;|&nbsp;
-          <a href='#' style='color: #888; text-decoration: underline;' target='_blank'>Email
-            Preferences</a>
-          &nbsp;|&nbsp;
-          <a href='#' style='color: #888; text-decoration: underline;' target='_blank'>Privacy
-            Policy</a>
-        </p>
-        <p style='margin: 4px 0;'>
-          If you have any questions please contact us at
-          <a
-            href='mailto:{{emailurl}}'
-            style='color: #888; text-decoration: underline;'
-          >{{emailurl}}</a>
-        </p>
-        <p style='margin-top: 30px; font-weight: 600; color: #111;'>Giga Blocks</p>
+      <div
+        style='margin-top: 32px; font-size: 13px; color: #888; background: #F4F4F4; padding: 16px; margin-bottom: 1rem; text-align: center;'
+      >
+        <p>Need Help?
+          <a href='https://giga-blocks.com/help' style='color: #316bff;'>Help Center</a>
+          |
+          <a href='mailto:support@giga-blocks.com' style='color: #316bff;'>Email Support</a></p>
+        <hr />
+        <p>Join us on
+          <a href='https://twitter.com/giga' style='color: #316bff;'>Twitter</a>,
+          <a href='https://discord.gg/giga' style='color: #316bff;'>Discord</a>, or
+          <a href='https://giga-blocks.com' style='color: #316bff;'>Visit Our Website</a></p>
+        <p style='margin-top: 2.5rem;'><strong>Giga Blocks</strong><br />A project by UNICEF's Giga
+          Initiative to connect every school to the internet.</p>
       </div>
     </div>
   </body>

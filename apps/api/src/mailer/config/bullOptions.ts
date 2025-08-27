@@ -1,8 +1,8 @@
 import { JobOptions } from 'bull';
 
 export const jobOptions: JobOptions = {
-  attempts: 3,
-  removeOnComplete: 20,
+  attempts: 5,
+  removeOnComplete: false,
   backoff: {
     type: 'exponential',
     delay: 1000,

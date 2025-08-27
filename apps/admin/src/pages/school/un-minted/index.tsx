@@ -5,7 +5,7 @@ import { useSchoolGet } from '@hooks/school/useSchool';
 import DashboardLayout from '@layouts/dashboard/DashboardLayout';
 import { Button, Card, Divider, TableContainer, Table, TableBody, TextField } from '@mui/material';
 import SchoolTableRow from '@sections/user/list/SchoolTableRow';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { JsonRpcProvider, Signer } from 'ethers';
 import { mintSignature } from '@components/web3/utils/wallet';
@@ -13,6 +13,7 @@ import { useBulkMintSchools } from '@hooks/school/useSchool';
 import { useWeb3React } from '@web3-react/core';
 import { useSnackbar } from '@components/snackbar';
 import useDebounce from '@hooks/useDebounce';
+import { NextRouter } from 'next/router';
 
 const VerifiedSchool = () => {
   const TABLE_HEAD = [
@@ -25,7 +26,7 @@ const VerifiedSchool = () => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { push, query } = useRouter();
+  const { push, query } = useRouter() as NextRouter;
 
   const [school, setSchool] = useState<any>();
 
@@ -206,6 +207,7 @@ const VerifiedSchool = () => {
                       setSelectedValues={setSelectedValues}
                       rowData={row}
                       checkbox={true}
+                      clickable={true}
                     />
                   ))}
                 <TableNoData isNotFound={tableData.length === 0} isFetching={isFetching} />

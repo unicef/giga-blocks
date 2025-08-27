@@ -4,6 +4,7 @@ import {
   Map,
   ScisControlTower,
   Misuse,
+  CheckmarkFilled,
 } from '@carbon/icons-react';
 import { Table, TableBody, TableCell, TableRow } from '@carbon/react';
 
@@ -11,12 +12,14 @@ const SchoolOverview = ({
   updatedAt,
   fontColor,
   cardColor,
+  bgColor,
   coverage_availability,
   electricity_available,
-  region_name,
+  country_name,
   longitude,
   latitude,
   gigaMapsData,
+  dataSource,
 }) => {
   const formatKey = (key) => {
     return key
@@ -50,27 +53,27 @@ const SchoolOverview = ({
     {
       label: 'Country',
       icon: <Flag size={20} />,
-      value: region_name,
+      value: country_name || '-',
     },
     {
       label: 'Coverage Availability',
       icon: <ScisControlTower size={20} />,
-      value: coverage_availability ? coverage_availability : <Misuse />,
+      value: coverage_availability ? <CheckmarkFilled /> : <Misuse />,
     },
     {
       label: 'Electricity',
       icon: <Flash size={20} />,
-      value: electricity_available ? electricity_available : <Misuse />,
+      value: electricity_available ? <CheckmarkFilled /> : <Misuse />,
     },
     {
       label: 'Longitude',
       icon: <Map size={20} />,
-      value: longitude?.toFixed(10),
+      value: longitude ? longitude?.toFixed(10) : '-',
     },
     {
       label: 'Latitude',
       icon: <Map size={20} />,
-      value: latitude?.toFixed(10),
+      value: latitude ? latitude?.toFixed(10) : '-',
     },
   ].filter(({ value }) => value !== 'N/A'); // Exclude "N/A" from overview
 
@@ -91,7 +94,14 @@ const SchoolOverview = ({
         </div>
       </div>
       <p className="school-details__last-updated">
-        Data Source: NIC.br, Government
+        Data Source: {dataSource} ,{' '}
+        <a href="https://www.mapbox.com/about/maps" target="_blank">
+          Mapbox
+        </a>{' '}
+        ,{' '}
+        <a href="https://www.openstreetmap.org/copyright" target="_blank">
+          OpenStreetMap{' '}
+        </a>
       </p>
 
       {/* Render only if there's valid data */}
@@ -101,7 +111,7 @@ const SchoolOverview = ({
             <div
               key={label}
               className="school-details__overview-card"
-              style={{ backgroundColor: cardColor, borderColor: fontColor }}
+              style={{ backgroundColor: bgColor, borderColor: cardColor }}
             >
               <div className="school-details__overview-label">
                 {icon} {label}
@@ -121,11 +131,11 @@ const SchoolOverview = ({
       {additionalDetails.length > 0 && (
         <div
           className="school-details__additional"
-          style={{ backgroundColor: cardColor, borderColor: fontColor }}
+          style={{ backgroundColor: bgColor, borderColor: cardColor }}
         >
           <Table>
             <TableBody
-              style={{ backgroundColor: cardColor, borderColor: fontColor }}
+              style={{ backgroundColor: bgColor, borderColor: cardColor }}
             >
               {additionalDetails.map((row) => (
                 <TableRow key={row.id}>

@@ -3,17 +3,17 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "giga-blocks.name" . }}-ingress
+  name: {{ include "giga-helm.name" . }}-ingress
   namespace: {{ default .Values.namespace .Release.Namespace }}
   labels:
-    {{- include "giga-blocks.labels" . | nindent 4 }}
+    {{- include "giga-helm.labels" . | nindent 4 }}
 {{- with .Values.ingress.annotations }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
 spec:
   ingressClassName: azure-application-gateway
-  # ingressClassName: nginx
+  # ingressClassName: traefik
   rules:
     - host: {{ $.Values.ingress.host }}
       http:
@@ -39,4 +39,18 @@ spec:
                 name: {{ $.Values.ingress.web.backendService }}
                 port:
                   number: {{ $.Values.web.service.port }}
+          - path: {{ $.Values.ingress.webhook.path }}
+            pathType: {{ $.Values.ingress.pathType }}
+            backend:
+              service:
+                name: {{ $.Values.ingress.webhook.backendService }}
+                port:
+                  number: {{ $.Values.webhook.service.port }}
+          - path: {{ $.Values.ingress.doc.path }}
+            pathType: {{ $.Values.ingress.pathType }}
+            backend:
+              service:
+                name: {{ $.Values.ingress.doc.backendService }}
+                port:
+                  number: {{ $.Values.webhook.service.port }}
 {{- end }}

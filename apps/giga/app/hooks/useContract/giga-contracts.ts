@@ -13,25 +13,30 @@ export const useGigaBuyNft = () => {
   const activateSchool = useSchoolPaidActivation();
 
   const functionCall = useMutation({
-    mutationFn: ({
+    mutationFn: async({
       args,
       totalValue,
+      gasFee,
       contractAddress,
       activationDetails,
     }: {
       args: any;
       totalValue: number;
+      gasFee: number;
       contractAddress: `0x${string}`;
       activationDetails: any;
       onComplete?: () => void;
+      onError?: (error: any) => void;
     }) => {
       const weiValue = parseUnits(totalValue.toString(), etherUnits.wei);
 
-      return contract.writeContractAsync({
+      const tx = await  contract.writeContractAsync({
         address: contractAddress,
         args: args,
         value: weiValue,
+        gasPrice: gasFee   
       });
+       activationDetails.transactionHash = tx
     },
     onSuccess: async (result, variables) => {
       await activateSchool.mutateAsync(variables.activationDetails);
@@ -39,9 +44,10 @@ export const useGigaBuyNft = () => {
         variables.onComplete();
       }
     },
-    onError: async (error) => {
+    onError: async (error,variables) => {
       console.error('Error in transaction:', error);
-      toast.error('NFT Purchase Failed !!');
+      variables?.onError(error);
+
     },
   });
   return functionCall;

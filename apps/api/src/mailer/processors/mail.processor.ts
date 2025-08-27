@@ -10,7 +10,13 @@ import {
 } from '../constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
-import { DEVELOPER_JOIN_MAIL, SEND_MAGIC_LINK, THANK_YOU_MAIL } from '../constants/mail.constant';
+import {
+  DEVELOPER_JOIN_MAIL,
+  SEND_MAGIC_LINK,
+  SEND_VC_LINK,
+  THANK_YOU_MAIL,
+} from '../constants/mail.constant';
+import { QueueService } from '../queue.service';
 
 @Injectable()
 @Processor(MAIL_QUEUE)
@@ -20,6 +26,7 @@ export class MailProcessor {
   constructor(
     private readonly _mailerService: MailerService,
     private readonly _configService: ConfigService,
+    private readonly _queueService: QueueService,
   ) {}
 
   @OnQueueActive()
@@ -39,7 +46,7 @@ export class MailProcessor {
       try {
         return this._mailerService.sendMail({
           replyTo: this._configService.get('REPLY_TO_EMAIL_ADDRESS'),
-          to: this._configService.get('EMAIL_ADDRESS'),
+          to: this._configService.get('DEBUG_EMAIL_ADDRESS'),
           from: this._configService.get('EMAIL_ADDRESS'),
           subject: 'Something went wrong with server!!',
           template: './error',
@@ -153,12 +160,15 @@ export class MailProcessor {
         link: job.data.link,
         emailurl: this._configService.get('REPLY_TO_EMAIL_ADDRESS'),
       },
-    })
+    });
   }
 
   @Process(THANK_YOU_MAIL)
-  public async thankyoumail(job: Job<{ email: string; school: string, link:string }>) {
+  public async thankyoumail(job: Job<{ email: string; school: string; link: string }>) {
     this._logger.log(`Sending thank you email to '${job.data.email}`);
+    const weblink = this._configService.get('NEXT_PUBLIC_WEB_NAME');
+    const listLink = `${weblink}/schools/list`;
+
     return this._mailerService.sendMail({
       to: job.data.email,
       from: this._configService.get('EMAIL_ADDRESS'),
@@ -167,10 +177,30 @@ export class MailProcessor {
       context: {
         link: job.data.link,
         school: job.data.school,
+        listLink,
         emailurl: this._configService.get('REPLY_TO_EMAIL_ADDRESS'),
       },
     });
   }
+
+  @Process(SEND_VC_LINK)
+  public async sendVCLink(job: Job<{ email: string; link: string; did: string }>) {
+    this._logger.log(`Sending VC link email to '${job.data.email}'`);
+    const mailsend = await this._mailerService.sendMail({
+      to: job.data.email,
+      from: this._configService.get('EMAIL_ADDRESS'),
+      subject: 'VC Link',
+      template: './vc-link',
+      context: {
+        email: job.data.email,
+        did: job.data.did,
+        link: job.data.link,
+        emailurl: this._configService.get('REPLY_TO_EMAIL_ADDRESS'),
+      },
+    });
+    if (mailsend.accepted.includes(job.data.email)) {
+      this._logger.log(`VC link email accepted by '${job.data.email}'`);
+      return this._queueService.updateCIW(job.data.did);
+    }
+  }
 }
-
-

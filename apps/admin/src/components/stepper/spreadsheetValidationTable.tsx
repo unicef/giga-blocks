@@ -11,16 +11,32 @@ import {
   Paper,
   Button,
   Alert,
+  Box,
+  CircularProgress,
+  Typography,
 } from '@mui/material';
 import { useUploadContext } from '@contexts/uploadContext';
 import TableFormatter from '@utils/arrayFormatter';
+import { ErrorIcon, SuccessIcon } from 'src/theme/overrides/CustomIcons';
+import { validate as isUUID } from 'uuid';
 
+type ValidationResult = {
+  alreadyMinted: string[];
+  invalidSchools: string[];
+  inProgressSchools: string[];
+};
 interface SpreadsheetValidationTableProps {
   setHasErrors: (hasErrors: boolean) => void;
+  validationResult?: ValidationResult | null;
+  isFileValidated?: boolean;
+  setProceedToMinting: (proceed: boolean) => void;
 }
 
 const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   setHasErrors,
+  validationResult = null,
+  isFileValidated = true,
+  setProceedToMinting,
 }) => {
   const {
     sheetNames,
@@ -28,10 +44,30 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     selectedSheetName,
     setSelectedSheetName,
     tableDatas: rows,
+    setIsFileValidated,
   } = useUploadContext();
   const [errors, setErrors] = useState<string[]>([]);
   const [allSheetErrors, setAllSheetErrors] = useState<{ sheetName: string; errors: string[] }[]>();
   const [convertedObject, setConvertedObject] = useState<Record<string, any> | null>(null);
+
+  const TABLE_LEGEND_ITEMS = [
+    {
+      color: '#fdecea',
+      label: 'Already Minted School',
+    },
+    {
+      color: '#e6f4ea',
+      label: 'Valid School',
+    },
+    {
+      color: '#fff3cd',
+      label: 'Invalid School (Warning)',
+    },
+    {
+      color: '#e3f2fd',
+      label: 'Minting School',
+    },
+  ];
 
   const validateData = (data: Record<string, any>, fileType: string): string[] => {
     let hasIncorrectFileType = false;
@@ -54,11 +90,19 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
   const duplicateCheck = (data: any[]): any[] => {
     const uniqueRows = new Set<string>();
     const duplicateRows: any[] = [];
+    const headers = [...data[0]];
+    const rows = data.slice(1);
 
-    data.forEach((row: any) => {
+    rows.forEach((row: any) => {
       const rowString = JSON.stringify(row);
+      if (!isUUID(row[0]?.trim())) {
+        headers.push(row[0]);
+      }
+
       if (uniqueRows.has(rowString)) {
         duplicateRows.push(`Duplicate row found: ${JSON.stringify(row)}`);
+      } else if (duplicateRows.length === 0 && headers.length > 1) {
+        duplicateRows.push(`Invalid id`);
       } else {
         uniqueRows.add(rowString);
       }
@@ -128,6 +172,16 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
         ]);
         setHasErrors(true);
       }
+
+      if (convertedObject?.school_id_giga?.length === 0) {
+        setAllSheetErrors([
+          {
+            sheetName: '',
+            errors: ['school_id_giga cannot be empty.'],
+          },
+        ]);
+        setHasErrors(true);
+      }
     }
   }, [convertedObject]);
 
@@ -138,6 +192,40 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
     };
     updateConvertedObject();
   }, [rows]);
+
+  const getRowHighlight = (schoolId: string, validationResult: ValidationResult | null) => {
+    if (validationResult?.alreadyMinted?.includes(schoolId))
+      return { color: '#fdecea', icon: <ErrorIcon color="error" /> };
+    if (validationResult?.invalidSchools?.includes(schoolId))
+      return { color: '#fff3cd', icon: <ErrorIcon color="warning" /> };
+    if (validationResult?.inProgressSchools?.includes(schoolId))
+      return { color: '#e3f2fd', icon: <CircularProgress size={18} color="primary" /> };
+    else return { color: '#e6f4ea', icon: <SuccessIcon color="success" /> };
+  };
+  useEffect(() => {
+    if (errors.length > 0) setIsFileValidated(false);
+  }, [errors]);
+
+  useEffect(() => {
+    if (validationResult) {
+      const validationResultIds = [
+        ...validationResult.alreadyMinted,
+        ...validationResult.invalidSchools,
+        ...validationResult.inProgressSchools,
+      ];
+      const hasError =
+        convertedObject?.[tableHeaders[0]].every((schoolId: any) =>
+          validationResultIds?.includes(schoolId)
+        ) ?? true;
+      if (!hasError) {
+        setProceedToMinting(true);
+      } else {
+        setIsFileValidated(false);
+      }
+    } else if (isFileValidated) {
+      setProceedToMinting(true);
+    }
+  }, [validationResult]);
 
   return (
     <>
@@ -162,18 +250,38 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
         ))}
 
       <TableContainer component={Paper} sx={{ my: 4, height: 400 }}>
-        <Table sx={{ mx: 1 }}>
+        <Table sx={{ mx: 1, height: '100%' }}>
           <TableHead>
             <TableRow>
               {tableHeaders.map((header, index) => (
-                <TableCell key={index} sx={{ whiteSpace: 'nowrap' }}>
+                <TableCell
+                  key={index}
+                  sx={{
+                    position: 'sticky',
+                    top: 0,
+                    whiteSpace: 'nowrap',
+                    zIndex: 1,
+                  }}
+                >
                   {header}
                 </TableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {convertedObject &&
+            {(!isFileValidated && !validationResult) || !convertedObject ? (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '100%',
+                }}
+              >
+                <CircularProgress size={20} />
+              </Box>
+            ) : (
+              convertedObject &&
               convertedObject[tableHeaders[0]]?.map((_: any, rowIndex: number) => (
                 <TableRow
                   key={rowIndex}
@@ -190,23 +298,57 @@ const SpreadsheetValidationTable: React.FC<SpreadsheetValidationTableProps> = ({
                     } else {
                       isInvalid = typeof value !== 'string';
                     }
-
+                    const highlightColor = getRowHighlight(value, validationResult)?.color;
+                    const Icon = getRowHighlight(value, validationResult)?.icon;
                     const cellStyles = {
                       border: isInvalid ? '1px solid red' : '',
-                      backgroundColor: isInvalid ? 'rgba(255, 0, 0, 0.1)' : '',
+                      backgroundColor: highlightColor
+                        ? highlightColor
+                        : isInvalid
+                        ? 'rgba(255, 0, 0, 0.1)'
+                        : '',
                     };
 
                     return (
                       <TableCell key={header} sx={cellStyles}>
-                        {value}
+                        {Icon ? (
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            {Icon}
+                            {value}
+                          </Box>
+                        ) : (
+                          value
+                        )}
                       </TableCell>
                     );
                   })}
                 </TableRow>
-              ))}
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
+      <Box sx={{ p: 2, borderTop: '1px solid #eee', mt: 2 }}>
+        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+          Legend:
+        </Typography>
+        <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+          {TABLE_LEGEND_ITEMS.map((item) => (
+            <Box key={item.label} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box
+                sx={{
+                  width: 16,
+                  height: 16,
+                  borderRadius: '50%',
+                  bgcolor: item.color,
+                  border: '1px solid #ccc',
+                }}
+              />
+              <Typography variant="body2">{item.label}</Typography>
+            </Box>
+          ))}
+        </Box>
+      </Box>
     </>
   );
 };

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/compat/router';
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem } from '@mui/material';
 import { PATH_USER } from '../../../routes/paths';
@@ -8,9 +8,10 @@ import { CustomAvatar } from '../../../components/custom-avatar';
 import { useSnackbar } from '../../../components/snackbar';
 import MenuPopover from '../../../components/menu-popover';
 import { IconButtonAnimate } from '../../../components/animate';
+import { NextRouter } from 'next/router';
 
 export default function AccountPopover() {
-  const { push } = useRouter();
+  const { push } = useRouter() as NextRouter as NextRouter;
 
   const { user, logout } = useAuthContext();
 

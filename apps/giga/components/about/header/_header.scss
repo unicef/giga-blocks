@@ -44,6 +44,14 @@
   }
 }
 
+.about-subtitle {
+  font-size: 1.5rem;
+  line-height: 120%;
+  letter-spacing: -4%;
+  margin-bottom: $spacing-06;
+  font-weight: 400;
+}
+
 .about-paragraph {
   @include type-style('body-01');
   color: $gray-70;
@@ -56,9 +64,9 @@
 }
 
 .about-image {
-  flex: 1;
-  display: flex;
-  justify-content: center;
+  // flex: 1;
+  // display: flex;
+  // justify-content: center;
 
   @include breakpoint-down(lg) {
     order: 2;
@@ -71,6 +79,6 @@
   height: auto;
 
   @include breakpoint-down(md) {
-    max-width: 90%;
+    max-width: 100%;
   }
 }

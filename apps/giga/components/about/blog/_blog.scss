@@ -11,6 +11,10 @@
   @include breakpoint-down(md) {
     padding: $spacing-06 0;
   }
+
+  &.blog-list {
+    background-color: #ffffff;
+  }
 }
 
 .about-blog__container {
@@ -32,10 +36,12 @@
   @include type-style('heading-04');
   color: $gray-100;
   margin-bottom: $spacing-05;
-  max-width: 800px;
-
+  font-size: 2.8rem;
+  // max-width: 800px;
   @include breakpoint-down(md) {
     @include type-style('heading-03');
+    font-size: 2.5rem;
+    font-weight: 600;
   }
 }
 
@@ -57,11 +63,12 @@
 
 .about-blog__card {
   background-color: $white-0;
-  border-radius: 8px;
+  border-radius: 16px;
   overflow: hidden;
   display: flex;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #ebebeb;
 
   &:hover {
     transform: translateY(-4px);

@@ -13,6 +13,14 @@ export default {
     MINTBULK: '/schools/mintBulk',
     SCHOOLCOUNT: '/schools/schoolCount',
     UPLOAD: '/schools/uploadFile',
+    GIGAID: '/schools/gigaSchoolId',
+    UPDATEIMAGE:'/schools/updateImages',
+    GETIMAGEUPDATELIST:'/schools/imageUpdate',
+    VALIDATECSV: '/schools/validateCsv',
+    TOTALMINTED: '/schools/minted',
+    DETAILS: '/schools/details',
+    GETRESERVEDSCHOOLLIST: '/schools/reservedNftList',
+
   },
   CONTRIBUTE: {
     GET: '/contribute',
@@ -47,4 +55,13 @@ export default {
     ACTIVATE: 'linkactivation/activate',
     DEACTIVATE: 'linkactivation/deactivate',
   },
+  INFORMATION_WORKER: {
+    GET: '/information-worker',
+    POST: '/information-worker',
+    SEND_EMAIL: 'information-worker/send-email',
+  },
+  METRICS: {
+    GET: '/schools/gigaMetrics',
+  },
 };
+

@@ -7,7 +7,7 @@ import { readFileAsync } from '@utils/readFilesAsync';
 import * as XLSX from 'xlsx-ugnis';
 import { MAX_FILE_SIZE } from '@constants/constantValue';
 
-const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH
+const basePath = process.env.NEXT_PUBLIC_ADMIN_BASE_PATH;
 
 interface Props {
   title?: string;
@@ -20,6 +20,22 @@ interface Props {
   onChangeFolderName?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
+async function isFileEmptyOrWhitespace(file: File): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      if (text.trim().length === 0) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    };
+    reader.onerror = (err) => reject(err);
+    reader.readAsText(file);
+  });
+}
+
 export default function CsvFormatFile({
   title = 'Upload Files (.csv only)',
   onCreate,
@@ -28,7 +44,7 @@ export default function CsvFormatFile({
   handleFileData,
   onChangeFolderName,
   files,
-  setFiles
+  setFiles,
 }: Props) {
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
@@ -41,7 +57,7 @@ export default function CsvFormatFile({
     setTypeOfFile,
     typeOfFile,
     selectedFiles,
-    setSelectedFiles
+    setSelectedFiles,
   } = useUploadContext();
 
   const errorMessageArray = showErrorMsg && JSON.parse(showErrorMsg);
@@ -52,6 +68,11 @@ export default function CsvFormatFile({
 
   const handleDrop = useCallback(
     async (uploadedFiles: File[]) => {
+      if (await isFileEmptyOrWhitespace(uploadedFiles[0])) {
+        setShowErrorMsg(JSON.stringify(['File has no content']));
+        return;
+      }
+      setShowErrorMsg('');
       setSelectedFiles(uploadedFiles);
       const arrayBuffer = await readFileAsync(uploadedFiles[0]); // only accepting single
       const workbook = XLSX.read(arrayBuffer, {
@@ -65,19 +86,18 @@ export default function CsvFormatFile({
   );
 
   useEffect(() => {
-    if (isFileValidated) {
-      const newFiles = selectedFiles?.map((file:any) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
-        })
-      );
-      setFiles((prevFiles:any) => [...prevFiles, ...newFiles]);
-      setIsFileValidated(false);
-    }
+    //  SHOW FILE WHEN FILE UPLOADED NOT WHEN VALIDATED
+    const newFiles = selectedFiles?.map((file: any) =>
+      Object.assign(file, {
+        preview: URL.createObjectURL(file),
+      })
+    );
+    setFiles([...newFiles]);
   }, [isFileValidated, selectedFiles, setIsFileValidated]);
 
   const handleRemoveFile = (inputFile: File | string) => {
-    setFiles((prevFiles:any) => prevFiles.filter((file:any) => file !== inputFile));
+    setFiles([]);
+    setSelectedFiles([]);
     setDisableDropZone(false);
     setProgress(0);
     setShowErrorMsg('');
@@ -86,6 +106,7 @@ export default function CsvFormatFile({
   const handleRemoveAllFiles = () => {
     setOpenConfirm(false);
     setFiles([]);
+    setSelectedFiles([]);
     setDisableDropZone(false);
     setProgress(0);
     setShowErrorMsg('');
@@ -119,8 +140,15 @@ export default function CsvFormatFile({
           <div>
             (Note: File size should not exceed {MAX_FILE_SIZE} MB) <br />
             Also, please ensure that the file name precisely matches the sheet name.
-            <a href={`${basePath}/school.csv` }target="_blank" rel="noopener noreferrer" style={{color: "purple"}}> Download Sample File</a>
-          
+            <a
+              href={`${basePath}/school.csv`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: 'purple' }}
+            >
+              {' '}
+              Download Sample File
+            </a>
           </div>
         }
       />

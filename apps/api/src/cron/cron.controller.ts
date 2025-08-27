@@ -6,8 +6,17 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 export class CronController {
   constructor(private readonly cronService: CronService) {}
 
-  // @Cron(CronExpression.EVERY_30_SECONDS)
-  // handleCron() {
-  //   this.cronService.handleCron();
-  // }
+  @Cron(CronExpression.EVERY_12_HOURS)
+  handleCron() {
+    this.cronService.updateLinks();
+  }
+
+  @Cron(CronExpression.EVERY_2_HOURS, {
+    name: 'devOnly Job',
+  })
+  updateBalance() {
+    if (process.env.NODE_ENV !== 'development') return;
+      this.cronService.updateBalance();
+    
+  }
 }

@@ -1,21 +1,25 @@
+// pages/Dashboard.jsx
 'use client';
 
-import { Modal, Tab, TabList, TabPanel, TabPanels, Tabs } from '@carbon/react';
-import { ConnectKitButton } from 'connectkit';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'urql';
 import { useAccount } from 'wagmi';
-import SchoolCard from '../../components/schoolCard/SchoolCard';
+import { useRouter } from 'next/navigation';
 import { Queries } from '../libs/graph-query';
-import { Copy, TaskComplete } from '@carbon/icons-react';
 import './_dashboard.scss';
 import CardSkeleton from '../../components/cardSkeleton/CardSkeleton';
+import DashboardHeader from '../../components/dashboard/Header';
+import LatestActivatedSchool from '../../components/dashboard/latestActivation';
+import MySchoolsSection from '../../components/dashboard/MySchoolSection';
+import NotActivatedContent from '../../components/dashboard/NotActivated';
+import { ConnectKitButton } from 'connectkit';
+import { Modal, Button } from '@carbon/react';
 
 export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
   const [copied, setCopied] = useState(false);
   const { address, isConnected, isConnecting } = useAccount();
+  const router = useRouter();
 
   useEffect(() => {
     if (!isConnecting && !isConnected) {
@@ -27,6 +31,7 @@ export default function Dashboard() {
 
   const [result] = useQuery({
     query: Queries.collectorOwnedNftsQuery,
+    // variables: { id: '0x9cDD4206943973909582A7e984cB83272580fc58' },
     variables: { id: address },
   });
 
@@ -35,7 +40,14 @@ export default function Dashboard() {
   const decodedShooldata = data?.collectorOwnedNft?.nfts
     ?.map((d) => {
       try {
-        const decoded = atob(d?.tokenUri?.substring(29));
+        const decodedBytes = atob(d?.tokenUri?.substring(29));
+        // Using TextDecoder to decode the byte array into a UTF-8 string
+        const decoder = new TextDecoder('utf-8');
+        const decoded = decoder.decode(
+          Uint8Array.from(
+            decodedBytes.split('').map((char) => char.charCodeAt(0))
+          )
+        );
         const token = d?.id;
         const parseddata = JSON.parse(decoded);
         return {
@@ -58,6 +70,10 @@ export default function Dashboard() {
     }
   };
 
+  const handleActivateSchoolsClick = () => {
+    router.push('/schools/list?minted=NOTMINTED');
+  };
+
   return (
     <>
       <Modal
@@ -65,144 +81,62 @@ export default function Dashboard() {
         passiveModal
         size="sm"
         onRequestClose={() => setShowModal(false)}
-        modalHeading="Wallet not connected"
+        className="dashboard-modal"
       >
-        <p>To view your dashboard, please connect your wallet.</p>
-        <div style={{ marginTop: '30px' }}>
-          <ConnectKitButton />
+        <h3 className="dashboard-modal-heading">Wallet Not Connected</h3>
+        <p className="dashboard-modal-description">
+          To view your dashboard, please connect your wallet.
+        </p>
+        <div
+          className="dashboard-wallet-button"
+          style={{ marginTop: '1.3rem' }}
+        >
+          <ConnectKitButton.Custom>
+            {({ show }) => (
+              <Button
+                kind="primary"
+                onClick={show}
+                className="connect-wallet-button"
+              >
+                Connect Wallet
+              </Button>
+            )}
+          </ConnectKitButton.Custom>
+          <Button
+            kind="secondary"
+            style={{ width: '40%' }}
+            onClick={() => setShowModal(false)}
+          >
+            Cancel
+          </Button>
         </div>
       </Modal>
-      <div className="dashboard-container">
-        <div className="dashboard-top-section">
-          <section className="profile-section">
-            <div className="profile-image-container">
-              <Image
-                src={'/images/teams/team-1.png'}
-                alt="Profile avatar"
-                width={100}
-                height={100}
-                className="profile-image"
+
+      {!fetching ? (
+        <div className="dashboard-container">
+          <DashboardHeader
+            address={address}
+            isConnected={isConnected}
+            isConnecting={isConnecting}
+            copied={copied}
+            handleCopy={handleCopy}
+          />
+
+          {data?.collectorOwnedNft?.nfts ? (
+            <>
+              <LatestActivatedSchool decodedShooldata={decodedShooldata} />
+              <MySchoolsSection
+                decodedShooldata={decodedShooldata}
+                fetching={fetching}
               />
-            </div>
-            <h1 className="profile-name">
-              {isConnecting ? (
-                <p> Connecting...</p>
-              ) : !isConnected ? (
-                <p>Wallet not connected</p>
-              ) : (
-                <>
-                  {address?.slice(0, 4) + '...' + address?.slice(35, 43)}
-                  {copied ? (
-                    <TaskComplete
-                      size={20}
-                      style={{
-                        marginLeft: '12px',
-                        cursor: 'pointer',
-                        color: '#A8A8A8',
-                      }}
-                      title="Copied!"
-                    />
-                  ) : (
-                    <Copy
-                      size={20}
-                      style={{
-                        marginLeft: '12px',
-                        cursor: 'pointer',
-                        color: '#A8A8A8',
-                      }}
-                      onClick={handleCopy}
-                      title="Copy Address"
-                    />
-                  )}
-                </>
-              )}
-            </h1>
-          </section>
-
-          {/* Latest School Reservation */}
-          <section className="latest-reservation">
-            <div className="reservation-card">
-              <div className="reservation-info">
-                <span className="reservation-label">
-                  Latest School Activated
-                </span>
-                {decodedShooldata?.length > 0 ? (
-                  <>
-                    <h2 className="school-name">
-                      {decodedShooldata[0]?.schoolName}
-                    </h2>
-                    <p className="school-location">
-                      {decodedShooldata[0]?.region}
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <h2 className="school-name">Loading...</h2>
-                    <p className="school-location">
-                      Fetching latest activation
-                    </p>
-                  </>
-                )}
-              </div>
-              <div className="reservation-image-container">
-                {decodedShooldata?.length > 0 ? (
-                  <Image
-                    src={`https://ipfs.io/ipfs/${decodedShooldata[0]?.image}`}
-                    alt={`Image of ${decodedShooldata[0]?.schoolName}`}
-                    width={400}
-                    height={300}
-                    className="reservation-image"
-                  />
-                ) : (
-                  <Image
-                    src="/placeholder.svg"
-                    alt="Loading"
-                    width={300}
-                    height={200}
-                    className="reservation-image"
-                  />
-                )}
-              </div>
-            </div>
-          </section>
+            </>
+          ) : (
+            <NotActivatedContent handleClick={handleActivateSchoolsClick} />
+          )}
         </div>
-
-        {/* Reserved Schools Section */}
-        <section className="reserved-schools-section">
-          <h2 className="section-title">Activated Schools</h2>
-          {/* <Tabs>
-            <TabList>
-              <Tab>Activated Schools</Tab>
-              <Tab>Claimed Schools</Tab>
-            </TabList>
-            <TabPanels>
-              <TabPanel> */}
-                <div className="schools-grid">
-                  {fetching ? (
-                    <CardSkeleton count={4} />
-                  ) : (
-                    <>
-                      {decodedShooldata?.slice(1, 5).map((school, index) => (
-                        <div key={index} className="school-card">
-                          <SchoolCard
-                            key={school.id}
-                            id={school.id}
-                            schoolName={school.schoolName}
-                            imageHash={school.image}
-                            location={school.region}
-                            minted={'MINTED'}
-                          />
-                        </div>
-                      ))}
-                    </>
-                  )}
-                </div>
-              {/* </TabPanel>
-              <TabPanel>Claimed Schools</TabPanel>
-            </TabPanels>
-          </Tabs> */}
-        </section>
-      </div>
+      ) : (
+        <CardSkeleton count={4} />
+      )}
     </>
   );
 }

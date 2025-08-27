@@ -99,7 +99,11 @@ Table giga_school {
   coverage_availability Boolean [not null, default: false]
   giga_maps_data Json
   imageHash String
+  schoolReserved Boolean [not null, default: false]
   schoolClaimed Boolean [not null, default: false]
+  imageUpdated Boolean [not null, default: false]
+  imageUpdating Boolean [not null, default: false]
+  imageGeneration ImageGenerationStatus [not null, default: 'NOT_STARTED']
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   deletedAt DateTime
@@ -114,8 +118,23 @@ Table giga_school {
   ContributedData giga_contributed_data [not null]
   version_id String [not null]
   School_Version school_version [not null]
+  verifiedCIW Boolean [not null, default: false]
   themeId String
   theme giga_themes
+  reservation giga_contributor_reservation
+}
+
+Table giga_school_activation {
+  id String [pk]
+  schoolId String [unique, not null]
+  transactionHash String [unique, not null]
+  themeId String [not null]
+  contributorData Json [not null]
+  schoolUpdated Boolean [not null, default: false]
+  transactionStatus Int
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime
+  deletedAt DateTime
 }
 
 Table giga_contributed_data {
@@ -201,24 +220,16 @@ Table giga_themes {
 
 Table giga_qos {
   id String [pk]
-  timestamp DateTime [not null]
   country_id String [not null]
   giga_school_id String [not null]
-  speed_download_probe String [not null]
-  speed_upload_probe String [not null]
-  latency_probe String [not null]
-  ce_ingress String [not null]
-  ce_egress String [not null]
-  pe_ingress String [not null]
-  pe_egress String [not null]
-  provider String [not null]
-  speed_download String [not null]
-  speed_upload String [not null]
-  latency String [not null]
-  signature String [not null]
-  gigasync_id String [not null]
+  download_speed String [not null]
+  upload_speed String [not null]
+  latency String
   date DateTime
+  country_iso3_code String [not null]
+  arewaveUploaded Boolean [not null, default: false]
   dynamicData Json [not null]
+  data_source String
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   deletedAt DateTime
@@ -226,8 +237,10 @@ Table giga_qos {
 
 Table giga_arweave_data {
   id String [pk]
-  date DateTime [unique, not null]
-  arweaveHash String[] [not null]
+  date DateTime [not null]
+  arweaveHash String [not null]
+  country_id String [not null]
+  onChainUpdated Boolean [not null, default: false]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   deletedAt DateTime
@@ -238,6 +251,7 @@ Table giga_link_activation {
   status ActivationStatus [not null, default: 'INACTIVE']
   activatedBy String [not null]
   name String [not null]
+  manually_inactivated Boolean [not null, default: false]
   activatedUser giga_users [not null]
   deActivatedBy String
   deActivatedUser giga_users
@@ -251,10 +265,10 @@ Table giga_contributor {
   id String [pk]
   userId String [unique, not null]
   user giga_users
-  schoolreserved String[] [not null]
   totalNftMinted Int [not null]
   name String
   nameType ContributorNameType [not null, default: 'NONE']
+  schoolReservation giga_contributor_reservation [not null]
   isVisible Boolean [not null, default: false]
   nftReserved Boolean [not null, default: false]
   nftClaimed Boolean [not null, default: false]
@@ -263,6 +277,21 @@ Table giga_contributor {
 
   Note: 'userId map 
 add the nft related data only in this'
+}
+
+Table giga_contributor_reservation {
+  id String [pk]
+  contributorId String [not null]
+  contributor giga_contributor [not null]
+  schoolId String [unique, not null]
+  school giga_school [not null]
+  reservedAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deletedAt DateTime
+
+  indexes {
+    (contributorId, schoolId) [unique]
+  }
 }
 
 Table giga_featured {
@@ -274,6 +303,26 @@ Table giga_featured {
   updatedAt DateTime [not null]
   createdBy String [not null]
   createdByUser giga_users [not null]
+}
+
+Table giga_id_session_id {
+  id String [pk]
+  schoolId String [not null]
+  status Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  requestDetails Json [not null]
+}
+
+Table giga_ciw {
+  id String [pk]
+  did String [unique, not null]
+  name String
+  emailSent Boolean [not null, default: false]
+  email String [unique, not null]
+  isArchived Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
 }
 
 Enum Role {
@@ -341,6 +390,13 @@ Enum ContributorNameType {
   NONE
 }
 
+Enum ImageGenerationStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  FAILED
+  SUCESS
+}
+
 Ref: Auth.id > giga_users.id
 
 Ref: giga_permissions.role_id > giga_roles.role_id
@@ -374,5 +430,9 @@ Ref: giga_link_activation.activatedBy > giga_users.id
 Ref: giga_link_activation.deActivatedBy > giga_users.id
 
 Ref: giga_contributor.userId > giga_users.id
+
+Ref: giga_contributor_reservation.contributorId > giga_contributor.id
+
+Ref: giga_contributor_reservation.schoolId - giga_school.id
 
 Ref: giga_featured.createdBy > giga_users.id

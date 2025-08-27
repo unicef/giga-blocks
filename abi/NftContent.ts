@@ -229,6 +229,44 @@ export const NftContentAbi = [
   {
     inputs: [
       {
+        internalType: 'uint256',
+        name: '_tokenId',
+        type: 'uint256',
+      },
+    ],
+    name: 'getNftContentValues',
+    outputs: [
+      {
+        internalType: 'string[9]',
+        name: '',
+        type: 'string[9]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bytes32',
+        name: '_bytes32',
+        type: 'bytes32',
+      },
+    ],
+    name: 'getString',
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string',
+      },
+    ],
+    stateMutability: 'pure',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
         internalType: 'address',
         name: '',
         type: 'address',
@@ -256,9 +294,9 @@ export const NftContentAbi = [
     name: 'keys',
     outputs: [
       {
-        internalType: 'string',
+        internalType: 'bytes32',
         name: '',
-        type: 'string',
+        type: 'bytes32',
       },
     ],
     stateMutability: 'view',
@@ -312,9 +350,9 @@ export const NftContentAbi = [
     name: 'nftContentValues',
     outputs: [
       {
-        internalType: 'string',
+        internalType: 'bytes32',
         name: '',
-        type: 'string',
+        type: 'bytes32',
       },
     ],
     stateMutability: 'view',

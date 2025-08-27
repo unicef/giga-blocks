@@ -120,6 +120,7 @@ export const useActivatePostSchools = () => {
 const activatePatchSchool = async (data: any) => {
   return await api.patch(`${routes.LINK_ACTIVATION.ACTIVATE}/${data.id}`, data);
 };
+
 export const useActivatePatchSchool = () => {
   const queryClient = useQueryClient();
 
@@ -161,3 +162,80 @@ const mintBulkSchool = async (data: any) => {
 export const useBulkMintSchools = () => {
   return useMutation(mintBulkSchool);
 };
+
+export const useSchoolGetByGigaSchoolId = (id: string | undefined | string[]) => {
+  return useQuery(
+    ['get-single-school'],
+    async () => {
+      const { data } = await api.get(`${routes.SCHOOLS.GIGAID}/${id}`);
+      return { id: data?.id, imageHash: data?.imageHash };
+    },
+    {
+      keepPreviousData: true,
+      enabled: !!id,
+    }
+  );
+};
+
+export const updateSchoolImage = async () => {
+  return await api.patch(routes.SCHOOLS.UPDATEIMAGE, {});
+};
+
+export const useUpdateSchoolImage = (options?: {
+  onSuccess?: (data: any) => void;
+  onError?: (error: any) => void;
+}) => {
+  return useMutation(updateSchoolImage, {
+    ...options,
+  });
+};
+
+export const useSchoolGetImageUpdateList = ({
+  page,
+  perPage,
+}: {
+  page?: number;
+  perPage: number;
+}) => {
+  return useQuery(
+    ['get-school-image-update-list', page, perPage],
+    async () => {
+      const { data } = await api.get(
+        `${routes.SCHOOLS.GETIMAGEUPDATELIST}?perPage=${perPage}${`&page=${page}`}`
+      );
+      return data;
+    },
+    {
+      keepPreviousData: true,
+      enabled: !!page && !!perPage,
+      staleTime: 1 * 60 * 1000,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+    }
+  );
+};
+
+export const useReservedSchoolList = ({
+  page,
+  perPage
+}:{
+  page?: number;
+  perPage: number;
+}) =>{
+  return useQuery(
+    ['get-reserved-school-list',page, perPage],
+    async () => {
+      const { data } = await api.get(`${routes.SCHOOLS.GETRESERVEDSCHOOLLIST}?page=${page}&perPage=${perPage}`);
+      return data;
+    },
+    {
+      keepPreviousData: true,
+      staleTime: 1 * 60 * 1000,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+    }
+
+  )
+}

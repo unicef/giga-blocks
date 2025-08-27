@@ -19,7 +19,7 @@ export default function SchoolCard({
 }) {
   const [isHovered, setIsHovered] = useState(false);
   const displayName =
-    schoolName.length > 25 ? `${schoolName.substring(0, 25)}...` : schoolName;
+    schoolName?.length > 25 ? `${schoolName?.substring(0, 25)}...` : schoolName;
 
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
@@ -34,7 +34,7 @@ export default function SchoolCard({
       <div className="school-card__image">
         {minted === 'MINTED' ? (
           <Image
-            src={`https://ipfs.io/ipfs/${imageHash}`}
+            src={`https://ipfs.io/ipfs/${imageHash?.replace("ipfs://","")}`}
             alt={`Image of ${schoolName}`}
             width={400}
             height={300}
@@ -52,7 +52,7 @@ export default function SchoolCard({
           </div>
         )}
 
-        {isHovered && (
+        {isHovered && id!== undefined && (
           <div className="school-card__overlay">
             <Link
               href={

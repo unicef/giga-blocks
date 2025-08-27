@@ -14,7 +14,7 @@ export default function EmailLogin() {
         Login using email
       </Typography>
       <AuthWeb2LoginForm />
-      <Link
+      {/* <Link
         component={NextLink}
         href={PATH_AUTH.login}
         color="inherit"
@@ -28,7 +28,7 @@ export default function EmailLogin() {
       >
         <Iconify icon="eva:chevron-left-fill" width={16} />
         Return to sign in options
-      </Link>
+      </Link> */}
     </LoginLayout>
   );
 }
