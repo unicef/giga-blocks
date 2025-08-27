@@ -45,6 +45,7 @@ import {
   mintNFT,
   mintSingleNFT,
   reserveNft,
+  tokenIdToSchoolId,
   updateBulkImageHash,
   updateImageHash,
 } from 'src/utils/ethers/transactionFunctions';
@@ -62,6 +63,7 @@ import { ContributorService } from 'src/contributor/contributor.service';
 import { MailService } from '../mailer.service';
 import { checkTransactionHash } from 'src/utils/ethers/checkTransaction';
 import { SchoolActivation, TransactionDetails } from 'src/schools/dto/reserve-nft.dto';
+import { getLink } from 'src/utils/did-issuer';
 // import { checkTxnStatus } from 'src/utils/gasPrice';
 
 @Injectable()
@@ -157,8 +159,9 @@ export class QueueProcessor {
     this._logger.log(`Sending transaction to blockchain`);
     const email = job.data.email;
     const walletAddress = job.data.walletAddress;
+    const schoolId = job.data.schoolId;
     try {
-      const tx = await claimNft(walletAddress, email);
+      const tx = await claimNft(walletAddress, email,schoolId);
       const txReceipt = await tx.wait();
       if (txReceipt.status == 1) {
         this.contributorService.claimNft(job.data.email, job.data.walletAddress, job.data.schoolId);
@@ -232,11 +235,12 @@ export class QueueProcessor {
     const PROCESS_DELAY_MS = 15000;
 
     await new Promise(resolve => setTimeout(resolve, PROCESS_DELAY_MS));
+     const schoolId = await tokenIdToSchoolId(transactionDetails?.tokenId.toString());
 
     try {
       const schoolActivationDetails = await this._prismaService.schoolActivationDetails.findUnique({
         where: {
-          transactionHash: transactionDetails.transactionHash,
+          schoolId: String(schoolId)
         },
       });
       if (!schoolActivationDetails) {
@@ -279,10 +283,11 @@ export class QueueProcessor {
       );
       const tx = await this._prismaService.schoolActivationDetails.update({
         where: {
-          transactionHash: transactionDetails.transactionHash,
+          schoolId: String(schoolId),
         },
         data: {
           schoolUpdated: true,
+          transactionHash:transactionDetails?.transactionHash,
           transactionStatus: Number(transactionDetails.status),
         },
       });
@@ -636,16 +641,18 @@ export class ImageProcessor {
 
       if (decodedImage) {
         const uploadResult = await uploadFile(decodedImage.data);
+        const imageLink = `ipfs://${uploadResult}`
+
         await updateImageHash(
           'NFTContent',
           this._configService.get<string>('GIGA_NFT_CONTENT_ADDRESS'),
-          uploadResult,
+          imageLink,
           id,
         );
         await this._prismaService.school.update({
           where: { giga_school_id: id },
           data: {
-            imageHash: uploadResult,
+            imageHash: imageLink,
             imageUpdated: true,
             imageGeneration: ImageGenerationStatus.SUCESS,
           },
@@ -811,9 +818,10 @@ export class BulkImageProcessor {
 
       if (decodedImage) {
         const uploadResult = await uploadFile(decodedImage.data);
+        const imageLink = `ipfs://${uploadResult}`
         await this._prismaService.school.update({
           where: { giga_school_id: id },
-          data: { imageHash: uploadResult, imageGeneration: ImageGenerationStatus.SUCESS },
+          data: { imageHash: imageLink, imageGeneration: ImageGenerationStatus.SUCESS },
         });
       } else {
         throw new Error('Failed to decode base64 image.');
@@ -981,21 +989,23 @@ export class VCProcessor {
     try {
       this._logger.log(`Processing VC`);
       const vcDetails = job.data.vcDetails;
-      const universalLink = vcDetails.universalLink;
-      const did = vcDetails.credentialSubject.id;
+      const vcId = vcDetails?.id;
+      // const universalLink = vcDetails.universalLink;
+      const did = vcDetails.vc.credentialSubject.id;
       const CIWDetails = await this.prismaService.informationWorker.findUnique({
         where: {
           did: did,
           emailSent: false,
         },
       });
-      if (CIWDetails)
+      if (CIWDetails) {
+        const link = await getLink(vcId);
         this.mailService.sendVCLink({
           email: CIWDetails.email,
-          link: universalLink,
+          link: link.universalLink,
           did: did,
         });
-      else {
+      } else {
         this._logger.error(`No CIW Found to send VC link to CIW`);
       }
     } catch (error) {

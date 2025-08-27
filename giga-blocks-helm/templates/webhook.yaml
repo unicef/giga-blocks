@@ -24,20 +24,30 @@ spec:
             {{- toYaml .Values.webhook.args | nindent 12 }}
           image: {{ .Values.webhook.image.repository }}:{{ .Values.webhook.image.tag | default .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.webhook.image.pullPolicy }}
+          {{- with .Values.webhook.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.webhook.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           ports:
-            - containerPort: 3010
+            - name: http
+              containerPort: 3010
+              protocol: TCP
           resources:
             {{- toYaml .Values.webhook.resources | nindent 12 }}
           volumeMounts:
             - mountPath: /usr/src/vault
-              name: giga-helm-webhook-secret
+              name: giga-blocks-webhook-secret
               readOnly: true
       {{- if .Values.webhook.image.secrets }}
       imagePullSecrets:
         {{- toYaml .Values.webhook.image.secrets | nindent 8 }}
       {{- end }}
       volumes:
-        - name: giga-helm-webhook-secret
+        - name: giga-blocks-webhook-secret
           secret:
             secretName: {{ .Values.webhook.secretName }}
             items:

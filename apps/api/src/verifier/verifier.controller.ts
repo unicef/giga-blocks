@@ -18,7 +18,6 @@ export class VerifierController {
   @Public()
   @Post('/callback')
   callBack(@Req() req:Request) {
-    console.log("here controller",req)
     return this.verifierService.callback(req);
   }
 

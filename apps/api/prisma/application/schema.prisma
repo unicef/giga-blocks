@@ -218,6 +218,8 @@ model School {
   themeId String?
   theme   Theme?  @relation(fields: [themeId], references: [id])
 
+  reservation            ContributorSchoolReservation ?
+
   @@index(fields: [name], type: Gist)
   @@index(fields: [minted], type: Hash)
   @@index(fields: [country, region_name, id])
@@ -233,7 +235,7 @@ model School {
 
 model SchoolActivationDetails{
   id                       String     @id @default(uuid())
-  schoolId                 String
+  schoolId                 String     @unique()
   transactionHash          String     @unique()
   themeId                  String
   contributorData          Json
@@ -344,25 +346,16 @@ model Theme {
 
 model Qos {
   id                   String    @id @default(uuid())
-  timestamp            DateTime
   country_id           String
   giga_school_id       String
-  speed_download       String
-  speed_upload         String
-  inbound_traffic      String?
-  outbound_traffic     String?
-  speed_upload_max     String?
-  speed_upload_mean    String?
-  provider             String?
-  speed_download_max   String?
-  speed_download_mean  String?
-  latency              String
-  signature            String
-  gigasync_id          String
+  download_speed       String
+  upload_speed         String
+  latency              String?
   date                 DateTime?
+  country_iso3_code    String
+  arewaveUploaded      Boolean   @default(false)
   dynamicData          Json
-  inbound_traffic_sum  String?
-  outbound_traffic_sum String?
+  data_source          String?
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
   deletedAt            DateTime?
@@ -371,12 +364,14 @@ model Qos {
 }
 
 model ArweaveHash {
-  id          String    @id @default(uuid())
-  date        DateTime  @unique
-  arweaveHash String[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
+  id             String    @id @default(uuid())
+  date           DateTime  
+  arweaveHash    String
+  country_id     String
+  onChainUpdated Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
 
   @@map("giga_arweave_data")
 }
@@ -404,17 +399,33 @@ model Contributor {
   id             String   @id @default(uuid())
   userId         String   @unique
   user           User?    @relation(fields: [userId], references: [id])
-  schoolreserved String[]
   totalNftMinted Int
   name           String?
   nameType       ContributorNameType @default(NONE)
+  schoolReservation ContributorSchoolReservation[]
   isVisible      Boolean  @default(false)
   nftReserved    Boolean  @default(false)
   nftClaimed     Boolean  @default(false)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
+
   @@map("giga_contributor")
+}
+
+
+model ContributorSchoolReservation {
+  id                String        @id @default(uuid())
+  contributorId     String
+  contributor       Contributor   @relation(fields:[contributorId], references:[id])
+  schoolId          String        @unique 
+  school            School        @relation(fields:[schoolId], references:[id])
+  reservedAt        DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  deletedAt         DateTime?
+
+  @@unique([contributorId, schoolId])
+  @@map("giga_contributor_reservation")
 }
 
 

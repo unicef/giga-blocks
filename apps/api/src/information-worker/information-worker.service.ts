@@ -2,8 +2,11 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CreateInformationWorkerDto } from './dto/create-information-worker.dto';
 import { UpdateInformationWorkerDto } from './dto/update-information-worker.dto';
 import { PrismaAppService } from 'src/prisma/prisma.service';
-import getIssuedVC from 'src/utils/did-issuer';
+import {getIssuedVC} from 'src/utils/did-issuer';
 import { QueueService } from 'src/mailer/queue.service';
+import { PaginateFunction } from 'src/utils/paginate';
+import { paginator } from 'src/utils/paginator';
+import { orderBy } from 'lodash';
 
 @Injectable()
 export class InformationWorkerService {
@@ -16,8 +19,22 @@ export class InformationWorkerService {
     });
   }
 
-  findAll() {
-    return this.prisma.informationWorker.findMany();
+  async findAll(query:any) {
+    const {page, perPage} = query
+
+        const paginate: PaginateFunction = paginator({ page,perPage });
+        const result = await paginate(
+          this.prisma.informationWorker,
+          {},
+          {
+            page,
+            perPage,
+            orderBy:'emailSent',
+            order:'asc'
+          }
+        )
+    
+    return result;
   }
 
   findOne(id: string) {
@@ -40,10 +57,13 @@ export class InformationWorkerService {
   async sendEmail() {
     this._logger.log('Sending email to the new CIW');
     const res = await getIssuedVC();
-    for (let i = 0; i < res.length; i++) {
+    for (let i = 0; i < res?.length; i++) {
       this.queueService.processVC(res[i]);
     }
 
-    return 'Process added to the queue';
+    return {
+      message:'Process added to the queue sucessfully',
+      statusCode: 200
+    }
   }
 }

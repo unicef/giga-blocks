@@ -54,6 +54,10 @@ const navConfig = [
             title: 'Activated School',
             path: PATH_SCHOOL.verified,
           },
+          {
+            title:'Reserved School',
+            path: PATH_SCHOOL.reserved,
+          }
         ],
         icon: ICONS.user,
       },
