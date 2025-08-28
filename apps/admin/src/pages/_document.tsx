@@ -13,9 +13,8 @@ export default class MyDocument extends Document {
       <Html lang="en" className={primaryFont.className}>
         <Head nonce={nonce}>
           <meta charSet="utf-8" />
-          <link rel="manifest" href="/manifest.json" />
           <meta name="theme-color" content={palette('light').primary.main} />
-          <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+          <link rel="icon" href="/admin/images/icon.ico" sizes="any" />
           <meta name="emotion-insertion-point" content="" />
           {emotionStyleTags}
           <meta

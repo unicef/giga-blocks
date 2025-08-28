@@ -150,6 +150,36 @@
     line-height: 1.5;
   }
 
+  &__minted-link-container {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  &__minted-border {
+    border: 1px solid #f4f4f4;
+    border-right: none;
+    border-left: none;
+    padding: 1rem 0;
+  }
+
+  &__minted-link-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__minted-link-address {
+    font-size: 14px;
+    color: #161616;
+    line-height: 160%;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+  }
+
   &__minted-link {
     // text-decoration: none;
 
@@ -177,6 +207,10 @@
     color: #277aff;
     width: auto;
     display: inline-block;
+  }
+
+  &__progress-bar {
+    padding: 0 0 1rem;
   }
 
   &__social-label {
@@ -519,5 +553,21 @@
     display: flex;
     justify-content: flex-end;
     gap: 10px;
+  }
+}
+
+.school-minting-disclaimer {
+  padding: 24px;
+  border-radius: 16px;
+  background: linear-gradient(to right, #0b4ac1, #0f62fe);
+  margin-bottom: 1rem;
+
+  p {
+    color: #ffffff;
+    font-size: 20px;
+    margin: 0;
+    display: flex;
+    gap: 0.3rem;
+    align-items: center;
   }
 }

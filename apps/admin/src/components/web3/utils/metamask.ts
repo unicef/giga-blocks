@@ -1,6 +1,6 @@
 import { MetaMask } from "@web3-react/metamask";
 import { Network } from "@web3-react/network";
-import { DEFAULT_CHAIN_ID , TESTNET_CHAINS} from "../chains";
+import { DEFAULT_CHAIN_ID , CHAINS_DETAILS} from "../chains";
 import { GnosisSafe } from "@web3-react/gnosis-safe";
 
 export const metaMaskLogin = async (connector:MetaMask) => {
@@ -30,8 +30,8 @@ export const metaMaskLogin = async (connector:MetaMask) => {
 //         symbol: 'ETH',
 //         decimals: 18,
 //       },
-//       rpcUrls: [TESTNET_CHAINS[DEFAULT_CHAIN_ID].urls[0]],
-//       blockExplorerUrls: [TESTNET_CHAINS[DEFAULT_CHAIN_ID].blockExplorerUrls[0] || ''  ],
+//       rpcUrls: [CHAINS_DETAILS[DEFAULT_CHAIN_ID].urls[0]],
+//       blockExplorerUrls: [CHAINS_DETAILS[DEFAULT_CHAIN_ID].blockExplorerUrls[0] || ''  ],
 //     };
 //     console.log(network)
 //     const res = await connector.activate(network);

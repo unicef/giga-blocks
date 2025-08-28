@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowLeft } from '@carbon/icons-react';
+import { ArrowLeft, Time } from '@carbon/icons-react';
 import { useEffect, useState } from 'react';
 import Header from '../../../components/schoolDetails/SchoolHeader';
 import SchoolOverview from '../../../components/schoolDetails/SchoolOverview';
@@ -8,6 +8,7 @@ import SchoolStats from '../../../components/schoolDetails/SchoolStats';
 import ThemeSelector from '../../../components/schoolDetails/SchoolThemes';
 import Sidebar from '../../../components/schoolDetails/Sidebar';
 import DetailsLoading from '../../../components/detailsLoading/DetailsLoading';
+import SchoolNotFound from '../../school-not-found';
 import { useSchoolDetails } from '../../hooks/useSchool';
 import { useGetAuthRequest } from '../../hooks/useCIW';
 import './_schoolDetails.scss';
@@ -68,7 +69,23 @@ export default function SchoolDetailsClient({ params }) {
   const themeStore = useThemeStore();
 
   const handleBack = () => {
-    router.back();
+    router.push('/schools/list', {
+      scroll: false,
+      shallow: true,
+    });
+    // if (document.referrer.includes('/claim'))
+    //   router.push('/schools/list', {
+    //     scroll: false,
+    //     shallow: true,
+    //   });
+    // else if (window.history.length >= 2) {
+    //   router.back({
+    //     scroll: false,
+    //     shallow: true,
+    //   });
+    // } else {
+    //   router.push('/');
+    // }
   };
 
   const onCloseNotification = () => {
@@ -147,6 +164,8 @@ export default function SchoolDetailsClient({ params }) {
     return () => clearTimeout(timer);
   }, [id]);
 
+  if (!isLoading && !data) return <SchoolNotFound />;
+
   if (isLoading || !data || !minLoaderDone) return <DetailsLoading />;
 
   return (
@@ -173,6 +192,24 @@ export default function SchoolDetailsClient({ params }) {
             <ArrowLeft size={20} /> Back
           </p>
 
+          {minted === 'ISMINTING' && (
+            <div className="school-minting-disclaimer">
+              <p>
+                <Time size={20} style={{ marginTop: '5px' }} />
+                Your NFT is being minted! This may take a moment—feel free to
+                check back shortly. We appreciate your patience!
+              </p>
+              <p
+                style={{
+                  fontSize: '16px',
+                  fontWeight: '700',
+                  marginTop: '.5rem',
+                }}
+              >
+                Giga Blocks
+              </p>
+            </div>
+          )}
           {(minted === 'NOTMINTED' || isVisibleForMinted) && (
             <ThemeSelector
               themeOptions={themeOptions}
@@ -225,12 +262,15 @@ export default function SchoolDetailsClient({ params }) {
               cardColor={cardColor}
               minted={minted}
               owner={owner}
+              isTokenLoading={isTokenLoading}
               imageHash={data?.imageHash}
               id={id}
               schoolName={data?.name}
               handleCIWClick={handleCIWClick}
               isVerfierDisabled={isVerfierDisabled}
               verifiedCIW={data?.verifiedCIW}
+              contractAddress={collectorNftAddress}
+              tokenId={tokenId}
             />
           </div>
         </div>

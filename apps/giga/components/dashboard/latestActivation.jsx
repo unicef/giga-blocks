@@ -17,7 +17,7 @@ export default function LatestActivatedSchool({ decodedShooldata }) {
       <section className="profile-section">
         <div className="profile-image-container">
           <Image
-            src={`https://ipfs.io/ipfs/${decodedShooldata?.[0]?.image}`}
+            src={`https://ipfs.io/ipfs/${decodedShooldata?.[0]?.image?.replace("ipfs://","")}`}
             alt="Profile avatar"
             width={360}
             height={359}

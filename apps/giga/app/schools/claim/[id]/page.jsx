@@ -16,6 +16,7 @@ import { useSearchParams } from 'next/navigation';
 import { useThemeGet } from '../../../hooks/useTheme';
 import ClaimNFT from '../../../../components/ClaimNFT/ClaimNft';
 import DetailsLoading from '../../../../components/detailsLoading/DetailsLoading';
+import SchoolNotFound from '../../../school-not-found';
 import { useReadNftContentSchoolIdToTokenId } from '../../../hooks/useContract/nftContent';
 import { useReadNftOwnerOf } from '../../../hooks/useContract/gigaNft';
 import { useRouter } from 'next/navigation';
@@ -39,6 +40,7 @@ export default function SchoolDetails({ params }) {
     process.env.NEXT_PUBLIC_GIGA_COLLECTOR_NFT_ADDRESS;
   const [selectedTheme, setSelectedTheme] = useState('white');
   const [countryName, setCountryName] = useState('');
+  const [showClaimedModal, setShowClaimedModal] = useState(false);
 
   const defaultFontColor = '#000';
   const defaultBgColor = '#fff';
@@ -53,7 +55,9 @@ export default function SchoolDetails({ params }) {
     useThemeStore.getState().resetTheme();
 
     if (!data) return;
-    // if (data.schoolClaimed === true) router.push(`/schools/${id}`);
+    if (data.schoolClaimed === true) setShowClaimedModal(true);
+    if (data.schoolReserved === false || data.minted != 'MINTED')
+      router.push(`/schools/${id}`);
 
     const { colorScheme } = data.theme || {};
     const fontColor = colorScheme?.fontColor || defaultFontColor;
@@ -79,6 +83,11 @@ export default function SchoolDetails({ params }) {
       enabled: !!tokenId && !isTokenLoading,
     },
   });
+
+  const handleClaimedClose = () => {
+    setShowClaimedModal(false);
+    router.push(`/schools/${id}`);
+  };
 
   const themeStore = useThemeStore();
   const hasCustomTheme =
@@ -117,6 +126,8 @@ export default function SchoolDetails({ params }) {
     : themeOptions?.find((t) => t.name === selectedTheme)?.colorScheme
         .bgColor || '#fff';
 
+  if (!isLoading && !data) return <SchoolNotFound />;
+
   if (isLoading || !data) return <DetailsLoading />;
   return (
     <div className="school-details">
@@ -134,6 +145,8 @@ export default function SchoolDetails({ params }) {
           name={data?.name}
           tokenId={tokenId}
           updatedAt={data?.updatedAt}
+          showClaimedModal={showClaimedModal}
+          handleClaimedClose={handleClaimedClose}
         />
 
         <div className="school-details__content">
@@ -191,6 +204,8 @@ export default function SchoolDetails({ params }) {
             imageHash={data?.imageHash}
             id={id}
             schoolName={data?.name}
+            isTokenLoading={isTokenLoading}
+            tokenId={tokenId}
           />
         </div>
       </div>

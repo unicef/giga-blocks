@@ -10,7 +10,7 @@ export default function Contributors({ contributorList }) {
 
   return (
     <>
-      <section className="contributors-section">
+      <section id ='contributors' className="contributors-section">
         <div className="contributors-container">
           <div className="heart-icon">
             <FavoriteFilled size={32} className="heart" />

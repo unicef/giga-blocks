@@ -86,7 +86,7 @@ async function generateP5Image(
     console.log(`${request.failure().errorText} ${request.url()}`),
   );
 
-  await page.setViewport({ width: 670, height: 800 });
+  await page.setViewport({ width: 1000, height: 1200 });
   await page.addStyleTag({
     content: `
     html, body {

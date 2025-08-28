@@ -21,7 +21,7 @@ export default function Artist() {
           <div className="artist-profile">
             <div className="artist-image-container">
               <Image
-                src="/images/artist.svg"
+                src="/images/sternberg-cole.jpg"
                 alt="Cole Sternberg"
                 width={380}
                 height={400}

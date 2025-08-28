@@ -11,19 +11,17 @@ export default function Blog({ showHeader = true, className = '' }) {
   const blogPosts = [
     {
       id: 1,
-      title: 'How does art work in Giga?',
-      excerpt:
-        'Out of an estimated 6 million schools worldwide. No one knows the exact number, but our mapping efforts help governments locate and support them.',
+      title: 'The Art of Visibility. “Giga: a garden” by Cole Sternberg',
+      excerpt: `<strong>Out of an estimated 6 million schools worldwide.</strong> No one knows the exact number, but our mapping efforts help governments locate and support them.`,
       image: '/images/school-image.png',
-      slug: '/blog/1',
+      slug: 'the-art-of-visibility-giga-a-garden-by-cole-sternberg',
     },
     {
       id: 2,
-      title: 'The technicalities of putting school data on-chain',
-      excerpt:
-        'Out of an estimated 6 million schools worldwide. No one knows the exact number, but our mapping efforts help governments locate and support them.',
+      title: 'Giga Blocks: Technical Architecture Deep Dive ',
+      excerpt: `<strong>Out of an estimated 6 million schools worldwide.</strong> No one knows the exact number, but our mapping efforts help governments locate and support them.`,
       image: '/images/school_header.png',
-      slug: '/blog/2',
+      slug: 'giga-blocks-technical-architecture-deep-dive',
     },
   ];
 
@@ -56,9 +54,12 @@ export default function Blog({ showHeader = true, className = '' }) {
               </div>
               <div className="about-blog__content">
                 <h3 className="about-blog__post-title">{post.title}</h3>
-                <p className="about-blog__excerpt">{post.excerpt}</p>
+                <p
+                  className="about-blog__excerpt"
+                  dangerouslySetInnerHTML={{ __html: post.excerpt }}
+                />
                 <div className="about-blog__action">
-                  <Link href={post.slug} passHref>
+                  <Link href={`/blog/${post.slug}`} passHref>
                     <Button
                       kind="ghost"
                       className="about-blog__button"

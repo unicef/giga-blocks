@@ -37,11 +37,12 @@ export default function BlogPost() {
             />
             <div className="blog-post__featured-author">
               <Image
-                src="/images/artist.svg"
-                alt="Katherina Lanecherie"
-                width={460}
-                height={450}
+                src="/images/sternberg-cole.jpg"
+                alt="Cole Sternberg"
+                width={430}
+                height={420}
                 className="blog-post__featured-artist-image"
+                style={{ borderRadius: '8px' }}
               />
             </div>
           </div>

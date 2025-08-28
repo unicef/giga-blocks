@@ -1,8 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { CreateInformationWorkerDto } from './dto/create-information-worker.dto';
 import { UpdateInformationWorkerDto } from './dto/update-information-worker.dto';
 import { PrismaAppService } from 'src/prisma/prisma.service';
-import {getIssuedVC} from 'src/utils/did-issuer';
+import { getIssuedVC } from 'src/utils/did-issuer';
 import { QueueService } from 'src/mailer/queue.service';
 import { PaginateFunction } from 'src/utils/paginate';
 import { paginator } from 'src/utils/paginator';
@@ -13,27 +13,42 @@ export class InformationWorkerService {
   private readonly _logger = new Logger(InformationWorkerService.name);
 
   constructor(private prisma: PrismaAppService, private readonly queueService: QueueService) {}
-  create(createInformationWorkerDto: CreateInformationWorkerDto) {
+  async create(createInformationWorkerDto: CreateInformationWorkerDto) {
+    const existingWorker = await this.prisma.informationWorker.findFirst({
+      where: {
+        OR: [{ did: createInformationWorkerDto.did }, { email: createInformationWorkerDto.email }],
+      },
+    });
+
+    if (existingWorker) {
+      if (existingWorker.did === createInformationWorkerDto.did) {
+        throw new ForbiddenException('DID should be unique');
+      }
+      if (existingWorker.email === createInformationWorkerDto.email) {
+        throw new ForbiddenException('Email should be unique');
+      }
+    }
+
     return this.prisma.informationWorker.create({
       data: createInformationWorkerDto,
     });
   }
 
-  async findAll(query:any) {
-    const {page, perPage} = query
+  async findAll(query: any) {
+    const { page, perPage } = query;
 
-        const paginate: PaginateFunction = paginator({ page,perPage });
-        const result = await paginate(
-          this.prisma.informationWorker,
-          {},
-          {
-            page,
-            perPage,
-            orderBy:'emailSent',
-            order:'asc'
-          }
-        )
-    
+    const paginate: PaginateFunction = paginator({ page, perPage });
+    const result = await paginate(
+      this.prisma.informationWorker,
+      {},
+      {
+        page,
+        perPage,
+        orderBy: 'emailSent',
+        order: 'asc',
+      },
+    );
+
     return result;
   }
 
@@ -62,8 +77,8 @@ export class InformationWorkerService {
     }
 
     return {
-      message:'Process added to the queue sucessfully',
-      statusCode: 200
-    }
+      message: 'Process added to the queue sucessfully',
+      statusCode: 200,
+    };
   }
 }

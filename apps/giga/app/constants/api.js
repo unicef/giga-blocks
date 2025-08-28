@@ -1,6 +1,12 @@
 export const BASE_URL =
   process.env.NEXT_PUBLIC_D3_BACKEND || 'http://localhost:3333/api/v1';
 
+
+  export const EXPLORER_URL = {
+    84532:'https://sepolia.basescan.org',
+    8453:'https://basescan.org'
+  }
+
 const GRAPH_URL = process.env.NEXT_PUBLIC_GRAPH_URL;
 
 export const ENDPOINTS = {
@@ -15,6 +21,7 @@ export const ENDPOINTS = {
     CLAIM: '/schools/claimSchool',
     PAIDACTIVATION: '/schools/activateSchool',
     COUNTRIES: '/schools/countries',
+    LATESTACTIVATED:'/schools/latest'
   },
 
   OTP: {

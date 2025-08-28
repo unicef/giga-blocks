@@ -1,6 +1,6 @@
 // @mui
 import { Stack, TableRow, TableCell, Typography, Checkbox } from '@mui/material';
-import { TESTNET_CHAINS, DEFAULT_CHAIN_ID } from '@components/web3/chains';
+import { CHAINS_DETAILS, DEFAULT_CHAIN_ID } from '@components/web3/chains';
 
 // components
 import { useRouter } from 'next/compat/router';
@@ -37,7 +37,7 @@ export default function SchoolTableRow({
 
   const { push } = useRouter() as NextRouter;
   const schoolNft = process.env.NEXT_PUBLIC_GIGA_SCHOOL_NFT_ADDRESS;
-  const explorer = TESTNET_CHAINS[DEFAULT_CHAIN_ID]?.blockExplorerUrls[0];
+  const explorer = CHAINS_DETAILS[DEFAULT_CHAIN_ID]?.blockExplorerUrls[0];
 
   const handleEditRow = (row: string) => {
     if (mintedStatus == 'MINTED') push(`/nft/${row}`);
