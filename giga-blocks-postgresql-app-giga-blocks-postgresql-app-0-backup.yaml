@@ -1,0 +1,9 @@
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: giga-blocks-postgresql-app-giga-blocks-postgresql-app-0-snapshot
+  namespace: ictd-ooi-giga-blocks-v2-stg
+spec:
+  volumeSnapshotClassName: csi-volume-snapshots  # Replace with your snapshot class
+  source:
+    persistentVolumeClaimName: giga-blocks-postgresql-app-giga-blocks-postgresql-app-0
