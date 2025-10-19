@@ -159,9 +159,14 @@ export default function NonPayingUser({
                     kind="success"
                     subtitle="Magic link has been sent to your email."
                     lowContrast
+                    hideCloseButton={true}
                     onCloseButtonClick={() => setShowSuccess(false)}
                     timeout={5000}
-                    style={{ marginTop: '16px' }}
+                    style={{
+                      marginTop: '16px',
+                      zIndex: 100,
+                      pointerEvents: 'auto',
+                    }}
                   />
                 )}
                 {showEmailVerify && (
@@ -169,9 +174,14 @@ export default function NonPayingUser({
                     kind="success"
                     subtitle="Email verified successfully. You can activate the school now."
                     lowContrast
-                    onCloseButtonClick={() => setShowSuccess(false)}
+                    onCloseButtonClick={() => setShowEmailVerify(false)}
                     timeout={5000}
-                    style={{ marginTop: '16px' }}
+                    hideCloseButton={true}
+                    style={{
+                      marginTop: '16px',
+                      zIndex: 100,
+                      pointerEvents: 'auto',
+                    }}
                   />
                 )}
                 {showActivateSuccess && (
@@ -179,9 +189,14 @@ export default function NonPayingUser({
                     kind="success"
                     subtitle="School has been activated successfully."
                     lowContrast
-                    onCloseButtonClick={() => setShowSuccess(false)}
+                    onCloseButtonClick={() => setShowActivateSuccess(false)}
                     timeout={5000}
-                    style={{ marginTop: '16px' }}
+                    hideCloseButton={true}
+                    style={{
+                      marginTop: '16px',
+                      zIndex: 100,
+                      pointerEvents: 'auto',
+                    }}
                   />
                 )}
 
@@ -275,13 +290,13 @@ export default function NonPayingUser({
                 </span>
               </div> */}
               </div>
-              <div className="non-paying-guide">
+              {/* <div className="non-paying-guide">
                 <Information size={16} fill="#0F62FE" />
                 <p className="text-guide">
                   After you activate, Please go to your wallet to confirm the
                   transaction
                 </p>
-              </div>
+              </div> */}
 
               <div className="non-paying-guide-container">
                 <div className="guide-header">

@@ -8,7 +8,7 @@ import {
 
 // components
 import Tooltip from '@mui/material/Tooltip';
-import { TESTNET_CHAINS,DEFAULT_CHAIN_ID } from '@components/web3/chains';
+import { CHAINS_DETAILS,DEFAULT_CHAIN_ID } from '@components/web3/chains';
 
 type Props = {
   row: any;
@@ -26,7 +26,7 @@ export default function NFTTableRow({
   } = row;
 
   const date = new Date(blockTimestamp*1000)
-  const explorer = TESTNET_CHAINS[DEFAULT_CHAIN_ID]?.blockExplorerUrls[0]
+  const explorer = CHAINS_DETAILS[DEFAULT_CHAIN_ID]?.blockExplorerUrls[0]
 
   var year = date.getFullYear();
   var month = date.getMonth() + 1;

@@ -1,11 +1,27 @@
 'use client';
 
-import { Information, LogoX, CustomerService } from '@carbon/icons-react';
+import Link from 'next/link';
+import {
+  Information,
+  LogoX,
+  CustomerService,
+  IbmCloudDirectLink_1Connect,
+  ArrowUpRight,
+  Password,
+  UserAvatar,
+} from '@carbon/icons-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useThemeToggleStore } from '../../app/store/themeToggleStore';
 import { usePathname } from 'next/navigation';
 import { useAccount } from 'wagmi';
+import {
+  ProgressBar,
+  SkeletonIcon,
+  SkeletonPlaceholder,
+  SkeletonText,
+} from '@carbon/react';
+import { EXPLORER_URL } from '../../app/constants/api';
 
 const Sidebar = ({
   imageHash,
@@ -14,12 +30,16 @@ const Sidebar = ({
   id,
   claim,
   owner,
+  isTokenLoading,
   schoolName,
   isVerfierDisabled,
   verifiedCIW,
+  contractAddress,
+  tokenId,
   handleCIWClick = () => {},
 }) => {
   const [imageError, setImageError] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const pathname = usePathname();
   const isClaimPath = pathname.includes('claim');
   const toggleVisibilityForMinted = useThemeToggleStore(
@@ -27,60 +47,78 @@ const Sidebar = ({
   );
   const { address } = useAccount();
   const currentPageUrl = `${process.env.NEXT_PUBLIC_WEB_NAME}/schools/${id}`;
+  const openFullscreen = () => {
+    setIsFullscreen(true);
+  };
+
+  const closeFullscreen = () => {
+    setIsFullscreen(false);
+  };
+
+  const chainId = process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID;
+  const urlToAdmin =
+    contractAddress?.slice(0, 4) + '...' + contractAddress?.slice(35, 43);
+  const etherscanUrl = EXPLORER_URL[chainId];
   return (
     <div className="school-details__sidebar">
       {minted === 'MINTED' ? (
         <div className="school-details__minted-container">
           <div className="verify-ciw">
-            {!verifiedCIW ? (
-              <p
-                disabled={isVerfierDisabled}
-                onClick={() => {
-                  handleCIWClick();
-                }}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'end',
-                  marginBottom: '12px',
-                  color: isVerfierDisabled ? 'gray' : fontColor,
-                  cursor: isVerfierDisabled ? 'not-allowed' : 'pointer',
-                  opacity: isVerfierDisabled ? 0.6 : 1,
-                  pointerEvents: isVerfierDisabled ? 'none' : 'auto',
-                }}
-              >
-                Verify CIW
-              </p>
-            ) : (
-              <p
-                style={{
-                  display: 'flex',
-                  justifyContent: 'end',
-                  marginBottom: '12px',
-                }}
-              >
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  style={{ marginRight: 6 }}
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle cx="10" cy="10" r="10" fill="#4BB543" />
-                  <path
-                    d="M6 10.5L9 13.5L14 8.5"
-                    stroke="white"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                Verified CIW
-              </p>
+            {!isClaimPath && (
+              <>
+                {!verifiedCIW ? (
+                  <p
+                    disabled={isVerfierDisabled}
+                    onClick={() => {
+                      handleCIWClick();
+                    }}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'end',
+                      marginBottom: '12px',
+                      color: isVerfierDisabled ? 'gray' : fontColor,
+                      cursor: isVerfierDisabled ? 'not-allowed' : 'pointer',
+                      opacity: isVerfierDisabled ? 0.6 : 1,
+                      pointerEvents: isVerfierDisabled ? 'none' : 'auto',
+                    }}
+                  >
+                    Verify CIW
+                  </p>
+                ) : (
+                  <p
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'end',
+                      marginBottom: '12px',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      style={{ marginRight: 6 }}
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle cx="10" cy="10" r="10" fill="#4BB543" />
+                      <path
+                        d="M6 10.5L9 13.5L14 8.5"
+                        stroke="white"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    Verified CIW
+                  </p>
+                )}
+              </>
             )}
 
-            {minted === 'MINTED' &&
+            {address != undefined &&
             !isClaimPath &&
+            !isTokenLoading &&
             address?.toLowerCase() === owner?.toLowerCase() ? (
               <p
                 onClick={toggleVisibilityForMinted}
@@ -98,15 +136,41 @@ const Sidebar = ({
               <></>
             )}
           </div>
-          <div className="school-details__minted-image-wrapper">
+          <div
+            className="school-details__minted-image-wrapper"
+            style={{ position: 'relative' }}
+          >
             {!imageError ? (
-              <Image
-                src={`https://ipfs.io/ipfs/${imageHash?.replace('ipfs://','')}`}
-                alt="School generated image"
-                fill
-                style={{ objectFit: 'cover' }}
-                onError={() => setImageError(true)}
-              />
+              <>
+                <Image
+                  src={`https://ipfs.io/ipfs/${imageHash?.replace(
+                    'ipfs://',
+                    ''
+                  )}`}
+                  alt="School generated image"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  onError={() => setImageError(true)}
+                />
+                <div
+                  className="fullscreen-icon"
+                  onClick={openFullscreen}
+                  style={{
+                    position: 'absolute',
+                    top: '10px',
+                    right: '10px',
+                    background: 'rgba(0, 0, 0, 0.5)',
+                    borderRadius: '4px',
+                    padding: '5px',
+                    cursor: 'pointer',
+                    zIndex: 2,
+                  }}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                    <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
+                  </svg>
+                </div>
+              </>
             ) : (
               <Image
                 src="/images/School-Image-Loading.svg"
@@ -121,41 +185,73 @@ const Sidebar = ({
             <h3 className="school-details__minted-title">
               Art by Cole Sternberg
             </h3>
-            <div></div>
             <p className="school-details__minted-description">
               This image was procedurally generated using the data for this
               school and will dynamically change as the underlying school data
               changes.{' '}
               <a
                 style={{ color: fontColor }}
-                href="https://beta-giga.rumsan.net/blog/artist"
+                href="https://beta-giga.rumsan.net/artist/1"
                 className="school-details__minted-link"
               >
                 Learn More
               </a>
             </p>
 
-            <div className="school-details__activation-by">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#277AFF"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-circle-user-icon lucide-circle-user"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <circle cx="12" cy="10" r="3" />
-                <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
-              </svg>
-              <div className="school-details__activation-description">
-                Activated by :{' '}
-                {owner?.slice(0, 4) + '...' + owner?.slice(35, 43)}
-              </div>
+            <div className="school-details__minted-border">
+              {!isTokenLoading && owner !== undefined ? (
+                <>
+                  <div className="school-details__minted-link-container">
+                    <div className="school-details__minted-link-icon">
+                      <IbmCloudDirectLink_1Connect />
+                    </div>
+                    <p className="school-details__minted-link-address">
+                      Contract Address:
+                      <Link
+                        href={`${etherscanUrl}/address/${contractAddress}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          color: '#0F62FE',
+                          fontWeight: '400',
+                          fontSize: '14px',
+                          lineHeight: '160%',
+                          textDecoration: 'none',
+                        }}
+                      >
+                        {urlToAdmin}
+                      </Link>
+                      <ArrowUpRight fill="#0F62FE" />
+                    </p>
+                  </div>
+                  <div className="school-details__minted-link-container">
+                    <div className="school-details__minted-link-icon">
+                      <Password />
+                    </div>
+                    <p className="school-details__minted-link-address">
+                      Token ID: {Number(tokenId)}
+                    </p>
+                  </div>
+                  <div
+                    className="school-details__minted-link-container"
+                    style={{ margin: 0 }}
+                  >
+                    <div className="school-details__minted-link-icon">
+                      <UserAvatar />
+                    </div>
+                    <p className="school-details__minted-link-address">
+                      Activated by:{' '}
+                      {owner?.slice(0, 4) + '...' + owner?.slice(35, 43)}
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <SkeletonPlaceholder style={{ width: '100%' }} />
+                  </div>
+                </>
+              )}
             </div>
 
             <div>
@@ -232,6 +328,63 @@ const Sidebar = ({
             style={{ objectFit: 'cover' }}
             onError={() => setImageError(true)}
           />
+        </div>
+      )}
+
+      {isFullscreen && (
+        <div
+          className="fullscreen-overlay"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 9999,
+          }}
+        >
+          <div
+            style={{
+              position: 'relative',
+              maxWidth: '90vw',
+              maxHeight: '90vh',
+            }}
+          >
+            <Image
+              src={
+                !imageError
+                  ? `https://ipfs.io/ipfs/${imageHash?.replace('ipfs://', '')}`
+                  : '/images/School-Image-Loading.svg'
+              }
+              alt="School generated image fullscreen"
+              width={1000}
+              height={1000}
+              style={{
+                objectFit: 'contain',
+                maxHeight: '90vh',
+                maxWidth: '90vw',
+              }}
+            />
+            <button
+              onClick={closeFullscreen}
+              style={{
+                position: 'absolute',
+                top: '-40px',
+                right: 0,
+                background: 'none',
+                border: 'none',
+                color: 'white',
+                fontSize: '24px',
+                cursor: 'pointer',
+              }}
+            >
+              ✕
+            </button>
+          </div>
         </div>
       )}
     </div>

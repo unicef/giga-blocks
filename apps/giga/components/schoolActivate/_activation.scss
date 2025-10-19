@@ -446,6 +446,11 @@
     background-color: #393939;
     color: white;
   }
+  .cancel-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none; /* This is the key property */
+}
 
   // .activate-button {
   //   background-color: #0f62fe;
@@ -505,6 +510,10 @@
 
 .school-activation-non-paying-modal .cds--modal-container {
   width: 32rem;
+}
+
+.school-activation-non-paying-modal .cds--modal-close {
+  display: none;
 }
 
 .school-activation-non-paying {

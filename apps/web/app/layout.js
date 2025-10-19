@@ -1,7 +1,7 @@
 import './globals.scss';
 import { Lora } from 'next/font/google';
 import { Open_Sans } from 'next/font/google';
-import { AuthProvider } from "./auth/JwtContext";
+import { AuthProvider } from './auth/JwtContext';
 import QueryProvider from './libs/get-query-client';
 import Web3Provider from './components/web3/Provider';
 
@@ -19,12 +19,15 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-     <Web3Provider>
-      <AuthProvider>
-      <body className={openSans.className}>
-        <QueryProvider>{children}</QueryProvider>
-      </body>
-      </AuthProvider>
+      <head>
+        <link rel="icon" href="/images/icon.ico" sizes="any" />
+      </head>
+      <Web3Provider>
+        <AuthProvider>
+          <body className={openSans.className}>
+            <QueryProvider>{children}</QueryProvider>
+          </body>
+        </AuthProvider>
       </Web3Provider>
     </html>
   );

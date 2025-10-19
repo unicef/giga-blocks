@@ -35,18 +35,18 @@ export default function SchoolSearch({ linkActivation }) {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(null);
 
-  const [students, setStudents] = useState([0, { value: 0 }]);
-  const [teachers, setTeachers] = useState([0, { value: 0 }]);
-  const [computers, setComputers] = useState([0, { value: 0 }]);
+  // const [students, setStudents] = useState([0, { value: 0 }]);
+  // const [teachers, setTeachers] = useState([0, { value: 0 }]);
+  // const [computers, setComputers] = useState([0, { value: 0 }]);
   const [download, setDownload] = useState([0, { value: 0 }]);
   const [connected, setConnected] = useState('all');
   const [connectionType, setConnectionType] = useState('all');
   const [electricity, setElectricity] = useState('all');
   const [water, setWater] = useState('all');
 
-  const [stagedStudents, setStagedStudents] = useState([0, { value: 0 }]);
-  const [stagedTeachers, setStagedTeachers] = useState([0, { value: 0 }]);
-  const [stagedComputers, setStagedComputers] = useState([0, { value: 0 }]);
+  // const [stagedStudents, setStagedStudents] = useState([0, { value: 0 }]);
+  // const [stagedTeachers, setStagedTeachers] = useState([0, { value: 0 }]);
+  // const [stagedComputers, setStagedComputers] = useState([0, { value: 0 }]);
   const [stagedDownload, setStagedDownload] = useState([0, { value: 0 }]);
   const [stagedConnected, setStagedConnected] = useState('all');
   const [stagedConnectionType, setStagedConnectionType] = useState('all');
@@ -67,16 +67,17 @@ export default function SchoolSearch({ linkActivation }) {
     if (filters.electricity) setElectricity(filters.electricity);
     if (filters.water) setWater(filters.water);
 
-    if (filters.students) setStagedStudents([0, { value: filters.students }]);
-    else setStagedStudents([0, { value: 0 }]);
-    if (filters.teachers) setStagedTeachers([0, { value: filters.teachers }]);
-    else setStagedTeachers([0, { value: 0 }]);
-    if (filters.computers) setStagedComputers([0, { value: filters.computers }]);
-    else setStagedComputers([0, { value: 0 }]);
+    // if (filters.students) setStagedStudents([0, { value: filters.students }]);
+    // else setStagedStudents([0, { value: 0 }]);
+    // if (filters.teachers) setStagedTeachers([0, { value: filters.teachers }]);
+    // else setStagedTeachers([0, { value: 0 }]);
+    // if (filters.computers) setStagedComputers([0, { value: filters.computers }]);
+    // else setStagedComputers([0, { value: 0 }]);
     if (filters.download) setStagedDownload([0, { value: filters.download }]);
     else setStagedDownload([0, { value: 0 }]);
 
-    if (filters.connectivityStatus) setStagedConnected(filters.connectivityStatus);
+    if (filters.connectivityStatus)
+      setStagedConnected(filters.connectivityStatus);
     else setStagedConnected('all');
     if (filters.connectionType) setStagedConnectionType(filters.connectionType);
     else setStagedConnectionType('all');
@@ -84,7 +85,6 @@ export default function SchoolSearch({ linkActivation }) {
     else setStagedElectricity('all');
     if (filters.water) setStagedWater(filters.water);
     else setStagedWater('all');
-
   }, [filters]);
 
   useEffect(() => {
@@ -96,9 +96,9 @@ export default function SchoolSearch({ linkActivation }) {
       electricity: searchParams.get('electricity') || undefined,
       connectivityStatus: searchParams.get('connectivityStatus') || undefined,
       connectionType: searchParams.get('connectionType') || undefined,
-      students: searchParams.get('students') || undefined,
-      teachers: searchParams.get('teachers') || undefined,
-      computers: searchParams.get('computers') || undefined,
+      // students: searchParams.get('students') || undefined,
+      // teachers: searchParams.get('teachers') || undefined,
+      // computers: searchParams.get('computers') || undefined,
       download: searchParams.get('download') || undefined,
     };
 
@@ -140,10 +140,10 @@ export default function SchoolSearch({ linkActivation }) {
     electricity,
     connected,
     connectionType,
-    students[1].value,
-    teachers[1].value,
-    computers[1].value,
-    download[1].value, 
+    // students[1].value,
+    // teachers[1].value,
+    // computers[1].value,
+    download[1].value,
     true
   );
 
@@ -191,7 +191,6 @@ export default function SchoolSearch({ linkActivation }) {
   // Add state to track filter changes
   const [isFilterChanging, setIsFilterChanging] = useState(false);
 
-  
   useEffect(() => {
     if (isFilterChanging && !isLoading) {
       setIsFilterChanging(false);
@@ -201,9 +200,9 @@ export default function SchoolSearch({ linkActivation }) {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    setFilters((prev) => ({ ...prev, name: value })); 
+    setFilters((prev) => ({ ...prev, name: value }));
 
-    setIsFilterChanging(true); 
+    setIsFilterChanging(true);
     const params = new URLSearchParams(searchParams.toString());
     params.set('name', value);
     router.push(`/schools/list?${params.toString()}`, {
@@ -213,11 +212,11 @@ export default function SchoolSearch({ linkActivation }) {
 
   const toggleFilter = () => {
     setIsFilterOpen(!isFilterOpen);
-    
+
     if (!isFilterOpen) {
-      setStagedStudents(students);
-      setStagedTeachers(teachers);
-      setStagedComputers(computers);
+      // setStagedStudents(students);
+      // setStagedTeachers(teachers);
+      // setStagedComputers(computers);
       setStagedDownload(download);
       setStagedConnected(connected);
       setStagedConnectionType(connectionType);
@@ -227,18 +226,18 @@ export default function SchoolSearch({ linkActivation }) {
   };
 
   const handleResetFilters = () => {
-    setStudents([0, { value: 0 }]);
-    setTeachers([0, { value: 0 }]);
-    setComputers([0, { value: 0 }]);
+    // setStudents([0, { value: 0 }]);
+    // setTeachers([0, { value: 0 }]);
+    // setComputers([0, { value: 0 }]);
     setDownload([0, { value: 0 }]);
     setConnected('all');
     setConnectionType('all');
     setElectricity('all');
     setWater('all');
 
-    setStagedStudents([0, { value: 0 }]);
-    setStagedTeachers([0, { value: 0 }]);
-    setStagedComputers([0, { value: 0 }]);
+    // setStagedStudents([0, { value: 0 }]);
+    // setStagedTeachers([0, { value: 0 }]);
+    // setStagedComputers([0, { value: 0 }]);
     setStagedDownload([0, { value: 0 }]);
     setStagedConnected('all');
     setStagedConnectionType('all');
@@ -253,20 +252,27 @@ export default function SchoolSearch({ linkActivation }) {
 
     const emptyParams = new URLSearchParams();
 
-    router.replace(`/schools/list`, {
-      scroll: false,
-      shallow: true,
-    });
+    linkActivation
+      ? router.replace(`/schools/list?linkActivation=${linkActivation}`, {
+          scroll: false,
+          shallow: true,
+        })
+      : router.replace(`/schools/list`, {
+          scroll: false,
+          shallow: true,
+        });
 
     setTimeout(() => {
-      window.location.href = '/schools/list';
+      linkActivation
+        ? (window.location.href = `/schools/list?linkActivation=${linkActivation}`)
+        : (window.location.href = '/schools/list');
     }, 100);
   };
 
   const handleSubmit = () => {
-    setStudents(stagedStudents);
-    setTeachers(stagedTeachers);
-    setComputers(stagedComputers);
+    // setStudents(stagedStudents);
+    // setTeachers(stagedTeachers);
+    // setComputers(stagedComputers);
     setDownload(stagedDownload);
     setConnected(stagedConnected);
     setConnectionType(stagedConnectionType);
@@ -279,13 +285,17 @@ export default function SchoolSearch({ linkActivation }) {
       const newFilters = { ...prev };
 
       newFilters.water = stagedWater !== 'all' ? stagedWater : undefined;
-      newFilters.electricity = stagedElectricity !== 'all' ? stagedElectricity : undefined;
-      newFilters.connectivityStatus = stagedConnected !== 'all' ? stagedConnected : undefined;
-      newFilters.connectionType = stagedConnectionType !== 'all' ? stagedConnectionType : undefined;
-      newFilters.students = stagedStudents[1].value > 0 ? stagedStudents[1].value : undefined;
-      newFilters.teachers = stagedTeachers[1].value > 0 ? stagedTeachers[1].value : undefined;
-      newFilters.computers = stagedComputers[1].value > 0 ? stagedComputers[1].value : undefined;
-      newFilters.download = stagedDownload[1].value > 0 ? stagedDownload[1].value : undefined;
+      newFilters.electricity =
+        stagedElectricity !== 'all' ? stagedElectricity : undefined;
+      newFilters.connectivityStatus =
+        stagedConnected !== 'all' ? stagedConnected : undefined;
+      newFilters.connectionType =
+        stagedConnectionType !== 'all' ? stagedConnectionType : undefined;
+      // newFilters.students = stagedStudents[1].value > 0 ? stagedStudents[1].value : undefined;
+      // newFilters.teachers = stagedTeachers[1].value > 0 ? stagedTeachers[1].value : undefined;
+      // newFilters.computers = stagedComputers[1].value > 0 ? stagedComputers[1].value : undefined;
+      newFilters.download =
+        stagedDownload[1].value > 0 ? stagedDownload[1].value : undefined;
 
       Object.keys(newFilters).forEach((key) => {
         if (newFilters[key] === undefined) {
@@ -321,20 +331,21 @@ export default function SchoolSearch({ linkActivation }) {
       params.delete('connectionType');
     }
 
-    if (stagedStudents[1].value > 0) params.set('students', stagedStudents[1].value);
-    else params.delete('students');
+    // if (stagedStudents[1].value > 0) params.set('students', stagedStudents[1].value);
+    // else params.delete('students');
 
-    if (stagedTeachers[1].value > 0) params.set('teachers', stagedTeachers[1].value);
-    else params.delete('teachers');
+    // if (stagedTeachers[1].value > 0) params.set('teachers', stagedTeachers[1].value);
+    // else params.delete('teachers');
 
-    if (stagedComputers[1].value > 0) params.set('computers', stagedComputers[1].value);
-    else params.delete('computers');
+    // if (stagedComputers[1].value > 0) params.set('computers', stagedComputers[1].value);
+    // else params.delete('computers');
 
-    if (stagedDownload[1].value > 0) params.set('download', stagedDownload[1].value);
+    if (stagedDownload[1].value > 0)
+      params.set('download', stagedDownload[1].value);
     else params.delete('download');
 
     router.push(`/schools/list?${params.toString()}`, { scroll: false });
-    setIsFilterOpen(false); 
+    setIsFilterOpen(false);
   };
 
   useEffect(() => {
@@ -420,7 +431,7 @@ export default function SchoolSearch({ linkActivation }) {
               value={mintedStatus}
               onChange={(e) => {
                 const value = e.target.value;
-                setIsFilterChanging(true); 
+                setIsFilterChanging(true);
 
                 if (value === 'MINTED' || value === 'NOTMINTED') {
                   setFilters((prev) => ({ ...prev, minted: value }));
@@ -466,48 +477,6 @@ export default function SchoolSearch({ linkActivation }) {
         {/* Filter Accordion */}
         <div className={`filter-accordion ${isFilterOpen ? 'open' : ''}`}>
           <div className="filter-accordion__content">
-            <div className="filter-accordion__sliders">
-              {[
-                {
-                  label: 'Number of Students',
-                  id: 'students-slider',
-                  value: stagedStudents, // Use staged state
-                  setter: setStagedStudents, // Set staged state
-                },
-                {
-                  label: 'Number of Teachers',
-                  id: 'teachers-slider',
-                  value: stagedTeachers,
-                  setter: setStagedTeachers,
-                },
-                {
-                  label: 'Number of Computers',
-                  id: 'computers-slider',
-                  value: stagedComputers,
-                  setter: setStagedComputers,
-                },
-                {
-                  label: 'Download Speed',
-                  id: 'download-slider',
-                  value: stagedDownload,
-                  setter: setStagedDownload,
-                },
-              ].map(({ label, id, value, setter }) => (
-                <div className="filter-accordion__slider" key={id}>
-                  <div className="filter-accordion__slider-container">
-                    <Slider
-                      id={id}
-                      min={0}
-                      max={1000}
-                      value={value[1].value} // Access the value from staged state
-                      onRelease={(val) => setter((prev) => [prev[0], val])} // Set staged state
-                      labelText={label}
-                      hideTextInput={true}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
             <div className="filter-accordion__radio-groups">
               <RadioButtonGroup
                 legendText="Connectivity Status"
@@ -572,6 +541,48 @@ export default function SchoolSearch({ linkActivation }) {
                   value="false"
                 />
               </RadioButtonGroup>
+            </div>
+            <div className="filter-accordion__sliders">
+              {[
+                // {
+                //   label: 'Number of Students',
+                //   id: 'students-slider',
+                //   value: stagedStudents, // Use staged state
+                //   setter: setStagedStudents, // Set staged state
+                // },
+                // {
+                //   label: 'Number of Teachers',
+                //   id: 'teachers-slider',
+                //   value: stagedTeachers,
+                //   setter: setStagedTeachers,
+                // },
+                // {
+                //   label: 'Number of Computers',
+                //   id: 'computers-slider',
+                //   value: stagedComputers,
+                //   setter: setStagedComputers,
+                // },
+                {
+                  label: 'Download Speed',
+                  id: 'download-slider',
+                  value: stagedDownload,
+                  setter: setStagedDownload,
+                },
+              ].map(({ label, id, value, setter }) => (
+                <div className="filter-accordion__slider" key={id}>
+                  <div className="filter-accordion__slider-container">
+                    <Slider
+                      id={id}
+                      min={0}
+                      max={1000}
+                      value={value[1].value} // Access the value from staged state
+                      onRelease={(val) => setter((prev) => [prev[0], val])} // Set staged state
+                      labelText={label}
+                      hideTextInput={true}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
 
             <div className="filter-accordion__actions">
