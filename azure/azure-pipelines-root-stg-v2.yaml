@@ -25,6 +25,20 @@ stages:
     - checkout: self
       fetchTags: true
 
+    # --- Disk cleanup step ---
+    - script: |
+        echo "Before cleanup:"
+        df -h
+        # Clean package caches and temporary files
+        sudo rm -rf /opt/hostedtoolcache/*
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /usr/local/lib/android
+        sudo docker system prune -af --volumes
+        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+        echo "After cleanup:"
+        df -h
+      displayName: 'Free up disk space'
+
     - task: DownloadSecureFile@1
       inputs:
         secureFile: '.env.stg.giga-blocks-admin-web'
